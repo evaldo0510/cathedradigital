@@ -102,17 +102,17 @@ const ReadingJournal: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-2xl px-md space-y-8 min-h-screen pb-4xl">
+    <div className="max-w-4xl mx-auto py-2xl px-md space-y-xl min-h-screen pb-4xl">
       <SEOHead title="Diário & Histórico | Cathedra" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." path="/diario" />
       
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-md">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
           <History className="w-sm h-sm" /> Memória da Alma
       </div>
 
       {/* Streak and Goals */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-lg max-w-2xl mx-auto w-full">
-        <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-soft group hover:bg-primary/[0.05] transition-all">
+        <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-md group hover:bg-primary/[0.05] transition-all">
           <CardContent className="p-xl flex flex-col items-center text-center gap-md">
             <div className="w-3xl h-3xl rounded-full bg-primary/10 flex items-center justify-center relative">
               <Zap className="w-xl h-xl text-primary group-hover:scale-110 transition-transform" />
@@ -130,7 +130,7 @@ const ReadingJournal: React.FC = () => {
         </Card>
 
         <div className="md:col-span-1">
-          <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-soft group hover:bg-secondary/[0.04] transition-all duration-1000">
+          <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-md group hover:bg-secondary/[0.04] transition-all duration-1000">
             <CardContent className="p-2xl flex flex-col items-center gap-xl">
               <div className="w-4xl h-4xl rounded-full bg-secondary/5 flex items-center justify-center relative">
                 <Target className={`w-2xl h-2xl text-secondary/60 group-hover:rotate-12 transition-transform duration-700 ${daysActiveThisWeek >= weeklyGoal ? 'animate-bounce' : ''}`} />
@@ -144,12 +144,12 @@ const ReadingJournal: React.FC = () => {
                   </motion.div>
                 )}
               </div>
-              <div className="w-full text-center space-y-4">
+              <div className="w-full text-center space-y-md">
                 <p className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/30">Meta da Semana</p>
                 <h3 className="text-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-2xl opacity-20">/ {weeklyGoal}</span></h3>
                 <p className="text-sm font-serif italic text-secondary/60">Dias em contemplação</p>
               </div>
-              <div className="w-full space-y-4">
+              <div className="w-full space-y-md">
                 <div className="h-xs w-full bg-secondary/5 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
@@ -226,7 +226,7 @@ const ReadingJournal: React.FC = () => {
           )}
         </div>
 
-        <TabsContent value="history" className="space-y-4">
+        <TabsContent value="history" className="space-y-md">
           {filteredMarks.length === 0 ? (
             <div className="text-center py-3xl bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
               <History className="w-2xl h-2xl text-muted-foreground/60 mx-auto mb-md" />
@@ -234,7 +234,7 @@ const ReadingJournal: React.FC = () => {
             </div>
           ) : (
             filteredMarks.map((mark) => (
-              <Card key={mark.id} className="group overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card/60 backdrop-blur-sm rounded-premium shadow-soft hover:shadow-premium">
+              <Card key={mark.id} className="group overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card/60 backdrop-blur-sm rounded-premium shadow-md hover:shadow-premium">
                 <CardContent className="p-md sm:p-lg flex items-center justify-between gap-md">
                   <div className="flex items-center gap-md min-w-0">
                     <div className={`w-xl h-xl rounded-full flex items-center justify-center shrink-0 ${
@@ -278,7 +278,7 @@ const ReadingJournal: React.FC = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="notes" className="space-y-4">
+        <TabsContent value="notes" className="space-y-md">
           {filteredNotes.length === 0 ? (
             <div className="text-center py-3xl bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
               <Edit3 className="w-2xl h-2xl text-muted-foreground/60 mx-auto mb-md" />
@@ -286,8 +286,8 @@ const ReadingJournal: React.FC = () => {
             </div>
           ) : (
             filteredNotes.map((note) => (
-              <Card key={note.id} className="overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card rounded-premium shadow-soft">
-                <CardContent className="p-lg space-y-4">
+              <Card key={note.id} className="overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card rounded-premium shadow-md">
+                <CardContent className="p-lg space-y-md">
                   <div className="flex items-start justify-between gap-md">
                     <div className="flex items-center gap-xs">
                        <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest">

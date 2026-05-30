@@ -394,7 +394,7 @@ const CommandCenter: React.FC = () => {
               <Icons.X className="w-md h-md" />
             </Button>
           )}
-          <kbd className="hidden sm:inline-flex items-center px-xs py-3xs rounded bg-muted text-muted-foreground text-premium-tiny font-mono font-bold">ESC</kbd>
+          <kbd className="hidden sm:inline-flex items-center px-xs py-3xs rounded bg-muted text-muted-foreground text-xs font-mono font-bold">ESC</kbd>
         </div>
 
         {/* Loading indicator */}
@@ -409,7 +409,7 @@ const CommandCenter: React.FC = () => {
         {/* Results */}
         <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-2xs">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-md py-xs text-premium-tiny font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
+            <div className="px-md py-xs text-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
@@ -430,7 +430,7 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-md pt-sm pb-2xs text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-xs" role="presentation">
+                  <div className="px-md pt-sm pb-2xs text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-xs" role="presentation">
                     <div className="w-md h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
@@ -452,9 +452,9 @@ const CommandCenter: React.FC = () => {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{item.label}</p>
-                    <p className="text-premium-tiny text-muted-foreground truncate">{item.description}</p>
+                    <p className="text-xs text-muted-foreground truncate">{item.description}</p>
                   </div>
-                  <span className={`text-premium-tiny font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
+                  <span className={`text-xs font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
                     TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
@@ -469,16 +469,16 @@ const CommandCenter: React.FC = () => {
         {/* Footer */}
         <div className="flex items-center justify-between px-md py-xs border-t border-border bg-muted/30">
           <div className="flex items-center gap-sm">
-            <span className="text-premium-tiny text-muted-foreground">↑↓ navegar</span>
-            <span className="text-premium-tiny text-muted-foreground">↵ abrir</span>
+            <span className="text-xs text-muted-foreground">↑↓ navegar</span>
+            <span className="text-xs text-muted-foreground">↵ abrir</span>
           </div>
           <div className="flex items-center gap-xs">
             {hasGlobalResults && (
-              <span className="text-premium-tiny text-primary font-medium">
+              <span className="text-xs text-primary font-medium">
                 Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
               </span>
             )}
-            <span className="text-premium-tiny text-muted-foreground font-mono">⌘K</span>
+            <span className="text-xs text-muted-foreground font-mono">⌘K</span>
           </div>
         </div>
       </div>

@@ -298,11 +298,11 @@ const DogmasPage: React.FC = () => {
   return (
     <>
     <SEOHead title="Dogmas da Fé Católica" description="Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo." path="/dogmas" keywords="dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Dogmas", path: "/dogmas" }]} />
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
+    <div className="max-w-5xl mx-auto space-y-xl">
+      <div className="text-center space-y-sm">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.Star className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Depositum Fidei</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Depositum Fidei</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Dogmas da Fé Católica</h1>
         <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
@@ -324,7 +324,7 @@ const DogmasPage: React.FC = () => {
       <div className="flex gap-xs justify-center flex-wrap">
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => setCategory(cat)}
-            className={`px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+            className={`px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
@@ -336,16 +336,16 @@ const DogmasPage: React.FC = () => {
       <div className="flex justify-center gap-lg text-center">
         <div>
           <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-          <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Dogmas</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">Dogmas</p>
         </div>
         <div>
           <p className="text-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-          <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Categorias</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
         </div>
       </div>
 
       {/* Dogmas list */}
-      <div className="space-y-3">
+      <div className="space-y-sm">
         {filtered.map(dogma => (
           <div key={dogma.id}
             className="bg-card border border-border rounded-full overflow-hidden transition-all hover:border-primary/30">
@@ -356,12 +356,12 @@ const DogmasPage: React.FC = () => {
               <span className="text-2xl font-serif font-bold text-primary/60 shrink-0 w-xl">{dogma.id}</span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-xs mb-2xs flex-wrap">
-                  <span className={`px-xs py-3xs rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
+                  <span className={`px-xs py-3xs rounded-full text-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
                     {dogma.category}
                   </span>
-                  <span className="text-premium-tiny text-muted-foreground">{dogma.year}</span>
+                  <span className="text-xs text-muted-foreground">{dogma.year}</span>
                   {dogma.refs.length > 0 && (
-                    <Badge variant="outline" className="text-premium-tiny gap-2xs px-2xs py-0">
+                    <Badge variant="outline" className="text-xs gap-2xs px-2xs py-0">
                       <Icons.ExternalLink className="w-xs h-xs" /> {dogma.refs.length} fontes
                     </Badge>
                   )}
@@ -374,10 +374,10 @@ const DogmasPage: React.FC = () => {
               <Icons.ArrowDown className={`w-md h-md text-muted-foreground shrink-0 transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} />
             </Button>
             {expandedId === dogma.id && (
-              <div className="px-lg pb-lg pl-[4.5rem] space-y-4 border-t border-border pt-md">
+              <div className="px-lg pb-lg pl-[4.5rem] space-y-md border-t border-border pt-md">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>
                 <div className="flex items-center gap-xs">
-                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Fonte:</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-primary">Fonte:</span>
                   <span className="text-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
                 </div>
 
@@ -401,8 +401,8 @@ const DogmasPage: React.FC = () => {
 
                 {/* Cross-references */}
                 {dogma.refs.length > 0 && (
-                  <div className="space-y-2">
-                    <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
+                  <div className="space-y-xs">
+                    <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
                     <div className="flex flex-wrap gap-xs">
                       {dogma.refs.map((ref, i) => {
                         if (ref.type === 'bible') {

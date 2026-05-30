@@ -46,7 +46,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         
         {/* Welcome Section - Reduced Height */}
         <FadeUp>
-          <header className="text-center space-y-4 mb-2xl">
+          <header className="text-center space-y-md mb-2xl">
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30">
               Cathedra Digital
             </p>
@@ -63,7 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
         {/* Heart of the Experience: Daily Ritual */}
         <FadeUp delay={0.2}>
-          <section className="space-y-8">
+          <section className="space-y-xl">
             <div className="flex items-center gap-md opacity-20 px-md">
               <div className="h-px flex-1 bg-primary/20" />
               <span className="text-[9px] font-black uppercase tracking-[0.3em]">Ritual do Dia</span>

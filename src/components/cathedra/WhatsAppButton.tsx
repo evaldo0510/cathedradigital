@@ -21,7 +21,7 @@ const WhatsAppButton = () => {
       className="fixed bottom-lg left-lg z-[200] w-2xl h-2xl bg-background border border-border text-foreground rounded-full flex items-center justify-center shadow-premium-hover group"
     >
       <MessageCircle className="w-lg h-lg" />
-      <span className="absolute left-3xl bg-background border border-border px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest text-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-premium-hover pointer-events-none">
+      <span className="absolute left-3xl bg-background border border-border px-sm py-2xs rounded-full text-xs font-black uppercase tracking-widest text-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-premium-hover pointer-events-none">
         Fale conosco
       </span>
     </motion.a>

@@ -39,11 +39,11 @@ const ViaCrucis: React.FC = () => {
 
   if (!isJourney) {
     return (
-      <motion.div className="max-w-5xl mx-auto space-y-12 pb-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        <motion.div className="text-center space-y-4 pt-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
+      <motion.div className="max-w-5xl mx-auto space-y-2xl pb-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <motion.div className="text-center space-y-md pt-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 border border-primary/10 rounded-premium">
             <Cross className="w-md h-md text-primary" />
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
           <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
@@ -66,7 +66,7 @@ const ViaCrucis: React.FC = () => {
                 <div className="w-2xl h-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
                   <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
-                  <p className="text-premium-tiny text-muted-foreground mt-2xs uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
+                  <p className="text-xs text-muted-foreground mt-2xs uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
                 </div>
               </div>
             </Button>
@@ -79,15 +79,15 @@ const ViaCrucis: React.FC = () => {
   const station = STATIONS[currentStation];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-2xl animate-in fade-in duration-700">
+    <div className="max-w-4xl mx-auto space-y-xl pb-2xl animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-xs">
-        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-soft gap-xs">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-md gap-xs">
           <ArrowLeft className="w-md h-md text-foreground" />
-          <span className="text-premium-tiny font-black uppercase tracking-widest hidden md:block">Voltar</span>
+          <span className="text-xs font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </Button>
         <div className="text-center">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60 mb-2xs">Via Sacra</p>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/60 mb-2xs">Via Sacra</p>
           <span className="text-sm font-serif font-bold text-foreground">
             Estação {currentStation + 1} de 14
           </span>
@@ -103,14 +103,14 @@ const ViaCrucis: React.FC = () => {
       </div>
 
       {/* Station content */}
-      <div className="bg-card border border-border rounded-[3rem] p-xl md:p-3xl space-y-12 shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
+      <div className="bg-card border border-border rounded-[3rem] p-xl md:p-3xl space-y-2xl shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-2xl opacity-[0.02]">
-          <Cross className="w-64 h-64 -mr-3xl -mt-3xl rotate-12" />
+          <Cross className="w-4xl h-4xl -mr-3xl -mt-3xl rotate-12" />
         </div>
         
-        <div className="relative text-center space-y-6">
+        <div className="relative text-center space-y-lg">
           <div className="w-3xl h-3xl rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
-          <div className="space-y-2">
+          <div className="space-y-xs">
             <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
             <p className="text-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-xs">
               <BookOpen className="w-md h-md" /> {station.scripture}
@@ -118,19 +118,19 @@ const ViaCrucis: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative space-y-12 max-w-2xl mx-auto">
-          <div className="space-y-4">
-            <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
+        <div className="relative space-y-2xl max-w-2xl mx-auto">
+          <div className="space-y-md">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
             <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-serif text-center italic">"{station.meditation}"</p>
           </div>
           
           <div className="bg-primary/5 rounded-[2.5rem] p-xl md:p-2xl border border-primary/10 relative">
             <Flame className="absolute -top-sm -right-sm w-xl h-xl text-primary/60 rotate-12" />
-            <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-lg">Oração</h3>
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-lg">Oração</h3>
             <p className="text-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>
           
-          <div className="text-center space-y-2 pt-md opacity-60">
+          <div className="text-center space-y-xs pt-md opacity-60">
             <p className="text-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
             <p className="text-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
           </div>

@@ -41,8 +41,8 @@ const GuidedReadingPage: React.FC = () => {
         path="/jornada-guiada"
       />
 
-      <main className="app-container py-4xl md:py-48 flex flex-col items-center">
-        <header className="text-center space-y-8 mb-3xl md:mb-4xl max-w-2xl mx-auto">
+      <main className="app-container py-4xl md:py-4xl flex flex-col items-center">
+        <header className="text-center space-y-xl mb-3xl md:mb-4xl max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-md px-lg py-xs bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">
             <div className="w-2xs h-2xs rounded-full bg-primary animate-pulse" />
             Experiência Guiada
@@ -61,7 +61,7 @@ const GuidedReadingPage: React.FC = () => {
           <GuidedReadingFlow />
         </section>
 
-        <footer className="mt-4xl text-center space-y-6 opacity-30 hover:opacity-100 transition-opacity duration-1000">
+        <footer className="mt-4xl text-center space-y-lg opacity-30 hover:opacity-100 transition-opacity duration-1000">
           <p className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40">
             Mosteiro Digital Moderno
           </p>

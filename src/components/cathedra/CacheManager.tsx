@@ -162,11 +162,11 @@ const CacheManager: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-xl px-md space-y-8 animate-in fade-in slide-in-from-bottom-md duration-700">
+    <div className="max-w-4xl mx-auto py-xl px-md space-y-xl animate-in fade-in slide-in-from-bottom-md duration-700">
       <SEOHead title="Gerenciar Cache Local" description="Gerencie os textos salvos offline no seu dispositivo." path="/cache-manager" />
       
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
-        <div className="space-y-1">
+        <div className="space-y-2xs">
           <h1 className="text-3xl font-serif font-bold text-foreground">Sanctuarium Offline</h1>
           <p className="text-muted-foreground">Gerencie a soberania dos seus dados e textos salvos localmente.</p>
         </div>
@@ -194,13 +194,13 @@ const CacheManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-xs">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-xs">
               <Icons.Database className="w-sm h-sm" /> Status do Cache
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
-            <p className="text-premium-tiny text-muted-foreground mt-2xs">
+            <p className="text-xs text-muted-foreground mt-2xs">
               Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
             </p>
           </CardContent>
@@ -208,15 +208,15 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-xs">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-xs">
               <Icons.Share2 className="w-sm h-sm" /> Portabilidade
             </CardDescription>
           </CardHeader>
           <CardContent className="flex gap-xs">
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={handleExport}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-xs font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-xs font-black uppercase" onClick={() => fileInputRef.current?.click()}>
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
@@ -225,11 +225,11 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-xs">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-xs">
               <Icons.Download className="w-sm h-sm" /> Pré-carregar
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-sm">
             <div className="flex items-center gap-xs">
               <Input 
                 type="number" 
@@ -237,13 +237,13 @@ const CacheManager: React.FC = () => {
                 onChange={(e) => setPreloadCount(parseInt(e.target.value))}
                 className="h-xl w-3xl text-xs rounded-full"
               />
-              <span className="text-premium-tiny font-bold text-muted-foreground uppercase">unid.</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase">unid.</span>
             </div>
             <div className="flex gap-xs">
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-xs font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
                 Catecismo
               </Button>
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-xs font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
                 Bíblia
               </Button>
             </div>
@@ -252,8 +252,8 @@ const CacheManager: React.FC = () => {
       </div>
 
       {preloading && (
-        <div className="space-y-2 animate-in fade-in slide-in-from-top-xs">
-          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
+        <div className="space-y-xs animate-in fade-in slide-in-from-top-xs">
+          <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
             <span>Pré-carregando conteúdo...</span>
             <span>{progress}%</span>
           </div>
@@ -266,7 +266,7 @@ const CacheManager: React.FC = () => {
           <Button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+            className={`px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
               filter === f 
                 ? 'bg-primary text-primary-foreground shadow-premium' 
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted'
@@ -284,7 +284,7 @@ const CacheManager: React.FC = () => {
           ))
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
-            <CardContent className="flex flex-col items-center justify-center py-3xl space-y-4">
+            <CardContent className="flex flex-col items-center justify-center py-3xl space-y-md">
               <div className="p-md rounded-premium bg-background border border-border shadow-inner">
                 <Icons.Library className="w-xl h-xl text-muted-foreground/40" />
               </div>
@@ -293,7 +293,7 @@ const CacheManager: React.FC = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-sm">
             <AnimatePresence mode="popLayout">
               {filteredItems.map(item => (
                 <motion.div
@@ -304,7 +304,7 @@ const CacheManager: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="rounded-premium border-border/40 shadow-soft overflow-hidden group hover:shadow-premium transition-all">
+                  <Card className="rounded-premium border-border/40 shadow-md overflow-hidden group hover:shadow-premium transition-all">
                     <CardContent className="p-md flex items-center justify-between gap-md">
                       <div className="flex items-center gap-md">
                         <div className={`p-sm rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
@@ -312,7 +312,7 @@ const CacheManager: React.FC = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
-                          <div className="flex items-center gap-xs text-premium-tiny text-muted-foreground font-medium">
+                          <div className="flex items-center gap-xs text-xs text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>
                             <span className="w-2xs h-2xs rounded-full bg-border" />
                             <span>Salvo {formatDistanceToNow(item.cachedAt, { addSuffix: true, locale: ptBR })}</span>
@@ -335,7 +335,7 @@ const CacheManager: React.FC = () => {
         )}
       </div>
 
-      <div className="bg-secondary/5 rounded-[2.5rem] p-xl border border-secondary/20 space-y-4">
+      <div className="bg-secondary/5 rounded-[2.5rem] p-xl border border-secondary/20 space-y-md">
         <div className="flex items-center gap-sm text-secondary">
           <Icons.ShieldCheck className="w-md h-md" />
           <h2 className="text-lg font-serif font-bold">Nota sobre Soberania de Dados</h2>

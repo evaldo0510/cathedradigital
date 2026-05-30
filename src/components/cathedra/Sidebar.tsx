@@ -217,7 +217,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="w-xl h-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-xs group-hover:scale-105 transition-transform duration-[2000ms]">
                   <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} />
                 </div>
-                <div className="space-y-0.5">
+                <div className="space-y-3xs">
                   <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
                   <p className="text-[6.5px] font-bold uppercase text-primary/10 tracking-[0.6em]">
                     Sacrum Archivum
@@ -237,7 +237,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-2 overflow-y-auto pb-md no-scrollbar pr-2xs" role="navigation">
+            <nav className="flex-1 space-y-xs overflow-y-auto pb-md no-scrollbar pr-2xs" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
@@ -253,7 +253,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <ul className="space-y-1 mt-2xs">
+                      <ul className="space-y-2xs mt-2xs">
                         {section.items.map((item, idx) => {
                           const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                           return (
@@ -292,7 +292,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               )))}
             </nav>
 
-            <div className="pt-md mt-auto space-y-4">
+            <div className="pt-md mt-auto space-y-md">
               <div className="flex flex-col gap-sm">
                 <div className="grid grid-cols-2 gap-xs">
                   <Button 

@@ -78,11 +78,11 @@ const MissalPage: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>('entrance');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
+    <div className="max-w-4xl mx-auto space-y-xl">
+      <div className="text-center space-y-sm">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.Cross className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
@@ -108,7 +108,7 @@ const MissalPage: React.FC = () => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-sm py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all ${
+            className={`px-sm py-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
@@ -117,7 +117,7 @@ const MissalPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-md">
         {MISSAL_SECTIONS.map(section => (
           <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-premium overflow-hidden">
             <Button
@@ -126,7 +126,7 @@ const MissalPage: React.FC = () => {
             >
               <div>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-3xs">{section.subtitle}</p>}
+                {section.subtitle && <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-3xs">{section.subtitle}</p>}
               </div>
               <ChevronDown className={`w-md h-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </Button>
@@ -134,7 +134,7 @@ const MissalPage: React.FC = () => {
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">
                 {section.parts.map((part, i) => (
-                  <div key={i} className="p-md space-y-3">
+                  <div key={i} className="p-md space-y-sm">
                     <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
                       <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-md py-xs border border-secondary/10">

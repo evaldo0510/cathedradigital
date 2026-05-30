@@ -15,8 +15,8 @@ const ChartSkeleton = React.forwardRef<HTMLDivElement, any>((props, ref) => (
   <div ref={ref}>
     <Card>
       <CardHeader>
-        <Skeleton className="h-md w-40" />
-        <Skeleton className="h-md w-56 mt-2xs" />
+        <Skeleton className="h-md w-4xl" />
+        <Skeleton className="h-md w-4xl mt-2xs" />
       </CardHeader>
       <CardContent className="h-[300px] flex items-center justify-center">
         <Skeleton className="h-full w-full rounded" />

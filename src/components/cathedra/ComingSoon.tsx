@@ -97,7 +97,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
 
   return (
-    <div className={cn("space-y-20", className)}>
+    <div className={cn("space-y-3xl", className)}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-mobile-stack)] md:gap-3xl max-w-5xl mx-auto">
         {items.map((item, idx) => (
           <div
@@ -107,7 +107,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             <div className="w-2xl h-2xl rounded-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/50 transition-all duration-1000">
               <item.icon className="w-lg h-lg" strokeWidth={0.5} />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-sm">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
               <p className="text-[11px] text-muted-foreground/60 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
             </div>
@@ -125,7 +125,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-2xl pl-2xl pr-36 rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
+                className="h-2xl pl-2xl pr-4xl rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
               />
               <Mail className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/60" />
               <button 

@@ -210,7 +210,7 @@ const ProfilePage: React.FC = () => {
       title="Meu Perfil"
       maxW="max-w-2xl"
     >
-      <div className="space-y-8 relative">
+      <div className="space-y-xl relative">
       <AnimatePresence>
         {showLevelUp && (
           <motion.div
@@ -255,7 +255,7 @@ const ProfilePage: React.FC = () => {
         </CathedraButton>
       </div>
 
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-md">
         <div className="relative w-4xl h-4xl mx-auto group">
           <Avatar className="w-4xl h-4xl border-4 border-primary/20">
             {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
@@ -284,7 +284,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <CathedraCard className="p-xl space-y-4">
+      <CathedraCard className="p-xl space-y-md">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
@@ -309,7 +309,7 @@ const ProfilePage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-sm">
         {statCards.map(s => (
-          <CathedraCard key={s.label} className="p-md text-center space-y-1">
+          <CathedraCard key={s.label} className="p-md text-center space-y-2xs">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -317,7 +317,7 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <CathedraCard className="p-xl space-y-6">
+      <CathedraCard className="p-xl space-y-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
           <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
@@ -348,11 +348,11 @@ const ProfilePage: React.FC = () => {
         </div>
       </CathedraCard>
 
-      <CathedraCard className="p-xl space-y-6">
+      <CathedraCard className="p-xl space-y-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-md">
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             "Sua contribuição é o que nos permite continuar levando a Luz da Verdade a milhares de corações."
           </p>
@@ -368,14 +368,14 @@ const ProfilePage: React.FC = () => {
         </div>
       </CathedraCard>
 
-      <CathedraCard className="p-xl space-y-8">
+      <CathedraCard className="p-xl space-y-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-md">
           <div className="flex items-center justify-between p-sm bg-muted/30 rounded-premium border border-border/50">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <div className="flex items-center gap-xs">
                 <Icons.Bell className="w-md h-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Push Notifications</p>
@@ -385,8 +385,8 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-sm bg-primary/5 rounded-premium border border-primary/20 shadow-soft">
-            <div className="space-y-1">
+          <div className="flex items-center justify-between p-sm bg-primary/5 rounded-premium border border-primary/20 shadow-md">
+            <div className="space-y-2xs">
               <div className="flex items-center gap-xs">
                 <Icons.Whatsapp className="w-md h-md text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
@@ -401,7 +401,7 @@ const ProfilePage: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="space-y-2 pt-xs"
+              className="space-y-xs pt-xs"
             >
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-2xs">Número do WhatsApp (com DDD)</label>
               <div className="relative">
@@ -418,7 +418,7 @@ const ProfilePage: React.FC = () => {
             </motion.div>
           )}
           <div className="flex items-center justify-between p-sm bg-muted/30 rounded-premium border border-border/50">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <div className="flex items-center gap-xs">
                 <Icons.Clock className="w-md h-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Horário do Ritual</p>
@@ -434,7 +434,7 @@ const ProfilePage: React.FC = () => {
           </div>
           
           <div className="flex items-center justify-between p-sm bg-muted/30 rounded-premium border border-border/50">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <div className="flex items-center gap-xs">
                 <Icons.Star className="w-md h-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Meta Semanal</p>
@@ -470,7 +470,7 @@ const ProfilePage: React.FC = () => {
             <div className="absolute top-0 right-0 p-lg opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
               <Icons.Star className="w-3xl h-3xl text-secondary fill-current" />
             </div>
-            <div className="p-lg space-y-4">
+            <div className="p-lg space-y-md">
               <div className="flex items-center gap-xs mb-2xs">
                 <div className="px-xs py-3xs rounded-full bg-secondary/20 text-amber-800 dark:text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
@@ -488,10 +488,10 @@ const ProfilePage: React.FC = () => {
         </motion.div>
       )}
 
-      <CathedraCard className="p-lg space-y-5">
+      <CathedraCard className="p-lg space-y-md">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
-        <div className="space-y-2">
+        <div className="space-y-xs">
           <label className="text-xs font-bold text-foreground">Nome</label>
           <input
             type="text"
@@ -501,7 +501,7 @@ const ProfilePage: React.FC = () => {
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-xs">
           <label className="text-xs font-bold text-foreground">Bio</label>
           <textarea
             value={bio}
@@ -512,7 +512,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         {/* Localização Eclesial */}
-        <div className="border-t border-border pt-md space-y-4">
+        <div className="border-t border-border pt-md space-y-md">
           <div className="flex items-center gap-xs mb-2xs">
             <Icons.Church className="w-md h-md text-primary" />
             <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
@@ -520,7 +520,7 @@ const ProfilePage: React.FC = () => {
           <p className="text-[10px] text-muted-foreground -mt-xs">Opcional — ajuda a personalizar sua experiênica.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
-            <div className="space-y-1.5">
+            <div className="space-y-2xs">
               <label className="text-xs font-bold text-foreground">Estado</label>
               <select
                 value={estado}
@@ -534,7 +534,7 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2xs">
               <label className="text-xs font-bold text-foreground">Diocese</label>
               <select
                 value={diocese}
@@ -549,7 +549,7 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2xs">
               <label className="text-xs font-bold text-foreground">Paróquia</label>
               <input
                 type="text"
@@ -560,7 +560,7 @@ const ProfilePage: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2xs">
               <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
               <select
                 value={movimentoPastoral}
@@ -585,15 +585,15 @@ const ProfilePage: React.FC = () => {
         </CathedraButton>
       </CathedraCard>
 
-      <CathedraCard className="p-xl space-y-6">
+      <CathedraCard className="p-xl space-y-lg">
         <div className="flex items-center gap-xs mb-2xs">
           <Icons.ShieldCheck className="w-md h-md text-primary" />
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Segurança da Conta</h2>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-md">
           <div className="flex items-center justify-between p-md bg-muted/30 rounded-premium border border-border/50">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <p className="text-sm font-bold text-foreground">Vincular Conta Google</p>
               <p className="text-[10px] text-muted-foreground">
                 Adicione o Google como método de acesso sem perder seus dados atuais.

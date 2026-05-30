@@ -102,7 +102,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           </motion.div>
 
           {/* Content */}
-          <div className="flex-1 space-y-1.5 min-w-0">
+          <div className="flex-1 space-y-2xs min-w-0">
             <h4 className="text-sm font-bold text-foreground">{copy.title}</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">{copy.message}</p>
             {reflectionCount >= 2 && context !== 'logos' && (
@@ -116,7 +116,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           {/* CTA */}
           <Button
             onClick={() => navigate(AppRoute.UPGRADE)}
-            className="flex items-center gap-xs px-md py-sm bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-xs px-md py-sm bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
           >
             Desbloquear experiência completa <ArrowRight className="w-sm h-sm" />
           </Button>

@@ -139,7 +139,7 @@ const ItinerariumDetailPage: React.FC = () => {
   const progress = (completedSteps.size / steps.length) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto py-2xl md:py-4xl space-y-16">
+    <div className="max-w-2xl mx-auto py-2xl md:py-4xl space-y-3xl">
       <motion.div 
         initial={{ opacity: 0, x: -10 }} 
         animate={{ opacity: 1, x: 0 }}
@@ -154,7 +154,7 @@ const ItinerariumDetailPage: React.FC = () => {
         </Button>
       </motion.div>
 
-      <div className="space-y-6">
+      <div className="space-y-lg">
         <div className="flex items-center justify-between gap-md flex-wrap">
           <div className="flex items-center gap-sm">
             <div className="w-2xs h-lg bg-primary/20 rounded-full" />
@@ -176,9 +176,9 @@ const ItinerariumDetailPage: React.FC = () => {
         <div className="absolute top-0 right-0 p-xl opacity-[0.03]">
           <Icons.Compass className="w-4xl h-4xl text-primary" />
         </div>
-        <CardContent className="p-xl md:p-xl space-y-6 relative z-10">
+        <CardContent className="p-xl md:p-xl space-y-lg relative z-10">
           <div className="flex justify-between items-end">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Progresso Atual</p>
               <h4 className="text-2xl font-bold font-serif">{Math.round(progress)}% Concluído</h4>
             </div>
@@ -188,7 +188,7 @@ const ItinerariumDetailPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      <div className="space-y-6">
+      <div className="space-y-lg">
         <div className="flex items-center gap-sm mb-xl">
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Caminho de Contemplação</span>
           <div className="flex-1 h-px bg-primary/5" />

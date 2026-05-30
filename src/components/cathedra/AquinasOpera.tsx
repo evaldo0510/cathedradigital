@@ -195,12 +195,12 @@ const AquinasOpera: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-3xl">
-      <div className="text-center space-y-6">
-        <div className="space-y-3">
+    <div className="max-w-4xl mx-auto space-y-xl pb-3xl">
+      <div className="text-center space-y-lg">
+        <div className="space-y-sm">
           <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
             <Icons.Brain className="w-md h-md text-primary" />
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
           <div className="flex justify-center mt-md">
@@ -215,13 +215,13 @@ const AquinasOpera: React.FC = () => {
         <div className="flex items-center justify-center gap-xs p-2xs bg-muted rounded-premium w-fit mx-auto">
           <Button
             onClick={() => setActiveTab('concepts')}
-            className={`px-lg py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-lg py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
           >
             10 Conceitos
           </Button>
           <Button
             onClick={() => setActiveTab('suma')}
-            className={`px-lg py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-lg py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Suma Teológica
           </Button>
@@ -235,7 +235,7 @@ const AquinasOpera: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="space-y-8"
+            className="space-y-xl"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
               {AQUINO_CONCEPTS.map((concept, idx) => (
@@ -247,13 +247,13 @@ const AquinasOpera: React.FC = () => {
                     </div>
                   </div>
                   <h3 className="text-xl font-serif font-bold text-foreground mb-md">{concept.title}</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-md">
                     <div className="p-md bg-muted/50 rounded-premium">
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2xs">Aquino ensina:</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-primary mb-2xs">Aquino ensina:</p>
                       <p className="text-sm font-serif italic text-foreground/80">{concept.aquino}</p>
                     </div>
                     <div>
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2xs">Reflexão P.A.D.H.:</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2xs">Reflexão P.A.D.H.:</p>
                       <p className="text-lg font-serif font-medium text-foreground">{concept.padh}</p>
                     </div>
                     <div className="pt-md border-t border-border">
@@ -266,13 +266,13 @@ const AquinasOpera: React.FC = () => {
 
             {/* Premium CTA */}
             <div className="relative overflow-hidden bg-foreground text-background rounded-[2.5rem] p-xl md:p-2xl">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-premium  -mr-4xl -mt-4xl" />
-              <div className="relative z-10 space-y-6">
+              <div className="absolute top-0 right-0 w-4xl h-4xl bg-primary/10 rounded-premium  -mr-4xl -mt-4xl" />
+              <div className="relative z-10 space-y-lg">
                 <div className="inline-flex items-center gap-xs px-sm py-2xs bg-background/10 rounded-premium border border-background/20">
                   <Icons.Star className="w-md h-md text-primary" />
-                  <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
+                  <span className="text-xs font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <h2 className="text-3xl md:text-5xl font-serif font-bold leading-tight">Clareza Interior com Aquino</h2>
                   <p className="text-lg text-background/70 font-serif italic">A trilha completa para quem busca clareza mental e direção de vida.</p>
                 </div>
@@ -304,7 +304,7 @@ const AquinasOpera: React.FC = () => {
             </div>
 
             {/* Viral Content Section */}
-            <div className="bg-card border border-border rounded-premium p-xl space-y-6">
+            <div className="bg-card border border-border rounded-premium p-xl space-y-lg">
               <div className="flex items-center gap-xs">
                 <Icons.Sparkles className="w-md h-md text-secondary" />
                 <h3 className="text-xl font-serif font-bold text-foreground">Pílulas de Sabedoria (Viral)</h3>
@@ -326,14 +326,14 @@ const AquinasOpera: React.FC = () => {
                 </div>
                 <div className="p-md bg-primary/5 rounded-premium border border-primary/20 flex flex-col justify-center items-center text-center">
                   <Icons.Video className="w-lg h-lg text-primary mb-xs" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
-                  <p className="text-premium-tiny text-muted-foreground mt-2xs">Gere 2 vídeos/dia</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
+                  <p className="text-xs text-muted-foreground mt-2xs">Gere 2 vídeos/dia</p>
                 </div>
               </div>
             </div>
 
             {/* AI Interaction Button */}
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-md">
               <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
               <Button
                 onClick={handleStartAquinasChat}
@@ -350,7 +350,7 @@ const AquinasOpera: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="space-y-4"
+            className="space-y-md"
           >
         {SUMA_DATA.map(section => (
           <div key={section.part} className="bg-card border border-border rounded-premium overflow-hidden">
@@ -359,7 +359,7 @@ const AquinasOpera: React.FC = () => {
               className="w-full p-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
-                <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{section.part}</span>
+                <span className="text-xs font-black uppercase tracking-widest text-primary">{section.part}</span>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
               </div>
               <Icons.ArrowDown className={`w-md h-md text-muted-foreground transition-transform ${expandedPart === section.part ? 'rotate-180' : ''}`} />
@@ -378,7 +378,7 @@ const AquinasOpera: React.FC = () => {
                     </Button>
 
                     {expandedQuestion === q.id && (
-                      <div className="px-xl pb-md space-y-2">
+                      <div className="px-xl pb-md space-y-xs">
                         {q.articles.map(art => {
                           const artKey = `${section.part}-${q.id}-${art.id}`;
                           return (
@@ -409,7 +409,7 @@ const AquinasOpera: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <div className="bg-muted rounded-premium p-xl text-center space-y-4">
+      <div className="bg-muted rounded-premium p-xl text-center space-y-md">
         <Icons.History className="w-xl h-xl text-primary/60 mx-auto" />
         <p className="text-sm text-muted-foreground font-serif italic max-w-sm mx-auto">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
       </div>

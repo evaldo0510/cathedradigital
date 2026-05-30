@@ -66,7 +66,7 @@ const WithdrawalRequests: React.FC = () => {
 
 const SellerDashboard: React.FC = () => {
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-xl px-md animate-in fade-in duration-700">
+    <div className="max-w-6xl mx-auto space-y-xl py-xl px-md animate-in fade-in duration-700">
       <div className="flex items-center gap-md">
         <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
           <Store className="w-lg h-lg" />

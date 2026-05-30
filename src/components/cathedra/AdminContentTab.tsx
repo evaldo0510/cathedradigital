@@ -118,7 +118,7 @@ const AdminContentTab: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-md">
         {[1, 2, 3].map(i => (
           <Card key={i} className="h-4xl bg-muted/40 animate-pulse" />
         ))}
@@ -127,7 +127,7 @@ const AdminContentTab: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Conteúdo</h2>
@@ -144,12 +144,12 @@ const AdminContentTab: React.FC = () => {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-lg">
         <TabsList>
           <TabsTrigger value="pending" className="gap-xs">
             Pendentes
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-premium-tiny font-bold">
+              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-xs font-bold">
                 {pendingCount}
               </span>
             )}
@@ -160,7 +160,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-4">
+        <TabsContent value={activeTab} className="space-y-md">
           {filteredPosts.length === 0 ? (
             <Card className="border-dashed border-2 py-2xl text-center">
               <MessageSquare className="w-2xl h-2xl text-muted-foreground mx-auto mb-md opacity-20" />
@@ -173,8 +173,8 @@ const AdminContentTab: React.FC = () => {
                   <div className="flex items-center gap-xs">
                     <User className="w-sm h-sm text-muted-foreground" />
                     <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
-                    <span className="text-premium-tiny text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
-                    {post.category && <Badge variant="outline" className="text-premium-tiny uppercase h-md px-2xs">{post.category}</Badge>}
+                    <span className="text-xs text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                    {post.category && <Badge variant="outline" className="text-xs uppercase h-md px-2xs">{post.category}</Badge>}
                   </div>
                   <div className="scale-90 origin-right">
                     {getStatusBadge(post.status)}
@@ -185,15 +185,15 @@ const AdminContentTab: React.FC = () => {
                   <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
                 </CardContent>
                 <CardFooter className="bg-muted/10 border-t border-border/10 py-2xs px-sm flex justify-end gap-2xs">
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-lg text-xs font-bold uppercase tracking-widest px-xs">
                     <Trash2 className="w-sm h-sm mr-2xs" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs">
+                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-lg text-xs font-bold uppercase tracking-widest px-xs">
                         <X className="w-sm h-sm mr-2xs" /> Rejeitar
                       </Button>
-                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-lg text-xs font-bold uppercase tracking-widest px-xs bg-emerald-600 hover:bg-emerald-700 text-white">
                         <Check className="w-sm h-sm mr-2xs" /> Aprovar
                       </Button>
                     </>
@@ -208,8 +208,8 @@ const AdminContentTab: React.FC = () => {
             ))
           )}
         </TabsContent>
-        <TabsContent value="catechism" className="space-y-4">
-          <React.Suspense fallback={<Card className="h-64 animate-pulse" />}>
+        <TabsContent value="catechism" className="space-y-md">
+          <React.Suspense fallback={<Card className="h-4xl animate-pulse" />}>
             <CatechismDebug />
           </React.Suspense>
         </TabsContent>

@@ -59,11 +59,11 @@ const PoenitentiaPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-2xl">
-      <div className="text-center space-y-4 pt-md">
+    <div className="max-w-5xl mx-auto space-y-2xl pb-2xl">
+      <div className="text-center space-y-md pt-md">
         <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Icons.Cross className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
@@ -80,7 +80,7 @@ const PoenitentiaPage: React.FC = () => {
                 : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-premium'
             }`}
           >
-            <div className={`text-premium-tiny font-black opacity-40 uppercase tracking-widest mb-xs ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
+            <div className={`text-xs font-black opacity-40 uppercase tracking-widest mb-xs ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
             <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
             {activeStep === i && (
               <div className="absolute top-0 right-0 p-md opacity-10">
@@ -93,18 +93,18 @@ const PoenitentiaPage: React.FC = () => {
 
       <CathedraCard padding="lg" className="animate-in fade-in slide-in-from-bottom-md duration-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-2xl opacity-[0.02]">
-          <Icons.Cross className="w-64 h-64 -mr-3xl -mt-3xl rotate-12" />
+          <Icons.Cross className="w-4xl h-4xl -mr-3xl -mt-3xl rotate-12" />
         </div>
 
-        <div className="relative space-y-8 max-w-3xl mx-auto">
-          <div className="space-y-4 text-center">
+        <div className="relative space-y-xl max-w-3xl mx-auto">
+          <div className="space-y-md text-center">
             <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{CONFESSION_STEPS[activeStep].title}</h2>
             <p className="text-xl text-muted-foreground italic font-serif leading-relaxed">"{CONFESSION_STEPS[activeStep].description}"</p>
           </div>
 
           {CONFESSION_STEPS[activeStep].items && (
-            <div className="space-y-6 pt-md">
-              <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-lg">Exame de Consciência</h3>
+            <div className="space-y-lg pt-md">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-lg">Exame de Consciência</h3>
               <div className="grid gap-sm">
                 {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
                   <div key={i} className="flex gap-md p-md rounded-premium bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-premium transition-all">
@@ -117,7 +117,7 @@ const PoenitentiaPage: React.FC = () => {
           )}
 
           {activeStep === 0 && (
-            <div className="mt-2xl p-xl bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-soft">
+            <div className="mt-2xl p-xl bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-md shadow-md">
               <Icons.BookOpen className="w-xl h-xl text-primary/60 mx-auto" />
               <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
@@ -126,7 +126,7 @@ const PoenitentiaPage: React.FC = () => {
           )}
           
           {activeStep === 2 && (
-            <div className="space-y-8 pt-xl">
+            <div className="space-y-xl pt-xl">
               <div className="flex items-center gap-sm justify-center">
                 <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                   <Icons.Flame className="w-md h-md" />
@@ -148,7 +148,7 @@ const PoenitentiaPage: React.FC = () => {
           <div className="flex justify-center pt-xl">
             <Button 
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
-              className="px-xl py-md bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-sm"
+              className="px-xl py-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-sm"
             >
               {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-md h-md" />
             </Button>
@@ -157,7 +157,7 @@ const PoenitentiaPage: React.FC = () => {
       </CathedraCard>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-xl">
-        <CathedraCard padding="md" className="space-y-6">
+        <CathedraCard padding="md" className="space-y-lg">
           <div className="flex items-center gap-md">
             <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-lg h-lg" />
@@ -168,7 +168,7 @@ const PoenitentiaPage: React.FC = () => {
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
           </p>
         </CathedraCard>
-        <CathedraCard padding="md" className="space-y-6">
+        <CathedraCard padding="md" className="space-y-lg">
           <div className="flex items-center gap-md">
             <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-lg h-lg" />

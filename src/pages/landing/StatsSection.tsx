@@ -53,7 +53,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
         delay: index * 0.15,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       }}
-      className="text-center space-y-3 group"
+      className="text-center space-y-sm group"
     >
       <motion.div
         initial={{ scaleX: 0 }}
@@ -68,7 +68,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
       </motion.p>
-      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
     </motion.div>
   );
 };
@@ -125,7 +125,7 @@ const StatsSection = () => {
         className="absolute inset-0 pointer-events-none opacity-20"
       >
         <div className="absolute top-xl left-xl w-4xl h-4xl rounded-premium bg-primary/5" />
-        <div className="absolute bottom-xl right-xl w-40 h-40 rounded-premium bg-primary/5" />
+        <div className="absolute bottom-xl right-xl w-4xl h-4xl rounded-premium bg-primary/5" />
       </motion.div>
 
       {/* Section header */}
@@ -136,7 +136,7 @@ const StatsSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-3xl"
       >
-        <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
+        <span className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
         <h2 className="mt-md text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
       </motion.div>
 

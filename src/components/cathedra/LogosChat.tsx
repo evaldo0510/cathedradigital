@@ -76,7 +76,7 @@ const LogosChat = () => {
   };
 
   return (
-    <div className="fixed bottom-36 right-md lg:bottom-4xl lg:right-lg z-[210]">
+    <div className="fixed bottom-4xl right-md lg:bottom-4xl lg:right-lg z-[210]">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -93,7 +93,7 @@ const LogosChat = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold font-serif text-primary">Logos IA</h3>
-                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
                 </div>
               </div>
               <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -103,7 +103,7 @@ const LogosChat = () => {
 
             {/* Messages */}
             <ScrollArea className="flex-1 p-md" ref={scrollRef}>
-              <div className="space-y-4">
+              <div className="space-y-md">
                 {messages.map((msg) => (
                   <motion.div
                     key={msg.id}
@@ -161,7 +161,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-xs p-sm lg:px-md lg:py-sm bg-primary text-primary-foreground rounded-full shadow-premium font-black uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-xs p-sm lg:px-md lg:py-sm bg-primary text-primary-foreground rounded-full shadow-premium font-black uppercase tracking-widest text-xs min-w-0"
       >
         <Sparkles className="w-md h-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>

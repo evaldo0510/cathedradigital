@@ -134,14 +134,14 @@ const Certamen: React.FC = () => {
   if (showResult) {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
-      <div className="max-w-2xl mx-auto space-y-8 p-md">
-        <div className="bg-card border border-border rounded-premium p-xl text-center space-y-6 shadow-premium-hover">
+      <div className="max-w-2xl mx-auto space-y-xl p-md">
+        <div className="bg-card border border-border rounded-premium p-xl text-center space-y-lg shadow-premium-hover">
           <div className="w-3xl h-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-xl h-xl" /> : pct >= 50 ? <BookOpen className="w-xl h-xl" /> : <Heart className="w-xl h-xl" />}
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
           <p className="text-5xl font-black text-primary">{score}/{answered}</p>
-          <div className="space-y-2">
+          <div className="space-y-xs">
             <p className="text-lg text-muted-foreground font-serif italic">
               {pct >= 80 ? 'Excelente! Conhecimento sólido da fé!' : pct >= 50 ? 'Bom progresso. Continue estudando!' : 'Continue sua formação. A fé se aprofunda com o estudo.'}
             </p>
@@ -149,11 +149,11 @@ const Certamen: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-md justify-center pt-md">
-            <Button onClick={restart} className="px-xl py-md bg-secondary text-secondary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-xs">
+            <Button onClick={restart} className="px-xl py-md bg-secondary text-secondary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-xs">
               <RotateCcw className="w-md h-md" />
               Tentar Novamente
             </Button>
-            <Button onClick={shareResult} className="px-xl py-md bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-xs shadow-premium shadow-primary/20">
+            <Button onClick={shareResult} className="px-xl py-md bg-primary text-primary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-xs shadow-premium shadow-primary/20">
               <Share2 className="w-md h-md" />
               Compartilhar Resultado
             </Button>
@@ -166,11 +166,11 @@ const Certamen: React.FC = () => {
   if (!question) return null;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 p-md">
-      <div className="text-center space-y-3">
+    <div className="max-w-3xl mx-auto space-y-xl p-md">
+      <div className="text-center space-y-sm">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.Star className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Quiz da Fé</h1>
         <p className="text-muted-foreground font-serif italic">Teste seus conhecimentos teológicos e compartilhe com sua comunidade.</p>
@@ -197,11 +197,11 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-xl space-y-6 shadow-soft">
-        <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-xs py-2xs rounded">{question.category}</span>
+      <div className="bg-card border border-border rounded-premium p-xl space-y-lg shadow-md">
+        <span className="text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-xs py-2xs rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
-        <div className="space-y-3">
+        <div className="space-y-sm">
           {question.options.map((opt, idx) => {
             let cls = 'bg-muted border-border hover:border-primary/50 hover:bg-primary/5';
             if (selected !== null) {
@@ -223,7 +223,7 @@ const Certamen: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-muted rounded-full p-lg space-y-3 border border-border"
+            className="bg-muted rounded-full p-lg space-y-sm border border-border"
           >
             <p className="text-sm font-bold text-foreground flex items-center gap-xs">
               {selected === question.correct ? '✅ Resposta Correta!' : '❌ Ops, não foi dessa vez.'}
@@ -232,7 +232,7 @@ const Certamen: React.FC = () => {
             
             <Button 
               onClick={nextQuestion}
-              className="w-full mt-md py-md bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-xs"
+              className="w-full mt-md py-md bg-primary text-primary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-xs"
             >
               {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
               <Icons.ArrowRight className="w-md h-md" />

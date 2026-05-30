@@ -233,7 +233,7 @@ const JornadaStepPage: React.FC = () => {
   if (!step) {
     return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-md">
           <p className="text-muted-foreground">Etapa não encontrada.</p>
           <Button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</Button>
         </div>
@@ -259,12 +259,12 @@ const JornadaStepPage: React.FC = () => {
           </Button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-xs">
-              <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
               <div className="group relative">
-                <span className="cursor-help px-2xs py-3xs rounded-full text-premium-tiny font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-2xs">
+                <span className="cursor-help px-2xs py-3xs rounded-full text-xs font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-2xs">
                   {userLevelClass} <ShieldQuestion className="w-xs h-xs opacity-50" />
                 </span>
-                <div className="absolute left-0 top-full mt-xs w-48 p-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-premium-tiny opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="absolute left-0 top-full mt-xs w-4xl p-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                   <p className="font-bold mb-2xs">Conteúdo Adaptado</p>
                   <p className="opacity-80">
                     {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
@@ -277,7 +277,7 @@ const JornadaStepPage: React.FC = () => {
 
             <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
-          <span className="text-premium-tiny font-bold text-muted-foreground flex items-center gap-2xs">
+          <span className="text-xs font-bold text-muted-foreground flex items-center gap-2xs">
             <Clock className="w-sm h-sm" /> {step.duration_minutes}min
           </span>
 
@@ -289,12 +289,12 @@ const JornadaStepPage: React.FC = () => {
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-auto">
-        <div className="max-w-2xl mx-auto px-md py-lg space-y-6 pb-4xl">
+        <div className="max-w-2xl mx-auto px-md py-lg space-y-lg pb-4xl">
           {/* Step Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-2"
+            className="text-center space-y-xs"
           >
             {saintImage && (
               <motion.div 
@@ -310,7 +310,7 @@ const JornadaStepPage: React.FC = () => {
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
             {content.bible_ref && (
-              <div className="inline-flex items-center gap-2xs px-sm py-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-premium-tiny font-black uppercase tracking-wider mx-auto">
+              <div className="inline-flex items-center gap-2xs px-sm py-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-xs font-black uppercase tracking-wider mx-auto">
                 <BookOpen className="w-sm h-sm" /> {content.bible_ref}
               </div>
             )}
@@ -341,7 +341,7 @@ const JornadaStepPage: React.FC = () => {
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-sm p-md rounded-t-2xl transition-all text-left ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border shadow-soft'
+                      ? 'bg-card border border-b-0 border-border shadow-md'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
                   } ${isLocked ? 'opacity-70' : ''}`}
                 >
@@ -356,7 +356,7 @@ const JornadaStepPage: React.FC = () => {
                         {label}
                       </span>
                       {sectionIsPremium && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-2xs py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-xs uppercase font-black px-2xs py-0">PRO</Badge>
                       )}
                     </div>
                   </div>
@@ -374,20 +374,20 @@ const JornadaStepPage: React.FC = () => {
                     >
                       <div className="bg-card border border-t-0 border-border rounded-b-2xl p-md relative min-h-[140px]">
                         {isLocked ? (
-                          <div className="space-y-4 py-md text-center">
+                          <div className="space-y-md py-md text-center">
                             <div className="blur-[6px] select-none pointer-events-none opacity-40">
                               <p className="text-sm font-serif line-clamp-4">
                                 {sectionContent}
                               </p>
                             </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-lg space-y-4 rounded-b-2xl">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-lg space-y-md rounded-b-2xl">
                               <Sparkles className="w-xl h-xl text-primary animate-pulse" />
                               <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
                                 Continue aprofundando essa experiência
                               </p>
                               <Button 
                                 size="sm" 
-                                className="font-bold text-premium-tiny uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
+                                className="font-bold text-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   navigate(AppRoute.PRICING);
@@ -415,7 +415,7 @@ const JornadaStepPage: React.FC = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="space-y-3"
+            className="space-y-sm"
           >
             <div className="flex items-center gap-xs">
               <PenLine className="w-md h-md text-primary" />
@@ -451,7 +451,7 @@ const JornadaStepPage: React.FC = () => {
                 onClick={handleSaveReflection}
                 disabled={saving || !reflection.trim()}
                 variant="outline"
-                className="flex-1 rounded-full h-2xl text-premium-tiny uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+                className="flex-1 rounded-full h-2xl text-xs uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
               >
                 {saving ? (
                   <div className="w-md h-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
@@ -464,7 +464,7 @@ const JornadaStepPage: React.FC = () => {
             <Button
               onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
               disabled={saving}
-              className={`${completed ? 'w-full' : 'flex-[2]'} h-2xl bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-sm`}
+              className={`${completed ? 'w-full' : 'flex-[2]'} h-2xl bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-sm`}
             >
               {saving ? (
                 <>
@@ -488,7 +488,7 @@ const JornadaStepPage: React.FC = () => {
             <div className="mt-sm">
               <Button
                 onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                className="w-full h-2xl bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-xs"
+                className="w-full h-2xl bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-xs"
               >
                 Próxima Etapa
                 <ChevronRight className="w-md h-md" />

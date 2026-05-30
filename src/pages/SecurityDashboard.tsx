@@ -35,7 +35,7 @@ const SecurityDashboard = () => {
   };
 
   return (
-    <div className="p-xl space-y-8">
+    <div className="p-xl space-y-xl">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold flex items-center gap-xs">
           <Shield className="w-xl h-xl text-primary" />

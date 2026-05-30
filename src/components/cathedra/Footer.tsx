@@ -171,7 +171,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-border/10 pt-4xl lg:pt-40 pb-4xl lg:pb-4xl bg-background relative overflow-hidden contain-layout footer-reading-auto-hide" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 520px' }} aria-label="Rodapé">
+    <footer className="mt-auto w-full border-t border-border/10 pt-4xl lg:pt-4xl pb-4xl lg:pb-4xl bg-background relative overflow-hidden contain-layout footer-reading-auto-hide" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 520px' }} aria-label="Rodapé">
       <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
       
       <div className="max-w-[1600px] mx-auto px-xl md:px-2xl relative z-10">

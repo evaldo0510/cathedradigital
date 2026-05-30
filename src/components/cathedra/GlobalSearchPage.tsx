@@ -68,8 +68,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-12">
-        <motion.div className="text-center space-y-4 pt-xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+      <div ref={ref} className="space-y-2xl">
+        <motion.div className="text-center space-y-md pt-xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="w-3xl h-3xl rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
             <Icons.Search className="w-xl h-xl text-white" />
           </div>
@@ -80,13 +80,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
 
         {/* LOGOS IA CHAT INTERFACE */}
-        <div className="bg-card border border-border/40 rounded-[2.5rem] p-xl md:p-2xl shadow-premium space-y-8">
+        <div className="bg-card border border-border/40 rounded-[2.5rem] p-xl md:p-2xl shadow-premium space-y-xl">
            <div className="flex flex-col gap-md">
               <div className="flex items-center gap-sm">
                  <div className="w-xl h-xl rounded-full bg-primary/10 flex items-center justify-center">
                     <Icons.Sparkles className="w-md h-md text-primary" />
                  </div>
-                 <h2 className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                 <h2 className="text-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
@@ -103,9 +103,9 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-lg">
           <div className="flex items-center gap-xl">
-            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+            <h2 className="text-xs font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
             </h2>
             <div className="h-px flex-1 bg-border/30" />
@@ -121,10 +121,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
-            className="text-center py-2xl space-y-4"
+            className="text-center py-2xl space-y-md"
           >
             <Icons.Search className="w-2xl h-2xl mx-auto text-muted-foreground opacity-20" />
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <p className="text-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
               <p className="text-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
             </div>
@@ -142,7 +142,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               <TabsTrigger value="jornadas" className="text-xs flex-1 min-w-[80px]">Jornadas ({counts.jornadas})</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="santos" className="space-y-2 mt-md">
+            <TabsContent value="santos" className="space-y-xs mt-md">
               <AnimatePresence mode="popLayout">
               {saints.results?.map((s, i) => (
                 <SearchResultCard
@@ -159,7 +159,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {saints.results?.length === 0 && <EmptyState text="Nenhum santo encontrado." />}
             </TabsContent>
 
-            <TabsContent value="glossario" className="space-y-2 mt-md">
+            <TabsContent value="glossario" className="space-y-xs mt-md">
               <AnimatePresence mode="popLayout">
               {glossary.results?.map((g, i) => (
                 <SearchResultCard
@@ -176,7 +176,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {glossary.results?.length === 0 && <EmptyState text="Nenhum termo encontrado." />}
             </TabsContent>
 
-            <TabsContent value="comunidade" className="space-y-2 mt-md">
+            <TabsContent value="comunidade" className="space-y-xs mt-md">
               <AnimatePresence mode="popLayout">
               {community.results?.map((p, i) => (
                 <SearchResultCard
@@ -193,7 +193,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {community.results?.length === 0 && <EmptyState text="Nenhuma discussão encontrada." />}
             </TabsContent>
 
-            <TabsContent value="temas" className="space-y-2 mt-md">
+            <TabsContent value="temas" className="space-y-xs mt-md">
               <div className="flex flex-wrap gap-xs" role="list" ref={tagsRef}>
                 {tags.results?.map((t, idx) => (
                   <Button
@@ -215,7 +215,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}
             </TabsContent>
 
-            <TabsContent value="jornadas" className="space-y-2 mt-md">
+            <TabsContent value="jornadas" className="space-y-xs mt-md">
               <AnimatePresence mode="popLayout">
               {journeys.results?.map((j, i) => (
                 <SearchResultCard

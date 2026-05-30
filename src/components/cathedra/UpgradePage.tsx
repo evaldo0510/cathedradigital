@@ -75,11 +75,11 @@ const UpgradePage: React.FC = () => {
 
       {/* Decorative background elements */}
       <div className="absolute top-0 left-2xs/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
-        <div className="absolute top-[10%] left-2xs/4 w-64 h-64 bg-primary/20 rounded-premium " />
-        <div className="absolute bottom-[20%] right-2xs/4 w-72 h-72 bg-primary/10 rounded-premium " />
+        <div className="absolute top-[10%] left-2xs/4 w-4xl h-4xl bg-primary/20 rounded-premium " />
+        <div className="absolute bottom-[20%] right-2xs/4 w-4xl h-4xl bg-primary/10 rounded-premium " />
       </div>
 
-      <div className="max-w-3xl w-full text-center space-y-8">
+      <div className="max-w-3xl w-full text-center space-y-xl">
         <motion.div 
           variants={fadeUp} 
           initial="hidden" 
@@ -89,7 +89,7 @@ const UpgradePage: React.FC = () => {
         >
           <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 border border-primary/20 rounded-premium text-primary">
             <Crown className="w-md h-md" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest">Cathedra PRO</span>
+            <span className="text-xs font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
         </motion.div>
 
@@ -98,7 +98,7 @@ const UpgradePage: React.FC = () => {
           initial="hidden" 
           animate="visible" 
           custom={1}
-          className="space-y-4"
+          className="space-y-md"
         >
           <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight text-balance">
             Sua caminhada de fé merece <span className="text-primary italic">profundidade</span>.

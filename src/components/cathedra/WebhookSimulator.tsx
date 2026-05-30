@@ -81,10 +81,10 @@ const WebhookSimulator: React.FC = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-xl space-y-6">
+      <CardContent className="p-xl space-y-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-          <div className="space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
+          <div className="space-y-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione um usuário" />
@@ -99,8 +99,8 @@ const WebhookSimulator: React.FC = () => {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
+          <div className="space-y-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o status" />
@@ -116,8 +116,8 @@ const WebhookSimulator: React.FC = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-lg items-end">
-          <div className="flex-1 space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
+          <div className="flex-1 space-y-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o tipo" />

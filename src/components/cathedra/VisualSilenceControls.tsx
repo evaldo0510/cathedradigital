@@ -62,7 +62,7 @@ export const VisualSilenceControls: React.FC = () => {
         >
           <div className="flex flex-col gap-md">
             <control.icon className={`w-lg h-lg ${control.active ? 'text-primary-foreground' : 'text-primary/40'}`} strokeWidth={1.5} />
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <span className="text-xs font-bold uppercase tracking-widest block">
                 {control.label}
               </span>

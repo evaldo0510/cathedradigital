@@ -34,18 +34,18 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   if (!hasRefs) return null;
 
   return (
-    <div className="bg-primary/5 border border-primary/20 rounded-premium p-md space-y-3">
+    <div className="bg-primary/5 border border-primary/20 rounded-premium p-md space-y-sm">
       <div className="flex items-center gap-xs">
         <div className="w-lg h-lg rounded-premium bg-primary/10 flex items-center justify-center">
           <Icons.Cross className="w-sm h-sm text-primary" />
         </div>
-        <span className="text-premium-tiny font-black uppercase tracking-[0.15em] text-primary">
+        <span className="text-xs font-black uppercase tracking-[0.15em] text-primary">
           Nexus Theologicus
         </span>
       </div>
 
       {type === 'bible' && cicParagraphs.length > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-2xs">
           <p className="text-xs text-muted-foreground">Parágrafos do Catecismo relacionados:</p>
           <div className="flex flex-wrap gap-2xs">
             {cicParagraphs.map(p => (
@@ -60,7 +60,7 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'bible' && documents.length > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-2xs">
           <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
           <div className="flex flex-wrap gap-2xs">
             {documents.map((doc, i) => (
@@ -76,7 +76,7 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'catechism' && documents.length > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-2xs">
           <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
           <div className="flex flex-wrap gap-2xs">
             {documents.map((doc, i) => (
@@ -92,7 +92,7 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'catechism' && bibleRefs.length > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-2xs">
           <p className="text-xs text-muted-foreground">Referências bíblicas:</p>
           <div className="flex flex-wrap gap-2xs">
             {bibleRefs.map((ref, i) => (

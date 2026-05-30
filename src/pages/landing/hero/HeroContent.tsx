@@ -72,7 +72,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.6 }}
-        className="space-y-6 md:space-y-12 mb-2xl md:mb-40 lg:mb-48"
+        className="space-y-lg md:space-y-2xl mb-2xl md:mb-4xl lg:mb-4xl"
       >
         <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-xs md:px-xl">
           Habite a profundidade do silêncio, <br /> 

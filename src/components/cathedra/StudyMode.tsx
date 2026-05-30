@@ -75,7 +75,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
     }
   };
   return (
-    <Button onClick={handleCopy} className="mt-xs inline-flex items-center gap-2xs text-premium-tiny text-muted-foreground hover:text-primary transition-colors">
+    <Button onClick={handleCopy} className="mt-xs inline-flex items-center gap-2xs text-xs text-muted-foreground hover:text-primary transition-colors">
       {copied ? <Check className="w-sm h-sm" /> : <Copy className="w-sm h-sm" />}
       {copied ? 'Copiado' : 'Copiar'}
     </Button>
@@ -327,7 +327,7 @@ const StudyMode: React.FC = () => {
   }, [location.search, location.state, messages.length, isLoading]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-2xl">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-2xl max-w-2xl mx-auto py-2xl">
       <SEOHead 
         title="Logos IA | Inteligência Teológica Minimalista" 
         description="Consulte a Logos IA para resumos teológicos, conexões bíblicas e suporte espiritual baseado na Tradição e no Magistério da Igreja Católica." 
@@ -343,27 +343,27 @@ const StudyMode: React.FC = () => {
         <Shield className="w-2xl h-2xl text-primary" />
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-md">
         <h1 className="text-3xl md:text-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
         <p className="text-lg text-muted-foreground font-serif italic">
           "Para garantir a integridade absoluta da doutrina e a soberania da sua experiência espiritual, a Cathedra Digital optou por não utilizar serviços de Inteligência Artificial."
         </p>
       </div>
 
-      <div className="bg-card border border-border p-xl rounded-[2.5rem] shadow-soft space-y-6">
+      <div className="bg-card border border-border p-xl rounded-[2.5rem] shadow-md space-y-lg">
         <p className="text-sm text-foreground/80 leading-relaxed">
           O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
         </p>
         <div className="flex flex-col sm:flex-row gap-md justify-center">
           <Button 
-            className="rounded-full h-2xl px-xl font-black uppercase text-premium-tiny tracking-widest"
+            className="rounded-full h-2xl px-xl font-black uppercase text-xs tracking-widest"
             onClick={() => navigate(AppRoute.CATECHISM)}
           >
             Explorar Catecismo
           </Button>
           <Button 
             variant="outline"
-            className="rounded-full h-2xl px-xl font-black uppercase text-premium-tiny tracking-widest border-primary/20 text-primary"
+            className="rounded-full h-2xl px-xl font-black uppercase text-xs tracking-widest border-primary/20 text-primary"
             onClick={() => navigate(AppRoute.TRANSPARENCY)}
           >
             Saiba Mais
@@ -377,9 +377,9 @@ const StudyMode: React.FC = () => {
           { label: 'Offline', desc: 'Funciona sem APIs externas.' },
           { label: 'Fidelidade', desc: 'Fiel ao Magistério Vivo.' }
         ].map(item => (
-          <div key={item.label} className="space-y-1">
-            <h4 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{item.label}</h4>
-            <p className="text-premium-tiny text-muted-foreground">{item.desc}</p>
+          <div key={item.label} className="space-y-2xs">
+            <h4 className="text-xs font-black uppercase tracking-widest text-primary">{item.label}</h4>
+            <p className="text-xs text-muted-foreground">{item.desc}</p>
           </div>
         ))}
       </div>

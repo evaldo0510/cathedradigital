@@ -67,9 +67,9 @@ export const ThemeControlPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-3xl left-0 w-72 bg-card border border-border/10 rounded-premium shadow-premium p-lg space-y-8 backdrop-blur-xl"
+            className="absolute bottom-3xl left-0 w-4xl bg-card border border-border/10 rounded-premium shadow-premium p-lg space-y-xl backdrop-blur-xl"
           >
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Sistemática de Temas</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">Alterne entre estados visuais do Cathedra.</p>
             </div>
@@ -80,7 +80,7 @@ export const ThemeControlPanel: React.FC = () => {
                   key={t.id}
                   onClick={() => updateSettings({ theme: t.id as any })}
                   className={cn(
-                    "flex items-center justify-between px-md py-sm rounded-premium-sm transition-all duration-300 border border-transparent",
+                    "flex items-center justify-between px-md py-sm rounded-sm transition-all duration-300 border border-transparent",
                     settings.theme === t.id 
                       ? "bg-primary text-primary-foreground shadow-premium" 
                       : "hover:bg-primary/5 hover:border-primary/5 text-primary/60"
@@ -97,7 +97,7 @@ export const ThemeControlPanel: React.FC = () => {
 
             <div className="h-px bg-primary/5" />
 
-            <div className="space-y-4">
+            <div className="space-y-md">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Alto Contraste</span>
                 <button
@@ -116,7 +116,7 @@ export const ThemeControlPanel: React.FC = () => {
 
               {/* A11y Feedback */}
               <div className={cn(
-                "p-md rounded-premium-sm border space-y-3 transition-all duration-500",
+                "p-md rounded-sm border space-y-sm transition-all duration-500",
                 contrastStats.ratio >= 4.5 ? "bg-green-500/5 border-green-500/20" : "bg-red-500/5 border-red-500/20"
               )}>
                 <div className="flex items-center justify-between">
@@ -134,12 +134,12 @@ export const ThemeControlPanel: React.FC = () => {
                 </div>
 
                 {auditIssues.length > 0 && (
-                  <div className="pt-xs border-t border-red-500/10 space-y-2">
+                  <div className="pt-xs border-t border-red-500/10 space-y-xs">
                     <div className="flex items-center gap-2xs text-[9px] font-bold text-red-600/60 uppercase">
                       <Icons.AlertTriangle className="w-sm h-sm" />
                       <span>{auditIssues.length} Conflitos de Contraste</span>
                     </div>
-                    <div className="space-y-1.5">
+                    <div className="space-y-2xs">
                       {auditIssues.map((issue, idx) => (
                         <div key={idx} className="flex flex-col gap-3xs">
                           <div className="flex items-center justify-between">

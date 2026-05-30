@@ -64,7 +64,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div className="w-full space-y-16 md:space-y-24 outline-none flex flex-col items-center" tabIndex={-1}>
+    <div className="w-full space-y-3xl md:space-y-4xl outline-none flex flex-col items-center" tabIndex={-1}>
       {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
       <section className="w-full max-w-4xl">
         <SpiritualContinuity />
@@ -82,7 +82,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             <div className="w-3xl h-3xl md:w-3xl md:h-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
               <Icons.Bible className="w-xl h-xl md:w-xl md:h-xl" strokeWidth={0.3} />
             </div>
-            <div className="space-y-3 text-center">
+            <div className="space-y-sm text-center">
               <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Bíblia</span>
               <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">A Palavra de Deus</span>
             </div>
@@ -96,7 +96,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             <div className="w-3xl h-3xl md:w-3xl md:h-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
               <Icons.Catechism className="w-xl h-xl md:w-xl md:h-xl" strokeWidth={0.3} />
             </div>
-            <div className="space-y-3 text-center">
+            <div className="space-y-sm text-center">
               <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Catecismo</span>
               <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">Doutrina e Fé</span>
             </div>

@@ -64,7 +64,7 @@ const SIZE_TOKENS: Record<NonNullable<FuzzySearchInputProps['size']>, {
     clearWrap: 'right-sm',
   },
   lg: {
-    input: 'pl-2xl pr-2xl py-md text-base rounded-full shadow-soft',
+    input: 'pl-2xl pr-2xl py-md text-base rounded-full shadow-md',
     icon: 'w-md h-md',
     iconWrap: 'left-lg',
     clearWrap: 'right-lg',
@@ -124,7 +124,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
       {showHint && (
         <div 
           aria-live="polite"
-          className="absolute -bottom-lg left-2xs/2 -translate-x-1/2 flex items-center gap-2xs text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground"
+          className="absolute -bottom-lg left-2xs/2 -translate-x-1/2 flex items-center gap-2xs text-xs font-bold uppercase tracking-widest text-muted-foreground"
         >
           <Loader2 className="w-sm h-sm animate-spin" />
           Buscando…

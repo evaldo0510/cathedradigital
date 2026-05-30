@@ -15,7 +15,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
   onTermClick,
 }) => {
   return (
-    <div className="md:col-span-4 space-y-1 max-h-[60vh] overflow-y-auto pr-xs scrollbar-thin">
+    <div className="md:col-span-4 space-y-2xs max-h-[60vh] overflow-y-auto pr-xs scrollbar-thin">
       {terms.length === 0 && (
         <p className="text-center text-muted-foreground text-sm py-xl italic">Nenhum termo encontrado.</p>
       )}

@@ -117,7 +117,7 @@ const CatechismExplorer: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-md md:p-xl space-y-4 md:space-y-8 min-h-screen pb-3xl">
+    <div className="max-w-4xl mx-auto p-md md:p-xl space-y-md md:space-y-xl min-h-screen pb-3xl">
       <SEOHead 
         title="Explorador do Catecismo | Cathedra" 
         description="Navegue pelos parágrafos do Catecismo da Igreja Católica com filtros inteligentes e temas."
@@ -131,20 +131,20 @@ const CatechismExplorer: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-xl">
         {/* Filters Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="p-md bg-muted/30 rounded-premium border border-border/50 space-y-2">
-            <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+        <div className="lg:col-span-1 space-y-lg">
+          <div className="p-md bg-muted/30 rounded-premium border border-border/50 space-y-xs">
+            <div className="flex justify-between text-xs font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
               <span className="text-foreground">{allParagraphs.length}</span>
             </div>
-            <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
+            <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
               <span>Filtrados</span>
               <span className="font-black">{filteredParagraphs.length}</span>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-xs text-primary font-bold uppercase text-premium-tiny tracking-widest">
+          <div className="space-y-md">
+            <div className="flex items-center gap-xs text-primary font-bold uppercase text-xs tracking-widest">
               <Icons.Search className="w-sm h-sm" /> Busca Rápida
             </div>
             <Input 
@@ -155,8 +155,8 @@ const CatechismExplorer: React.FC = () => {
             />
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-xs text-primary font-bold uppercase text-premium-tiny tracking-widest">
+          <div className="space-y-md">
+            <div className="flex items-center gap-xs text-primary font-bold uppercase text-xs tracking-widest">
               <Icons.Tag className="w-sm h-sm" /> Temas e Tags
             </div>
             <ScrollArea className="h-[400px] pr-md">
@@ -183,7 +183,7 @@ const CatechismExplorer: React.FC = () => {
                           {currentCount}
                         </Badge>
                         {!isSelected && currentCount !== totalCount && (
-                          <span className="text-premium-tiny opacity-40">/ {totalCount}</span>
+                          <span className="text-xs opacity-40">/ {totalCount}</span>
                         )}
                       </div>
                     </Button>
@@ -195,7 +195,7 @@ const CatechismExplorer: React.FC = () => {
         </div>
 
         {/* Content Area */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-lg">
           <div className="flex items-center justify-between gap-md">
             <div className="text-premium-small font-medium text-muted-foreground">
               {filteredParagraphs.length} resultados encontrados
@@ -205,7 +205,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="ghost" 
                 size="sm" 
                 onClick={toggleSort}
-                className="text-premium-tiny font-black uppercase tracking-widest h-xl"
+                className="text-xs font-black uppercase tracking-widest h-xl"
               >
                 <Icons.ArrowDown className={`w-sm h-sm mr-xs transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
                 {sortBy === 'number-asc' ? 'Crescente' : 'Decrescente'}
@@ -214,7 +214,7 @@ const CatechismExplorer: React.FC = () => {
           </div>
 
           <AnimatePresence mode="popLayout">
-            <div className="space-y-4">
+            <div className="space-y-md">
               {paginatedItems.map((p) => (
                 <motion.div
                   key={p.id}
@@ -229,10 +229,10 @@ const CatechismExplorer: React.FC = () => {
                     onClick={() => navigate(`/catechism?p=${p.paragraph}`)}
                   >
                     <div className="flex gap-md">
-                      <div className="text-premium-base font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
+                      <div className="text-base font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
                         §{p.paragraph}
                       </div>
-                      <div className="flex-1 space-y-2">
+                      <div className="flex-1 space-y-xs">
                         <h3 className="font-serif font-bold text-foreground">{p.titulo}</h3>
                         <p className="text-muted-foreground line-clamp-3 leading-relaxed">
                           {p.conteudo}

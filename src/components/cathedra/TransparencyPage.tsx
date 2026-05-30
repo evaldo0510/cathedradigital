@@ -16,10 +16,10 @@ const TransparencyPage: React.FC = () => {
         path="/transparencia"
       />
       
-      <div className="max-w-3xl mx-auto space-y-16 px-md">
+      <div className="max-w-3xl mx-auto space-y-3xl px-md">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-xs px-sm py-2xs rounded-premium bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
+        <div className="text-center space-y-md">
+          <div className="inline-flex items-center gap-xs px-sm py-2xs rounded-premium bg-primary/10 text-primary text-xs font-black uppercase tracking-[0.2em] border border-primary/20">
             <ShieldCheck className="w-sm h-sm" />
             Integridade Doutrinária
           </div>
@@ -41,7 +41,7 @@ const TransparencyPage: React.FC = () => {
           <div className="absolute top-0 right-0 p-xl opacity-5">
             <Icons.Zap className="w-4xl h-4xl text-primary" />
           </div>
-          <div className="relative space-y-6">
+          <div className="relative space-y-lg">
             <div className="flex items-center gap-sm text-primary">
               <CheckCircle className="w-lg h-lg" />
               <h2 className="text-xl font-bold uppercase tracking-wider">Compromisso 100% Sem IA</h2>
@@ -58,7 +58,7 @@ const TransparencyPage: React.FC = () => {
 
         {/* Content Generation */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-xl">
-          <div className="space-y-4">
+          <div className="space-y-md">
             <div className="flex items-center gap-sm text-primary">
               <Search className="w-md h-md" />
               <h3 className="font-bold uppercase tracking-widest text-xs">Fontes Primárias</h3>
@@ -67,7 +67,7 @@ const TransparencyPage: React.FC = () => {
               Todos os textos bíblicos e parágrafos do Catecismo são extraídos de edições oficiais e fontes de domínio público reconhecidas. Não realizamos alterações nos textos sagrados.
             </p>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-md">
             <div className="flex items-center gap-sm text-primary">
               <FileText className="w-md h-md" />
               <h3 className="font-bold uppercase tracking-widest text-xs">Revisão Manual</h3>
@@ -79,8 +79,8 @@ const TransparencyPage: React.FC = () => {
         </div>
 
         {/* Contact & Review */}
-        <section className="space-y-8 pt-xl border-t border-border">
-          <div className="text-center space-y-2">
+        <section className="space-y-xl pt-xl border-t border-border">
+          <div className="text-center space-y-xs">
             <h2 className="text-2xl font-display font-bold">Contato e Revisão Manual</h2>
             <p className="text-muted-foreground text-sm">Se você encontrar qualquer imprecisão ou desejar sugerir uma melhoria na curadoria, utilize os canais abaixo para uma revisão humana imediata.</p>
 
@@ -102,7 +102,7 @@ const TransparencyPage: React.FC = () => {
                 trackEvent('social_link_click', { platform: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP });
                 window.open(SOCIAL_LINKS.WHATSAPP, '_blank');
               }}
-              className="h-2xl px-xl border border-primary/20 w-full sm:w-auto shadow-soft gap-sm"
+              className="h-2xl px-xl border border-primary/20 w-full sm:w-auto shadow-md gap-sm"
             >
               <Icons.MessageSquare className="w-md h-md" />
               Suporte WhatsApp
@@ -111,14 +111,14 @@ const TransparencyPage: React.FC = () => {
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-xl rounded-[2rem] border border-border text-center space-y-4">
+        <div className="p-xl rounded-[2rem] border border-border text-center space-y-md">
           <Icons.WifiOff className="w-xl h-xl text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">
             O site foi projetado para funcionar de forma soberana. As chamadas para provedores externos foram reduzidas ao mínimo essencial (Supabase para dados), garantindo que a plataforma opere mesmo sem conexão estável e sem depender de serviços de terceiros que possam comprometer a integridade do conteúdo.
           </p>
           <div className="pt-md">
-            <span className="px-md py-xs rounded-full bg-secondary/10 text-primary text-premium-tiny font-black uppercase tracking-widest border border-primary/10">
+            <span className="px-md py-xs rounded-full bg-secondary/10 text-primary text-xs font-black uppercase tracking-widest border border-primary/10">
               PWA Habilitado para Uso Offline
             </span>
           </div>

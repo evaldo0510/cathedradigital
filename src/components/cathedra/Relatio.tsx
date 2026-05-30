@@ -195,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-2xl pt-2xl border-t border-primary/[0.01] space-y-6 mb-2xl", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-2xl pt-2xl border-t border-primary/[0.01] space-y-lg mb-2xl", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-sm">
           <div className="w-lg h-lg rounded-full bg-primary/[0.03] flex items-center justify-center">
@@ -237,7 +237,7 @@ const Relatio: React.FC<RelatioProps> = ({
             variant="ghost" 
             size="sm" 
             onClick={() => setIsVisible(!isVisible)}
-            className="text-muted-foreground hover:text-primary transition-colors text-premium-tiny uppercase tracking-widest font-black"
+            className="text-muted-foreground hover:text-primary transition-colors text-xs uppercase tracking-widest font-black"
           >
             {isVisible ? 'Ocultar' : 'Revelar'}
           </Button>
@@ -252,7 +252,7 @@ const Relatio: React.FC<RelatioProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-6"
+            className="space-y-lg"
           >
             <LayoutGroup id="relatio-cards">
             {/* Static References */}
@@ -284,7 +284,7 @@ const Relatio: React.FC<RelatioProps> = ({
 
             {/* Dynamic Connections */}
             {connections.length > 0 && (
-              <div className="space-y-10">
+              <div className="space-y-xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
 
                   {(showAll ? connections : connections.slice(0, 4)).map((item) => {
@@ -339,7 +339,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                 {item.type === 'magisterium' && <Icons.Magisterium className="w-md h-md" strokeWidth={1} />}
                                 {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-md h-md" strokeWidth={1} />}
                               </div>
-                              <div className="space-y-0.5">
+                              <div className="space-y-3xs">
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors">
                                   {item.type === 'bible' ? 'Escritura' : 
                                    item.type === 'catechism' ? 'Catecismo' : 
@@ -405,7 +405,7 @@ const Relatio: React.FC<RelatioProps> = ({
                             </div>
                           </div>
                           
-                          <div className="flex-1 space-y-2">
+                          <div className="flex-1 space-y-xs">
                             <h4 className="text-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
                             <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
@@ -427,7 +427,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 {loading && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-md mt-md">
                     {[1, 2].map((i) => (
-                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
+                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
                       </div>
                     ))}

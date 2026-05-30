@@ -46,11 +46,11 @@ const DiagnosticsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 py-xl">
-      <div className="text-center space-y-3">
+    <div className="max-w-4xl mx-auto space-y-xl py-xl">
+      <div className="text-center space-y-sm">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium text-primary">
           <Icons.Zap className="w-md h-md" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Painel de Controle</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
@@ -62,7 +62,7 @@ const DiagnosticsPage: React.FC = () => {
           <CardHeader className="pb-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Supabase Core</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-md">
             <div className="flex items-center gap-sm">
               <div className={`w-sm h-sm rounded-full animate-pulse ${
                 supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-secondary' : 'bg-secondary/50'
@@ -79,7 +79,7 @@ const DiagnosticsPage: React.FC = () => {
           <CardHeader className="pb-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Banco de Dados</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-md">
             <div className="flex items-center gap-sm">
               <Icons.History className="w-md h-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.table_count || 0} Tabelas</span>
@@ -92,7 +92,7 @@ const DiagnosticsPage: React.FC = () => {
           <CardHeader className="pb-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Comunidade</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-md">
             <div className="flex items-center gap-sm">
               <Icons.Message className="w-md h-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.post_count || 0} Discussões</span>
@@ -102,7 +102,7 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-xl space-y-6">
+      <div className="bg-card border border-border rounded-premium p-xl space-y-lg">
         <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-sm">
           <Icons.Zap className="w-md h-md text-primary" /> Relatório de Serviços
         </h2>
@@ -116,7 +116,7 @@ const DiagnosticsPage: React.FC = () => {
           ].map((service, i) => (
             <div key={i} className="flex items-center justify-between py-sm border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
-              <span className={`text-premium-tiny font-black uppercase tracking-widest px-sm py-2xs rounded-full ${
+              <span className={`text-xs font-black uppercase tracking-widest px-sm py-2xs rounded-full ${
                 service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
@@ -125,10 +125,10 @@ const DiagnosticsPage: React.FC = () => {
           ))}
         </div>
         <div className="pt-md flex flex-col sm:flex-row justify-center gap-sm">
-          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-premium-tiny">
+          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-xs">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>
-          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-premium-tiny hover:bg-red-500/5 hover:text-red-600">
+          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-xs hover:bg-red-500/5 hover:text-red-600">
             <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>

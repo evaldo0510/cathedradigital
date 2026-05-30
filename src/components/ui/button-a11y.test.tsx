@@ -110,7 +110,7 @@ describe("Button Accessibility & Keyboard Navigation", () => {
 
   it("matches snapshot for premium styling", () => {
     const { container } = render(
-      <div className="space-y-4">
+      <div className="space-y-md">
         <Button variant="default">Primary</Button>
         <Button variant="outline" size="sm">Small Outline</Button>
         <Button size="icon" isLoading />

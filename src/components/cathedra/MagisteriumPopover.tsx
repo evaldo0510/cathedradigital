@@ -76,7 +76,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
       <HoverCardContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-emerald-200 dark:border-emerald-800"
+        className="w-4xl max-h-4xl overflow-y-auto p-0 rounded-full border-emerald-200 dark:border-emerald-800"
       >
         <div className="p-sm border-b border-border bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-between">
           <div className="flex items-center gap-xs min-w-0">
@@ -90,7 +90,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
               if (onNavigate) onNavigate(documentName);
               else navigate(`/magisterium/${documentName}`);
             }}
-            className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2xs shrink-0 ml-xs"
+            className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2xs shrink-0 ml-xs"
           >
             Abrir completo
             <Icons.ArrowDown className="w-sm h-sm -rotate-90" />
@@ -98,7 +98,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
         </div>
         <div className="p-sm">
           {loading && (
-            <div className="space-y-2 py-xs">
+            <div className="space-y-xs py-xs">
               {[1, 2, 3].map(i => (
                 <div key={i} className="h-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}

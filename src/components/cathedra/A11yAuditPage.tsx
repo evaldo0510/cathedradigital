@@ -50,11 +50,11 @@ const A11yAuditPage = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto py-xl px-md space-y-8 animate-in fade-in duration-500">
-      <header className="text-center space-y-4">
+    <div className="max-w-4xl mx-auto py-xl px-md space-y-xl animate-in fade-in duration-500">
+      <header className="text-center space-y-md">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
           <ShieldCheck className="w-md h-md" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Quality Assurance</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
         <p className="text-muted-foreground italic font-serif">Validação manual e automatizada para NVDA e VoiceOver.</p>
@@ -68,13 +68,13 @@ const A11yAuditPage = () => {
               Checklist Manual
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-lg space-y-6">
+          <CardContent className="p-lg space-y-lg">
             {sections.map(section => (
-              <div key={section.title} className="space-y-3">
-                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-2xs">
+              <div key={section.title} className="space-y-sm">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-2xs">
                   {section.title}
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   {section.items.map(item => (
                     <Button
                       key={item.id}
@@ -102,19 +102,19 @@ const A11yAuditPage = () => {
                 <Key className="w-md h-md text-secondary" />
                 Auditoria Técnica
               </div>
-              <Button size="sm" onClick={performAudit} className="rounded-full h-xl text-premium-tiny font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
+              <Button size="sm" onClick={performAudit} className="rounded-full h-xl text-xs font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-lg space-y-4">
+          <CardContent className="p-lg space-y-md">
             {!auditResults ? (
-              <div className="flex flex-col items-center justify-center py-3xl text-center space-y-4 opacity-40">
+              <div className="flex flex-col items-center justify-center py-3xl text-center space-y-md opacity-40">
                 <Search className="w-2xl h-2xl" />
                 <p className="text-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-md">
                 <div className={`p-md rounded-full flex items-center gap-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
                   {auditResults.success ? (
                     <>
@@ -129,7 +129,7 @@ const A11yAuditPage = () => {
                   )}
                 </div>
 
-                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-xs scrollbar-thin">
+                <div className="space-y-xs max-h-[400px] overflow-y-auto pr-xs scrollbar-thin">
                   {auditResults.issues.map((issue, idx) => (
                     <div key={idx} className="flex gap-sm p-sm rounded-premium bg-muted/20 border border-border/40">
                       <AlertTriangle className="w-md h-md text-amber-500 shrink-0 mt-3xs" />
@@ -144,7 +144,7 @@ const A11yAuditPage = () => {
       </div>
 
       <footer className="text-center pt-xl">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Acessibilidade v2.0
         </p>
       </footer>

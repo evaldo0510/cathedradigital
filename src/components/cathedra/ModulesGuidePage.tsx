@@ -113,11 +113,11 @@ const MODULES = [
 
 const ModulesGuidePage: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-3xl">
-      <header className="text-center space-y-4">
+    <div className="max-w-5xl mx-auto space-y-2xl pb-3xl">
+      <header className="text-center space-y-md">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.Feather className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
           Entenda os Módulos
@@ -135,7 +135,7 @@ const ModulesGuidePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
           >
-            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-soft hover:shadow-premium-hover rounded-premium overflow-hidden group">
+            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-md hover:shadow-premium-hover rounded-premium overflow-hidden group">
               <CardHeader className="pb-md">
                 <div className="flex items-center gap-md">
                   <div className={`w-2xl h-2xl rounded-full ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
@@ -148,7 +148,7 @@ const ModulesGuidePage: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2.5">
+                <ul className="space-y-xs">
                   {module.details.map((detail, i) => (
                     <li key={i} className="flex items-start gap-sm text-sm text-muted-foreground leading-relaxed">
                       <div className={`w-2xs h-2xs rounded-full mt-2xs shrink-0 ${module.color.replace('text-', 'bg-')}`} />
@@ -162,9 +162,9 @@ const ModulesGuidePage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-xl md:p-2xl text-center space-y-6 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-premium  -mr-4xl -mt-4xl" />
-        <div className="relative z-10 space-y-4">
+      <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-xl md:p-2xl text-center space-y-lg relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-4xl h-4xl bg-primary/10 rounded-premium  -mr-4xl -mt-4xl" />
+        <div className="relative z-10 space-y-md">
           <h2 className="text-2xl md:text-3xl font-bold text-primary">Ainda tem dúvidas?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Nossa plataforma é viva e está em constante evolução. Se você não encontrou o que procurava ou tem uma sugestão, converse com nossa equipe de suporte ou partilhe na comunidade.

@@ -18,7 +18,7 @@ const OfflinePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80dvh] p-lg text-center space-y-8 animate-in fade-in duration-700">
+    <div className="flex flex-col items-center justify-center min-h-[80dvh] p-lg text-center space-y-xl animate-in fade-in duration-700">
       <SEOHead title="Você está Offline" description="O Cathedra Digital continua disponível em modo offline." path="/offline" />
       
       <div className="relative">
@@ -34,7 +34,7 @@ const OfflinePage: React.FC = () => {
         </motion.div>
       </div>
 
-      <div className="max-w-md space-y-4">
+      <div className="max-w-md space-y-md">
         <h1 className="text-3xl font-serif font-bold text-foreground">
           {isForcedOffline ? 'Soberania de Dados Ativa' : 'Conexão Interrompida'}
         </h1>
@@ -46,12 +46,12 @@ const OfflinePage: React.FC = () => {
         
         {stats && stats.total > 0 && (
           <div className="flex flex-col items-center gap-xs pt-xs animate-in fade-in slide-in-from-top-2xs duration-1000">
-            <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/5 px-md py-xs rounded-premium border border-primary/10">
+            <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary bg-primary/5 px-md py-xs rounded-premium border border-primary/10">
               <Icons.Library className="w-sm h-sm" />
               {stats.total} textos salvos offline
             </div>
             {stats.lastSync && (
-              <span className="text-premium-tiny text-muted-foreground font-medium italic">
+              <span className="text-xs text-muted-foreground font-medium italic">
                 Sincronizado {formatDistanceToNow(parseInt(stats.lastSync), { addSuffix: true, locale: ptBR })}
               </span>
             )}

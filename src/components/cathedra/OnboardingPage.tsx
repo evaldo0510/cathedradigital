@@ -254,9 +254,9 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-lg lg:max-w-3xl space-y-6 lg:space-y-12"
+          className="w-full max-w-lg lg:max-w-3xl space-y-lg lg:space-y-2xl"
         >
-          <div className="text-center space-y-3">
+          <div className="text-center space-y-sm">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -269,7 +269,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-premium p-lg space-y-3 text-center">
+          <div className="bg-card border border-primary/20 rounded-premium p-lg space-y-sm text-center">
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
@@ -292,12 +292,12 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
     return (
       <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-md">
-        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-lg lg:space-y-xl text-center">
           <div className="flex justify-center mb-lg">
             <Icons.Logo className="w-3xl h-3xl" variant="blue" />
           </div>
           
-          <div className="space-y-2 mb-xl">
+          <div className="space-y-xs mb-xl">
             <div className="w-full h-2xs bg-muted rounded-premium overflow-hidden">
               <motion.div 
                 className="h-full bg-primary"
@@ -305,7 +305,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -314,7 +314,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              className="space-y-xl"
             >
               <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-md">{question.question}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
@@ -343,7 +343,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-md">
-      <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
+      <div className="w-full max-w-lg lg:max-w-5xl space-y-lg lg:space-y-xl">
         <div className="flex justify-center">
           <Icons.Logo className="w-3xl h-3xl" variant="blue" />
         </div>
@@ -357,11 +357,11 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.25 }}
             className="bg-card border border-border rounded-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
-            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-2xs/2 object-cover" />
-            <div className="p-lg md:p-xl lg:p-3xl text-center lg:text-left lg:w-2xs/2 space-y-4 lg:space-y-8">
+            <img src={slide.image} alt={slide.title} className="w-full h-4xl md:h-4xl lg:h-full lg:w-2xs/2 object-cover" />
+            <div className="p-lg md:p-xl lg:p-3xl text-center lg:text-left lg:w-2xs/2 space-y-md lg:space-y-xl">
               <div className="flex justify-center lg:justify-start text-primary mb-xs lg:mb-md">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
-              <p className="text-premium-tiny lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-xs lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
               <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
             </div>
           </motion.div>
@@ -393,7 +393,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
           <Button
             onClick={handleSlideNext}
-            className="flex items-center gap-xs px-lg py-sm bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-xs px-lg py-sm bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-md h-md" />

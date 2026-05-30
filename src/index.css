@@ -239,7 +239,7 @@
 
   /* Specific Reader Container */
   .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-xl sm:px-2xl md:px-4xl py-3xl md:py-36 transition-all duration-1000;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-xl sm:px-2xl md:px-4xl py-3xl md:py-4xl transition-all duration-1000;
     scroll-behavior: smooth;
   }
 
@@ -277,7 +277,7 @@
 
   /* Shared Module Header Style - Deprecated in favor of ContemplativeLayout props */
   .module-header {
-    @apply text-center mb-xl md:mb-3xl space-y-4 md:space-y-6;
+    @apply text-center mb-xl md:mb-3xl space-y-md md:space-y-lg;
   }
 
   /* Rhythm System */

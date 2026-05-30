@@ -93,10 +93,10 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container py-2xl md:py-4xl space-y-16 md:space-y-32">
+    <div className="app-container py-2xl md:py-4xl space-y-3xl md:space-y-4xl">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-8 max-w-3xl mx-auto">
+      <header className="text-center space-y-xl max-w-3xl mx-auto">
         <div className="premium-tag mx-auto">
           <Icons.PenLine className="w-md h-md text-secondary" />
           <span>Diarium Spirituale</span>
@@ -142,12 +142,12 @@ const SpiritualJournalPage = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            className="space-y-16 md:space-y-32"
+            className="space-y-3xl md:space-y-4xl"
           >
             {/* Entry Form */}
             <section className="max-w-4xl mx-auto w-full">
-              <CathedraCard padding="lg" className="space-y-16">
-                <div className="space-y-8">
+              <CathedraCard padding="lg" className="space-y-3xl">
+                <div className="space-y-xl">
                   <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
                   <div className="flex flex-wrap justify-center gap-lg">
                     {MOODS.map((m) => (
@@ -167,7 +167,7 @@ const SpiritualJournalPage = () => {
                   </div>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-xl">
                   <Textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
@@ -189,7 +189,7 @@ const SpiritualJournalPage = () => {
             </section>
 
             {/* History */}
-            <section className="space-y-12 max-w-4xl mx-auto w-full">
+            <section className="space-y-2xl max-w-4xl mx-auto w-full">
               <div className="flex items-center gap-xl">
                 <div className="h-px flex-1 bg-border/40" />
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap uppercase">
@@ -199,9 +199,9 @@ const SpiritualJournalPage = () => {
               </div>
 
               {isFetching ? (
-                <div className="space-y-10">
+                <div className="space-y-xl">
                   {[1, 2].map((i) => (
-                    <div key={i} className="h-48 bg-muted/10 animate-pulse rounded-premium border border-border/10" />
+                    <div key={i} className="h-4xl bg-muted/10 animate-pulse rounded-premium border border-border/10" />
                   ))}
                 </div>
               ) : entries.length > 0 ? (
@@ -211,7 +211,7 @@ const SpiritualJournalPage = () => {
                       key={entry.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-card p-xl md:p-2xl rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                      className="bg-card p-xl md:p-2xl rounded-premium border border-border/40 shadow-premium space-y-xl relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-md">
@@ -261,7 +261,7 @@ const SpiritualJournalPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-4xl mx-auto w-full space-y-12"
+            className="max-w-4xl mx-auto w-full space-y-2xl"
           >
             <div className="flex items-center gap-xl">
               <div className="h-px flex-1 bg-border/40" />
@@ -303,7 +303,7 @@ const RelatioFavoritesList = () => {
           className="bg-card p-lg rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
         >
           <div className="flex items-start justify-between">
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <div className="flex items-center gap-xs">
                 <div className="w-lg h-lg rounded-full bg-primary/10 flex items-center justify-center">
                   <Icons.Sparkles className="w-sm h-sm text-primary" />

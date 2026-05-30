@@ -215,15 +215,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-2xl mx-auto pb-4xl">
-        <div className="text-center space-y-3 pt-md">
+      <div className="space-y-lg max-w-2xl mx-auto pb-4xl">
+        <div className="text-center space-y-sm pt-md">
           <div className="w-xl h-xl mx-auto rounded-premium bg-primary/20 animate-pulse" />
-          <div className="h-lg w-48 mx-auto bg-muted/60 rounded-premium animate-pulse" />
-          <div className="h-md w-64 mx-auto bg-muted/40 rounded-premium animate-pulse" />
+          <div className="h-lg w-4xl mx-auto bg-muted/60 rounded-premium animate-pulse" />
+          <div className="h-md w-4xl mx-auto bg-muted/40 rounded-premium animate-pulse" />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-md">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 rounded-premium bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
+            <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
           ))}
         </div>
       </div>
@@ -240,7 +240,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     >
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
       <div ref={ref} className="desktop-layout">
-        <div className="desktop-main space-y-8 md:space-y-12">
+        <div className="desktop-main space-y-xl md:space-y-2xl">
           
           {/* Journey Reminder Settings */}
           {user && (
@@ -255,8 +255,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   <DialogHeader>
                     <DialogTitle className="font-display text-2xl text-primary">Lembrete de Jornada</DialogTitle>
                   </DialogHeader>
-                  <div className="py-md space-y-6">
-                    <div className="space-y-3">
+                  <div className="py-md space-y-lg">
+                    <div className="space-y-sm">
                       <label className="text-xs font-bold uppercase tracking-widest text-primary/60">Horário Preferencial</label>
                       <div className="flex gap-xs">
                         <Input 
@@ -296,7 +296,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Quote */}
       <motion.div 
-        className="text-center space-y-4 max-w-3xl mx-auto mb-2xl"
+        className="text-center space-y-md max-w-3xl mx-auto mb-2xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
@@ -316,17 +316,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         >
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-foreground">{stats.total}</p>
-            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Jornadas</p>
+            <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Jornadas</p>
           </div>
           <div className="w-px h-xl bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-primary">{stats.started}</p>
-            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Iniciadas</p>
+            <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Iniciadas</p>
           </div>
           <div className="w-px h-xl bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-emerald-500">{stats.completed}</p>
-            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Concluídas</p>
+            <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Concluídas</p>
           </div>
         </motion.div>
       )}
@@ -335,12 +335,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <AnimatePresence>
         {activeJourneys.length > 0 && (
           <motion.div 
-            className="space-y-3"
+            className="space-y-sm"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary/60">
+            <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary/60">
               <Icons.Flame className="w-sm h-sm" /> Continuar Jornada
             </div>
             {activeJourneys.slice(0, 1).map(journey => {
@@ -367,7 +367,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className="absolute top-0 right-0 p-md opacity-5 pointer-events-none">
                       <Icons.Flame className="w-3xl h-3xl text-primary" />
                     </div>
-                    <div className="p-sm sm:p-md space-y-2.5 sm:space-y-3">
+                    <div className="p-sm sm:p-md space-y-xs sm:space-y-sm">
                       <div className="flex items-center justify-between gap-sm">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-foreground text-base sm:text-lg">{journey.title}</h3>
@@ -380,14 +380,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
                           </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-premium-tiny sm:text-xs font-black text-primary">{pct}%</span>
+                          <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-xs font-black text-primary">{pct}%</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <p className="text-premium-tiny text-muted-foreground font-medium">{done} de {total} etapas</p>
+                        <p className="text-xs text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
                           size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-premium-tiny sm:text-premium-tiny uppercase tracking-[0.15em] px-sm sm:px-md h-xl sm:h-xl rounded-full sm:rounded-full shadow-premium shadow-primary/20 group"
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-xs sm:text-xs uppercase tracking-[0.15em] px-sm sm:px-md h-xl sm:h-xl rounded-full sm:rounded-full shadow-premium shadow-primary/20 group"
                         >
                           Continuar <Icons.ChevronRight className="w-sm h-sm ml-2xs group-hover:translate-x-0.5 transition-transform" />
                         </Button>
@@ -425,7 +425,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Search & Filters */}
       <motion.div 
-        className="space-y-4"
+        className="space-y-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -437,7 +437,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           isSearching={fuzzySearch.isPending}
         />
 
-        <div className="space-y-3">
+        <div className="space-y-sm">
           <div className="flex items-center gap-xs text-sm text-muted-foreground">
             <Icons.Filter className="w-md h-md" />
             <span className="font-medium">Filtrar</span>
@@ -468,7 +468,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="flex flex-wrap gap-2xs sm:gap-xs">
           <Button
             onClick={() => setFilterDifficulty('all')}
-            className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-premium' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
             aria-pressed={filterDifficulty === 'all'}
@@ -480,7 +480,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <Button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
-              className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 filterDifficulty === diff ? 'bg-foreground text-background shadow-premium' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
               aria-pressed={filterDifficulty === diff}
@@ -496,8 +496,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {/* Search Results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && fuzzySearch.results && fuzzySearch.results.length > 0 && (
         <AnimatePresence mode="popLayout">
-        <div className="space-y-2">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+        <div className="space-y-xs">
+          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           {fuzzySearch.results.map((j, i) => (
             <SearchResultCard
               key={j.id}
@@ -515,7 +515,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Journey Cards */}
       <motion.div 
-        className="space-y-3 sm:space-y-4"
+        className="space-y-sm sm:space-y-md"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -572,14 +572,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                         {isComplete && (
-                          <div className="absolute top-sm right-sm bg-emerald-500 text-white px-xs py-2xs rounded-premium text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2xs shadow-premium">
+                          <div className="absolute top-sm right-sm bg-emerald-500 text-white px-xs py-2xs rounded-premium text-xs font-black uppercase tracking-widest flex items-center gap-2xs shadow-premium">
                             <Icons.Check className="w-sm h-sm" /> Concluída
                           </div>
                         )}
                       </div>
                     )}
 
-                    <div className="p-sm sm:p-md space-y-2.5 sm:space-y-3.5 relative">
+                    <div className="p-sm sm:p-md space-y-xs sm:space-y-sm relative">
                       {/* Title row */}
                       <div className="flex items-start justify-between gap-sm">
                         <div className="flex-1 min-w-0">
@@ -600,7 +600,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
                           )}
                           {journey.is_premium && (
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-premium-tiny px-xs">
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs px-xs">
                               <Icons.Sparkles className="w-sm h-sm mr-3xs" /> PRO
                             </Badge>
                           )}
@@ -617,12 +617,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       {journey.tags && journey.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2xs">
                           {journey.tags.slice(0, 3).map((tag: string) => (
-                            <span key={tag} className="text-premium-tiny px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
+                            <span key={tag} className="text-xs px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
                               {tag}
                             </span>
                           ))}
                           {journey.tags.length > 3 && (
-                            <span className="text-premium-tiny px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
+                            <span className="text-xs px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
                               +{journey.tags.length - 3}
                             </span>
                           )}
@@ -630,11 +630,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       )}
 
                       {/* Meta */}
-                      <div className="flex items-center gap-xs sm:gap-sm text-premium-tiny sm:text-xs text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-xs sm:gap-sm text-xs sm:text-xs text-muted-foreground flex-wrap">
                         <span className="flex items-center gap-2xs">
                           <Icons.Clock className="w-sm h-sm" /> ~{journey.estimated_days}d
                         </span>
-                        <span className={`px-xs py-3xs rounded-full text-premium-tiny font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-xs py-3xs rounded-full text-xs font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
                         <span className="flex items-center gap-2xs">
@@ -644,11 +644,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                       {/* Progress */}
                       {totalSteps > 0 && (
-                        <div className="space-y-1.5 pt-2xs">
+                        <div className="space-y-2xs pt-2xs">
                           <div className="relative">
                             <Progress value={progressPercent} className="h-xs" />
                           </div>
-                          <div className="flex justify-between text-premium-tiny text-muted-foreground">
+                          <div className="flex justify-between text-xs text-muted-foreground">
                             <span className="font-medium">
                               {hasStarted 
                                 ? `${completedSteps}/${totalSteps} etapas concluídas` 
@@ -676,7 +676,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {filteredJourneys.length === 0 && (
         <motion.div 
-          className="text-center py-2xl space-y-3"
+          className="text-center py-2xl space-y-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
@@ -701,7 +701,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
       )}
         </div>
-        <aside className="desktop-aside space-y-6 hidden xl:block">
+        <aside className="desktop-aside space-y-lg hidden xl:block">
           <div className="desktop-card bg-primary/5 border-primary/20">
             <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Sua Formação</h3>
             <p className="text-xs text-muted-foreground leading-relaxed italic">
@@ -710,10 +710,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
           <div className="desktop-card">
             <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-sm">Mais Populares</h3>
-            <div className="space-y-3">
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">1. O Caminho da Perfeição</div>
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">2. Catecismo Explicado</div>
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <div className="space-y-sm">
+              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">1. O Caminho da Perfeição</div>
+              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">2. Catecismo Explicado</div>
+              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">3. Mistérios Gloriosos</div>
             </div>
           </div>
         </aside>

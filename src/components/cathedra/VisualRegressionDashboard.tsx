@@ -122,10 +122,10 @@ const VisualRegressionDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col md:flex-row gap-lg">
         {/* Runs Sidebar */}
-        <Card className="w-full md:w-80 border-border/10 bg-muted/20 backdrop-blur-sm rounded-premium shadow-premium">
+        <Card className="w-full md:w-4xl border-border/10 bg-muted/20 backdrop-blur-sm rounded-premium shadow-premium">
           <CardHeader className="p-md border-b border-border/10">
             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-xs">
               <Clock className="w-md h-md" /> Histórico
@@ -133,12 +133,12 @@ const VisualRegressionDashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="h-[500px]">
-              <div className="p-xs space-y-1">
+              <div className="p-xs space-y-2xs">
                 {runs.map((run) => (
                   <button
                     key={run.id}
                     onClick={() => setSelectedRun(run)}
-                    className={`w-full text-left p-sm rounded-premium-sm transition-all duration-300 ${
+                    className={`w-full text-left p-sm rounded-sm transition-all duration-300 ${
                       selectedRun?.id === run.id 
                         ? 'bg-primary/10 border border-primary/20' 
                         : 'hover:bg-muted/50 border border-transparent'
@@ -172,7 +172,7 @@ const VisualRegressionDashboard: React.FC = () => {
         </Card>
 
         {/* Snapshots Area */}
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 space-y-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
             <StatsCard 
               title="Acessibilidade" 
@@ -207,7 +207,7 @@ const VisualRegressionDashboard: React.FC = () => {
               </Button>
             </div>
 
-            <TabsContent value="all" className="mt-0 space-y-4">
+            <TabsContent value="all" className="mt-0 space-y-md">
               {snapshots.map(snapshot => (
                 <SnapshotCard 
                   key={snapshot.id} 
@@ -218,7 +218,7 @@ const VisualRegressionDashboard: React.FC = () => {
               ))}
             </TabsContent>
             
-            <TabsContent value="failed" className="mt-0 space-y-4">
+            <TabsContent value="failed" className="mt-0 space-y-md">
               {snapshots.filter(s => s.status === 'fail').map(snapshot => (
                 <SnapshotCard 
                   key={snapshot.id} 
@@ -241,7 +241,7 @@ const VisualRegressionDashboard: React.FC = () => {
 const StatsCard = ({ title, value, icon, status }: any) => (
   <Card className="border-border/10 bg-muted/10 rounded-premium overflow-hidden">
     <CardContent className="p-md flex items-center justify-between">
-      <div className="space-y-1">
+      <div className="space-y-2xs">
         <p className="text-[10px] font-black uppercase tracking-widest opacity-50 flex items-center gap-2xs">
           {icon} {title}
         </p>
@@ -260,7 +260,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
     <Card className="border-border/10 bg-muted/10 overflow-hidden rounded-premium group transition-all duration-300 hover:bg-muted/20">
       <CardHeader className="p-md border-b border-border/10 flex flex-row items-center justify-between">
         <div className="flex items-center gap-sm">
-          <div className={`p-xs rounded-premium-sm ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
+          <div className={`p-xs rounded-sm ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
             {snapshot.status === 'pass' ? <CheckCircle2 className="w-md h-md" /> : snapshot.status === 'fail' ? <XCircle className="w-md h-md" /> : <ShieldAlert className="w-md h-md" />}
           </div>
           <div>
@@ -283,7 +283,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
             <div className="flex gap-xs">
               <input 
                 placeholder="Motivo (ex: 'Novo design de card')..." 
-                className="h-xl rounded-l-full bg-background/50 border border-border/10 text-[10px] px-md w-56 outline-none focus:border-primary/50 transition-all font-medium"
+                className="h-xl rounded-l-full bg-background/50 border border-border/10 text-[10px] px-md w-4xl outline-none focus:border-primary/50 transition-all font-medium"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
               />
@@ -315,23 +315,23 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
           )}
         </div>
       </CardHeader>
-      <CardContent className="p-md space-y-4">
+      <CardContent className="p-md space-y-md">
         {showDiff && snapshot.diff_url ? (
-          <div className="relative aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10">
+          <div className="relative aspect-video bg-black/5 rounded-sm overflow-hidden border border-border/10">
             <img src={snapshot.diff_url} alt="Diferença Visual" className="w-full h-full object-contain" />
             <div className="absolute top-xs left-xs px-xs py-2xs bg-red-500 text-white text-[8px] font-black uppercase tracking-widest rounded-md">Diferenças em Vermelho</div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-md">
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Baseline (Esperado)</p>
-              <div className="aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10">
+              <div className="aspect-video bg-black/5 rounded-sm overflow-hidden border border-border/10">
                 <img src={snapshot.baseline_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Baseline" className="w-full h-full object-contain" />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Atual (Encontrado)</p>
-              <div className="aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10 relative">
+              <div className="aspect-video bg-black/5 rounded-sm overflow-hidden border border-border/10 relative">
                 <img src={snapshot.current_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Atual" className="w-full h-full object-contain" />
                 {snapshot.status === 'fail' && (
                   <div className="absolute inset-0 bg-red-500/5 flex items-center justify-center pointer-events-none">
@@ -344,7 +344,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
         )}
 
         {snapshot.typography_errors && snapshot.typography_errors.length > 0 && (
-          <div className="p-sm bg-yellow-500/5 border border-yellow-500/20 rounded-premium-sm space-y-2">
+          <div className="p-sm bg-yellow-500/5 border border-yellow-500/20 rounded-sm space-y-xs">
             <p className="text-[9px] font-black uppercase tracking-widest text-yellow-600 flex items-center gap-2xs">
               <Type className="w-sm h-sm" /> Discrepâncias Tipográficas Encontradas ({snapshot.typography_errors.length})
             </p>

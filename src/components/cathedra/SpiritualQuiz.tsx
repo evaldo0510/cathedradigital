@@ -321,12 +321,12 @@ const SpiritualQuiz: React.FC = () => {
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-premium border border-border bg-card p-md space-y-3">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-premium border border-border bg-card p-md space-y-sm">
         <div className="flex items-center justify-between">
-          <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
           <Button 
             onClick={reset} 
-            className="text-premium-tiny text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-2xs"
+            className="text-xs text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-2xs"
             aria-label="Refazer teste de perfil espiritual"
           >
             Refazer
@@ -367,11 +367,11 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-lg md:p-xl space-y-6 shadow-premium`}
+        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-lg md:p-xl space-y-lg shadow-premium`}
       >
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-sm">
           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
-          <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
           <h2 className={`text-2xl font-black ${p.color}`}>{p.title}</h2>
           <p className="text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto italic font-serif">"{p.message}"</p>
         </div>
@@ -379,21 +379,21 @@ const SpiritualQuiz: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="grid grid-cols-2 gap-sm">
-          <div className="p-sm rounded-premium bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
+          <div className="p-sm rounded-premium bg-background/60 border border-border space-y-2xs text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
             <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
-          <div className="p-sm rounded-premium bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
+          <div className="p-sm rounded-premium bg-background/60 border border-border space-y-2xs text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
             <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
         </div>
 
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-        <div className="space-y-2">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
-          <div className="space-y-2 text-sm">
+        <div className="space-y-xs">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
+          <div className="space-y-xs text-sm">
             <div className="flex items-center gap-xs px-sm py-xs rounded-premium bg-primary/[0.04] border border-primary/10">
               <Sparkles className="w-md h-md text-primary shrink-0" />
               <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
@@ -430,9 +430,9 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-lg md:p-xl space-y-5 shadow-soft text-center"
+        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-lg md:p-xl space-y-md shadow-md text-center"
       >
-        <div className="space-y-3">
+        <div className="space-y-sm">
           <span className="text-4xl block">🧠</span>
           <h2 className="text-xl font-black text-foreground leading-tight">Descubra seu momento espiritual</h2>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
@@ -460,12 +460,12 @@ const SpiritualQuiz: React.FC = () => {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-lg space-y-5 shadow-soft"
+      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-lg space-y-md shadow-md"
     >
-      <div className="space-y-1">
+      <div className="space-y-2xs">
         <div className="flex items-center justify-between">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
-          <p className="text-premium-tiny font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
+          <p className="text-xs font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
         </div>
         <div className="h-2xs bg-muted rounded-premium overflow-hidden">
           <motion.div className="h-full bg-secondary rounded-premium" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
@@ -479,11 +479,11 @@ const SpiritualQuiz: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className="space-y-4"
+          className="space-y-md"
         >
           <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
           <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-          <div className="space-y-2.5" role="radiogroup" aria-label={q.question}>
+          <div className="space-y-xs" role="radiogroup" aria-label={q.question}>
             {q.options.map((opt) => (
               <motion.button
                 key={opt.value}

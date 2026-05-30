@@ -117,7 +117,7 @@ const SpiritualGoals: React.FC = () => {
   const progress = Math.min((goal.achieved_count / goal.goal_count) * 100, 100);
 
   return (
-    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-8">
+    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-sm">
             <div className="p-xs bg-primary/10 rounded-premium">
@@ -144,9 +144,9 @@ const SpiritualGoals: React.FC = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="space-y-6"
+              className="space-y-lg"
             >
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Quantos passos nesta semana?</label>
                 <div className="flex gap-xs">
                   <Input 
@@ -180,10 +180,10 @@ const SpiritualGoals: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="space-y-6"
+              className="space-y-lg"
             >
               <div className="flex justify-between items-end mb-xs">
-                <div className="space-y-1">
+                <div className="space-y-2xs">
                   <span className="text-4xl font-display font-bold text-primary">{goal.achieved_count}</span>
                   <span className="text-xl text-muted-foreground/40 font-serif italic mx-xs">/</span>
                   <span className="text-xl font-bold text-muted-foreground">{goal.goal_count} passos</span>

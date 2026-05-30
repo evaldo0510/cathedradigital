@@ -70,7 +70,7 @@ const StudyJournal: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
+    <div className="space-y-xl animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div className="flex bg-muted/30 p-2xs rounded-full border border-border/10">
           <Button
@@ -89,7 +89,7 @@ const StudyJournal: React.FC = () => {
           </Button>
         </div>
 
-        <div className="relative w-full md:w-80">
+        <div className="relative w-full md:w-4xl">
           <Icons.Search className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
           <Input
             value={searchQuery}
@@ -162,7 +162,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
   return (
     <motion.div
       layout
-      className="bg-card border border-border/40 rounded-premium p-lg space-y-4 hover:border-primary/20 transition-all group"
+      className="bg-card border border-border/40 rounded-premium p-lg space-y-md hover:border-primary/20 transition-all group"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-sm">
@@ -182,7 +182,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
       </div>
 
       {isEditing ? (
-        <div className="space-y-3">
+        <div className="space-y-sm">
           <textarea
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
@@ -219,7 +219,7 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
 }) => (
   <motion.div
     layout
-    className="bg-muted/10 border border-border/10 rounded-premium p-lg space-y-4 hover:bg-muted/20 transition-all group relative overflow-hidden"
+    className="bg-muted/10 border border-border/10 rounded-premium p-lg space-y-md hover:bg-muted/20 transition-all group relative overflow-hidden"
   >
     <div className="flex items-center gap-sm">
       <div className="w-xl h-xl rounded-full bg-primary/5 flex items-center justify-center text-primary">

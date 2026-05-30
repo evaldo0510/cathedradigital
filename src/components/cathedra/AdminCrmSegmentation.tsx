@@ -79,11 +79,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const getStatusBadge = (u: UserProfile) => {
     const status = u.depth_level || 'Inativo';
     switch (status) {
-      case 'Profundo': return <Badge variant="default" className="text-premium-tiny">Profundo</Badge>;
-      case 'Engajado': return <Badge variant="secondary" className="text-premium-tiny">Engajado</Badge>;
-      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-premium-tiny">Ativo</Badge>;
-      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-premium-tiny">Novo</Badge>;
-      default: return <Badge variant="destructive" className="text-premium-tiny">Inativo</Badge>;
+      case 'Profundo': return <Badge variant="default" className="text-xs">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="text-xs">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-xs">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-xs">Novo</Badge>;
+      default: return <Badge variant="destructive" className="text-xs">Inativo</Badge>;
     }
   };
 
@@ -111,7 +111,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [filtered, segment]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-md">
       {/* Segment Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-xs">
         {segments.map(s => (
@@ -126,7 +126,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
           >
             <div className={`flex items-center gap-2xs ${s.color}`}>
               {s.icon}
-              <span className="text-premium-tiny font-black uppercase tracking-wider">{s.label}</span>
+              <span className="text-xs font-black uppercase tracking-wider">{s.label}</span>
             </div>
             <p className="text-xl font-bold mt-2xs">{segmentedUsers[s.key].length}</p>
           </Button>
@@ -186,7 +186,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                       </div>
                     </td>
                     <td className="p-sm text-center">
-                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-premium-tiny">
+                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-xs">
                         {u.is_premium ? 'PRO' : 'Free'}
                       </Badge>
                     </td>
@@ -195,7 +195,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-sm text-center hidden lg:table-cell">
-                      <span className="text-premium-tiny text-muted-foreground truncate max-w-[150px] block mx-auto">
+                      <span className="text-xs text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>

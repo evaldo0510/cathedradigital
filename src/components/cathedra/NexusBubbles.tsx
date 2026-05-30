@@ -169,7 +169,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-premium-hover z-[100] bg-card/95 backdrop-blur-xl">
         <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-xl border-b border-border/20 flex items-center justify-between">
           <div className="flex items-center gap-md">
-            <div className="w-2xl h-2xl rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
+            <div className="w-2xl h-2xl rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-md text-primary border border-primary/5">
               {getTagIcon(tag.emoji, "w-lg h-lg")}
             </div>
             <div>
@@ -186,7 +186,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </Button>
         </div>
         
-        <div className="p-xl space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
+        <div className="p-xl space-y-xl max-h-[600px] overflow-y-auto scrollbar-none">
           {/* Path Navigation - Monastic Breadcrumbs with History */}
           <nav className="flex items-center gap-xs overflow-x-auto whitespace-nowrap scrollbar-none pb-md border-b border-border/5">
             <button 
@@ -205,7 +205,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   disabled={idx === navHistory.length - 1}
                   className={`text-[9px] font-black uppercase tracking-[0.3em] px-sm py-2xs rounded-full border transition-all ${
                     idx === navHistory.length - 1 
-                      ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-soft' 
+                      ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-md' 
                       : 'text-muted-foreground/60 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
                   }`}
                 >
@@ -235,29 +235,29 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
 
           {status === 'loading' ? (
-            <div className="space-y-4 py-xs">
+            <div className="space-y-md py-xs">
               <div className="flex gap-xs">
                 <div className="w-xl h-xl rounded-premium bg-muted animate-pulse" />
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-xs">
                   <div className="h-sm bg-muted rounded animate-pulse w-full" />
                   <div className="h-sm bg-muted rounded animate-pulse w-xs/3" />
                 </div>
               </div>
               <div className="h-4xl bg-muted/20 rounded-premium animate-pulse w-full" />
-              <p className="text-premium-tiny text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
+              <p className="text-xs text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
           ) : status === 'error' && content.length === 0 ? (
-            <div className="p-lg text-center space-y-3 bg-red-500/5 rounded-premium border border-red-500/10">
+            <div className="p-lg text-center space-y-sm bg-red-500/5 rounded-premium border border-red-500/10">
               <AlertCircle className="w-xl h-xl text-red-500 mx-auto" />
             <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-            <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
-            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-xl rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
+            <p className="text-xs text-muted-foreground italic">{errorDetails}</p>
+            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-xl rounded-full text-xs uppercase font-black tracking-widest">Tentar Novamente</Button>
           </div>
         ) : (
 
             <>
               {status === 'error' && content.length > 0 && (
-                <div className="px-sm py-2xs bg-amber-500/10 text-amber-600 rounded-premium text-premium-tiny font-bold flex items-center gap-xs mb-xs">
+                <div className="px-sm py-2xs bg-amber-500/10 text-amber-600 rounded-premium text-xs font-bold flex items-center gap-xs mb-xs">
                   <Info className="w-sm h-sm" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
                 </div>
               )}
@@ -282,7 +282,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               )}
               
               {content.length > 0 && (
-                <div className="space-y-6">
+                <div className="space-y-lg">
                   {[
                     { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-sm h-sm" /> },
                     { id: 'catechism', label: 'Catecismo', icon: <Church className="w-sm h-sm" /> },
@@ -294,8 +294,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     if (categoryContent.length === 0) return null;
 
                     return (
-                      <div key={category.id} className="space-y-3">
-                        <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-xs">
+                      <div key={category.id} className="space-y-sm">
+                        <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-xs">
                           <div className="h-[1px] w-md bg-border/40" />
                           <div className="flex items-center gap-2xs text-primary/60">
                             {category.icon}
@@ -304,7 +304,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                           <div className="h-[1px] flex-1 bg-border/40" />
                         </span>
                         
-                        <div className="space-y-4">
+                        <div className="space-y-md">
                           {categoryContent.map((c, i) => {
                             const isBible = c.type === 'bible';
                             const isJourney = c.type === 'journey';
@@ -320,7 +320,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="space-y-1.5 group/content p-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
+                                className="space-y-2xs group/content p-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
                                 onClick={() => link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
@@ -328,7 +328,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 </p>
                                 <div className="flex flex-col gap-xs">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-premium-tiny font-bold text-primary flex items-center gap-2xs px-xs py-3xs rounded-full bg-primary/5">
+                                    <span className="text-xs font-bold text-primary flex items-center gap-2xs px-xs py-3xs rounded-full bg-primary/5">
                                       {reference}
                                       {link && <ExternalLink className="w-xs h-xs" />}
                                     </span>
@@ -371,7 +371,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
 
               {/* Related Themes (The "Map" feeling) */}
-              <div className="pt-xl space-y-6 border-t border-border/5">
+              <div className="pt-xl space-y-lg border-t border-border/5">
                 <div className="flex flex-col items-center gap-xs">
                   <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/60">RADIUS COGNITIONIS</span>
                   <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
@@ -395,14 +395,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               </div>
 
               {!logosInsight && status === 'success' && content.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-xl text-center space-y-4">
+                <div className="flex flex-col items-center justify-center py-xl text-center space-y-md">
                   <div className="w-3xl h-3xl rounded-premium bg-muted/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
                     <Search className="w-xl h-xl text-muted-foreground/60" />
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-2xs">
                     <p className="text-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
-                    <p className="text-premium-tiny text-muted-foreground/60 italic max-w-[200px] mx-auto">
+                    <p className="text-xs text-muted-foreground/60 italic max-w-[200px] mx-auto">
                       Ainda estamos tecendo as conexões para "{tag.label}". Tente outro tema ou explore o A-Z.
                     </p>
                   </div>
@@ -410,7 +410,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     size="sm" 
                     variant="outline" 
                     onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} 
-                    className="h-xl rounded-full text-premium-tiny uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
+                    className="h-xl rounded-full text-xs uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
                   >
                     Navegação A-Z
                   </Button>
@@ -424,7 +424,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           <Button 
             variant="ghost" 
             size="sm" 
-            className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-xl hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
+            className="w-full rounded-full text-xs font-black uppercase tracking-widest h-xl hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
           >
             Navegação Completa
@@ -492,7 +492,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   const { handleKeyDown } = useRovingTabindex(filteredTags.length);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-2xl">
       <div className="relative group max-w-md mx-auto">
         <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
         <Search className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -505,9 +505,9 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         />
       </div>
 
-      <div className="space-y-16">
+      <div className="space-y-3xl">
         {searchQuery.trim() ? (
-          <div className="space-y-6">
+          <div className="space-y-lg">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 text-center">Resultados da Busca</h3>
             <div 
               ref={filteredRef}
@@ -528,7 +528,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             {categories.map((cat, idx) => {
               const catTags = tags.filter(t => t.category === cat);
               return (
-                <section key={cat} className="space-y-6">
+                <section key={cat} className="space-y-lg">
                   <div className="flex items-center gap-lg">
                     <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 whitespace-nowrap">{cat}</h3>
                     <div className="h-px flex-1 bg-border/20" />
@@ -551,7 +551,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
       </div>
 
       {!loading && filteredTags.length === 0 && (
-        <div className="text-center py-3xl space-y-4">
+        <div className="text-center py-3xl space-y-md">
           <Search className="w-2xl h-2xl text-muted-foreground/60 mx-auto" />
           <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
         </div>

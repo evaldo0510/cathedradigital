@@ -32,9 +32,9 @@ const ItinerariaPage: React.FC = () => {
   return (
     <>
       <SEOHead title="Trilhas Espirituais" description="Caminhadas contemplativas para aprofundamento na vida espiritual." path="/itineraria" />
-      <div className="app-container py-2xl md:py-4xl space-y-16 md:space-y-32">
+      <div className="app-container py-2xl md:py-4xl space-y-3xl md:space-y-4xl">
         <motion.div 
-          className="text-center space-y-8 max-w-3xl mx-auto"
+          className="text-center space-y-xl max-w-3xl mx-auto"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -56,7 +56,7 @@ const ItinerariaPage: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-xl">
             {[1, 2].map(i => (
-              <div key={i} className="h-80 rounded-[2.5rem] bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
+              <div key={i} className="h-4xl rounded-[2.5rem] bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
             ))}
           </div>
         ) : (
@@ -83,7 +83,7 @@ const ItinerariaPage: React.FC = () => {
                     <Icons.Compass className="w-4xl h-4xl text-primary" />
                   </div>
                   
-                  <CardContent className="p-xl md:p-2xl space-y-6 relative z-10">
+                  <CardContent className="p-xl md:p-2xl space-y-lg relative z-10">
                     <div className="flex items-center gap-sm">
                       <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] px-sm py-2xs bg-primary/5 border-primary/10 text-primary">
                         {item.category}

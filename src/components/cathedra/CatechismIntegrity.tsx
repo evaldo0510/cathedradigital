@@ -127,7 +127,7 @@ const CatechismIntegrity: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-lg space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto p-lg space-y-xl animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div>
           <h1 className="text-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
@@ -151,7 +151,7 @@ const CatechismIntegrity: React.FC = () => {
           
           <div className="flex items-center gap-xs bg-muted/50 p-2xs rounded-premium border border-border">
             <div className="flex items-center gap-2xs">
-              <span className="text-premium-tiny font-bold text-muted-foreground uppercase px-2xs">De:</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase px-2xs">De:</span>
               <input 
                 type="number" 
                 value={startPara} 
@@ -160,7 +160,7 @@ const CatechismIntegrity: React.FC = () => {
               />
             </div>
             <div className="flex items-center gap-2xs">
-              <span className="text-premium-tiny font-bold text-muted-foreground uppercase px-2xs">Até:</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase px-2xs">Até:</span>
               <input 
                 type="number" 
                 value={endPara} 
@@ -169,7 +169,7 @@ const CatechismIntegrity: React.FC = () => {
               />
             </div>
             <div className="flex items-center gap-2xs ml-xs border-l border-border pl-xs">
-              <span className="text-premium-tiny font-bold text-muted-foreground uppercase px-2xs">Lote:</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase px-2xs">Lote:</span>
               <input 
                 type="number" 
                 value={batchSize} 
@@ -210,7 +210,7 @@ const CatechismIntegrity: React.FC = () => {
                 loadData();
               }}
               disabled={isReprocessing}
-              className="ml-xs px-md h-xl rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-xs shadow-soft disabled:opacity-50"
+              className="ml-xs px-md h-xl rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-xs shadow-md disabled:opacity-50"
             >
               <Icons.Zap className="w-sm h-sm" /> Iniciar
             </Button>
@@ -229,28 +229,28 @@ const CatechismIntegrity: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
+          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
+          <span className="text-xs font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.error402}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Incompletos</span>
+          <span className="text-xs font-black uppercase tracking-widest text-destructive">Incompletos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.empty}</div>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-soft">
+      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-md">
         <div className="p-md border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-xs bg-background/50 border border-border rounded-premium p-2xs">
-            <Button onClick={() => setFilter('all')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
-            <Button onClick={() => setFilter('not_cached')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</Button>
-            <Button onClick={() => setFilter('error_402')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</Button>
-            <Button onClick={() => setFilter('empty')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</Button>
+            <Button onClick={() => setFilter('all')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
+            <Button onClick={() => setFilter('not_cached')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</Button>
+            <Button onClick={() => setFilter('error_402')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</Button>
+            <Button onClick={() => setFilter('empty')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</Button>
           </div>
-          <span className="text-premium-tiny text-muted-foreground uppercase font-black">
+          <span className="text-xs text-muted-foreground uppercase font-black">
             {filteredData.length} itens encontrados
           </span>
         </div>
@@ -258,7 +258,7 @@ const CatechismIntegrity: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-border text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+              <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
                 <th className="px-lg py-md">§ Parágrafo</th>
                 <th className="px-lg py-md">Problema</th>
                 <th className="px-lg py-md">Status Atual</th>
@@ -284,7 +284,7 @@ const CatechismIntegrity: React.FC = () => {
                       )}
                     </td>
                     <td className="px-lg py-md">
-                      <span className="text-premium-tiny font-black uppercase tracking-widest px-xs py-3xs rounded-full bg-muted text-muted-foreground">
+                      <span className="text-xs font-black uppercase tracking-widest px-xs py-3xs rounded-full bg-muted text-muted-foreground">
                         {item.status}
                       </span>
                     </td>

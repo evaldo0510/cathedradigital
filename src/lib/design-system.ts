@@ -16,8 +16,8 @@ export const DESIGN_TOKENS = {
     soft: "0 4px 15px -2px rgba(0, 0, 0, 0.02)",
   },
   spacing: {
-    section: "py-3xl sm:py-4xl md:py-36 lg:py-56",
-    stack: "space-y-8 md:space-y-12 lg:space-y-16",
+    section: "py-3xl sm:py-4xl md:py-4xl lg:py-4xl",
+    stack: "space-y-xl md:space-y-2xl lg:space-y-3xl",
     container: "w-full max-w-[1280px] mx-auto px-md sm:px-xl md:px-2xl lg:px-3xl",
   },
   grid: {

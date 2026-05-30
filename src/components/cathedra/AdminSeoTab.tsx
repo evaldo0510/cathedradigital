@@ -132,10 +132,10 @@ const AdminSeoTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-3xl">
+    <div className="space-y-lg animate-in fade-in duration-500 pb-3xl">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-        <div className="md:col-span-2 space-y-6">
-          <Card className="border-border/50 shadow-soft overflow-hidden">
+        <div className="md:col-span-2 space-y-lg">
+          <Card className="border-border/50 shadow-md overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/50">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
                 <div className="flex items-center gap-xs text-primary">
@@ -156,76 +156,76 @@ const AdminSeoTab: React.FC = () => {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-lg space-y-6">
+            <CardContent className="p-lg space-y-lg">
               <div className="grid grid-cols-1 gap-lg">
-                <div className="space-y-2">
-                  <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Título Base do Site (Google Title)</Label>
+                <div className="space-y-xs">
+                  <Label className="text-xs font-black uppercase tracking-widest opacity-70">Título Base do Site (Google Title)</Label>
                   <Input 
                     value={formData.site_title || ''} 
                     onChange={e => setFormData({...formData, site_title: e.target.value})}
                     placeholder="Ex: Cathedra Digital — Bíblia e Tradição"
                   />
-                  <p className="text-premium-tiny text-muted-foreground italic">Recomendado: 50-60 caracteres.</p>
+                  <p className="text-xs text-muted-foreground italic">Recomendado: 50-60 caracteres.</p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Meta Description Global</Label>
+                <div className="space-y-xs">
+                  <Label className="text-xs font-black uppercase tracking-widest opacity-70">Meta Description Global</Label>
                   <Textarea 
                     value={formData.site_description || ''} 
                     onChange={e => setFormData({...formData, site_description: e.target.value})}
                     placeholder="Descrição que aparecerá no Google..."
                     rows={3}
                   />
-                  <p className="text-premium-tiny text-muted-foreground italic">Recomendado: 150-160 caracteres.</p>
+                  <p className="text-xs text-muted-foreground italic">Recomendado: 150-160 caracteres.</p>
                 </div>
 
-                <div className="space-y-4 pt-lg border-t border-border/50">
+                <div className="space-y-md pt-lg border-t border-border/50">
                   <h4 className="text-sm font-serif font-bold text-primary flex items-center gap-xs">
                     <MapPin className="w-md h-md" /> SEO Local & NAP
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Nome do Negócio</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">Nome do Negócio</Label>
                       <Input 
                         value={formData.business_name || ''} 
                         onChange={e => setFormData({...formData, business_name: e.target.value})}
                         placeholder="Ex: Cathedra Digital HQ"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Email de Contato</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">Email de Contato</Label>
                       <Input 
                         value={formData.business_email || ''} 
                         onChange={e => setFormData({...formData, business_email: e.target.value})}
                         placeholder="contato@cathedra.com"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Endereço Físico</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">Endereço Físico</Label>
                       <Input 
                         value={formData.business_address || ''} 
                         onChange={e => setFormData({...formData, business_address: e.target.value})}
                         placeholder="Rua Exemplo, 123 - São Paulo"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Horário de Funcionamento</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">Horário de Funcionamento</Label>
                       <Input 
                         value={formData.opening_hours || ''} 
                         onChange={e => setFormData({...formData, opening_hours: e.target.value})}
                         placeholder="Seg-Sex 08:00-18:00"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">WhatsApp / Telefone</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">WhatsApp / Telefone</Label>
                       <Input 
                         value={formData.business_whatsapp || ''} 
                         onChange={e => setFormData({...formData, business_whatsapp: e.target.value})}
                         placeholder="+55 11 99999-9999"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Google Maps URL</Label>
+                    <div className="space-y-xs">
+                      <Label className="text-xs font-black uppercase tracking-widest opacity-70">Google Maps URL</Label>
                       <Input 
                         value={formData.google_maps_url || ''} 
                         onChange={e => setFormData({...formData, google_maps_url: e.target.value})}
@@ -236,8 +236,8 @@ const AdminSeoTab: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-md pt-lg border-t border-border/50">
-                  <div className="space-y-2">
-                    <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70 flex items-center gap-2xs">
+                  <div className="space-y-xs">
+                    <Label className="text-xs font-black uppercase tracking-widest opacity-70 flex items-center gap-2xs">
                       <Search className="w-sm h-sm" /> GSC Verification Code
                     </Label>
                     <Input 
@@ -246,8 +246,8 @@ const AdminSeoTab: React.FC = () => {
                       placeholder="Código da meta tag google-site-verification"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70 flex items-center gap-2xs">
+                  <div className="space-y-xs">
+                    <Label className="text-xs font-black uppercase tracking-widest opacity-70 flex items-center gap-2xs">
                       <LineChart className="w-sm h-sm" /> GA4 Measurement ID
                     </Label>
                     <Input 
@@ -271,13 +271,13 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-soft">
+          <Card className="border-border/50 shadow-md">
             <CardHeader>
               <CardTitle className="text-lg font-serif">Simulação de Google Snippet</CardTitle>
               <CardDescription>Como seu site aparece nos resultados de busca.</CardDescription>
             </CardHeader>
             <CardContent className="p-lg">
-              <div className="bg-background border border-border/50 rounded-premium p-lg shadow-inner space-y-2">
+              <div className="bg-background border border-border/50 rounded-premium p-lg shadow-inner space-y-xs">
                 <div className="flex items-center gap-xs mb-2xs">
                   <div className="w-md h-md bg-muted rounded-premium flex items-center justify-center overflow-hidden">
                     <Globe className="w-sm h-sm text-muted-foreground" />
@@ -297,14 +297,14 @@ const AdminSeoTab: React.FC = () => {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card className="border-border/50 shadow-soft h-fit">
+        <div className="space-y-lg">
+          <Card className="border-border/50 shadow-md h-fit">
             <CardHeader className="bg-muted/10 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-xs">
                 <LineChart className="w-md h-md text-primary" /> GA4 Debug Status
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-md space-y-3">
+            <CardContent className="p-md space-y-sm">
               <div className="flex items-center justify-between text-xs">
                 <span>Measurement ID:</span>
                 <Badge variant="outline" className="font-mono">{formData.ga4_measurement_id || 'Não configurado'}</Badge>
@@ -321,11 +321,11 @@ const AdminSeoTab: React.FC = () => {
                   </Badge>
                 )}
               </div>
-              <div className="pt-xs space-y-2 border-t border-border/50">
-                <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
+              <div className="pt-xs space-y-xs border-t border-border/50">
+                <p className="text-xs font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
                 <div className="grid grid-cols-2 gap-xs">
                   {['Page Views', 'Clicks', 'Submits', 'Session'].map(ev => (
-                    <div key={ev} className="flex items-center gap-2xs text-premium-tiny font-medium">
+                    <div key={ev} className="flex items-center gap-2xs text-xs font-medium">
                       <div className={`w-2xs h-2xs rounded-full ${(window as any).gtag ? 'bg-emerald-500' : 'bg-muted'}`} />
                       {ev}
                     </div>
@@ -335,15 +335,15 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-soft h-fit">
+          <Card className="border-border/50 shadow-md h-fit">
             <CardHeader className="bg-amber-500/5 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-xs">
                 <MapPin className="w-md h-md text-amber-600" /> Validação NAP & Local SEO
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-md space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
+            <CardContent className="p-md space-y-md">
+              <div className="space-y-xs">
+                <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest opacity-60">
                   <span>NAP Status</span>
                   {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) && formData.opening_hours ? (
                     <span className="text-emerald-600 flex items-center gap-2xs"><CheckCircle2 className="w-sm h-sm" /> Válido</span>
@@ -352,32 +352,32 @@ const AdminSeoTab: React.FC = () => {
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-xs">
-                  <Badge variant={formData.business_name ? "secondary" : "outline"} className="text-premium-tiny h-md justify-start">Name: {formData.business_name ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.business_address ? "secondary" : "outline"} className="text-premium-tiny h-md justify-start">Address: {formData.business_address ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-premium-tiny h-md justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-premium-tiny h-md justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_name ? "secondary" : "outline"} className="text-xs h-md justify-start">Name: {formData.business_name ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_address ? "secondary" : "outline"} className="text-xs h-md justify-start">Address: {formData.business_address ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-xs h-md justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-xs h-md justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-sm">
                 <div className="flex items-center justify-between">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
+                  <p className="text-xs font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
                   <div className="flex gap-xs">
                     <Button 
                       onClick={() => setJsonMode(jsonMode === 'pretty' ? 'minified' : 'pretty')}
-                      className="text-premium-tiny font-bold uppercase underline text-primary"
+                      className="text-xs font-bold uppercase underline text-primary"
                     >
                       {jsonMode === 'pretty' ? 'Minificar' : 'Pretty Print'}
                     </Button>
                     <Button 
                       onClick={handleCopyJSONLD}
-                      className="flex items-center gap-2xs text-premium-tiny font-bold uppercase text-primary hover:bg-primary/5 p-2xs rounded"
+                      className="flex items-center gap-2xs text-xs font-bold uppercase text-primary hover:bg-primary/5 p-2xs rounded"
                     >
                       <Copy className="w-xs h-xs" /> Copiar
                     </Button>
                   </div>
                 </div>
-                <div className="bg-black/90 text-amber-400 p-sm rounded-premium text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                <div className="bg-black/90 text-amber-400 p-sm rounded-premium text-xs font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
                   <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -396,12 +396,12 @@ const AdminSeoTab: React.FC = () => {
 
               <div className="pt-xs border-t border-border/50">
                 <div className="flex items-center justify-between mb-xs">
-                   <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
+                   <p className="text-xs font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
                    <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={verifyDOM}
-                    className="h-lg text-premium-tiny uppercase font-black"
+                    className="h-lg text-xs uppercase font-black"
                    >
                      <Eye className="w-sm h-sm mr-2xs" /> Verificar no Site
                    </Button>
@@ -411,7 +411,7 @@ const AdminSeoTab: React.FC = () => {
                   domVerified === 'fail' ? 'bg-destructive/5 border-destructive/20 text-destructive' : 
                   'bg-muted/30 border-border/50 text-muted-foreground'
                 }`}>
-                  <span className="text-premium-tiny font-bold">
+                  <span className="text-xs font-bold">
                     {domVerified === 'pending' ? 'Aguardando verificação...' : 
                      domVerified === 'ok' ? 'JSON-LD Ativo no DOM' : 'JSON-LD Ausente ou Inválido'}
                   </span>
@@ -422,13 +422,13 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-soft h-fit">
+          <Card className="border-border/50 shadow-md h-fit">
             <CardHeader className="bg-primary/5 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-xs">
                 <Sparkles className="w-md h-md text-primary" /> IA SEO Insights
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-md space-y-4">
+            <CardContent className="p-md space-y-md">
               <div className="p-sm bg-muted/50 rounded-premium border border-border/50 text-premium-small leading-relaxed">
                 <p className="font-bold text-primary mb-2xs">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
@@ -436,12 +436,12 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-soft h-fit bg-muted/20">
-            <CardContent className="p-md space-y-3">
-              <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary">
+          <Card className="border-border/50 shadow-md h-fit bg-muted/20">
+            <CardContent className="p-md space-y-sm">
+              <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary">
                 <Info className="w-sm h-sm" /> Links Úteis
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <a href="https://search.google.com/search-console" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
                   Search Console <ExternalLink className="w-sm h-sm opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>

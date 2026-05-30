@@ -4,7 +4,7 @@
 }
 
 .desktop-main {
-  @apply w-full max-w-4xl mx-auto space-y-10;
+  @apply w-full max-w-4xl mx-auto space-y-xl;
 }
 
 .desktop-aside {
@@ -12,7 +12,7 @@
 }
 
 .content-section {
-  @apply space-y-8;
+  @apply space-y-xl;
 }
 
 #root {

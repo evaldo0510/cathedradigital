@@ -42,9 +42,9 @@ const DesignSystemGuide: React.FC = () => {
     <div className="min-h-screen bg-background py-3xl md:py-4xl px-lg transition-colors duration-1000">
       <SEOHead title="Design System Documentation | Cathedra" description="Tokens, regras e componentes do ecossistema visual Cathedra Digital." path="/design-system" />
       
-      <div className="max-w-6xl mx-auto space-y-32">
+      <div className="max-w-6xl mx-auto space-y-4xl">
         {/* Header */}
-        <header className="space-y-12 text-center py-3xl">
+        <header className="space-y-2xl text-center py-3xl">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -53,7 +53,7 @@ const DesignSystemGuide: React.FC = () => {
             <Icons.ShieldCheck className="w-md h-md text-secondary" />
             <span className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/40">Sistemática Visual v4.0</span>
           </motion.div>
-          <div className="space-y-6">
+          <div className="space-y-lg">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ const DesignSystemGuide: React.FC = () => {
         </header>
 
         {/* 1. Color System */}
-        <section className="space-y-16">
+        <section className="space-y-3xl">
           <div className="flex items-center gap-xl">
             <h2 className="text-sm font-bold uppercase tracking-[0.4em] text-primary/30 shrink-0">01. Chroma & Contrast</h2>
             <div className="h-px w-full bg-primary/5" />
@@ -85,7 +85,7 @@ const DesignSystemGuide: React.FC = () => {
                 variant="interactive" 
                 className="group scroll-mt-4xl"
               >
-                <div className="space-y-6">
+                <div className="space-y-lg">
                   <div 
                     className="w-full h-4xl rounded-premium border border-primary/5 shadow-inner transition-premium group-hover:scale-[1.02]" 
                     style={{ backgroundColor: `hsl(var(${color.variable}))` }}
@@ -102,13 +102,13 @@ const DesignSystemGuide: React.FC = () => {
         </section>
 
         {/* 2. Typography Hierarchy */}
-        <section className="space-y-16">
+        <section className="space-y-3xl">
           <div className="flex items-center gap-xl">
             <h2 className="text-sm font-bold uppercase tracking-[0.4em] text-primary/30 shrink-0">02. Typographia Sacra</h2>
             <div className="h-px w-full bg-primary/5" />
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-2xl">
             {tokens.typography.map((font) => (
               <div key={font.name} className="group border-b border-primary/5 pb-2xl last:border-0">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-2xl items-baseline">
@@ -128,16 +128,16 @@ const DesignSystemGuide: React.FC = () => {
         </section>
 
         {/* 3. Spacing System */}
-        <section className="space-y-16">
+        <section className="space-y-3xl">
           <div className="flex items-center gap-xl">
             <h2 className="text-sm font-bold uppercase tracking-[0.4em] text-primary/30 shrink-0">03. Spatium & Ritmus</h2>
             <div className="h-px w-full bg-primary/5" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2xl">
-            <CathedraCard padding="lg" className="space-y-10">
+            <CathedraCard padding="lg" className="space-y-xl">
               <h3 className="h4 text-primary">Escala de Espaçamento</h3>
-              <div className="space-y-6">
+              <div className="space-y-lg">
                 {tokens.spacing.map((s) => (
                   <div key={s.name} className="flex items-center gap-xl">
                     <div className="w-2xl text-[10px] font-bold text-primary/40">{s.name}</div>
@@ -151,22 +151,22 @@ const DesignSystemGuide: React.FC = () => {
               </p>
             </CathedraCard>
 
-            <div className="space-y-8">
-              <CathedraCard padding="md" className="space-y-4">
+            <div className="space-y-xl">
+              <CathedraCard padding="md" className="space-y-md">
                 <h5 className="text-secondary uppercase tracking-widest text-[9px] font-bold">Layout Margins</h5>
                 <div className="aspect-video bg-primary/[0.02] border border-dashed border-primary/10 rounded-premium flex items-center justify-center p-xl">
-                  <div className="w-full h-full border border-dashed border-secondary/40 rounded-premium-sm flex items-center justify-center text-[10px] font-mono text-secondary/60">
+                  <div className="w-full h-full border border-dashed border-secondary/40 rounded-sm flex items-center justify-center text-[10px] font-mono text-secondary/60">
                     .app-container (1440px max)
                   </div>
                 </div>
               </CathedraCard>
-              <CathedraCard padding="md" className="space-y-4">
+              <CathedraCard padding="md" className="space-y-md">
                 <h5 className="text-secondary uppercase tracking-widest text-[9px] font-bold">Stacking Rhythm</h5>
-                <div className="space-y-4">
+                <div className="space-y-md">
                   <div className="h-xl bg-primary/5 rounded-full w-full" />
                   <div className="h-xl bg-primary/5 rounded-full w-md/5" />
                   <div className="h-xl bg-primary/5 rounded-full w-xs/3" />
-                  <p className="text-[10px] text-center text-muted-foreground font-mono pt-xs">.stack-spacing (space-y-16)</p>
+                  <p className="text-[10px] text-center text-muted-foreground font-mono pt-xs">.stack-spacing (space-y-3xl)</p>
                 </div>
               </CathedraCard>
             </div>
@@ -174,33 +174,33 @@ const DesignSystemGuide: React.FC = () => {
         </section>
 
         {/* 4. Borders & Shadows */}
-        <section className="space-y-16">
+        <section className="space-y-3xl">
           <div className="flex items-center gap-xl">
             <h2 className="text-sm font-bold uppercase tracking-[0.4em] text-primary/30 shrink-0">04. Limites & Umbrae</h2>
             <div className="h-px w-full bg-primary/5" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-xl">
-            <div className="space-y-4">
+            <div className="space-y-md">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium shadow-premium transition-premium hover:shadow-premium-hover flex items-center justify-center">
                 <Icons.Layout className="w-xl h-xl text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Premium Shadow</p>
             </div>
-            <div className="space-y-4">
-              <div className="aspect-square bg-card border border-primary/5 rounded-premium-sm flex items-center justify-center">
+            <div className="space-y-md">
+              <div className="aspect-square bg-card border border-primary/5 rounded-sm flex items-center justify-center">
                 <Icons.Menu className="w-xl h-xl text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius SM (1.25rem)</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-md">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium flex items-center justify-center">
                 <Icons.Plus className="w-2xl h-2xl text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius MD (2rem)</p>
             </div>
-            <div className="space-y-4">
-              <div className="aspect-square bg-card border border-primary/5 rounded-premium-lg flex items-center justify-center">
+            <div className="space-y-md">
+              <div className="aspect-square bg-card border border-primary/5 rounded-lg flex items-center justify-center">
                 <Icons.Maximize className="w-3xl h-3xl text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius LG (2.5rem)</p>
@@ -209,14 +209,14 @@ const DesignSystemGuide: React.FC = () => {
         </section>
 
         {/* 5. Componentes Interativos */}
-        <section className="space-y-16 pb-3xl">
+        <section className="space-y-3xl pb-3xl">
           <div className="flex items-center gap-xl">
             <h2 className="text-sm font-bold uppercase tracking-[0.4em] text-primary/30 shrink-0">05. Organica & Actio</h2>
             <div className="h-px w-full bg-primary/5" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl">
-            <CathedraCard padding="xl" className="space-y-12">
+            <CathedraCard padding="xl" className="space-y-2xl">
               <h3 className="h4 text-primary">Buttons Protocol</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
                 <CathedraButton variant="primary">Primary Action</CathedraButton>
@@ -226,11 +226,11 @@ const DesignSystemGuide: React.FC = () => {
               </div>
             </CathedraCard>
 
-            <CathedraCard padding="xl" variant="interactive" className="flex flex-col items-center justify-center text-center space-y-8 bg-secondary/[0.02]">
+            <CathedraCard padding="xl" variant="interactive" className="flex flex-col items-center justify-center text-center space-y-xl bg-secondary/[0.02]">
               <div className="w-3xl h-3xl rounded-full bg-secondary/10 flex items-center justify-center animate-pulse">
                 <Icons.Zap className="w-xl h-xl text-secondary" />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-sm">
                 <h3 className="text-2xl font-serif">Micro-interações</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
                   Passe o mouse sobre este card para sentir o feedback premium: elevação sutil, sombreamento profundo e blur dinâmico.

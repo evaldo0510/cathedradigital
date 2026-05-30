@@ -48,8 +48,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
       </div>
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-3xl items-center relative z-10">
-        <div className="space-y-10">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
+        <div className="space-y-xl">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-lg">
             <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
               Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
             </h2>
@@ -61,7 +61,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-md">
             {registerBenefits.map((benefit, i) => (
               <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
-                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-lg rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full">
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-sm p-lg rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full">
                   <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-xl h-xl rounded-premium bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </motion.div>

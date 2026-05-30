@@ -146,15 +146,15 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-xl text-center space-y-6 my-xl"
+      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-xl text-center space-y-lg my-xl"
     >
       <div className="mx-auto w-3xl h-3xl rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
         <Icons.WifiOff className="w-xl h-xl text-primary/40" />
       </div>
 
       {downloading && (
-        <div className="space-y-3 animate-in fade-in slide-in-from-top-xs">
-          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
+        <div className="space-y-sm animate-in fade-in slide-in-from-top-xs">
+          <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
@@ -163,7 +163,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       )}
 
 
-      <div className="space-y-2">
+      <div className="space-y-xs">
         <h3 className="text-xl font-serif font-bold text-foreground">
           {paragraph ? `Parágrafo §${paragraph} Offline` : 'Catecismo Offline'}
         </h3>
@@ -212,7 +212,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       </div>
 
       <div className="pt-md border-t border-border/40">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>

@@ -128,7 +128,7 @@ const BibliotecaPage: React.FC = () => {
       subtitle="Sacrum Archivum"
       icon={Icons.Compass}
     >
-      <div className="w-full space-y-16 pb-4xl">
+      <div className="w-full space-y-3xl pb-4xl">
         <div className="relative group max-w-2xl mx-auto">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
@@ -140,13 +140,13 @@ const BibliotecaPage: React.FC = () => {
           />
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-4xl">
           {filtered.length === 0 && (
             <p className="text-center font-serif italic text-muted-foreground/40 py-3xl">Nenhum módulo encontrado no silêncio da busca.</p>
           )}
           
           {filtered.map((group, groupIdx) => (
-            <div key={group.category} className="space-y-10">
+            <div key={group.category} className="space-y-xl">
               <div className="flex items-center gap-lg">
                 <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">
                   {group.category}
@@ -166,7 +166,7 @@ const BibliotecaPage: React.FC = () => {
                     <div className={cn("w-2xl h-2xl rounded-premium flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
                       {item.icon}
                     </div>
-                    <div className="space-y-2 flex-1">
+                    <div className="space-y-xs flex-1">
                       <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-base tracking-tight">{item.title}</h3>
                       <p className="text-xs leading-relaxed text-muted-foreground/40 line-clamp-2 italic">{item.description}</p>
                     </div>

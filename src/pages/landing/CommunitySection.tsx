@@ -85,7 +85,7 @@ const CommunitySection = () => {
                 <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
-                <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-xs py-2xs rounded-full">
+                <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-xs py-2xs rounded-full">
                   {feature.tag}
                 </span>
               </div>
@@ -102,9 +102,9 @@ const CommunitySection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="p-xl rounded-[3rem] bg-muted border border-border/50 text-center space-y-6"
+          className="p-xl rounded-[3rem] bg-muted border border-border/50 text-center space-y-lg"
         >
-          <div className="flex -space-x-4 justify-center mb-md">
+          <div className="flex -space-x-md justify-center mb-md">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="w-2xl h-2xl rounded-premium border-4 border-background bg-muted overflow-hidden">
                 <img 
@@ -114,7 +114,7 @@ const CommunitySection = () => {
                 />
               </div>
             ))}
-            <div className="w-2xl h-2xl rounded-premium border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
+            <div className="w-2xl h-2xl rounded-premium border-4 border-background bg-primary flex items-center justify-center text-white text-xs font-bold">
               +1k
             </div>
           </div>

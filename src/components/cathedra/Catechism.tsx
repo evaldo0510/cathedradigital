@@ -78,7 +78,7 @@ const CatechismContent: React.FC<{
 
   if (isError) {
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-md text-destructive font-serif text-sm py-md space-y-2">
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-md text-destructive font-serif text-sm py-md space-y-xs">
         <div className="font-bold flex items-center gap-xs">
            <Icons.Cross className="w-md h-md" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
@@ -238,7 +238,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
-        <div className="max-w-[70ch] mx-auto space-y-12">
+        <div className="max-w-[70ch] mx-auto space-y-2xl">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-md py-md border-b border-primary/5 mb-2xl">
              <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>
@@ -262,7 +262,7 @@ const Catechism: React.FC = memo(() => {
              <ReadingControlPanel />
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-3xl">
             {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
             ))}
@@ -279,7 +279,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'sections' && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
-        <div className="w-full space-y-12 pb-4xl">
+        <div className="w-full space-y-2xl pb-4xl">
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-xl py-sm h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-sm h-sm mr-xs" /> Voltar às Partes
@@ -289,7 +289,7 @@ const Catechism: React.FC = memo(() => {
             {selectedPart.sections.map((sec, idx) => (
               <CathedraCard key={sec.id} variant="interactive" padding="none" onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group">
                 <div className="p-lg flex items-center justify-between h-full">
-                  <div className="space-y-2 text-left">
+                  <div className="space-y-xs text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
                     <h3 className="text-base font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{sec.title}</h3>
                     <p className="text-[9px] text-muted-foreground/50 italic tracking-wider uppercase">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
@@ -307,7 +307,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
-      <div className="w-full space-y-12 pb-4xl">
+      <div className="w-full space-y-2xl pb-4xl">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
@@ -318,9 +318,9 @@ const Catechism: React.FC = memo(() => {
             <div 
               key={part.part} 
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-lg flex flex-col justify-between h-full space-y-6 text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2rem] border border-transparent hover:border-primary/[0.03]"
+              className="group cursor-pointer p-lg flex flex-col justify-between h-full space-y-lg text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2rem] border border-transparent hover:border-primary/[0.03]"
             >
-              <div className="space-y-3">
+              <div className="space-y-sm">
                 <div className="flex items-center gap-sm">
                   <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30">{part.part}</span>
                   <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />

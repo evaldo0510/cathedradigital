@@ -111,14 +111,14 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
       className="w-full mb-xl md:mb-3xl"
     >
       <CathedraCard variant={variant} padding="none" className="p-md md:p-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-none">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.01] rounded-full -mr-4xl -mt-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
+        <div className="absolute top-0 right-0 w-4xl h-4xl bg-primary/[0.01] rounded-full -mr-4xl -mt-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-md md:gap-xl relative z-10">
           <div className="flex items-center gap-sm md:gap-lg">
             <div className="w-2xl h-2xl md:w-2xl md:h-2xl rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
               <Icons.Compass className="w-lg h-lg" strokeWidth={1} />
             </div>
-            <div className="space-y-1 text-center md:text-left">
+            <div className="space-y-2xs text-center md:text-left">
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/40">
                 {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>

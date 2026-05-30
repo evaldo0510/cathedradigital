@@ -18,20 +18,20 @@ const HowItWorksSection = () => {
 
   return (
     <section ref={sectionRef} className="w-full py-4xl px-lg bg-muted/30 border-y border-border/20 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-3xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="text-center space-y-4"
+          className="text-center space-y-md"
         >
           <motion.span
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/60 block italic"
+            className="text-xs font-black uppercase tracking-[0.4em] text-primary/60 block italic"
           >
             Passo a passo
           </motion.span>
@@ -59,7 +59,7 @@ const HowItWorksSection = () => {
                 delay: i * 0.2,
                 ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
               }}
-              className="relative text-center space-y-6"
+              className="relative text-center space-y-lg"
             >
               <motion.div
                 whileHover={{ scale: 1.15, rotate: -8 }}
@@ -73,7 +73,7 @@ const HowItWorksSection = () => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + i * 0.2, type: "spring", stiffness: 500 }}
-                  className="absolute -top-xs -right-xs w-lg h-lg rounded-full bg-primary text-primary-foreground text-premium-tiny font-black flex items-center justify-center border border-primary/20"
+                  className="absolute -top-xs -right-xs w-lg h-lg rounded-full bg-primary text-primary-foreground text-xs font-black flex items-center justify-center border border-primary/20"
                 >
                   {step.num}
                 </motion.span>

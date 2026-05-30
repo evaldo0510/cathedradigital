@@ -333,7 +333,7 @@ const ItinerariumStepPage: React.FC = () => {
           >
             <X className="w-md h-md text-primary" />
           </Button>
-          <div className="space-y-0.5" aria-live="polite">
+          <div className="space-y-3xs" aria-live="polite">
             <h1 className="text-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
             <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-xs">
               <Clock className="w-sm h-sm text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
@@ -362,24 +362,24 @@ const ItinerariumStepPage: React.FC = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar reader-container" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
-        <div className="mx-auto px-md md:px-lg py-2xl space-y-12 pb-4xl reader-text">
+        <div className="mx-auto px-md md:px-lg py-2xl space-y-2xl pb-4xl reader-text">
 
-          <header className="text-center space-y-4">
+          <header className="text-center space-y-md">
             <Badge variant="outline" className="text-primary/60 border-primary/10">{step.step_type}</Badge>
             <h2 className="text-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
           </header>
 
           <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg md:text-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
-             <div className="space-y-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.content.html || '') }} />
+             <div className="space-y-lg" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.content.html || '') }} />
              {!step.content.html && (
-               <div className="flex flex-col items-center justify-center py-3xl space-y-6 opacity-30">
+               <div className="flex flex-col items-center justify-center py-3xl space-y-lg opacity-30">
                  <Icons.Sparkles className="w-2xl h-2xl animate-pulse" />
                  <p className="italic text-center font-serif">O conteúdo deste passo está sendo preparado em silêncio...</p>
                </div>
              )}
           </article>
 
-          <div className="space-y-4 pt-2xl border-t border-border/10">
+          <div className="space-y-md pt-2xl border-t border-border/10">
             <div className="flex items-center gap-xs text-primary">
               <PenLine className="w-md h-md" />
               <h3 className="text-sm font-black uppercase tracking-widest">Sua Reflexão</h3>

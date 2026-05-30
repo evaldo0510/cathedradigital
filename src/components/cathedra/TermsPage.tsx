@@ -13,7 +13,7 @@ const TermsPage: React.FC = () => {
       <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-xs">Termos de Uso</h1>
       <p className="text-xs font-black uppercase tracking-widest text-primary mb-xl">Última atualização: Abril de 2026</p>
 
-      <div className="prose prose-sm dark:prose-invert max-w-none space-y-8 text-muted-foreground">
+      <div className="prose prose-sm dark:prose-invert max-w-none space-y-xl text-muted-foreground">
         <section>
           <h2 className="text-lg font-bold text-foreground">1. Aceitação dos Termos</h2>
           <p>

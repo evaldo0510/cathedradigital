@@ -50,7 +50,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
     <div className="relative inline-flex">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2xs px-xs py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+        className={`flex items-center gap-2xs px-xs py-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
           notes.length > 0
             ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
@@ -65,7 +65,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-xs w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-md space-y-3">
+        <div className="absolute right-0 top-full mt-xs w-4xl max-h-4xl overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-md space-y-sm">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}
@@ -76,7 +76,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           </div>
 
           {/* New note form */}
-          <div className="space-y-2">
+          <div className="space-y-xs">
             <textarea
               value={newNote}
               onChange={e => setNewNote(e.target.value)}
@@ -97,7 +97,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
               <Button
                 onClick={handleSave}
                 disabled={!newNote.trim()}
-                className="px-sm py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
+                className="px-sm py-2xs rounded-full text-xs font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
               >
                 Salvar
               </Button>
@@ -109,9 +109,9 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           {notes.map(note => {
             const cfg = colorCfg(note.highlight_color);
             return (
-              <div key={note.id} className={`rounded-full p-sm ${cfg.bg} border ${cfg.border} space-y-1`}>
+              <div key={note.id} className={`rounded-full p-sm ${cfg.bg} border ${cfg.border} space-y-2xs`}>
                 {editingId === note.id ? (
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <textarea
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
@@ -119,27 +119,27 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
                       className="w-full px-xs py-2xs rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none"
                     />
                     <div className="flex gap-xs">
-                      <Button onClick={() => handleUpdate(note.id)} className="text-premium-tiny font-bold text-primary">Salvar</Button>
-                      <Button onClick={() => setEditingId(null)} className="text-premium-tiny text-muted-foreground">Cancelar</Button>
+                      <Button onClick={() => handleUpdate(note.id)} className="text-xs font-bold text-primary">Salvar</Button>
+                      <Button onClick={() => setEditingId(null)} className="text-xs text-muted-foreground">Cancelar</Button>
                     </div>
                   </div>
                 ) : (
                   <>
                     <p className="text-sm text-foreground leading-relaxed">{note.note_text}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-premium-tiny text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         {new Date(note.created_at).toLocaleDateString('pt-BR')}
                       </span>
                       <div className="flex gap-xs">
                         <Button
                           onClick={() => { setEditingId(note.id); setEditText(note.note_text); }}
-                          className="text-premium-tiny text-muted-foreground hover:text-foreground"
+                          className="text-xs text-muted-foreground hover:text-foreground"
                         >
                           Editar
                         </Button>
                         <Button
                           onClick={() => deleteNote(note.id)}
-                          className="text-premium-tiny text-destructive hover:underline"
+                          className="text-xs text-destructive hover:underline"
                         >
                           Excluir
                         </Button>

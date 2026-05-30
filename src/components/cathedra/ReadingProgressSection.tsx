@@ -26,7 +26,7 @@ export const ReadingProgressSection: React.FC = () => {
             <div className="w-2xl h-2xl rounded-full bg-primary/[0.005] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:text-primary/50 transition-all duration-1000 border border-primary/[0.01]">
               <Clock className="w-lg h-lg" strokeWidth={0.5} />
             </div>
-            <div className="space-y-2 md:space-y-4">
+            <div className="space-y-xs md:space-y-md">
               <div className="flex items-center gap-md">
                 <span className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/40">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 

@@ -93,7 +93,7 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-xs text-premium-tiny font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+              className="flex items-center gap-xs text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
               aria-label="Mudar idioma"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
@@ -108,7 +108,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-xs w-40 bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
+                  className="absolute right-0 mt-xs w-4xl bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button

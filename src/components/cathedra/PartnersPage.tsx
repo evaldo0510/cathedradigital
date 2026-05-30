@@ -98,9 +98,9 @@ const PartnersPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full space-y-12 py-md">
+    <div className="w-full space-y-2xl py-md">
       {/* Header Section */}
-      <section className="text-center space-y-4">
+      <section className="text-center space-y-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ const PartnersPage: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-64 rounded-premium bg-muted/40 animate-pulse border border-border" />
+              <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
             ))}
           </div>
         ) : partners.length > 0 ? (
@@ -160,7 +160,7 @@ const PartnersPage: React.FC = () => {
                       </div>
                     )}
                   </CardHeader>
-                  <CardContent className="p-lg space-y-3">
+                  <CardContent className="p-lg space-y-sm">
                     <CardTitle className="text-xl group-hover:text-primary transition-colors">
                       {partner.name}
                     </CardTitle>
@@ -190,12 +190,12 @@ const PartnersPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-3xl px-lg text-center space-y-6 bg-muted/20 rounded-full border-2 border-dashed border-border/50"
+            className="flex flex-col items-center justify-center py-3xl px-lg text-center space-y-lg bg-muted/20 rounded-full border-2 border-dashed border-border/50"
           >
             <div className="w-3xl h-3xl rounded-premium bg-primary/5 flex items-center justify-center">
               <Icons.Community className="w-xl h-xl text-muted-foreground/50" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <h3 className="text-2xl font-semibold text-foreground/80">
                 Em breve novos parceiros farão parte desta missão
               </h3>
@@ -218,8 +218,8 @@ const PartnersPage: React.FC = () => {
                   </DialogDescription>
                 </DialogHeader>
                 
-                <form onSubmit={handleSubmit} className="space-y-5 pt-md">
-                  <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="space-y-md pt-md">
+                  <div className="space-y-xs">
                     <Label htmlFor="name">Nome da Instituição/Empresa *</Label>
                     <Input 
                       id="name" 
@@ -231,7 +231,7 @@ const PartnersPage: React.FC = () => {
                     />
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <Label htmlFor="contact_email">E-mail de Contato *</Label>
                     <Input 
                       id="contact_email" 
@@ -244,7 +244,7 @@ const PartnersPage: React.FC = () => {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <Label htmlFor="description">Breve Descrição</Label>
                     <Textarea 
                       id="description" 
@@ -257,7 +257,7 @@ const PartnersPage: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
-                    <div className="space-y-2">
+                    <div className="space-y-xs">
                       <Label htmlFor="website_url">Site Externo (URL)</Label>
                       <Input 
                         id="website_url" 
@@ -267,7 +267,7 @@ const PartnersPage: React.FC = () => {
                         placeholder="https://..." 
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-xs">
                       <Label htmlFor="logo_url">URL da Logo</Label>
                       <Input 
                         id="logo_url" 
@@ -307,9 +307,9 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="bg-primary/5 rounded-full p-xl md:p-2xl text-center space-y-6 border border-primary/10"
+          className="bg-primary/5 rounded-full p-xl md:p-2xl text-center space-y-lg border border-primary/10"
         >
-          <div className="max-w-2xl mx-auto space-y-4">
+          <div className="max-w-2xl mx-auto space-y-md">
             <h2 className="text-2xl md:text-3xl font-bold">Quer apoiar esta causa?</h2>
             <p className="text-muted-foreground">
               Junte-se a nós como um patrocinador e ajude a manter o Cathedra gratuito e acessível para milhares de fiéis em todo o mundo.
@@ -326,25 +326,25 @@ const PartnersPage: React.FC = () => {
                       Preencha os dados abaixo para submeter sua proposta de parceria ou patrocínio.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-5 pt-md">
-                    <div className="space-y-2">
+                  <form onSubmit={handleSubmit} className="space-y-md pt-md">
+                    <div className="space-y-xs">
                       <Label htmlFor="name-bottom">Nome da Instituição/Empresa *</Label>
                       <Input id="name-bottom" name="name" value={formData.name} onChange={handleInputChange} placeholder="Ex: Editora São José" required />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-xs">
                       <Label htmlFor="email-bottom">E-mail de Contato *</Label>
                       <Input id="email-bottom" name="contact_email" type="email" value={formData.contact_email} onChange={handleInputChange} placeholder="seu@email.com" required />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-xs">
                       <Label htmlFor="desc-bottom">Breve Descrição</Label>
                       <Textarea id="desc-bottom" name="description" value={formData.description} onChange={handleInputChange} placeholder="Conte-nos um pouco sobre sua missão..." className="min-h-[100px] resize-none" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
-                      <div className="space-y-2">
+                      <div className="space-y-xs">
                         <Label htmlFor="site-bottom">Site Externo (URL)</Label>
                         <Input id="site-bottom" name="website_url" value={formData.website_url} onChange={handleInputChange} placeholder="https://..." />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-xs">
                         <Label htmlFor="logo-bottom">URL da Logo</Label>
                         <Input id="logo-bottom" name="logo_url" value={formData.logo_url} onChange={handleInputChange} placeholder="https://..." />
                       </div>

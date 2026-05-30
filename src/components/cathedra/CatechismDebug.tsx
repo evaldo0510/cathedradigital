@@ -308,7 +308,7 @@ const CatechismDebug: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-lg space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto p-lg space-y-xl animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div>
           <h1 className="text-2xl font-serif font-bold text-foreground">Depuração do Catecismo</h1>
@@ -333,13 +333,13 @@ const CatechismDebug: React.FC = () => {
           <Button 
             onClick={reprocessIncomplete}
             disabled={isReprocessing}
-            className="px-md py-xs rounded-full bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-xs shadow-soft"
+            className="px-md py-xs rounded-full bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-xs shadow-md"
           >
             <Icons.PenTool className="w-sm h-sm" /> Reparar Incompletos
           </Button>
           <Button 
             onClick={() => window.location.href = '/catechism/integrity'}
-            className="px-md py-xs rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-xs shadow-soft"
+            className="px-md py-xs rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-xs shadow-md"
           >
             <Icons.Activity className="w-sm h-sm" /> Painel de Integridade
           </Button>
@@ -354,51 +354,51 @@ const CatechismDebug: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Total no Banco</span>
+          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Total no Banco</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.total}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-success text-green-500">Gerados OK</span>
+          <span className="text-xs font-black uppercase tracking-widest text-success text-green-500">Gerados OK</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.generated}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Pendentes (402)</span>
+          <span className="text-xs font-black uppercase tracking-widest text-primary">Pendentes (402)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.pending}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-md">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Inválidos/Curtos</span>
+          <span className="text-xs font-black uppercase tracking-widest text-destructive">Inválidos/Curtos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.invalid}</div>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-soft">
+      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-md">
         <div className="p-md border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-md">
             <div className="flex items-center gap-xs bg-background/50 border border-border rounded-premium p-2xs">
               <Button 
                 onClick={() => setView('cache')}
-                className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Cache
               </Button>
               <Button 
                 onClick={() => setView('logs')}
-                className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Logs
               </Button>
               <Button 
                 onClick={() => setView('integrity')}
-                className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Integridade
               </Button>
             </div>
             {view === 'cache' && (
               <div className="flex items-center gap-xs bg-background/50 border border-border rounded-premium p-2xs">
-                <Button onClick={() => setFilter('all')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
-                <Button onClick={() => setFilter('generated')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
-                <Button onClick={() => setFilter('error')} className={`px-sm py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
+                <Button onClick={() => setFilter('all')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
+                <Button onClick={() => setFilter('generated')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
+                <Button onClick={() => setFilter('error')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
               </div>
             )}
             {view === 'integrity' && (
@@ -427,13 +427,13 @@ const CatechismDebug: React.FC = () => {
                   type="date" 
                   value={dateRange.start} 
                   onChange={e => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                  className="bg-background border border-border rounded px-xs py-2xs text-premium-tiny"
+                  className="bg-background border border-border rounded px-xs py-2xs text-xs"
                 />
                 <input 
                   type="date" 
                   value={dateRange.end} 
                   onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                  className="bg-background border border-border rounded px-xs py-2xs text-premium-tiny"
+                  className="bg-background border border-border rounded px-xs py-2xs text-xs"
                 />
                 <Button 
                   onClick={exportLogsToCSV}
@@ -451,7 +451,7 @@ const CatechismDebug: React.FC = () => {
                 </Button>
               </div>
             )}
-            <span className="text-premium-tiny text-muted-foreground uppercase font-black">
+            <span className="text-xs text-muted-foreground uppercase font-black">
               {view === 'cache' ? `Mostrando ${filteredCache.length} registros` : `Últimas 100 execuções`}
             </span>
           </div>
@@ -461,7 +461,7 @@ const CatechismDebug: React.FC = () => {
           {view === 'cache' ? (
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+                <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
                   <th className="px-lg py-md">§</th>
                   <th className="px-lg py-md">Status</th>
                   <th className="px-lg py-md">Retentativas</th>
@@ -530,7 +530,7 @@ const CatechismDebug: React.FC = () => {
           ) : view === 'logs' ? (
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+                <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
                   <th className="px-lg py-md">§</th>
                   <th className="px-lg py-md">Status</th>
                   <th className="px-lg py-md">Duração</th>
@@ -548,7 +548,7 @@ const CatechismDebug: React.FC = () => {
                     <tr key={log.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                       <td className="px-lg py-md font-bold text-primary font-serif">§{log.paragraph}</td>
                       <td className="px-lg py-md">
-                        <span className={`text-premium-tiny font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
+                        <span className={`text-xs font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
                           log.status === 'generated' || log.status === 'official' || log.status === 'static' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                           log.status === 'error_402' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
                           'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -558,7 +558,7 @@ const CatechismDebug: React.FC = () => {
                       </td>
                       <td className="px-lg py-md font-mono text-xs text-muted-foreground">{log.duration_ms}ms</td>
                       <td className="px-lg py-md text-xs text-muted-foreground truncate max-w-xs">{log.error_message || '-'}</td>
-                      <td className="px-lg py-md text-right text-premium-tiny text-muted-foreground font-medium">
+                      <td className="px-lg py-md text-right text-xs text-muted-foreground font-medium">
                         {new Date(log.created_at).toLocaleString('pt-BR')}
                       </td>
                     </tr>
@@ -567,7 +567,7 @@ const CatechismDebug: React.FC = () => {
               </tbody>
             </table>
           ) : (
-            <div className="p-xl space-y-6">
+            <div className="p-xl space-y-lg">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
                 {[
                   { label: 'Texto Oficial', field: 'content' },
@@ -577,8 +577,8 @@ const CatechismDebug: React.FC = () => {
                   const filled = cache.filter(c => c[item.field as keyof CacheEntry] && (c[item.field as keyof CacheEntry] as string).length > 20).length;
                   const percent = Math.round((filled / 2865) * 100);
                   return (
-                    <div key={item.field} className="space-y-2">
-                      <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest">
+                    <div key={item.field} className="space-y-xs">
+                      <div className="flex justify-between text-xs font-black uppercase tracking-widest">
                         <span>{item.label}</span>
                         <span>{percent}%</span>
                       </div>
@@ -593,7 +593,7 @@ const CatechismDebug: React.FC = () => {
               <div className="border border-border rounded-premium overflow-hidden">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/50 border-b border-border">
-                    <tr className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
+                    <tr className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                       <th className="px-md py-sm">Parágrafo</th>
                       <th className="px-md py-sm">Texto</th>
                       <th className="px-md py-sm">Explicação</th>

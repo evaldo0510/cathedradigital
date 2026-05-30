@@ -22,7 +22,7 @@ const AboutCreatorSection = () => {
             className="w-full md:w-2xs/3 flex justify-center"
           >
             <div className="relative">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-premium border border-border/10 p-2xs relative bg-background">
+              <div className="w-4xl h-4xl md:w-4xl md:h-4xl rounded-premium border border-border/10 p-2xs relative bg-background">
                 <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border/10">
                   <Icons.User className="w-3xl h-3xl text-muted-foreground/30" />
                 </div>
@@ -34,17 +34,17 @@ const AboutCreatorSection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="w-full md:w-xs/3 space-y-6 text-center md:text-left"
+            className="w-full md:w-xs/3 space-y-lg text-center md:text-left"
           >
             <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/5 rounded-premium">
-              <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider">
               Evaldo.os
             </h2>
             
-            <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
+            <div className="space-y-md text-muted-foreground text-lg leading-relaxed">
               <p>
                 Idealizador do Cathedra, buscador da Verdade e entusiasta da tecnologia. Minha missão é construir pontes entre o sagrado e o digital, permitindo que a profundidade da tradição católica floresça no mundo contemporâneo.
               </p>

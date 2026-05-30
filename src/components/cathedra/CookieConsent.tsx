@@ -44,18 +44,18 @@ const CookieConsent = () => {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-md left-md right-md md:left-auto md:right-xl md:w-[400px] z-[300] bg-background  border border-border p-lg rounded-full shadow-premium-hover"
         >
-          <div className="space-y-4">
+          <div className="space-y-md">
             <p className="text-sm text-muted-foreground leading-relaxed">
               {t.message}
             </p>
             <div className="flex items-center gap-md">
               <Button 
                 onClick={handleAccept}
-                className="flex-1 rounded-full font-black uppercase tracking-widest text-premium-tiny h-xl"
+                className="flex-1 rounded-full font-black uppercase tracking-widest text-xs h-xl"
               >
                 {t.accept}
               </Button>
-              <Button className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline">
+              <Button className="text-xs font-black uppercase tracking-widest text-primary hover:underline">
                 {t.policy}
               </Button>
             </div>

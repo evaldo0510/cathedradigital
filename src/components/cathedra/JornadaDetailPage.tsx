@@ -82,7 +82,7 @@ const JornadaDetailPage: React.FC = () => {
 
   if (!journey) {
     return (
-      <div className="text-center space-y-4 py-2xl">
+      <div className="text-center space-y-md py-2xl">
         <p className="text-muted-foreground">Jornada não encontrada.</p>
         <Button variant="outline" onClick={() => navigate(AppRoute.JORNADAS)}>
           <ArrowLeft className="w-md h-md mr-xs" /> Voltar
@@ -98,7 +98,7 @@ const JornadaDetailPage: React.FC = () => {
   const isJourneyComplete = totalSteps > 0 && completedCount === totalSteps;
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-lg max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-sm">
         <div className="flex-1">
@@ -113,7 +113,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <CathedraCard padding="md" className="border-primary/10 shadow-premium space-y-4">
+      <CathedraCard padding="md" className="border-primary/10 shadow-premium space-y-md">
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground font-medium">Progresso da Jornada</span>
             <span className="font-bold text-primary">{completedCount}/{totalSteps} etapas</span>
@@ -154,7 +154,7 @@ const JornadaDetailPage: React.FC = () => {
       )}
 
       {/* Steps */}
-      <div className="space-y-3">
+      <div className="space-y-sm">
         <h2 className="text-lg font-semibold text-foreground">Etapas</h2>
         {steps.map((step, index) => {
           const isCompleted = completedStepIds.has(step.id);
@@ -188,7 +188,7 @@ const JornadaDetailPage: React.FC = () => {
                     <div className="flex items-center gap-xs">
                       <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
                       {isStepLocked && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-2xs py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-xs uppercase font-black px-2xs py-0">PRO</Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-xs text-xs text-muted-foreground mt-3xs">
@@ -216,7 +216,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {isLocked && (
-        <CathedraCard padding="md" className="premium-card border-primary/10 bg-primary/[0.01] shadow-premium text-center space-y-3">
+        <CathedraCard padding="md" className="premium-card border-primary/10 bg-primary/[0.01] shadow-premium text-center space-y-sm">
             <Sparkles className="w-xl h-xl mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">

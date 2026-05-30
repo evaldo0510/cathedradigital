@@ -34,14 +34,14 @@ const LectioStep: React.FC<LectioStepProps> = ({
   if (!activeStep) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-2xl">
+    <div className="max-w-4xl mx-auto space-y-xl pb-2xl">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-lg px-xs">
-        <Button variant="outline" size="icon" onClick={onBack} className="rounded-full shadow-soft self-start md:self-center">
+        <Button variant="outline" size="icon" onClick={onBack} className="rounded-full shadow-md self-start md:self-center">
           <ArrowLeft className="w-lg h-lg text-foreground" />
         </Button>
-        <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">
+        <div className="flex-1 space-y-2xs">
+          <div className="flex items-center gap-xs text-xs font-black uppercase tracking-[0.2em] text-primary/60">
             <Feather className="w-sm h-sm" />
             Lectio Divina
           </div>
@@ -52,7 +52,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             title={`Lectio Divina — ${selectedPassage}`}
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
-          <div className="flex items-center gap-sm px-md py-sm rounded-premium bg-card border border-border shadow-soft">
+          <div className="flex items-center gap-sm px-md py-sm rounded-premium bg-card border border-border shadow-md">
             <Timer className="w-md h-md text-primary/60" />
             <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>
@@ -60,7 +60,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
       </div>
 
       {/* Step progress */}
-      <div className="px-xs space-y-6">
+      <div className="px-xs space-y-lg">
         <div className="flex gap-xs">
           {STEPS.map((step, i) => (
             <Button
@@ -85,7 +85,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
               }`}
             >
               <step.icon className={`w-md h-md ${step.id === currentStep ? 'text-white' : i <= stepIndex ? 'text-primary' : ''}`} />
-              <span className="text-premium-tiny font-black uppercase tracking-widest">{step.latin}</span>
+              <span className="text-xs font-black uppercase tracking-widest">{step.latin}</span>
             </Button>
           ))}
         </div>
@@ -99,13 +99,13 @@ const LectioStep: React.FC<LectioStepProps> = ({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.4 }}
-          className="bg-card border border-border rounded-[3rem] p-xl md:p-3xl space-y-10 shadow-premium-hover shadow-black/[0.02] relative overflow-hidden"
+          className="bg-card border border-border rounded-[3rem] p-xl md:p-3xl space-y-xl shadow-premium-hover shadow-black/[0.02] relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-2xl opacity-[0.02] pointer-events-none">
-            <activeStep.icon className="w-64 h-64 -mr-3xl -mt-3xl rotate-12" />
+            <activeStep.icon className="w-4xl h-4xl -mr-3xl -mt-3xl rotate-12" />
           </div>
 
-          <div className="relative text-center space-y-4">
+          <div className="relative text-center space-y-md">
             <motion.div 
               className={`w-3xl h-3xl rounded-[2rem] flex items-center justify-center mx-auto shadow-premium-hover border-4 border-background ${activeStep.color}`}
               initial={{ scale: 0 }}
@@ -114,16 +114,16 @@ const LectioStep: React.FC<LectioStepProps> = ({
             >
               <activeStep.icon className="w-xl h-xl" />
             </motion.div>
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{activeStep.title}</h2>
               <p className="text-base font-serif italic text-primary opacity-80">{activeStep.latin} — {activeStep.duration}</p>
             </div>
           </div>
           
-          <div className="relative space-y-8 max-w-2xl mx-auto">
-            <div className="bg-muted/50 rounded-[2.5rem] p-xl md:p-2xl border border-border/50 space-y-6">
+          <div className="relative space-y-xl max-w-2xl mx-auto">
+            <div className="bg-muted/50 rounded-[2.5rem] p-xl md:p-2xl border border-border/50 space-y-lg">
               {isBibleLoading ? (
-                <div className="space-y-4 py-md">
+                <div className="space-y-md py-md">
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="h-md bg-primary/10 rounded animate-pulse" style={{ width: `${75 + Math.random() * 25}%` }} />
                   ))}
@@ -131,10 +131,10 @@ const LectioStep: React.FC<LectioStepProps> = ({
               ) : bibleError ? (
                 <p className="text-muted-foreground italic text-center text-lg font-serif">{bibleError}</p>
               ) : bibleText.length > 0 ? (
-                <div className="space-y-6">
+                <div className="space-y-lg">
                   <div className="flex items-center gap-xs justify-center opacity-40">
                     <Book className="w-md h-md" />
-                    <p className="text-premium-tiny font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
+                    <p className="text-xs font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
                   </div>
                   <div className="font-serif leading-relaxed text-xl text-foreground/90 text-center">
                     {bibleText.map((v, i) => (
@@ -146,20 +146,20 @@ const LectioStep: React.FC<LectioStepProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="text-center space-y-6">
+                <div className="text-center space-y-lg">
                   <p className="text-xl text-foreground/90 leading-relaxed font-serif italic">"{activeStep.instruction}"</p>
                 </div>
               )}
             </div>
             
-            <div className="space-y-8">
-              <div className="text-center space-y-3">
-                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
+            <div className="space-y-xl">
+              <div className="text-center space-y-sm">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
                 <p className="text-lg md:text-xl font-serif font-bold text-primary italic leading-relaxed">"{activeStep.prompt}"</p>
               </div>
 
-              <div className="space-y-4 group">
-                <div className="flex items-center gap-xs justify-center text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
+              <div className="space-y-md group">
+                <div className="flex items-center gap-xs justify-center text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
                   <PenTool className="w-sm h-sm" /> Sua Reflexão
                 </div>
                 <textarea
@@ -167,7 +167,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
                   onChange={e => onNotesChange({ ...notes, [activeStep.id]: e.target.value })}
                   rows={6}
                   placeholder="Deixe a alma falar... Escreva aqui suas reflexões, luzes e resoluções."
-                  className="w-full px-xl py-xl rounded-[2rem] border border-border bg-background text-lg md:text-xl font-serif text-foreground resize-none focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft leading-relaxed"
+                  className="w-full px-xl py-xl rounded-[2rem] border border-border bg-background text-lg md:text-xl font-serif text-foreground resize-none focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-md leading-relaxed"
                 />
               </div>
             </div>

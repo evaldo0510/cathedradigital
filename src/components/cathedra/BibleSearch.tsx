@@ -55,7 +55,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-md">
       <div className="flex items-center gap-xs">
         <div className="relative flex-1">
           <label htmlFor="bible-search-input" className="sr-only">Buscar nos versículos</label>
@@ -80,7 +80,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </div>
 
       {loading && (
-        <div className="space-y-2 py-md">
+        <div className="space-y-xs py-md">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="h-3xl bg-muted rounded-premium animate-pulse" />
           ))}
@@ -92,15 +92,15 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       )}
 
       {!loading && results.length > 0 && (
-        <div className="space-y-1">
-          <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
-          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+        <div className="space-y-2xs">
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
+          <div className="space-y-xs max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
                 className="w-full text-left p-md rounded-premium bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all group h-auto block">
                 <div className="flex items-center gap-xs mb-2xs">
-                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
+                  <span className="text-xs text-muted-foreground">— {r.bookName}</span>
                 </div>
                 <p className="text-sm text-foreground/80 font-serif line-clamp-2">
                   {(() => {

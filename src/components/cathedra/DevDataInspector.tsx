@@ -41,7 +41,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
         className="flex items-center gap-xs px-md py-xs bg-primary text-white rounded-full shadow-premium-hover hover:scale-105 transition-all border border-white/20"
       >
         <Icons.Activity className="w-md h-md" />
-        <span className="text-premium-tiny font-black uppercase tracking-widest">Dev Inspector</span>
+        <span className="text-xs font-black uppercase tracking-widest">Dev Inspector</span>
       </Button>
 
       <AnimatePresence>
@@ -50,10 +50,10 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-2xl right-0 w-80 bg-card border border-border rounded-premium shadow-premium-hover overflow-hidden "
+            className="absolute bottom-2xl right-0 w-4xl bg-card border border-border rounded-premium shadow-premium-hover overflow-hidden "
           >
             <div className="p-md border-b border-border bg-muted/30 flex items-center justify-between">
-              <h4 className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-xs">
+              <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-xs">
                 <Icons.Activity className="w-sm h-sm" />
                 Dados em Tempo Real
               </h4>
@@ -62,22 +62,22 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
               </Button>
             </div>
             
-            <div className="p-md space-y-4 max-h-[400px] overflow-y-auto">
-              <div className="space-y-2">
+            <div className="p-md space-y-md max-h-[400px] overflow-y-auto">
+              <div className="space-y-xs">
                 {fields.map((field) => {
                   const status = getStatus(field.name.toLowerCase(), field.value);
                   return (
                     <div key={field.name} className="flex flex-col gap-2xs p-xs rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-premium-tiny font-bold text-muted-foreground uppercase">{field.name}</span>
-                        <span className={`text-premium-tiny font-black uppercase px-2xs py-3xs rounded ${status.color}`}>
+                        <span className="text-xs font-bold text-muted-foreground uppercase">{field.name}</span>
+                        <span className={`text-xs font-black uppercase px-2xs py-3xs rounded ${status.color}`}>
                           {status.label}
                         </span>
                       </div>
                       <div className="text-premium-small font-mono truncate text-foreground/80">
                         {String(field.value || 'N/A')}
                       </div>
-                      <div className="text-premium-tiny italic text-muted-foreground/60">
+                      <div className="text-xs italic text-muted-foreground/60">
                         Fonte: {field.source}
                       </div>
                     </div>
@@ -86,8 +86,8 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
               </div>
 
               <div className="pt-xs">
-                <p className="text-premium-tiny font-bold text-muted-foreground uppercase mb-xs">JSON Bruto (Official Saint)</p>
-                <pre className="text-premium-tiny bg-black/5 p-sm rounded-lg overflow-x-auto font-mono text-foreground/70">
+                <p className="text-xs font-bold text-muted-foreground uppercase mb-xs">JSON Bruto (Official Saint)</p>
+                <pre className="text-xs bg-black/5 p-sm rounded-lg overflow-x-auto font-mono text-foreground/70">
                   {JSON.stringify(officialSaint, null, 2)}
                 </pre>
               </div>

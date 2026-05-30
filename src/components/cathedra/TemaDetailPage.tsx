@@ -77,19 +77,19 @@ const ThemeContentCard = ({
       transition={{ delay: index * 0.1 }}
     >
       <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-premium overflow-hidden group hover:shadow-premium-hover hover:border-primary/20">
-        <CardContent className="p-lg sm:p-xl space-y-4">
+        <CardContent className="p-lg sm:p-xl space-y-md">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-xs">
               <div className={`p-xs rounded-full ${accentColor.replace('text-', 'bg-')}/10`}>
                 <Icon className={`w-md h-md ${accentColor}`} />
               </div>
-              <span className={`text-premium-tiny font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
+              <span className={`text-xs font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={onAction}
-              className={`h-xl rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-2xs px-md transition-all duration-300`}
+              className={`h-xl rounded-full text-xs font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-2xs px-md transition-all duration-300`}
             >
               {buttonText} <ExternalLink className="w-sm h-sm" />
             </Button>
@@ -100,7 +100,7 @@ const ThemeContentCard = ({
           
           {otherTags.length > 0 && (
             <div className="pt-md border-t border-border/10">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 mb-xs">Conexões relacionadas:</p>
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 mb-xs">Conexões relacionadas:</p>
               <div className="flex flex-wrap gap-xs">
                 {otherTags.map((tag, idx) => (
                   <BubbleTag
@@ -122,15 +122,15 @@ const ThemeContentCard = ({
 };
 
 const ContentSkeleton = () => (
-  <div className="space-y-4" data-testid="content-skeleton">
+  <div className="space-y-md" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
       <Card key={i} className="border-border/40 bg-card/20 rounded-premium overflow-hidden">
-        <CardContent className="p-lg sm:p-xl space-y-4">
+        <CardContent className="p-lg sm:p-xl space-y-md">
           <div className="flex items-center gap-xs">
             <Skeleton className="w-xl h-xl rounded-full" />
             <Skeleton className="h-sm w-4xl" />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-xs">
             <Skeleton className="h-md w-full" />
             <Skeleton className="h-md w-[90%]" />
             <Skeleton className="h-md w-[70%]" />
@@ -329,7 +329,7 @@ const TemaDetailPage = () => {
 
   if (!selectedTag && tags) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60dvh] space-y-4">
+      <div className="flex flex-col items-center justify-center min-h-[60dvh] space-y-md">
         <h2 className="text-2xl font-bold">Tema não encontrado</h2>
         <Button onClick={() => navigate(AppRoute.TEMAS)}>Voltar para Temas</Button>
       </div>
@@ -353,7 +353,7 @@ const TemaDetailPage = () => {
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-md duration-700 max-w-5xl mx-auto pb-4xl px-md relative">
+    <div className="space-y-2xl animate-in fade-in slide-in-from-bottom-md duration-700 max-w-5xl mx-auto pb-4xl px-md relative">
       <div className={`fixed inset-0 bg-gradient-to-b ${getCategoryColor(selectedTag?.category)} -z-10 pointer-events-none opacity-40`} />
       <SEOHead 
         title={`${selectedTag?.label || 'Tema'} - Cathedra`}
@@ -361,7 +361,7 @@ const TemaDetailPage = () => {
         path={`/temas/${slug}`}
       />
 
-      <nav className="flex items-center gap-sm text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-xl overflow-x-auto whitespace-nowrap pb-xs scrollbar-none">
+      <nav className="flex items-center gap-sm text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-xl overflow-x-auto whitespace-nowrap pb-xs scrollbar-none">
         <Button 
           onClick={() => navigate(AppRoute.HOME)}
           className="hover:text-primary transition-colors flex items-center gap-2xs"
@@ -386,7 +386,7 @@ const TemaDetailPage = () => {
         <span className="text-primary/80">{selectedTag?.label}</span>
       </nav>
 
-      <header className="space-y-6">
+      <header className="space-y-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-lg">
           <div className="flex items-center gap-md">
             <div className="w-3xl h-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/20">
@@ -394,9 +394,9 @@ const TemaDetailPage = () => {
             </div>
             <div>
               <div className="flex items-center gap-xs mb-2xs">
-                <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
                 <div className="w-2xs h-2xs rounded-premium bg-primary/30" />
-                <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
+                <Badge variant="outline" className="text-xs font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
             </div>
@@ -439,7 +439,7 @@ const TemaDetailPage = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-secondary/5 rounded-premium-lg" />
+              <div className="absolute inset-0 bg-secondary/5 rounded-lg" />
               <Card className="border-secondary/30 bg-card rounded-premium overflow-hidden relative z-10 shadow-premium">
                 <CardContent className="p-xl sm:p-xl">
                   <div className="flex items-center justify-between mb-xl">
@@ -452,16 +452,16 @@ const TemaDetailPage = () => {
                         <p className="text-sm text-muted-foreground font-medium">Sentido & Aplicação</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-sm">IA Ativa</Badge>
+                    <Badge variant="outline" className="text-xs font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-sm">IA Ativa</Badge>
                   </div>
                   {loadingLogos && !logosInsight ? (
-                    <div className="space-y-4">
+                    <div className="space-y-md">
                       <div className="h-md w-full bg-muted animate-pulse rounded-premium" />
                       <div className="h-md w-[90%] bg-muted animate-pulse rounded-premium opacity-70" />
                       <div className="h-md w-[75%] bg-muted animate-pulse rounded-premium opacity-40" />
                     </div>
                   ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-lg">
                       <p className="text-xl sm:text-2xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-5xl first-letter:font-black first-letter:mr-xs first-letter:float-left first-letter:text-secondary selection:bg-secondary/20">
                         {logosInsight}
                       </p>
@@ -469,7 +469,7 @@ const TemaDetailPage = () => {
                       <div className="pt-lg border-t border-secondary/10 flex items-start gap-sm opacity-80">
                         <Icons.CheckCircle className="w-md h-md text-secondary shrink-0 mt-2xs" />
                         <div>
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary mb-2xs">Aplicação Prática</p>
+                          <p className="text-xs font-black uppercase tracking-widest text-secondary mb-2xs">Aplicação Prática</p>
                           <p className="text-sm text-muted-foreground italic leading-relaxed">
                             "Busque viver este mistério hoje através de um ato de caridade ou de um momento de silêncio contemplativo."
                           </p>
@@ -485,17 +485,17 @@ const TemaDetailPage = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
-        <div className="md:col-span-2 space-y-8">
+        <div className="md:col-span-2 space-y-xl">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full bg-muted/40 p-2xs rounded-full border border-border/40 grid grid-cols-4">
-              <TabsTrigger value="bible" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-xs">Escrituras</TabsTrigger>
-              <TabsTrigger value="tradition" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-xs">Tradição</TabsTrigger>
-              <TabsTrigger value="magisterium" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-xs">Magistério</TabsTrigger>
-              <TabsTrigger value="journeys" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-xs">Jornadas</TabsTrigger>
+              <TabsTrigger value="bible" className="rounded-full text-xs font-black uppercase tracking-widest py-xs">Escrituras</TabsTrigger>
+              <TabsTrigger value="tradition" className="rounded-full text-xs font-black uppercase tracking-widest py-xs">Tradição</TabsTrigger>
+              <TabsTrigger value="magisterium" className="rounded-full text-xs font-black uppercase tracking-widest py-xs">Magistério</TabsTrigger>
+              <TabsTrigger value="journeys" className="rounded-full text-xs font-black uppercase tracking-widest py-xs">Jornadas</TabsTrigger>
             </TabsList>
 
             {contentError ? (
-              <div className="p-2xl text-center space-y-4 bg-red-500/5 rounded-[2rem] border border-red-500/10">
+              <div className="p-2xl text-center space-y-md bg-red-500/5 rounded-[2rem] border border-red-500/10">
                 <AlertTriangle className="w-2xl h-2xl text-red-500 mx-auto" />
                 <p className="text-lg font-bold text-red-600">Erro ao carregar conexões de {activeTab === 'bible' ? 'Escrituras' : activeTab === 'tradition' ? 'Tradição' : activeTab === 'magisterium' ? 'Magistério' : 'Jornadas'} no Nexus</p>
                 <p className="text-sm text-muted-foreground italic max-w-md mx-auto">
@@ -521,12 +521,12 @@ const TemaDetailPage = () => {
               </div>
             ) : (
             <>
-            <TabsContent value="bible" className="mt-lg space-y-4">
+            <TabsContent value="bible" className="mt-lg space-y-md">
               {isLoadingAny ? (
                 <ContentSkeleton />
               ) : bibleVerses.length > 0 ? (
                 <>
-                  <div className="space-y-4">
+                  <div className="space-y-md">
                     {bibleVerses.slice(0, bibleLimit).map((c, i) => (
                       <ThemeContentCard
                         key={c.id}
@@ -546,7 +546,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setBibleLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-xs"
+                        className="rounded-full text-xs font-black uppercase tracking-widest gap-xs"
                       >
                         Carregar mais escrituras ({bibleVerses.length - bibleLimit})
                       </Button>
@@ -558,12 +558,12 @@ const TemaDetailPage = () => {
               )}
             </TabsContent>
 
-            <TabsContent value="tradition" className="mt-lg space-y-4">
+            <TabsContent value="tradition" className="mt-lg space-y-md">
               {isLoadingAny ? (
                 <ContentSkeleton />
               ) : catechism.length > 0 ? (
                 <>
-                  <div className="space-y-4">
+                  <div className="space-y-md">
                     {catechism.slice(0, traditionLimit).map((c, i) => (
                       <ThemeContentCard
                         key={c.id}
@@ -586,7 +586,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setTraditionLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-xs"
+                        className="rounded-full text-xs font-black uppercase tracking-widest gap-xs"
                       >
                         Carregar mais Tradição ({catechism.length - traditionLimit})
                       </Button>
@@ -598,12 +598,12 @@ const TemaDetailPage = () => {
               )}
             </TabsContent>
 
-            <TabsContent value="magisterium" className="mt-lg space-y-4">
+            <TabsContent value="magisterium" className="mt-lg space-y-md">
               {isLoadingAny ? (
                 <ContentSkeleton />
               ) : magisterium.length > 0 ? (
                 <>
-                  <div className="space-y-4">
+                  <div className="space-y-md">
                     {magisterium.slice(0, magisteriumLimit).map((c, i) => (
                       <ThemeContentCard
                         key={c.id}
@@ -623,7 +623,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setMagisteriumLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-xs"
+                        className="rounded-full text-xs font-black uppercase tracking-widest gap-xs"
                       >
                         Carregar mais Magistério ({magisterium.length - magisteriumLimit})
                       </Button>
@@ -635,11 +635,11 @@ const TemaDetailPage = () => {
               )}
             </TabsContent>
             
-            <TabsContent value="journeys" className="mt-lg space-y-4">
+            <TabsContent value="journeys" className="mt-lg space-y-md">
               {isLoadingAny ? (
                 <ContentSkeleton />
               ) : journeys.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-md">
                   {journeys.map((c, i) => (
                     <ThemeContentCard
                       key={c.id}
@@ -663,8 +663,8 @@ const TemaDetailPage = () => {
           </Tabs>
         </div>
 
-        <aside className="space-y-6">
-          <div className="bg-card border border-border/40 rounded-[2rem] p-lg space-y-6">
+        <aside className="space-y-lg">
+          <div className="bg-card border border-border/40 rounded-[2rem] p-lg space-y-lg">
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
             <div ref={relatedRef} className="flex flex-wrap gap-xs">
               {relatedThemes.length > 0 ? (
@@ -683,7 +683,7 @@ const TemaDetailPage = () => {
                   />
                 ))
               ) : (
-                <p className="text-premium-tiny text-muted-foreground italic leading-relaxed">
+                <p className="text-xs text-muted-foreground italic leading-relaxed">
                   Estamos tecendo novas conexões para este tema.
                 </p>
               )}
@@ -691,7 +691,7 @@ const TemaDetailPage = () => {
           </div>
 
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
-            <CardContent className="p-lg space-y-4">
+            <CardContent className="p-lg space-y-md">
               <div className="w-xl h-xl rounded-premium bg-primary/20 flex items-center justify-center">
                 <Quote className="w-md h-md text-primary" />
               </div>
@@ -699,8 +699,8 @@ const TemaDetailPage = () => {
                 "A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade."
               </p>
               <div className="pt-xs">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
-                <p className="text-premium-tiny text-muted-foreground/60">Fides et Ratio</p>
+                <p className="text-xs font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
+                <p className="text-xs text-muted-foreground/60">Fides et Ratio</p>
               </div>
             </CardContent>
           </Card>

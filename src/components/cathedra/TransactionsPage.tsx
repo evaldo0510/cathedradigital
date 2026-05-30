@@ -421,9 +421,9 @@ const TransactionsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-xl px-md animate-in fade-in duration-700">
+    <div className="max-w-6xl mx-auto space-y-xl py-xl px-md animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
-        <div className="space-y-2">
+        <div className="space-y-xs">
           <h1 className="text-3xl font-serif font-bold tracking-tight">Histórico de Transações</h1>
           <p className="text-muted-foreground italic font-serif text-sm">Controle financeiro e auditoria de pagamentos.</p>
         </div>
@@ -457,11 +457,11 @@ const TransactionsPage: React.FC = () => {
       </div>
 
       {exporting && totalToExport > 0 && (
-        <Card className="bg-primary/5 border-primary/10 rounded-premium p-lg space-y-3">
+        <Card className="bg-primary/5 border-primary/10 rounded-premium p-lg space-y-sm">
           <div className="flex justify-between items-end">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
-              <p className="text-premium-tiny text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
+              <p className="text-xs text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
             </div>
             <div className="flex items-center gap-md">
               <Button variant="ghost" size="sm" onClick={() => abortController?.abort()} className="h-xl text-xs text-destructive hover:bg-destructive/10">Cancelar Exportação</Button>
@@ -476,13 +476,13 @@ const TransactionsPage: React.FC = () => {
         <CardHeader className="bg-muted/30 border-b border-border/50 p-xl">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-md items-end">
             {isAdmin && (
-              <div className="space-y-1.5">
-                <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário</label>
+              <div className="space-y-2xs">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Usuário</label>
                 <Input placeholder="Nome/Email" value={userSearch} onChange={(e) => setUserSearch(e.target.value)} disabled={loading || exporting} className="rounded-full h-xl bg-background/50" />
               </div>
             )}
-            <div className="space-y-1.5">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Status</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Status</label>
               <Select value={statusFilter} onValueChange={setStatusFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-full h-xl bg-background/50"><SelectValue /></SelectTrigger>
                 <SelectContent className="rounded-full">
@@ -493,8 +493,8 @@ const TransactionsPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Plano</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Plano</label>
               <Select value={planFilter} onValueChange={setPlanFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-full h-xl bg-background/50"><SelectValue /></SelectTrigger>
                 <SelectContent className="rounded-full">
@@ -503,23 +503,23 @@ const TransactionsPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Início</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Início</label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} disabled={loading || exporting} className="rounded-full h-xl bg-background/50" />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Fim</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Fim</label>
               <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} disabled={loading || exporting} className="rounded-full h-xl bg-background/50" />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Ordem</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Ordem</label>
               <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-full h-xl bg-background/50"><SelectValue /></SelectTrigger>
                 <SelectContent className="rounded-full"><SelectItem value="desc">Recentes</SelectItem><SelectItem value="asc">Antigos</SelectItem></SelectContent>
               </Select>
             </div>
           </div>
-          {dateError && <p className="text-premium-tiny text-destructive mt-sm font-bold">{dateError}</p>}
+          {dateError && <p className="text-xs text-destructive mt-sm font-bold">{dateError}</p>}
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -532,21 +532,21 @@ const TransactionsPage: React.FC = () => {
               <TableHead className="text-right px-xl">Ações</TableHead>
             </TableRow></TableHeader>
             <TableBody>
-              {loading ? <TableRow><TableCell colSpan={6} className="h-64 text-center italic font-serif text-muted-foreground">Consultando pergaminhos...</TableCell></TableRow> :
-               transactions.length === 0 ? <TableRow><TableCell colSpan={6} className="h-64 text-center">
+              {loading ? <TableRow><TableCell colSpan={6} className="h-4xl text-center italic font-serif text-muted-foreground">Consultando pergaminhos...</TableCell></TableRow> :
+               transactions.length === 0 ? <TableRow><TableCell colSpan={6} className="h-4xl text-center">
                  <div className="flex flex-col items-center gap-sm">
                    <Search className="w-xl h-xl text-muted/30" />
                    <p className="font-serif italic text-muted-foreground">Nenhum registro encontrado.</p>
-                   <Button variant="ghost" size="sm" className="text-premium-tiny uppercase font-bold" onClick={() => { setStatusFilter('all'); setPlanFilter('all'); setUserSearch(''); setStartDate(''); setEndDate(''); }}>Limpar Filtros</Button>
+                   <Button variant="ghost" size="sm" className="text-xs uppercase font-bold" onClick={() => { setStatusFilter('all'); setPlanFilter('all'); setUserSearch(''); setStartDate(''); setEndDate(''); }}>Limpar Filtros</Button>
                  </div>
                </TableCell></TableRow> :
                transactions.map(tx => (
                  <TableRow key={tx.id} className="group hover:bg-primary/5 transition-colors">
                    <TableCell className="py-md px-xl flex flex-col">
                      <span className="font-bold text-sm">{format(new Date(tx.created_at), "dd 'de' MMM", { locale: ptBR })}</span>
-                     <span className="text-premium-tiny text-muted-foreground">{format(new Date(tx.created_at), "HH:mm:ss")}</span>
+                     <span className="text-xs text-muted-foreground">{format(new Date(tx.created_at), "HH:mm:ss")}</span>
                    </TableCell>
-                   {isAdmin && <TableCell className="max-w-[150px] truncate"><div className="flex flex-col"><span className="font-bold text-xs">{tx.profiles?.name || '---'}</span><span className="text-premium-tiny text-muted-foreground">{tx.profiles?.email}</span></div></TableCell>}
+                   {isAdmin && <TableCell className="max-w-[150px] truncate"><div className="flex flex-col"><span className="font-bold text-xs">{tx.profiles?.name || '---'}</span><span className="text-xs text-muted-foreground">{tx.profiles?.email}</span></div></TableCell>}
                    <TableCell className="font-serif italic text-sm">{tx.description}</TableCell>
                    <TableCell className="text-right font-bold text-primary">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}</TableCell>
                    <TableCell className="text-center flex justify-center py-md">{getStatusBadge(tx.status)}</TableCell>
@@ -560,9 +560,9 @@ const TransactionsPage: React.FC = () => {
       </Card>
 
       <div className="flex items-center justify-center gap-lg mt-md">
-        <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || loading} className="rounded-full px-lg shadow-soft">Anterior</Button>
+        <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || loading} className="rounded-full px-lg shadow-md">Anterior</Button>
         <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Página {page} de {Math.ceil(totalCount / pageSize) || 1}</span>
-        <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= totalCount || loading} className="rounded-full px-lg shadow-soft">Próxima</Button>
+        <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= totalCount || loading} className="rounded-full px-lg shadow-md">Próxima</Button>
       </div>
 
       {/* CSV PREVIEW DIALOG */}
@@ -571,23 +571,23 @@ const TransactionsPage: React.FC = () => {
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Preview da Exportação</DialogTitle><DialogDescription>Confira os dados antes de baixar o arquivo CSV.</DialogDescription></DialogHeader>
           <div className="py-md overflow-x-auto"><Table className="border rounded-full">
             <TableHeader className="bg-muted/50"><TableRow>
-              <TableHead className="text-premium-tiny font-bold">Data</TableHead>
-              <TableHead className="text-premium-tiny font-bold">Audit_TZ</TableHead>
-              <TableHead className="text-premium-tiny font-bold">E-mail</TableHead>
-              <TableHead className="text-premium-tiny font-bold text-right">Valor</TableHead>
+              <TableHead className="text-xs font-bold">Data</TableHead>
+              <TableHead className="text-xs font-bold">Audit_TZ</TableHead>
+              <TableHead className="text-xs font-bold">E-mail</TableHead>
+              <TableHead className="text-xs font-bold text-right">Valor</TableHead>
             </TableRow></TableHeader>
             <TableBody>
               {previewData.slice(0, 5).map(tx => (
                 <TableRow key={tx.id}>
-                  <TableCell className="text-premium-tiny">{format(new Date(tx.created_at), "dd/MM/yyyy HH:mm")}</TableCell>
-                  <TableCell className="text-premium-tiny font-mono">{new Date(tx.created_at).toISOString().split('T')[1].substring(0, 8)}</TableCell>
-                  <TableCell className="text-premium-tiny truncate max-w-[120px]">{tx.profiles?.email}</TableCell>
-                  <TableCell className="text-premium-tiny text-right font-bold">{tx.amount}</TableCell>
+                  <TableCell className="text-xs">{format(new Date(tx.created_at), "dd/MM/yyyy HH:mm")}</TableCell>
+                  <TableCell className="text-xs font-mono">{new Date(tx.created_at).toISOString().split('T')[1].substring(0, 8)}</TableCell>
+                  <TableCell className="text-xs truncate max-w-[120px]">{tx.profiles?.email}</TableCell>
+                  <TableCell className="text-xs text-right font-bold">{tx.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table></div>
-          <p className="text-premium-tiny text-muted-foreground text-center">Mostrando as 5 primeiras de {previewData.length} transações.</p>
+          <p className="text-xs text-muted-foreground text-center">Mostrando as 5 primeiras de {previewData.length} transações.</p>
           <DialogFooter className="gap-sm">
             <Button variant="ghost" onClick={() => setIsPreviewOpen(false)} className="rounded-full">Cancelar</Button>
             <Button onClick={() => executeDownload(previewData, previewMode)} className="rounded-full bg-primary flex-1 font-bold">Confirmar e Baixar CSV</Button>
@@ -599,10 +599,10 @@ const TransactionsPage: React.FC = () => {
       <Dialog open={isCleanupOpen} onOpenChange={setIsCleanupOpen}>
         <DialogContent className="max-w-md rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold text-destructive">Limpar Registros</DialogTitle><DialogDescription>Ação irreversível de exclusão de dados.</DialogDescription></DialogHeader>
-          <div className="py-md space-y-4">
+          <div className="py-md space-y-md">
             <div className="p-md bg-destructive/5 rounded-premium border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
-            <div className="space-y-2">
-              <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Digite 'CONFIRMAR' para liberar</label>
+            <div className="space-y-xs">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Digite 'CONFIRMAR' para liberar</label>
               <Input value={cleanupConfirmation} onChange={(e) => setCleanupConfirmation(e.target.value)} placeholder="CONFIRMAR" className="rounded-full border-destructive/30" />
             </div>
           </div>
@@ -618,18 +618,18 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
           {selectedTx && !Array.isArray(selectedTx) && (
-            <div className="space-y-6 py-md">
+            <div className="space-y-lg py-md">
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-1"><p className="text-premium-tiny font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-xs rounded-full truncate">{selectedTx.id}</p></div>
-                <div className="space-y-1"><p className="text-premium-tiny font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-xs rounded-full truncate">{selectedTx.payment_id || 'N/A'}</p></div>
+                <div className="space-y-2xs"><p className="text-xs font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-xs rounded-full truncate">{selectedTx.id}</p></div>
+                <div className="space-y-2xs"><p className="text-xs font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-xs rounded-full truncate">{selectedTx.payment_id || 'N/A'}</p></div>
               </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center"><p className="text-premium-tiny font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-xs items-center">
-                  <div className="relative"><Search className="absolute left-xs top-2xs/2 -translate-y-1/2 w-sm h-sm text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-lg text-premium-tiny pl-lg w-40 rounded-full" /></div>
-                  <Badge variant="outline" className="text-premium-tiny font-bold">{filteredJSON?.count} matches</Badge>
-                  <Button variant="ghost" size="sm" className="h-lg text-premium-tiny" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-sm h-sm text-green-500" /> : <Copy className="w-sm h-sm" />}</Button>
+              <div className="space-y-md">
+                <div className="flex justify-between items-center"><p className="text-xs font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-xs items-center">
+                  <div className="relative"><Search className="absolute left-xs top-2xs/2 -translate-y-1/2 w-sm h-sm text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-lg text-xs pl-lg w-4xl rounded-full" /></div>
+                  <Badge variant="outline" className="text-xs font-bold">{filteredJSON?.count} matches</Badge>
+                  <Button variant="ghost" size="sm" className="h-lg text-xs" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-sm h-sm text-green-500" /> : <Copy className="w-sm h-sm" />}</Button>
                 </div></div>
-                <div className="max-h-60 overflow-y-auto bg-slate-950 p-lg rounded-premium border border-white/5 custom-scrollbar"><pre className="text-premium-small text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
+                <div className="max-h-4xl overflow-y-auto bg-slate-950 p-lg rounded-premium border border-white/5 custom-scrollbar"><pre className="text-premium-small text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
               </div>
             </div>
           )}
@@ -649,16 +649,16 @@ const TransactionsPage: React.FC = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md my-lg">
-            <div className="space-y-1">
-              <label className="text-premium-tiny font-bold uppercase text-muted-foreground">Admin</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase text-muted-foreground">Admin</label>
               <Input placeholder="E-mail" value={auditAdminFilter} onChange={(e) => setAuditAdminFilter(e.target.value)} className="h-xl rounded-full text-xs" />
             </div>
-            <div className="space-y-1">
-              <label className="text-premium-tiny font-bold uppercase text-muted-foreground">Início</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase text-muted-foreground">Início</label>
               <Input type="date" value={auditStart} onChange={(e) => setAuditStart(e.target.value)} className="h-xl rounded-full text-xs" />
             </div>
-            <div className="space-y-1">
-              <label className="text-premium-tiny font-bold uppercase text-muted-foreground">Fim</label>
+            <div className="space-y-2xs">
+              <label className="text-xs font-bold uppercase text-muted-foreground">Fim</label>
               <Input type="date" value={auditEnd} onChange={(e) => setAuditEnd(e.target.value)} className="h-xl rounded-full text-xs" />
             </div>
           </div>
@@ -667,11 +667,11 @@ const TransactionsPage: React.FC = () => {
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead className="text-premium-tiny font-bold">Data</TableHead>
-                  <TableHead className="text-premium-tiny font-bold">Admin/Status</TableHead>
-                  <TableHead className="text-premium-tiny font-bold">Registros</TableHead>
-                  <TableHead className="text-premium-tiny font-bold">Filtros Aplicados</TableHead>
-                  <TableHead className="text-right text-premium-tiny font-bold">Ações</TableHead>
+                  <TableHead className="text-xs font-bold">Data</TableHead>
+                  <TableHead className="text-xs font-bold">Admin/Status</TableHead>
+                  <TableHead className="text-xs font-bold">Registros</TableHead>
+                  <TableHead className="text-xs font-bold">Filtros Aplicados</TableHead>
+                  <TableHead className="text-right text-xs font-bold">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -680,17 +680,17 @@ const TransactionsPage: React.FC = () => {
                 ) : (
                   auditLogs.map((log: any) => (
                     <TableRow key={log.id} className="group">
-                      <TableCell className="text-premium-tiny font-medium">{format(new Date(log.created_at), "dd/MM HH:mm")}</TableCell>
-                      <TableCell className="text-premium-tiny">
+                      <TableCell className="text-xs font-medium">{format(new Date(log.created_at), "dd/MM HH:mm")}</TableCell>
+                      <TableCell className="text-xs">
                         <div className="flex flex-col">
                           <span>{log.metadata?.user_email || '---'}</span>
-                          <span className={`text-premium-tiny font-bold uppercase ${log.metadata?.status === 'cancelled' ? 'text-destructive' : 'text-green-500'}`}>
+                          <span className={`text-xs font-bold uppercase ${log.metadata?.status === 'cancelled' ? 'text-destructive' : 'text-green-500'}`}>
                             {log.metadata?.status === 'cancelled' ? 'Cancelado' : 'Concluído'}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-premium-tiny font-bold text-primary">{log.metadata?.records_count}</TableCell>
-                      <TableCell className="text-premium-tiny max-w-[200px] truncate italic text-muted-foreground">
+                      <TableCell className="text-xs font-bold text-primary">{log.metadata?.records_count}</TableCell>
+                      <TableCell className="text-xs max-w-[200px] truncate italic text-muted-foreground">
                         {Object.entries(log.metadata?.filters || {}).map(([k, v]) => v !== 'all' && v ? `${k}:${v}` : null).filter(Boolean).join(', ') || 'Sem filtros'}
                       </TableCell>
                       <TableCell className="text-right">
@@ -698,7 +698,7 @@ const TransactionsPage: React.FC = () => {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-lg text-premium-tiny rounded-full"
+                            className="h-lg text-xs rounded-full"
                             title="Baixar CSV diretamente"
                             onClick={() => {
                               setIsAuditOpen(false);
@@ -711,7 +711,7 @@ const TransactionsPage: React.FC = () => {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-lg text-premium-tiny rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-lg text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                             title="Ver no painel principal"
                             onClick={() => {
                               const f = log.metadata?.filters;

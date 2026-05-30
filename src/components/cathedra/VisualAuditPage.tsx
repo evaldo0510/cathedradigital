@@ -84,7 +84,7 @@ const VisualAuditPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-lg space-y-8 animate-in fade-in duration-700">
+    <div className="max-w-7xl mx-auto p-lg space-y-xl animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div>
           <CathedraButton 
@@ -117,10 +117,10 @@ const VisualAuditPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-lg">
-        <CathedraCard className="md:col-span-1 p-lg space-y-6">
-          <div className="space-y-4">
+        <CathedraCard className="md:col-span-1 p-lg space-y-lg">
+          <div className="space-y-md">
             <h3 className="text-xs font-black uppercase tracking-widest opacity-50">Resumo</h3>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <div className="flex justify-between items-center text-sm">
                 <span className="opacity-70">Total de Violações</span>
                 <span className="font-bold text-red-500">{report?.total_violations || 0}</span>
@@ -132,14 +132,14 @@ const VisualAuditPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 pt-md border-t border-border/10">
+          <div className="space-y-md pt-md border-t border-border/10">
             <h3 className="text-xs font-black uppercase tracking-widest opacity-50">Filtros</h3>
             <div className="relative">
               <Search className="absolute left-sm top-2xs/2 -translate-y-1/2 w-md h-md opacity-40" />
               <input 
                 type="text"
                 placeholder="Filtrar arquivos..."
-                className="w-full bg-muted/20 border border-border/10 rounded-premium-sm py-xs pl-xl pr-md text-sm outline-none focus:border-primary/50"
+                className="w-full bg-muted/20 border border-border/10 rounded-sm py-xs pl-xl pr-md text-sm outline-none focus:border-primary/50"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               />
@@ -147,7 +147,7 @@ const VisualAuditPage: React.FC = () => {
           </div>
         </CathedraCard>
 
-        <div className="md:col-span-3 space-y-6">
+        <div className="md:col-span-3 space-y-lg">
           {Object.entries(violationsByFile).map(([file, violations]) => (
             <CathedraCard key={file} className="overflow-hidden">
               <div className="p-md bg-muted/10 border-b border-border/10 flex items-center justify-between">
@@ -164,7 +164,7 @@ const VisualAuditPage: React.FC = () => {
                   <div className="divide-y divide-border/5">
                     {violations.map((v, i) => (
                       <div key={i} className="p-md flex items-start justify-between group hover:bg-primary/5 transition-colors">
-                        <div className="space-y-1">
+                        <div className="space-y-2xs">
                           <div className="flex items-center gap-xs">
                             <AlertTriangle className="w-sm h-sm text-yellow-500" />
                             <span className="text-sm font-bold">{v.pattern}</span>
@@ -194,7 +194,7 @@ const VisualAuditPage: React.FC = () => {
           ))}
 
           {Object.keys(violationsByFile).length === 0 && (
-            <div className="flex flex-col items-center justify-center py-3xl opacity-50 italic space-y-4">
+            <div className="flex flex-col items-center justify-center py-3xl opacity-50 italic space-y-md">
               <CheckCircle2 className="w-2xl h-2xl text-green-500/50" />
               <p>Nenhuma violação encontrada com os filtros atuais.</p>
             </div>

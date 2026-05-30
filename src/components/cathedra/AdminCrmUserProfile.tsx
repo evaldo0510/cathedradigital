@@ -85,7 +85,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   const statusColor = isInactive ? 'text-destructive' : isDeep ? 'text-primary' : isNew ? 'text-primary' : 'text-primary';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       {/* Header */}
       <div className="flex items-center gap-sm">
         <Button variant="ghost" size="sm" onClick={onBack} className="gap-2xs">
@@ -100,12 +100,12 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             <div className="w-3xl h-3xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
-            <div className="flex-1 min-w-0 space-y-2">
+            <div className="flex-1 min-w-0 space-y-xs">
               <div className="flex items-center gap-xs flex-wrap">
                 <h2 className="text-xl font-bold">{user.name || 'Sem nome'}</h2>
                 {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-2xs"><Crown className="w-sm h-sm" /> PRO</Badge>}
                 {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-2xs"><Shield className="w-sm h-sm" /> Admin</Badge>}
-                <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-tiny`}>{statusLabel}</Badge>
+                <Badge variant="outline" className={`${statusColor} border-current/30 text-xs`}>{statusLabel}</Badge>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-2xs"><Mail className="w-sm h-sm" /> {user.email}</span>
@@ -135,7 +135,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               {stat.icon}
               <div>
                 <p className="text-lg font-bold leading-tight">{stat.value}</p>
-                <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
@@ -150,7 +150,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           </CardHeader>
           <CardContent>
             {diagnosis ? (
-              <div className="space-y-2 text-sm">
+              <div className="space-y-xs text-sm">
                 {typeof diagnosis === 'object' && Object.entries(diagnosis).map(([key, value]) => (
                   <div key={key} className="flex justify-between py-2xs border-b border-border/30 last:border-0">
                     <span className="text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
@@ -171,11 +171,11 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           </CardHeader>
           <CardContent>
             {journeyProgress.length > 0 ? (
-              <div className="space-y-2 max-h-[200px] overflow-y-auto">
+              <div className="space-y-xs max-h-[200px] overflow-y-auto">
                 {journeyProgress.slice(0, 10).map((jp: any) => (
                   <div key={jp.id} className="flex justify-between items-center py-2xs border-b border-border/30 last:border-0 text-sm">
                     <span className="truncate">{(jp.journeys as any)?.title ?? jp.journey_id.slice(0, 8)}</span>
-                    <span className="text-premium-tiny text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-xs text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
                   </div>
                 ))}
               </div>
@@ -192,12 +192,12 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           <CardHeader className="pb-sm">
             <CardTitle className="text-sm">Últimas Reflexões do Diário</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-sm">
             {journalEntries.map((entry: any) => (
               <div key={entry.id} className="p-sm rounded-premium bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-xs mb-2xs">
                   <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
-                  {entry.mood && <Badge variant="secondary" className="text-premium-tiny">{entry.mood}</Badge>}
+                  {entry.mood && <Badge variant="secondary" className="text-xs">{entry.mood}</Badge>}
                 </div>
                 <p className="text-sm line-clamp-2">{entry.content}</p>
               </div>

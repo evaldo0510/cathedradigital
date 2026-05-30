@@ -32,10 +32,10 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
   }, [user?.id, allNotesText]);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-10 pb-3xl animate-in fade-in duration-700">
+    <div className="max-w-3xl mx-auto space-y-xl pb-3xl animate-in fade-in duration-700">
       {/* Celebration */}
       <motion.div 
-        className="text-center space-y-6 pt-xl"
+        className="text-center space-y-lg pt-xl"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
@@ -66,14 +66,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         <div className="flex items-center gap-sm px-lg py-md rounded-premium bg-card border border-border">
           <Clock className="w-md h-md text-primary/60" />
           <div>
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
+            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
         <div className="flex items-center gap-sm px-lg py-md rounded-premium bg-card border border-border">
           <PenTool className="w-md h-md text-primary/60" />
           <div>
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
+            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
             <p className="font-mono text-xl font-bold text-foreground">{notesWritten.length}/{STEPS.length}</p>
           </div>
         </div>
@@ -82,15 +82,15 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
       {/* Reflections summary */}
       {notesWritten.length > 0 && (
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-xl md:p-2xl space-y-8 shadow-premium-hover shadow-black/[0.02]"
+          className="bg-card border border-border rounded-[2.5rem] p-xl md:p-2xl space-y-xl shadow-premium-hover shadow-black/[0.02]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <h3 className="text-center text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
-          <div className="space-y-6">
+          <h3 className="text-center text-xs font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
+          <div className="space-y-lg">
             {notesWritten.map(step => (
-              <div key={step.id} className="space-y-2">
+              <div key={step.id} className="space-y-xs">
                 <div className="flex items-center gap-xs">
                   <div className={`w-xl h-xl rounded-full flex items-center justify-center ${step.color}`}>
                     <step.icon className="w-md h-md" />
@@ -108,7 +108,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
 
       {/* Encouragement */}
       <motion.div 
-        className="text-center space-y-6 bg-primary/5 rounded-[2.5rem] p-xl border border-primary/10"
+        className="text-center space-y-lg bg-primary/5 rounded-[2.5rem] p-xl border border-primary/10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
@@ -141,7 +141,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         />
         <Button
           onClick={onRestart}
-          className="flex items-center gap-xs px-xl py-md rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-soft"
+          className="flex items-center gap-xs px-xl py-md rounded-full bg-card border border-border text-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-md"
         >
           <RotateCcw className="w-md h-md" /> Nova Lectio
         </Button>

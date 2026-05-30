@@ -123,9 +123,9 @@ const SpiritualProfile: React.FC = () => {
       title="Perfil Espiritual"
       maxW="max-w-5xl"
     >
-      <div className="space-y-24 md:space-y-32">
+      <div className="space-y-4xl md:space-y-4xl">
         {/* Header/Summary */}
-        <section className="text-center space-y-8 animate-in fade-in slide-in-from-bottom-md duration-1000">
+        <section className="text-center space-y-xl animate-in fade-in slide-in-from-bottom-md duration-1000">
           <div className="relative w-4xl h-4xl mx-auto mb-xl">
             <div className="absolute inset-0 rounded-full border border-primary/10 animate-pulse" />
             <div className="absolute -inset-md rounded-full border border-primary/5 animate-slow-spin" />
@@ -138,7 +138,7 @@ const SpiritualProfile: React.FC = () => {
             </div>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-xs">
             <h2 className="text-3xl font-display font-bold text-primary">{profile.name || 'Peregrino'}</h2>
             <p className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">{levelName}</p>
           </div>
@@ -157,13 +157,13 @@ const SpiritualProfile: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3xl md:gap-4xl">
           {/* Continuar Jornada */}
-          <section className="space-y-10">
+          <section className="space-y-xl">
             <div className="flex items-center gap-lg opacity-30">
               <Icons.Compass className="w-md h-md" strokeWidth={1} />
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em]">Itinerários Ativos</h3>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-lg">
               {activeJourneys.length > 0 ? (
                 activeJourneys.map((j) => (
                   <CathedraCard 
@@ -174,7 +174,7 @@ const SpiritualProfile: React.FC = () => {
                     className="group cursor-pointer hover:border-primary/20 transition-all duration-700"
                   >
                     <div className="flex items-center justify-between gap-lg p-lg">
-                      <div className="space-y-2">
+                      <div className="space-y-xs">
                         <p className="text-xs text-primary/40 font-bold uppercase tracking-widest">Em progresso</p>
                         <h4 className="text-lg font-serif font-bold text-primary">{j.title}</h4>
                       </div>
@@ -207,7 +207,7 @@ const SpiritualProfile: React.FC = () => {
           </section>
 
           {/* Temas Contemplados (Dynamic) */}
-          <section className="space-y-10">
+          <section className="space-y-xl">
             <div className="flex items-center gap-lg opacity-30">
               <Icons.Sparkles className="w-md h-md" strokeWidth={1} />
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em]">Temas da Caminhada</h3>
@@ -230,28 +230,28 @@ const SpiritualProfile: React.FC = () => {
           </section>
 
           {/* Preferências Contemplativas */}
-          <section className="space-y-10 md:col-span-2 pt-2xl">
+          <section className="space-y-xl md:col-span-2 pt-2xl">
             <div className="flex items-center gap-lg opacity-30">
               <Icons.Settings className="w-md h-md" strokeWidth={1} />
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em]">Preferências Contemplativas</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
-              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
+              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Ritmo</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{preferences.rhythm === 'soft' ? 'Suave' : preferences.rhythm === 'moderate' ? 'Moderado' : 'Intenso'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('rhythm', preferences.rhythm === 'soft' ? 'moderate' : preferences.rhythm === 'moderate' ? 'intense' : 'soft')}>Alterar</Button>
                 </div>
               </div>
-              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
+              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Sugestões Logos</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{preferences.suggestion_mode === 'balanced' ? 'Equilibrado' : 'Aprofundado'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('suggestion_mode', preferences.suggestion_mode === 'balanced' ? 'deep' : 'balanced')}>Alterar</Button>
                 </div>
               </div>
-              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
+              <div className="p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Lembretes</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{profile.notification_settings?.email_reminders ? 'Email e Push' : 'Apenas Push'}</span>
@@ -262,7 +262,7 @@ const SpiritualProfile: React.FC = () => {
           </section>
 
           {/* Últimas Leituras */}
-          <section className="space-y-10 md:col-span-2">
+          <section className="space-y-xl md:col-span-2">
             <div className="flex items-center gap-lg opacity-30">
               <Icons.BookOpen className="w-md h-md" strokeWidth={1} />
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em]">Memória de Leitura</h3>
@@ -271,7 +271,7 @@ const SpiritualProfile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
               {recentReadings.length > 0 ? (
                 recentReadings.map((reading) => (
-                  <div key={reading.id} className="space-y-4 p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] group hover:bg-primary/[0.02] transition-all duration-700">
+                  <div key={reading.id} className="space-y-md p-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] group hover:bg-primary/[0.02] transition-all duration-700">
                     <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">
                       {format(new Date(reading.visited_at), "d 'de' MMM", { locale: ptBR })}
                     </p>
@@ -286,7 +286,7 @@ const SpiritualProfile: React.FC = () => {
           </section>
 
           {/* Reflexões Favoritas */}
-          <section className="space-y-10 md:col-span-2">
+          <section className="space-y-xl md:col-span-2">
             <div className="flex items-center gap-lg opacity-30">
               <Icons.Feather className="w-md h-md" strokeWidth={1} />
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em]">Reflexões Guardadas</h3>
@@ -314,10 +314,10 @@ const SpiritualProfile: React.FC = () => {
 
         {/* Logos Suggestion */}
         <section className="pt-4xl border-t border-primary/5">
-          <div className="premium-card p-2xl md:p-3xl bg-primary/[0.005] border-primary/[0.02] text-center space-y-12 relative overflow-hidden">
+          <div className="premium-card p-2xl md:p-3xl bg-primary/[0.005] border-primary/[0.02] text-center space-y-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
             
-            <div className="space-y-6">
+            <div className="space-y-lg">
               <div className="w-2xl h-2xl rounded-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center mx-auto text-primary/60">
                 <Icons.Sparkles className="w-md h-md" strokeWidth={0.5} />
               </div>

@@ -100,7 +100,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         onClick={handleNavigate}
         className="w-full flex items-center gap-lg group text-left p-md"
       >
-        <div className="w-3xl h-3xl rounded-premium-sm overflow-hidden border border-border/20 shadow-soft shrink-0">
+        <div className="w-3xl h-3xl rounded-sm overflow-hidden border border-border/20 shadow-md shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}
@@ -108,7 +108,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-2xs">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-secondary/80 mb-2xs">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
           <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
@@ -142,7 +142,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       onClick={handleNavigate}
       className="group p-0 overflow-hidden flex flex-col sm:flex-row h-full"
     >
-      <div className="w-full sm:w-2xs/3 h-56 sm:h-auto relative shrink-0 overflow-hidden">
+      <div className="w-full sm:w-2xs/3 h-4xl sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 
           src={saint.image} 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
@@ -150,12 +150,12 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-lg left-lg right-lg">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-white/70 mb-2xs">{saint.feastDay}</p>
+          <p className="text-xs font-black uppercase tracking-widest text-white/70 mb-2xs">{saint.feastDay}</p>
           <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
         </div>
       </div>
-      <div className="flex-1 p-xl md:p-xl space-y-6 flex flex-col justify-center">
-        <div className="space-y-4">
+      <div className="flex-1 p-xl md:p-xl space-y-lg flex flex-col justify-center">
+        <div className="space-y-md">
           <p className="text-xl text-primary font-serif italic mb-xs">
             "{saint.title === 'Santo do Dia' ? 'Exemplo de Santidade' : (saint.title || 'Exemplo de Santidade')}"
           </p>
@@ -166,9 +166,9 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         <div className="flex items-center justify-between pt-lg border-t border-border/40">
           <div className="flex gap-xs">
             {saint.virtues?.slice(0, 2).map((v: string) => (
-              <span key={v} className="px-sm py-2xs bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">{v}</span>
+              <span key={v} className="px-sm py-2xs bg-primary/5 text-primary text-xs font-black uppercase rounded-full tracking-wider">{v}</span>
             )) || (
-              <span className="px-sm py-2xs bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">Fé</span>
+              <span className="px-sm py-2xs bg-primary/5 text-primary text-xs font-black uppercase rounded-full tracking-wider">Fé</span>
             )}
           </div>
           <div className="flex items-center gap-sm">

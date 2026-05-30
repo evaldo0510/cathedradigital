@@ -22,12 +22,12 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({
 
   return (
     <motion.div
-      className="space-y-4"
+      className="space-y-md"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8, duration: 0.6 }}
     >
-      <div className="text-center space-y-1">
+      <div className="text-center space-y-2xs">
         <div className="flex items-center justify-center gap-xs">
           <Icons.Sparkles className="w-md h-md text-primary" />
           <h3 className="text-sm font-bold text-foreground">{title}</h3>

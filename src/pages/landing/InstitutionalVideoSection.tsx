@@ -203,7 +203,7 @@ const InstitutionalVideoSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative w-full py-4xl md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
+    <section ref={sectionRef} className="relative w-full py-4xl md:py-4xl bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
       <div className="absolute inset-0 z-0 bg-background/50" aria-hidden="true">
         <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-premium" />
@@ -215,10 +215,10 @@ const InstitutionalVideoSection = () => {
           
           <motion.div 
             style={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity, scale }}
-            className="space-y-8"
+            className="space-y-xl"
           >
-            <div className="space-y-4">
-              <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
+            <div className="space-y-md">
+              <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
               <h2 id="video-section-title" className="font-display font-bold leading-tight">
                 A Tradição em <span className="text-primary italic font-serif">Movimento</span>
               </h2>
@@ -234,9 +234,9 @@ const InstitutionalVideoSection = () => {
                 { title: "Universalidade", desc: "Tesouros de qualquer lugar." },
                 { title: "Comunhão", desc: "Rede global de oração." },
               ].map((item) => (
-                <div key={item.title} className="space-y-1">
+                <div key={item.title} className="space-y-2xs">
                   <h4 className="font-bold text-foreground text-premium-small">{item.title}</h4>
-                  <p className="text-premium-tiny text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -283,7 +283,7 @@ const InstitutionalVideoSection = () => {
               {/* Cinematic Overlays */}
               <div className="absolute inset-0 bg-black/40" />
               
-              <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6">
+              <div className="absolute inset-0 flex flex-col items-center justify-center space-y-lg">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -293,7 +293,7 @@ const InstitutionalVideoSection = () => {
                   <Play className="w-xl h-xl text-white fill-white relative z-10 ml-2xs" />
                 </motion.div>
                 
-                <div className="text-center space-y-2 px-xl">
+                <div className="text-center space-y-xs px-xl">
                   <h3 className="font-display font-bold text-white tracking-tight">
                     Assistir Apresentação
                   </h3>
@@ -326,11 +326,11 @@ const InstitutionalVideoSection = () => {
               <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center">
                 {isMuted ? <VolumeX className="w-md h-md text-primary" /> : <Volume2 className="w-md h-md text-primary" />}
               </div>
-              <div className="space-y-0.5">
-                <p className="text-premium-tiny font-black text-primary uppercase tracking-tighter">
+              <div className="space-y-3xs">
+                <p className="text-xs font-black text-primary uppercase tracking-tighter">
                   {isMuted ? "Mudo" : "Som Ativado"}
                 </p>
-                <p className="text-premium-tiny font-bold text-foreground">Experiência Imersiva</p>
+                <p className="text-xs font-bold text-foreground">Experiência Imersiva</p>
               </div>
             </motion.div>
           </motion.div>
@@ -376,7 +376,7 @@ const InstitutionalVideoSection = () => {
                           to_lang: newLang 
                         });
                       }}
-                      className="bg-transparent text-white text-premium-tiny font-bold focus:outline-none cursor-pointer"
+                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
                     >
                       {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}

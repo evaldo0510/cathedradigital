@@ -187,15 +187,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         })}
       </script>
 
-      <div ref={ref} className="space-y-10 pb-3xl">
-        <header className="text-center space-y-4">
+      <div ref={ref} className="space-y-xl pb-3xl">
+        <header className="text-center space-y-md">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-full text-primary border border-primary/20"
           >
             <CalendarIcon className="w-sm h-sm" />
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
           </motion.div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">Santos</h1>
           <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
@@ -208,8 +208,8 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             {viewModes.map((mode, idx) => (
               <Button
                 key={mode}
-                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-md md:px-lg py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  viewMode === mode ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
+                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-md md:px-lg py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  viewMode === mode ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, viewModes.length, (newIdx) => setViewMode(viewModes[newIdx]), 'tab-')}
@@ -225,7 +225,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           {viewMode === 'daily' ? (
               <motion.div
                 key="daily"
-                {...getTabPanelProps('panel-daily', 'tab-daily', viewMode === 'daily', "space-y-8 outline-none")}
+                {...getTabPanelProps('panel-daily', 'tab-daily', viewMode === 'daily', "space-y-xl outline-none")}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -244,7 +244,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <h2 className="text-2xl font-serif font-bold text-foreground">
                       {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
                     </h2>
-                    <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mt-2xs">
+                    <p className="text-xs font-black uppercase tracking-widest text-primary mt-2xs">
                       {format(selectedDate, "EEEE", { locale: ptBR })}
                     </p>
                   </div>
@@ -271,7 +271,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
                       aria-pressed={isSameDay(date, selectedDate)}
                     >
-                      <span className="text-premium-tiny font-black uppercase tracking-tighter mb-2xs">
+                      <span className="text-xs font-black uppercase tracking-tighter mb-2xs">
                         {format(date, "EEE", { locale: ptBR }).replace('.', '')}
                       </span>
                       <span className="text-lg font-serif font-bold">{format(date, "dd")}</span>
@@ -280,7 +280,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 </div>
               </div>
 
-              <div className="max-w-4xl mx-auto space-y-6">
+              <div className="max-w-4xl mx-auto space-y-lg">
                 {isLoadingDaily ? (
                   <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
@@ -292,7 +292,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       className="premium-card overflow-hidden group relative transition-all"
                     >
                       <div className="flex flex-col md:flex-row h-full">
-                        <div className="w-full md:w-2xs/3 h-64 md:h-auto relative">
+                        <div className="w-full md:w-2xs/3 h-4xl md:h-auto relative">
                           <SacredImage 
                             src={saint.image} 
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -300,14 +300,14 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                           <div className="absolute bottom-lg left-lg right-lg text-white">
-                            <span className="text-premium-tiny font-black uppercase tracking-widest bg-primary px-xs py-2xs rounded-full mb-xs inline-block">
+                            <span className="text-xs font-black uppercase tracking-widest bg-primary px-xs py-2xs rounded-full mb-xs inline-block">
                               {CATEGORY_LABELS[saint.category] || saint.category}
                             </span>
                             <h3 className="text-2xl font-serif font-bold">{saint.name}</h3>
                           </div>
                         </div>
 
-                        <div className="flex-1 p-xl space-y-6">
+                        <div className="flex-1 p-xl space-y-lg">
                           <div>
                             <p className="text-lg text-primary font-serif italic mb-md">"{saint.title}"</p>
                             <p className="text-muted-foreground leading-relaxed line-clamp-4 font-serif italic">
@@ -316,16 +316,16 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           </div>
 
                           <div className="grid grid-cols-2 gap-md">
-                            <div className="space-y-1">
-                              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
+                            <div className="space-y-2xs">
+                              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
                               <div className="flex flex-wrap gap-2xs">
                                 {saint.virtues?.slice(0, 1).map(v => (
-                                  <span key={v} className="px-xs py-2xs bg-primary/10 text-primary text-premium-tiny font-black uppercase rounded-full">{v}</span>
+                                  <span key={v} className="px-xs py-2xs bg-primary/10 text-primary text-xs font-black uppercase rounded-full">{v}</span>
                                 ))}
                               </div>
                             </div>
-                            <div className="space-y-1 text-right">
-                              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
+                            <div className="space-y-2xs text-right">
+                              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
                               <p className="text-xs font-bold text-foreground truncate">{saint.patronOf?.[0] || '—'}</p>
                             </div>
                           </div>
@@ -354,9 +354,9 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     </motion.div>
                   ))
                 ) : (
-                  <div className="text-center py-3xl bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
+                  <div className="text-center py-3xl bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-md">
                     <Icons.Star className="w-2xl h-2xl text-muted-foreground/60 mx-auto" />
-                    <div className="space-y-2">
+                    <div className="space-y-xs">
                       <p className="text-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
                       <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
                         Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
@@ -370,11 +370,11 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <motion.div
               key="search"
               id="panel-search"
-              {...getTabPanelProps('panel-search', 'tab-search', viewMode === 'search', "space-y-8 outline-none")}
+              {...getTabPanelProps('panel-search', 'tab-search', viewMode === 'search', "space-y-xl outline-none")}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 outline-none"
+              className="space-y-xl outline-none"
               tabIndex={0}
             >
               <FuzzySearchInput
@@ -391,7 +391,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 ) : search.trim() ? (
                   <>
                     {(searchResults.length > 0 || globalResults.length > 0) ? (
-                      <div className="space-y-2">
+                      <div className="space-y-xs">
                         <AnimatePresence mode="popLayout">
                         {searchResults.map((saint, i) => (
                           <SearchResultCard
@@ -419,7 +419,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     ) : null}
 
                     {searchResults.length === 0 && !isSearchingGlobal && globalResults.length === 0 && (
-                      <div className="text-center py-3xl space-y-6">
+                      <div className="text-center py-3xl space-y-lg">
                         <p className="text-muted-foreground font-serif italic">
                           Nenhum santo encontrado em nossa base local.
                         </p>
@@ -434,7 +434,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     )}
 
                     {isSearchingGlobal && (
-                      <div className="text-center py-3xl space-y-4">
+                      <div className="text-center py-3xl space-y-md">
                         <Sparkles className="w-xl h-xl text-primary animate-pulse mx-auto" />
                         <p className="text-sm text-muted-foreground animate-pulse">Consultando hagiografias históricas...</p>
                       </div>
@@ -450,15 +450,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           ) : viewMode === 'cloud' ? (
             <motion.div
               key="cloud"
-              {...getTabPanelProps('panel-cloud', 'tab-cloud', viewMode === 'cloud', "space-y-8 outline-none")}
+              {...getTabPanelProps('panel-cloud', 'tab-cloud', viewMode === 'cloud', "space-y-xl outline-none")}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="space-y-8 outline-none"
+              className="space-y-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-2">
-                <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
+              <div className="text-center space-y-xs">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
                 <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
               </div>
 
@@ -485,10 +485,10 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 outline-none"
+              className="space-y-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-4 max-w-2xl mx-auto px-md">
+              <div className="text-center space-y-md max-w-2xl mx-auto px-md">
                 <h2 className="text-2xl font-serif font-bold">
                   {viewMode === 'writers' ? 'Doutores e Escritores' : viewMode === 'popes' ? 'Sucessores de Pedro' : 'Base Sanctorum'}
                 </h2>
@@ -533,7 +533,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
       onClick={onClick}
       className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-4xl overflow-hidden">
         <SacredImage 
           src={saint.image || ''} 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
@@ -541,7 +541,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-md left-lg flex items-center gap-xs">
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-white/90 bg-primary/80 px-xs py-3xs rounded-full ">
+          <span className="text-xs font-black uppercase tracking-widest text-white/90 bg-primary/80 px-xs py-3xs rounded-full ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
@@ -551,10 +551,10 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         />
       </div>
       
-      <div className="flex-1 p-lg space-y-4">
+      <div className="flex-1 p-lg space-y-md">
         <div>
           <div className="flex items-center justify-between mb-xs">
-            <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+            <span className="text-xs font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
               <div className="p-2xs bg-primary/5 rounded-premium text-primary" title="Possui obras escritas">
                 <BookOpen className="w-sm h-sm" />
@@ -569,7 +569,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         
         <div className="flex flex-wrap gap-2xs mt-auto">
           {saint.virtues?.slice(0, 2).map(v => (
-            <span key={v} className="px-xs py-3xs bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full border border-primary/10">{v}</span>
+            <span key={v} className="px-xs py-3xs bg-primary/5 text-primary text-xs font-black uppercase rounded-full border border-primary/10">{v}</span>
           ))}
         </div>
       </div>

@@ -255,7 +255,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-3xl overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-lg md:p-2xl lg:p-3xl space-y-4 md:space-y-10 relative overflow-hidden shadow-premium rounded-[3rem]">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-lg md:p-2xl lg:p-3xl space-y-md md:space-y-xl relative overflow-hidden shadow-premium rounded-[3rem]">
               <div className="absolute top-0 left-0 w-full h-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
               <div className="absolute top-md right-md md:top-lg md:right-lg flex items-center gap-xs">
@@ -302,7 +302,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-4 md:space-y-10 max-w-3xl mx-auto">
+              <div className="space-y-md md:space-y-xl max-w-3xl mx-auto">
                 {history.length > visibleMessages && (
                   <div className="flex justify-center pb-xs">
                     <Button 
@@ -456,9 +456,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-lg md:p-xl space-y-8 md:space-y-10 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-lg md:p-xl space-y-xl md:space-y-xl scrollbar-hide">
               {history.length === 0 && !selectedText && (
-                <div className="text-center py-3xl space-y-8">
+                <div className="text-center py-3xl space-y-xl">
                   <div className="w-2xs h-2xs rounded-full bg-primary/10 mx-auto animate-pulse" />
                   <p className="text-lg text-muted-foreground/40 font-serif italic leading-relaxed max-w-[280px] mx-auto">
                     {settings.totalSilence 
@@ -486,7 +486,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
               {history.slice(-visibleMessages).map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-sm animate-in fade-in slide-in-from-bottom-xs duration-500`}>
-                  <div className={`max-w-[90%] p-lg md:p-xl rounded-premium-lg text-sm md:text-base leading-relaxed ${
+                  <div className={`max-w-[90%] p-lg md:p-xl rounded-lg text-sm md:text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 
                       : 'bg-card border border-border/5 font-serif italic text-foreground/80'
@@ -501,7 +501,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {(isLoading || isTyping) && (
                 <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/10 p-md md:p-lg rounded-premium-lg flex gap-sm">
+                  <div className="bg-muted/10 p-md md:p-lg rounded-lg flex gap-sm">
                     <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce" />
                     <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
                     <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />

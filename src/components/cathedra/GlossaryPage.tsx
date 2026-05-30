@@ -161,12 +161,12 @@ const GlossaryPage: React.FC = () => {
   return (
     <>
     <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Glossário", path: "/glossary" }]} />
-    <div className="max-w-5xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto space-y-xl">
       {/* Header */}
-      <div className="text-center space-y-3">
+      <div className="text-center space-y-sm">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.BookOpen className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
         <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
@@ -188,7 +188,7 @@ const GlossaryPage: React.FC = () => {
         <div className="flex gap-xs justify-center flex-wrap">
           {categories.map(cat => (
             <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+              className={`px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -202,23 +202,23 @@ const GlossaryPage: React.FC = () => {
         <div className="flex justify-center gap-lg text-center">
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Termos</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Termos</p>
           </div>
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Categorias</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
           </div>
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{enrichedCount}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Com reflexão</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Com reflexão</p>
           </div>
         </div>
       )}
 
       {/* Search results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+        <div className="space-y-xs">
+          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           <AnimatePresence mode="popLayout">
           {searchResults.map((term, i) => (
             <SearchResultCard
@@ -236,7 +236,7 @@ const GlossaryPage: React.FC = () => {
       )}
 
       {/* Glossary list */}
-      <div className="space-y-3">
+      <div className="space-y-sm">
         {loading ? (
           <div className="flex justify-center py-2xl">
             <div className="w-xl h-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
@@ -258,12 +258,12 @@ const GlossaryPage: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-xs mb-2xs flex-wrap">
                       {term.category && (
-                        <span className={`px-xs py-3xs rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-xs py-3xs rounded-full text-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
                           {term.category}
                         </span>
                       )}
                       {enrichment && (
-                        <span className="px-xs py-3xs rounded-full text-premium-tiny font-bold bg-primary/10 text-primary uppercase tracking-wider">
+                        <span className="px-xs py-3xs rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
                           <Icons.Sparkles className="w-xs h-xs inline mr-2xs" /> Com reflexão
                         </span>
                       )}
@@ -277,24 +277,24 @@ const GlossaryPage: React.FC = () => {
                 </Button>
 
                 {isExpanded && (
-                  <div className="px-lg pb-lg space-y-4 border-t border-border pt-md">
+                  <div className="px-lg pb-lg space-y-md border-t border-border pt-md">
                     {/* Layer 1: Simple definition */}
-                    <div className="space-y-1">
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">📘 Definição</p>
+                    <div className="space-y-2xs">
+                      <p className="text-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
                       <p className="text-foreground/90 leading-relaxed font-serif">{term.definition}</p>
                     </div>
 
                     {enrichment && (
                       <>
                         {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-premium p-md text-center space-y-2">
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
+                        <div className="bg-primary/5 rounded-premium p-md text-center space-y-xs">
+                          <p className="text-xs font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
                           <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-premium p-md text-center space-y-2">
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
+                        <div className="bg-accent/30 rounded-premium p-md text-center space-y-xs">
+                          <p className="text-xs font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
                           <p className="text-foreground font-bold text-base">{enrichment.question}</p>
                         </div>
 
@@ -308,7 +308,7 @@ const GlossaryPage: React.FC = () => {
 
                         {/* Journey Link */}
                         {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-md space-y-3">
+                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-md space-y-sm">
                             <div className="flex items-center gap-xs">
                               <Icons.Compass className="w-md h-md text-primary" />
                               <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
@@ -318,7 +318,7 @@ const GlossaryPage: React.FC = () => {
                             </p>
                             <Button 
                               onClick={() => navigate(`/jornadas/${term.journey_id}`)}
-                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-tiny tracking-widest py-md"
+                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-xs tracking-widest py-md"
                             >
                               Iniciar Jornada Prática
                             </Button>

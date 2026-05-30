@@ -148,7 +148,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
 
   if (questions.length === 0) {
     return (
-      <div className="text-center py-2xl space-y-4">
+      <div className="text-center py-2xl space-y-md">
         <Brain className="w-2xl h-2xl text-muted-foreground mx-auto" />
         <p className="text-muted-foreground">Não há termos suficientes para gerar o quiz.</p>
         <Button variant="outline" onClick={onClose}>Voltar</Button>
@@ -162,7 +162,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
     const avgScore = history.length > 0 ? Math.round(history.reduce((a, h) => a + h.percentage, 0) / history.length) : 0;
 
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto space-y-6">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto space-y-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">Histórico de Quizzes</h2>
           <Button variant="ghost" size="xs" onClick={() => setShowHistory(false)}>Voltar</Button>
@@ -173,17 +173,17 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             <div className="bg-primary/5 border border-primary/10 rounded-premium p-md text-center">
               <TrendingUp className="w-md h-md text-primary mx-auto mb-2xs" />
               <p className="text-2xl font-black text-primary">{bestScore}%</p>
-              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Melhor</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Melhor</p>
             </div>
             <div className="bg-accent/50 border border-border rounded-premium p-md text-center">
               <Brain className="w-md h-md text-foreground/60 mx-auto mb-2xs" />
               <p className="text-2xl font-black text-foreground">{avgScore}%</p>
-              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Média</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Média</p>
             </div>
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-xs">
           {history.length === 0 ? (
             <p className="text-center text-muted-foreground text-sm py-xl">Nenhum quiz realizado ainda.</p>
           ) : (
@@ -218,7 +218,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-card border border-border rounded-full p-xl text-center space-y-6 max-w-md mx-auto"
+        className="bg-card border border-border rounded-full p-xl text-center space-y-lg max-w-md mx-auto"
       >
         <div className="w-3xl h-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto">
           <Trophy className="w-xl h-xl text-primary" />
@@ -228,7 +228,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <p className="text-muted-foreground text-sm">
             Você acertou <span className="font-bold text-primary">{score}</span> de <span className="font-bold">{total}</span> ({pct}%)
           </p>
-          {user && <p className="text-premium-tiny text-muted-foreground mt-2xs">✓ Resultado salvo</p>}
+          {user && <p className="text-xs text-muted-foreground mt-2xs">✓ Resultado salvo</p>}
         </div>
 
         <div className="relative w-4xl h-4xl mx-auto">
@@ -264,7 +264,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
   }
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
+    <div className="max-w-lg mx-auto space-y-lg">
       {/* Header with history button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-md text-xs text-muted-foreground">
@@ -293,10 +293,10 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ type: 'spring', damping: 25 }}
-          className="space-y-5"
+          className="space-y-md"
         >
-          <div className="bg-card border border-border rounded-premium p-lg space-y-4">
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-xs py-2xs rounded-full">
+          <div className="bg-card border border-border rounded-premium p-lg space-y-md">
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-xs py-2xs rounded-full">
               {question.category}
             </span>
             <h3 className="text-lg font-bold text-foreground leading-snug">
@@ -304,7 +304,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             </h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-sm">
             {question.options.map((opt, idx) => {
               const isCorrect = idx === question.correctIndex;
               const isSelected = idx === selected;
@@ -337,10 +337,10 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-4"
+              className="space-y-md"
             >
               <div className="bg-primary/5 border border-primary/10 rounded-premium p-md">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2xs">
+                <p className="text-xs font-black uppercase tracking-widest text-primary mb-2xs">
                   <Sparkles className="w-sm h-sm inline mr-2xs" />
                   {selected === question.correctIndex ? 'Correto!' : `A resposta certa era sobre "${question.term}"`}
                 </p>

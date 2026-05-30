@@ -131,7 +131,7 @@ const TemasPage = () => {
   return (
     <div className="desktop-layout section-rhythm animate-in fade-in slide-in-from-bottom-md duration-700">
       <div className="desktop-main px-md stack-rhythm">
-        <header className="space-y-4 text-center header-margin-rhythm">
+        <header className="space-y-md text-center header-margin-rhythm">
           <div className="flex justify-center mb-md">
             <div className="w-3xl h-2xs bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
@@ -158,7 +158,7 @@ const TemasPage = () => {
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-sm sm:px-md py-xs sm:py-xs rounded-full sm:rounded-full text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    whitespace-nowrap px-sm sm:px-md py-xs sm:py-xs rounded-full sm:rounded-full text-xs sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
                       ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -189,7 +189,7 @@ const TemasPage = () => {
                   <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
                 </div>
               ) : filteredTags.length === 0 ? (
-                <div className="py-3xl px-xl text-center w-full space-y-4">
+                <div className="py-3xl px-xl text-center w-full space-y-md">
                   <div className="w-3xl h-3xl bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
                     <Search className="w-lg h-lg text-muted-foreground/60" />
                   </div>
@@ -201,11 +201,11 @@ const TemasPage = () => {
                     <div className="px-lg pt-lg flex items-center justify-between">
                       <div className="flex items-center gap-xs px-sm py-2xs rounded-premium bg-primary/5 border border-primary/10">
                         <Sparkles className="w-sm h-sm text-primary/40" />
-                        <span className="text-premium-tiny font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
+                        <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
                       <Button 
                         onClick={() => setActiveCategory('all')}
-                        className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
+                        className="text-xs font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
                       >
                         Limpar Filtro
                       </Button>
@@ -221,7 +221,7 @@ const TemasPage = () => {
                             isSuggested={suggestedSlugs.has(tag.slug)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            className="px-md py-xs text-premium-tiny sm:text-premium-small uppercase tracking-widest"
+                            className="px-md py-xs text-xs sm:text-premium-small uppercase tracking-widest"
                             profileId={profileId as ProfileId}
                           />
                         </div>
@@ -230,7 +230,7 @@ const TemasPage = () => {
                   </div>
                   <div className="flex items-center justify-center gap-sm px-xl pb-lg pt-xs">
                     <div className="flex items-center gap-xs bg-muted/20 px-md py-2xs rounded-premium border border-border/20">
-                      <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                      <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
                       <div className="w-2xs h-2xs rounded-premium bg-primary/30" />
@@ -261,7 +261,7 @@ const TemasPage = () => {
         </div>
       </div>
 
-      <aside className="desktop-aside space-y-6 hidden xl:block">
+      <aside className="desktop-aside space-y-lg hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
           <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Conexões Nexus</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
@@ -270,7 +270,7 @@ const TemasPage = () => {
         </div>
         <div className="desktop-card">
           <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-sm">Dica de Estudo</h3>
-          <p className="text-premium-tiny text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             Use as setas do teclado para navegar rapidamente entre os temas e "Home" para voltar ao início.
           </p>
         </div>

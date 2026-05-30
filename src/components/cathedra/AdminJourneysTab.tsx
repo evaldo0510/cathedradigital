@@ -361,13 +361,13 @@ const AdminJourneysTab: React.FC = () => {
   );
 
   if (loading) {
-    return <div className="space-y-4 animate-pulse">
+    return <div className="space-y-md animate-pulse">
       {[1, 2, 3].map(i => <div key={i} className="h-3xl bg-muted/40 rounded-premium" />)}
     </div>;
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Jornadas</h2>
@@ -401,8 +401,8 @@ const AdminJourneysTab: React.FC = () => {
                 <div>
                   <h3 className="font-bold flex items-center gap-xs">
                     {journey.title}
-                    {journey.is_premium && <Badge variant="secondary" className="text-premium-tiny bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
-                    {!journey.is_active && <Badge variant="outline" className="text-premium-tiny">Inativa</Badge>}
+                    {journey.is_premium && <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
+                    {!journey.is_active && <Badge variant="outline" className="text-xs">Inativa</Badge>}
                   </h3>
                   <p className="text-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
                 </div>
@@ -425,7 +425,7 @@ const AdminJourneysTab: React.FC = () => {
             </div>
 
             {selectedJourneyId === journey.id && (
-              <div className="bg-muted/30 border-t p-md space-y-3">
+              <div className="bg-muted/30 border-t p-md space-y-sm">
                 <div className="flex items-center justify-between mb-xs">
                   <h4 className="text-sm font-semibold flex items-center gap-xs"><Layers className="w-md h-md" /> Passos da Jornada</h4>
                   <Button variant="outline" size="sm" className="h-xl text-xs gap-2xs" onClick={() => handleCreateStep(journey.id)}>
@@ -433,17 +433,17 @@ const AdminJourneysTab: React.FC = () => {
                   </Button>
                 </div>
                 {stepsLoading ? (
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     {[1, 2].map(i => <div key={i} className="h-xl bg-muted animate-pulse rounded" />)}
                   </div>
                 ) : steps.length === 0 ? (
                   <p className="text-sm text-muted-foreground italic text-center py-md">Nenhum passo cadastrado nesta jornada.</p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     {steps.map(step => (
                       <div key={step.id} className="flex items-center justify-between bg-card p-sm rounded-premium border text-sm group">
                         <div className="flex items-center gap-sm">
-                          <span className="w-lg h-lg rounded bg-muted flex items-center justify-center font-bold text-premium-tiny">{step.step_order}</span>
+                          <span className="w-lg h-lg rounded bg-muted flex items-center justify-center font-bold text-xs">{step.step_order}</span>
                           <div>
                             <p className="font-medium">{step.title}</p>
                             <p className="text-xs text-muted-foreground">{step.step_type}</p>
@@ -471,29 +471,29 @@ const AdminJourneysTab: React.FC = () => {
           {editingJourney && (
             <div className="grid gap-md py-md">
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Título</Label>
                   <Input value={editingJourney.title} onChange={e => setEditingJourney({...editingJourney, title: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Subtítulo</Label>
                   <Input value={editingJourney.subtitle || ''} onChange={e => setEditingJourney({...editingJourney, subtitle: e.target.value})} />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Descrição</Label>
                 <Textarea value={editingJourney.description || ''} onChange={e => setEditingJourney({...editingJourney, description: e.target.value})} />
               </div>
               <div className="grid grid-cols-3 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Categoria</Label>
                   <Input value={editingJourney.category || ''} onChange={e => setEditingJourney({...editingJourney, category: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Dificuldade</Label>
                   <Input value={editingJourney.difficulty || ''} onChange={e => setEditingJourney({...editingJourney, difficulty: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Dias Estimados</Label>
                   <Input type="number" value={editingJourney.estimated_days || 0} onChange={e => setEditingJourney({...editingJourney, estimated_days: parseInt(e.target.value)})} />
                 </div>
@@ -525,28 +525,28 @@ const AdminJourneysTab: React.FC = () => {
             <DialogTitle>Editar Passo da Jornada</DialogTitle>
           </DialogHeader>
           {editingStep && (
-            <div className="flex-1 overflow-y-auto pr-xs space-y-4 py-md">
+            <div className="flex-1 overflow-y-auto pr-xs space-y-md py-md">
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Título</Label>
                   <Input value={editingStep.title} onChange={e => setEditingStep({...editingStep, title: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Subtítulo</Label>
                   <Input value={editingStep.subtitle || ''} onChange={e => setEditingStep({...editingStep, subtitle: e.target.value})} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Tipo de Passo</Label>
                   <Input value={editingStep.step_type} onChange={e => setEditingStep({...editingStep, step_type: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label>Ordem</Label>
                   <Input type="number" value={editingStep.step_order} onChange={e => setEditingStep({...editingStep, step_order: parseInt(e.target.value)})} />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Conteúdo (JSON)</Label>
                 <div className="relative group">
                    <Textarea 
@@ -555,7 +555,7 @@ const AdminJourneysTab: React.FC = () => {
                      onChange={e => setStepContentString(e.target.value)} 
                    />
                    <div className="absolute right-xs top-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="sm" className="h-lg text-premium-tiny uppercase tracking-tighter" onClick={() => {
+                     <Button variant="outline" size="sm" className="h-lg text-xs uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
@@ -566,7 +566,7 @@ const AdminJourneysTab: React.FC = () => {
                      }}>Formatar</Button>
                    </div>
                 </div>
-                <p className="text-premium-tiny text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+                <p className="text-xs text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
               </div>
             </div>
           )}
@@ -587,29 +587,29 @@ const AdminJourneysTab: React.FC = () => {
           </DialogHeader>
           <div className="grid gap-md py-md">
             <div className="grid grid-cols-2 gap-md">
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Título</Label>
                 <Input placeholder="Ex: Caminho de Santidade" value={newJourney.title} onChange={e => setNewJourney({...newJourney, title: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Subtítulo</Label>
                 <Input placeholder="Ex: 7 dias de reflexão" value={newJourney.subtitle} onChange={e => setNewJourney({...newJourney, subtitle: e.target.value})} />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <Label>Descrição</Label>
               <Textarea placeholder="Descreva o propósito desta jornada..." value={newJourney.description} onChange={e => setNewJourney({...newJourney, description: e.target.value})} />
             </div>
             <div className="grid grid-cols-3 gap-md">
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Categoria</Label>
                 <Input value={newJourney.category} onChange={e => setNewJourney({...newJourney, category: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Dificuldade</Label>
                 <Input value={newJourney.difficulty} onChange={e => setNewJourney({...newJourney, difficulty: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Dias Estimados</Label>
                 <Input type="number" value={newJourney.estimated_days} onChange={e => setNewJourney({...newJourney, estimated_days: parseInt(e.target.value)})} />
               </div>

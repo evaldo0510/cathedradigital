@@ -275,7 +275,7 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="max-w-3xl mx-auto space-y-6 py-xl px-md">
+      <div className="max-w-3xl mx-auto space-y-lg py-xl px-md">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-xs text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-xs py-2xs"
@@ -284,16 +284,16 @@ const CommunityPage: React.FC = () => {
           <Icons.ChevronLeft className="w-md h-md" /> Voltar
         </Button>
 
-        <div className="bg-card border border-border rounded-premium p-lg space-y-4">
+        <div className="bg-card border border-border rounded-premium p-lg space-y-md">
           <div className="flex items-center gap-sm">
             <div className="w-xl h-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-sm">
               {(selectedPost.author_name || 'A').charAt(0).toUpperCase()}
             </div>
             <div>
               <p className="text-sm font-bold text-foreground">{selectedPost.author_name}</p>
-              <p className="text-premium-tiny text-muted-foreground">{timeAgo(selectedPost.created_at)}</p>
+              <p className="text-xs text-muted-foreground">{timeAgo(selectedPost.created_at)}</p>
             </div>
-            <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-xs py-2xs rounded-full">
+            <span className="ml-auto text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-xs py-2xs rounded-full">
               {CATEGORIES.find(c => c.id === selectedPost.category)?.label || selectedPost.category}
             </span>
           </div>
@@ -313,7 +313,7 @@ const CommunityPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-sm">
           {replies.map(r => (
             <div key={r.id} className="bg-card border border-border rounded-premium p-md ml-lg">
               <div className="flex items-center gap-xs mb-xs">
@@ -321,7 +321,7 @@ const CommunityPage: React.FC = () => {
                   {(r.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-bold text-foreground">{r.author_name}</span>
-                <span className="text-premium-tiny text-muted-foreground">{timeAgo(r.created_at)}</span>
+                <span className="text-xs text-muted-foreground">{timeAgo(r.created_at)}</span>
               </div>
               <p className="text-sm text-foreground/80 whitespace-pre-wrap">{r.content}</p>
             </div>
@@ -329,7 +329,7 @@ const CommunityPage: React.FC = () => {
         </div>
 
         {user ? (
-          <div className="bg-card border border-border rounded-premium p-md space-y-3">
+          <div className="bg-card border border-border rounded-premium p-md space-y-sm">
             <textarea
               value={replyContent}
               onChange={e => setReplyContent(e.target.value)}
@@ -355,27 +355,27 @@ const CommunityPage: React.FC = () => {
     <div className="desktop-layout py-xl">
       <div className="desktop-main px-md">
         {loading && posts.length === 0 ? (
-          <div className="space-y-8">
+          <div className="space-y-xl">
             <PageHeaderSkeleton />
             <ListSkeleton count={6} />
           </div>
         ) : (
           <>
-            <div className="text-center space-y-4 pt-md mb-xl">
+            <div className="text-center space-y-md pt-md mb-xl">
               <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 rounded-premium border border-primary/10 shadow-inner mb-xs">
                 <Icons.Message className="w-md h-md text-primary" aria-hidden="true" />
                 <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
               <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
               <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
-              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
             </div>
           </>
         )}
 
         <div className="flex gap-xs justify-center mb-xl" role="tablist" aria-label="Abas da comunidade">
           <Button 
-            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('forum')}
@@ -384,7 +384,7 @@ const CommunityPage: React.FC = () => {
             <Icons.Message className="w-sm h-sm inline mr-2xs" />Fórum
           </Button>
           <Button 
-            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('ranking')}
@@ -395,7 +395,7 @@ const CommunityPage: React.FC = () => {
         </div>
 
         {tab === 'forum' ? (
-          <div className="space-y-6" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
+          <div className="space-y-lg" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
             <div className="flex flex-col sm:flex-row gap-md mb-lg">
               <FuzzySearchInput
                 value={searchQuery}
@@ -419,19 +419,19 @@ const CommunityPage: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{post.author_name}</p>
-                        <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
                       </div>
-                      <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">
+                      <Badge variant="outline" className="text-xs font-black uppercase tracking-widest border-primary/20 text-primary/70">
                         {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                       </Badge>
                     </div>
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-xs">{post.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2 italic mb-md">{post.content}</p>
                     <div className="flex items-center gap-md pt-md border-t border-border/40">
-                      <div className="flex items-center gap-2xs text-premium-tiny font-bold text-muted-foreground">
+                      <div className="flex items-center gap-2xs text-xs font-bold text-muted-foreground">
                         <Icons.Heart className="w-sm h-sm" /> {post.likes_count}
                       </div>
-                      <div className="flex items-center gap-2xs text-premium-tiny font-bold text-muted-foreground">
+                      <div className="flex items-center gap-2xs text-xs font-bold text-muted-foreground">
                         <Icons.MessageSquare className="w-sm h-sm" /> {post.replies_count || 0}
                       </div>
                     </div>
@@ -441,7 +441,7 @@ const CommunityPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-4" {...getTabPanelProps('panel-ranking', 'tab-1', true)}>
+          <div className="space-y-md" {...getTabPanelProps('panel-ranking', 'tab-1', true)}>
             {lbLoading ? <ListSkeleton count={5} /> : (
               <div className="grid grid-cols-1 gap-sm">
                 {leaderboard.map((entry, idx) => (
@@ -451,11 +451,11 @@ const CommunityPage: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
-                      <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
+                      <p className="text-xs text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-black text-primary">{entry.score}</p>
-                      <p className="text-premium-tiny font-black uppercase text-muted-foreground">Pontos</p>
+                      <p className="text-xs font-black uppercase text-muted-foreground">Pontos</p>
                     </div>
                   </div>
                 ))}
@@ -465,7 +465,7 @@ const CommunityPage: React.FC = () => {
         )}
       </div>
 
-      <aside className="desktop-aside space-y-6 hidden xl:block">
+      <aside className="desktop-aside space-y-lg hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
           <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Comunhão de Santos</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
@@ -474,15 +474,15 @@ const CommunityPage: React.FC = () => {
         </div>
         <div className="desktop-card">
           <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-md">Líderes de Engajamento</h3>
-          <div className="space-y-4">
+          <div className="space-y-md">
             {leaderboard.slice(0, 3).map((entry, i) => (
               <div key={entry.id} className="flex items-center gap-sm">
-                <div className="w-xl h-xl rounded-premium bg-muted flex items-center justify-center font-black text-premium-tiny">
+                <div className="w-xl h-xl rounded-premium bg-muted flex items-center justify-center font-black text-xs">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-premium-tiny font-bold text-foreground truncate">{entry.name}</p>
-                  <p className="text-premium-tiny text-muted-foreground uppercase font-medium">{entry.levelName}</p>
+                  <p className="text-xs font-bold text-foreground truncate">{entry.name}</p>
+                  <p className="text-xs text-muted-foreground uppercase font-medium">{entry.levelName}</p>
                 </div>
               </div>
             ))}

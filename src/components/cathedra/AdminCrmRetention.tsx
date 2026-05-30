@@ -59,7 +59,7 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
   const badge = (
-    <span className={`inline-flex items-center gap-3xs text-premium-tiny font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+    <span className={`inline-flex items-center gap-3xs text-xs font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-sm h-sm" />}
       {direction === 'down' && <ArrowDown className="w-sm h-sm" />}
       {direction === 'flat' && <Minus className="w-sm h-sm" />}
@@ -288,7 +288,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     if (!active || !payload?.[0]) return null;
     const label = payload[0]?.payload?.label || '';
     return (
-      <div className="rounded-premium bg-popover px-xs py-2xs text-premium-tiny font-medium text-popover-foreground shadow-premium border border-border">
+      <div className="rounded-premium bg-popover px-xs py-2xs text-xs font-medium text-popover-foreground shadow-premium border border-border">
         {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );
@@ -313,7 +313,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
 
   return (
     <TooltipProvider delayDuration={200}>
-    <div className="space-y-6">
+    <div className="space-y-lg">
       {/* Period Filter + Export */}
       <div className="flex items-center justify-between flex-wrap gap-xs">
         <div className="flex gap-2xs">

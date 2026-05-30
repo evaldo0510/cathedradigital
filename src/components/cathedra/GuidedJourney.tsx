@@ -121,13 +121,13 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         </Button>
 
         {!showResult ? (
-          <div className="space-y-8">
+          <div className="space-y-xl">
             {currentStep <= steps.length - 1 ? (
               <>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <div className="flex items-center gap-xs text-secondary">
                     <Sparkles className="w-md h-md" />
-                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
+                    <span className="text-xs font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
                   </div>
                   <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary leading-tight">
                     {steps[currentStep].question}
@@ -168,11 +168,11 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </div>
               </>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8 py-md">
-                <div className="space-y-2">
+              <form onSubmit={handleSubmit} className="space-y-xl py-md">
+                <div className="space-y-xs">
                   <div className="flex items-center gap-xs text-secondary">
                     <Mail className="w-md h-md" />
-                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Quase lá</span>
+                    <span className="text-xs font-black uppercase tracking-[0.2em]">Quase lá</span>
                   </div>
                   <h2 className="text-3xl font-serif font-bold text-primary">
                     Onde devemos enviar seu roteiro espiritual?
@@ -182,7 +182,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-md">
                   <div className="relative">
                     <User className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
                     <Input
@@ -209,7 +209,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-2xl rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover"
+                  className="w-full h-2xl rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
@@ -228,9 +228,9 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-8"
+            className="space-y-xl"
           >
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-xs">
               <div className="w-3xl h-3xl bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-md text-secondary">
                 <Sparkles className="w-xl h-xl" />
               </div>
@@ -241,30 +241,30 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </div>
 
             <div className="grid gap-lg">
-              <div className="p-lg rounded-premium bg-secondary/5 border border-secondary/20 space-y-3">
+              <div className="p-lg rounded-premium bg-secondary/5 border border-secondary/20 space-y-sm">
                 <div className="flex items-center gap-xs text-secondary">
                   <Book className="w-md h-md" />
-                  <span className="text-premium-tiny font-black uppercase tracking-widest">A Palavra de Deus</span>
+                  <span className="text-xs font-black uppercase tracking-widest">A Palavra de Deus</span>
                 </div>
                 <p className="text-lg font-serif italic text-primary">
                   "Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos aliviarei." (Mt 11,28)
                 </p>
               </div>
 
-              <div className="p-lg rounded-premium bg-primary/5 border border-primary/10 space-y-3">
+              <div className="p-lg rounded-premium bg-primary/5 border border-primary/10 space-y-sm">
                 <div className="flex items-center gap-xs text-primary">
                   <Cross className="w-md h-md" />
-                  <span className="text-premium-tiny font-black uppercase tracking-widest">Catecismo</span>
+                  <span className="text-xs font-black uppercase tracking-widest">Catecismo</span>
                 </div>
                 <p className="text-sm font-serif text-muted-foreground">
                   "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes." (§2559)
                 </p>
               </div>
 
-              <div className="p-lg rounded-premium bg-muted/30 border border-border space-y-3">
+              <div className="p-lg rounded-premium bg-muted/30 border border-border space-y-sm">
                 <div className="flex items-center gap-xs text-muted-foreground">
                   <MessageSquare className="w-md h-md" />
-                  <span className="text-premium-tiny font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
+                  <span className="text-xs font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
                 </div>
                 <p className="text-sm font-serif italic leading-relaxed">
                   Percebo que você busca paz em meio ao cansaço. Saiba que o silêncio não é ausência, mas a plenitude da presença divina que restaura as forças.
@@ -275,7 +275,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             <div className="flex flex-col sm:flex-row gap-sm">
               <Button 
                 asChild
-                className="flex-1 h-2xl rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
+                className="flex-1 h-2xl rounded-full text-xs font-black uppercase tracking-[0.1em]"
               >
                 <a 
                   href={getWhatsAppLink()} 
@@ -289,7 +289,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <Button 
                 variant="outline"
                 onClick={onClose}
-                className="h-2xl rounded-full text-premium-tiny font-black uppercase tracking-[0.1em] px-xl"
+                className="h-2xl rounded-full text-xs font-black uppercase tracking-[0.1em] px-xl"
               >
                 Concluir
               </Button>

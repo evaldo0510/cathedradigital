@@ -132,9 +132,9 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
             </div>
 
             <ScrollArea className="flex-1 px-xl pb-xl">
-              <div className="space-y-10">
+              <div className="space-y-xl">
                 {/* Theme Selection */}
-                <section className="space-y-4">
+                <section className="space-y-md">
                   <div className="flex items-center gap-xs mb-xs">
                     <Sun className="w-md h-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Ambiente e Profundidade</h3>
@@ -185,13 +185,13 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <Separator className="opacity-50" />
 
                 {/* Typography Settings */}
-                <section className="space-y-6">
+                <section className="space-y-lg">
                   <div className="flex items-center gap-xs mb-xs">
                     <Type className="w-md h-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Tipografia</h3>
                   </div>
                   
-                  <div className="space-y-8">
+                  <div className="space-y-xl">
                     {/* Font Family */}
                     <div className="bg-muted/5 rounded-premium p-xs border border-muted/20">
                       <ToggleGroup 
@@ -222,7 +222,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                     </div>
 
                     {/* Font Size */}
-                    <div className="space-y-4 px-xs">
+                    <div className="space-y-md px-xs">
                       <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                         <span>Tamanho do Texto</span>
                         <span className="text-primary capitalize">{settings.fontSize.replace('-', ' ')}</span>
@@ -247,7 +247,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <Separator className="opacity-50" />
 
                 {/* Contrast Settings */}
-                <section className="space-y-6">
+                <section className="space-y-lg">
                   <div className="flex items-center gap-xs mb-xs">
                     <Sun className="w-md h-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Contraste e Nitidez</h3>
@@ -285,15 +285,15 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <Separator className="opacity-50" />
 
                 {/* Layout & Margins */}
-                <section className="space-y-6">
+                <section className="space-y-lg">
                   <div className="flex items-center gap-xs mb-xs">
                     <Layout className="w-md h-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Densidade</h3>
                   </div>
 
-                  <div className="space-y-8">
+                  <div className="space-y-xl">
                     {/* Line Spacing */}
-                    <div className="space-y-3">
+                    <div className="space-y-sm">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-2xs">
                         Ritmo entre Linhas
                       </label>
@@ -318,7 +318,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                     </div>
 
                     {/* Side Margins / Breathing Room */}
-                    <div className="space-y-3">
+                    <div className="space-y-sm">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-2xs">
                         Respiro Lateral (Margens)
                       </label>
@@ -352,7 +352,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                     </div>
 
                     {/* Word Density (Letter Spacing) */}
-                    <div className="space-y-3">
+                    <div className="space-y-sm">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-2xs">
                         Densidade das Palavras
                       </label>
@@ -381,7 +381,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <Separator className="opacity-50" />
 
                 {/* Advanced Experience */}
-                <section className="space-y-4">
+                <section className="space-y-md">
                   <div className="flex items-center gap-xs mb-xs">
                     <Settings2 className="w-md h-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Imersiva</h3>

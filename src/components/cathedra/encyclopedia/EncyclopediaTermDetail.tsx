@@ -47,11 +47,11 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-full p-lg md:p-xl space-y-6 shadow-soft"
+            className="bg-card border border-border rounded-full p-lg md:p-xl space-y-lg shadow-md"
           >
             {/* Term Header */}
             <div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-premium-tiny uppercase tracking-[0.15em] font-black mb-xs">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-xs uppercase tracking-[0.15em] font-black mb-xs">
                 {selectedTerm.category || 'Conceito'}
               </Badge>
               <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -60,8 +60,8 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             </div>
 
             {/* Definition */}
-            <div className="space-y-1">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Definição</p>
+            <div className="space-y-2xs">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Definição</p>
               <p className="text-foreground/90 leading-relaxed text-base font-medium italic">
                 {selectedTerm.definition}
               </p>
@@ -69,10 +69,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Bible */}
             {(selectedTerm.bibleVerses || selectedTerm.reference) && (
-              <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium p-md space-y-2">
+              <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium p-md space-y-xs">
                 <div className="flex items-center gap-xs">
                   <Book className="w-md h-md text-blue-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                 </div>
                 <div className="flex flex-wrap gap-xs">
                   {(selectedTerm.bibleVerses || [selectedTerm.reference!]).flatMap((v, vIdx) => {
@@ -106,10 +106,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Catechism */}
             {selectedTerm.catechismReferences && (
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium p-md space-y-2">
+              <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium p-md space-y-xs">
                 <div className="flex items-center gap-xs">
                   <Bookmark className="w-md h-md text-amber-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                 </div>
                 <div className="flex flex-wrap gap-xs">
                   {selectedTerm.catechismReferences.flatMap((r, rIdx) => {
@@ -137,10 +137,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Magisterium */}
             {selectedTerm.magisteriumReferences && (
-              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium p-md space-y-2">
+              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium p-md space-y-xs">
                 <div className="flex items-center gap-xs">
                   <Globe className="w-md h-md text-emerald-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                 </div>
                 <div className="flex flex-wrap gap-xs">
                   {selectedTerm.magisteriumReferences.map((m, idx) => {
@@ -160,10 +160,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Practical Application */}
             {selectedTerm.practicalApplication && (
-              <div className="bg-primary/5 border border-primary/10 rounded-premium p-md space-y-2">
+              <div className="bg-primary/5 border border-primary/10 rounded-premium p-md space-y-xs">
                 <div className="flex items-center gap-xs">
                   <Target className="w-md h-md text-primary" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
                 </div>
                 <p className="text-foreground/80 leading-relaxed text-sm font-medium">
                   {selectedTerm.practicalApplication}
@@ -173,10 +173,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Deep Interpretation */}
             {selectedTerm.deepInterpretation && (
-              <div className="bg-muted/30 rounded-premium p-md space-y-2">
+              <div className="bg-muted/30 rounded-premium p-md space-y-xs">
                 <div className="flex items-center gap-xs">
                   <Quote className="w-md h-md text-muted-foreground" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
                 </div>
                 <p className="text-foreground/70 leading-relaxed text-sm italic font-serif">
                   {selectedTerm.deepInterpretation}

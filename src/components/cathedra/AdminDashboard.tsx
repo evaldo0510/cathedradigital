@@ -404,7 +404,7 @@ const AdminDashboard: React.FC = () => {
   // If a user profile is selected, show it
   if (selectedUser) {
     return (
-      <div className="space-y-8 pb-xl">
+      <div className="space-y-xl pb-xl">
         <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
           <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
         </Suspense>
@@ -414,7 +414,7 @@ const AdminDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse">
+      <div className="space-y-lg animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
           {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-4xl w-full rounded-full" />)}
         </div>
@@ -434,7 +434,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 pb-3xl sm:pb-xl px-0 sm:px-0">
+    <div className="space-y-lg sm:space-y-xl pb-3xl sm:pb-xl px-0 sm:px-0">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md px-md sm:px-0">
         <div className="flex flex-col gap-2xs">
           <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
@@ -451,115 +451,115 @@ const AdminDashboard: React.FC = () => {
       </div>
 
 
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-lg">
         <div className="px-md sm:px-0 -mx-md sm:mx-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-2xs bg-muted/30 border border-border/10 rounded-full no-scrollbar scroll-smooth snap-x">
-            <TabsTrigger value="overview" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="overview" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <LayoutGrid className="w-sm h-sm" /> Visão Geral
             </TabsTrigger>
-            <TabsTrigger value="users" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="users" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Users className="w-sm h-sm" /> Usuários
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="transactions" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <DollarSign className="w-sm h-sm" /> Financeiro
             </TabsTrigger>
-            <TabsTrigger value="design" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="design" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Palette className="w-sm h-sm" /> Design System
             </TabsTrigger>
-            <TabsTrigger value="regression" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="regression" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Eye className="w-sm h-sm" /> Regressão Visual
             </TabsTrigger>
 
-            <TabsTrigger value="partners" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="partners" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Handshake className="w-sm h-sm" /> Parceiros
             </TabsTrigger>
-            <TabsTrigger value="content" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="content" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <MessageSquare className="w-sm h-sm" /> Conteúdo
             </TabsTrigger>
-            <TabsTrigger value="journeys" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="journeys" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <MapIcon className="w-sm h-sm" /> Jornadas
             </TabsTrigger>
-            <TabsTrigger value="segmentation" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="segmentation" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Target className="w-sm h-sm" /> CRM: Segmentos
             </TabsTrigger>
-            <TabsTrigger value="retention" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="retention" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Activity className="w-sm h-sm" /> CRM: Retenção
             </TabsTrigger>
-            <TabsTrigger value="automations" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="automations" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Bell className="w-sm h-sm" /> CRM: Automações
             </TabsTrigger>
-            <TabsTrigger value="themes" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="themes" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Tag className="w-sm h-sm" /> Nexus Temas
             </TabsTrigger>
-            <TabsTrigger value="seo" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="seo" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Globe className="w-sm h-sm" /> SEO
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start relative group">
+            <TabsTrigger value="security" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start relative group">
               <Shield className="w-sm h-sm text-red-500" /> Segurança
               <span className="absolute -top-2xs -right-2xs flex h-xs w-xs">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-xs w-xs bg-red-500"></span>
               </span>
             </TabsTrigger>
-            <TabsTrigger value="tests" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="tests" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <RefreshCcw className="w-sm h-sm" /> Testes
             </TabsTrigger>
-            <TabsTrigger value="geography" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="geography" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <MapIcon className="w-sm h-sm" /> Geografia
             </TabsTrigger>
-            <TabsTrigger value="construction" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="construction" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Building2 className="w-sm h-sm" /> Obras
             </TabsTrigger>
-            <TabsTrigger value="design" className="gap-xs text-premium-tiny font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
+            <TabsTrigger value="design" className="gap-xs text-xs font-black uppercase tracking-widest min-w-fit px-md py-xs snap-start">
               <Shield className="w-sm h-sm" /> Design
             </TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-lg">
           {/* Stats Overview */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-sm">
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
                 <Users className="h-sm w-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Cadastrados</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Cadastrados</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
                 <UserCheck className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Últimos 30 dias</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Últimos 30 dias</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
                 <Crown className="h-sm w-sm text-secondary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Assinantes</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Assinantes</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
                 <TrendingUp className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Recorrência</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Recorrência</p>
               </CardContent>
             </Card>
           </div>
@@ -567,53 +567,53 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-sm">
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
                 <DollarSign className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.totalRevenue || 0)}
                 </div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Aprovada</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Aprovada</p>
               </CardContent>
             </Card>
 
             <Card className="bg-amber-500/5 border-amber-500/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
                 <Clock className="h-sm w-sm text-amber-500" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-amber-500 tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.pendingRevenue || 0)}
                 </div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Em espera</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Em espera</p>
               </CardContent>
             </Card>
 
             <Card className="bg-destructive/5 border-destructive/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
                 <Heart className="h-sm w-sm text-destructive" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-destructive tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">50% Social</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">50% Social</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
                 <Wallet className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Operação</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Operação</p>
               </CardContent>
             </Card>
           </div>
@@ -621,34 +621,34 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
             <Card className="bg-secondary/5 border-secondary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
                 <Heart className="h-sm w-sm text-secondary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Impacto Espiritual</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Impacto Espiritual</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
                 <MapIcon className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Jornadas Totais</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Jornadas Totais</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
                 <Activity className="h-sm w-sm text-primary" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Sucesso de Retenção</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Sucesso de Retenção</p>
               </CardContent>
             </Card>
           </div>
@@ -657,45 +657,45 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-sm">
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
                 <UserCheck className="h-sm w-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black tabular-nums">{stats?.activeToday}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Visitantes</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Visitantes</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
                 <AlertCircle className="h-sm w-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">{'>'} 48h sem acesso</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">{'>'} 48h sem acesso</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
                 <Smartphone className="h-sm w-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">PWA Total</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">PWA Total</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
                 <Target className="h-sm w-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-sm pb-sm">
                 <div className="text-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Em andamento</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-tighter mt-3xs">Em andamento</p>
               </CardContent>
             </Card>
           </div>
@@ -704,18 +704,18 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-xs pt-sm px-sm">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
               </CardHeader>
               <CardContent className="px-sm pb-sm pt-2xs">
-                <div className="space-y-2.5">
+                <div className="space-y-xs">
                   {[
                     { label: 'Profundos (Mestres)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
                     { label: 'Engajados (High XP)', count: users.filter(u => u.depth_level === 'Engajado').length, color: 'bg-orange-500' },
                     { label: 'Ativos (Frequentes)', count: users.filter(u => u.depth_level === 'Ativo').length, color: 'bg-primary/60' },
                     { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
                   ].map(s => (
-                    <div key={s.label} className="space-y-1">
-                      <div className="flex items-center justify-between text-premium-tiny font-bold uppercase tracking-wider">
+                    <div key={s.label} className="space-y-2xs">
+                      <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider">
                         <span className="opacity-70">{s.label}</span>
                         <span className="tabular-nums">{s.count}</span>
                       </div>
@@ -733,7 +733,7 @@ const AdminDashboard: React.FC = () => {
 
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-2xs pt-sm px-sm flex flex-row items-center justify-between">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
                 <div className="text-xl font-black text-primary tabular-nums">
                   {users.length > 0 ? ((users.filter(u => u.is_premium).length / users.length) * 100).toFixed(1) : 0}%
                 </div>
@@ -742,14 +742,14 @@ const AdminDashboard: React.FC = () => {
                 <div className="mt-xs grid grid-cols-2 gap-md w-full">
                   <div className="text-center p-xs rounded-premium bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
-                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Assinantes</div>
+                    <div className="text-xs font-black uppercase tracking-widest opacity-50">Assinantes</div>
                   </div>
                   <div className="text-center p-xs rounded-premium bg-muted/20 border border-border/10">
                     <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
-                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Gratuitos</div>
+                    <div className="text-xs font-black uppercase tracking-widest opacity-50">Gratuitos</div>
                   </div>
                 </div>
-                <p className="text-premium-tiny text-muted-foreground text-center mt-sm uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
+                <p className="text-xs text-muted-foreground text-center mt-sm uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
               </CardContent>
             </Card>
           </div>
@@ -764,28 +764,28 @@ const AdminDashboard: React.FC = () => {
             
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-sm pt-sm px-sm">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-xs">
+                <CardTitle className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-xs">
                   <MessageSquare className="w-sm h-sm" /> Últimas Reflexões
                 </CardTitle>
               </CardHeader>
-              <CardContent className="px-sm pb-sm pt-2xs space-y-3">
+              <CardContent className="px-sm pb-sm pt-2xs space-y-sm">
                 {recentJournal.length > 0 ? (
                   recentJournal.map((entry) => (
-                    <div key={entry.id} className="p-xs rounded-premium bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
-                      <div className="flex items-center justify-between text-premium-tiny font-bold">
+                    <div key={entry.id} className="p-xs rounded-premium bg-muted/20 border border-border/10 space-y-2xs hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center justify-between text-xs font-bold">
                         <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
                         <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                       <p className="text-premium-small leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
                       {entry.mood && (
-                        <Badge variant="outline" className="text-premium-tiny font-black h-md px-2xs uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
+                        <Badge variant="outline" className="text-xs font-black h-md px-2xs uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
                           {entry.mood}
                         </Badge>
                       )}
                     </div>
                   ))
                 ) : (
-                  <div className="py-xl text-center text-premium-tiny text-muted-foreground uppercase font-black tracking-widest opacity-40">
+                  <div className="py-xl text-center text-xs text-muted-foreground uppercase font-black tracking-widest opacity-40">
                     Nenhuma reflexão recente.
                   </div>
                 )}
@@ -830,34 +830,34 @@ const AdminDashboard: React.FC = () => {
         </TabsContent>
 
         {/* Partners Tab */}
-        <TabsContent value="partners" className="space-y-4">
+        <TabsContent value="partners" className="space-y-md">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminPartnersTab />
           </Suspense>
         </TabsContent>
 
         {/* Content Tab */}
-        <TabsContent value="content" className="space-y-4">
+        <TabsContent value="content" className="space-y-md">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminContentTab />
           </Suspense>
         </TabsContent>
 
         {/* Journeys Tab */}
-        <TabsContent value="journeys" className="space-y-4">
+        <TabsContent value="journeys" className="space-y-md">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminJourneysTab />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="seo" className="space-y-4">
+        <TabsContent value="seo" className="space-y-md">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminSeoTab />
           </Suspense>
         </TabsContent>
 
         {/* Security Tab */}
-        <TabsContent value="security" className="space-y-4 outline-none">
+        <TabsContent value="security" className="space-y-md outline-none">
           <Suspense fallback={
             <Card className="border-primary/20 bg-primary/5 animate-pulse">
               <CardHeader>
@@ -867,17 +867,17 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CardTitle>
-                    <CardDescription className="text-premium-tiny font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
+                    <CardDescription className="text-xs font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-md">
                 <Skeleton className="h-2xl w-full rounded-full bg-primary/10" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                   <Skeleton className="h-4xl w-full rounded-full bg-primary/5" />
                   <Skeleton className="h-4xl w-full rounded-full bg-primary/5" />
                 </div>
-                <Skeleton className="h-48 w-full rounded-full bg-primary/5" />
+                <Skeleton className="h-4xl w-full rounded-full bg-primary/5" />
               </CardContent>
             </Card>
           }>
@@ -886,7 +886,7 @@ const AdminDashboard: React.FC = () => {
         </TabsContent>
 
         {/* Users Tab */}
-        <TabsContent value="users" className="space-y-4">
+        <TabsContent value="users" className="space-y-md">
           <div className="flex items-center gap-sm">
             <div className="relative flex-1">
               <Search className="absolute left-sm top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
@@ -908,19 +908,19 @@ const AdminDashboard: React.FC = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border/60 bg-muted/20">
-                      <th className="text-left px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
+                      <th className="text-left px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
                         Nome <SortIcon field="name" />
                       </th>
-                      <th className="text-left px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60 hidden md:table-cell">Email</th>
-                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60">Status</th>
-                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60">Cargo</th>
-                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
+                      <th className="text-left px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60 hidden md:table-cell">Email</th>
+                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60">Status</th>
+                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60">Cargo</th>
+                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
                         XP <SortIcon field="xp" />
                       </th>
-                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
+                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
                         Cadastro <SortIcon field="created_at" />
                       </th>
-                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-premium-tiny opacity-60">Ações</th>
+                      <th className="text-center px-sm py-xs font-black uppercase tracking-widest text-xs opacity-60">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -928,33 +928,33 @@ const AdminDashboard: React.FC = () => {
                       <tr key={u.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
                         <td className="px-sm py-xs">
                           <div className="flex items-center gap-xs">
-                            <div className="w-lg h-lg rounded bg-foreground text-background flex items-center justify-center font-black text-premium-tiny shrink-0">
+                            <div className="w-lg h-lg rounded bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                               {u.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
                             <span className="font-bold text-xs truncate max-w-[120px]">{u.name || '—'}</span>
                           </div>
                         </td>
-                        <td className="px-sm py-xs text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-premium-tiny font-medium">{u.email}</td>
+                        <td className="px-sm py-xs text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-xs font-medium">{u.email}</td>
                         <td className="px-sm py-xs text-center">
                           {u.is_premium ? (
-                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-2xs text-premium-tiny font-bold h-md px-2xs shadow-none">
+                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-2xs text-xs font-bold h-md px-2xs shadow-none">
                               <Crown className="w-xs h-xs" /> PRO
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="gap-2xs text-premium-tiny font-bold h-md px-2xs shadow-none">GRATUITO</Badge>
+                            <Badge variant="secondary" className="gap-2xs text-xs font-bold h-md px-2xs shadow-none">GRATUITO</Badge>
                           )}
                         </td>
                         <td className="px-sm py-xs text-center">
                           {u.role === 'admin' ? (
-                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-2xs text-premium-tiny font-bold h-md px-2xs shadow-none">
+                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-2xs text-xs font-bold h-md px-2xs shadow-none">
                               <Shield className="w-xs h-xs" /> ADMIN
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="gap-2xs text-premium-tiny font-bold h-md px-2xs shadow-none">USER</Badge>
+                            <Badge variant="outline" className="gap-2xs text-xs font-bold h-md px-2xs shadow-none">USER</Badge>
                           )}
                         </td>
-                        <td className="px-sm py-xs text-center hidden lg:table-cell font-mono text-premium-tiny font-bold">{u.xp ?? 0}</td>
-                        <td className="px-sm py-xs text-center hidden lg:table-cell text-premium-tiny font-medium text-muted-foreground">
+                        <td className="px-sm py-xs text-center hidden lg:table-cell font-mono text-xs font-bold">{u.xp ?? 0}</td>
+                        <td className="px-sm py-xs text-center hidden lg:table-cell text-xs font-medium text-muted-foreground">
                           {new Date(u.created_at).toLocaleDateString('pt-BR')}
                         </td>
                         <td className="px-sm py-xs text-center">
@@ -992,7 +992,7 @@ const AdminDashboard: React.FC = () => {
               <CardTitle className="flex items-center gap-xs text-sm"><Crown className="w-md h-md text-primary" /> Controle Manual de Acesso</CardTitle>
               <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-md">
               <div className="flex flex-col sm:flex-row gap-sm">
                 <Input
                   type="email"
@@ -1029,7 +1029,7 @@ const AdminDashboard: React.FC = () => {
         </TabsContent>
 
         {/* Geography Tab */}
-        <TabsContent value="geography" className="space-y-6">
+        <TabsContent value="geography" className="space-y-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
             <Card>
               <CardHeader>
@@ -1037,7 +1037,7 @@ const AdminDashboard: React.FC = () => {
                 <CardDescription>Estados com mais usuários ativos.</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-md">
                   {stats?.statesStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
                   ) : (
@@ -1061,7 +1061,7 @@ const AdminDashboard: React.FC = () => {
                 <CardDescription>Principais dioceses da comunidade.</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-xs custom-scrollbar">
+                <div className="space-y-md max-h-[400px] overflow-y-auto pr-xs custom-scrollbar">
                   {stats?.diocesesStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
                   ) : (
@@ -1082,7 +1082,7 @@ const AdminDashboard: React.FC = () => {
                 <CardDescription>Engajamento por grupo eclesial.</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-xs custom-scrollbar">
+                <div className="space-y-md max-h-[400px] overflow-y-auto pr-xs custom-scrollbar">
                   {stats?.movementsStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
                   ) : (
@@ -1098,7 +1098,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
         </TabsContent>
-        <TabsContent value="regression" className="space-y-6">
+        <TabsContent value="regression" className="space-y-lg">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-premium" />}>
             <VisualRegressionDashboard />
           </Suspense>

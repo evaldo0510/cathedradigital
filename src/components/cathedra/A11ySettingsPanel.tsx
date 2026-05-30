@@ -129,7 +129,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
           >
             <div className="flex items-center justify-between mb-xl">
               <div className="flex items-center gap-sm">
-                <div className="p-xs rounded-premium-sm bg-primary/10 text-primary">
+                <div className="p-xs rounded-sm bg-primary/10 text-primary">
                   <Icons.ShieldCheck className="w-md h-md" />
                 </div>
                 <h2 id="a11y-title" className="text-xl font-serif font-bold text-primary">Acessibilidade</h2>
@@ -139,13 +139,13 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </Button>
             </div>
 
-            <div className="space-y-8 overflow-y-auto pr-xs custom-scrollbar flex-1">
-              <section className="space-y-6">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Aparência e Leitura</h3>
+            <div className="space-y-xl overflow-y-auto pr-xs custom-scrollbar flex-1">
+              <section className="space-y-lg">
+                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Aparência e Leitura</h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-md">
                   <div className="flex items-center justify-between group">
-                    <div className="space-y-1">
+                    <div className="space-y-2xs">
                       <label htmlFor="dark-mode-toggle" className="text-sm font-bold text-primary cursor-pointer">Modo Escuro</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Reduz o cansaço visual em ambientes com pouca luz.</p>
                     </div>
@@ -157,7 +157,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   </div>
 
                   <div className="flex items-center justify-between group pt-md">
-                    <div className="space-y-1">
+                    <div className="space-y-2xs">
                       <label htmlFor="high-contrast-toggle" className="text-sm font-bold text-primary cursor-pointer">Alto Contraste</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Aumenta a distinção entre elementos para facilitar a leitura.</p>
                     </div>
@@ -168,7 +168,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     />
                   </div>
                   <div className="flex items-center justify-between group pt-md">
-                    <div className="space-y-1">
+                    <div className="space-y-2xs">
                       <label htmlFor="reduce-animations-toggle" className="text-sm font-bold text-primary cursor-pointer">Reduzir Animações</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Desativa movimentos excessivos para uma experiência mais estática e rápida.</p>
                     </div>
@@ -181,7 +181,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   </div>
                   
                   <div className="flex items-center justify-between group pt-md">
-                    <div className="space-y-1">
+                    <div className="space-y-2xs">
                       <label htmlFor="visible-focus-toggle" className="text-sm font-bold text-primary cursor-pointer">Foco Visível</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Adiciona uma borda de alto destaque em elementos selecionados.</p>
                     </div>
@@ -192,7 +192,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     />
                   </div>
 
-                  <div className="space-y-4 pt-lg">
+                  <div className="space-y-md pt-lg">
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-bold text-primary">Tamanho da Fonte</label>
                       <span className="text-[10px] font-bold text-primary uppercase">{settings.fontSize}</span>
@@ -215,8 +215,8 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
               </section>
 
-              <section className="space-y-6 pt-md">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Atalhos de Teclado</h3>
+              <section className="space-y-lg pt-md">
+                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Atalhos de Teclado</h3>
                 <div className="grid gap-sm">
                   <ShortcutInput 
                     label="Bíblia" 
@@ -241,9 +241,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
 
-              <section className="space-y-6 pt-md">
+              <section className="space-y-lg pt-md">
                 <div className="flex items-center justify-between mb-xs">
-                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60">Histórico Logos IA</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60">Histórico Logos IA</h3>
                   <span className="text-xs font-bold text-primary">{settings.logosHistoryLimit} itens</span>
                 </div>
                 <div className="px-xs">
@@ -261,9 +261,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
 
-              <section className="space-y-6 pt-md">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Sugestões Logos IA</h3>
-                <div className="space-y-4">
+              <section className="space-y-lg pt-md">
+                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Sugestões Logos IA</h3>
+                <div className="space-y-md">
                   <div className="flex flex-col gap-xs">
                     {(['always', 'first_selection', 'never'] as const).map((mode) => (
                       <button
@@ -288,9 +288,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
 
-              <section className="space-y-4 pt-md">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Impacto na Leitura</h3>
-                <div className="p-md rounded-premium bg-primary/5 border border-primary/10 space-y-3">
+              <section className="space-y-md pt-md">
+                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-xs">Impacto na Leitura</h3>
+                <div className="p-md rounded-premium bg-primary/5 border border-primary/10 space-y-sm">
                   <div className="flex items-center gap-xs text-[11px] font-bold text-primary">
                     <Icons.Info className="w-sm h-sm" />
                     <span>Otimização para NVDA & VoiceOver</span>
@@ -301,9 +301,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
               
-              <section className="space-y-6 pt-xl border-t border-border/10">
+              <section className="space-y-lg pt-xl border-t border-border/10">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60">Auditoria Técnica</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60">Auditoria Técnica</h3>
                   {auditResult && (
                     <span className={`text-[10px] font-black uppercase tracking-widest ${auditResult.status === 'premium' ? 'text-green-500' : 'text-amber-500'}`}>
                       Score: {auditResult.wcagScore}%
@@ -311,7 +311,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   )}
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-md">
                   <Button 
                     variant="outline" 
                     className="w-full h-2xl rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
@@ -341,12 +341,12 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   </div>
 
                   {auditResult && auditResult.contrastIssues.length > 0 && (
-                    <div className="p-md rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
+                    <div className="p-md rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-sm">
                       <div className="flex items-center gap-xs text-[10px] font-bold text-amber-600 uppercase tracking-widest">
                         <Icons.AlertTriangle className="w-sm h-sm" />
                         <span>Ajustes de Contraste Necessários</span>
                       </div>
-                      <ul className="space-y-2">
+                      <ul className="space-y-xs">
                         {auditResult.contrastIssues.slice(0, 5).map((issue, idx) => (
                           <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic border-b border-amber-500/5 pb-xs last:border-0">
                             <div className="flex justify-between items-start gap-xs">

@@ -21,7 +21,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
 
   return (
     <Card className="bg-primary/[0.02] border-primary/5 rounded-premium overflow-hidden mt-2xl mb-2xl">
-      <div className="p-lg md:p-xl space-y-6">
+      <div className="p-lg md:p-xl space-y-lg">
         <div className="flex items-center gap-sm">
           <Icons.BookOpen className="w-md h-md text-primary/40" />
           <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">{title}</h3>
@@ -39,7 +39,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
             >
               <div className="flex items-start gap-sm">
                 <div className={`w-2xs h-2xl rounded-full flex-shrink-0 bg-primary/10`} />
-                <div className="space-y-1 pr-xl">
+                <div className="space-y-2xs pr-xl">
                   <div className="flex items-center gap-xs">
                     <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">
                       {note.verse ? `Versículo ${note.verse}` : note.paragraph ? `§${note.paragraph}` : 'Geral'}

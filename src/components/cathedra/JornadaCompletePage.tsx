@@ -227,7 +227,7 @@ const JornadaCompletePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto pb-2xl">
+    <div className="space-y-xl max-w-2xl mx-auto pb-2xl">
       {/* Back */}
       <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
         <ArrowLeft className="w-md h-md mr-xs" /> Jornadas
@@ -241,18 +241,18 @@ const JornadaCompletePage: React.FC = () => {
       >
         <div ref={certificateRef}>
           <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-            <CardContent className="p-xl text-center space-y-6">
+            <CardContent className="p-xl text-center space-y-lg">
               <div className="w-3xl h-3xl mx-auto rounded-premium bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-xl h-xl text-primary" />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
                 <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
                 <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
               </div>
 
-              <div className="border-t border-b border-border/50 py-md space-y-1">
+              <div className="border-t border-b border-border/50 py-md space-y-2xs">
                 <p className="text-xs text-muted-foreground">Jornada concluída em</p>
                 <p className="text-sm font-semibold text-foreground">{completionDate}</p>
               </div>
@@ -289,7 +289,7 @@ const JornadaCompletePage: React.FC = () => {
           transition={{ delay: 0.3 }}
         >
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
-            <CardContent className="p-lg space-y-4">
+            <CardContent className="p-lg space-y-md">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-xs">
                 <Star className="w-md h-md text-primary" /> Recompensas
               </h2>
@@ -326,13 +326,13 @@ const JornadaCompletePage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="space-y-4"
+          className="space-y-md"
         >
           <h2 className="text-lg font-bold text-foreground flex items-center gap-xs">
             <BookOpen className="w-md h-md text-primary" /> Suas Reflexões
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-sm">
             {reflections.map((r, i) => (
               <motion.div
                 key={i}
@@ -341,7 +341,7 @@ const JornadaCompletePage: React.FC = () => {
                 transition={{ delay: 0.5 + i * 0.1 }}
               >
                 <Card className="border-border/50">
-                  <CardContent className="p-md space-y-2">
+                  <CardContent className="p-md space-y-xs">
                     <p className="text-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
                     <div className="flex gap-xs">
                       <Quote className="w-md h-md text-muted-foreground flex-shrink-0 mt-3xs" />
@@ -361,7 +361,7 @@ const JornadaCompletePage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="space-y-3"
+          className="space-y-sm"
         >
           <h2 className="text-lg font-bold text-foreground">Continue sua caminhada</h2>
 

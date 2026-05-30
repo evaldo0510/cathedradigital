@@ -59,7 +59,7 @@ const PricingPage: React.FC = () => {
         })}
       </script>
 
-      <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center space-y-4 mb-2xl">
+      <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center space-y-md mb-2xl">
         <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/10 border border-primary/20 rounded-full text-primary mb-md">
           <Crown className="w-md h-md" />
           <span className="text-xs font-black uppercase tracking-[0.15em]">Planos</span>
@@ -75,7 +75,7 @@ const PricingPage: React.FC = () => {
         {/* Free */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
           <Card className="h-full rounded-premium border-border/50 bg-card shadow-premium">
-            <CardHeader className="text-center pb-xs space-y-4">
+            <CardHeader className="text-center pb-xs space-y-md">
               <div className="w-2xl h-2xl mx-auto rounded-premium bg-muted flex items-center justify-center">
                 <Zap className="w-lg h-lg text-muted-foreground" />
               </div>
@@ -86,8 +86,8 @@ const PricingPage: React.FC = () => {
               </div>
               <p className="text-sm text-muted-foreground">Acesso essencial à fé católica</p>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <ul className="space-y-3">
+            <CardContent className="space-y-lg">
+              <ul className="space-y-sm">
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-sm text-sm">
                     {item.free ? (
@@ -113,10 +113,10 @@ const PricingPage: React.FC = () => {
         {/* Pro */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={1}>
           <Card className="h-full rounded-premium border-primary/30 bg-card shadow-premium-hover ring-2 ring-primary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest px-md py-2xs rounded-bl-2xl">
+            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest px-md py-2xs rounded-bl-2xl">
               Recomendado
             </div>
-            <CardHeader className="text-center pb-xs space-y-4">
+            <CardHeader className="text-center pb-xs space-y-md">
               <div className="w-2xl h-2xl mx-auto rounded-premium bg-primary/10 flex items-center justify-center">
                 <Sparkles className="w-lg h-lg text-primary" />
               </div>
@@ -130,8 +130,8 @@ const PricingPage: React.FC = () => {
                 R$ 191,04/ano · <span className="text-primary font-bold">Economize 20%</span>
               </p>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <ul className="space-y-3">
+            <CardContent className="space-y-lg">
+              <ul className="space-y-sm">
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-sm text-sm">
                     <Check className="w-md h-md text-primary shrink-0" />
@@ -154,7 +154,7 @@ const PricingPage: React.FC = () => {
       {/* Comparison table */}
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-display font-bold text-center mb-xl">Comparativo Detalhado</h2>
-        <div className="rounded-premium border border-border/50 overflow-hidden bg-card shadow-soft">
+        <div className="rounded-premium border border-border/50 overflow-hidden bg-card shadow-md">
           <div className="grid grid-cols-3 bg-muted/30 px-lg py-md border-b border-border/30">
             <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Recurso</span>
             <span className="text-xs font-black uppercase tracking-widest text-center text-muted-foreground">Grátis</span>
@@ -175,7 +175,7 @@ const PricingPage: React.FC = () => {
       </motion.div>
 
       {/* Mission note */}
-      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-2xl mx-auto mt-3xl text-center space-y-4 p-xl rounded-premium bg-primary/5 border border-primary/10">
+      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-2xl mx-auto mt-3xl text-center space-y-md p-xl rounded-premium bg-primary/5 border border-primary/10">
         <Crown className="w-xl h-xl text-primary mx-auto" />
         <p className="text-muted-foreground leading-relaxed italic font-serif">
           "Parte de cada assinatura PRO é destinada a projetos de evangelização e formação católica. Ao assinar, você também contribui para levar a fé a mais pessoas."

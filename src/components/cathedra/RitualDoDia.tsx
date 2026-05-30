@@ -282,7 +282,7 @@ const RitualDoDia: React.FC = () => {
                 </DialogHeader>
                 <div className="grid gap-xl py-xl">
                   <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                    <div className="space-y-2xs">
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Modo Silencioso</Label>
                       <p className="text-xs text-muted-foreground/40 font-serif italic">Foco absoluto na leitura.</p>
                     </div>
@@ -291,7 +291,7 @@ const RitualDoDia: React.FC = () => {
                       onCheckedChange={(val) => updateSettings(val, reminderTime)}
                     />
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-md">
                     <div className="flex items-center gap-sm">
                       <Clock className="w-md h-md text-primary/40" />
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Lembrete</Label>
@@ -323,7 +323,7 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-md md:gap-2xl lg:gap-3xl">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-2 md:space-y-4 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+          <section className="space-y-xs md:space-y-md max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
             <h4 id="lectio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/15 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
@@ -343,7 +343,7 @@ const RitualDoDia: React.FC = () => {
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-2 md:space-y-6 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+          <section className="space-y-xs md:space-y-lg max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
             <h4 id="meditatio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
@@ -361,7 +361,7 @@ const RitualDoDia: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md md:gap-2xl lg:gap-3xl items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-3 md:space-y-8 text-center p-sm md:p-xl lg:p-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
+            <section className="space-y-sm md:space-y-xl text-center p-sm md:p-xl lg:p-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
               <h4 id="traditio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
@@ -381,7 +381,7 @@ const RitualDoDia: React.FC = () => {
             </section>
 
             {/* 4. Prayer */}
-            <section className="space-y-3 md:space-y-8 text-center p-sm md:p-xl lg:p-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="oratio-heading">
+            <section className="space-y-sm md:space-y-xl text-center p-sm md:p-xl lg:p-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="oratio-heading">
               <h4 id="oratio-heading" className="text-[6.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(

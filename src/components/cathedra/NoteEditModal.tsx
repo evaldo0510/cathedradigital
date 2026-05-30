@@ -70,10 +70,10 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium overflow-hidden p-xl md:p-2xl space-y-8"
+            className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium overflow-hidden p-xl md:p-2xl space-y-xl"
           >
             <div className="flex items-center justify-between">
-              <div className="space-y-1">
+              <div className="space-y-2xs">
                 <h3 className="text-xl font-display font-light text-primary uppercase tracking-widest">{title}</h3>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 italic">Scriptum Sanctuarium</p>
               </div>
@@ -82,7 +82,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
               </Button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-md">
               <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 px-2xs">Cor do Destaque</p>
               <div className="flex gap-sm">
                 {COLORS.map((c) => (
@@ -99,7 +99,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-md">
                <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 px-2xs">Anotação</p>
                <textarea
                 ref={textareaRef}

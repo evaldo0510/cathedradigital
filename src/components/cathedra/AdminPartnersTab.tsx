@@ -157,14 +157,14 @@ const AdminPartnersTab: React.FC = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-48 rounded-premium bg-muted/40 animate-pulse border border-border" />
+          <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Parceiros</h2>
@@ -183,12 +183,12 @@ const AdminPartnersTab: React.FC = () => {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-lg">
         <TabsList>
           <TabsTrigger value="pending" className="gap-xs">
             Solicitações
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-premium-tiny font-bold">
+              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-xs font-bold">
                 {pendingCount}
               </span>
             )}
@@ -201,11 +201,11 @@ const AdminPartnersTab: React.FC = () => {
         <TabsContent value={activeTab} className="mt-0">
           {filteredPartners.length === 0 ? (
             <Card className="border-dashed border-2 py-2xl">
-              <CardContent className="flex flex-col items-center text-center space-y-4">
+              <CardContent className="flex flex-col items-center text-center space-y-md">
                 <div className="w-3xl h-3xl rounded-premium bg-muted flex items-center justify-center">
                   <Building2 className="w-xl h-xl text-muted-foreground" />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2xs">
                   <p className="font-semibold">Nenhum parceiro nesta categoria</p>
                   <p className="text-sm text-muted-foreground">Use a busca ou mude o filtro para encontrar parceiros.</p>
                 </div>
@@ -217,7 +217,7 @@ const AdminPartnersTab: React.FC = () => {
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
                   <CardHeader className="flex flex-row items-start justify-between pb-sm">
                     <div className="flex items-center gap-md">
-                      <div className="w-2xl h-2xl rounded-premium bg-white flex items-center justify-center overflow-hidden border p-2xs shadow-soft">
+                      <div className="w-2xl h-2xl rounded-premium bg-white flex items-center justify-center overflow-hidden border p-2xs shadow-md">
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (
@@ -334,9 +334,9 @@ const AdminPartnersTab: React.FC = () => {
           </DialogHeader>
 
           {editingPartner && (
-            <div className="space-y-4 py-md">
+            <div className="space-y-md py-md">
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label htmlFor="edit-name">Nome</Label>
                   <Input 
                     id="edit-name" 
@@ -344,7 +344,7 @@ const AdminPartnersTab: React.FC = () => {
                     onChange={(e) => setEditingPartner({...editingPartner, name: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label htmlFor="edit-email">Email de Contato</Label>
                   <Input 
                     id="edit-email" 
@@ -355,7 +355,7 @@ const AdminPartnersTab: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label htmlFor="edit-description">Descrição</Label>
                 <Textarea 
                   id="edit-description" 
@@ -366,7 +366,7 @@ const AdminPartnersTab: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label htmlFor="edit-website">Site (URL)</Label>
                   <Input 
                     id="edit-website" 
@@ -374,7 +374,7 @@ const AdminPartnersTab: React.FC = () => {
                     onChange={(e) => setEditingPartner({...editingPartner, website_url: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <Label htmlFor="edit-logo">Logo (URL)</Label>
                   <Input 
                     id="edit-logo" 
@@ -384,7 +384,7 @@ const AdminPartnersTab: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <Label>Status Atual</Label>
                 <div className="flex gap-xs">
                   <Button 

@@ -39,9 +39,9 @@ const AchievementsPage: React.FC = () => {
   const progress = Math.round((totalEarned / totalPossible) * 100);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 py-2xl md:py-4xl px-lg">
+    <div className="max-w-4xl mx-auto space-y-2xl py-2xl md:py-4xl px-lg">
       {/* Header */}
-      <div className="text-center space-y-6">
+      <div className="text-center space-y-lg">
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -61,9 +61,9 @@ const AchievementsPage: React.FC = () => {
         <div className="absolute top-0 right-0 p-2xl opacity-[0.03]">
           <Sparkles className="w-4xl h-4xl text-primary" />
         </div>
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 space-y-lg">
           <div className="flex items-center justify-between">
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <h3 className="text-2xl font-bold font-serif">Seu Galardão</h3>
               <p className="text-sm text-muted-foreground/60">Você conquistou {totalEarned} de {totalPossible} marcos espirituais.</p>
             </div>
@@ -73,9 +73,9 @@ const AchievementsPage: React.FC = () => {
         </div>
       </Card>
 
-      <div className="space-y-16">
+      <div className="space-y-3xl">
         {/* New Dynamic Achievements */}
-        <section className="space-y-8">
+        <section className="space-y-xl">
           <div className="flex items-center gap-md">
             <h2 className="text-2xl font-bold font-serif">Marcos das Trilhas</h2>
             <div className="flex-1 h-px bg-primary/5" />
@@ -99,7 +99,7 @@ const AchievementsPage: React.FC = () => {
                     <div className="text-4xl bg-background w-3xl h-3xl rounded-premium flex items-center justify-center shadow-sm border border-border/50">
                       {ach.icon}
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-xs">
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-foreground font-serif">{ach.name}</h3>
                         {!unlocked && <Lock className="w-sm h-sm text-muted-foreground/40" />}
@@ -119,7 +119,7 @@ const AchievementsPage: React.FC = () => {
         </section>
 
         {/* Legacy Bible Badges */}
-        <section className="space-y-8">
+        <section className="space-y-xl">
           <div className="flex items-center gap-md">
             <h2 className="text-2xl font-bold font-serif">Estudo das Escrituras</h2>
             <div className="flex-1 h-px bg-primary/5" />
@@ -130,14 +130,14 @@ const AchievementsPage: React.FC = () => {
               return (
                 <motion.div
                   key={badge.id}
-                  className={`p-lg rounded-[2rem] border transition-all duration-700 flex flex-col items-center text-center space-y-4 ${
+                  className={`p-lg rounded-[2rem] border transition-all duration-700 flex flex-col items-center text-center space-y-md ${
                     unlocked ? 'bg-card border-primary/10 shadow-premium' : 'bg-muted/10 border-border opacity-30'
                   }`}
                 >
                   <div className={`text-3xl w-2xl h-2xl rounded-full flex items-center justify-center ${unlocked ? 'bg-primary/10' : 'bg-muted'}`}>
                     {unlocked ? '🏆' : <Lock className="w-md h-md" />}
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-2xs">
                     <h4 className="font-bold text-sm">{badge.name}</h4>
                     <p className="text-[10px] text-muted-foreground line-clamp-2">{badge.description}</p>
                   </div>

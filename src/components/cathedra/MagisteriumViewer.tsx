@@ -340,7 +340,7 @@ const MagisteriumViewer: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-md py-3xl flex flex-col items-center justify-center space-y-6">
+      <div className="max-w-4xl mx-auto px-md py-3xl flex flex-col items-center justify-center space-y-lg">
         <div className="relative">
           <div className="w-3xl h-3xl rounded-premium bg-primary/10 animate-pulse border-2 border-primary/20" />
           <Icons.Loader className="absolute inset-0 w-3xl h-3xl text-primary animate-spin p-md" />
@@ -352,11 +352,11 @@ const MagisteriumViewer: React.FC = () => {
 
   if (error || !content) {
     return (
-      <div className="max-w-2xl mx-auto px-md py-3xl text-center space-y-6">
+      <div className="max-w-2xl mx-auto px-md py-3xl text-center space-y-lg">
         <div className="w-3xl h-3xl bg-destructive/10 rounded-premium flex items-center justify-center mx-auto">
           <Icons.AlertTriangle className="w-xl h-xl text-destructive" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-xs">
           <h2 className="text-2xl font-serif font-bold">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
         </div>
@@ -537,7 +537,7 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {content && (
-        <div className="w-full max-w-[70ch] mx-auto mb-2xl space-y-12">
+        <div className="w-full max-w-[70ch] mx-auto mb-2xl space-y-2xl">
           <ChapterNotesList 
             notes={currentDocNotes} 
             onDeleteNote={deleteDocNote}
@@ -576,9 +576,9 @@ const MagisteriumViewer: React.FC = () => {
 
 
       <div className="mt-4xl pt-3xl border-t border-primary/5 flex flex-col items-center gap-2xl">
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-md">
           <Icons.CheckCircle2 className="w-2xl h-2xl text-primary/60 mx-auto" />
-          <div className="space-y-1">
+          <div className="space-y-2xs">
             <h3 className="text-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
             <p className="text-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>
           </div>

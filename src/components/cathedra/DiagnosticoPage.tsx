@@ -140,9 +140,9 @@ const DiagnosticoPage: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-lg mx-auto space-y-6"
+        className="max-w-lg mx-auto space-y-lg"
       >
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-sm">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -155,7 +155,7 @@ const DiagnosticoPage: React.FC = () => {
           <p className="text-muted-foreground">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
         </div>
 
-        <Card className="p-lg space-y-4 border-primary/20">
+        <Card className="p-lg space-y-md border-primary/20">
           <h2 className="text-xl font-bold text-foreground">{rec.title}</h2>
           <p className="text-muted-foreground">{rec.description}</p>
           <div className="flex gap-sm">
@@ -174,8 +174,8 @@ const DiagnosticoPage: React.FC = () => {
   const question = QUESTIONS[currentStep];
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
-      <div className="text-center space-y-2">
+    <div className="max-w-lg mx-auto space-y-lg">
+      <div className="text-center space-y-xs">
         <Compass className="w-xl h-xl mx-auto text-primary" />
         <h1 className="text-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
         <p className="text-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
@@ -193,11 +193,11 @@ const DiagnosticoPage: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -40 }}
           transition={{ duration: 0.25 }}
-          className="space-y-4"
+          className="space-y-md"
         >
           <h2 className="text-lg font-semibold text-foreground text-center">{question.question}</h2>
 
-          <div className="space-y-3">
+          <div className="space-y-sm">
             {question.options.map((opt) => (
               <motion.button
                 key={opt.value}

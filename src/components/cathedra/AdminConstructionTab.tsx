@@ -196,7 +196,7 @@ const AdminConstructionTab: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Obras</h2>
@@ -221,16 +221,16 @@ const AdminConstructionTab: React.FC = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-48 rounded-premium bg-muted/40 animate-pulse border border-border" />
+            <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
           ))}
         </div>
       ) : filteredProjects.length === 0 ? (
         <Card className="border-dashed border-2 py-2xl">
-          <CardContent className="flex flex-col items-center text-center space-y-4">
+          <CardContent className="flex flex-col items-center text-center space-y-md">
             <div className="w-3xl h-3xl rounded-premium bg-muted flex items-center justify-center">
               <Building2 className="w-xl h-xl text-muted-foreground" />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2xs">
               <p className="font-semibold">Nenhuma obra cadastrada</p>
               <p className="text-sm text-muted-foreground">Comece criando uma nova obra paroquial.</p>
             </div>
@@ -250,16 +250,16 @@ const AdminConstructionTab: React.FC = () => {
                   {project.status === 'concluida' ? 'Concluída' : 'Em Andamento'}
                 </Badge>
               </CardHeader>
-              <CardContent className="pb-sm space-y-4">
+              <CardContent className="pb-sm space-y-md">
                 <div className="grid grid-cols-2 gap-md">
-                  <div className="p-sm rounded-premium bg-muted/50 border space-y-1">
+                  <div className="p-sm rounded-premium bg-muted/50 border space-y-2xs">
                     <div className="flex items-center gap-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <DollarSign className="w-sm h-sm" /> Orçamento
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-xl gap-xs text-premium-tiny font-black uppercase tracking-widest"
+                      className="w-full h-xl gap-xs text-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('budget');
@@ -269,14 +269,14 @@ const AdminConstructionTab: React.FC = () => {
                       <Upload className="w-sm h-sm" /> Subir Planilha
                     </Button>
                   </div>
-                  <div className="p-sm rounded-premium bg-muted/50 border space-y-1">
+                  <div className="p-sm rounded-premium bg-muted/50 border space-y-2xs">
                     <div className="flex items-center gap-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <Calendar className="w-sm h-sm" /> Cronograma
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-xl gap-xs text-premium-tiny font-black uppercase tracking-widest"
+                      className="w-full h-xl gap-xs text-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('schedule');
@@ -289,7 +289,7 @@ const AdminConstructionTab: React.FC = () => {
                 </div>
               </CardContent>
               <CardFooter className="bg-muted/10 py-sm flex justify-between">
-                <span className="text-premium-tiny text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
+                <span className="text-xs text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-lg text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
                   <Trash2 className="w-sm h-sm" />
                 </Button>
@@ -306,8 +306,8 @@ const AdminConstructionTab: React.FC = () => {
             <DialogTitle>Nova Obra</DialogTitle>
             <DialogDescription>Cadastre uma nova obra ou reforma paroquial.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-xs">
-            <div className="space-y-2">
+          <div className="space-y-md py-xs">
+            <div className="space-y-xs">
               <Label htmlFor="project-name">Nome da Obra</Label>
               <Input 
                 id="project-name" 
@@ -316,7 +316,7 @@ const AdminConstructionTab: React.FC = () => {
                 onChange={e => setNewProject({...newProject, name: e.target.value})}
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               <Label htmlFor="project-desc">Descrição</Label>
               <Input 
                 id="project-desc" 

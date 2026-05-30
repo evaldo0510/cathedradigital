@@ -82,7 +82,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-8 relative">
+    <div className="max-w-md mx-auto space-y-xl relative">
       <Button 
         variant="ghost"
         size="sm"
@@ -90,10 +90,10 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         className="absolute -top-2xl left-0 flex items-center gap-xs text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
         <ArrowLeft className="w-md h-md group-hover:-translate-x-1 transition-transform" />
-        <span className="text-premium-tiny font-black uppercase tracking-widest">Voltar para Início</span>
+        <span className="text-xs font-black uppercase tracking-widest">Voltar para Início</span>
       </Button>
 
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-md">
         <div className="flex justify-center">
           <Icons.Logo variant="blue" className="w-3xl h-3xl" />
         </div>
@@ -105,7 +105,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <CathedraCard padding="md" className="space-y-6">
+      <CathedraCard padding="md" className="space-y-lg">
         {error && (
           <div className="p-md bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
@@ -113,10 +113,10 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <div className="p-md bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-md">
           {mode === 'signup' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-xs block">Nome</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-xs block">Nome</label>
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
@@ -125,7 +125,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             </div>
           )}
           <div>
-            <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-xs block">Email</label>
+            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-xs block">Email</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
@@ -134,7 +134,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           </div>
           {mode !== 'forgot' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-xs block">Senha</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-xs block">Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
@@ -149,7 +149,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
         <div className="relative flex items-center gap-md my-xs">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">ou</span>
+          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">ou</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
@@ -216,7 +216,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           </Button>
         )}
 
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-xs">
           {mode === 'login' && (
             <Button 
               variant="ghost" 

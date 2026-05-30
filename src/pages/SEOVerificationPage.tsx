@@ -309,7 +309,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         path="/admin/seo-verify"
       />
       
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
           <div>
             <h1 className="text-4xl font-serif font-bold text-foreground mb-xs flex items-center gap-sm">
@@ -335,7 +335,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           </div>
         </div>
 
-        <div className="bg-muted/30 p-md rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-md">
+        <div className="bg-muted/30 p-md rounded-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-md">
           <div className="flex items-center gap-md">
             <div className="p-xs bg-primary/10 rounded-lg">
               <RefreshCcw className={`w-md h-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
@@ -410,7 +410,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <p className="text-muted-foreground">Carregando rotas do sitemap...</p>
             </div>
           ) : pages.map((page) => (
-            <div key={page.path} className="space-y-4">
+            <div key={page.path} className="space-y-md">
               <div className="flex items-center justify-between px-xs">
                 <div className="flex items-center gap-sm">
                   <h2 className="text-2xl font-serif font-bold">{page.name}</h2>
@@ -454,11 +454,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   <CardContent className="p-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                       {/* Left Side: Metadata & Search Previews */}
-                      <div className="p-lg space-y-6 border-r border-border/50">
-                        <div className="space-y-4">
+                      <div className="p-lg space-y-lg border-r border-border/50">
+                        <div className="space-y-md">
                           <div>
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2xs">Google Search Preview</div>
-                            <div className="p-md bg-white dark:bg-[#1a1a1a] rounded-lg border border-border/40 shadow-soft">
+                            <div className="p-md bg-white dark:bg-[#1a1a1a] rounded-lg border border-border/40 shadow-md">
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-2xs flex items-center gap-2xs">
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
                               </div>
@@ -503,7 +503,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-xs flex items-center gap-xs">
                                 <AlertCircle className="w-sm h-sm" /> Sugestões de Melhoria
                               </h4>
-                              <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-1 list-disc pl-md">
+                              <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-2xs list-disc pl-md">
                                 {!page.title && <li>O título está ausente. Use o componente SEOHead para definir um título único.</li>}
                                 {page.title && (page.title.length + 18) > 60 && <li>O título está muito longo e será cortado no Google. Reduza para menos de 60 caracteres.</li>}
                                 {!page.description && <li>A descrição está ausente. Adicione uma meta descrição de 120-160 caracteres para melhorar o CTR.</li>}
@@ -516,7 +516,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       </div>
 
                       {/* Right Side: Social Media Previews */}
-                      <div className="p-lg bg-muted/10 space-y-8">
+                      <div className="p-lg bg-muted/10 space-y-xl">
                         <div>
                           <div className="flex items-center justify-between mb-xs">
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2xs">
@@ -566,7 +566,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <Copy className="w-sm h-sm" /> Copiar Tags
                             </Button>
                           </div>
-                          <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-soft">
+                          <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-md">
                             <div className="aspect-[1.91/1] bg-muted">
                               <img 
                                 src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
@@ -625,7 +625,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 Dicas de Otimização e Cache
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-muted-foreground">
+            <CardContent className="space-y-md text-sm text-muted-foreground">
               <p>
                 <strong>1. Cache de Imagem:</strong> As imagens dinâmicas utilizam o parâmetro <code>v=yyyy-mm</code>. Isso garante que as redes sociais não usem versões antigas por muito tempo, mas mantém a estabilidade durante o mês atual.
               </p>

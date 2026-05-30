@@ -194,7 +194,7 @@ const AdminThemesTab = () => {
   }, {} as Record<string, ThemeContent[]>) : {};
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold text-foreground">Gestão de Temas</h2>
@@ -205,7 +205,7 @@ const AdminThemesTab = () => {
             <Search className="absolute left-xs top-xs h-md w-md text-muted-foreground" />
             <Input 
               placeholder="Buscar tema..." 
-              className="pl-xl w-full md:w-64 h-xl"
+              className="pl-xl w-full md:w-4xl h-xl"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
@@ -216,9 +216,9 @@ const AdminThemesTab = () => {
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader><DialogTitle>Criar Novo Tema</DialogTitle></DialogHeader>
-              <div className="space-y-4 pt-md">
+              <div className="space-y-md pt-md">
                 <div className="grid grid-cols-2 gap-md">
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Nome</label>
                     <Input placeholder="Ex: Misericórdia" value={newTheme.name} onChange={e => {
                       const name = e.target.value;
@@ -226,22 +226,22 @@ const AdminThemesTab = () => {
                       setNewTheme(p => ({ ...p, name, slug }));
                     }} />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Slug</label>
                     <Input placeholder="slug-do-tema" value={newTheme.slug} onChange={e => setNewTheme(p => ({ ...p, slug: e.target.value }))} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-md">
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Emoji</label>
                     <Input placeholder="Ex: ⛪" value={newTheme.emoji || ''} onChange={e => setNewTheme(p => ({ ...p, emoji: e.target.value }))} />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-xs">
                     <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Categoria</label>
                     <Input placeholder="Ex: Dogmas" value={newTheme.category || ''} onChange={e => setNewTheme(p => ({ ...p, category: e.target.value }))} />
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Descrição</label>
                   <Textarea placeholder="Descrição teológica do tema..." value={newTheme.description} onChange={e => setNewTheme(p => ({ ...p, description: e.target.value }))} rows={3} />
                 </div>
@@ -257,7 +257,7 @@ const AdminThemesTab = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg">
         {/* Themes List */}
-        <div className="lg:col-span-4 space-y-2 overflow-y-auto max-h-[70vh] pr-2xs">
+        <div className="lg:col-span-4 space-y-xs overflow-y-auto max-h-[70vh] pr-2xs">
           {loadingThemes ? (
             <div className="flex items-center justify-center py-xl"><Loader2 className="w-lg h-lg animate-spin text-primary" /></div>
           ) : filteredThemes?.length === 0 ? (
@@ -270,7 +270,7 @@ const AdminThemesTab = () => {
                 key={theme.id}
                 onClick={() => setSelectedTheme(theme)}
                 className={`w-full group text-left p-md rounded-full border transition-all cursor-pointer relative ${
-                  selectedTheme?.id === theme.id ? 'bg-primary/5 border-primary/30 shadow-soft' : 'bg-card border-border hover:border-primary/20'
+                  selectedTheme?.id === theme.id ? 'bg-primary/5 border-primary/30 shadow-md' : 'bg-card border-border hover:border-primary/20'
                 }`}
               >
                 <div className="flex items-center justify-between gap-xs">
@@ -278,7 +278,7 @@ const AdminThemesTab = () => {
                     <span className="text-xl">{theme.emoji || '⛪'}</span>
                     <div className="flex flex-col">
                       <span className="font-bold text-foreground">{theme.name}</span>
-                      <span className="text-premium-tiny uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
+                      <span className="text-xs uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
                     </div>
                   </div>
                   <div className="flex gap-2xs opacity-0 group-hover:opacity-100 transition-opacity">
@@ -298,7 +298,7 @@ const AdminThemesTab = () => {
                   </div>
                 </div>
                 {theme.description && (
-                  <p className="text-premium-tiny text-muted-foreground mt-xs line-clamp-1 italic">{theme.description}</p>
+                  <p className="text-xs text-muted-foreground mt-xs line-clamp-1 italic">{theme.description}</p>
                 )}
               </div>
             ))
@@ -318,13 +318,13 @@ const AdminThemesTab = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4 animate-in fade-in duration-300">
+            <div className="space-y-md animate-in fade-in duration-300">
               <div className="flex items-center justify-between bg-card p-md rounded-premium border border-border/50">
                 <div className="flex items-center gap-sm">
                   <span className="text-3xl">{selectedTheme.emoji || '⛪'}</span>
                   <div>
                     <h3 className="text-xl font-bold text-foreground leading-none mb-2xs">{selectedTheme.name}</h3>
-                    <Badge variant="secondary" className="text-premium-tiny uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
+                    <Badge variant="secondary" className="text-xs uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
                   </div>
                 </div>
                 <div className="flex gap-xs">
@@ -340,8 +340,8 @@ const AdminThemesTab = () => {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader><DialogTitle>Novo Conteúdo — {selectedTheme.name}</DialogTitle></DialogHeader>
-                      <div className="space-y-4 pt-md">
-                        <div className="space-y-2">
+                      <div className="space-y-md pt-md">
+                        <div className="space-y-xs">
                           <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tipo de Conteúdo</label>
                           <Select value={newContent.content_type} onValueChange={v => setNewContent(p => ({ ...p, content_type: v }))}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -352,15 +352,15 @@ const AdminThemesTab = () => {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-xs">
                           <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Referência</label>
                           <Input placeholder="Ex: Jo 3,16 ou CIC §1822" value={newContent.reference} onChange={e => setNewContent(p => ({ ...p, reference: e.target.value }))} />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-xs">
                           <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Título (Opcional)</label>
                           <Input placeholder="Título do trecho" value={newContent.title} onChange={e => setNewContent(p => ({ ...p, title: e.target.value }))} />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-xs">
                           <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Texto</label>
                           <Textarea placeholder="Texto do conteúdo sagrado..." value={newContent.text_content} onChange={e => setNewContent(p => ({ ...p, text_content: e.target.value }))} rows={4} />
                         </div>
@@ -377,23 +377,23 @@ const AdminThemesTab = () => {
               {loadingContents ? (
                 <div className="flex items-center justify-center py-3xl"><Loader2 className="w-xl h-xl animate-spin text-primary/60" /></div>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-lg">
                   {Object.entries(contentsByType).map(([type, items]) => {
                     const config = contentTypeConfig[type];
                     if (items.length === 0) return null;
                     return (
-                      <div key={type} className="space-y-3">
+                      <div key={type} className="space-y-sm">
                         <div className="flex items-center gap-xs border-b border-border/50 pb-xs">
                           <div className={`p-2xs rounded-full ${config.color}`}>{config.icon}</div>
                           <span className="text-sm font-bold text-foreground uppercase tracking-widest">{config.label}</span>
-                          <Badge variant="outline" className="text-premium-tiny ml-auto">{items.length}</Badge>
+                          <Badge variant="outline" className="text-xs ml-auto">{items.length}</Badge>
                         </div>
                         <div className="grid gap-sm">
                           {items.map(item => (
                             <Card key={item.id} className="bg-card hover:bg-card transition-colors border-border/40 shadow-none">
                               <CardContent className="p-md">
                                 {editingContent?.id === item.id ? (
-                                  <div className="space-y-4">
+                                  <div className="space-y-md">
                                     <div className="grid grid-cols-2 gap-md">
                                       <Select value={editingContent.content_type} onValueChange={v => setEditingContent(p => p ? { ...p, content_type: v } : null)}>
                                         <SelectTrigger><SelectValue /></SelectTrigger>
@@ -419,7 +419,7 @@ const AdminThemesTab = () => {
                                   <div className="flex items-start justify-between gap-md">
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-xs mb-xs">
-                                        <Badge variant="outline" className="text-premium-tiny font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
+                                        <Badge variant="outline" className="text-xs font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
                                         {item.title && <span className="text-xs font-bold text-foreground/80">— {item.title}</span>}
                                       </div>
                                       <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">"{item.text_content}"</p>
@@ -464,28 +464,28 @@ const AdminThemesTab = () => {
         <DialogContent className="max-w-md">
           <DialogHeader><DialogTitle>Editar Tema</DialogTitle></DialogHeader>
           {editingTheme && (
-            <div className="space-y-4 pt-md">
+            <div className="space-y-md pt-md">
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Nome</label>
                   <Input value={editingTheme.name} onChange={e => setEditingTheme(p => p ? { ...p, name: e.target.value } : null)} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Slug</label>
                   <Input value={editingTheme.slug} onChange={e => setEditingTheme(p => p ? { ...p, slug: e.target.value } : null)} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-md">
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Emoji</label>
                   <Input value={editingTheme.emoji || ''} onChange={e => setEditingTheme(p => p ? { ...p, emoji: e.target.value } : null)} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-xs">
                   <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Categoria</label>
                   <Input value={editingTheme.category || ''} onChange={e => setEditingTheme(p => p ? { ...p, category: e.target.value } : null)} />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-xs">
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Descrição</label>
                 <Textarea value={editingTheme.description || ''} onChange={e => setEditingTheme(p => p ? { ...p, description: e.target.value } : null)} rows={4} />
               </div>

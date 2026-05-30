@@ -151,8 +151,8 @@ const LoadingFallback = () => (
         className="absolute inset-0 w-3xl h-3xl rounded-full border-t border-primary/[0.05] z-20" 
       />
     </div>
-    <div className="space-y-12 w-full max-w-sm flex flex-col items-center">
-      <div className="h-[0.5px] w-48 bg-primary/[0.03] rounded-full overflow-hidden">
+    <div className="space-y-2xl w-full max-w-sm flex flex-col items-center">
+      <div className="h-[0.5px] w-4xl bg-primary/[0.03] rounded-full overflow-hidden">
         <motion.div 
           className="h-full bg-primary/[0.08]"
           initial={{ width: "0%", x: "-100%" }}

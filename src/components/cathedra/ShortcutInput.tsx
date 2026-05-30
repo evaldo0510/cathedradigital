@@ -41,8 +41,8 @@ export const ShortcutInput: React.FC<ShortcutInputProps> = ({ label, value, onCh
   };
 
   return (
-    <div className="flex items-center justify-between gap-md p-md rounded-premium-sm bg-primary/[0.02] border border-border/10">
-      <div className="space-y-1">
+    <div className="flex items-center justify-between gap-md p-md rounded-sm bg-primary/[0.02] border border-border/10">
+      <div className="space-y-2xs">
         <p className="text-xs font-bold text-primary">{label}</p>
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Alt + tecla</p>
       </div>

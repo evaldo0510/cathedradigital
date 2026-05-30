@@ -71,7 +71,7 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
       <div className="mt-lg pt-md border-t border-border">
         <Button 
           onClick={() => { navigate(`${AppRoute.BIBLE}?book=${book}&ch=${chapter}`); onClose(); }}
-          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
+          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
         >
           <Icons.Book className="w-sm h-sm" />
           Ir para a Bíblia Completa
@@ -131,7 +131,7 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
       <div className="mt-lg pt-md border-t border-border">
         <Button 
           onClick={() => { navigate(`${AppRoute.CATECHISM}?p=${paragraph}`); onClose(); }}
-          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
+          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
         >
           <Icons.Cross className="w-sm h-sm" />
           Ir para o Catecismo Completo
@@ -172,21 +172,21 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
         <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar documento..."
           className="w-full pl-xl pr-md py-xs rounded-full border border-border bg-card text-foreground text-sm focus:outline-none" />
       </div>
-      <div className="max-h-[50vh] overflow-y-auto space-y-1">
+      <div className="max-h-[50vh] overflow-y-auto space-y-2xs">
         {filtered.map(d => (
           <div key={d.title} className="flex items-center justify-between p-sm rounded-premium hover:bg-muted transition-colors">
             <div>
               <p className="text-sm font-semibold text-foreground">{d.title}</p>
-              <p className="text-premium-tiny text-muted-foreground">{d.author} • {d.year}</p>
+              <p className="text-xs text-muted-foreground">{d.author} • {d.year}</p>
             </div>
-            <span className="text-premium-tiny text-primary font-bold">→ Magistério</span>
+            <span className="text-xs text-primary font-bold">→ Magistério</span>
           </div>
         ))}
       </div>
       <div className="mt-lg pt-md border-t border-border">
         <Button 
           onClick={() => { navigate(AppRoute.MAGISTERIUM); onClose(); }}
-          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
+          className="w-full py-sm bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-xs"
         >
           <Icons.Globe className="w-sm h-sm" />
           Ver Todos os Documentos
@@ -233,7 +233,7 @@ const ModalShell: React.FC<{ title: string; onClose: () => void; children: React
 
 
 const LoadingSkeleton = () => (
-  <div className="space-y-3 py-md">
+  <div className="space-y-sm py-md">
     {Array.from({ length: 4 }).map((_, i) => (
       <div key={i} className="h-md bg-muted rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
     ))}

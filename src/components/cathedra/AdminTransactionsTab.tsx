@@ -16,7 +16,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
       {transactions.length === 0 ? (
         <p className="text-center text-muted-foreground py-xl">Nenhuma transação registrada.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-sm">
           {transactions.map((t: any) => (
             <div key={t.id} className="flex items-center justify-between p-md rounded-premium bg-muted/30 border border-border/50">
               <div className="flex items-center gap-sm">
@@ -27,7 +27,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
                   <div className="flex items-center gap-xs">
                     <p className="font-medium text-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-premium-tiny bg-muted px-2xs py-3xs rounded text-muted-foreground flex items-center gap-2xs">
+                      <span className="text-xs bg-muted px-2xs py-3xs rounded text-muted-foreground flex items-center gap-2xs">
                         <User className="w-xs h-xs" />
                         {t.profiles.name}
                       </span>

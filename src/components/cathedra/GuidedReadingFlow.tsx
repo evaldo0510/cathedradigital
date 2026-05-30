@@ -70,7 +70,7 @@ export const GuidedReadingFlow: React.FC = () => {
           transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
           className={`premium-card p-2xl md:p-3xl flex flex-col items-center text-center gap-2xl ${step.color} border-none shadow-none`}
         >
-          <div className="space-y-4">
+          <div className="space-y-md">
             <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/60">
               {step.tag}
             </span>
@@ -79,7 +79,7 @@ export const GuidedReadingFlow: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-6 max-w-xl">
+          <div className="space-y-lg max-w-xl">
             <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight text-primary">
               {step.title}
             </h2>

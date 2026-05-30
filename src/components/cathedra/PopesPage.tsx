@@ -168,17 +168,17 @@ const PopesPage: React.FC = () => {
   }, [search]);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-3xl px-md">
+    <div className="max-w-4xl mx-auto space-y-xl pb-3xl px-md">
       <SEOHead 
         title="Os Papas - Sucessores de Pedro" 
         description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais." 
         path="/papas"
       />
 
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-md">
         <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
           <Icons.ShieldCheck className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">Os Papas</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
@@ -204,7 +204,7 @@ const PopesPage: React.FC = () => {
           >
             <Card className="overflow-hidden bg-card border-border hover:border-primary/30 transition-all h-full group">
               <div className="flex flex-col h-full">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-4xl overflow-hidden">
                   <SacredImage 
                     src={pope.image} 
                     alt={pope.name} 
@@ -215,15 +215,15 @@ const PopesPage: React.FC = () => {
                     <div className="flex items-center justify-between mb-2xs">
                       <h3 className="text-xl font-serif font-bold text-white">{pope.name}</h3>
                       {pope.isSaint && (
-                        <Badge variant="outline" className="text-premium-tiny bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
+                        <Badge variant="outline" className="text-xs bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
                       )}
                     </div>
                     <p className="text-white/80 text-xs font-serif italic">{pope.title}</p>
                   </div>
                 </div>
 
-                <CardContent className="p-md flex-1 flex flex-col space-y-4">
-                  <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary">
+                <CardContent className="p-md flex-1 flex flex-col space-y-md">
+                  <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary">
                     <Calendar className="w-sm h-sm" /> {pope.reign}
                   </div>
 
@@ -231,11 +231,11 @@ const PopesPage: React.FC = () => {
                     {pope.bio}
                   </p>
 
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <div className="space-y-xs flex-1">
+                    <div className="flex items-center gap-xs text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
                       <Scroll className="w-sm h-sm" /> Legado Principal
                     </div>
-                    <ul className="space-y-1">
+                    <ul className="space-y-2xs">
                       {pope.contributions.map((item, i) => (
                         <li key={i} className="flex items-start gap-xs text-premium-small text-foreground font-bold">
                           <ChevronRight className="w-sm h-sm text-primary mt-3xs shrink-0" />
@@ -247,7 +247,7 @@ const PopesPage: React.FC = () => {
 
                   {pope.motto && (
                     <div className="pt-md border-t border-border/50 text-center">
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2xs">Lema</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2xs">Lema</p>
                       <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}

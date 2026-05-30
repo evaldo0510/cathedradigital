@@ -237,13 +237,13 @@ const LitaniesPage: React.FC = () => {
 
   if (litany) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 pb-2xl animate-in fade-in duration-700">
+      <div className="max-w-4xl mx-auto space-y-xl pb-2xl animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-lg">
-          <Button onClick={() => setSelectedId(null)} className="p-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft self-start md:self-center">
+          <Button onClick={() => setSelectedId(null)} className="p-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-md self-start md:self-center">
             <ArrowLeft className="w-lg h-lg text-foreground" />
           </Button>
-          <div className="space-y-1">
-            <span className={`inline-flex px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
+          <div className="space-y-2xs">
+            <span className={`inline-flex px-sm py-2xs rounded-full text-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
@@ -251,7 +251,7 @@ const LitaniesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="premium-card p-xl md:p-3xl space-y-10">
+        <div className="premium-card p-xl md:p-3xl space-y-xl">
           {/* Opening */}
           {litany.opening && (
             <div className="text-center pb-xl border-b border-border/50">
@@ -260,7 +260,7 @@ const LitaniesPage: React.FC = () => {
           )}
 
           {/* Invocations */}
-          <div className="space-y-1 max-w-2xl mx-auto">
+          <div className="space-y-2xs max-w-2xl mx-auto">
             {litany.invocations.map((inv, i) => (
               <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-2xs md:gap-md py-sm border-b border-border/30 last:border-0 group">
                 <p className="flex-1 font-serif text-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
@@ -281,11 +281,11 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-2xl">
-      <div className="text-center space-y-4 pt-md">
+    <div className="max-w-5xl mx-auto space-y-2xl pb-2xl">
+      <div className="text-center space-y-md pt-md">
         <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Heart className="w-md h-md text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
@@ -299,7 +299,7 @@ const LitaniesPage: React.FC = () => {
           value={searchQuery} 
           onChange={e => setSearchQuery(e.target.value)} 
           placeholder="Buscar por título ou categoria..."
-          className="w-full pl-2xl pr-md py-md rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft" 
+          className="w-full pl-2xl pr-md py-md rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-md" 
         />
       </div>
 
@@ -310,15 +310,15 @@ const LitaniesPage: React.FC = () => {
             <div className="absolute top-0 right-0 p-xl opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
               <BookOpen className="w-4xl h-4xl -mr-xl -mt-xl rotate-12" />
             </div>
-            <div className="relative z-10 space-y-4">
-              <span className={`inline-block font-serif px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+            <div className="relative z-10 space-y-md">
+              <span className={`inline-block font-serif px-sm py-2xs rounded-full text-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
-              <div className="space-y-1">
+              <div className="space-y-2xs">
                 <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
                 {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
-              <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary pt-xs">
+              <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary pt-xs">
                 Começar Oração <ChevronRight className="w-sm h-sm transition-transform group-hover:translate-x-1" />
               </div>
             </div>

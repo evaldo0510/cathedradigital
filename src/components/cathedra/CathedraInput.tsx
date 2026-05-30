@@ -12,7 +12,7 @@ interface CathedraInputProps extends React.InputHTMLAttributes<HTMLInputElement>
 const CathedraInput = React.forwardRef<HTMLInputElement, CathedraInputProps>(
   ({ className, label, error, icon, ...props }, ref) => {
     return (
-      <div className="space-y-4 w-full">
+      <div className="space-y-md w-full">
         {label && (
           <label className="h5 block px-md">
             {label}

@@ -292,9 +292,9 @@ const Magisterium: React.FC = () => {
         })}
       </script>
 
-      <div className="w-full space-y-12 pb-4xl">
+      <div className="w-full space-y-2xl pb-4xl">
         {/* Unified Search & Filters */}
-        <div className="space-y-8">
+        <div className="space-y-xl">
           <div className="relative group max-w-4xl mx-auto">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <Icons.Search className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
@@ -348,7 +348,7 @@ const Magisterium: React.FC = () => {
                   <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
                 </div>
 
-                <div className="space-y-2 flex-1">
+                <div className="space-y-xs flex-1">
                   <h3 className="text-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
                   <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
                   <p className="text-[10px] text-muted-foreground/40 italic line-clamp-2 leading-relaxed">{doc.summary}</p>

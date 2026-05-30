@@ -5,17 +5,17 @@ import { fadeUp } from "./animations";
 const AcolhimentoSection = () => {
   return (
     <section className="w-full py-4xl px-lg bg-primary/5">
-      <div className="max-w-7xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-3xl">
         <motion.div 
           variants={fadeUp} 
           initial="hidden" 
           whileInView="visible" 
           viewport={{ once: true }} 
-          className="text-center space-y-6"
+          className="text-center space-y-lg"
         >
           <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
             <Heart className="w-md h-md fill-current" aria-hidden="true" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest">Sinta-se em Casa</span>
+            <span className="text-xs font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-display font-bold">Um Espaço Feito por Fiéis para Fiéis</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-serif italic">
@@ -49,7 +49,7 @@ const AcolhimentoSection = () => {
               viewport={{ once: true }}
               custom={i + 1}
               whileHover={{ y: -5, scale: 1.02 }}
-              className="space-y-4 p-xl bg-card rounded-[2.5rem] border border-border/50 shadow-soft hover:shadow-premium-hover hover:border-primary/20 transition-all duration-300"
+              className="space-y-md p-xl bg-card rounded-[2.5rem] border border-border/50 shadow-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-300"
             >
               <div className="w-xl h-xl bg-primary/10 rounded-premium flex items-center justify-center text-primary" aria-hidden="true">
                 {item.icon}

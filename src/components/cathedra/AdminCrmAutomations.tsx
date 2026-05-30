@@ -100,9 +100,9 @@ const AdminCrmAutomations: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-lg">
       {/* Automation Status */}
-      <div className="space-y-3">
+      <div className="space-y-sm">
         <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-xs">
           <Zap className="w-md h-md" /> Automações Configuradas
         </h3>
@@ -119,9 +119,9 @@ const AdminCrmAutomations: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-sm shrink-0">
                   <div className="text-right hidden sm:block">
-                    <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
                     {auto.edgeFunction && (
-                      <p className="text-premium-tiny font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
+                      <p className="text-xs font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
                     )}
                   </div>
                   <Badge className={auto.status === 'active'
@@ -149,7 +149,7 @@ const AdminCrmAutomations: React.FC = () => {
           </CardTitle>
           <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-md">
           <div className="flex gap-xs">
             {(['all', 'at_risk', 'premium'] as const).map(target => (
               <Button

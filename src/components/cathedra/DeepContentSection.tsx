@@ -116,11 +116,11 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
   if (sections.length === 0) return null;
 
   return (
-    <section className="space-y-8 animate-in fade-in slide-in-from-bottom-md duration-500" aria-label="Aprofundamento teológico">
+    <section className="space-y-xl animate-in fade-in slide-in-from-bottom-md duration-500" aria-label="Aprofundamento teológico">
       {title && (
         <div className="flex items-center gap-sm mb-lg">
           <div className="h-px flex-1 bg-border/40" />
-          <h3 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
+          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
           <div className="h-px flex-1 bg-border/40" />
         </div>
       )}
@@ -153,7 +153,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 }`}>
                   {section.label}
                   {section.isPremium && !isLocked && (
-                    <span className="ml-xs px-2xs py-3xs rounded-full bg-primary/10 text-primary text-premium-tiny">PRO</span>
+                    <span className="ml-xs px-2xs py-3xs rounded-full bg-primary/10 text-primary text-xs">PRO</span>
                   )}
                 </h4>
               </div>
@@ -190,14 +190,14 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                   </div>
                 ) : (
                   <div className="py-md px-xs rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
-                    <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
                   </div>
                 )}
 
                 {isLocked && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 p-md text-center">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center space-y-sm p-md text-center">
                     <Sparkles className="w-lg h-lg text-primary animate-pulse" />
                     <p className="text-sm font-bold text-foreground">
                       Continue aprofundando essa experiência
@@ -205,7 +205,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="font-bold text-premium-tiny uppercase tracking-widest h-xl"
+                      className="font-bold text-xs uppercase tracking-widest h-xl"
                       onClick={() => navigate(AppRoute.PRICING)}
                     >
                       Desbloquear PRO
@@ -215,14 +215,14 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               </div>
 
               {section.id === 'reflexaoFinal' && !isLocked && (
-                <div className="mt-lg pt-lg border-t border-border/40 space-y-4">
+                <div className="mt-lg pt-lg border-t border-border/40 space-y-md">
                   <div className="flex items-start gap-sm">
                     <Icons.MessageSquare className="w-md h-md text-primary mt-3xs" />
                     <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
                   </div>
                   
                   {!hasReflected ? (
-                    <div className="space-y-3 pt-xs">
+                    <div className="space-y-sm pt-xs">
                       <textarea 
                         value={reflectionText}
                         onChange={(e) => setReflectionText(e.target.value)}

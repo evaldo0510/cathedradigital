@@ -57,7 +57,7 @@ const FeedbackWidget = () => {
             className="absolute bottom-3xl right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-full p-lg overflow-hidden"
           >
             {submitted ? (
-              <div className="text-center py-xl space-y-4">
+              <div className="text-center py-xl space-y-md">
                 <div className="w-3xl h-3xl bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
                   <Send className="w-xl h-xl text-primary" />
                 </div>
@@ -67,7 +67,7 @@ const FeedbackWidget = () => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-md">
                 <div className="flex items-center justify-between">
                   <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -102,7 +102,7 @@ const FeedbackWidget = () => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting || (!feedback && rating === 0)}
-                  className="w-full rounded-full font-bold uppercase tracking-widest text-premium-tiny h-2xl"
+                  className="w-full rounded-full font-bold uppercase tracking-widest text-xs h-2xl"
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar Feedback'}
                 </Button>
@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-xs p-sm lg:px-md lg:py-sm bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-xs p-sm lg:px-md lg:py-sm bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-xs min-w-0"
       >
         <MessageSquare className="w-md h-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

@@ -124,7 +124,7 @@ const CheckoutResultPage: React.FC = () => {
 
   if (state === 'loading') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-lg">
         <div className="w-3xl h-3xl border-4 border-secondary border-t-transparent rounded-premium animate-spin" />
         <p className="text-muted-foreground font-serif italic text-lg">Confirmando seu pagamento...</p>
       </div>
@@ -138,13 +138,13 @@ const CheckoutResultPage: React.FC = () => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 max-w-lg mx-auto py-2xl"
+      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-xl max-w-lg mx-auto py-2xl"
     >
       <div className={`w-4xl h-4xl rounded-full ${c.iconBg} flex items-center justify-center`}>
         {c.icon}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-sm">
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{c.title}</h1>
         <p className="text-muted-foreground font-serif italic text-base leading-relaxed">{c.description}</p>
       </div>
@@ -153,14 +153,14 @@ const CheckoutResultPage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full bg-muted/50 rounded-full p-lg border border-border/50 space-y-4"
+          className="w-full bg-muted/50 rounded-full p-lg border border-border/50 space-y-md"
         >
           <div className="flex justify-between items-center pb-xs border-b border-border/50">
-            <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
-            <span className="text-premium-tiny font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
+            <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
+            <span className="text-xs font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-sm">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Descrição</span>
               <span className="text-sm font-bold text-foreground">{txData.description || 'Contribuição Cathedra'}</span>
@@ -173,7 +173,7 @@ const CheckoutResultPage: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Status</span>
-              <span className={`text-premium-tiny font-bold uppercase px-xs py-3xs rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+              <span className={`text-xs font-bold uppercase px-xs py-3xs rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
                 {state === 'success' ? 'Aprovado' : 'Em processamento'}
               </span>
             </div>
@@ -183,7 +183,7 @@ const CheckoutResultPage: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full h-xl text-premium-tiny font-bold uppercase text-muted-foreground gap-xs"
+              className="w-full h-xl text-xs font-bold uppercase text-muted-foreground gap-xs"
               onClick={() => window.print()}
             >
               <Download className="w-sm h-sm" /> Baixar Comprovante

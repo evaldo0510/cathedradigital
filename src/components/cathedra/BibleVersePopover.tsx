@@ -77,7 +77,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-premium border-primary/20 bg-card shadow-premium"
+        className="w-4xl max-h-4xl overflow-y-auto p-0 rounded-premium border-primary/20 bg-card shadow-premium"
       >
         <div className="p-sm border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-xs">
@@ -88,15 +88,15 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
           </div>
           <Button
             onClick={handleNavigate}
-            className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2xs"
+            className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2xs"
           >
             {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
             <Icons.ArrowDown className="w-sm h-sm -rotate-90" />
           </Button>
         </div>
-        <div className="p-sm space-y-2">
+        <div className="p-sm space-y-xs">
           {loading && (
-            <div className="space-y-2 py-xs">
+            <div className="space-y-xs py-xs">
               {[1, 2, 3].map(i => (
                 <div key={i} className="h-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}
@@ -111,7 +111,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
                 </p>
               ))}
               {!verse && (
-                <p className="text-premium-tiny text-muted-foreground italic pt-2xs border-t border-border">
+                <p className="text-xs text-muted-foreground italic pt-2xs border-t border-border">
                   Mostrando primeiros versículos...
                 </p>
               )}
