@@ -81,6 +81,14 @@ function generateTreeString(files: string[]) {
 if (updateMode) {
   console.log(`${BOLD}🔄 Atualizando árvore no README...${RESET}`);
   const actualFiles = getActualFiles();
+  
+  // JSON Validation first
+  const corrupted = validateJsonFiles(actualFiles);
+  if (corrupted.length > 0) {
+    console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
+    process.exit(1);
+  }
+
   const treeStr = generateTreeString(actualFiles);
   
   if (!existsSync(README_PATH)) {
@@ -92,11 +100,25 @@ if (updateMode) {
   const treeRegex = /#### Estrutura de Relatórios e Logs \(Exemplo Real\)\n\nAo executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pasta `\.\/reports` é populada com a seguinte estrutura:\n\n```text\n([\s\S]*?)```/;
   
   if (treeRegex.test(readmeContent)) {
+    const oldTreeMatch = readmeContent.match(treeRegex);
+    const oldTree = oldTreeMatch ? oldTreeMatch[1] : "";
+
     const newContent = readmeContent.replace(treeRegex, (match, p1) => {
       return match.replace(p1, treeStr);
     });
     writeFileSync(README_PATH, newContent);
+    
+    // Generate divergences.md
+    let divergenceContent = "# Resumo de Atualização dos Relatórios\n\n";
+    divergenceContent += `Data: ${new Date().toLocaleString()}\n\n`;
+    divergenceContent += "## Mudanças na Árvore\n\n";
+    divergenceContent += "### Anterior\n```text\n" + oldTree + "```\n\n";
+    divergenceContent += "### Novo\n```text\n" + treeStr + "```\n";
+    
+    writeFileSync("divergences.md", divergenceContent);
+    
     console.log(`${GREEN}✓ README.md atualizado com sucesso.${RESET}`);
+    console.log(`${BOLD}i Resumo gerado em divergences.md${RESET}`);
   } else {
     console.log(`${RED}✗ Não foi possível encontrar a seção da árvore no README.${RESET}`);
     process.exit(1);
