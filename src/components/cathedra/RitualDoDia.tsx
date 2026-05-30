@@ -454,5 +454,7 @@ const RitualDoDia: React.FC = () => {
       </div>
     </div>
   );
+};
+
 const MemoizedRitualDoDia = React.memo(RitualDoDia);
 export default MemoizedRitualDoDia;
