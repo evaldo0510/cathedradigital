@@ -26,9 +26,12 @@ reports/
 \`\`\`
 `;
     writeFileSync(TEST_README, initialReadme);
+
+    // Create the files documented in the README to ensure alignment by default
+    writeFileSync(join(TEST_DIR, 'compliance-history.json'), JSON.stringify([]));
+    writeFileSync(join(TEST_DIR, 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
     
     // Set environment variables for the script to use our test paths
-    // Note: We'll need to modify the script slightly to accept custom paths or use these env vars
     process.env.REPORTS_DIR_OVERRIDE = TEST_DIR;
     process.env.README_PATH_OVERRIDE = TEST_README;
   });
