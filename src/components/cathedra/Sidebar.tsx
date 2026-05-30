@@ -307,10 +307,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-5 px-5 py-3.5 rounded-2xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[56px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.03] dark:bg-white/[0.03] text-primary'
-                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
+                                ? 'bg-primary/[0.04] dark:bg-white/[0.04] text-primary'
+                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
                               {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
