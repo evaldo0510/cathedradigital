@@ -202,34 +202,6 @@ forbiddenPatterns.forEach(pattern => {
     }
 
   } catch (error) {
-    if (process.env.NODE_ENV === 'test') {
-       console.error(`TEST ERROR: ${error}`);
-    }
-    results.push({ ...pattern, issuesCount: 0, details: [] });
-    console.log(`✅ ${pattern.name}: Compliant`);
-  }
-});
-
-      if (fixMode && !dryRun && filesToFix.size > 0) {
-        filesToFix.forEach((content, path) => {
-          writeFileSync(path, content);
-        });
-      }
-    }
-    
-    results.push({
-      ...pattern,
-      issuesCount: patternIssues.length,
-      details: patternIssues
-    });
-
-    if (patternIssues.length > 0) {
-      console.log(`${fixMode ? '🛠️' : '❌'} ${pattern.name}: ${patternIssues.length} issues found.`);
-    } else {
-      console.log(`✅ ${pattern.name}: Compliant`);
-    }
-
-  } catch (error) {
     results.push({ ...pattern, issuesCount: 0, details: [] });
     console.log(`✅ ${pattern.name}: Compliant`);
   }
