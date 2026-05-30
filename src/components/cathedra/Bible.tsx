@@ -1455,20 +1455,17 @@ const Bible: React.FC = memo(() => {
         title="Capítulos"
         icon={Icons.Bible}
       >
-        <div className="stack-rhythm">
-
-
-
+        <div className="space-y-8">
           <Button 
             variant="ghost" 
             onClick={goBack}
-            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+            className="group flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 hover:text-primary transition-all"
           >
-            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Todos os Livros
+            <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            Voltar aos Livros
           </Button>
 
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-2 md:gap-4">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
@@ -1476,19 +1473,19 @@ const Bible: React.FC = memo(() => {
               return (
                 <motion.button 
                   key={ch} 
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
-                  className={`aspect-square flex flex-col items-center justify-center rounded-2xl border text-sm font-bold transition-all relative group
+                  className={`aspect-square flex flex-col items-center justify-center rounded-xl border text-sm font-bold transition-all relative group
                     ${isRead 
                       ? 'bg-primary text-primary-foreground border-primary' 
                       : isLastReadChapter
-                        ? 'bg-secondary/10 border-secondary text-primary'
-                        : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
+                        ? 'bg-primary/5 border-primary/20 text-primary'
+                        : 'bg-card border-primary/5 text-primary/60 hover:border-primary/20 hover:text-primary'}`}
                 >
                   <span>{ch}</span>
                   {isLastReadChapter && (
-                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
+                    <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-widest text-primary animate-pulse whitespace-nowrap">
                       Retomar
                     </span>
                   )}
@@ -1529,59 +1526,75 @@ const Bible: React.FC = memo(() => {
         })}
       </script>
       
-      <div className="space-y-20">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
-          <div className="flex gap-4">
+      <div className="space-y-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-primary/[0.04] pb-8">
+          <div className="flex gap-2">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
-                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
+                className={`px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] transition-all
                   ${testament === t 
                     ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground/40 hover:text-primary'}`}
+                    : 'text-muted-foreground/30 hover:text-primary'}`}
               >
                 {t}
               </Button>
             ))}
           </div>
           
-          <div className="relative group w-full md:w-80">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60 group-focus-within:text-primary/40 transition-colors" />
+          <div className="relative group w-full md:w-64">
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/60 group-focus-within:text-primary transition-colors" />
             <input
               type="text"
               placeholder="Buscar livro..."
-              className="search-input-premium"
+              className="search-input-premium py-2 pl-10 text-xs"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-16">
           {filteredCategories.map((cat) => (
-            <section key={cat.label} className="space-y-12">
-              <div className="flex items-center gap-6">
-                <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
-                  <cat.icon className="w-4 h-4 text-primary/60" />
+            <section key={cat.label} className="space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="w-6 h-6 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
+                  <cat.icon className="w-3 h-3 text-primary/60" />
                 </div>
-                <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
+                <h2 className="text-[9px] font-bold text-primary/40 uppercase tracking-[0.4em]">{cat.label}</h2>
                 <div className="h-px flex-1 bg-border/5" />
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                 {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
                     <motion.button
                       key={book.abbr}
-                      whileHover={{ y: -4 }}
+                      whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => selectBook(book)}
-                      className={`text-left p-6 md:p-8 premium-card-interactive group flex flex-col gap-4 relative
-                        ${isRead ? 'border-primary/20 bg-primary/[0.02]' : ''}`}
+                      className={`text-left p-4 md:p-5 rounded-xl border transition-all flex flex-col gap-3 relative group
+                        ${isRead ? 'border-primary/20 bg-primary/[0.02]' : 'bg-card border-primary/5 hover:border-primary/10 hover:shadow-sm'}`}
                     >
+                      <div className="flex justify-between items-start">
+                        <span className="text-[9px] font-bold text-primary/40 uppercase tracking-widest">{book.abbr}</span>
+                        {isRead && <Icons.CheckCircle2 className="w-3 h-3 text-primary/60" />}
+                      </div>
+                      <div className="space-y-0.5">
+                        <h3 className="font-display font-medium text-base text-primary group-hover:text-primary/80 transition-colors leading-tight">{book.name}</h3>
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-widest">{book.chapters} Cap</p>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
                       <div className="flex justify-between items-start">
                         <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">{book.abbr}</span>
                         {isRead && <Icons.CheckCircle2 className="w-3.5 h-3.5 text-primary/60" />}
