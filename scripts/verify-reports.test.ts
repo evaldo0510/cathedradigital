@@ -1,0 +1,107 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { execSync } from 'node:child_process';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+
+const TEST_DIR = 'reports-test-temp';
+const TEST_README = 'README-test.md';
+const SCRIPT_PATH = 'scripts/verify-reports.ts';
+
+describe('reports:verify integration tests', () => {
+  beforeEach(() => {
+    // Setup temporary test environment
+    if (existsSync(TEST_DIR)) rmSync(TEST_DIR, { recursive: true, force: true });
+    mkdirSync(TEST_DIR);
+    
+    // Create a mock README with the expected structure
+    const initialReadme = `
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+├── compliance-history.json    # Histórico de progresso
+└── token-audit.json           # Logs técnicos brutos (mais recente)
+\`\`\`
+`;
+    writeFileSync(TEST_README, initialReadme);
+    
+    // Set environment variables for the script to use our test paths
+    // Note: We'll need to modify the script slightly to accept custom paths or use these env vars
+    process.env.REPORTS_DIR_OVERRIDE = TEST_DIR;
+    process.env.README_PATH_OVERRIDE = TEST_README;
+  });
+
+  afterEach(() => {
+    if (existsSync(TEST_DIR)) rmSync(TEST_DIR, { recursive: true, force: true });
+    if (existsSync(TEST_README)) rmSync(TEST_README);
+    if (existsSync('divergences.md')) rmSync('divergences.md');
+    delete process.env.REPORTS_DIR_OVERRIDE;
+    delete process.env.README_PATH_OVERRIDE;
+    delete process.env.REPORTS_FAIL_ON_DIVERGENCES;
+  });
+
+  const runVerify = (args: string[] = [], env: any = {}) => {
+    try {
+      const command = `bun run ${SCRIPT_PATH} ${args.join(' ')}`;
+      const output = execSync(command, { 
+        env: { ...process.env, ...env },
+        encoding: 'utf8' 
+      });
+      return { status: 0, output };
+    } catch (error: any) {
+      return { status: error.status, output: error.stdout };
+    }
+  };
+
+  it('should fail when there is a divergence and --fail-on-divergence is set', () => {
+    // Create a file that is not in the README
+    writeFileSync(join(TEST_DIR, 'unexpected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+    
+    const result = runVerify(['--fail-on-divergence']);
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('Arquivos inesperados');
+  });
+
+  it('should pass when there is a divergence but --fail-on-divergence is not set', () => {
+    writeFileSync(join(TEST_DIR, 'unexpected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+    
+    const result = runVerify([]);
+    expect(result.status).toBe(0);
+    expect(result.output).toContain('Divergências encontradas, mas o modo de falha está desativado');
+  });
+
+  it('should update README and generate divergences.md in --update mode', () => {
+    const filename = 'token-audit-dry-run-2026-05-30T10-00-00.json';
+    writeFileSync(join(TEST_DIR, filename), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+    
+    const result = runVerify(['--update']);
+    expect(result.status).toBe(0);
+    expect(existsSync('divergences.md')).toBe(true);
+    
+    const updatedReadme = readFileSync(TEST_README, 'utf8');
+    expect(updatedReadme).toContain(filename);
+  });
+
+  it('should NOT update README in --update --dry-run mode', () => {
+    const filename = 'token-audit-dry-run-2026-05-30T10-00-00.json';
+    writeFileSync(join(TEST_DIR, filename), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+    
+    const result = runVerify(['--update', '--dry-run']);
+    expect(result.status).toBe(0);
+    expect(result.output).toContain('Modo DRY RUN: Nenhuma alteração será feita');
+    expect(existsSync('divergences.md')).toBe(false);
+    
+    const updatedReadme = readFileSync(TEST_README, 'utf8');
+    expect(updatedReadme).not.toContain(filename);
+  });
+
+  it('should detect corrupted JSON files', () => {
+    writeFileSync(join(TEST_DIR, 'corrupted.json'), 'invalid json {');
+    
+    const result = runVerify(['--fail-on-divergence']);
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+  });
+});
