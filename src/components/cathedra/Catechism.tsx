@@ -711,7 +711,11 @@ const Catechism: React.FC = memo(() => {
     const fromDashboard = searchParams.get('from') === 'dashboard';
 
     return (
-      <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
+      <ContemplativeLayout
+        subtitle={`${selectedSection.title}`}
+        title={`CIC`}
+        maxW="max-w-[var(--layout-max-width)]"
+      >
         <SEOHead 
           title={`${selectedSection.title} | Catecismo`}
           description={`Leia o Catecismo da Igreja Católica: ${selectedSection.title}`}
@@ -1086,7 +1090,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout
       subtitle="Codex Fidei"
-      title="Catecismo da Igreja Católica"
+      title="Catecismo"
       maxW="max-w-6xl"
     >
       <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" type="book" />
