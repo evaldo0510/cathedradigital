@@ -366,7 +366,7 @@ const CommunityPage: React.FC = () => {
                 <Icons.Message className="w-spacing-md h-spacing-md text-primary" aria-hidden="true" />
                 <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
-              <h1 className="text-premium-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
+              <h1 className="text-premium-4xl md:text-premium-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
               <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-premium-base sm:text-premium-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
               <p className="text-premium-xs text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
             </div>

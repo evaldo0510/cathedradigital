@@ -74,7 +74,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         transition={{ delay: 0.6 }}
         className="space-y-spacing-lg md:space-y-spacing-2xl mb-spacing-2xl md:mb-spacing-4xl lg:mb-spacing-4xl"
       >
-        <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-premium-xl sm:text-premium-3xl md:text-premium-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-spacing-xs md:px-spacing-xl">
+        <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-premium-xl sm:text-premium-3xl md:text-premium-5xl lg:text-premium-6xl text-foreground/40 italic leading-snug tracking-tight px-spacing-xs md:px-spacing-xl">
           Habite a profundidade do silêncio, <br /> 
           <span className="text-secondary/70">contemple a clareza da Verdade.</span>
         </p>

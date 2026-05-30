@@ -65,7 +65,7 @@ const PoenitentiaPage: React.FC = () => {
           <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
-        <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
       </div>
 

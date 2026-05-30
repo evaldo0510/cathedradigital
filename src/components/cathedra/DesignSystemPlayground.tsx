@@ -25,7 +25,7 @@ const DesignSystemPlayground: React.FC = () => {
             <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary/40" />
             <span className="h5 !text-primary/40 tracking-[0.5em]">Systema Visualis</span>
           </div>
-          <h1 className="text-premium-5xl md:text-7xl lg:text-8xl tracking-tighter">itinerarium</h1>
+          <h1 className="text-premium-5xl md:text-premium-7xl lg:text-premium-8xl tracking-tighter">itinerarium</h1>
           <p className="font-serif italic text-muted-foreground/60 text-premium-lg md:text-premium-xl max-w-spacing-2xl mx-auto leading-relaxed">
             "A beleza é o esplendor da verdade." — Santo Agostinho
           </p>

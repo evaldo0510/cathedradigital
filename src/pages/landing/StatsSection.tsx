@@ -63,7 +63,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
         className="w-spacing-2xl h-spacing-3xs bg-primary/30 mx-auto mb-spacing-md origin-left"
       />
       <motion.p
-        className="text-premium-5xl md:text-6xl font-display font-bold text-primary"
+        className="text-premium-5xl md:text-premium-6xl font-display font-bold text-primary"
         viewport={{ once: true }}
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}

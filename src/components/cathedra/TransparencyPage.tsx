@@ -23,7 +23,7 @@ const TransparencyPage: React.FC = () => {
             <ShieldCheck className="w-spacing-sm h-spacing-sm" />
             Integridade Doutrinária
           </div>
-          <h1 className="text-premium-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
+          <h1 className="text-premium-4xl md:text-premium-6xl font-display font-black text-primary leading-tight tracking-tight">
             Transparência
           </h1>
           <p className="text-premium-lg text-muted-foreground italic font-serif">

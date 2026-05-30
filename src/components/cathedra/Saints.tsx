@@ -197,7 +197,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <CalendarIcon className="w-spacing-sm h-spacing-sm" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
           </motion.div>
-          <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground">Santos</h1>
+          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground">Santos</h1>
           <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
             "Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2
           </p>

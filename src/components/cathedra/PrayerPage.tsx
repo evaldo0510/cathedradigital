@@ -383,7 +383,7 @@ const PrayerPage: React.FC = () => {
           <Heart className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
         </div>
-        <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Oração e Devoção</h1>
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Oração e Devoção</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"A oração é a respiração da alma. Sem ela, a vida interior desfalece."</p>
       </motion.div>
 

@@ -287,7 +287,7 @@ const LitaniesPage: React.FC = () => {
           <Heart className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
-        <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">
           Orações de invocação e súplica consagradas pela tradição secular da Igreja.
         </p>

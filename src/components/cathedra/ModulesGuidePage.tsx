@@ -119,7 +119,7 @@ const ModulesGuidePage: React.FC = () => {
           <Icons.Feather className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
         </div>
-        <h1 className="text-premium-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
+        <h1 className="text-premium-4xl md:text-premium-6xl font-display font-black text-primary leading-tight tracking-tight">
           Entenda os Módulos
         </h1>
         <p className="text-muted-foreground text-premium-lg max-w-spacing-2xl mx-auto italic font-serif">

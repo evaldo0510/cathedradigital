@@ -135,7 +135,7 @@ const TemasPage = () => {
           <div className="flex justify-center mb-spacing-md">
             <div className="w-spacing-3xl h-spacing-2xs bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
-          <h1 className="text-premium-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
+          <h1 className="text-premium-4xl sm:text-premium-6xl md:text-premium-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
             <span>Nexus</span> <span className="text-primary/90">Temas</span>
           </h1>
           <p className="text-muted-foreground text-premium-base sm:text-premium-xl max-w-spacing-2xl mx-auto font-serif italic leading-relaxed">

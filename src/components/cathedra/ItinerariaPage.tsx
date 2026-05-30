@@ -43,7 +43,7 @@ const ItinerariaPage: React.FC = () => {
             <Icons.Compass className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Itinerarium Mentis</span>
           </div>
-          <h1 className="text-premium-5xl md:text-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Trilhas</h1>
+          <h1 className="text-premium-5xl md:text-premium-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Trilhas</h1>
           <p className="text-muted-foreground font-serif italic text-premium-lg md:text-premium-xl leading-relaxed">
             "Aquele que me segue não andará em trevas, mas terá a luz da vida." — João 8,12
           </p>

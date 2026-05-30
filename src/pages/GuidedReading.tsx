@@ -48,7 +48,7 @@ const GuidedReadingPage: React.FC = () => {
             Experiência Guiada
           </div>
           
-          <h1 className="text-premium-5xl md:text-7xl font-display font-medium tracking-tighter text-primary">
+          <h1 className="text-premium-5xl md:text-premium-7xl font-display font-medium tracking-tighter text-primary">
             Jornada de Luz
           </h1>
           

@@ -101,7 +101,7 @@ const SpiritualJournalPage = () => {
           <Icons.PenLine className="w-spacing-md h-spacing-md text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-premium-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+        <h1 className="text-premium-4xl md:text-premium-7xl font-display font-bold text-primary tracking-tight">
           Diário Espiritual
         </h1>
         <p className="text-premium-lg md:text-premium-xl text-primary/60 italic font-serif leading-relaxed">

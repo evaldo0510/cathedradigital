@@ -100,7 +100,7 @@ const UpgradePage: React.FC = () => {
           custom={1}
           className="space-y-spacing-md"
         >
-          <h1 className="text-premium-4xl md:text-6xl font-display font-bold tracking-tight text-balance">
+          <h1 className="text-premium-4xl md:text-premium-6xl font-display font-bold tracking-tight text-balance">
             Sua caminhada de fé merece <span className="text-primary italic">profundidade</span>.
           </h1>
           <p className="text-premium-lg md:text-premium-xl text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">

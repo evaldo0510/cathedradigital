@@ -136,7 +136,7 @@ const Rosary: React.FC = () => {
             <Heart className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
           </div>
-          <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
+          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
           <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">Reze os 20 mistérios com meditações profundas e guia passo a passo para sua jornada de fé.</p>
         </motion.div>
 

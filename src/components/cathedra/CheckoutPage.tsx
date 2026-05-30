@@ -156,7 +156,7 @@ const CheckoutPage: React.FC = () => {
           <Icons.Zap className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
-        <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">
           Eleve sua experiência <br />
           <span className="text-primary italic">espiritual.</span>
         </h1>
@@ -200,7 +200,7 @@ const CheckoutPage: React.FC = () => {
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(plan.price)}
                   </span>
                 )}
-                <span className="text-6xl font-serif font-bold text-foreground">
+                <span className="text-premium-6xl font-serif font-bold text-foreground">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                     getDiscountedPrice(plan.price)
                   )}

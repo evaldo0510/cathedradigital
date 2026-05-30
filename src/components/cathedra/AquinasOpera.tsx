@@ -202,7 +202,7 @@ const AquinasOpera: React.FC = () => {
             <Icons.Brain className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
           </div>
-          <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
+          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
           <div className="flex justify-center mt-spacing-md">
             <AudioButton variant="default" className="px-spacing-lg" />
           </div>

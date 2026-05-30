@@ -50,7 +50,7 @@ const AchievementsPage: React.FC = () => {
           <Trophy className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Sacra Victoria</span>
         </motion.div>
-        <h1 className="text-premium-4xl md:text-6xl font-display font-bold text-foreground tracking-tight">Suas Conquistas</h1>
+        <h1 className="text-premium-4xl md:text-premium-6xl font-display font-bold text-foreground tracking-tight">Suas Conquistas</h1>
         <p className="text-muted-foreground font-serif italic text-premium-lg max-w-spacing-2xl mx-auto">
           "Combati o bom combate, terminei a corrida, guardei a fé." — 2 Timóteo 4,7
         </p>

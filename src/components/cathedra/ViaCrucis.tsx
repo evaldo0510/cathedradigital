@@ -45,7 +45,7 @@ const ViaCrucis: React.FC = () => {
             <Cross className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
-          <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
+          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
           <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
         </motion.div>
 

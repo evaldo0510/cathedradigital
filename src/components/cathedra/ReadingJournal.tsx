@@ -146,7 +146,7 @@ const ReadingJournal: React.FC = () => {
               </div>
               <div className="w-full text-center space-y-spacing-md">
                 <p className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/30">Meta da Semana</p>
-                <h3 className="text-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-premium-2xl opacity-20">/ {weeklyGoal}</span></h3>
+                <h3 className="text-premium-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-premium-2xl opacity-20">/ {weeklyGoal}</span></h3>
                 <p className="text-premium-sm font-serif italic text-secondary/60">Dias em contemplação</p>
               </div>
               <div className="w-full space-y-spacing-md">

@@ -58,7 +58,7 @@ const DesignSystemGuide: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-7xl md:text-9xl font-display font-light text-primary leading-none tracking-tighter"
+              className="text-premium-7xl md:text-premium-9xl font-display font-light text-primary leading-none tracking-tighter"
             >
               Cathedra <br />
               <span className="text-secondary/60 italic font-serif">Artes Docendi</span>
@@ -117,7 +117,7 @@ const DesignSystemGuide: React.FC = () => {
                     <p className="text-premium-xs text-muted-foreground max-w-spacing-xs">{font.desc}</p>
                   </div>
                   <div className="lg:col-span-2">
-                    <p className={`${font.class} text-premium-4xl md:text-6xl text-primary leading-tight`}>
+                    <p className={`${font.class} text-premium-4xl md:text-premium-6xl text-primary leading-tight`}>
                       Abyssus abyssum invocat in voce cataractarum tuarum.
                     </p>
                   </div>
