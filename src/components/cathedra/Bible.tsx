@@ -866,8 +866,8 @@ const Bible: React.FC = memo(() => {
           </motion.div>
         )}
 
-        {/* Atmospheric Floating Header - Only visible on interaction or scroll up */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+        {/* Atmospheric Floating Toolbar - Minimalist */}
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/20 backdrop-blur-3xl p-1.5 rounded-full border border-primary/5 header-reading-auto-hide fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transition-all duration-700 shadow-2xl md:bottom-32">
           <div className="flex items-center gap-1">
             <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
             <ReadingControlPanel />
@@ -880,20 +880,18 @@ const Bible: React.FC = memo(() => {
           </div>
         </div>
 
-        {/* Desktop Toolbar */}
-        <div className="hidden md:flex items-center justify-between gap-4 bg-card/40 backdrop-blur-xl p-3 rounded-premium border border-border/40 shadow-soft mb-16">
+        {/* Minimal Desktop Nav Bar */}
+        <div className="hidden md:flex items-center justify-between gap-4 py-4 border-b border-primary/5 mb-8">
           <div className="flex items-center gap-3">
             <Button 
               variant="ghost" 
-              size="icon" 
+              size="sm" 
               onClick={goBack}
-              className="rounded-full hover:bg-primary/5"
-              title="Voltar ao Sumário"
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
             >
-              <Icons.ArrowLeft className="w-5 h-5" />
+              ← Sumário
             </Button>
-            <div className="h-8 w-px bg-border/20 mx-2" />
-            <AudioButton variant="default" className="px-6 rounded-full" />
+            <div className="h-4 w-px bg-border/20" />
             <ShareButton
               title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
@@ -901,37 +899,26 @@ const Bible: React.FC = memo(() => {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button 
+          <div className="flex items-center gap-6">
+            <button 
               disabled={selectedChapter <= 1} 
               onClick={() => navigateChapter(-1)}
-              variant="outline"
-              className="rounded-full border-primary/5 hover:border-primary/20"
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary disabled:opacity-20"
             >
-              ← Anterior
-            </Button>
-            <Button 
+              Anterior
+            </button>
+            <span className="text-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+            <button 
               disabled={selectedChapter >= selectedBook.chapters} 
               onClick={() => navigateChapter(1)}
-              variant="outline"
-              className="rounded-full border-primary/5 hover:border-primary/20"
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary disabled:opacity-20"
             >
-              Próximo →
-            </Button>
+              Próximo
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <ReadingControlPanel />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setShowLogosAI(!showLogosAI)}
-              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : 'border-primary/10'}`}
-            >
-              <Icons.Sparkles className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Logos IA</span>
-            </Button>
-            <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
+          <div className="flex items-center gap-4">
+            {/* Controls are in the floating bar now for unified experience */}
           </div>
         </div>
 
@@ -1012,11 +999,11 @@ const Bible: React.FC = memo(() => {
                       return (
                         <div key={v.number} 
                           id={`v${v.number}`}
-                          className={`group relative py-6 px-8 rounded-[2rem] transition-all duration-1000 mb-2
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.01]' : 'hover:bg-primary/[0.005]'}`}>
-                          <div className="flex items-start gap-4">
+                          className={`group relative py-3 md:py-4 px-2 md:px-6 transition-all duration-700
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] rounded-lg' : 'hover:bg-primary/[0.01]'}`}>
+                          <div className="flex items-start gap-3 md:gap-5">
 
-                            <sup className="text-[0.6em] font-bold text-primary/10 mt-2 select-none group-hover:text-primary/30 transition-colors duration-1000">{v.number}</sup>
+                            <span className="text-[0.65em] font-bold text-primary/10 mt-2.5 select-none group-hover:text-primary/30 transition-colors duration-700 w-4 shrink-0 text-right">{v.number}</span>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -1024,7 +1011,6 @@ const Bible: React.FC = memo(() => {
                               localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
                               localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
                               
-                              // Seamless auto-save on verse click/selection
                               saveLastRead({
                                 content_type: 'bible',
                                 content_id: selectedBook.abbr,
@@ -1035,7 +1021,7 @@ const Bible: React.FC = memo(() => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-1000">
+                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-3xl text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1043,18 +1029,18 @@ const Bible: React.FC = memo(() => {
                                       const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
                                       if (note) setActiveHighlight(note);
                                     }}
-                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all`}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-0.5 rounded-sm mr-1`}
                                   >
                                     {v.text}
                                   </span>
                                 )}
                                 {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                  <span className="opacity-100 leading-[1.85]">{v.text}</span>
+                                  <span>{v.text}</span>
                                 )}
 
                                 
                                 {relatedP && (
-                                  <span className="inline-flex gap-0.5 ml-2">
+                                  <span className="inline-flex gap-0.5 ml-2 align-middle">
                                     {relatedP.map(p => (
                                       <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
                                     ))}
@@ -1062,13 +1048,8 @@ const Bible: React.FC = memo(() => {
                                 )}
                               </p>
                               
-                              {/* Inline Notes display */}
                               {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
-                                <div key={note.id} className="mt-3 p-4 bg-secondary/5 border-l-2 border-secondary rounded-r-xl text-[13px] italic text-muted-foreground group/note relative">
-                                  <div className="flex items-center gap-2 mb-1.5 opacity-40">
-                                    <Icons.FileText className="w-3 h-3" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Minha Reflexão</span>
-                                  </div>
+                                <div key={note.id} className="mt-3 p-4 bg-primary/[0.02] border-l border-primary/10 rounded-r-lg text-[13px] italic text-muted-foreground group/note relative">
                                   {note.note_text}
                                   <button 
                                     onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
@@ -1079,8 +1060,7 @@ const Bible: React.FC = memo(() => {
                                 </div>
                               ))}
                             </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-40 hover:!opacity-100 transition-opacity">
-                              <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity invisible md:visible">
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
