@@ -31,10 +31,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/40 backdrop-blur-xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
+        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-14 md:h-20 py-2 md:py-0">
+        <div className="app-container flex items-center justify-between h-12 md:h-14 py-1">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
