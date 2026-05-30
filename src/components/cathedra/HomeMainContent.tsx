@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 
-import HomeMainDoors from './HomeMainDoors';
-import RitualDoDia from './RitualDoDia';
-import { ReadingProgressSection } from './ReadingProgressSection';
-import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare, User, Settings, Heart } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
