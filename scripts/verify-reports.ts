@@ -24,6 +24,7 @@ const REPORTS_DIR = "reports";
 const README_PATH = "README.md";
 const args = process.argv.slice(2);
 const updateMode = args.includes("--update");
+const dryRun = args.includes("--dry-run");
 
 const RESET = "\x1b[0m";
 const RED = "\x1b[31m";
@@ -112,6 +113,13 @@ if (updateMode) {
   if (treeRegex.test(readmeContent)) {
     const oldTreeMatch = readmeContent.match(treeRegex);
     const oldTree = oldTreeMatch ? oldTreeMatch[1] : "";
+
+    if (dryRun) {
+      console.log(`${YELLOW}${BOLD}⚠ Modo DRY RUN: Nenhuma alteração será feita.${RESET}`);
+      console.log(`${BOLD}Divergências detectadas que seriam aplicadas:${RESET}\n`);
+      console.log(treeStr);
+      process.exit(0);
+    }
 
     const newContent = readmeContent.replace(treeRegex, (match, p1) => {
       return match.replace(p1, treeStr);
