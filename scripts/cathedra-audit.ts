@@ -133,7 +133,9 @@ forbiddenPatterns.forEach(pattern => {
           const lineNumber = parts[1];
           const content = parts.slice(2).join(':').trim();
           
-          const matches = content.match(new RegExp(pattern.regex, 'g'));
+          const regex = new RegExp(pattern.regex, 'g');
+          const matches = content.match(regex);
+          
           if (matches) {
             matches.forEach(match => {
               if (!pattern.exclude.includes(match)) {
