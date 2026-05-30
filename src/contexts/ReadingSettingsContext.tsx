@@ -117,6 +117,38 @@ const SettingsSideEffects: React.FC = () => {
   const { settings } = useReadingSettings();
   
   useEffect(() => {
+    if (!settings.focusMode) return;
+
+    const revealUI = () => {
+      document.documentElement.classList.add('reveal-chrome');
+      
+      // Auto-hide again after 3 seconds of inactivity
+      const timeout = setTimeout(() => {
+        document.documentElement.classList.remove('reveal-chrome');
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    };
+
+    const handleInteraction = () => revealUI();
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientY < 50 || e.clientY > window.innerHeight - 50) {
+        handleInteraction();
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [settings.focusMode]);
+
+  useEffect(() => {
     // Apply theme to body
     const root = document.documentElement;
     root.classList.remove('reading-theme-paper', 'reading-theme-sepia', 'reading-theme-dark', 'reading-theme-night');

@@ -223,48 +223,6 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Focus Mode - Click to reveal UI
-  useEffect(() => {
-    // We read focusMode once or use an event-based approach, but since it's a one-time setup on mount for the effect
-    // Actually, it's better to keep it decoupled. 
-    // For now I'll just keep focusMode here as it is only 1 boolean, 
-    // but the proper way is to use the new SettingsSideEffects or a specialized hook.
-    
-    // Let's check how focusMode is used.
-    // If I move the Focus Mode logic to SettingsSideEffects, AppLayout becomes even lighter.
-    const stored = localStorage.getItem('cathedra_reading_settings');
-    const focusMode = stored ? JSON.parse(stored).focusMode : false;
-    if (!focusMode) return;
-
-    const revealUI = () => {
-      document.documentElement.classList.add('reveal-chrome');
-      
-      // Auto-hide again after 3 seconds of inactivity
-      const timeout = setTimeout(() => {
-        document.documentElement.classList.remove('reveal-chrome');
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    };
-
-    const handleInteraction = () => {
-      revealUI();
-    };
-
-    window.addEventListener('click', handleInteraction);
-    window.addEventListener('touchstart', handleInteraction);
-    window.addEventListener('mousemove', (e) => {
-      if (e.clientY < 50 || e.clientY > window.innerHeight - 50) {
-        handleInteraction();
-      }
-    });
-
-    return () => {
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('mousemove', handleInteraction);
-    };
-  }, [settings.focusMode]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
