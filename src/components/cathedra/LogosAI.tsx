@@ -160,7 +160,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
           next[next.length - 1] = { role: 'assistant', content: textToSet };
           return next;
         });
-        await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 40));
+        await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 20));
       }
       setIsTyping(false);
     } catch (err: any) {

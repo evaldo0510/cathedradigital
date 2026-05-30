@@ -82,7 +82,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
+      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
       isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
     )}
   >
@@ -107,7 +107,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <Icon 
         className={cn(
           "transition-all",
-          shouldReduceMotion ? "duration-0" : "duration-700",
+          shouldReduceMotion ? "duration-0" : "duration-300",
           isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
         )}
         size={20}
@@ -125,7 +125,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
         "text-[8px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
-        shouldReduceMotion ? "duration-0" : "duration-700",
+        shouldReduceMotion ? "duration-0" : "duration-300",
         isActive ? 'text-primary' : 'text-muted-foreground/60'
       )}
     >
@@ -170,7 +170,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     <nav 
       className={cn(
         "fixed bottom-3 left-3 right-3 z-[160] lg:hidden h-10 bg-background/5 rounded-full shadow-none border border-primary/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-2 overflow-hidden transition-all backdrop-blur-sm will-change-transform",
-        shouldReduceMotion ? "duration-0" : "duration-1000"
+        shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >

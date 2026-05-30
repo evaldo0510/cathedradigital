@@ -11,7 +11,7 @@ export const BibleSkeleton = () => (
     
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
       {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-        <Card key={i} className="h-40 rounded-premium bg-muted/10 border-border/40 animate-pulse" />
+        <Card key={i} className="h-40 rounded-premium bg-muted/20 border-border/20 animate-pulse duration-700" />
       ))}
     </div>
   </div>
@@ -27,11 +27,11 @@ export const CatechismSkeleton = () => (
     <div className="space-y-8 max-w-3xl mx-auto">
       {[1, 2, 3].map((i) => (
         <div key={i} className="space-y-4">
-          <div className="h-8 w-48 bg-muted/30 rounded-full animate-pulse" />
+          <div className="h-8 w-48 bg-muted/40 rounded-full animate-pulse duration-700" />
           <div className="space-y-2">
-            <div className="h-4 w-full bg-muted/20 rounded-full animate-pulse" />
-            <div className="h-4 w-full bg-muted/20 rounded-full animate-pulse" />
-            <div className="h-4 w-2/3 bg-muted/20 rounded-full animate-pulse" />
+            <div className="h-4 w-full bg-muted/20 rounded-full animate-pulse duration-700" />
+            <div className="h-4 w-full bg-muted/20 rounded-full animate-pulse duration-700" />
+            <div className="h-4 w-2/3 bg-muted/20 rounded-full animate-pulse duration-700" />
           </div>
         </div>
       ))}

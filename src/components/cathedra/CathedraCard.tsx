@@ -41,10 +41,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
           "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2 focus-within:border-primary/20 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.995, y: 10, filter: 'blur(5px)' })}
+        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.998, y: 5, filter: 'blur(4px)' })}
         animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.8, ease: [0.16, 1, 0.3, 1] })}
-        whileHover={settings.reduceAnimations ? {} : { y: -2, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.4, ease: "easeOut" })}
+        whileHover={settings.reduceAnimations ? {} : { y: -1, transition: { duration: 0.2, ease: "easeOut" } }}
         {...props}
       >
         {children}
