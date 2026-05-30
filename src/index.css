@@ -264,46 +264,46 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-12 md:px-20 lg:px-32;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-8 md:px-12 lg:px-16;
   }
 
   /* Shared Module Header Style */
   .module-header {
-    @apply text-center mb-12 md:mb-24 space-y-4 md:space-y-8;
+    @apply text-center mb-10 md:mb-20 space-y-4 md:space-y-6;
   }
 
   .section-rhythm {
-    @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
+    @apply py-8 md:py-24;
   }
 
   .stack-rhythm {
-    @apply space-y-[var(--space-mobile-stack)] md:space-y-[var(--space-desktop-stack)];
+    @apply space-y-6 md:space-y-12;
   }
 
   .padding-rhythm {
-    @apply p-[var(--space-mobile-padding)] md:p-[var(--space-desktop-padding)];
+    @apply p-4 md:p-8;
   }
 
   .header-margin-rhythm {
-    @apply mb-[var(--space-mobile-header-mb)] md:mb-[var(--space-desktop-header-mb)];
+    @apply mb-6 md:mb-16;
   }
 
   .premium-card {
-    @apply transition-all relative overflow-hidden bg-transparent border border-primary/[0.05] dark:border-white/[0.03];
-    border-radius: var(--card-radius-mobile);
+    @apply transition-all relative overflow-hidden bg-card/40 border border-primary/[0.03] dark:border-white/[0.02];
+    border-radius: 1.5rem;
     transition: all var(--transition-subtle);
   }
 
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-muted/5 focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-card/60 hover:border-primary/10 focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply -translate-y-0.5 border-primary/5 shadow-premium;
+    @apply -translate-y-1 shadow-premium;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border-white/5;
+    @apply shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border-white/10;
   }
 
   /* Unified Search Input Utility */
