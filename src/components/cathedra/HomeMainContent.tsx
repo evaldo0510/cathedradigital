@@ -7,11 +7,13 @@ import RitualDoDia from './RitualDoDia';
 import { ReadingProgressSection } from './ReadingProgressSection';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare, User } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, User, Settings, Heart } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import { CathedraButton } from './CathedraButton';
 import { CathedraCard } from './CathedraCard';
+import { Icons } from '@/constants';
+
 
 import { useAuth } from '@/hooks/useAuth';
 
