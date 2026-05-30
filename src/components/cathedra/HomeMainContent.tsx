@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-16 md:py-32 flex flex-col items-center gap-4 opacity-5 select-none pointer-events-none">
+      <div className="py-24 md:py-48 flex flex-col items-center gap-4 opacity-5 select-none pointer-events-none">
         <div className="w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
         <Sparkles className="w-3 h-3 text-primary/30" strokeWidth={0.5} />
       </div>
@@ -168,7 +168,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-20 md:py-48 flex justify-center opacity-3">
+      <div className="py-24 md:py-64 flex justify-center opacity-3">
         <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
