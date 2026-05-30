@@ -31,7 +31,9 @@
     "token-audit": "bun run scripts/cathedra-audit.ts",
     "token-audit:ci": "CI=true bun run scripts/cathedra-audit.ts",
     "token-audit:fix": "bun run scripts/cathedra-audit.ts --fix --threshold=0",
-    "token-audit:dry-run": "bun run scripts/cathedra-audit.ts --dry-run --threshold=0",
+    "token-audit:dry-run": "mkdir -p reports && bun run scripts/cathedra-audit.ts --dry-run --threshold=0",
+    "token-audit:report": "mkdir -p reports && bun run scripts/cathedra-audit.ts --dry-run --threshold=0 --soft",
+    "prepare": "husky install",
     "test:token-audit": "vitest run scripts/cathedra-audit.test.ts",
     "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe"
   },
