@@ -51,9 +51,8 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
       </motion.button>
     );
   }
-);
+));
 
 CathedraButton.displayName = "CathedraButton";
 
-const CathedraButtonExport = CathedraButton;
-export { CathedraButtonExport as CathedraButton };
+export { CathedraButton };
