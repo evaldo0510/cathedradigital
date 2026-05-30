@@ -366,11 +366,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
                       isSpeaking 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
+                        : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="w-3.5 h-3.5 animate-pulse" /> : <Icons.Volume2 className="w-3.5 h-3.5" />}
+                    <span className="text-[7.5px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
