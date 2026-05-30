@@ -284,5 +284,27 @@
         "count": 0
       }
     ]
+  },
+  {
+    "timestamp": "2026-05-30T15:55:58.182Z",
+    "totalIssues": 5,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 2
+      },
+      {
+        "id": "typography",
+        "count": 1
+      },
+      {
+        "id": "rounding",
+        "count": 1
+      },
+      {
+        "id": "shadows",
+        "count": 1
+      }
+    ]
   }
 ]
