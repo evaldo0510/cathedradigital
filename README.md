@@ -203,6 +203,30 @@ Após a execução, os seguintes arquivos e logs são gerados:
 | Audit não detecta nada | Regex não bate com o formato das classes ou arquivos fora de `src/`. | Verifique as definições em `forbiddenPatterns` no script `cathedra-audit.ts`. |
 | Erro de permissão ao salvar | Arquivos estão bloqueados ou sem permissão de escrita. | Verifique as permissões de arquivo no seu sistema operacional. |
 
+#### Exemplos de Saída e Mensagens de Erro
+
+**Erro: Threshold Ultrapassado**
+```text
+--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---
+❌ Direct Spacing: 12 issues found.
+❌ Direct Typography: 3 issues found.
+
+Audit finished. Reports generated in /reports
+Error: Process completed with exit code 1.
+```
+*Ação*: Execute `npm run token-audit:fix` para corrigir automaticamente ou ajuste as classes manualmente conforme as sugestões nos logs.
+
+**Dry-Run (Log de Substituição)**
+```text
+--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---
+--- DRY RUN MODE: No files will be modified ---
+  [DRY RUN] Would replace "p-4" with "p-spacing-md" in src/components/Card.tsx:12
+  [DRY RUN] Would replace "rounded-lg" with "rounded-premium-lg" in src/App.tsx:45
+
+--- DRY RUN FINISHED: 2 potential issues identified ---
+Audit finished. Reports generated in /reports
+```
+
 ### 7. Suíte Completa de Verificação (Checklist de CI)
 
 Para rodar localmente **exatamente todos os checks** que o pipeline de CI executa antes de permitir um merge, utilize o comando:
@@ -211,10 +235,13 @@ Para rodar localmente **exatamente todos os checks** que o pipeline de CI execut
 npm run check-all
 ```
 
+> **Nota**: Este projeto utiliza `husky`. O comando acima é executado automaticamente em cada `git commit`. Se o check falhar, o commit será bloqueado até que os problemas sejam resolvidos.
+
 Este comando executa em sequência:
 1. `npm run lint` (Linting de código)
 2. `npm run typecheck` (Checagem de tipos TS)
 3. `npm run test:local:unit` (Testes unitários)
 4. `npm run token-audit:ci` (Governança de tokens)
 5. `npm run test:local:axe` (Acessibilidade)
+
 
