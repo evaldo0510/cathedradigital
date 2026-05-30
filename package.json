@@ -31,7 +31,8 @@
     "token-audit": "bun run scripts/cathedra-audit.ts",
     "token-audit:ci": "CI=true bun run scripts/cathedra-audit.ts",
     "token-audit:fix": "bun run scripts/cathedra-audit.ts --fix --threshold=0",
-    "token-audit:dry-run": "bun run scripts/cathedra-audit.ts --dry-run --threshold=0"
+    "token-audit:dry-run": "bun run scripts/cathedra-audit.ts --dry-run --threshold=0",
+    "test:token-audit": "vitest run scripts/cathedra-audit.test.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
