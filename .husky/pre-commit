@@ -1,1 +1,10 @@
-npm run check-all
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run check-all || {
+  echo "\n❌ Erro: O pipeline de verificação falhou."
+  echo "Se a falha for no 'token-audit', verifique os relatórios detalhados em:"
+  echo "📂 ./reports/token-audit.html"
+  echo "Dica: Use 'npm run token-audit:fix' para corrigir problemas automaticamente.\n"
+  exit 1
+}
