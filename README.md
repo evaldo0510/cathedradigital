@@ -167,12 +167,18 @@ O script `cathedra-audit.ts` suporta as seguintes flags:
 #### Guia de Validação Local (Passo a Passo)
 
 1. **Dry-Run (Seguro)**:
-   ```bash
-   npm run token-audit:dry-run
-   ```
-   *Validação*: Verifique os logs no console. Eles devem listar todas as substituições sugeridas (ex: `Would replace "p-4" with "p-spacing-md"`). Nenhum arquivo deve ser alterado.
+    ```bash
+    npm run token-audit:dry-run
+    ```
+    *Validação*: Verifique os logs no console. Eles devem listar todas as substituições sugeridas (ex: `Would replace "p-4" with "p-spacing-md"`). Nenhum arquivo deve ser alterado.
 
-2. **Audit (Check de Conformidade)**:
+2. **Gerar Relatório Detalhado (Report)**:
+   ```bash
+   npm run token-audit:report
+   ```
+   *Validação*: Este comando gera uma análise completa em `./reports` sem interromper a execução caso existam falhas. É ideal para inspeção visual antes de aplicar o fix.
+
+3. **Audit (Check de Conformidade)**:
    ```bash
    npm run token-audit
    ```
@@ -190,10 +196,10 @@ Após a execução, os seguintes arquivos e logs são gerados:
 
 | Caminho | Tipo | Descrição |
 |---------|------|-----------|
-| `reports/token-audit.html` | Arquivo | Dashboard visual com gráficos de tendência e tabela de violações. |
-| `reports/token-audit.json` | Arquivo | Dados brutos da última execução para integrações externas. |
-| `reports/compliance-history.json` | Arquivo | Histórico das últimas 30 execuções para medir progresso. |
-| **Logs de Console** | Saída | Resumo por categoria (Spacing, Typography, Rounding, Shadows). |
+| `reports/token-audit.html` | Dashboard | Visualização rica com gráficos de tendência, score de saúde e tabela detalhada de violações. |
+| `reports/token-audit.json` | JSON | Dados estruturados com resultados da última execução e histórico para integrações. |
+| `reports/compliance-history.json` | Histórico | Armazena o progresso de conformidade das últimas 30 execuções. |
+| **Console Output** | Logs | Resumo imediato por categoria e mensagens de dry-run/fix. |
 
 #### Troubleshooting (Resolução de Problemas)
 
