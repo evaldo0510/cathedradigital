@@ -245,14 +245,14 @@ const ProfilePage: React.FC = () => {
       </AnimatePresence>
 
       <div className="flex justify-center mb-8">
-        <Button 
+        <CathedraButton 
           variant="outline" 
           onClick={() => navigate('/spiritual-profile')}
           className="rounded-full px-8 h-12 border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
         >
           <Icons.Sparkles className="w-4 h-4 mr-2" />
           Ver Perfil Espiritual Contemplativo
-        </Button>
+        </CathedraButton>
       </div>
 
       <div className="text-center space-y-4">
@@ -261,18 +261,18 @@ const ProfilePage: React.FC = () => {
             {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
             <AvatarFallback className="text-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
           </Avatar>
-          <Button
+          <CathedraButton
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
             className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center focus-visible:opacity-100 outline-none focus-visible:ring-4 focus-visible:ring-primary"
             aria-label="Alterar foto de perfil"
           >
             {uploading ? (
-              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}
-          </Button>
+          </CathedraButton>
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
         </div>
 
