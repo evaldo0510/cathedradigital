@@ -1,6 +1,6 @@
 import { Check, Sparkles, Zap, Heart } from "lucide-react";
 import { HomeButton } from "@/components/cathedra/HomeButton";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const PricingSection = () => {
   const tiers = [
@@ -67,7 +67,7 @@ const PricingSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           {tiers.map((tier) => (
-            <HomeCard
+            <CathedraCard
               key={tier.name}
               className={`p-8 relative flex flex-col h-full ${
                 tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
@@ -116,7 +116,7 @@ const PricingSection = () => {
                   {tier.button}
                 </HomeButton>
               </div>
-            </HomeCard>
+            </CathedraCard>
           ))}
         </div>
       </div>

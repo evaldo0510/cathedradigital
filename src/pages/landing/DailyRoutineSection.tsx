@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Sun, Coffee, Moon, CheckCircle2 } from "lucide-react";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const DailyRoutineSection = () => {
   const dayFlow = [
@@ -38,7 +38,7 @@ const DailyRoutineSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {dayFlow.map((step) => (
-            <HomeCard
+            <CathedraCard
               key={step.title}
               className="p-8 flex flex-col space-y-8"
             >
@@ -66,7 +66,7 @@ const DailyRoutineSection = () => {
                   </li>
                 ))}
               </ul>
-            </HomeCard>
+            </CathedraCard>
           ))}
         </div>
       </div>
