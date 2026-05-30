@@ -92,7 +92,13 @@ describe('Cathedra Audit Token Mapping', () => {
       const mockRgOutput = 'src/App.tsx:10:  <div className="p-4 rounded-md shadow-md text-sm"></div>';
       
       const mockedExecSync = vi.mocked(execSync);
-      mockedExecSync.mockReturnValue(mockRgOutput as any);
+      // We need to match the actual regex strings used in the script
+      mockedExecSync.mockImplementation((command: string) => {
+        if (command.includes('rg')) {
+          return mockRgOutput as any;
+        }
+        return '' as any;
+      });
       
       const mockedReadFileSync = vi.mocked(readFileSync);
       mockedReadFileSync.mockReturnValue('<div className="p-4 rounded-md shadow-md text-sm"></div>');
@@ -104,9 +110,6 @@ describe('Cathedra Audit Token Mapping', () => {
       process.argv = ['node', 'scripts/cathedra-audit.ts', '--dry-run', '--threshold=10'];
 
       runAudit();
-
-      // Debug: print calls if fails again
-      // consoleSpy.mock.calls.forEach(call => process.stderr.write(`CALL: ${call[0]}\n`));
 
       // Verify log messages for dry run
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "p-4" with "p-spacing-md"'));
