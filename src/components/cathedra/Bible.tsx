@@ -1137,7 +1137,7 @@ const Bible: React.FC = memo(() => {
         </div>
 
 
-          <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+          <div className="mt-12 pt-12 border-t border-primary/5 space-y-12">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
             <Button 
               variant="ghost" 
@@ -1533,7 +1533,7 @@ const Bible: React.FC = memo(() => {
           />
         </div>
 
-        <div className="flex justify-center mb-16">
+        <div className="flex justify-center mb-8 md:mb-12">
           <div className="flex bg-primary/[0.02] p-1.5 rounded-full border border-primary/5">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
@@ -1552,9 +1552,9 @@ const Bible: React.FC = memo(() => {
           </div>
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-12 md:space-y-20">
           {filteredCategories.map((category, catIdx) => (
-            <div key={category.label} className="space-y-8">
+            <div key={category.label} className="space-y-4 md:space-y-8">
               <div className="flex items-center gap-6">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${category.bgColor} opacity-60`}>
                   <category.icon className={`w-5 h-5 ${category.color}`} strokeWidth={1} />

@@ -65,13 +65,13 @@
     --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.01);
     --shadow-premium-hover: 0 20px 60px -20px rgba(0, 0, 0, 0.02);
     
-    /* Spacing Scale - Premium Generous */
-    --spacing-xs: 0.5rem;   /* 8px */
-    --spacing-sm: 1rem;     /* 16px */
-    --spacing-md: 2rem;     /* 32px */
-    --spacing-lg: 4rem;     /* 64px */
-    --spacing-xl: 8rem;     /* 128px */
-    --spacing-2xl: 12rem;   /* 192px */
+    /* Spacing Scale - Premium & Efficient */
+    --spacing-xs: 0.25rem;  /* 4px */
+    --spacing-sm: 0.75rem;  /* 12px */
+    --spacing-md: 1.5rem;   /* 24px */
+    --spacing-lg: 3rem;     /* 48px */
+    --spacing-xl: 6rem;     /* 96px */
+    --spacing-2xl: 8rem;    /* 128px */
     
     /* Design System Tokens */
     --card-radius: 4rem;
@@ -92,11 +92,11 @@
     --space-mobile-padding: 0.6rem;
     --space-mobile-header-mb: 0.3rem;
     
-    --space-desktop-base: 1.5rem;
-    --space-desktop-section: 8rem;
-    --space-desktop-stack: 3rem;
-    --space-desktop-padding: 3rem;
-    --space-desktop-header-mb: 6rem;
+    --space-desktop-base: 1rem;
+    --space-desktop-section: 4rem;
+    --space-desktop-stack: 2rem;
+    --space-desktop-padding: 2rem;
+    --space-desktop-header-mb: 3rem;
   }
 
   .dark, [data-theme='dark'] {
@@ -277,15 +277,15 @@
   }
 
   .stack-rhythm {
-    @apply space-y-6 md:space-y-12;
+    @apply space-y-4 md:space-y-8;
   }
 
   .padding-rhythm {
-    @apply p-4 md:p-8;
+    @apply p-3 md:p-6;
   }
 
   .header-margin-rhythm {
-    @apply mb-6 md:mb-16;
+    @apply mb-4 md:mb-10;
   }
 
   .premium-card {
