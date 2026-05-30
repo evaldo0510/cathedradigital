@@ -1412,16 +1412,19 @@ const Bible: React.FC = memo(() => {
             {/* Next Chapter Card */}
             {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Card 
+                <CathedraCard 
+                  variant="interactive"
+                  padding="none"
                   className="premium-card-interactive"
                   onClick={() => navigateChapter(1)}>
-                  <CardContent className="p-6 flex items-center justify-between">
+                  <div className="p-6 flex items-center justify-between">
                     <div>
                       <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
-              </CathedraCard>
+                  </div>
+                </CathedraCard>
               </motion.div>
             )}
 
