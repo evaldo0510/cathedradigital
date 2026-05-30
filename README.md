@@ -199,6 +199,8 @@ reports/
 ├── compliance-history.json    # Histórico de progresso
 ├── token-audit-dry-run-2026-05-30T16-20-07.html    # [2026-05-30 16 20:07] Log histórico
 ├── token-audit-dry-run-2026-05-30T16-20-07.json    # [2026-05-30 16 20:07] Log histórico
+├── token-audit-dry-run-2026-05-30T16-22-38.html    # [2026-05-30 16 22:38] Log histórico
+├── token-audit-dry-run-2026-05-30T16-22-38.json    # [2026-05-30 16 22:38] Log histórico
 ├── token-audit.html           # Dashboard visual (mais recente)
 └── token-audit.json           # Logs técnicos brutos (mais recente)
 ```
@@ -219,6 +221,22 @@ Para validar se a estrutura atual de `./reports` corresponde exatamente à árvo
 ```bash
 npm run reports:verify
 ```
+
+Para limpar relatórios antigos mantendo o histórico organizado:
+```bash
+# Remover relatórios anteriores a uma data
+npm run reports:clean -- --since=2026-05-01
+```
+
+#### Opções Avançadas de Árvore:
+```bash
+# Saída em JSON para automação
+npm run reports:tree -- --json
+
+# Filtrar por padrão de nome (Regex)
+npm run reports:tree -- --pattern="dry-run.*\.json"
+```
+
 
 Para atualizar automaticamente a árvore do README com os arquivos atuais de `./reports`:
 ```bash

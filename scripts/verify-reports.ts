@@ -9,7 +9,7 @@
  *   npm run reports:verify
  *   npm run reports:verify -- --update
  */
-import { readdirSync, existsSync, statSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, existsSync, statSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REPORTS_DIR = "reports";
@@ -32,6 +32,27 @@ function getActualFiles() {
   return readdirSync(REPORTS_DIR)
     .filter(f => !statSync(join(REPORTS_DIR, f)).isDirectory())
     .sort();
+}
+
+function validateJsonFiles(files: string[]) {
+  const jsonFiles = files.filter(f => f.endsWith('.json'));
+  const corrupted: string[] = [];
+  
+  jsonFiles.forEach(file => {
+    const content = readFileSync(join(REPORTS_DIR, file), 'utf8');
+    try {
+      const data = JSON.parse(content);
+      // Basic schema check
+      if (file === 'compliance-history.json') {
+        if (!Array.isArray(data)) throw new Error("History must be an array");
+      } else if (file.startsWith('token-audit')) {
+        if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
+      }
+    } catch (e) {
+      corrupted.push(file);
+    }
+  });
+  return corrupted;
 }
 
 function generateTreeString(files: string[]) {
@@ -60,6 +81,14 @@ function generateTreeString(files: string[]) {
 if (updateMode) {
   console.log(`${BOLD}🔄 Atualizando árvore no README...${RESET}`);
   const actualFiles = getActualFiles();
+  
+  // JSON Validation first
+  const corrupted = validateJsonFiles(actualFiles);
+  if (corrupted.length > 0) {
+    console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
+    process.exit(1);
+  }
+
   const treeStr = generateTreeString(actualFiles);
   
   if (!existsSync(README_PATH)) {
@@ -71,11 +100,25 @@ if (updateMode) {
   const treeRegex = /#### Estrutura de Relatórios e Logs \(Exemplo Real\)\n\nAo executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pasta `\.\/reports` é populada com a seguinte estrutura:\n\n```text\n([\s\S]*?)```/;
   
   if (treeRegex.test(readmeContent)) {
+    const oldTreeMatch = readmeContent.match(treeRegex);
+    const oldTree = oldTreeMatch ? oldTreeMatch[1] : "";
+
     const newContent = readmeContent.replace(treeRegex, (match, p1) => {
       return match.replace(p1, treeStr);
     });
     writeFileSync(README_PATH, newContent);
+    
+    // Generate divergences.md
+    let divergenceContent = "# Resumo de Atualização dos Relatórios\n\n";
+    divergenceContent += `Data: ${new Date().toLocaleString()}\n\n`;
+    divergenceContent += "## Mudanças na Árvore\n\n";
+    divergenceContent += "### Anterior\n```text\n" + oldTree + "```\n\n";
+    divergenceContent += "### Novo\n```text\n" + treeStr + "```\n";
+    
+    writeFileSync("divergences.md", divergenceContent);
+    
     console.log(`${GREEN}✓ README.md atualizado com sucesso.${RESET}`);
+    console.log(`${BOLD}i Resumo gerado em divergences.md${RESET}`);
   } else {
     console.log(`${RED}✗ Não foi possível encontrar a seção da árvore no README.${RESET}`);
     process.exit(1);
@@ -87,6 +130,16 @@ if (updateMode) {
 console.log(`${BOLD}🔍 Verificando estrutura de ./${REPORTS_DIR}${RESET}\n`);
 
 const actualFiles = getActualFiles();
+
+// JSON Validation
+const corrupted = validateJsonFiles(actualFiles);
+if (corrupted.length > 0) {
+  console.log(`${RED}✗ Relatórios JSON corrompidos detectados:${RESET}`);
+  corrupted.forEach(f => console.log(`  - ${f}`));
+  console.log("");
+  process.exit(1);
+}
+
 const readmeContent = readFileSync(README_PATH, "utf8");
 const treeRegex = /```text\nreports\/\n([\s\S]*?)```/;
 const match = readmeContent.match(treeRegex);

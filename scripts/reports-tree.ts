@@ -19,64 +19,82 @@ const args = process.argv.slice(2);
 const typeFilter = args.find(a => a.startsWith('--type='))?.split('=')[1];
 const sinceFilter = args.find(a => a.startsWith('--since='))?.split('=')[1];
 const untilFilter = args.find(a => a.startsWith('--until='))?.split('=')[1];
+const patternFilter = args.find(a => a.startsWith('--pattern='))?.split('=')[1];
+const jsonOutput = args.includes('--json');
 
 const RESET = "\x1b[0m";
 const BOLD = "\x1b[1m";
 const CYAN = "\x1b[36m";
 
 if (!existsSync(REPORTS_DIR)) {
-  console.log(`Pasta ./${REPORTS_DIR} não encontrada.`);
+  if (jsonOutput) {
+    console.log(JSON.stringify({ error: "Reports directory not found", files: [] }));
+  } else {
+    console.log(`Pasta ./${REPORTS_DIR} não encontrada.`);
+  }
   process.exit(0);
 }
 
 const files = readdirSync(REPORTS_DIR).filter(f => !statSync(join(REPORTS_DIR, f)).isDirectory());
 
 const filteredFiles = files.filter(file => {
-  // Always include compliance-history.json and the latest generic ones? 
-  // User asked to filter the tree, so maybe they want to see everything that matches.
   if (file === 'compliance-history.json' || file === 'token-audit.html' || file === 'token-audit.json') {
-    return !typeFilter && !sinceFilter && !untilFilter;
+    return !typeFilter && !sinceFilter && !untilFilter && !patternFilter;
   }
 
-  const parts = file.split('-');
-  // Expected format: token-audit-<type>-<YYYY>-<MM>-<DD>T<HH>-<mm>-<ss>.<ext>
-  // parts[2] should be the type
   if (typeFilter && !file.includes(`-${typeFilter}-`)) return false;
+  
+  if (patternFilter) {
+    try {
+      const regex = new RegExp(patternFilter);
+      if (!regex.test(file)) return false;
+    } catch (e) {
+      // If invalid regex, treat as simple include
+      if (!file.includes(patternFilter)) return false;
+    }
+  }
 
-  // Extract timestamp part: <YYYY>-<MM>-<DD>T<HH>-<mm>-<ss>
-  // It starts after the type. 
-  // Let's find the timestamp.
   const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2})/);
   if (match) {
-    const tsStr = match[1].replace(/-/g, (m, offset) => (offset > 10 ? ':' : '-')); // Convert back to ISO-ish for parsing
+    const tsStr = match[1].replace(/-/g, (m, offset) => (offset > 10 ? ':' : '-'));
     const fileDate = new Date(tsStr);
     
     if (sinceFilter && fileDate < new Date(sinceFilter)) return false;
     if (untilFilter && fileDate > new Date(untilFilter)) return false;
-  } else {
-    // If no timestamp and we have filters, exclude it (except the main ones if no filters)
-    if (sinceFilter || untilFilter) return false;
+  } else if (sinceFilter || untilFilter) {
+    return false;
   }
 
   return true;
 });
 
-console.log(`${BOLD}${CYAN}reports/${RESET}`);
-if (filteredFiles.length === 0) {
-  console.log("└── (nenhum arquivo corresponde aos filtros)");
-} else {
-  filteredFiles.sort().forEach((file, index) => {
-    const isLast = index === filteredFiles.length - 1;
-    const prefix = isLast ? "└── " : "├── ";
-    
-    // Add a comment with a readable timestamp if possible
-    let comment = "";
+if (jsonOutput) {
+  const result = filteredFiles.sort().map(file => {
     const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2})/);
-    if (match) {
-        const readable = match[1].replace('T', ' ').replace(/-/g, (m, offset) => (offset > 13 ? ':' : (offset > 10 ? ' ' : '-')));
-        comment = `    # [${readable}]`;
-    }
-
-    console.log(`${prefix}${file}${comment}`);
+    return {
+      name: file,
+      timestamp: match ? match[1].replace(/-/g, (m, offset) => (offset > 13 ? ':' : (offset > 10 ? ' ' : '-'))) : null,
+      path: join(REPORTS_DIR, file)
+    };
   });
+  console.log(JSON.stringify(result, null, 2));
+} else {
+  console.log(`${BOLD}${CYAN}reports/${RESET}`);
+  if (filteredFiles.length === 0) {
+    console.log("└── (nenhum arquivo corresponde aos filtros)");
+  } else {
+    filteredFiles.sort().forEach((file, index) => {
+      const isLast = index === filteredFiles.length - 1;
+      const prefix = isLast ? "└── " : "├── ";
+      
+      let comment = "";
+      const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2})/);
+      if (match) {
+          const readable = match[1].replace('T', ' ').replace(/-/g, (m, offset) => (offset > 13 ? ':' : (offset > 10 ? ' ' : '-')));
+          comment = `    # [${readable}]`;
+      }
+
+      console.log(`${prefix}${file}${comment}`);
+    });
+  }
 }
