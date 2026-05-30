@@ -355,17 +355,15 @@ const AppLayout: React.FC = () => {
 
 
         <ScrollToTop />
-        {location.pathname !== '/' && (
-          <AppHeader 
-            user={authUserAdapter} 
-            isDark={isDark} 
-            onToggleDark={toggleDark}
-            lang={lang}
-            onChangeLang={setLang}
-            onSignOut={signOut}
-            onOpenSidebar={handleOpenSidebar}
-          />
-        )}
+        <AppHeader 
+          user={authUserAdapter} 
+          isDark={isDark} 
+          onToggleDark={toggleDark}
+          lang={lang}
+          onChangeLang={setLang}
+          onSignOut={signOut}
+          onOpenSidebar={handleOpenSidebar}
+        />
         
         <CathedralSidebar 
           isOpen={isSidebarOpen}
