@@ -199,19 +199,32 @@ reports/
       }
     });
 
-    const runIsolated = (args: string[] = []) => {
+    const runIsolated = (args: string[] = [], env: any = {}) => {
+      const summaryPath = 'github_step_summary_isolated_test.md';
+      const githubEnv = {
+        ...process.env,
+        ...env,
+        REPORTS_DIR_OVERRIDE: CUSTOM_DIR,
+        README_PATH_OVERRIDE: CUSTOM_README,
+      };
+
+      if (env.GITHUB_ACTIONS) {
+        githubEnv.GITHUB_STEP_SUMMARY = summaryPath;
+        writeFileSync(summaryPath, '');
+      }
+
       try {
         const output = execSync(`bun run ${SCRIPT_PATH} ${args.join(' ')}`, {
-          env: {
-            ...process.env,
-            REPORTS_DIR_OVERRIDE: CUSTOM_DIR,
-            README_PATH_OVERRIDE: CUSTOM_README,
-          },
+          env: githubEnv,
           encoding: 'utf8',
         });
-        return { status: 0, output };
+        const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: 0, output, summary };
       } catch (error: any) {
-        return { status: error.status, output: error.stdout };
+        const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: error.status, output: error.stdout, summary };
       }
     };
 
