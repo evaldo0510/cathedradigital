@@ -153,27 +153,68 @@ npm run test:local:axe
 
 O sistema Cathedra utiliza um sistema de governança de tokens para garantir que classes Tailwind não-tokenizadas não sejam introduzidas no projeto.
 
-#### Comandos Disponíveis
+#### Comandos e Opções (Flags)
 
-| Comando | Descrição |
-|---------|-----------|
-| `npm run token-audit` | Executa o audit básico. Falha se exceder o limite (padrão 5). |
-| `npm run token-audit:dry-run` | Lista todas as substituições sugeridas sem modificar os arquivos. |
-| `npm run token-audit:fix` | Aplica automaticamente as correções sugeridas (codemod). |
-| `npm run test:token-audit` | Executa os testes unitários do sistema de audit. |
+O script `cathedra-audit.ts` suporta as seguintes flags:
 
-#### O que esperar do Modo Dry-Run
+| Flag | Descrição | Exemplo |
+|------|-----------|---------|
+| `--threshold=N` | Define o limite máximo de violações permitidas (default: 5). | `npm run token-audit -- --threshold=10` |
+| `--fix` | Ativa o modo de correção automática (codemod). | `npm run token-audit:fix` |
+| `--dry-run` | Mostra o que seria alterado sem modificar nenhum arquivo. | `npm run token-audit:dry-run` |
+| `--soft` | Não retorna erro (exit 1) mesmo se ultrapassar o threshold. | `npm run token-audit -- --soft` |
 
-Ao executar `npm run token-audit:dry-run`, você verá logs no seguinte formato:
-- Confirmação do modo: `--- DRY RUN MODE: No files will be modified ---`
-- Detalhes das mudanças: `[DRY RUN] Would replace "p-4" with "p-spacing-md" in src/components/MyComponent.tsx:12`
-- Resumo final com o total de problemas identificados.
+#### Guia de Validação Local (Passo a Passo)
 
-#### Relatórios e Logs
+1. **Dry-Run (Seguro)**:
+   ```bash
+   npm run token-audit:dry-run
+   ```
+   *Validação*: Verifique os logs no console. Eles devem listar todas as substituições sugeridas (ex: `Would replace "p-4" with "p-spacing-md"`). Nenhum arquivo deve ser alterado.
 
-O audit gera relatórios detalhados na pasta `/reports`:
-- `token-audit.html`: Dashboard visual para revisão de conformidade.
-- `token-audit.json`: Dados estruturados da última execução.
-- `compliance-history.json`: Histórico das últimas 30 execuções para acompanhamento de tendências.
+2. **Audit (Check de Conformidade)**:
+   ```bash
+   npm run token-audit
+   ```
+   *Validação*: Se o número de problemas for > 5, o comando falhará (útil para testar o comportamento do CI).
 
-**Importante:** No CI, o comando `token-audit:ci` é executado automaticamente e bloqueará o merge se houverem violações acima do limite configurado.
+3. **Fix (Aplicar Correções)**:
+   ```bash
+   npm run token-audit:fix
+   ```
+   *Validação*: Abra um arquivo modificado e verifique se as classes Tailwind foram substituídas pelos tokens premium.
+
+#### Relatórios e Logs Esperados
+
+Após a execução, os seguintes arquivos e logs são gerados:
+
+| Caminho | Tipo | Descrição |
+|---------|------|-----------|
+| `reports/token-audit.html` | Arquivo | Dashboard visual com gráficos de tendência e tabela de violações. |
+| `reports/token-audit.json` | Arquivo | Dados brutos da última execução para integrações externas. |
+| `reports/compliance-history.json` | Arquivo | Histórico das últimas 30 execuções para medir progresso. |
+| **Logs de Console** | Saída | Resumo por categoria (Spacing, Typography, Rounding, Shadows). |
+
+#### Troubleshooting (Resolução de Problemas)
+
+| Problema | Causa Comum | Solução |
+|----------|-------------|---------|
+| `rg: command not found` | `ripgrep` não está instalado no sistema. | Instale o ripgrep (`brew install rg` no Mac ou `sudo apt install ripgrep` no Ubuntu). |
+| Audit não detecta nada | Regex não bate com o formato das classes ou arquivos fora de `src/`. | Verifique as definições em `forbiddenPatterns` no script `cathedra-audit.ts`. |
+| Erro de permissão ao salvar | Arquivos estão bloqueados ou sem permissão de escrita. | Verifique as permissões de arquivo no seu sistema operacional. |
+
+### 7. Suíte Completa de Verificação (Checklist de CI)
+
+Para rodar localmente **exatamente todos os checks** que o pipeline de CI executa antes de permitir um merge, utilize o comando:
+
+```bash
+npm run check-all
+```
+
+Este comando executa em sequência:
+1. `npm run lint` (Linting de código)
+2. `npm run typecheck` (Checagem de tipos TS)
+3. `npm run test:local:unit` (Testes unitários)
+4. `npm run token-audit:ci` (Governança de tokens)
+5. `npm run test:local:axe` (Acessibilidade)
+
