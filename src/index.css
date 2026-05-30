@@ -280,12 +280,25 @@
     @apply text-center mb-10 md:mb-20 space-y-4 md:space-y-6;
   }
 
+  /* Rhythm System */
+  .header-margin-rhythm {
+    @apply mb-xl md:mb-3xl;
+  }
+
   .section-rhythm {
-    @apply py-8 md:py-24;
+    @apply py-xl md:py-4xl;
   }
 
   .stack-rhythm {
-    @apply space-y-4 md:space-y-8;
+    @apply space-y-md md:space-y-xl;
+  }
+
+  .stack-rhythm-lg {
+    @apply space-y-xl md:space-y-3xl;
+  }
+
+  .padding-rhythm {
+    @apply p-md md:p-xl;
   }
 
 
