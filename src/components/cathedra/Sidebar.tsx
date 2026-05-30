@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
@@ -23,7 +23,7 @@ interface SidebarProps {
   onSignOut?: () => void;
 }
 
-const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }: SidebarProps) => {
+const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
