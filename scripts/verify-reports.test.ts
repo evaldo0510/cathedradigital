@@ -168,4 +168,86 @@ reports/
       expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.');
     });
   });
+
+  describe('Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE', () => {
+    const CUSTOM_DIR = 'custom-reports-isolated';
+    const CUSTOM_README = 'CUSTOM-README-isolated.md';
+    const REAL_README_BEFORE = existsSync('README.md') ? readFileSync('README.md', 'utf8') : null;
+
+    beforeEach(() => {
+      if (existsSync(CUSTOM_DIR)) rmSync(CUSTOM_DIR, { recursive: true, force: true });
+      mkdirSync(CUSTOM_DIR);
+      writeFileSync(CUSTOM_README, `
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── placeholder.json
+\`\`\`
+`);
+    });
+
+    afterEach(() => {
+      if (existsSync(CUSTOM_DIR)) rmSync(CUSTOM_DIR, { recursive: true, force: true });
+      if (existsSync(CUSTOM_README)) rmSync(CUSTOM_README);
+      // Verify real README was not touched
+      if (REAL_README_BEFORE !== null) {
+        const after = readFileSync('README.md', 'utf8');
+        expect(after).toBe(REAL_README_BEFORE);
+      }
+    });
+
+    const runIsolated = (args: string[] = []) => {
+      try {
+        const output = execSync(`bun run ${SCRIPT_PATH} ${args.join(' ')}`, {
+          env: {
+            ...process.env,
+            REPORTS_DIR_OVERRIDE: CUSTOM_DIR,
+            README_PATH_OVERRIDE: CUSTOM_README,
+          },
+          encoding: 'utf8',
+        });
+        return { status: 0, output };
+      } catch (error: any) {
+        return { status: error.status, output: error.stdout };
+      }
+    };
+
+    it('should write updated content ONLY to the custom README via overrides', () => {
+      const filename = 'token-audit-dry-run-2026-05-30T10-00-00.json';
+      writeFileSync(join(CUSTOM_DIR, filename), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+
+      const result = runIsolated(['--update']);
+      expect(result.status).toBe(0);
+
+      const customReadmeContent = readFileSync(CUSTOM_README, 'utf8');
+      expect(customReadmeContent).toMatchSnapshot('custom-readme-updated');
+      expect(customReadmeContent).toContain(filename);
+      expect(customReadmeContent).not.toContain('placeholder.json');
+    });
+
+    it('should detect divergence ONLY in the custom directory via overrides', () => {
+      writeFileSync(join(CUSTOM_DIR, 'isolated-extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+
+      const result = runIsolated(['--fail-on-divergence']);
+      expect(result.status).toBe(1);
+      expect(result.output).toContain('isolated-extra.json');
+      expect(result.output).toContain(CUSTOM_DIR);
+      expect(result.output).not.toContain('Encontrado em ./reports:');
+    });
+
+    it('should NOT modify the custom README in --dry-run mode with overrides', () => {
+      const before = readFileSync(CUSTOM_README, 'utf8');
+      writeFileSync(join(CUSTOM_DIR, 'isolated-extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+
+      const result = runIsolated(['--update', '--dry-run']);
+      expect(result.status).toBe(0);
+
+      const after = readFileSync(CUSTOM_README, 'utf8');
+      expect(after).toBe(before);
+      expect(after).toMatchSnapshot('custom-readme-unchanged-dry-run');
+    });
+  });
 });
