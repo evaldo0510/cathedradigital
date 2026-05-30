@@ -292,21 +292,21 @@ const Magisterium: React.FC = () => {
 
       <div className="space-y-24">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
-          <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-b border-primary/[0.04] pb-8">
+          <div className="relative group w-full md:w-80">
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/60" />
             <input
               placeholder="Buscar documento ou autor..." 
-              className="search-input-premium"
+              className="search-input-premium py-2 pl-12 text-xs"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
             <Button 
               variant="ghost"
-              className={`rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${selectedTheme === null ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary'}`}
+              className={`rounded-full px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all ${selectedTheme === null ? 'bg-primary text-white' : 'text-primary/40 hover:text-primary'}`}
               onClick={() => setSelectedTheme(null)}
             >
               Todos
@@ -315,7 +315,7 @@ const Magisterium: React.FC = () => {
               <Button 
                 key={theme}
                 variant="ghost"
-                className={`rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${selectedTheme === theme ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-full px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all ${selectedTheme === theme ? 'bg-primary text-white' : 'text-primary/40 hover:text-primary'}`}
                 onClick={() => setSelectedTheme(theme)}
               >
                 {theme}
@@ -325,13 +325,13 @@ const Magisterium: React.FC = () => {
         </div>
 
         {/* Documents Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {filteredDocs.map((doc, idx) => (
             <motion.button
               key={doc.id}
-              whileHover={{ y: -8 }}
+              whileHover={{ y: -4 }}
               onClick={() => navigate(`/magisterium/${doc.id}`)}
-              className="text-left flex flex-col gap-8 p-12 premium-card-interactive group h-full"
+              className="text-left flex flex-col gap-6 p-6 rounded-2xl border border-primary/5 bg-card hover:border-primary/10 hover:shadow-sm transition-all group h-full"
             >
               <div className="flex justify-between items-start">
                 <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/40 transition-colors">
