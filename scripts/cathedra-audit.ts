@@ -261,3 +261,13 @@ const htmlContent = `
   </div>
 </body>
 </html>
+\`;
+
+writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
+
+console.log(\`\\nAudit finished. Reports generated in /reports\`);
+
+if (!softMode && totalIssues > threshold) {
+  process.exit(1);
+}
+
