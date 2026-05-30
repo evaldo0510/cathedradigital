@@ -149,7 +149,7 @@ const HojePage: React.FC = () => {
               {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
             </p>
           </div>
-          <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[1] md:leading-[0.9] tracking-tighter filter blur-[0.2px]">
+          <h1 className="text-4xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[1] md:leading-[0.9] tracking-tighter filter blur-[0.2px]">
             Mosteiro <br />
             <motion.span 
               initial={{ opacity: 0, x: -20 }}
