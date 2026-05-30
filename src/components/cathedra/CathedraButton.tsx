@@ -17,7 +17,7 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
       sm: 'px-spacing-lg h-spacing-xl text-[9px] md:text-[10px]',
       md: 'px-spacing-xl h-spacing-2xl text-[10px] md:text-[11px]',
       lg: 'px-spacing-2xl h-spacing-2xl text-[11px] md:text-[12px]',
-      xl: 'px-spacing-3xl h-18 text-[12px] md:text-[16px]',
+      xl: 'px-spacing-3xl h-spacing-3xl text-[12px] md:text-[16px]',
     };
 
     const variantStyles = {
