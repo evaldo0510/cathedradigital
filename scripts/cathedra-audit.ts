@@ -141,6 +141,25 @@ const htmlContent = `
       </div>
     </header>
 
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+      <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl border border-slate-800">
+        <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">Health Score</p>
+        <p class="text-5xl font-black ${totalIssues > threshold ? 'text-rose-400' : 'text-emerald-400'}">${totalIssues}</p>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-3">Tolerance: ${threshold}</p>
+      </div>
+      ${results.map(r => `
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">${r.name}</p>
+          <p class="text-4xl font-black ${r.issuesCount > 0 ? 'text-rose-600' : 'text-emerald-600'}">${r.issuesCount}</p>
+          <div class="flex items-center mt-3">
+             <div class="w-1.5 h-1.5 rounded-full ${r.issuesCount > 0 ? 'bg-rose-500' : 'bg-emerald-500'} mr-2"></div>
+             <span class="text-[10px] font-bold text-slate-500 uppercase">${r.issuesCount > 0 ? 'Review' : 'Verified'}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+
     <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 mb-10 overflow-hidden relative">
       <div class="flex justify-between items-center mb-8">
         <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Compliance Trend</h3>
