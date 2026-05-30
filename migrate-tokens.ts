@@ -5,15 +5,15 @@ const spacingMap: Record<string, string> = {
   '0': '0',
   '0.5': '3xs',
   '1': '2xs',
-  '1.5': '2xs', // approx
+  '1.5': '2xs',
   '2': 'xs',
-  '2.5': 'xs', // approx
+  '2.5': 'xs',
   '3': 'sm',
-  '3.5': 'sm', // approx
+  '3.5': 'sm',
   '4': 'md',
-  '5': 'md', // approx
+  '5': 'md',
   '6': 'lg',
-  '7': 'lg', // approx
+  '7': 'lg',
   '8': 'xl',
   '9': 'xl',
   '10': 'xl',
@@ -25,6 +25,17 @@ const spacingMap: Record<string, string> = {
   '24': '4xl',
   '28': '4xl',
   '32': '4xl',
+  '36': '4xl',
+  '40': '4xl',
+  '44': '4xl',
+  '48': '4xl',
+  '52': '4xl',
+  '56': '4xl',
+  '60': '4xl',
+  '64': '4xl',
+  '72': '4xl',
+  '80': '4xl',
+  '96': '4xl',
 };
 
 const shadowMap: Record<string, string> = {
@@ -33,6 +44,7 @@ const shadowMap: Record<string, string> = {
   'lg': 'premium',
   'xl': 'premium',
   '2xl': 'premium',
+  'soft': 'md',
 };
 
 const radiusMap: Record<string, string> = {
@@ -42,9 +54,11 @@ const radiusMap: Record<string, string> = {
   'xl': 'xl',
   '2xl': 'premium',
   '3xl': 'premium',
+  'premium-sm': 'sm',
+  'premium-lg': 'lg',
 };
 
-const prefixes = ['p', 'm', 'w', 'h', 'gap', 'space', 'top', 'bottom', 'left', 'right', 'px', 'py', 'pt', 'pb', 'pl', 'pr', 'mx', 'my', 'mt', 'mb', 'ml', 'mr', 'inset', 'size'];
+const prefixes = ['p', 'm', 'w', 'h', 'gap', 'space-x', 'space-y', 'top', 'bottom', 'left', 'right', 'px', 'py', 'pt', 'pb', 'pl', 'pr', 'mx', 'my', 'mt', 'mb', 'ml', 'mr', 'inset', 'size'];
 
 function migrateFile(filePath: string) {
   let content = fs.readFileSync(filePath, 'utf8');
@@ -52,9 +66,12 @@ function migrateFile(filePath: string) {
 
   // 1. Spacing migration
   prefixes.forEach(prefix => {
-    // Look for prefix-number, but not prefix-[...], prefix-px, etc.
-    const regex = new RegExp(`\\b${prefix}-([0-9.]+)\\b`, 'g');
+    // Negative lookbehind for letters to avoid pt-BR etc.
+    const regex = new RegExp(`(?<![a-zA-Z])${prefix}-([0-9.]+)(?![a-zA-Z])`, 'g');
     content = content.replace(regex, (match, value) => {
+      // Special check for pt-BR
+      if (prefix === 'pt' && match.includes('pt-BR')) return match;
+
       if (spacingMap[value]) {
         changed = true;
         return `${prefix}-${spacingMap[value]}`;
@@ -64,15 +81,27 @@ function migrateFile(filePath: string) {
   });
 
   // 2. Shadow migration
-  content = content.replace(/\bshadow-(lg|xl|2xl)\b/g, (match, val) => {
+  content = content.replace(/\bshadow-(lg|xl|2xl|soft)\b/g, (match, val) => {
     changed = true;
-    return `shadow-premium`;
+    return `shadow-${shadowMap[val] || 'premium'}`;
   });
 
   // 3. Border radius migration
-  content = content.replace(/\brounded-(2xl|3xl)\b/g, (match, val) => {
+  content = content.replace(/\brounded-(2xl|3xl|premium-sm|premium-lg)\b/g, (match, val) => {
     changed = true;
-    return `rounded-premium`;
+    return `rounded-${radiusMap[val] || 'premium'}`;
+  });
+
+  // 4. Typography migration
+  content = content.replace(/\btext-(premium-tiny|premium-base|premium-lg|premium-xl)\b/g, (match, val) => {
+    changed = true;
+    const tMap: Record<string, string> = {
+      'premium-tiny': 'xs',
+      'premium-base': 'base',
+      'premium-lg': 'lg',
+      'premium-xl': 'xl'
+    };
+    return `text-${tMap[val]}`;
   });
 
   if (changed) {
@@ -96,6 +125,6 @@ function walk(dir: string) {
   });
 }
 
-console.log('Starting migration...');
+console.log('Starting migration pass 2...');
 walk('./src');
-console.log('Migration complete.');
+console.log('Migration pass 2 complete.');
