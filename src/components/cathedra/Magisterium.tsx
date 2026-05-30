@@ -292,7 +292,7 @@ const Magisterium: React.FC = () => {
         })}
       </script>
 
-      <div className="max-w-6xl mx-auto space-y-12 pb-32">
+      <div className="w-full space-y-12 pb-32">
         {/* Unified Search & Filters */}
         <div className="space-y-8">
           <div className="relative group max-w-4xl mx-auto">
