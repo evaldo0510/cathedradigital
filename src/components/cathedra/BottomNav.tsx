@@ -148,7 +148,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar, isMenu: true },
   ];
 
   return (
@@ -161,9 +161,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     >
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => {
-          const isActive = item.route 
-            ? isRouteActive(item.route, currentPath)
-            : false;
+          const isActive = item.isMenu 
+            ? false 
+            : (item.route ? isRouteActive(item.route, currentPath) : false);
 
 
           return (
