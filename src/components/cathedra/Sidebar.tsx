@@ -250,7 +250,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             tabIndex={-1}
           >
             {/* Mobile Header - More dedicated and sophisticated */}
-            <header className="flex items-center justify-between mb-12 pb-6">
+            <header className="flex items-center justify-between mb-8 pb-4 border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
