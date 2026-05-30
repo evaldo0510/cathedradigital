@@ -22,10 +22,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     };
 
     const variantStyles = {
-      default: 'premium-card dark:bg-primary/[0.02] dark:border dark:border-primary/[0.05]',
-      interactive: 'premium-card-interactive dark:bg-primary/[0.01] dark:hover:bg-primary/[0.03] dark:border dark:border-primary/[0.03] dark:hover:border-primary/[0.1]',
-      outline: 'bg-transparent border border-primary/10 dark:border-primary/20 rounded-premium',
-      glass: 'bg-background/40 backdrop-blur-xl border border-primary/10 dark:border-primary/20 rounded-premium shadow-premium',
+      default: 'premium-card dark:bg-primary/[0.01] dark:border-transparent hover:dark:border-primary/[0.05]',
+      interactive: 'premium-card-interactive dark:bg-primary/[0.005] dark:hover:bg-primary/[0.02] dark:border-transparent dark:hover:border-primary/[0.05]',
+      outline: 'bg-transparent border border-primary/[0.02] dark:border-primary/[0.03] rounded-premium',
+      glass: 'bg-background/20 backdrop-blur-2xl border border-primary/[0.02] dark:border-primary/[0.04] rounded-premium shadow-none',
     };
 
     return (

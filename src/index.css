@@ -52,17 +52,17 @@
     --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.02; /* Near invisible */
-    --input: 220 20% 10% / 0.03;
-    --ring: 40 45% 45% / 0.1;
+    --border: 220 20% 10% / 0.01; /* Near absolute silence */
+    --input: 220 20% 10% / 0.02;
+    --ring: 40 45% 45% / 0.05;
     
     /* Design Tokens */
     --radius: 2rem;
     --radius-lg: 2.5rem;
     --radius-sm: 1.25rem;
     
-    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.04);
-    --shadow-premium-hover: 0 40px 100px -30px rgba(0, 0, 0, 0.06);
+    --shadow-premium: 0 10px 60px -15px rgba(0, 0, 0, 0.02);
+    --shadow-premium-hover: 0 20px 80px -20px rgba(0, 0, 0, 0.04);
     
     /* Spacing Scale - Premium Generous */
     --spacing-xs: 0.5rem;   /* 8px */
@@ -123,9 +123,9 @@
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.1;   /* Subtly defined borders */
-    --input: 220 20% 10% / 0.1;
-    --ring: 42 40% 62% / 0.2;
+    --border: 220 20% 10% / 0.02;   /* Ghost-like borders in dark mode */
+    --input: 220 20% 10% / 0.02;
+    --ring: 42 40% 62% / 0.1;
     
     --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, 0.95);
   }
