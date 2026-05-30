@@ -54,7 +54,7 @@ export const forbiddenPatterns = [
   { 
     name: 'Direct Spacing', 
     id: 'spacing',
-    regex: '\\b(p|m|gap|space|w|h)-([0-9.]+)\\b',
+    regex: '(p|m|gap|space|w|h)-([0-9.]+)',
     exclude: ['w-full', 'h-full', 'w-screen', 'h-screen', 'w-auto', 'h-auto', 'w-fit', 'h-fit', 'min-w-0', 'min-h-0'],
     suggestion: 'Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap="md" />',
     fix: (match: string) => {
