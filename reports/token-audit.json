@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-30T15:46:56.437Z",
+  "timestamp": "2026-05-30T15:48:57.450Z",
   "totalIssues": 5,
   "categories": [
     {
@@ -38,11 +38,6 @@
       ],
       "suggestion": "Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap=\"md\" />",
       "issuesCount": 5,
-      "summary": [
-        "2 w-4.5",
-        "      2 h-4.5",
-        "      1 h-18"
-      ],
       "details": [
         {
           "file": "src/components/cathedra/AudioButton.tsx",
@@ -83,7 +78,6 @@
       "exclude": [],
       "suggestion": "Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size=\"lg\" />",
       "issuesCount": 0,
-      "summary": [],
       "details": []
     },
     {
@@ -93,7 +87,6 @@
       "exclude": [],
       "suggestion": "Use rounded-premium-sm to full (e.g., rounded-premium-md)",
       "issuesCount": 0,
-      "summary": [],
       "details": []
     },
     {
@@ -103,7 +96,6 @@
       "exclude": [],
       "suggestion": "Use shadow-premium-sm to premium-hover (e.g., shadow-premium)",
       "issuesCount": 0,
-      "summary": [],
       "details": []
     }
   ],
@@ -154,6 +146,28 @@
     },
     {
       "timestamp": "2026-05-30T15:46:56.437Z",
+      "totalIssues": 5,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 5
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:48:57.450Z",
       "totalIssues": 5,
       "categories": [
         {
