@@ -31,7 +31,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide"
+        className="bg-background/10 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
         role="banner"
       >
         <div className="app-container flex items-center justify-between h-14 md:h-36 py-1 md:py-0">
@@ -47,7 +47,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           >
             <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-80" variant="dark" />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[9px] md:text-2xl font-display font-light uppercase tracking-[0.4em] md:tracking-[0.8em] text-primary/40 leading-none transition-premium-slow group-hover:text-primary">
+              <span className="text-[10px] md:text-2xl font-display font-light uppercase tracking-[0.4em] md:tracking-[0.8em] text-primary/30 leading-none transition-premium-slow group-hover:text-primary">
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1)) || 'Cathedra'}
               </span>
               <span className="hidden md:block h5 !text-[8px] !text-muted-foreground/40 mt-2 group-hover:text-primary/40 transition-premium-slow uppercase tracking-widest font-bold">Digital Library</span>
@@ -78,7 +78,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   className="w-8 h-8 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
-                  <Icons.Search className="w-3.5 h-3.5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Search className="w-3.5 h-3.5 md:w-5 md:h-5 opacity-30 group-hover:opacity-100 transition-opacity" />
                 </Button>
 
                 <Button
