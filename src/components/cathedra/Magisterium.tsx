@@ -25,6 +25,8 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import ContemplativeLayout from './ContemplativeLayout';
 import ReadingMark from './ReadingMark';
+import { CathedraCard } from './CathedraCard';
+import { cn } from '@/lib/utils';
 
 const SPIRITUAL_GUIDANCE = [
   {
