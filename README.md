@@ -199,6 +199,8 @@ reports/
 ├── compliance-history.json    # Histórico de progresso
 ├── token-audit-dry-run-2026-05-30T16-20-07.html    # [2026-05-30 16 20:07] Log histórico
 ├── token-audit-dry-run-2026-05-30T16-20-07.json    # [2026-05-30 16 20:07] Log histórico
+├── token-audit-dry-run-2026-05-30T16-22-38.html    # [2026-05-30 16 22:38] Log histórico
+├── token-audit-dry-run-2026-05-30T16-22-38.json    # [2026-05-30 16 22:38] Log histórico
 ├── token-audit.html           # Dashboard visual (mais recente)
 └── token-audit.json           # Logs técnicos brutos (mais recente)
 ```
