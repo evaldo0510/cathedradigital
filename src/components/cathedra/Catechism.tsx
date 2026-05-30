@@ -317,7 +317,7 @@ const Catechism: React.FC = memo(() => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {CIC_SECTIONS.map((part, idx) => (
-            <CathedraCard key={part.id} variant="interactive" padding="none" onClick={() => { setSelectedPart(part); setViewMode('sections'); }} className="group">
+            <CathedraCard key={part.part} variant="interactive" padding="none" onClick={() => { setSelectedPart(part); setViewMode('sections'); }} className="group">
               <div className="p-10 flex flex-col justify-between h-full space-y-8 text-left">
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
