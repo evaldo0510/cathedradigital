@@ -31,23 +31,23 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/40 backdrop-blur-xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
+        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-14 md:h-20 py-2 md:py-0">
+        <div className="app-container flex items-center justify-between h-12 md:h-14 py-1">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
-            className="flex items-center gap-3 md:gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-full p-1" 
+            className="flex items-center gap-2 md:gap-3 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-full" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-5 h-5 md:w-8 md:h-8 transition-all group-hover:scale-105 opacity-60" variant={isDark ? "light" : "dark"} />
+            <Icons.Logo className="w-4 h-4 md:w-6 md:h-6 transition-all group-hover:scale-105 opacity-60" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[10px] md:text-sm font-display font-light uppercase tracking-[0.4em] text-primary/40 leading-none transition-all group-hover:text-primary">
+              <span className="text-[9px] md:text-[11px] font-display font-light uppercase tracking-[0.3em] text-primary/40 leading-none transition-all group-hover:text-primary">
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1).replace('magisterium', 'Magistério')) || 'Cathedra'}
               </span>
             </div>

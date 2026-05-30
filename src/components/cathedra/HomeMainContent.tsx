@@ -66,19 +66,19 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
-      {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS (MOVED TO TOP FOR PRIORITY) */}
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[24rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
+      {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000 delay-150 fill-mode-both w-full">
         <h2 className="sr-only">Sua Jornada de Leitura</h2>
         <SectionHeader 
           align="left"
           title="Sua Jornada" 
-          subtitle="Continue de onde a alma parou."
-          className="header-margin-rhythm"
+          subtitle="Continue de onde parou."
+          className="mb-4 md:mb-8"
         />
-        <CathedraCard variant="outline" padding="none" className="p-2 md:p-12 border-primary/[0.005] bg-transparent">
+        <div className="w-full p-2 md:p-6 rounded-3xl border border-primary/[0.01] bg-primary/[0.005]">
           <ReadingProgressSection />
-        </CathedraCard>
+        </div>
       </section>
 
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
@@ -87,9 +87,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="Bíblia, Catecismo e Magistério."
-          className="header-margin-rhythm"
+          className="mb-6 md:mb-12"
         />
-        <div className="p-0.5 md:p-20">
+        <div className="p-0.5 md:p-8">
           <HomeMainDoors t={t} />
         </div>
       </section>
@@ -97,9 +97,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       {/* 1. RITUAL DO DIA */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both w-full">
         <h2 className="sr-only">Ritual</h2>
-        <CathedraCard padding="none" className="p-1 md:p-12 border-transparent shadow-none bg-transparent">
+        <div className="p-1 md:p-8">
           <RitualDoDia />
-        </CathedraCard>
+        </div>
       </section>
 
       {/* VISUAL PAUSE */}
