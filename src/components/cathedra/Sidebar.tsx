@@ -243,14 +243,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-2 left-2 bottom-2 w-[min(250px,75vw)] sm:w-[320px] md:w-[380px] bg-white/70 dark:bg-background/80 backdrop-blur-xl border border-black/[0.001] dark:border-white/[0.003] flex flex-col p-4 md:p-12 z-[170] shadow-2xl rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-0 left-0 bottom-0 w-[min(250px,85vw)] sm:w-[320px] md:w-[380px] bg-background/95 backdrop-blur-xl border-r border-primary/[0.02] dark:border-white/[0.01] flex flex-col p-4 md:p-12 z-[170] shadow-2xl overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - Cinematic extension of the atmosphere */}
-            <header className="flex items-center justify-between mb-12 pb-6 border-b border-primary/[0.002] dark:border-white/[0.002]">
+            <header className="flex items-center justify-between mb-8 pb-4 border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
@@ -281,7 +281,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-10 overflow-y-auto pb-12 no-scrollbar pr-1" role="navigation">
+            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
@@ -294,7 +294,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[6px] font-black uppercase tracking-[0.8em] text-primary/[0.03] dark:text-primary/10 mb-4 px-4 select-none italic">/ {section.label}</h3>
+                  <h3 className="text-[6px] font-black uppercase tracking-[0.8em] text-primary/[0.05] dark:text-primary/10 mb-2 px-4 select-none italic">/ {section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
