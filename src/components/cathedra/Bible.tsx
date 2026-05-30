@@ -926,8 +926,8 @@ const Bible: React.FC = memo(() => {
 
         {/* Content with Side Nav */}
         <div className="mt-12 md:mt-24">
-          <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
-            <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
+          <div className="flex flex-col gap-12 lg:gap-24 items-start">
+            <div className="flex-1 w-full max-w-[70ch] mx-auto relative">
               {currentChapterNotes.length > 0 && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
                   <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
