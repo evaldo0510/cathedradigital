@@ -335,10 +335,20 @@ const htmlContent = `
 </html>
 `;
 
-writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
-writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({ ...currentAudit, results, history }, null, 2));
+  const type = dryRun ? 'dry-run' : (fixMode ? 'fix' : 'audit');
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  
+  const jsonName = `token-audit-${type}-${timestamp}.json`;
+  const htmlName = `token-audit-${type}-${timestamp}.html`;
 
-  console.log('\nAudit finished. Reports generated in /reports');
+  writeFileSync(join(reportDir, jsonName), JSON.stringify({ ...currentAudit, results, history }, null, 2));
+  writeFileSync(join(reportDir, htmlName), htmlContent);
+  
+  // Also keep latest for compatibility
+  writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({ ...currentAudit, results, history }, null, 2));
+  writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
+
+  console.log(`\nAudit finished. Reports generated in /reports (${jsonName})`);
   if (!softMode && totalIssues > threshold) process.exit(1);
 }
 
