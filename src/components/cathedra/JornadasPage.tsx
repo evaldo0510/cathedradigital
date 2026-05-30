@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard } from './CathedraCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
