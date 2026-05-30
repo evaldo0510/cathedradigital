@@ -131,7 +131,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       items: [
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Magisterium /> },
         { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
         { label: 'Busca Global', path: AppRoute.BUSCAR, onClick: () => { onClose(); (window as any).dispatchEvent(new CustomEvent('open-command-center')); }, icon: <Icons.Search /> },
       ]
@@ -315,8 +315,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                     ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
                               >
-                                <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
-                                  {React.cloneElement(item.icon as React.ReactElement, { size: 14, strokeWidth: isActive ? 1.2 : 0.8 })}
+                                <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
+                                  {React.cloneElement(item.icon as React.ReactElement, { size: 16, strokeWidth: isActive ? 1.5 : 1.2 })}
                                 </span>
                                 <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (

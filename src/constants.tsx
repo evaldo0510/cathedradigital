@@ -175,7 +175,7 @@ const createIcon = (IconComponent: any) =>
       ref={ref} 
       strokeWidth={strokeWidth} 
       size={size}
-      className={cn("transition-all duration-1000 shrink-0 opacity-50 group-hover:opacity-100 group-hover:scale-105", className)}
+      className={cn("transition-all duration-1000 shrink-0", className)}
       {...props} 
     />
   ));
@@ -346,12 +346,12 @@ export const Icons = {
   PartyPopper: IconsInternal.PartyPopper,
   
   // Library & Study
-  Bible: IconsInternal.BookMarked,
-  HolyBible: IconsInternal.BookMarked,
+  Bible: IconsInternal.BookOpen,
+  HolyBible: IconsInternal.BookOpen,
   Book: IconsInternal.Book,
   BookOpen: IconsInternal.BookOpen,
   Library: IconsInternal.Library,
-  Catechism: IconsInternal.BookText,
+  Catechism: IconsInternal.Book,
   CatechismShield: IconsInternal.ShieldCheck,
   FileText: IconsInternal.FileText,
   Magisterium: IconsInternal.ScrollText,
