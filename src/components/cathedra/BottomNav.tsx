@@ -46,7 +46,7 @@ interface BottomNavItemProps {
   icon: React.ElementType;
   route: string;
   isActive: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent | React.TouchEvent) => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
   shouldReduceMotion?: boolean;
 }
@@ -62,7 +62,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
 }) => (
   <Button 
     variant="ghost"
-    onClick={(e) => { onRipple(e); onClick(); }}
+    onClick={(e) => { onRipple(e); onClick(e); }}
     onTouchStart={(e) => { prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
@@ -174,7 +174,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
-              onClick={() => {
+              onClick={(e) => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
             }}
