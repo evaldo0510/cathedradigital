@@ -34,10 +34,10 @@ const ReadingControlPanel: React.FC = () => {
   ];
 
   const SettingsContent = () => (
-    <div className="space-y-12 py-10">
-      <div className="text-center space-y-4">
-        <p className="text-[9px] text-primary/30 uppercase tracking-[0.6em] font-bold">Atmosphæra</p>
-        <h2 className="text-3xl font-display font-light text-primary uppercase tracking-[0.3em] leading-tight">Leitura</h2>
+    <div className="space-y-8 py-6">
+      <div className="text-center space-y-2">
+        <p className="text-[8px] text-primary/30 uppercase tracking-[0.5em] font-bold">Atmosphæra</p>
+        <h2 className="text-2xl font-display font-light text-primary uppercase tracking-[0.25em] leading-tight">Leitura</h2>
       </div>
       
       <div className="space-y-4">
@@ -254,7 +254,7 @@ const ReadingControlPanel: React.FC = () => {
               <Settings2 className="w-4 h-4" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[85vh] rounded-t-[3rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl px-6">
+          <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl px-6">
             <ScrollArea className="h-full pr-0">
               <SettingsContent />
             </ScrollArea>
