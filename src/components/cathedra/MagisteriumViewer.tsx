@@ -441,8 +441,9 @@ const MagisteriumViewer: React.FC = () => {
               }}
               className={`py-8 md:py-24 prose prose-slate dark:prose-invert max-w-none reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
-                prose-headings:font-serif prose-headings:text-primary 
-                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-3xl prose-blockquote:italic
+                prose-p:leading-[1.8] prose-p:mb-8
+                prose-headings:font-serif prose-headings:text-primary prose-headings:mb-8
+                prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
 

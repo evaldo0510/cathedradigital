@@ -1003,7 +1003,7 @@ const Bible: React.FC = memo(() => {
                             ${highlightedVerse === v.number ? 'bg-primary/[0.03] rounded-lg' : 'hover:bg-primary/[0.01]'}`}>
                           <div className="flex items-start gap-3 md:gap-5">
 
-                            <span className="text-[0.65em] font-bold text-primary/10 mt-2.5 select-none group-hover:text-primary/30 transition-colors duration-700 w-4 shrink-0 text-right">{v.number}</span>
+                            <span className="text-[0.7em] font-serif italic text-primary/20 mt-3 select-none group-hover:text-primary/40 transition-colors duration-700 w-6 shrink-0 text-right">{v.number}</span>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -1075,6 +1075,12 @@ const Bible: React.FC = memo(() => {
                                 <Icons.Sparkles className="w-3 h-3" />
                               </Button>
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
+                              <ShareButton 
+                                title={`${selectedBook.name} ${selectedChapter}:${v.number}`} 
+                                text={v.text} 
+                                url={buildBibleAbsoluteUrl(selectedBook.abbr, selectedChapter, v.number)}
+                                className="w-6 h-6 p-0 text-primary/40 hover:text-primary"
+                              />
                             </div>
                           </div>
                         </div>
@@ -1086,7 +1092,7 @@ const Bible: React.FC = memo(() => {
               </div>
             </div>
 
-            <div className="flex-1 w-full max-w-4xl mx-auto">
+            <div className="flex-1 w-full max-w-[70ch] mx-auto">
               <div className="w-full relative">
                 <div className="py-8 md:py-20 lg:py-24">
                   <Relatio 
