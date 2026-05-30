@@ -340,23 +340,23 @@ const Magisterium: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
               className="group h-full"
             >
-              <div className="p-8 flex flex-col gap-6 h-full text-left">
+              <div className="p-5 flex flex-col gap-4 h-full text-left">
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
-                    {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" strokeWidth={1} /> : <Icons.FileText className="w-5 h-5" strokeWidth={1} />}
+                  <div className="w-10 h-10 rounded-xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
+                    {doc.type === 'Encíclica' ? <Icons.Scroll className="w-4 h-4" strokeWidth={1} /> : <Icons.FileText className="w-4 h-4" strokeWidth={1} />}
                   </div>
-                  <span className="text-[9px] font-black text-secondary/50 tracking-widest">{doc.year}</span>
+                  <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
                 </div>
 
-                <div className="space-y-3 flex-1">
-                  <h3 className="text-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
-                  <p className="text-[9px] font-black text-primary/40 uppercase tracking-[0.2em]">{doc.author}</p>
-                  <p className="text-[11px] text-muted-foreground/50 italic line-clamp-3 leading-relaxed">{doc.summary}</p>
+                <div className="space-y-2 flex-1">
+                  <h3 className="text-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
+                  <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
+                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-2 leading-relaxed">{doc.summary}</p>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-primary/[0.03]">
+                <div className="flex flex-wrap gap-1 pt-3 border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
                   {doc.theme.map(t => (
-                    <span key={t} className="text-[7px] font-black text-primary/30 uppercase tracking-[0.15em] bg-primary/[0.01] px-2 py-0.5 rounded-full">
+                    <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-1.5 py-0.5 rounded-full">
                       {t}
                     </span>
                   ))}

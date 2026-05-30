@@ -255,62 +255,61 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-4 md:p-14 lg:p-16 space-y-6 md:space-y-12 relative overflow-hidden shadow-premium">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-4 md:p-10 lg:p-12 space-y-4 md:space-y-8 relative overflow-hidden shadow-premium">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
-              <div className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center gap-2">
+              <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2">
                 {history.length > 0 && (
                   <>
                     <CathedraButton 
                       variant="ghost" 
                       size="sm"
                       onClick={exportHistory} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8 px-0"
                       title="Exportar histórico"
-                      icon={<Icons.Download className="w-3.5 h-3.5" />}
+                      icon={<Icons.Download className="w-3 h-3" />}
                     />
                     <CathedraButton 
                       variant="ghost" 
                       size="sm"
                       onClick={() => clearHistory()} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8 px-0"
                       title="Limpar histórico"
-                      icon={<Icons.RotateCcw className="w-3.5 h-3.5" />}
+                      icon={<Icons.RotateCcw className="w-3 h-3" />}
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-3.5 h-3.5" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8 px-0" icon={<Icons.X className="w-3 h-3" />} />
               </div>
 
-              <div className="flex items-center justify-between mb-10 md:mb-16 opacity-40">
-                <div className="flex items-center gap-4 md:gap-6">
-                  <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
-                    <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
+              <div className="flex items-center justify-between mb-6 md:mb-10 opacity-30">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-8 h-8 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
+                    <Icons.Sparkles className="w-3 h-3" strokeWidth={0.5} />
                   </div>
                   <div>
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
-                    <p className="text-[10px] font-serif italic text-primary/60 mt-0.5">Companhia Contemplativa</p>
+                    <h4 className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <div className={`w-1 h-1 rounded-full ${
                     settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                   }`} />
-                  <span className="text-[7px] font-black uppercase tracking-widest text-primary/60">
-                    {settings.totalSilence ? 'Modo Silêncio Ativo' : (history.length > 0 ? 'Histórico Ativo' : 'Estado de Silêncio')}
+                  <span className="text-[6px] font-black uppercase tracking-widest text-primary/60">
+                    {settings.totalSilence ? 'Silêncio' : (history.length > 0 ? 'Ativo' : 'Puro')}
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-6 md:space-y-14 max-w-3xl mx-auto">
+              <div className="space-y-4 md:space-y-10 max-w-3xl mx-auto">
                 {history.length > visibleMessages && (
-                  <div className="flex justify-center pb-4">
+                  <div className="flex justify-center pb-2">
                     <Button 
                       variant="ghost" 
                       size="sm" 
                       onClick={() => setVisibleMessages(prev => prev + 10)}
-                      className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
+                      className="text-[8px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
                     >
                       Ver registros anteriores
                     </Button>
@@ -322,17 +321,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.2, delay: i * 0.1 }}
-                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3`}
                   >
-                    <div className={`max-w-full text-base md:text-xl leading-[1.7] md:leading-[1.8] tracking-wide ${
+                    <div className={`max-w-full text-sm md:text-lg leading-[1.7] md:leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-6 md:pr-8 text-right' 
+                        ? 'text-primary/60 font-serif italic border-r border-primary/10 pr-4 md:pr-6 text-right' 
                         : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-4 md:mb-6 opacity-20">
-                          <div className="w-6 h-px bg-primary" />
-                          <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
+                        <div className="flex items-center gap-2 mb-3 md:mb-4 opacity-20">
+                          <div className="w-4 h-px bg-primary" />
+                          <span className="text-[7px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
                       )}
                       {msg.content}
@@ -357,28 +356,28 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-xl mx-auto pt-10 md:pt-16 border-t border-primary/5">
+              <div className="max-w-xl mx-auto pt-6 md:pt-10 border-t border-primary/5">
                 <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
+                    placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Reflexão..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-base md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-4 md:py-6 transition-all text-primary"
+                    className="w-full bg-transparent border-none text-sm md:text-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-3 md:py-4 transition-all text-primary"
                   />
                   <button 
                     type="submit" 
                     disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
                     className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-2"
                   >
-                    <Icons.ArrowRight className="w-5 h-5 stroke-[1]" />
+                    <Icons.ArrowRight className="w-4 h-4 stroke-[1]" />
                   </button>
                 </form>
-                <div className="flex flex-col items-center gap-3 mt-10">
-                  <div className="w-1 h-1 bg-primary/10 rounded-full" />
-                  <p className="text-[8px] text-center text-primary/60 uppercase tracking-[0.5em] font-black">
-                    {settings.totalSilence ? "O silêncio é a oração perfeita" : "O silêncio é a alma do entendimento"}
+                <div className="flex flex-col items-center gap-2 mt-6">
+                  <div className="w-0.5 h-0.5 bg-primary/10 rounded-full" />
+                  <p className="text-[7px] text-center text-primary/40 uppercase tracking-[0.5em] font-black">
+                    {settings.totalSilence ? "O silêncio é a oração perfeita" : "Silêncio é entendimento"}
                   </p>
                 </div>
               </div>
