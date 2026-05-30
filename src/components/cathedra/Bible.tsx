@@ -1595,22 +1595,6 @@ const Bible: React.FC = memo(() => {
           ))}
         </div>
       </div>
-                      <div className="flex justify-between items-start">
-                        <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">{book.abbr}</span>
-                        {isRead && <Icons.CheckCircle2 className="w-3.5 h-3.5 text-primary/60" />}
-                      </div>
-                      <div className="space-y-1">
-                        <h3 className="font-display font-medium text-lg text-primary group-hover:text-secondary transition-colors leading-tight">{book.name}</h3>
-                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest">{book.chapters} Capítulos</p>
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
-      </div>
     </ContemplativeLayout>
   );
 });
