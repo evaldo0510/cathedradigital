@@ -90,7 +90,7 @@ export const forbiddenPatterns = [
   { 
     name: 'Direct Shadows', 
     id: 'shadows',
-    regex: '\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b',
+    regex: 'shadow-(sm|md|lg|xl|2xl|inner|none)',
     exclude: [],
     suggestion: 'Use shadow-premium-sm to premium-hover (e.g., shadow-premium)',
     fix: (match: string) => {
