@@ -6,51 +6,123 @@ import { join } from 'path';
 const args = process.argv.slice(2);
 const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '5');
 const softMode = args.includes('--soft');
+const fixMode = args.includes('--fix');
+
+const spacingMap: Record<string, string> = {
+  '0.5': 'spacing-3xs',
+  '1': 'spacing-2xs',
+  '1.5': 'spacing-2xs',
+  '2': 'spacing-xs',
+  '3': 'spacing-sm',
+  '4': 'spacing-md',
+  '5': 'spacing-lg',
+  '6': 'spacing-xl',
+  '8': 'spacing-2xl',
+  '10': 'spacing-3xl',
+  '12': 'spacing-4xl',
+  '16': 'spacing-4xl',
+};
+
+const roundingMap: Record<string, string> = {
+  'none': 'premium-none',
+  'sm': 'premium-sm',
+  'md': 'premium-md',
+  'lg': 'premium-lg',
+  'xl': 'premium-lg',
+  '2xl': 'premium',
+  '3xl': 'premium',
+  'full': 'premium-full',
+};
+
+const shadowMap: Record<string, string> = {
+  'none': 'premium-none',
+  'sm': 'premium-sm',
+  'md': 'premium',
+  'lg': 'premium-hover',
+  'xl': 'premium-xl',
+  '2xl': 'premium-xl',
+};
+
+const typographyMap: Record<string, string> = {
+  'xs': 'premium-xs',
+  'sm': 'premium-sm',
+  'base': 'premium-base',
+  'lg': 'premium-lg',
+  'xl': 'premium-xl',
+  '2xl': 'premium-2xl',
+  '3xl': 'premium-3xl',
+  '4xl': 'premium-4xl',
+  '5xl': 'premium-5xl',
+};
 
 const forbiddenPatterns = [
   { 
     name: 'Direct Spacing', 
     id: 'spacing',
-    regex: '\\b(p|m|gap|space|w|h)-[0-9.]+\\b',
+    regex: '\\b(p|m|gap|space|w|h)-([0-9.]+)\\b',
     exclude: ['w-full', 'h-full', 'w-screen', 'h-screen', 'w-auto', 'h-auto', 'w-fit', 'h-fit', 'min-w-0', 'min-h-0'],
-    suggestion: 'Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap="md" />'
+    suggestion: 'Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap="md" />',
+    fix: (match: string) => {
+      const [prefix, value] = match.split('-');
+      const token = spacingMap[value];
+      return token ? `${prefix}-${token}` : match;
+    }
   },
   { 
     name: 'Direct Typography', 
     id: 'typography',
     regex: '\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b',
     exclude: [],
-    suggestion: 'Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size="lg" />'
+    suggestion: 'Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size="lg" />',
+    fix: (match: string) => {
+      const value = match.replace('text-', '');
+      const token = typographyMap[value];
+      return token ? `text-${token}` : match;
+    }
   },
   { 
     name: 'Direct Rounding', 
     id: 'rounding',
     regex: '\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b',
     exclude: [],
-    suggestion: 'Use rounded-premium-sm to full (e.g., rounded-premium-md)'
+    suggestion: 'Use rounded-premium-sm to full (e.g., rounded-premium-md)',
+    fix: (match: string) => {
+      const value = match.replace('rounded-', '');
+      const token = roundingMap[value];
+      return token ? `rounded-${token}` : match;
+    }
   },
   { 
     name: 'Direct Shadows', 
     id: 'shadows',
     regex: '\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b',
     exclude: [],
-    suggestion: 'Use shadow-premium-sm to premium-hover (e.g., shadow-premium)'
+    suggestion: 'Use shadow-premium-sm to premium-hover (e.g., shadow-premium)',
+    fix: (match: string) => {
+      const value = match.replace('shadow-', '');
+      const token = shadowMap[value];
+      return token ? `shadow-${token}` : match;
+    }
   }
 ];
 
 const results: any[] = [];
 let totalIssues = 0;
+let fixedCount = 0;
 
 console.log('--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---');
+if (fixMode) console.log('--- AUTO-FIX MODE ENABLED ---');
 
 forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
   try {
-    const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**"`;
+    const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" --color=never`;
     const rawOutput = execSync(command, { encoding: 'utf8' }).trim();
     
     if (rawOutput) {
       const lines = rawOutput.split('\n');
+      const filesToFix = new Map<string, string>();
+
       lines.forEach(line => {
         const parts = line.split(':');
         if (parts.length >= 3) {
@@ -69,11 +141,31 @@ forbiddenPatterns.forEach(pattern => {
                   content: content
                 });
                 totalIssues++;
+
+                if (fixMode) {
+                  const fixedValue = pattern.fix(match);
+                  if (fixedValue !== match) {
+                    let fileContent = filesToFix.get(file) || readFileSync(file, 'utf8');
+                    // Simple replacement, careful with multiple matches on same line
+                    // Using a more robust approach would be better but this is a start
+                    const newContent = fileContent.replace(new RegExp(`\\b${match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), fixedValue);
+                    if (newContent !== fileContent) {
+                      filesToFix.set(file, newContent);
+                      fixedCount++;
+                    }
+                  }
+                }
               }
             });
           }
         }
       });
+
+      if (fixMode && filesToFix.size > 0) {
+        filesToFix.forEach((content, path) => {
+          writeFileSync(path, content);
+        });
+      }
     }
     
     results.push({
@@ -83,7 +175,7 @@ forbiddenPatterns.forEach(pattern => {
     });
 
     if (patternIssues.length > 0) {
-      console.log(`❌ ${pattern.name}: ${patternIssues.length} issues found.`);
+      console.log(`${fixMode ? '🛠️' : '❌'} ${pattern.name}: ${patternIssues.length} issues found.`);
     } else {
       console.log(`✅ ${pattern.name}: Compliant`);
     }
@@ -93,6 +185,11 @@ forbiddenPatterns.forEach(pattern => {
     console.log(`✅ ${pattern.name}: Compliant`);
   }
 });
+
+if (fixMode) {
+  console.log(`\n--- FIXED ${fixedCount} ISSUES AUTOMATICALLY ---`);
+  // Recalculate issues after fix if possible or just inform user
+}
 
 const reportDir = join(process.cwd(), 'reports');
 if (!existsSync(reportDir)) mkdirSync(reportDir);
