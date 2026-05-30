@@ -196,5 +196,27 @@
         "count": 0
       }
     ]
+  },
+  {
+    "timestamp": "2026-05-30T15:54:42.795Z",
+    "totalIssues": 8,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 4
+      },
+      {
+        "id": "typography",
+        "count": 2
+      },
+      {
+        "id": "rounding",
+        "count": 1
+      },
+      {
+        "id": "shadows",
+        "count": 1
+      }
+    ]
   }
 ]
