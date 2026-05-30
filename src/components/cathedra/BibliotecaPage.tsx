@@ -179,14 +179,14 @@ const BibliotecaPage: React.FC = () => {
                         <Icons.ChevronRight className="w-4 h-4 text-primary/10 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                       </div>
                     </div>
-                  </CathedraCard> section-rhythm stack-rhythm max-w-2xl mx-auto pb-24
+                  </CathedraCard>
                 ))}
               </div>
             </div>
           ))}
         </div>
       </div>
-    </ContemplativeLayout> section-rhythm stack-rhythm max-w-2xl mx-auto pb-24
+    </ContemplativeLayout>
   );
 };
 
