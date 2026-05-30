@@ -1,6 +1,6 @@
 import { Church, ChevronRight } from "lucide-react";
 import { HomeButton } from "@/components/cathedra/HomeButton";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 interface CtaBannerSectionProps {
   onStart: () => void;
@@ -9,7 +9,7 @@ interface CtaBannerSectionProps {
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full section-spacing">
     <div className="app-container">
-      <HomeCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group border-primary/10">
+      <CathedraCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group border-primary/10">
         {/* Subtle background glow */}
         <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
         
@@ -38,7 +38,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             </p>
           </div>
         </div>
-      </HomeCard>
+      </CathedraCard>
     </div>
   </section>
 );

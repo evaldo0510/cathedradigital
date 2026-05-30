@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard } from "@/components/cathedra/CathedraCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [
@@ -38,8 +38,10 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <HomeCard
+    <CathedraCard
       as="button"
+      variant="interactive"
+      padding="none"
       className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
@@ -59,7 +61,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
         <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </HomeCard>
+    </CathedraCard>
   );
 };
 FeatureCard.displayName = 'FeatureCard';

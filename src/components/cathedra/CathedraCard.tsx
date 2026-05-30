@@ -7,10 +7,11 @@ interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
+  as?: any;
 }
 
 const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
-  ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
+  ({ className, variant = 'default', padding = 'md', hover = false, as: Component = motion.div, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
@@ -28,13 +29,16 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
       glass: 'bg-background/2 backdrop-blur-sm border border-primary/[0.005] dark:border-primary/[0.01] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-700',
     };
 
+    const isClickable = props.onClick || variant === 'interactive';
+
     return (
-      <motion.div
+      <Component
         ref={ref as any}
         className={cn(
           variantStyles[variant],
           paddingMap[padding],
           hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 transition-premium',
+          "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2 focus-within:border-primary/20 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
           className
         )}
         initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.995, y: 10, filter: 'blur(5px)' })}
@@ -44,7 +48,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         {...props}
       >
         {children}
-      </motion.div>
+      </Component>
     );
   }
 );

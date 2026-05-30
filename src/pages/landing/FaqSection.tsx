@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const faqs = [
   { q: "O Cathedra é gratuito?", a: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },

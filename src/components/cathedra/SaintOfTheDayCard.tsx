@@ -7,7 +7,7 @@ import { useOfficialSaint, useSaintsToday } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton } from './SacredSkeleton';
 import { ChevronRight, Sparkles } from 'lucide-react';
-import { HomeCard } from './HomeCard';
+import { CathedraCard } from './CathedraCard';
 
 interface SaintOfTheDayCardProps {
   variant?: 'compact' | 'full';
@@ -78,10 +78,10 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
 
   if (!saint) {
     return (
-      <HomeCard className="p-8 text-center opacity-60">
+      <CathedraCard className="p-8 text-center opacity-60">
         <Icons.Saints className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
         <p className="text-sm text-muted-foreground font-serif italic">Nenhum santo encontrado para hoje</p>
-      </HomeCard>
+      </CathedraCard>
     );
   }
 
@@ -93,8 +93,10 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
 
   if (variant === 'compact') {
     return (
-      <HomeCard
+      <CathedraCard
         as="button"
+        variant="interactive"
+        padding="none"
         onClick={handleNavigate}
         className="w-full flex items-center gap-6 group text-left p-5"
       >
@@ -117,13 +119,15 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           </p>
         </div>
         <ChevronRight className="w-5 h-5 text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
-      </HomeCard>
+      </CathedraCard>
     );
   }
 
   return (
-    <HomeCard
+    <CathedraCard
       as={motion.div}
+      variant="interactive"
+      padding="none"
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       tabIndex={0}
@@ -175,7 +179,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           </div>
         </div>
       </div>
-    </HomeCard>
+    </CathedraCard>
   );
 };
 

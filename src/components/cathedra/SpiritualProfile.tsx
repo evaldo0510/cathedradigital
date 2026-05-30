@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { HomeCard } from './HomeCard';
+import { CathedraCard } from './CathedraCard';
 import ContemplativeLayout from './ContemplativeLayout';
 import { getLevelInfo } from '@/lib/levels';
 import { Button } from '@/components/ui/button';
@@ -166,12 +166,14 @@ const SpiritualProfile: React.FC = () => {
             <div className="space-y-6">
               {activeJourneys.length > 0 ? (
                 activeJourneys.map((j) => (
-                  <HomeCard 
-                    key={j.id} 
-                    className="group cursor-pointer hover:border-primary/20 transition-all duration-700"
+                  <CathedraCard 
+                    key={j.id}
+                    padding="none"
+                    variant="interactive"
                     onClick={() => navigate(`/jornadas/${j.id}`)}
+                    className="group cursor-pointer hover:border-primary/20 transition-all duration-700"
                   >
-                    <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center justify-between gap-6 p-6">
                       <div className="space-y-2">
                         <p className="text-xs text-primary/40 font-bold uppercase tracking-widest">Em progresso</p>
                         <h4 className="text-lg font-serif font-bold text-primary">{j.title}</h4>
@@ -187,7 +189,7 @@ const SpiritualProfile: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  </HomeCard>
+                  </CathedraCard>
                 ))
               ) : (
                 <div className="p-12 border border-dashed border-primary/10 rounded-premium text-center opacity-30">

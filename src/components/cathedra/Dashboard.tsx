@@ -11,7 +11,7 @@ import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
-import { HomeCard } from './HomeCard';
+import { CathedraCard } from './CathedraCard';
 import { HomeButton } from './HomeButton';
 import { SpiritualContinuity } from './SpiritualContinuity';
 
@@ -161,7 +161,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.05}>
-        <HomeCard 
+        <CathedraCard 
+          variant="interactive"
+          padding="none"
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
           className="padding-rhythm flex items-center justify-between cursor-pointer group"
           role="button"
@@ -179,14 +181,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
           </div>
           <Icons.ChevronRight className="w-5 h-5 text-primary/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-        </HomeCard>
+        </CathedraCard>
       </FadeUp>
 
       <FadeUp delay={0.1}>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[var(--space-mobile-padding)] md:gap-6">
           {MAIN_DOORS.map((door, idx) => (
-            <HomeCard
+            <CathedraCard
               key={idx}
+              variant="interactive"
+              padding="none"
               onClick={() => goTo(door.route)}
               role="button"
               tabIndex={0}
@@ -206,7 +210,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
               </div>
-            </HomeCard>
+            </CathedraCard>
           ))}
         </div>
       </FadeUp>
