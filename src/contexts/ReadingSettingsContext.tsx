@@ -113,6 +113,8 @@ const defaultSettings: ReadingSettings = {
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
 
+import { useRef } from 'react';
+
 const SettingsSideEffects: React.FC = () => {
   const { settings } = useReadingSettings();
   
@@ -274,8 +276,13 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
 
 
 
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
   const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
-    const updated = { ...settings, ...newSettings, lastUpdated: Date.now() };
+    const updated = { ...settingsRef.current, ...newSettings, lastUpdated: Date.now() };
     setSettings(updated);
 
     if (user) {
@@ -295,7 +302,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
         refreshProfile();
       }
     }
-  }, [settings, user, refreshProfile]);
+  }, [user, refreshProfile]); // Removed settings dependency
 
   const resetSettings = useCallback(async () => {
     const reset = { ...defaultSettings, lastUpdated: Date.now() };
@@ -363,8 +370,10 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     return () => window.clearInterval(id);
   }, [settings.nightSchedule, settings.theme, updateSettings]);
 
+  const value = useMemo(() => ({ settings, updateSettings, resetSettings, isLoading }), [settings, updateSettings, resetSettings, isLoading]);
+
   return (
-    <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>
+    <ReadingSettingsContext.Provider value={value}>
       <SettingsSideEffects />
       {children}
     </ReadingSettingsContext.Provider>
