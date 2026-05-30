@@ -201,17 +201,28 @@ reports/
 └── token-audit.json           # [2024-05-20 14:30:05] Logs técnicos brutos
 ```
 
-Para visualizar a árvore atual no seu terminal, use:
+Para visualizar a árvore atual no seu terminal (com filtros opcionais), use:
 ```bash
+# Árvore completa
 npm run reports:tree
+
+# Filtrar por tipo (dry-run, fix, audit)
+npm run reports:tree -- --type=dry-run
+
+# Filtrar por data
+npm run reports:tree -- --since=2026-05-01 --until=2026-05-31
 ```
 
-Para validar se a estrutura atual de `./reports` corresponde exatamente à árvore documentada acima (apontando arquivos faltando ou inesperados), use:
+Para validar se a estrutura atual de `./reports` corresponde exatamente à árvore documentada acima:
 ```bash
 npm run reports:verify
 ```
-*Saída esperada em caso de sucesso*: `✓ Estrutura de ./reports está alinhada com o README.`
-*Em caso de divergência*: o comando lista os arquivos faltando/extras e finaliza com código de saída `1`, ideal para uso em CI.
+
+Para atualizar automaticamente a árvore do README com os arquivos atuais de `./reports`:
+```bash
+npm run reports:verify -- --update
+```
+
 
 #### Como interpretar os arquivos:
 
