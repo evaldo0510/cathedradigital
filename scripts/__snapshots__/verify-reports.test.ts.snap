@@ -327,3 +327,255 @@ exports[`reports:verify integration tests Matriz de Combinações de Flags com O
 ,
 }
 `;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update Simples COM divergência [--update] 1`] = `
+{
+  "args": [
+    "--update",
+  ],
+  "divergence": true,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update Simples",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+🔄 **Status:** Sincronizado
+📝 **Motivo do Exit Code:** README atualizado automaticamente.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update Simples SEM divergência [--update] 1`] = `
+{
+  "args": [
+    "--update",
+  ],
+  "divergence": false,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update Simples",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+✅ **Status:** Sucesso (Já Sincronizado)
+📝 **Motivo do Exit Code:** Nenhuma divergência detectada; README mantido.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Dry Run COM divergência [--update --dry-run] 1`] = `
+{
+  "args": [
+    "--update",
+    "--dry-run",
+  ],
+  "divergence": true,
+  "exitCode": 0,
+  "readmeUpdated": false,
+  "scenario": "Update com Dry Run",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Simulação (Dry Run)
+📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Dry Run SEM divergência [--update --dry-run] 1`] = `
+{
+  "args": [
+    "--update",
+    "--dry-run",
+  ],
+  "divergence": false,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update com Dry Run",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Simulação (Dry Run)
+📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Fail on Divergence COM divergência [--update --fail-on-divergence] 1`] = `
+{
+  "args": [
+    "--update",
+    "--fail-on-divergence",
+  ],
+  "divergence": true,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update com Fail on Divergence",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+🔄 **Status:** Sincronizado
+📝 **Motivo do Exit Code:** README atualizado automaticamente.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Fail on Divergence SEM divergência [--update --fail-on-divergence] 1`] = `
+{
+  "args": [
+    "--update",
+    "--fail-on-divergence",
+  ],
+  "divergence": false,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update com Fail on Divergence",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+✅ **Status:** Sucesso (Já Sincronizado)
+📝 **Motivo do Exit Code:** Nenhuma divergência detectada; README mantido.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Dry Run e Fail on Divergence COM divergência [--update --dry-run --fail-on-divergence] 1`] = `
+{
+  "args": [
+    "--update",
+    "--dry-run",
+    "--fail-on-divergence",
+  ],
+  "divergence": true,
+  "exitCode": 0,
+  "readmeUpdated": false,
+  "scenario": "Update com Dry Run e Fail on Divergence",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Simulação (Dry Run)
+📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar Update com Dry Run e Fail on Divergence SEM divergência [--update --dry-run --fail-on-divergence] 1`] = `
+{
+  "args": [
+    "--update",
+    "--dry-run",
+    "--fail-on-divergence",
+  ],
+  "divergence": false,
+  "exitCode": 0,
+  "readmeUpdated": true,
+  "scenario": "Update com Dry Run e Fail on Divergence",
+  "summary": 
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Simulação (Dry Run)
+📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.
+
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+,
+}
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar modo Verificação Padrão (sem --update) COM divergência 1`] = `
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Aviso (Divergência Detectada)
+📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.
+
+#### 🔍 Detalhes das Divergências
+
+#### Missing Files (1)
+- \`expected-file.json\` (Documentado no README mas não encontrado)
+#### Unexpected Files (1)
+- \`extra-file.json\` (Presente em \`./reports\` mas não documentado)
+
+> **Dica:** Rode \`npm run reports:verify -- --update\` localmente para sincronizar.
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+`;
+
+exports[`reports:verify integration tests Matriz de Combinações de Flags com Overrides deve validar modo Verificação com Falha (sem --update) COM divergência 1`] = `
+"### 📊 Relatório de Verificação de Estrutura
+
+❌ **Status:** Falha (Divergência Detectada)
+📝 **Motivo do Exit Code:** Divergências encontradas com \`--fail-on-divergence\` ativo.
+
+#### 🔍 Detalhes das Divergências
+
+#### Missing Files (1)
+- \`expected-file.json\` (Documentado no README mas não encontrado)
+#### Unexpected Files (1)
+- \`extra-file.json\` (Presente em \`./reports\` mas não documentado)
+
+> **Dica:** Rode \`npm run reports:verify -- --update\` localmente para sincronizar.
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`matrix-reports-test\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`MATRIX-README-test.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+`;
