@@ -7,11 +7,13 @@ import RitualDoDia from './RitualDoDia';
 import { ReadingProgressSection } from './ReadingProgressSection';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare, User } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, User, Settings, Heart } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import { CathedraButton } from './CathedraButton';
 import { CathedraCard } from './CathedraCard';
+import { Icons } from '@/constants';
+
 
 import { useAuth } from '@/hooks/useAuth';
 
@@ -66,111 +68,112 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-8 md:space-y-16 pb-10 md:pb-24 px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
-      {/* 4. BIBLIOTECA - THE CORE SOURCES */}
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-12 md:space-y-24 pb-16 md:pb-32 px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
+      {/* 1. CONTINUAR LEITURA - HIGH PRIORITY JOURNEY */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both w-full">
+        <h2 className="sr-only">Sua Jornada de Leitura</h2>
+        <SectionHeader 
+          title="Sua Jornada" 
+          subtitle="Onde a alma parou para contemplar."
+          className="header-margin-rhythm"
+        />
+        <div className="w-full max-w-4xl mx-auto">
+          <ReadingProgressSection />
+        </div>
+      </section>
 
-        <h2 className="sr-only">Fontes de Sabedoria</h2>
+      {/* 2. PORTAL SAGRADO - CORE MODULES */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both w-full">
+        <h2 className="sr-only">Biblioteca Sagrada</h2>
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="Bíblia, Catecismo e Magistério."
-          className="mb-4 md:mb-12"
+          className="header-margin-rhythm"
         />
         <HomeMainDoors t={t} />
       </section>
 
-      {/* 1. RITUAL DO DIA */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both w-full">
-        <h2 className="sr-only">Ritual</h2>
+      {/* 3. RITUAL DO DIA */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both w-full">
+        <h2 className="sr-only">Ritual do Dia</h2>
+        <SectionHeader 
+          title="Ritual do Dia" 
+          subtitle="A oração que santifica o tempo."
+          className="header-margin-rhythm"
+        />
         <RitualDoDia />
       </section>
 
-      {/* VISUAL PAUSE */}
-      <div className="py-4 md:py-12 flex flex-col items-center gap-2 opacity-[0.02] select-none pointer-events-none">
-        <Sparkles className="w-3 h-3 text-primary/10" strokeWidth={0.2} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 lg:gap-24 w-full">
-
-        {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
-          <h2 className="sr-only">Sua Jornada de Leitura</h2>
-          <SectionHeader 
-            align="left"
-            title="Sua Jornada" 
-            subtitle="Onde a alma parou para contemplar."
-            className="header-margin-rhythm"
-          />
-          <div className="flex-1">
-            <ReadingProgressSection />
+      {/* 4. LOGOS IA - INTELLIGENT COMPANION */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both w-full max-w-4xl mx-auto">
+        <h2 className="sr-only">Logos IA</h2>
+        <SectionHeader 
+          title="Logos IA" 
+          subtitle="Inteligência artificial a serviço da sua fé."
+          className="header-margin-rhythm"
+        />
+        
+        <CathedraCard
+          ref={logosCardRef}
+          variant="glass"
+          padding="none"
+          className="flex flex-col items-center justify-center gap-6 group border-none shadow-none bg-primary/[0.01] rounded-[2rem] p-8 md:p-12"
+        >
+          <div className="relative z-10 w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center text-primary/40 group-hover:scale-105 group-hover:bg-primary/[0.05] transition-all duration-1000">
+            <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
           </div>
-        </section>
-
-        {/* 3. LOGOS IA - INTELLIGENT COMPANION */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both flex flex-col">
-          <h2 className="sr-only">Logos IA</h2>
-          <SectionHeader 
-            align="left"
-            title="Logos IA" 
-            subtitle="Inteligência artificial a serviço da sua fé."
-            className="header-margin-rhythm"
-          />
           
-          <CathedraCard
-            ref={logosCardRef}
-            variant="glass"
-            padding="none"
-            className="flex-1 flex flex-col items-center justify-center gap-4 md:gap-8 group border-none shadow-none bg-transparent"
-          >
-            <div className="relative z-10 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/[0.005] border border-primary/[0.01] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:bg-primary/[0.01] transition-all duration-1000">
-              <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.3} />
+          <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-2xl">
+            <div className="relative group/input">
+              <Input
+                ref={logosInputRef}
+                value={logosQuery}
+                onChange={(e) => setLogosQuery(e.target.value)}
+                placeholder="Pergunte sobre a fé..."
+                className="h-14 md:h-20 pl-14 md:pl-16 pr-14 md:pr-16 rounded-full border-primary/[0.1] bg-background/40 focus:bg-background/80 transition-all text-sm md:text-base placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/20 shadow-sm"
+                aria-label="Logos IA: Pergunte sobre a fé"
+              />
+              <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 transition-colors" />
+              <button 
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary/10 text-primary/60 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn outline-none"
+              >
+                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
             </div>
-            
-            <div className="relative z-10 space-y-2 text-center">
-              <h3 className="text-lg md:text-2xl font-display font-medium text-primary/70 tracking-tight">Logos IA</h3>
-              <p className="hidden md:block text-xs text-muted-foreground/60 leading-relaxed font-serif italic max-w-[240px] mx-auto tracking-wide">
-                "Buscai e encontrareis."
-              </p>
-            </div>
+          </form>
+        </CathedraCard>
+      </section>
 
-            <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-md">
-              <div className="relative group/input">
-                <Input
-                  ref={logosInputRef}
-                  value={logosQuery}
-                  onChange={(e) => setLogosQuery(e.target.value)}
-                  placeholder="Pergunte sobre a fé..."
-                  className="h-10 md:h-14 pl-10 md:pl-12 pr-10 md:pr-12 rounded-full border-primary/[0.05] bg-background/20 focus:bg-background/40 transition-all text-xs md:text-sm placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
-                  aria-label="Logos IA: Pergunte sobre a fé"
-                />
-                <MessageSquare className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-primary/40 transition-colors" />
-                <button 
-                  type="submit"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn outline-none"
-                >
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            </form>
-          </CathedraCard>
-        </section>
-      </div>
+      {/* 5. SPIRITUAL CONTINUITY & FAVORITES (PLACEHOLDER FOR MORE) */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-750 fill-mode-both w-full">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <CathedraButton 
+              variant="outline" 
+              className="h-24 md:h-32 rounded-[2rem] border-primary/[0.05] hover:bg-primary/[0.02] flex flex-col items-center justify-center gap-2"
+              onClick={() => navigate(AppRoute.FAVORITES)}
+            >
+              <Icons.Heart className="w-5 h-5 text-primary/40" strokeWidth={1} />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Favoritos</span>
+            </CathedraButton>
 
-      {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-8 md:py-24 flex justify-center opacity-[0.05]">
-        <div className="w-12 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/3 to-transparent" />
-      </div>
+            <CathedraButton 
+              variant="outline" 
+              className="h-24 md:h-32 rounded-[2rem] border-primary/[0.05] hover:bg-primary/[0.02] flex flex-col items-center justify-center gap-2"
+              onClick={() => navigate('/settings')}
+            >
+              <Icons.Settings className="w-5 h-5 text-primary/40" strokeWidth={1} />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Configurações</span>
+            </CathedraButton>
+         </div>
+      </section>
 
-
-      {/* 4. BIBLIOTECA - REMOVED FROM ORIGINAL POSITION (ALREADY MOVED UP) */}
-      
-
-      {/* 5. EM BREVE - FUTURE EXPANSIONS */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-30 hover:opacity-100 transition-opacity duration-1500">
+      {/* 6. EM BREVE - FUTURE EXPANSIONS */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-900 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1500 w-full">
         <h2 className="sr-only">Futuras Expansões</h2>
         <SectionHeader 
-          title="O Futuro" 
-          subtitle="Novas salas sendo preparadas para o seu santuário."
+          title="Biblioteca" 
+          subtitle="Documentos e fontes secundárias."
           className="header-margin-rhythm"
         />
         <div className="px-0 md:px-4 grayscale opacity-60">
