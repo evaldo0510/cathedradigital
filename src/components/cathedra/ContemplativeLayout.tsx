@@ -26,7 +26,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-1 md:pt-8 pb-8 md:pb-32 will-change-[transform,opacity] flex flex-col items-center", className)}>
+    <div className={cn("min-h-screen pt-4 md:pt-12 pb-8 md:pb-24 will-change-[transform,opacity] flex flex-col items-center", className)}>
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", 
@@ -34,17 +34,17 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
           !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
         )}>
           {Icon && (
-            <div className="mb-2 md:mb-4">
-              <Icon className="w-4 h-4 md:w-8 md:h-8 text-primary opacity-10 mx-auto" strokeWidth={0.5} />
+            <div className="mb-2 md:mb-3">
+              <Icon className="w-4 h-4 md:w-6 md:h-6 text-primary opacity-10 mx-auto" strokeWidth={0.5} />
             </div>
           )}
           {subtitle && (
-            <p className="text-[7px] md:text-[10px] font-black uppercase text-primary/30 mb-2 md:mb-8 tracking-[0.5em] md:tracking-[1em]">
+            <p className="text-[7px] md:text-[8px] font-black uppercase text-primary/20 mb-2 md:mb-4 tracking-[0.4em] md:tracking-[0.8em]">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-3xl md:text-5xl lg:text-6xl tracking-tighter text-primary/90 font-display leading-[0.9] mb-3">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl tracking-tighter text-primary/90 font-display leading-[0.9] mb-3">
               {title}
             </h1>
           )}
