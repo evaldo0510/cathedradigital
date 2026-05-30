@@ -282,9 +282,11 @@
   }
 
   .premium-card {
-    @apply bg-card/[0.15] backdrop-blur-2xl border-none transition-all relative overflow-hidden shadow-premium;
+    @apply bg-card/[0.1] border-none transition-all relative overflow-hidden;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: var(--card-radius-mobile);
-    transition: all var(--transition-premium);
+    transition: all var(--transition-subtle);
   }
 
 
