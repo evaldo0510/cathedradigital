@@ -117,82 +117,37 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
     }] : []),
     {
-      label: 'Hoje',
+      label: 'Peregrinação',
       items: [
-        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun /> },
-        { label: 'Perfil Espiritual', path: '/spiritual-profile', icon: <Icons.User /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen /> },
+        { label: 'O Meu Dia', path: AppRoute.HOJE, icon: <Icons.Sun /> },
+        { label: 'Minha Jornada', path: AppRoute.DIARIO, icon: <Icons.BookOpen /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart /> },
-        { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award /> },
       ]
     },
     {
       label: 'Portal Sagrado',
       items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible /> },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Magisterium /> },
+        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <Icons.Bible /> },
+        { label: 'Catecismo', path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
         { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, onClick: () => { onClose(); (window as any).dispatchEvent(new CustomEvent('open-command-center')); }, icon: <Icons.Search /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Magisterium /> },
       ]
     },
     {
-      label: 'Biblioteca',
+      label: 'Tesouros da Fé',
       items: [
+        { label: 'Santos & Papas', path: AppRoute.SAINTS, icon: <Icons.Saints /> },
+        { label: 'Liturgia & Missal', path: AppRoute.LITURGIA, icon: <Icons.ScrollText /> },
         { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library /> },
         { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes /> },
-        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary /> },
-        { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type /> },
-        { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather /> },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass /> },
       ]
     },
     {
-      label: 'Santos & Devoções',
-      items: [
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Saints /> },
-        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator /> },
-        { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles /> },
-        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck /> },
-      ]
-    },
-    {
-      label: 'Liturgia & Oração',
-      items: [
-        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.ScrollText /> },
-        { label: 'Calendário', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.Calendar /> },
-        { label: 'Missal', path: AppRoute.MISSAL, icon: <Icons.BookOpen /> },
-        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock /> },
-        { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart /> },
-        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross /> },
-        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music /> },
-        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Oracao /> },
-        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen /> },
-        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather /> },
-      ]
-    },
-    {
-      label: 'Jornadas',
-      items: [
-        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys /> },
-        { label: 'Itineraria', path: AppRoute.ITINERARIA, icon: <Icons.Compass /> },
-      ]
-    },
-    {
-      label: 'Comunidade',
-      items: [
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users /> },
-        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart /> },
-        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck /> },
-      ]
-    },
-    {
-      label: 'Conta',
+      label: 'Sistema',
       items: [
         { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
-        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info /> },
-        { label: 'Termos', path: AppRoute.TERMS, icon: <Icons.ShieldCheck /> },
-        { label: 'Privacidade', path: AppRoute.PRIVACY, icon: <Icons.Lock /> },
+        { label: 'Configurações', path: '/settings', icon: <Icons.Settings /> },
+        { label: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Info /> },
       ]
     }
 
