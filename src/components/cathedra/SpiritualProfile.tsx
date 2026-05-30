@@ -167,9 +167,13 @@ const SpiritualProfile: React.FC = () => {
               {activeJourneys.length > 0 ? (
                 activeJourneys.map((j) => (
                   <CathedraCard 
+                    key={j.id}
                     padding="none"
                     variant="interactive"
-                    <div className="flex items-center justify-between gap-6">
+                    onClick={() => navigate(`/jornadas/${j.id}`)}
+                    className="group cursor-pointer hover:border-primary/20 transition-all duration-700"
+                  >
+                    <div className="flex items-center justify-between gap-6 p-6">
                       <div className="space-y-2">
                         <p className="text-xs text-primary/40 font-bold uppercase tracking-widest">Em progresso</p>
                         <h4 className="text-lg font-serif font-bold text-primary">{j.title}</h4>
