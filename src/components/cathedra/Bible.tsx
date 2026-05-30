@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense, memo } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
