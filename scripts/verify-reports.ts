@@ -9,7 +9,7 @@
  *   npm run reports:verify
  *   npm run reports:verify -- --update
  */
-import { readdirSync, existsSync, statSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, existsSync, statSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
 const REPORTS_DIR = "reports";
