@@ -1062,8 +1062,8 @@ const Catechism: React.FC = memo(() => {
                   key={sec.id} 
                   whileHover={{ x: 8 }}
                   onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-                  className={`text-left p-10 md:p-12 premium-card-interactive group flex flex-col gap-6 relative
-                    ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : ''}`}
+                  className={`text-left p-6 md:p-8 rounded-2xl border border-primary/5 bg-card hover:border-primary/10 hover:shadow-sm transition-all group flex flex-col gap-4 relative
+                    ${isLastReadSection ? 'border-secondary/40 bg-secondary/[0.01]' : ''}`}
                 >
                   <span className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
                     Seção {sec.id} {isLastReadSection && '• Ponto Salvo'}
@@ -1110,16 +1110,16 @@ const Catechism: React.FC = memo(() => {
       
       <div className="space-y-24">
         {/* Search & Suggested */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
-          <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-b border-primary/[0.04] pb-8">
+          <div className="relative group w-full md:w-80">
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/60" />
             <input
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
               placeholder="Ir para o parágrafo..."
-              className="search-input-premium pr-24"
+              className="search-input-premium py-2 pl-12 text-xs"
             />
-            <Button onClick={handleSearch} variant="ghost" className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">
+            <Button onClick={handleSearch} variant="ghost" className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest text-primary/30 hover:text-primary">
               Ir
             </Button>
           </div>
@@ -1127,25 +1127,25 @@ const Catechism: React.FC = memo(() => {
           {nextUnreadParagraph && (
             <button 
               onClick={() => navigateToParagraph(nextUnreadParagraph)}
-              className="group flex items-center gap-4 text-left px-8 py-4 rounded-full bg-primary/[0.02] border border-primary/10 hover:border-primary/20 transition-all"
+              className="group flex items-center gap-3 text-left px-6 py-3 rounded-full bg-primary/[0.01] border border-primary/10 hover:border-primary/20 transition-all"
             >
-              <Icons.Sparkles className="w-4 h-4 text-secondary/40 group-hover:text-secondary transition-colors" />
+              <Icons.Sparkles className="w-3 h-3 text-secondary/40 group-hover:text-secondary transition-colors" />
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-primary/60">Continuar Formação</p>
-                <p className="text-sm font-bold text-primary">Sugerido: §{nextUnreadParagraph}</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest text-primary/40">Continuar Formação</p>
+                <p className="text-xs font-bold text-primary">Sugerido: §{nextUnreadParagraph}</p>
               </div>
             </button>
           )}
         </div>
 
         {/* Parts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {CIC_SECTIONS.map(part => (
             <motion.button 
               key={part.part} 
-              whileHover={{ y: -8 }}
+              whileHover={{ y: -4 }}
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-              className="text-left p-12 md:p-16 premium-card-interactive group flex flex-col gap-8"
+              className="text-left p-6 md:p-10 rounded-2xl border border-primary/5 bg-card hover:border-primary/10 hover:shadow-sm transition-all group flex flex-col gap-6"
             >
               <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60">
                 <Icons.Logo className="w-6 h-6" />
