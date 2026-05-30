@@ -230,23 +230,6 @@
     @apply mb-4 md:mb-10;
   }
 
-  .premium-card {
-    @apply transition-all relative overflow-hidden bg-transparent border-none;
-    border-radius: 1.5rem;
-    transition: all var(--transition-subtle);
-  }
-
-  .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/60 hover:border-primary/10 active:scale-[0.985] focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-1 focus-visible:outline-none;
-  }
-
-  .premium-card-interactive:hover {
-    @apply -translate-y-1 shadow-premium;
-  }
-
-  .dark .premium-card-interactive:hover {
-    @apply shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border-white/10;
-  }
 
   /* Unified Search Input Utility */
   .search-input-premium {
