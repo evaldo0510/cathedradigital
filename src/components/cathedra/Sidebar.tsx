@@ -241,16 +241,16 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
             transition={{ 
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
-              ease: [0.19, 1, 0.22, 1] 
+              ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-2 left-2 bottom-2 w-[calc(100vw-16px)] sm:w-[320px] md:w-[380px] bg-white/95 dark:bg-background/95 backdrop-blur-[60px] border border-black/[0.02] dark:border-white/[0.04] flex flex-col p-6 md:p-12 z-[170] shadow-[0_64px_128px_-32px_rgba(0,0,0,0.4)] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.5rem+env(safe-area-inset-top,0px))] pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-2 left-2 bottom-2 w-[min(280px,85vw)] sm:w-[320px] md:w-[380px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.05] flex flex-col p-5 md:p-12 z-[170] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.25rem+env(safe-area-inset-top,0px))] pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - More dedicated and sophisticated */}
-            <header className="flex items-center justify-between mb-12 pb-6">
+            <header className="flex items-center justify-between mb-8 pb-4 border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
@@ -281,7 +281,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-8 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
@@ -294,7 +294,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[7px] font-bold uppercase tracking-[0.5em] text-primary/20 dark:text-primary/40 mb-5 px-4">{section.label}</h3>
+                  <h3 className="text-[7.5px] font-black uppercase tracking-[0.4em] text-primary/20 dark:text-primary/30 mb-3 px-4">/ {section.label}</h3>
                   <ul className="space-y-1.5">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -307,13 +307,13 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-5 px-5 py-3.5 rounded-2xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[56px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.03] dark:bg-white/[0.03] text-primary'
-                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
+                                ? 'bg-primary/[0.04] dark:bg-white/[0.04] text-primary'
+                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.5 : 1.1 })}
                             </span>
                             <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
@@ -338,11 +338,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-10 rounded-xl border border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
+                    className="h-10 rounded-xl border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary/60" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                    {isDark ? <Icons.Sun className="w-3.5 h-3.5 text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-3.5 h-3.5 opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
+                    <span className="text-[7.5px] font-black uppercase tracking-widest text-muted-foreground/40 group-hover/btn:text-muted-foreground/80 transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
@@ -351,11 +351,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     className={`h-10 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                       isHighContrast 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
+                        : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-4 h-4" />
-                    <span className="text-[8px] font-bold uppercase tracking-widest">A11y</span>
+                    <Icons.ShieldCheck className="w-3.5 h-3.5" />
+                    <span className="text-[7.5px] font-black uppercase tracking-widest">A11y</span>
                   </Button>
                 </div>
 
@@ -366,11 +366,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
                       isSpeaking 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
+                        : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="w-3.5 h-3.5 animate-pulse" /> : <Icons.Volume2 className="w-3.5 h-3.5" />}
+                    <span className="text-[7.5px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
@@ -381,8 +381,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                       className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' 
-                          : 'bg-transparent text-muted-foreground/30 border-transparent hover:border-primary/10'
+                          ? 'bg-primary/5 text-primary border-primary/10 shadow-none' 
+                          : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
                       }`}
                     >
                       {l}
@@ -398,12 +398,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </div>
 
               {user ? (
-                <div className="p-6 bg-primary/[0.02] dark:bg-white/[0.01] rounded-[2rem] border border-primary/[0.03] dark:border-white/[0.03]">
+                <div className="p-5 bg-primary/[0.01] dark:bg-white/[0.005] rounded-[2rem] border border-primary/[0.01] dark:border-white/[0.01]">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
                     className="flex items-center gap-3 cursor-pointer group"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-none group-hover:scale-105 transition-transform overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
@@ -411,8 +411,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-bold truncate text-primary/80">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/40 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[10px] font-bold truncate text-primary/70">{user.name}</p>
+                      <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
