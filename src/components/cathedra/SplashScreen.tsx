@@ -42,16 +42,16 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           }}
         />
 
-        {[...Array(12)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 40, x: (i % 2 === 0 ? -1 : 1) * (20 + i * 8) }}
             animate={{ 
-              opacity: [0, 0.6, 0], 
+              opacity: [0, 0.4, 0], 
               y: [40, -60 - i * 10],
               x: (i % 2 === 0 ? -1 : 1) * (20 + i * 12),
             }}
-            transition={{ duration: 2.5, delay: 0.3 + i * 0.12, ease: 'easeOut' }}
+            transition={{ duration: 1.5, delay: 0.2 + i * 0.1, ease: 'easeOut' }}
             className="absolute w-1 h-1 rounded-full bg-primary"
           />
         ))}
