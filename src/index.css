@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 45% 1.2%;    /* Deeper, more atmospheric Night Navy */
-    --foreground: 45 10% 90%;      /* Softer warm white */
+    --background: 220 50% 1%;      /* Deeper, more abyssal Night Navy */
+    --foreground: 45 10% 85%;      /* Softer, more contemplative white */
     
-    --card: 220 40% 1.6%;          /* Almost background-level depth */
-    --card-foreground: 45 10% 90%;
+    --card: 220 40% 2%;            /* Ghost-level elevation */
+    --card-foreground: 45 10% 85%;
     
-    --popover: 220 40% 1.6%;
-    --popover-foreground: 45 10% 90%;
+    --popover: 220 40% 2%;
+    --popover-foreground: 45 10% 85%;
     
-    --primary: 42 35% 65%;         /* Lustrous Antiquated Gold */
-    --primary-foreground: 220 50% 1%;
+    --primary: 42 30% 60%;         /* More muted, sophisticated Gold */
+    --primary-foreground: 220 50% 0.5%;
     
-    --secondary: 220 30% 2%;      
-    --secondary-foreground: 42 35% 65%;
+    --secondary: 220 30% 1.5%;      
+    --secondary-foreground: 42 30% 60%;
     
-    --muted: 220 20% 4%;
-    --muted-foreground: 220 5% 60%; /* Low interference */
+    --muted: 220 20% 3%;
+    --muted-foreground: 220 5% 50%; /* Further reduced for non-essentials */
     
-    --accent: 42 35% 65% / 0.05;
-    --accent-foreground: 42 35% 65%;
+    --accent: 42 30% 60% / 0.04;
+    --accent-foreground: 42 30% 60%;
     
-    --destructive: 0 60% 45%;
+    --destructive: 0 50% 40%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.01;   /* Nearly invisible borders */
-    --input: 220 20% 10% / 0.01;
-    --ring: 42 35% 65% / 0.1;
+    --border: 220 20% 10% / 0.005; /* Almost non-existent borders */
+    --input: 220 20% 10% / 0.005;
+    --ring: 42 30% 60% / 0.08;
     
-    --shadow-premium: 0 60px 200px -40px rgba(0, 0, 0, 1);
+    --shadow-premium: 0 80px 250px -50px rgba(0, 0, 0, 1);
   }
 
   .high-contrast {
