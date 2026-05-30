@@ -164,6 +164,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <CathedraCard 
           variant="interactive"
           padding="none"
+          onClick={() => goTo(AppRoute.MODULES_GUIDE)}
+          className="padding-rhythm flex items-center justify-between cursor-pointer group"
+          role="button"
+          tabIndex={0}
+          aria-label="Ver Guia dos Módulos"
+          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
+        >
           <div className="flex items-center gap-5">
             <div className="w-12 h-12 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/40 group-hover:scale-110 group-hover:bg-primary/[0.03] transition-all border border-primary/10">
               <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
@@ -184,6 +191,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               key={idx}
               variant="interactive"
               padding="none"
+              onClick={() => goTo(door.route)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Abrir ${door.label}`}
+              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
+              className="relative overflow-hidden padding-rhythm cursor-pointer group flex flex-col items-center text-center gap-6"
+            >
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
                   <Icons.Star className="w-3 h-3 fill-current" />
