@@ -35,6 +35,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
           variantStyles[variant],
           paddingMap[padding],
           hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 transition-premium',
+          "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2 focus-within:border-primary/20 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
           className
         )}
         initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.995, y: 10, filter: 'blur(5px)' })}

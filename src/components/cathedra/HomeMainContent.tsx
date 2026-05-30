@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import { HomeCard } from './HomeCard';
+
 import HomeMainDoors from './HomeMainDoors';
 import RitualDoDia from './RitualDoDia';
 import { ReadingProgressSection } from './ReadingProgressSection';
@@ -143,9 +143,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             className="header-margin-rhythm"
           />
           
-          <HomeCard
+          <CathedraCard
             ref={logosCardRef}
             variant="glass"
+            padding="none"
             className="flex-1 p-4 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-5 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
@@ -178,7 +179,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 </button>
               </div>
             </form>
-          </HomeCard>
+          </CathedraCard>
         </section>
       </div>
 

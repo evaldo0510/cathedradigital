@@ -124,7 +124,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               </div>
             </div>
 
-            {/* Desktop Navigation Links - Hidden on Mobile to avoid duplication with BottomNav */}
+            {/* Desktop Navigation Links - Hidden on Mobile and Tablet to avoid duplication with BottomNav */}
             {isDashboard && (
               <nav className="hidden lg:flex items-center gap-2 border-l border-primary/10 pl-8 ml-4" aria-label="Navegação principal">
                 {[
