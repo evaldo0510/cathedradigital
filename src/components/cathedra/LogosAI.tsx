@@ -255,7 +255,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-4 md:p-10 lg:p-12 space-y-4 md:space-y-8 relative overflow-hidden shadow-premium">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-6 md:p-14 lg:p-16 space-y-4 md:space-y-10 relative overflow-hidden shadow-premium rounded-[3rem]">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
               <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2">

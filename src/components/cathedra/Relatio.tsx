@@ -202,7 +202,7 @@ const Relatio: React.FC<RelatioProps> = ({
             <Icons.Sparkles className="w-3 h-3 text-primary/40" />
           </div>
           <div>
-            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">Relatio Contextual</h3>
+            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/10 group-hover:text-primary/30 transition-all duration-1000">Relatio Contextual</h3>
           </div>
         </div>
         <div className="flex items-center gap-4">

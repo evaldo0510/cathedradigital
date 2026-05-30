@@ -45,9 +45,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-4 h-4 md:w-5 md:h-5 transition-all group-hover:scale-105 opacity-40" variant={isDark ? "light" : "dark"} />
+            <Icons.Logo className="w-4 h-4 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 leading-none transition-all group-hover:text-primary">
+              <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/10 leading-none transition-all group-hover:text-primary group-hover:tracking-[0.8em] duration-700">
                 Cathedra
               </span>
             </div>

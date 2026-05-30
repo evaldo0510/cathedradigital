@@ -59,14 +59,14 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <label htmlFor="bible-search-input" className="sr-only">Buscar nos versículos</label>
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
+          <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/10 group-focus-within:text-primary/30 transition-all duration-700" />
           <input
             id="bible-search-input"
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
-            placeholder="Buscar por palavra-chave..."
-            className="w-full pl-12 pr-4 py-3 rounded-full border border-primary/[0.03] bg-transparent text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/10"
+            placeholder="Buscar na Palavra..."
+            className="w-full pl-14 pr-4 h-14 rounded-full border border-primary/[0.03] bg-transparent text-foreground text-sm font-serif italic placeholder:text-muted-foreground/20 focus:outline-none focus:bg-primary/[0.01] transition-all duration-700"
             autoFocus
           />
         </div>
