@@ -27,21 +27,22 @@ export default tseslint.config(
         "error",
         {
           "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p|m|gap|space|w|h)-[0-9.]+\\b/]",
-          "message": "Direct Tailwind spacing detected. Use Cathedra spacing tokens (e.g., p-spacing-md) or layout components (<Stack />, <Box />)."
+          "message": "Direct Tailwind spacing detected. Use Cathedra spacing tokens (e.g., p-spacing-md) or layout components (<Stack gap=\"md\" />). Mapping: p-2 -> p-spacing-sm, p-4 -> p-spacing-md, p-8 -> p-spacing-lg."
         },
         {
           "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b/]",
-          "message": "Direct Tailwind typography detected. Use Cathedra premium typography tokens (e.g., text-premium-lg) or <Typography />."
+          "message": "Direct Tailwind typography detected. Use Cathedra premium typography tokens. Mapping: text-sm -> text-premium-sm, text-base -> text-premium-base, text-lg -> text-premium-lg."
         },
         {
           "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b/]",
-          "message": "Direct Tailwind rounding detected. Use Cathedra rounded-premium tokens."
+          "message": "Direct Tailwind rounding detected. Use Cathedra rounded-premium tokens. Mapping: rounded-md -> rounded-premium-md, rounded-lg -> rounded-premium-lg."
         },
         {
           "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b/]",
-          "message": "Direct Tailwind shadows detected. Use Cathedra shadow-premium tokens."
+          "message": "Direct Tailwind shadows detected. Use Cathedra shadow-premium tokens. Mapping: shadow-md -> shadow-premium, shadow-lg -> shadow-premium-hover."
         }
       ]
+
     },
   },
 );
