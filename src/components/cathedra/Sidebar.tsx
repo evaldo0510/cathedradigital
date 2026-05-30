@@ -281,7 +281,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-8 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
