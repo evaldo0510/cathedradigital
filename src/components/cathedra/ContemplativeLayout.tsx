@@ -22,7 +22,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-12 md:pt-72 pb-24 md:pb-96 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-8 md:pt-72 pb-16 md:pb-96 will-change-transform", className)}>
 
       {(title || subtitle) && (
         <header className={cn("header-margin-rhythm px-8 md:px-12 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-6 duration-[2000ms] ease-out")}>

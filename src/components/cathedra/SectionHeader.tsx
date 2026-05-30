@@ -16,11 +16,11 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex flex-col gap-4 md:gap-8 header-margin-rhythm items-center",
+      "flex flex-col gap-3 md:gap-8 header-margin-rhythm items-center",
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
-      <div className="w-px h-12 md:h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
+      <div className="w-px h-8 md:h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
       <h2 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.5em] text-primary">
         {title}
       </h2>

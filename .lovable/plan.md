@@ -1,40 +1,43 @@
-Implementarei um sistema de **Trilhas Espirituais Guiadas (Itineraria)**, transformando o Cathedra em uma jornada progressiva e contemplativa.
+Refine the mobile scale and screen utilization of Cathedra Digital to create a more compact, fluid, and premium experience.
 
-### 1. Estrutura de Dados e Backend
-- Já foram criadas as tabelas `itineraria`, `itineraria_steps` e `itineraria_progress` via migração.
-- A view `view_itineraria_with_stats` foi configurada para facilitar a listagem no frontend com segurança.
+### Technical Detail Section
+- **Global Tokens**: Adjust `--space-mobile-section`, `--space-mobile-stack-lg`, and `--space-mobile-padding` in `src/index.css` for better density.
+- **Layout Spacing**: Reduce `pt` and `pb` in `ContemplativeLayout.tsx` and `HomeMainContent.tsx` on mobile.
+- **Section Headers**: Tweak `SectionHeader.tsx` to use shorter vertical lines and smaller gaps on mobile.
+- **Card Refinement**:
+  - Normalize `p-` values in `CathedraCard`, `HomeCard`, and `HomeMainDoors`.
+  - Reduce large mobile paddings in `RitualDoDia` (e.g., `p-6` to `p-4`).
+  - Tighten gaps between elements inside cards (icons, titles, descriptions).
+- **Visual Pauses**: Shrink mobile vertical padding in spacer elements across `HomeMainContent`.
+- **Proportions**: Adjust heading sizes and tracking slightly for better mobile fit.
 
-### 2. Interface de Listagem (ItinerariaPage)
-- Criar `src/components/cathedra/ItinerariaPage.tsx` inspirada na `JornadasPage.tsx`, mas com um design editorial premium.
-- Foco em tipografia elegante, espaçamento generoso e iconografia minimalista.
-- Categorias como "Purificação", "Iluminação" e "União" (Três Vias da Vida Espiritual).
+### Implementation Steps
 
-### 3. Detalhes da Trilha (ItinerariumDetailPage)
-- Criar `src/components/cathedra/ItinerariumDetailPage.tsx`.
-- Visual imersivo com banner de cobertura e resumo da jornada.
-- Timeline vertical elegante para os passos, diferenciando tipos de atividades (Leitura, Oração, Logos IA).
+1. **Update `src/index.css`**
+   - Reduce `--space-mobile-section` from `3rem` to `2rem`.
+   - Reduce `--space-mobile-stack-lg` from `2rem` to `1.5rem`.
+   - Tweak `.app-container` mobile padding for better horizontal occupation.
 
-### 4. Experiência do Passo (ItinerariumStepPage)
-- Criar `src/components/cathedra/ItinerariumStepPage.tsx`.
-- Interface focada em "Silêncio Visual", ocultando distrações.
-- Suporte a múltiplos tipos de conteúdo:
-    - **Leitura:** Markdown rico com referências bíblicas/catequéticas.
-    - **Oração:** Espaço para meditação com áudio ambiente (opcional).
-    - **Logos IA:** Drawer integrado para aprofundamento contextual.
-    - **Reflexão:** Journal espiritual integrado para salvar insights.
+2. **Refine `ContemplativeLayout.tsx`**
+   - Change `pt-12` to `pt-8` and `pb-24` to `pb-16` on mobile.
 
-### 5. Integração Logos IA
-- Refinar o prompt da Logos IA dentro das trilhas para que ela atue como um "Mentor de Caminhada", sugerindo conexões entre os passos anteriores e o atual.
+3. **Adjust `SectionHeader.tsx`**
+   - Reduce vertical line height on mobile from `h-12` to `h-8`.
+   - Reduce gap from `gap-4` to `gap-3`.
 
-### 6. Navegação e SEO
-- Registrar as novas rotas em `src/App.tsx`.
-- Adicionar metadados SEO específicos para as trilhas.
+4. **Refine `HomeMainContent.tsx`**
+   - Reduce bottom padding from `pb-24` to `pb-16`.
+   - Reduce "Visual Pause" paddings from `py-8` and `py-12` to `py-6` and `py-8`.
+   - Update cards to use more consistent, smaller mobile padding.
 
----
+5. **Polish `RitualDoDia.tsx`**
+   - Reduce header padding and gaps.
+   - Shrink section paddings (e.g., `p-6` -> `p-4`).
+   - Reduce text sizes slightly for the Bible verse on mobile if it exceeds viewport elegantly.
 
-### Detalhes Técnicos
+6. **Compact `HomeMainDoors.tsx`**
+   - Reduce card padding from `p-10` to `p-6`.
+   - Reduce gap between elements.
 
-- **Tecnologias:** React, Framer Motion (para transições suaves), Lucide React (ícones), Tailwind CSS, Supabase.
-- **Transições:** Uso de `AnimatePresence` e `motion` para garantir que a mudança entre passos pareça uma caminhada fluida, não um carregamento de página.
-- **Persistência:** Sincronização em tempo real do progresso via Supabase.
-- **Componentização:** Reutilização de `Relatio.tsx` e `LogosAI.tsx` para manter a consistência do ecossistema.
+7. **Verify Changes**
+   - Check the mobile preview to ensure improved "useful area" and "visual rhythm".

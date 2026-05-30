@@ -75,7 +75,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
         <CathedraCard
           key={idx}
@@ -92,9 +92,9 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-10 md:p-32 lg:p-48 flex flex-col items-center text-center gap-8 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-transparent hover:bg-primary/[0.005] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[3rem] md:rounded-[6rem]"
+          className="p-6 md:p-32 lg:p-48 flex flex-col items-center text-center gap-6 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-transparent hover:bg-primary/[0.005] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[2.5rem] md:rounded-[6rem]"
         >
-          <div className="w-16 h-16 md:w-40 md:h-40 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/20 group-hover:scale-110 group-hover:text-primary/60 group-hover:bg-primary/[0.015] transition-all duration-1500 ease-in-out">
+          <div className="w-14 h-14 md:w-40 md:h-40 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/20 group-hover:scale-110 group-hover:text-primary/60 group-hover:bg-primary/[0.015] transition-all duration-1500 ease-in-out">
             <door.icon className="w-6 h-6 md:w-12 md:h-12" strokeWidth={0.8} />
           </div>
           <div className="space-y-6 md:space-y-10">
