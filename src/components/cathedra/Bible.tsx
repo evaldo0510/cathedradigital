@@ -1078,7 +1078,7 @@ const Bible: React.FC = memo(() => {
                               <ShareButton 
                                 title={`${selectedBook.name} ${selectedChapter}:${v.number}`} 
                                 text={v.text} 
-                                url={buildBibleAbsoluteUrl(selectedBook.abbr, selectedChapter, v.number)}
+                                url={buildBibleAbsoluteUrl(selectedBook.abbr, selectedChapter)}
                                 className="w-6 h-6 p-0 text-primary/40 hover:text-primary"
                               />
                             </div>
