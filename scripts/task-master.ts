@@ -124,18 +124,19 @@ function startWave(waveNumber: number, dryRun: boolean = false): { logs: string[
         logs.push('CI Green: Build completado com sucesso.');
       }
       
-      // Simulating some "fixes"
       const fixMsg = `Wave ${waveNumber} aplicada com sucesso no código.`;
       logs.push(fixMsg);
-      if (waveNumber === 2) {
-        errors.push('Linting errors in Dashboard.tsx', 'Type mismatch in useData.ts');
-      }
       
     } catch (e: any) {
       const errMsg = `Erro no CI: ${e.message}`;
       console.error(errMsg);
       errors.push(errMsg);
     }
+  }
+
+  // Simulating "fixed" errors for the report (for testing visibility)
+  if (waveNumber === 2 && errors.length === 0) {
+    errors.push('Linting errors in Dashboard.tsx', 'Type mismatch in useData.ts');
   }
   
   return { logs, errors };
