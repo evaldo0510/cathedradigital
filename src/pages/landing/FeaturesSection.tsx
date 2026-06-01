@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Sparkles, Hash } from "lucide-react";
+import { Icons } from "@/constants";
 import { AppRoute } from "@/types";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -9,25 +9,25 @@ const features = [
   { 
     title: "Logos IA", 
     description: "Um mentor espiritual para os tempos modernos, treinado com o Magistério da Igreja.", 
-    icon: <Sparkles className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.Sparkles />, 
     route: AppRoute.DASHBOARD 
   },
   { 
     title: "Enciclopédia Católica", 
     description: "Lexicon Theologicum digital completo, navegável de A a Z.", 
-    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.BookOpen />, 
     route: AppRoute.ENCYCLOPEDIA 
   },
   { 
     title: "Bíblia Sagrada", 
     description: "Escrituras com ferramentas de estudo avançadas e busca inteligente.", 
-    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.BookOpen />, 
     route: AppRoute.BIBLE 
   },
   { 
     title: "Catecismo da Igreja", 
     description: "Doutrina cristã sistemática e orgânica, fiel ao Magistério.", 
-    icon: <Hash className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.Hash />, 
     route: AppRoute.CATECHISM 
   },
 ];
@@ -55,7 +55,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       tabIndex={0}
     >
       <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-spacing-lg h-spacing-lg" })}
+        {feature.icon}
       </div>
       <div className="space-y-spacing-xs w-full">
         <h3 className="text-premium-xl font-display font-bold text-center">{feature.title}</h3>

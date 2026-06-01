@@ -120,7 +120,9 @@ import {
   Languages,
   BookMarked,
   Wifi,
-  Printer
+  Printer,
+  UserMinus,
+  Edit2
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
@@ -319,6 +321,8 @@ const IconsInternal = {
   Shield: createIcon(ShieldCheck),
   VolumeX: createIcon(Volume),
   Coffee: createIcon(Coffee),
+  UserMinus: createIcon(UserMinus),
+  Edit2: createIcon(Edit2),
 };
 
 
@@ -499,7 +503,8 @@ export const Icons = {
   Hash: IconsInternal.Hash,
   Shield: IconsInternal.Shield,
   VolumeX: IconsInternal.VolumeX,
-
+  UserMinus: IconsInternal.UserMinus,
+  Edit2: IconsInternal.Edit2,
 };
 
 // Runtime Consistency Check
