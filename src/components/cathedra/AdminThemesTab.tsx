@@ -174,13 +174,13 @@ const AdminThemesTab = () => {
   });
 
   const contentTypeConfig: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-    bible: { icon: <Book className="w-spacing-md h-spacing-md" />, label: 'Bíblia', color: 'bg-blue-500/10 text-blue-600' },
-    catechism: { icon: <Bookmark className="w-spacing-md h-spacing-md" />, label: 'Catecismo', color: 'bg-amber-500/10 text-amber-600' },
-    magisterium: { icon: <FileText className="w-spacing-md h-spacing-md" />, label: 'Magistério', color: 'bg-emerald-500/10 text-emerald-600' },
-    saints: { icon: <Sparkles className="w-spacing-md h-spacing-md" />, label: 'Santos', color: 'bg-purple-500/10 text-purple-600' },
-    prayers: { icon: <Heart className="w-spacing-md h-spacing-md" />, label: 'Orações', color: 'bg-rose-500/10 text-rose-600' },
-    journey: { icon: <Compass className="w-spacing-md h-spacing-md" />, label: 'Jornadas', color: 'bg-indigo-500/10 text-indigo-600' },
-    history: { icon: <History className="w-spacing-md h-spacing-md" />, label: 'História', color: 'bg-orange-500/10 text-orange-600' },
+    bible: { icon: <Icons.Book className="w-spacing-md h-spacing-md" />, label: 'Bíblia', color: 'bg-blue-500/10 text-blue-600' },
+    catechism: { icon: <Icons.Bookmark className="w-spacing-md h-spacing-md" />, label: 'Catecismo', color: 'bg-amber-500/10 text-amber-600' },
+    magisterium: { icon: <Icons.FileText className="w-spacing-md h-spacing-md" />, label: 'Magistério', color: 'bg-emerald-500/10 text-emerald-600' },
+    saints: { icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, label: 'Santos', color: 'bg-purple-500/10 text-purple-600' },
+    prayers: { icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, label: 'Orações', color: 'bg-rose-500/10 text-rose-600' },
+    journey: { icon: <Icons.Compass className="w-spacing-md h-spacing-md" />, label: 'Jornadas', color: 'bg-indigo-500/10 text-indigo-600' },
+    history: { icon: <Icons.History className="w-spacing-md h-spacing-md" />, label: 'História', color: 'bg-orange-500/10 text-orange-600' },
   };
 
   const filteredThemes = themes?.filter(t => 
@@ -202,7 +202,7 @@ const AdminThemesTab = () => {
         </div>
         <div className="flex items-center gap-spacing-sm">
           <div className="relative">
-            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
+            <Icons.Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input 
               placeholder="Buscar tema..." 
               className="pl-spacing-xl w-full md:w-spacing-4xl h-spacing-xl"
@@ -212,7 +212,7 @@ const AdminThemesTab = () => {
           </div>
           <Dialog open={showNewTheme} onOpenChange={setShowNewTheme}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-spacing-xs shrink-0"><Plus className="w-spacing-md h-spacing-md" /> Novo Tema</Button>
+              <Button size="sm" className="gap-spacing-xs shrink-0"><Icons.Plus className="w-spacing-md h-spacing-md" /> Novo Tema</Button>
             </DialogTrigger>
             <DialogContent className="max-w-spacing-md">
               <DialogHeader><DialogTitle>Criar Novo Tema</DialogTitle></DialogHeader>
@@ -246,7 +246,7 @@ const AdminThemesTab = () => {
                   <Textarea placeholder="Descrição teológica do tema..." value={newTheme.description} onChange={e => setNewTheme(p => ({ ...p, description: e.target.value }))} rows={3} />
                 </div>
                 <Button className="w-full" onClick={() => createThemeMutation.mutate(newTheme)} disabled={!newTheme.name || !newTheme.slug || createThemeMutation.isPending}>
-                  {createThemeMutation.isPending ? <Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : null}
+                  {createThemeMutation.isPending ? <Icons.Loader className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : null}
                   Criar Tema
                 </Button>
               </div>
@@ -259,7 +259,7 @@ const AdminThemesTab = () => {
         {/* Themes List */}
         <div className="lg:col-span-4 space-y-spacing-xs overflow-y-auto max-h-[70vh] pr-spacing-2xs">
           {loadingThemes ? (
-            <div className="flex items-center justify-center py-spacing-xl"><Loader2 className="w-spacing-lg h-spacing-lg animate-spin text-primary" /></div>
+            <div className="flex items-center justify-center py-spacing-xl"><Icons.Loader className="w-spacing-lg h-spacing-lg animate-spin text-primary" /></div>
           ) : filteredThemes?.length === 0 ? (
             <div className="text-center py-spacing-2xl bg-muted/20 rounded-premium border border-dashed">
               <p className="text-premium-sm text-muted-foreground">Nenhum tema encontrado.</p>
@@ -287,13 +287,13 @@ const AdminThemesTab = () => {
                       setEditingTheme(theme);
                       setShowEditTheme(true);
                     }}>
-                      <Edit2 className="w-spacing-sm h-spacing-sm" />
+                      <Icons.Edit2 className="w-spacing-sm h-spacing-sm" />
                     </Button>
                     <Button variant="ghost" size="sm" className="h-spacing-xl w-spacing-xl p-spacing-0 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={e => {
                       e.stopPropagation();
                       if (confirm(`Deletar tema "${theme.name}" e todos os seus conteúdos?`)) deleteThemeMutation.mutate(theme.id);
                     }}>
-                      <Trash2 className="w-spacing-sm h-spacing-sm" />
+                      <Icons.Trash2 className="w-spacing-sm h-spacing-sm" />
                     </Button>
                   </div>
                 </div>
@@ -311,7 +311,7 @@ const AdminThemesTab = () => {
             <Card className="border-dashed h-[400px] flex items-center justify-center">
               <CardContent className="flex flex-col items-center justify-center text-center">
                 <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted/30 flex items-center justify-center mb-spacing-md">
-                  <Tag className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
+                  <Icons.Tag className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
                 </div>
                 <h3 className="font-bold text-premium-lg mb-spacing-2xs">Nenhum tema selecionado</h3>
                 <p className="text-muted-foreground text-premium-sm max-w-[250px]">Selecione um tema à esquerda para gerenciar seus conteúdos conectados.</p>
@@ -332,11 +332,11 @@ const AdminThemesTab = () => {
                     setEditingTheme(selectedTheme);
                     setShowEditTheme(true);
                   }}>
-                    <Edit2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Editar Tema
+                    <Icons.Edit2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Editar Tema
                   </Button>
                   <Dialog open={showNewContent} onOpenChange={setShowNewContent}>
                     <DialogTrigger asChild>
-                      <Button size="sm" className="gap-spacing-xs"><Plus className="w-spacing-md h-spacing-md" /> Adicionar Conteúdo</Button>
+                      <Button size="sm" className="gap-spacing-xs"><Icons.Plus className="w-spacing-md h-spacing-md" /> Adicionar Conteúdo</Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader><DialogTitle>Novo Conteúdo — {selectedTheme.name}</DialogTitle></DialogHeader>
@@ -365,7 +365,7 @@ const AdminThemesTab = () => {
                           <Textarea placeholder="Texto do conteúdo sagrado..." value={newContent.text_content} onChange={e => setNewContent(p => ({ ...p, text_content: e.target.value }))} rows={4} />
                         </div>
                         <Button className="w-full" onClick={() => createContentMutation.mutate({ ...newContent, theme_id: selectedTheme.id })} disabled={!newContent.reference || createContentMutation.isPending}>
-                          {createContentMutation.isPending ? <Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : null}
+                          {createContentMutation.isPending ? <Icons.Loader className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : null}
                           Salvar Conteúdo
                         </Button>
                       </div>
@@ -375,7 +375,7 @@ const AdminThemesTab = () => {
               </div>
 
               {loadingContents ? (
-                <div className="flex items-center justify-center py-spacing-3xl"><Loader2 className="w-spacing-xl h-spacing-xl animate-spin text-primary/60" /></div>
+                <div className="flex items-center justify-center py-spacing-3xl"><Icons.Loader className="w-spacing-xl h-spacing-xl animate-spin text-primary/60" /></div>
               ) : (
                 <div className="space-y-spacing-lg">
                   {Object.entries(contentsByType).map(([type, items]) => {
@@ -410,7 +410,7 @@ const AdminThemesTab = () => {
                                     <div className="flex gap-spacing-xs justify-end">
                                       <Button size="sm" variant="outline" onClick={() => setEditingContent(null)}>Cancelar</Button>
                                       <Button size="sm" onClick={() => updateContentMutation.mutate(editingContent)} disabled={updateContentMutation.isPending}>
-                                        {updateContentMutation.isPending && <Loader2 className="w-spacing-sm h-spacing-sm animate-spin mr-spacing-xs" />}
+                                        {updateContentMutation.isPending && <Icons.Loader className="w-spacing-sm h-spacing-sm animate-spin mr-spacing-xs" />}
                                         Salvar Alterações
                                       </Button>
                                     </div>
@@ -426,12 +426,12 @@ const AdminThemesTab = () => {
                                     </div>
                                     <div className="flex gap-spacing-2xs shrink-0">
                                       <Button variant="ghost" size="sm" className="h-spacing-xl w-spacing-xl p-spacing-0" onClick={() => setEditingContent(item)}>
-                                        <Edit2 className="w-spacing-sm h-spacing-sm" />
+                                        <Icons.Edit2 className="w-spacing-sm h-spacing-sm" />
                                       </Button>
                                       <Button variant="ghost" size="sm" className="h-spacing-xl w-spacing-xl p-spacing-0 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => {
                                         if (confirm('Remover este conteúdo?')) deleteContentMutation.mutate(item.id);
                                       }}>
-                                        <Trash2 className="w-spacing-sm h-spacing-sm" />
+                                        <Icons.Trash2 className="w-spacing-sm h-spacing-sm" />
                                       </Button>
                                     </div>
                                   </div>
@@ -449,7 +449,7 @@ const AdminThemesTab = () => {
               {!loadingContents && contents?.length === 0 && (
                 <Card className="border-dashed py-spacing-2xl">
                   <CardContent className="flex flex-col items-center justify-center text-center opacity-50">
-                    <FileText className="w-spacing-xl h-spacing-xl mb-spacing-xs" />
+                    <Icons.FileText className="w-spacing-xl h-spacing-xl mb-spacing-xs" />
                     <p className="text-premium-sm font-medium">Nenhum conteúdo vinculado a este tema.</p>
                   </CardContent>
                 </Card>
@@ -492,7 +492,7 @@ const AdminThemesTab = () => {
               <DialogFooter>
                 <Button variant="outline" onClick={() => setShowEditTheme(false)}>Cancelar</Button>
                 <Button onClick={() => updateThemeMutation.mutate(editingTheme)} disabled={updateThemeMutation.isPending}>
-                  {updateThemeMutation.isPending && <Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" />}
+                  {updateThemeMutation.isPending && <Icons.Loader className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" />}
                   Salvar Alterações
                 </Button>
               </DialogFooter>
