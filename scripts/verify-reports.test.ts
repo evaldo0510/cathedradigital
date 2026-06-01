@@ -339,16 +339,18 @@ reports/
       if (existsSync('divergences.md')) rmSync('divergences.md');
     });
 
-    const runMatrix = (args: string[], hasDivergence: boolean) => {
+    const runMatrix = (args: string[], hasDivergence: boolean, skipSetup: boolean = false) => {
       // Setup environment based on hasDivergence
-      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
-      mkdirSync(MATRIX_DIR);
-      
-      if (hasDivergence) {
-        writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
-      } else {
-        // Files matching the README
-        writeFileSync(join(MATRIX_DIR, 'expected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      if (!skipSetup) {
+        if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+        mkdirSync(MATRIX_DIR);
+        
+        if (hasDivergence) {
+          writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+        } else {
+          // Files matching the README
+          writeFileSync(join(MATRIX_DIR, 'expected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+        }
       }
 
       const summaryPath = `summary-matrix-${args.join('-') || 'no-args'}-${hasDivergence ? 'divergent' : 'aligned'}.md`;
