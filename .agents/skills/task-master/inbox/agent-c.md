@@ -1,3 +1,7 @@
-# Inbox Agente C (Guardião)
-Status: Aguardando Wave 1
----
+# Inbox: AGENT-C
+
+Status: Ready
+
+## Pending Requests
+
+- None

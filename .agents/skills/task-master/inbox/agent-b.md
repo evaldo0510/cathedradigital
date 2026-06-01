@@ -1,3 +1,7 @@
-# Inbox Agente B (Ecossistema)
-Status: Aguardando Wave 1
----
+# Inbox: AGENT-B
+
+Status: Ready
+
+## Pending Requests
+
+- None
