@@ -1,3 +1,8 @@
+---
+name: task-master
+description: Orquestração de Elite com Multi-Agentes (A, B e C) operando em paralelo via Waves e Inboxes.
+---
+
 # TASK MASTER: Orquestração de Elite com Multi-Agentes
 
 Skill de arquitetura avançada para orquestração coordenada de engenharia usando múltiplos agentes virtuais (A, B e C) operando em paralelo através de Waves e Inboxes.
