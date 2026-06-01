@@ -494,6 +494,11 @@ export const Icons = {
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe, 
   Apple: IconsInternal.Smartphone,
+  Coffee: IconsInternal.Coffee,
+  PanelLeft: IconsInternal.PanelLeft,
+  Hash: IconsInternal.Hash,
+  Shield: IconsInternal.Shield,
+  VolumeX: IconsInternal.VolumeX,
 
 };
 
