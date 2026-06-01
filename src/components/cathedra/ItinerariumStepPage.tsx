@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, BookOpen, Clock, ChevronDown, Check, PenLine, Hand, Save, ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -157,7 +157,7 @@ const ItinerariumStepPage: React.FC = () => {
   const checkAchievements = async () => {
     if (!user) return;
     
-    // Check total steps completed
+    // Icons.Check total steps completed
     const { count } = await supabase
       .from('itineraria_progress')
       .select('*', { count: 'exact', head: true })
@@ -331,12 +331,12 @@ const ItinerariumStepPage: React.FC = () => {
             onClick={() => navigate(`/itineraria/${itinerariumId}`)}
             aria-label="Voltar para o itinerário"
           >
-            <X className="w-spacing-md h-spacing-md text-primary" />
+            <Icons.X className="w-spacing-md h-spacing-md text-primary" />
           </Button>
           <div className="space-y-spacing-3xs" aria-live="polite">
             <h1 className="text-premium-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
             <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-spacing-xs">
-              <Clock className="w-spacing-sm h-spacing-sm text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
+              <Icons.Clock className="w-spacing-sm h-spacing-sm text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
             </p>
           </div>
         </div>
@@ -348,7 +348,7 @@ const ItinerariumStepPage: React.FC = () => {
             className="gap-spacing-xs text-[10px] font-black uppercase tracking-widest hidden md:flex"
             onClick={exportStepPDF}
           >
-            <FileText className="w-spacing-sm h-spacing-sm" /> PDF
+            <Icons.FileText className="w-spacing-sm h-spacing-sm" /> PDF
           </Button>
           <Button 
             variant="outline" 
@@ -356,7 +356,7 @@ const ItinerariumStepPage: React.FC = () => {
             className="gap-spacing-xs text-[10px] font-black uppercase tracking-widest border-primary/20"
             onClick={() => setIsLogosOpen(true)}
           >
-            <Sparkles className="w-spacing-sm h-spacing-sm text-primary" /> Logos IA
+            <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" /> Logos IA
           </Button>
         </div>
       </div>
@@ -381,7 +381,7 @@ const ItinerariumStepPage: React.FC = () => {
 
           <div className="space-y-spacing-md pt-spacing-2xl border-t border-border/10">
             <div className="flex items-center gap-spacing-xs text-primary">
-              <PenLine className="w-spacing-md h-spacing-md" />
+              <Icons.PenLine className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-sm font-black uppercase tracking-widest">Sua Reflexão</h3>
             </div>
             <textarea
@@ -416,7 +416,7 @@ const ItinerariumStepPage: React.FC = () => {
             onClick={() => navigateToStep(currentStepIndex - 1)}
             aria-label="Passo anterior"
           >
-            <ChevronLeft className="w-spacing-lg h-spacing-lg" />
+            <Icons.ChevronLeft className="w-spacing-lg h-spacing-lg" />
           </Button>
 
           <Button 
@@ -435,7 +435,7 @@ const ItinerariumStepPage: React.FC = () => {
             onClick={() => navigateToStep(currentStepIndex + 1)}
             aria-label="Próximo passo"
           >
-            <ChevronRight className="w-spacing-lg h-spacing-lg" />
+            <Icons.ChevronRight className="w-spacing-lg h-spacing-lg" />
           </Button>
         </div>
       </div>

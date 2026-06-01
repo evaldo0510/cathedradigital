@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, Trophy, RotateCcw, Sparkles, ArrowRight, BookOpen, Brain, TrendingUp, Calendar } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { supabase } from '@/integrations/supabase/client';
@@ -149,14 +150,14 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
   if (questions.length === 0) {
     return (
       <div className="text-center py-spacing-2xl space-y-spacing-md">
-        <Brain className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto" />
+        <Icons.Brain className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto" />
         <p className="text-muted-foreground">Não há termos suficientes para gerar o quiz.</p>
         <Button variant="outline" onClick={onClose}>Voltar</Button>
       </div>
     );
   }
 
-  // History view
+  // Icons.History view
   if (showHistory) {
     const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
     const avgScore = history.length > 0 ? Math.round(history.reduce((a, h) => a + h.percentage, 0) / history.length) : 0;
@@ -171,12 +172,12 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         {history.length > 0 && (
           <div className="grid grid-cols-2 gap-spacing-sm">
             <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md text-center">
-              <TrendingUp className="w-spacing-md h-spacing-md text-primary mx-auto mb-spacing-2xs" />
+              <Icons.TrendingUp className="w-spacing-md h-spacing-md text-primary mx-auto mb-spacing-2xs" />
               <p className="text-premium-2xl font-black text-primary">{bestScore}%</p>
               <p className="text-premium-xs text-muted-foreground uppercase tracking-widest">Melhor</p>
             </div>
             <div className="bg-accent/50 border border-border rounded-premium p-spacing-md text-center">
-              <Brain className="w-spacing-md h-spacing-md text-foreground/60 mx-auto mb-spacing-2xs" />
+              <Icons.Brain className="w-spacing-md h-spacing-md text-foreground/60 mx-auto mb-spacing-2xs" />
               <p className="text-premium-2xl font-black text-foreground">{avgScore}%</p>
               <p className="text-premium-xs text-muted-foreground uppercase tracking-widest">Média</p>
             </div>
@@ -190,7 +191,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             history.map((r) => (
               <div key={r.id} className="flex items-center justify-between bg-card border border-border rounded-premium px-spacing-md py-spacing-sm">
                 <div className="flex items-center gap-spacing-sm">
-                  <Calendar className="w-spacing-md h-spacing-md text-muted-foreground" />
+                  <Icons.Calendar className="w-spacing-md h-spacing-md text-muted-foreground" />
                   <span className="text-premium-xs text-muted-foreground">
                     {new Date(r.created_at).toLocaleDateString('pt-BR')}
                   </span>
@@ -221,7 +222,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         className="bg-card border border-border rounded-premium-full p-spacing-xl text-center space-y-spacing-lg max-w-spacing-md mx-auto"
       >
         <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto">
-          <Trophy className="w-spacing-xl h-spacing-xl text-primary" />
+          <Icons.Trophy className="w-spacing-xl h-spacing-xl text-primary" />
         </div>
         <div>
           <h2 className="text-premium-2xl font-black text-foreground mb-spacing-2xs">{grade}</h2>
@@ -247,15 +248,15 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         <div className="flex flex-col gap-spacing-sm">
           <div className="flex gap-spacing-sm justify-center">
             <Button variant="outline" onClick={onClose} className="rounded-premium-full gap-spacing-xs">
-              <BookOpen className="w-spacing-md h-spacing-md" /> Voltar ao A-Z
+              <Icons.BookOpen className="w-spacing-md h-spacing-md" /> Voltar ao A-Z
             </Button>
             <Button onClick={handleRestart} className="rounded-premium-full gap-spacing-xs bg-primary text-primary-foreground">
-              <RotateCcw className="w-spacing-md h-spacing-md" /> Jogar Novamente
+              <Icons.RotateCcw className="w-spacing-md h-spacing-md" /> Jogar Novamente
             </Button>
           </div>
           {user && (
             <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-spacing-2xs text-muted-foreground">
-              <TrendingUp className="w-spacing-sm h-spacing-sm" /> Ver Histórico
+              <Icons.TrendingUp className="w-spacing-sm h-spacing-sm" /> Ver Histórico
             </Button>
           )}
         </div>
@@ -273,7 +274,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         </div>
         {user && history.length > 0 && (
           <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-spacing-2xs">
-            <TrendingUp className="w-spacing-sm h-spacing-sm" /> Histórico
+            <Icons.TrendingUp className="w-spacing-sm h-spacing-sm" /> Histórico
           </Button>
         )}
       </div>
@@ -324,7 +325,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                   className={`w-full text-left p-spacing-md rounded-premium-full transition-all text-premium-sm font-medium flex items-center gap-spacing-sm focus-visible:ring-2 focus-visible:ring-primary outline-none ${classes}`}
                 >
                   <span className="w-spacing-lg h-spacing-lg rounded-premium-full border-2 flex items-center justify-center shrink-0 text-premium-xs font-black" aria-hidden="true">
-                    {answered && isCorrect ? <Check className="w-spacing-md h-spacing-md" /> : answered && isSelected ? <X className="w-spacing-md h-spacing-md" /> : String.fromCharCode(65 + idx)}
+                    {answered && isCorrect ? <Icons.Check className="w-spacing-md h-spacing-md" /> : answered && isSelected ? <Icons.X className="w-spacing-md h-spacing-md" /> : String.fromCharCode(65 + idx)}
                   </span>
                   <span className="line-clamp-spacing-sm">{opt}</span>
                 </Button>
@@ -341,7 +342,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             >
               <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md">
                 <p className="text-premium-xs font-black uppercase tracking-widest text-primary mb-spacing-2xs">
-                  <Sparkles className="w-spacing-sm h-spacing-sm inline mr-spacing-2xs" />
+                  <Icons.Sparkles className="w-spacing-sm h-spacing-sm inline mr-spacing-2xs" />
                   {selected === question.correctIndex ? 'Correto!' : `A resposta certa era sobre "${question.term}"`}
                 </p>
                 <p className="text-premium-xs text-foreground/70 leading-relaxed line-clamp-spacing-md italic">
@@ -353,7 +354,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                 className="w-full rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest bg-primary text-primary-foreground"
               >
                 {currentQ + 1 >= total ? 'Ver Resultado' : 'Próxima'}
-                <ArrowRight className="w-spacing-md h-spacing-md" />
+                <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
               </Button>
             </motion.div>
           )}

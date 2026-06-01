@@ -1,23 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Book, 
-  Cross, 
-  Scroll, 
-  History, 
-  ChevronRight, 
-  Trash2, 
-  Edit3, 
-  Download,
-  Calendar,
-  Filter,
-  ArrowRight,
-  Bookmark,
-  Zap,
-  Target,
-  CheckCircle2
-} from 'lucide-react';
+
 import { useReadingMarks, ReadingMark } from '@/hooks/useReadingMarks';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useAuth } from '@/hooks/useAuth';
@@ -107,7 +91,7 @@ const ReadingJournal: React.FC = () => {
       
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary text-[10px] font-black uppercase tracking-widest">
-          <History className="w-spacing-sm h-spacing-sm" /> Memória da Alma
+          <Icons.History className="w-spacing-sm h-spacing-sm" /> Memória da Alma
       </div>
 
       {/* Streak and Goals */}
@@ -115,7 +99,7 @@ const ReadingJournal: React.FC = () => {
         <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-premium-md group hover:bg-primary/[0.05] transition-all">
           <CardContent className="p-spacing-xl flex flex-col items-center text-center gap-spacing-md">
             <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full bg-primary/10 flex items-center justify-center relative">
-              <Zap className="w-spacing-xl h-spacing-xl text-primary group-hover:scale-110 transition-transform" />
+              <Icons.Zap className="w-spacing-xl h-spacing-xl text-primary group-hover:scale-110 transition-transform" />
               <div className="absolute inset-0 rounded-premium-full border border-primary/20 animate-ping opacity-20" />
             </div>
             <div>
@@ -133,14 +117,14 @@ const ReadingJournal: React.FC = () => {
           <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-premium-md group hover:bg-secondary/[0.04] transition-all duration-1000">
             <CardContent className="p-spacing-2xl flex flex-col items-center gap-spacing-xl">
               <div className="w-spacing-4xl h-spacing-4xl rounded-premium-full bg-secondary/5 flex items-center justify-center relative">
-                <Target className={`w-spacing-2xl h-spacing-2xl text-secondary/60 group-hover:rotate-12 transition-transform duration-700 ${daysActiveThisWeek >= weeklyGoal ? 'animate-bounce' : ''}`} />
+                <Icons.Target className={`w-spacing-2xl h-spacing-2xl text-secondary/60 group-hover:rotate-12 transition-transform duration-700 ${daysActiveThisWeek >= weeklyGoal ? 'animate-bounce' : ''}`} />
                 {daysActiveThisWeek >= weeklyGoal && (
                   <motion.div 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="absolute -top-spacing-xs -right-spacing-xs bg-secondary text-white p-spacing-xs rounded-premium-full shadow-premium"
                   >
-                    <CheckCircle2 className="w-spacing-md h-spacing-md" />
+                    <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" />
                   </motion.div>
                 )}
               </div>
@@ -178,7 +162,7 @@ const ReadingJournal: React.FC = () => {
                             ? 'bg-secondary/20 border-secondary/20 text-secondary' 
                             : 'bg-transparent border-secondary/5 text-secondary/10'
                         } ${isToday ? 'ring-2 ring-secondary/20 ring-offset-2' : ''}`}>
-                          {isActive && <CheckCircle2 className="w-spacing-sm h-spacing-sm" />}
+                          {isActive && <Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm" />}
                         </div>
                       </div>
                     );
@@ -199,7 +183,7 @@ const ReadingJournal: React.FC = () => {
       </div>
 
       <div className="relative group max-w-spacing-xl mx-auto">
-        <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input 
           placeholder="Pesquisar em marcas e anotações..." 
           className="h-spacing-2xl pl-spacing-2xl rounded-premium-full bg-card border-border/40 focus:ring-primary/20"
@@ -221,7 +205,7 @@ const ReadingJournal: React.FC = () => {
           
           {activeTab === 'notes' && notes.length > 0 && (
             <Button onClick={exportPDF} variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs text-premium-xs uppercase tracking-widest font-bold border-primary/20 hover:bg-primary/5">
-              <Download className="w-spacing-md h-spacing-md" /> PDF
+              <Icons.Download className="w-spacing-md h-spacing-md" /> PDF
             </Button>
           )}
         </div>
@@ -229,7 +213,7 @@ const ReadingJournal: React.FC = () => {
         <TabsContent value="history" className="space-y-spacing-md">
           {filteredMarks.length === 0 ? (
             <div className="text-center py-spacing-3xl bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
-              <History className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto mb-spacing-md" />
+              <Icons.History className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto mb-spacing-md" />
               <p className="text-muted-foreground font-serif italic">Nenhuma marca de leitura encontrada.</p>
             </div>
           ) : (
@@ -242,9 +226,9 @@ const ReadingJournal: React.FC = () => {
                       mark.content_type === 'catechism' ? 'bg-amber-500/10 text-amber-600' :
                       'bg-emerald-500/10 text-emerald-600'
                     }`}>
-                      {mark.content_type === 'bible' ? <Book className="w-spacing-md h-spacing-md" /> :
-                       mark.content_type === 'catechism' ? <Cross className="w-spacing-md h-spacing-md" /> :
-                       <Scroll className="w-spacing-md h-spacing-md" />}
+                      {mark.content_type === 'bible' ? <Icons.Book className="w-spacing-md h-spacing-md" /> :
+                       mark.content_type === 'catechism' ? <Icons.Cross className="w-spacing-md h-spacing-md" /> :
+                       <Icons.Scroll className="w-spacing-md h-spacing-md" />}
                     </div>
                     <div className="min-w-spacing-0">
                       <div className="flex items-center gap-spacing-xs mb-spacing-3xs">
@@ -252,7 +236,7 @@ const ReadingJournal: React.FC = () => {
                         {mark.is_last_read && <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[8px] h-spacing-md">ÚLTIMO PONTO</Badge>}
                       </div>
                       <div className="flex items-center gap-spacing-xs text-[10px] text-muted-foreground uppercase tracking-widest font-medium">
-                         <Calendar className="w-spacing-sm h-spacing-sm" /> {new Date(mark.updated_at).toLocaleDateString('pt-BR')}
+                         <Icons.Calendar className="w-spacing-sm h-spacing-sm" /> {new Date(mark.updated_at).toLocaleDateString('pt-BR')}
                       </div>
                     </div>
                   </div>
@@ -263,13 +247,13 @@ const ReadingJournal: React.FC = () => {
                       className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
                       onClick={() => deleteMark(mark.id)}
                     >
-                      <Trash2 className="w-spacing-md h-spacing-md" />
+                      <Icons.Trash2 className="w-spacing-md h-spacing-md" />
                     </Button>
                     <Button 
                       onClick={() => navigate(mark.url || '/')}
                       className="rounded-premium-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all h-spacing-xl px-spacing-md text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
                     >
-                      Voltar <ChevronRight className="w-spacing-sm h-spacing-sm" />
+                      Voltar <Icons.ChevronRight className="w-spacing-sm h-spacing-sm" />
                     </Button>
                   </div>
                 </CardContent>
@@ -281,7 +265,7 @@ const ReadingJournal: React.FC = () => {
         <TabsContent value="notes" className="space-y-spacing-md">
           {filteredNotes.length === 0 ? (
             <div className="text-center py-spacing-3xl bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
-              <Edit3 className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto mb-spacing-md" />
+              <Icons.Edit3 className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto mb-spacing-md" />
               <p className="text-muted-foreground font-serif italic">Nenhuma anotação encontrada.</p>
             </div>
           ) : (
@@ -303,7 +287,7 @@ const ReadingJournal: React.FC = () => {
                       className="rounded-premium-full text-muted-foreground hover:text-destructive h-spacing-xl w-spacing-xl"
                       onClick={() => deleteNote(note.id)}
                     >
-                      <Trash2 className="w-spacing-md h-spacing-md" />
+                      <Icons.Trash2 className="w-spacing-md h-spacing-md" />
                     </Button>
                   </div>
                   <p className="text-premium-sm font-serif leading-relaxed text-foreground/90 whitespace-pre-line">
@@ -320,7 +304,7 @@ const ReadingJournal: React.FC = () => {
                         navigate(url);
                       }}
                     >
-                      Ver Contexto <ArrowRight className="w-spacing-sm h-spacing-sm" />
+                      Ver Contexto <Icons.ArrowRight className="w-spacing-sm h-spacing-sm" />
                     </Button>
                   </div>
                 </CardContent>

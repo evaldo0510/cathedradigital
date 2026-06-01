@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { runA11yAudit } from '@/lib/a11y-audit';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, XCircle, AlertTriangle, ShieldCheck, Search, Tag, Key } from 'lucide-react';
+
 import { Icons } from '@/constants';
 
 const A11yAuditPage = () => {
@@ -53,7 +53,7 @@ const A11yAuditPage = () => {
     <div className="max-w-spacing-4xl mx-auto py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
       <header className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
-          <ShieldCheck className="w-spacing-md h-spacing-md" />
+          <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
         <h1 className="text-premium-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
@@ -83,7 +83,7 @@ const A11yAuditPage = () => {
                     >
                       <span className="text-premium-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
                       {checklist[item.id] ? (
-                        <CheckCircle className="w-spacing-md h-spacing-md text-green-500 fill-green-500/10" />
+                        <Icons.CheckCircle className="w-spacing-md h-spacing-md text-green-500 fill-green-500/10" />
                       ) : (
                         <div className="w-spacing-md h-spacing-md rounded-premium border-2 border-border/60" />
                       )}
@@ -99,7 +99,7 @@ const A11yAuditPage = () => {
           <CardHeader className="bg-secondary/5 border-b border-border/50">
             <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center justify-between">
               <div className="flex items-center gap-spacing-xs">
-                <Key className="w-spacing-md h-spacing-md text-secondary" />
+                <Icons.Key className="w-spacing-md h-spacing-md text-secondary" />
                 Auditoria Técnica
               </div>
               <Button size="sm" onClick={performAudit} className="rounded-premium-full h-spacing-xl text-premium-xs font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
@@ -110,7 +110,7 @@ const A11yAuditPage = () => {
           <CardContent className="p-spacing-lg space-y-spacing-md">
             {!auditResults ? (
               <div className="flex flex-col items-center justify-center py-spacing-3xl text-center space-y-spacing-md opacity-40">
-                <Search className="w-spacing-2xl h-spacing-2xl" />
+                <Icons.Search className="w-spacing-2xl h-spacing-2xl" />
                 <p className="text-premium-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
               </div>
             ) : (
@@ -118,12 +118,12 @@ const A11yAuditPage = () => {
                 <div className={`p-spacing-md rounded-premium-full flex items-center gap-spacing-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
                   {auditResults.success ? (
                     <>
-                      <CheckCircle className="w-spacing-lg h-spacing-lg text-green-500" />
+                      <Icons.CheckCircle className="w-spacing-lg h-spacing-lg text-green-500" />
                       <p className="text-premium-sm font-bold text-green-600">Nenhum problema técnico detectado no DOM atual.</p>
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-spacing-lg h-spacing-lg text-red-500" />
+                      <Icons.XCircle className="w-spacing-lg h-spacing-lg text-red-500" />
                       <p className="text-premium-sm font-bold text-red-600">{auditResults.issues.length} problemas encontrados.</p>
                     </>
                   )}
@@ -132,7 +132,7 @@ const A11yAuditPage = () => {
                 <div className="space-y-spacing-xs max-h-[400px] overflow-y-auto pr-spacing-xs scrollbar-thin">
                   {auditResults.issues.map((issue, idx) => (
                     <div key={idx} className="flex gap-spacing-sm p-spacing-sm rounded-premium bg-muted/20 border border-border/40">
-                      <AlertTriangle className="w-spacing-md h-spacing-md text-amber-500 shrink-0 mt-spacing-3xs" />
+                      <Icons.AlertTriangle className="w-spacing-md h-spacing-md text-amber-500 shrink-0 mt-spacing-3xs" />
                       <span className="text-premium-xs text-muted-foreground leading-relaxed">{issue}</span>
                     </div>
                   ))}

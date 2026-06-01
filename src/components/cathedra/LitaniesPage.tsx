@@ -1,21 +1,7 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
-import { 
-  Heart, 
-  Search, 
-  ArrowLeft, 
-  ChevronRight, 
-  BookOpen, 
-  Star, 
-  Flame, 
-  Zap, 
-  Sparkles,
-  Music,
-  Clock,
-  Calendar,
-  Activity,
-  Cross
-} from 'lucide-react';
+
 
 interface Litany {
   id: string;
@@ -240,7 +226,7 @@ const LitaniesPage: React.FC = () => {
       <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg">
           <Button onClick={() => setSelectedId(null)} className="p-spacing-sm rounded-premium-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-premium-md self-start md:self-center">
-            <ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
+            <Icons.ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
           </Button>
           <div className="space-y-spacing-2xs">
             <span className={`inline-flex px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
@@ -284,7 +270,7 @@ const LitaniesPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl">
       <div className="text-center space-y-spacing-md pt-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-          <Heart className="w-spacing-md h-spacing-md text-primary" />
+          <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
@@ -294,7 +280,7 @@ const LitaniesPage: React.FC = () => {
       </div>
 
       <div className="max-w-spacing-md mx-auto relative group">
-        <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground transition-colors group-focus-within:text-primary" />
         <input 
           value={searchQuery} 
           onChange={e => setSearchQuery(e.target.value)} 
@@ -308,7 +294,7 @@ const LitaniesPage: React.FC = () => {
           <Button key={l.id} onClick={() => setSelectedId(l.id)}
             className="text-left p-spacing-xl rounded-premium-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
             <div className="absolute top-spacing-0 right-0 p-spacing-xl opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-              <BookOpen className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
+              <Icons.BookOpen className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
             </div>
             <div className="relative z-10 space-y-spacing-md">
               <span className={`inline-block font-serif px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
@@ -319,7 +305,7 @@ const LitaniesPage: React.FC = () => {
                 {l.latin && <p className="text-premium-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
               <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary pt-spacing-xs">
-                Começar Oração <ChevronRight className="w-spacing-sm h-spacing-sm transition-transform group-hover:translate-x-1" />
+                Começar Oração <Icons.ChevronRight className="w-spacing-sm h-spacing-sm transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Button>

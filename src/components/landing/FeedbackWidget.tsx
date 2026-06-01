@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import React, { useState } from 'react';
-import { MessageSquare, Send, X, Star } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -59,7 +60,7 @@ const FeedbackWidget = () => {
             {submitted ? (
               <div className="text-center py-spacing-xl space-y-spacing-md">
                 <div className="w-spacing-3xl h-spacing-3xl bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
-                  <Send className="w-spacing-xl h-spacing-xl text-primary" />
+                  <Icons.Send className="w-spacing-xl h-spacing-xl text-primary" />
                 </div>
                 <h3 className="text-premium-xl font-serif font-bold">Obrigado!</h3>
                 <p className="text-premium-sm text-muted-foreground font-serif italic">
@@ -71,7 +72,7 @@ const FeedbackWidget = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="font-serif font-bold text-premium-lg">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-                    <X className="w-spacing-md h-spacing-md" />
+                    <Icons.X className="w-spacing-md h-spacing-md" />
                   </Button>
                 </div>
                 
@@ -87,7 +88,7 @@ const FeedbackWidget = () => {
                       onClick={() => setRating(star)}
                       className={`transition-all ${rating >= star ? 'text-secondary scale-110' : 'text-muted-foreground/30'}`}
                     >
-                      <Star className="w-spacing-lg h-spacing-lg fill-current" />
+                      <Icons.Star className="w-spacing-lg h-spacing-lg fill-current" />
                     </Button>
                   ))}
                 </div>
@@ -118,7 +119,7 @@ const FeedbackWidget = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-premium-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-xs min-w-spacing-0"
       >
-        <MessageSquare className="w-spacing-md h-spacing-md shrink-0" />
+        <Icons.MessageSquare className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>
       </motion.button>
     </div>

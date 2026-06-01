@@ -8,7 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter, AlertCircle, Info } from 'lucide-react';
+
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -182,12 +182,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             className="w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-premium-hover shadow-primary/10 group border-none"
             title="Estudo Completo"
           >
-            <ExternalLink className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
+            <Icons.ExternalLink className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
           </Button>
         </div>
         
         <div className="p-spacing-xl space-y-spacing-xl max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs with History */}
+          {/* Path Navigation - Monastic Breadcrumbs with Icons.History */}
           <nav className="flex items-center gap-spacing-xs overflow-x-auto whitespace-nowrap scrollbar-none pb-spacing-md border-b border-border/5">
             <button 
               onClick={() => handlePopTag(0)}
@@ -224,7 +224,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             )}
           </nav>
 
-          {/* Elegant Map Header */}
+          {/* Elegant Icons.Map Header */}
           <header className="flex flex-col gap-spacing-xs items-center justify-center text-center py-spacing-md">
             <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/60">SENTIERO DI SAPIENZA</span>
             <p className="text-premium-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
@@ -248,7 +248,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             </div>
           ) : status === 'error' && content.length === 0 ? (
             <div className="p-spacing-lg text-center space-y-spacing-sm bg-red-500/5 rounded-premium border border-red-500/10">
-              <AlertCircle className="w-spacing-xl h-spacing-xl text-red-500 mx-auto" />
+              <Icons.AlertCircle className="w-spacing-xl h-spacing-xl text-red-500 mx-auto" />
             <p className="text-premium-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
             <p className="text-premium-xs text-muted-foreground italic">{errorDetails}</p>
             <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-spacing-xl rounded-premium-full text-premium-xs uppercase font-black tracking-widest">Tentar Novamente</Button>
@@ -258,7 +258,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             <>
               {status === 'error' && content.length > 0 && (
                 <div className="px-spacing-sm py-spacing-2xs bg-amber-500/10 text-amber-600 rounded-premium text-premium-xs font-bold flex items-center gap-spacing-xs mb-spacing-xs">
-                  <Info className="w-spacing-sm h-spacing-sm" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
+                  <Icons.Info className="w-spacing-sm h-spacing-sm" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
                 </div>
               )}
               {logosInsight && (
@@ -271,7 +271,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-premium-full -mr-spacing-3xl -mt-spacing-3xl blur-3xl" />
                   <div className="flex items-center gap-spacing-sm mb-spacing-md">
                     <div className="w-spacing-md h-spacing-md rounded-premium-full bg-primary/5 flex items-center justify-center">
-                      <Sparkles className="w-spacing-xs h-spacing-xs text-primary/40" />
+                      <Icons.Sparkles className="w-spacing-xs h-spacing-xs text-primary/40" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Contemplação Logos</span>
                   </div>
@@ -284,11 +284,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {content.length > 0 && (
                 <div className="space-y-spacing-lg">
                   {[
-                    { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'catechism', label: 'Catecismo', icon: <Church className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'saint', label: 'Santos', icon: <Sparkles className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'journey', label: 'Jornadas', icon: <Flame className="w-spacing-sm h-spacing-sm" /> },
+                    { id: 'bible', label: 'Bíblia', icon: <Icons.BookOpen className="w-spacing-sm h-spacing-sm" /> },
+                    { id: 'catechism', label: 'Catecismo', icon: <Icons.Church className="w-spacing-sm h-spacing-sm" /> },
+                    { id: 'magisterium', label: 'Magistério', icon: <Icons.Shield className="w-spacing-sm h-spacing-sm" /> },
+                    { id: 'saint', label: 'Santos', icon: <Icons.Sparkles className="w-spacing-sm h-spacing-sm" /> },
+                    { id: 'journey', label: 'Jornadas', icon: <Icons.Flame className="w-spacing-sm h-spacing-sm" /> },
                   ].map((category) => {
                     const categoryContent = content.filter(c => c.type === category.id);
                     if (categoryContent.length === 0) return null;
@@ -330,7 +330,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                   <div className="flex items-center justify-between">
                                     <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
                                       {reference}
-                                      {link && <ExternalLink className="w-spacing-xs h-spacing-xs" />}
+                                      {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
                                     </span>
                                   </div>
                                   
@@ -398,7 +398,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 <div className="flex flex-col items-center justify-center py-spacing-xl text-center space-y-spacing-md">
                   <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
-                    <Search className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
+                    <Icons.Search className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
                   </div>
                   <div className="space-y-spacing-2xs">
                     <p className="text-premium-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
@@ -455,7 +455,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         .order('name');
       
       if (!error && data) {
-        // Map themes to the Tag interface expected by the component
+        // Icons.Map themes to the Icons.Tag interface expected by the component
         const mappedTags = data.map((t: any) => ({
           id: t.id,
           slug: t.slug,
@@ -495,7 +495,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
     <div className="space-y-spacing-2xl">
       <div className="relative group max-w-spacing-md mx-auto">
         <div className="absolute inset-0 bg-primary/5 rounded-premium-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
-        <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
         <input 
           type="text" 
           placeholder="Buscar temas e conexões..." 
@@ -552,7 +552,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
       {!loading && filteredTags.length === 0 && (
         <div className="text-center py-spacing-3xl space-y-spacing-md">
-          <Search className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
+          <Icons.Search className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
           <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
         </div>
       )}

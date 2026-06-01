@@ -3,26 +3,7 @@ import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
-import { 
-  Heart, 
-  ArrowLeft, 
-  ChevronRight, 
-  Play, 
-  Pause, 
-  Video, 
-  Flame, 
-  Star, 
-  Zap, 
-  Sparkles,
-  Search,
-  BookOpen,
-  Calendar,
-  Activity,
-  Music,
-  Youtube,
-  Clock,
-  Cross
-} from 'lucide-react';
+
 import ShareButton from './ShareButton';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
@@ -56,7 +37,7 @@ const MYSTERIES: Record<MysterySet, {
   joyful: {
     name: 'Mistérios Gozosos',
     day: 'Segunda e Sábado',
-    icon: Sparkles,
+    icon: Icons.Sparkles,
     color: 'text-primary bg-primary/10',
     mysteries: [
       { title: 'A Anunciação do Anjo a Maria', scripture: 'Lc 1,26-38', meditation: 'O Anjo Gabriel anuncia a Maria que ela será Mãe do Salvador. Maria diz "sim" com fé total: "Eis a serva do Senhor."' },
@@ -69,7 +50,7 @@ const MYSTERIES: Record<MysterySet, {
   sorrowful: {
     name: 'Mistérios Dolorosos',
     day: 'Terça e Sexta',
-    icon: Flame,
+    icon: Icons.Flame,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'A Agonia de Jesus no Horto', scripture: 'Lc 22,39-46', meditation: 'Jesus sua sangue no Getsêmani. "Pai, se possível, afasta de mim este cálice; porém, não a minha vontade, mas a Tua."' },
@@ -82,7 +63,7 @@ const MYSTERIES: Record<MysterySet, {
   glorious: {
     name: 'Mistérios Gloriosos',
     day: 'Quarta e Domingo',
-    icon: Star,
+    icon: Icons.Star,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'A Ressurreição de Jesus', scripture: 'Mc 16,1-7', meditation: '"Ele ressuscitou, não está aqui!" A pedra foi removida. A morte foi vencida. Cristo é a Vida que triunfa para sempre.' },
@@ -95,7 +76,7 @@ const MYSTERIES: Record<MysterySet, {
   luminous: {
     name: 'Mistérios Luminosos',
     day: 'Quinta',
-    icon: Zap,
+    icon: Icons.Zap,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'O Batismo de Jesus no Jordão', scripture: 'Mt 3,13-17', meditation: '"Este é o meu Filho amado." Jesus desce às águas do Jordão, santificando o Batismo e revelando a Trindade.' },
@@ -133,7 +114,7 @@ const Rosary: React.FC = () => {
       <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-            <Heart className="w-spacing-md h-spacing-md text-primary" />
+            <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
           </div>
           <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
@@ -173,7 +154,7 @@ const Rosary: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mx-auto mb-spacing-md">
-            <BookOpen className="w-spacing-xl h-spacing-xl" />
+            <Icons.BookOpen className="w-spacing-xl h-spacing-xl" />
           </div>
           <div className="space-y-spacing-xs">
             <h2 className="text-premium-2xl font-serif font-bold text-foreground">Outras Orações e Devoções</h2>
@@ -185,7 +166,7 @@ const Rosary: React.FC = () => {
             onClick={() => window.location.href = '/oracao'}
             className="inline-flex items-center gap-spacing-xs px-spacing-xl py-spacing-md bg-muted hover:bg-muted/80 text-foreground rounded-premium-full font-bold text-premium-xs uppercase tracking-widest transition-all"
           >
-            Explorar Devoções <ChevronRight className="w-spacing-md h-spacing-md" />
+            Explorar Devoções <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </motion.div>
       </motion.div>
@@ -200,7 +181,7 @@ const Rosary: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg justify-between">
           <div className="flex items-center gap-spacing-lg">
             <Button onClick={() => setSelectedSet(null)} className="p-spacing-sm rounded-premium-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-premium-md">
-              <ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
+              <Icons.ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
             </Button>
             <div className="space-y-spacing-2xs">
               <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60">{set.day}</span>
@@ -238,7 +219,7 @@ const Rosary: React.FC = () => {
             <div className="p-spacing-xl rounded-[2rem] bg-card border border-border shadow-premium-md space-y-spacing-md">
               <div className="flex items-center gap-spacing-sm">
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                  <Activity className="w-spacing-md h-spacing-md" />
+                  <Icons.Activity className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-premium-lg font-serif font-bold">Suas Intenções</h3>
               </div>
@@ -288,7 +269,7 @@ const Rosary: React.FC = () => {
               <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-                  <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
                 </div>
                 {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
               </div>
@@ -363,7 +344,7 @@ const Rosary: React.FC = () => {
                     {PRAYERS[k as keyof typeof PRAYERS].title}
                     {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
                   </p>
-                  <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
                 </div>
                 {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
               </div>
@@ -395,14 +376,14 @@ const Rosary: React.FC = () => {
         <div className="bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
           <div className="flex items-center justify-between mb-spacing-xs">
             <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS.salveRainha.title}</p>
-            <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
+            <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
           </div>
           {showPrayer === 'salve' && <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
         </div>
         <div className="text-center space-y-spacing-md py-spacing-xl">
           <div className="relative inline-block font-serif">
-            <Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
-            <Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-xl h-spacing-xl text-secondary/40 animate-pulse" />
+            <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
+            <Icons.Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-xl h-spacing-xl text-secondary/40 animate-pulse" />
           </div>
           <div className="space-y-spacing-sm">
             <p className="text-secondary font-serif font-bold text-premium-3xl tracking-tight">Rosário Completo!</p>
@@ -422,7 +403,7 @@ const Rosary: React.FC = () => {
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
       <div className="flex items-center justify-between p-spacing-lg sticky top-spacing-0 z-10 bg-inherit/80 ">
         <Button onClick={() => { setIsPraying(false); }} className="p-spacing-sm rounded-premium-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
-          <ArrowLeft className="w-spacing-md h-spacing-md text-secondary/70" />
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md text-secondary/70" />
         </Button>
         <span className="text-premium-xs font-black uppercase tracking-widest text-secondary/40">{set.name}</span>
         <div className="w-spacing-xl" />

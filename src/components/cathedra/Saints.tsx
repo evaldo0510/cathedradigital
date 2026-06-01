@@ -13,7 +13,7 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, User } from 'lucide-react';
+
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
@@ -51,7 +51,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   
   const { data: officialSaint } = useOfficialSaint();
 
-  // Daily Saints from Database
+  // Daily Saints from Icons.Database
   const { data: localSaints = [], isLoading: isLoadingDaily } = useQuery({
     queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
     queryFn: () => getSaintsByDate(selectedDate.getMonth() + 1, selectedDate.getDate()),
@@ -73,7 +73,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   // Debounced search to avoid one DB hit per keystroke
   const debouncedSearch = useDebounce(search, 300);
 
-  // Search results
+  // Icons.Search results
   const { data: searchResults = [], isLoading: isSearchingLocal } = useQuery({
     queryKey: ['saints-search', debouncedSearch],
     queryFn: () => searchSaints(debouncedSearch),
@@ -194,7 +194,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary border border-primary/20"
           >
-            <CalendarIcon className="w-spacing-sm h-spacing-sm" />
+            <Icons.Calendar className="w-spacing-sm h-spacing-sm" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
           </motion.div>
           <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground">Santos</h1>
@@ -237,7 +237,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
                     aria-label="Dia anterior"
                   >
-                    <ChevronLeft className="w-spacing-md h-spacing-md" />
+                    <Icons.ChevronLeft className="w-spacing-md h-spacing-md" />
                   </Button>
                   
                   <div className="text-center min-w-[200px]">
@@ -254,7 +254,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
                     aria-label="Próximo dia"
                   >
-                    <ChevronRight className="w-spacing-md h-spacing-md" />
+                    <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
                   </Button>
                 </div>
 
@@ -336,7 +336,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                               variant="secondary"
                               className="w-full"
                             >
-                              <BookOpen className="w-spacing-md h-spacing-md" />
+                              <Icons.BookOpen className="w-spacing-md h-spacing-md" />
                               Conhecer História
                             </Button>
 
@@ -345,7 +345,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                               variant="primary"
                               className="w-full"
                             >
-                              <Sparkles className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" />
+                              <Icons.Sparkles className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" />
                               Refletir com Logos
                             </Button>
                           </div>
@@ -399,7 +399,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             title={saint.name}
                             subtitle={saint.title}
                             score={saint.similarityScore}
-                            icon={<User className="w-spacing-md h-spacing-md" />}
+                            icon={<Icons.User className="w-spacing-md h-spacing-md" />}
                             onClick={() => handleOpenSaint(saint, false)}
                             index={i}
                           />
@@ -409,7 +409,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             key={saint.id}
                             title={saint.name}
                             subtitle={saint.title}
-                            icon={<Sparkles className="w-spacing-md h-spacing-md" />}
+                            icon={<Icons.Sparkles className="w-spacing-md h-spacing-md" />}
                             onClick={() => handleOpenSaint(saint, false)}
                             index={searchResults.length + i}
                           />
@@ -427,7 +427,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           onClick={() => handleGlobalSearch(search)}
                           className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-premium-xs uppercase tracking-widest h-spacing-2xl px-spacing-xl rounded-premium-full shadow-premium shadow-primary/20 flex items-center gap-spacing-sm mx-auto"
                         >
-                          <Sparkles className="w-spacing-md h-spacing-md" />
+                          <Icons.Sparkles className="w-spacing-md h-spacing-md" />
                           Buscar na Biblioteca Universal
                         </Button>
                       </div>
@@ -435,7 +435,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                     {isSearchingGlobal && (
                       <div className="text-center py-spacing-3xl space-y-spacing-md">
-                        <Sparkles className="w-spacing-xl h-spacing-xl text-primary animate-pulse mx-auto" />
+                        <Icons.Sparkles className="w-spacing-xl h-spacing-xl text-primary animate-pulse mx-auto" />
                         <p className="text-premium-sm text-muted-foreground animate-pulse">Consultando hagiografias históricas...</p>
                       </div>
                     )}
@@ -557,7 +557,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
             <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
               <div className="p-spacing-2xs bg-primary/5 rounded-premium text-primary" title="Possui obras escritas">
-                <BookOpen className="w-spacing-sm h-spacing-sm" />
+                <Icons.BookOpen className="w-spacing-sm h-spacing-sm" />
               </div>
             )}
           </div>

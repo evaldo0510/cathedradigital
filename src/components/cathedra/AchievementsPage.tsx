@@ -1,10 +1,11 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
 import { Progress } from '@/components/ui/progress';
-import { Trophy, Lock, Star, Award, Shield, Sparkles } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -47,7 +48,7 @@ const AchievementsPage: React.FC = () => {
           animate={{ scale: 1, opacity: 1 }}
           className="inline-flex items-center gap-spacing-sm px-spacing-md py-spacing-xs bg-primary/5 rounded-premium-full border border-primary/10"
         >
-          <Trophy className="w-spacing-md h-spacing-md text-primary" />
+          <Icons.Trophy className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Sacra Victoria</span>
         </motion.div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-display font-bold text-foreground tracking-tight">Suas Conquistas</h1>
@@ -59,7 +60,7 @@ const AchievementsPage: React.FC = () => {
       {/* Summary Card */}
       <Card className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl shadow-premium-none overflow-hidden relative">
         <div className="absolute top-spacing-0 right-0 p-spacing-2xl opacity-[0.03]">
-          <Sparkles className="w-spacing-4xl h-spacing-4xl text-primary" />
+          <Icons.Sparkles className="w-spacing-4xl h-spacing-4xl text-primary" />
         </div>
         <div className="relative z-10 space-y-spacing-lg">
           <div className="flex items-center justify-between">
@@ -102,7 +103,7 @@ const AchievementsPage: React.FC = () => {
                     <div className="flex-1 space-y-spacing-xs">
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-foreground font-serif">{ach.name}</h3>
-                        {!unlocked && <Lock className="w-spacing-sm h-spacing-sm text-muted-foreground/40" />}
+                        {!unlocked && <Icons.Lock className="w-spacing-sm h-spacing-sm text-muted-foreground/40" />}
                       </div>
                       <p className="text-premium-xs text-muted-foreground leading-relaxed">{ach.description}</p>
                       {unlocked && (
@@ -135,7 +136,7 @@ const AchievementsPage: React.FC = () => {
                   }`}
                 >
                   <div className={`text-premium-3xl w-spacing-2xl h-spacing-2xl rounded-premium-full flex items-center justify-center ${unlocked ? 'bg-primary/10' : 'bg-muted'}`}>
-                    {unlocked ? '🏆' : <Lock className="w-spacing-md h-spacing-md" />}
+                    {unlocked ? '🏆' : <Icons.Lock className="w-spacing-md h-spacing-md" />}
                   </div>
                   <div className="space-y-spacing-2xs">
                     <h4 className="font-bold text-premium-sm">{badge.name}</h4>

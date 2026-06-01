@@ -6,7 +6,7 @@ import { AppRoute } from '@/types';
 import { useOfficialSaint, useSaintsToday } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton } from './SacredSkeleton';
-import { ChevronRight, Sparkles } from 'lucide-react';
+
 import { CathedraCard } from './CathedraCard';
 
 interface SaintOfTheDayCardProps {
@@ -118,7 +118,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             {saint.bio?.slice(0, 100)}...
           </p>
         </div>
-        <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
+        <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
       </CathedraCard>
     );
   }
@@ -173,7 +173,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           </div>
           <div className="flex items-center gap-spacing-sm">
             <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-              <Sparkles className="w-spacing-md h-spacing-md" />
+              <Icons.Sparkles className="w-spacing-md h-spacing-md" />
             </div>
             <span className="text-premium-small font-black uppercase tracking-widest text-primary">Conhecer</span>
           </div>

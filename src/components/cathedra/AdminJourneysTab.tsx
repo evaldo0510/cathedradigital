@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -6,18 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  Edit, 
-  Trash2, 
-  Plus, 
-  Search,
-  Map,
-  Layers,
-  Save,
-  ChevronRight,
-  ChevronDown,
-  AlertTriangle
-} from 'lucide-react';
+
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import {
@@ -375,7 +365,7 @@ const AdminJourneysTab: React.FC = () => {
         </div>
         <div className="flex gap-spacing-xs">
           <div className="relative">
-            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
+            <Icons.Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input
               placeholder="Buscar jornada..."
               className="pl-spacing-xl w-full sm:w-[250px]"
@@ -384,7 +374,7 @@ const AdminJourneysTab: React.FC = () => {
             />
           </div>
           <Button className="gap-spacing-xs" onClick={() => setIsAddJourneyDialogOpen(true)}>
-            <Plus className="w-spacing-md h-spacing-md" /> Nova Jornada
+            <Icons.Plus className="w-spacing-md h-spacing-md" /> Nova Jornada
           </Button>
         </div>
       </div>
@@ -394,9 +384,9 @@ const AdminJourneysTab: React.FC = () => {
           <div key={journey.id} className="border rounded-premium overflow-hidden bg-card">
             <div className="p-spacing-md flex items-center justify-between">
               <div className="flex items-center gap-spacing-sm cursor-pointer flex-1" onClick={() => toggleJourneySteps(journey.id)}>
-                {selectedJourneyId === journey.id ? <ChevronDown className="w-spacing-md h-spacing-md text-muted-foreground" /> : <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />}
+                {selectedJourneyId === journey.id ? <Icons.ChevronDown className="w-spacing-md h-spacing-md text-muted-foreground" /> : <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />}
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center">
-                  <Map className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.Map className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
                   <h3 className="font-bold flex items-center gap-spacing-xs">
@@ -412,13 +402,13 @@ const AdminJourneysTab: React.FC = () => {
                   setEditingJourney({...journey});
                   setIsEditDialogOpen(true);
                 }}>
-                  <Edit className="w-spacing-md h-spacing-md" />
+                  <Icons.Edit className="w-spacing-md h-spacing-md" />
                 </Button>
                 <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={(e) => {
                   e.stopPropagation();
                   initiateDeleteJourney(journey);
                 }}>
-                  <Trash2 className="w-spacing-md h-spacing-md" />
+                  <Icons.Trash2 className="w-spacing-md h-spacing-md" />
                 </Button>
 
               </div>
@@ -427,9 +417,9 @@ const AdminJourneysTab: React.FC = () => {
             {selectedJourneyId === journey.id && (
               <div className="bg-muted/30 border-t p-spacing-md space-y-spacing-sm">
                 <div className="flex items-center justify-between mb-spacing-xs">
-                  <h4 className="text-premium-sm font-semibold flex items-center gap-spacing-xs"><Layers className="w-spacing-md h-spacing-md" /> Passos da Jornada</h4>
+                  <h4 className="text-premium-sm font-semibold flex items-center gap-spacing-xs"><Icons.Layers className="w-spacing-md h-spacing-md" /> Passos da Jornada</h4>
                   <Button variant="outline" size="sm" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={() => handleCreateStep(journey.id)}>
-                    <Plus className="w-spacing-sm h-spacing-sm" /> Adicionar Passo
+                    <Icons.Plus className="w-spacing-sm h-spacing-sm" /> Adicionar Passo
                   </Button>
                 </div>
                 {stepsLoading ? (
@@ -450,8 +440,8 @@ const AdminJourneysTab: React.FC = () => {
                           </div>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg" onClick={() => handleEditStep(step)}><Edit className="w-spacing-sm h-spacing-sm" /></Button>
-                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg text-destructive" onClick={() => handleDeleteStep(step.id)}><Trash2 className="w-spacing-sm h-spacing-sm" /></Button>
+                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg" onClick={() => handleEditStep(step)}><Icons.Edit className="w-spacing-sm h-spacing-sm" /></Button>
+                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg text-destructive" onClick={() => handleDeleteStep(step.id)}><Icons.Trash2 className="w-spacing-sm h-spacing-sm" /></Button>
                         </div>
                       </div>
                     ))}
@@ -513,7 +503,7 @@ const AdminJourneysTab: React.FC = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSaveJourney} className="gap-spacing-xs">
-              <Save className="w-spacing-md h-spacing-md" /> Salvar
+              <Icons.Save className="w-spacing-md h-spacing-md" /> Salvar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -573,7 +563,7 @@ const AdminJourneysTab: React.FC = () => {
           <DialogFooter className="pt-spacing-md border-t">
             <Button variant="outline" onClick={() => setIsEditStepDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSaveStep} className="gap-spacing-xs">
-              <Save className="w-spacing-md h-spacing-md" /> Salvar Passo
+              <Icons.Save className="w-spacing-md h-spacing-md" /> Salvar Passo
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -635,7 +625,7 @@ const AdminJourneysTab: React.FC = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-spacing-xs text-destructive">
-              <AlertTriangle className="w-spacing-md h-spacing-md" /> Confirmar Exclusão
+              <Icons.AlertTriangle className="w-spacing-md h-spacing-md" /> Confirmar Exclusão
             </AlertDialogTitle>
             <AlertDialogDescription>
               Você está prestes a excluir a jornada <strong className="text-foreground">"{journeyToDelete?.title}"</strong>.

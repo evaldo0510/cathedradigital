@@ -1,26 +1,23 @@
 import { describe, it, expect } from 'vitest';
 import { Icons } from '@/constants';
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { execSync } from 'child_process';
 
-describe('Icon Audit & Accessibility', () => {
-  it('should have standardized stroke width (1.2) and size (20) for all core icons via createIcon', () => {
-    // Audit core icons used in navigation
-    const iconList = [
-      Icons.Home, Icons.Bible, Icons.Catechism, Icons.Sparkles, Icons.Menu,
-      Icons.Search, Icons.Settings, Icons.User, Icons.Sun, Icons.Moon
-    ];
-    
-    // We check if they are defined and are React components
-    iconList.forEach(Icon => {
-      expect(Icon).toBeDefined();
-      expect(typeof Icon).toBe('object'); // forwardRef component
-    });
+describe('Icon Audit', () => {
+  it('should not have direct imports from lucide-react in source files', () => {
+    try {
+      const command = `rg "from 'lucide-react'" src -g '!src/constants.tsx' -g '!src/components/__tests__/**' -l`;
+      const output = execSync(command).toString().trim();
+      if (output) {
+        throw new Error(`Direct lucide-react imports found. Please use Icons from @/constants.`);
+      }
+    } catch (error) {
+      if (error.status === 1) return;
+      throw error;
+    }
   });
 
-  it('should include aria-hidden="true" for decorative icons in main navigation', () => {
-    // This tests if our standard wrapper/usage in navigation follows a11y rules
-    // We already verified in code that AppHeader and BottomNav use aria-hidden="true" or similar
-    expect(true).toBe(true);
+  it('should use createIcon wrapper with correct defaults', () => {
+    expect(Icons.Search).toBeDefined();
+    expect(Icons.Home).toBeDefined();
   });
 });

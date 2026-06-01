@@ -36,7 +36,7 @@ const LogosAI = lazy(() => import('./LogosAI'));
 const LogosContextualSuggestions = lazy(() => import('./LogosContextualSuggestions').then(m => ({ default: m.LogosContextualSuggestions })));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
+
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
@@ -336,7 +336,7 @@ const Bible: React.FC = memo(() => {
 
     // 1. If we have a specific ref or book/ch, use that
     if (refParam || (bookParam && chParam)) {
-      setShouldAutoResume(false); // User clicked a specific link, don't auto-resume
+      setShouldAutoResume(false); // Icons.User clicked a specific link, don't auto-resume
       
       if (refParam) {
         // Handle "Book Chapter,Verse" or "Book Chapter" format
@@ -614,7 +614,7 @@ const Bible: React.FC = memo(() => {
         }
       }
 
-      // History navigation (Alt + Left/Right)
+      // Icons.History navigation (Alt + Left/Right)
       if (e.altKey && e.key === 'ArrowLeft' && historyIndex > 0) {
         e.preventDefault();
         const prevUrl = history[historyIndex - 1];
@@ -705,7 +705,7 @@ const Bible: React.FC = memo(() => {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
       const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       
-      // 1) Check in-memory cache
+      // 1) Icons.Check in-memory cache
       const memCached = bibleCache.get(cacheKey);
       if (memCached) {
         setVerses(memCached);
@@ -717,7 +717,7 @@ const Bible: React.FC = memo(() => {
       setBibleError('');
       setVerses([]);
 
-      // 2 Check IndexedDB cache, then direct DB, then fetch
+      // 2 Icons.Check IndexedDB cache, then direct DB, then fetch
       import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
         getCachedBibleChapter(selectedBook.abbr, selectedChapter).then(async (idbCached) => {
           if (idbCached?.verses?.length > 0) {
@@ -727,7 +727,7 @@ const Bible: React.FC = memo(() => {
             return;
           }
 
-          // 3) Check Direct DB Connection (spiritual_contents) - No AI fallback requested
+          // 3) Icons.Check Direct DB Connection (spiritual_contents) - No AI fallback requested
           try {
             const { data: dbData } = await supabase
               .from('spiritual_contents')
@@ -826,7 +826,7 @@ const Bible: React.FC = memo(() => {
               onClick={goBack}
               className="group flex items-center gap-spacing-xs text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
             >
-              <ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
+              <Icons.ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
               Sumário
             </Button>
 
@@ -836,7 +836,7 @@ const Bible: React.FC = memo(() => {
                 onClick={() => navigate(lastReadMark.url)}
                 className="flex items-center gap-spacing-xs text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary"
               >
-                <History className="w-spacing-md h-spacing-md" />
+                <Icons.History className="w-spacing-md h-spacing-md" />
                 Ponto salvo
               </Button>
             )}
@@ -1316,7 +1316,7 @@ const Bible: React.FC = memo(() => {
             />
 
 
-            {/* Cross References Panel - Below the text for focused reading */}
+            {/* Icons.Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
             {!isLoading && !bibleError && (
               <>

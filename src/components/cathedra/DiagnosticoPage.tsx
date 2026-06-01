@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, ArrowRight, ArrowLeft, Sparkles, Heart, BookOpen, Church, Hand, Sun } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -21,50 +22,50 @@ const QUESTIONS: DiagnosisQuestion[] = [
     id: 'moment',
     question: 'Como você descreveria seu momento espiritual atual?',
     options: [
-      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Heart className="w-spacing-md h-spacing-md" /> },
-      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'prayer',
     question: 'Qual é sua relação com a oração?',
     options: [
-      { label: 'Quase não rezo', value: 'rarely', icon: <Hand className="w-spacing-md h-spacing-md" /> },
-      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Quase não rezo', value: 'rarely', icon: <Icons.Hand className="w-spacing-md h-spacing-md" /> },
+      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'knowledge',
     question: 'Quanto você conhece da doutrina católica?',
     options: [
-      { label: 'Muito pouco, o básico', value: 'basic', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Conheço razoavelmente', value: 'moderate', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Estudo com frequência', value: 'advanced', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho formação teológica', value: 'theological', icon: <Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Muito pouco, o básico', value: 'basic', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Conheço razoavelmente', value: 'moderate', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Estudo com frequência', value: 'advanced', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho formação teológica', value: 'theological', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'sacraments',
     question: 'Como é sua vivência sacramental?',
     options: [
-      { label: 'Não frequento os sacramentos', value: 'none', icon: <Church className="w-spacing-md h-spacing-md" /> },
-      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Church className="w-spacing-md h-spacing-md" /> },
-      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Vida sacramental intensa', value: 'intense', icon: <Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Não frequento os sacramentos', value: 'none', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Vida sacramental intensa', value: 'intense', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'goal',
     question: 'O que você mais deseja nesta jornada?',
     options: [
-      { label: 'Encontrar paz interior', value: 'peace', icon: <Heart className="w-spacing-md h-spacing-md" /> },
-      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Encontrar paz interior', value: 'peace', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
     ],
   },
 ];
@@ -149,7 +150,7 @@ const DiagnosticoPage: React.FC = () => {
             transition={{ type: 'spring', delay: 0.2 }}
             className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium-full bg-primary/10 flex items-center justify-center"
           >
-            <Compass className="w-spacing-xl h-spacing-xl text-primary" />
+            <Icons.Compass className="w-spacing-xl h-spacing-xl text-primary" />
           </motion.div>
           <h1 className="text-premium-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
           <p className="text-muted-foreground">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
@@ -160,7 +161,7 @@ const DiagnosticoPage: React.FC = () => {
           <p className="text-muted-foreground">{rec.description}</p>
           <div className="flex gap-spacing-sm">
             <Button onClick={() => navigate(AppRoute.JORNADAS)} className="flex-1">
-              Ver Jornadas <ArrowRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
+              Ver Jornadas <Icons.ArrowRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
             </Button>
             <Button variant="outline" onClick={() => navigate(AppRoute.HOJE)}>
               Ir para Hoje
@@ -176,7 +177,7 @@ const DiagnosticoPage: React.FC = () => {
   return (
     <div className="max-w-spacing-lg mx-auto space-y-spacing-lg">
       <div className="text-center space-y-spacing-xs">
-        <Compass className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
+        <Icons.Compass className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
         <h1 className="text-premium-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
         <p className="text-premium-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
       </div>
@@ -220,7 +221,7 @@ const DiagnosticoPage: React.FC = () => {
 
       {currentStep > 0 && (
         <Button variant="ghost" size="sm" onClick={() => setCurrentStep(currentStep - 1)}>
-          <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-2xs" /> Voltar
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-2xs" /> Voltar
         </Button>
       )}
     </div>

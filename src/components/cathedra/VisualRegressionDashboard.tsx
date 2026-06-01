@@ -1,10 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  CheckCircle2, XCircle, Clock, Eye, Check, X, 
-  ArrowRight, ShieldAlert, Type, Grid, Layout, 
-  ChevronRight, ExternalLink, RefreshCw
-} from 'lucide-react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -116,7 +113,7 @@ const VisualRegressionDashboard: React.FC = () => {
   if (loading && runs.length === 0) {
     return (
       <div className="flex items-center justify-center p-spacing-3xl">
-        <RefreshCw className="w-spacing-xl h-spacing-xl animate-spin text-primary opacity-50" />
+        <Icons.RefreshCw className="w-spacing-xl h-spacing-xl animate-spin text-primary opacity-50" />
       </div>
     );
   }
@@ -128,7 +125,7 @@ const VisualRegressionDashboard: React.FC = () => {
         <Card className="w-full md:w-spacing-4xl border-border/10 bg-muted/20 backdrop-blur-sm rounded-premium shadow-premium">
           <CardHeader className="p-spacing-md border-b border-border/10">
             <CardTitle className="text-premium-sm font-black uppercase tracking-widest flex items-center gap-spacing-xs">
-              <Clock className="w-spacing-md h-spacing-md" /> Histórico
+              <Icons.Clock className="w-spacing-md h-spacing-md" /> Histórico
             </CardTitle>
           </CardHeader>
           <CardContent className="p-spacing-0">
@@ -149,9 +146,9 @@ const VisualRegressionDashboard: React.FC = () => {
                         {format(new Date(run.created_at), 'dd/MM/yy HH:mm')}
                       </span>
                       {run.status === 'success' ? (
-                        <CheckCircle2 className="w-spacing-sm h-spacing-sm text-green-500" />
+                        <Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm text-green-500" />
                       ) : (
-                        <XCircle className="w-spacing-sm h-spacing-sm text-red-500" />
+                        <Icons.XCircle className="w-spacing-sm h-spacing-sm text-red-500" />
                       )}
                     </div>
                     <div className="flex items-center justify-between">
@@ -177,19 +174,19 @@ const VisualRegressionDashboard: React.FC = () => {
             <StatsCard 
               title="Acessibilidade" 
               value="WCAG AAA" 
-              icon={<ShieldAlert className="w-spacing-md h-spacing-md" />} 
+              icon={<Icons.ShieldAlert className="w-spacing-md h-spacing-md" />} 
               status="valid"
             />
             <StatsCard 
               title="Tipografia" 
               value="Consistente" 
-              icon={<Type className="w-spacing-md h-spacing-md" />} 
+              icon={<Icons.Type className="w-spacing-md h-spacing-md" />} 
               status="valid"
             />
             <StatsCard 
               title="Grids & Espaço" 
               value="Alinhado" 
-              icon={<Grid className="w-spacing-md h-spacing-md" />} 
+              icon={<Icons.Grid className="w-spacing-md h-spacing-md" />} 
               status="valid"
             />
           </div>
@@ -203,7 +200,7 @@ const VisualRegressionDashboard: React.FC = () => {
               </TabsList>
               
               <Button size="sm" variant="outline" className="rounded-premium-full h-spacing-xl text-premium-xs font-black uppercase tracking-wider gap-spacing-xs">
-                <RefreshCw className="w-spacing-sm h-spacing-sm" /> Nova Auditoria
+                <Icons.RefreshCw className="w-spacing-sm h-spacing-sm" /> Nova Auditoria
               </Button>
             </div>
 
@@ -261,7 +258,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
       <CardHeader className="p-spacing-md border-b border-border/10 flex flex-row items-center justify-between">
         <div className="flex items-center gap-spacing-sm">
           <div className={`p-spacing-xs rounded-premium-sm ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
-            {snapshot.status === 'pass' ? <CheckCircle2 className="w-spacing-md h-spacing-md" /> : snapshot.status === 'fail' ? <XCircle className="w-spacing-md h-spacing-md" /> : <ShieldAlert className="w-spacing-md h-spacing-md" />}
+            {snapshot.status === 'pass' ? <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" /> : snapshot.status === 'fail' ? <Icons.XCircle className="w-spacing-md h-spacing-md" /> : <Icons.ShieldAlert className="w-spacing-md h-spacing-md" />}
           </div>
           <div>
             <h4 className="text-premium-sm font-black text-primary">{snapshot.page_name}</h4>
@@ -293,7 +290,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
                 disabled={isApproving || !reason}
                 onClick={() => onApprove(reason)}
               >
-                {isApproving ? <RefreshCw className="w-spacing-sm h-spacing-sm animate-spin" /> : <Check className="w-spacing-sm h-spacing-sm mr-spacing-xs" />} Aceitar
+                {isApproving ? <Icons.RefreshCw className="w-spacing-sm h-spacing-sm animate-spin" /> : <Icons.Check className="w-spacing-sm h-spacing-sm mr-spacing-xs" />} Aceitar
               </Button>
               <Button 
                 size="sm" 
@@ -304,7 +301,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
                   setReason('');
                 }}
               >
-                <X className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Rejeitar
+                <Icons.X className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Rejeitar
               </Button>
             </div>
           )}
@@ -335,7 +332,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
                 <img src={snapshot.current_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Atual" className="w-full h-full object-contain" />
                 {snapshot.status === 'fail' && (
                   <div className="absolute inset-0 bg-red-500/5 flex items-center justify-center pointer-events-none">
-                    <XCircle className="w-spacing-2xl h-spacing-2xl text-red-500/20" />
+                    <Icons.XCircle className="w-spacing-2xl h-spacing-2xl text-red-500/20" />
                   </div>
                 )}
               </div>
@@ -346,7 +343,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
         {snapshot.typography_errors && snapshot.typography_errors.length > 0 && (
           <div className="p-spacing-sm bg-yellow-500/5 border border-yellow-500/20 rounded-premium-sm space-y-spacing-xs">
             <p className="text-[9px] font-black uppercase tracking-widest text-yellow-600 flex items-center gap-spacing-2xs">
-              <Type className="w-spacing-sm h-spacing-sm" /> Discrepâncias Tipográficas Encontradas ({snapshot.typography_errors.length})
+              <Icons.Type className="w-spacing-sm h-spacing-sm" /> Discrepâncias Tipográficas Encontradas ({snapshot.typography_errors.length})
             </p>
             <div className="text-[10px] opacity-70 font-mono">
               {snapshot.typography_errors.map((err: string, i: number) => (

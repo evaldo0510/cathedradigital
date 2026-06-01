@@ -1,11 +1,10 @@
+import { Icons } from '@/constants';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { AppRoute } from '@/types';
 import { motion } from 'framer-motion';
-import { 
-  Search, X, BookOpen, Brain
-} from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import AZFaithQuiz from './AZFaithQuiz';
 import { useGlossary } from '@/hooks/useGlossary';
@@ -112,14 +111,14 @@ const AZFaithPage: React.FC = () => {
     <ContemplativeLayout
       title="A–Z da Fé"
       subtitle="Glossarium Fidei"
-      icon={BookOpen}
+      icon={Icons.BookOpen}
       headerActions={
         <Button
           variant={quizMode ? 'default' : 'outline'}
           onClick={() => setQuizMode(!quizMode)}
           className="rounded-premium-full gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest"
         >
-          <Brain className="w-spacing-md h-spacing-md" />
+          <Icons.Brain className="w-spacing-md h-spacing-md" />
           {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
         </Button>
       }
@@ -135,7 +134,7 @@ const AZFaithPage: React.FC = () => {
         ) : (
           <>
             <div className="relative max-w-spacing-lg mx-auto mb-spacing-lg">
-              <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+              <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Buscar..."
@@ -148,7 +147,7 @@ const AZFaithPage: React.FC = () => {
               />
               {searchQuery && (
                 <Button onClick={() => setSearchQuery('')} className="absolute right-spacing-md top-spacing-2xs/2 -translate-y-1/2">
-                  <X className="w-spacing-md h-spacing-md text-muted-foreground" />
+                  <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground" />
                 </Button>
               )}
             </div>

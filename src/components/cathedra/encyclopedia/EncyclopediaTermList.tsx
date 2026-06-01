@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+
 import { FaithTerm } from '../AZFaithPage';
 
 interface EncyclopediaTermListProps {
@@ -34,7 +35,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
           >
 
             <span className="font-semibold text-premium-sm truncate">{t.term}</span>
-            <ChevronRight className={`w-spacing-md h-spacing-md shrink-0 transition-transform ${isActive ? 'text-primary rotate-90' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
+            <Icons.ChevronRight className={`w-spacing-md h-spacing-md shrink-0 transition-transform ${isActive ? 'text-primary rotate-90' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
           </Button>
         );
       })}

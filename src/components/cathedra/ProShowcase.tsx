@@ -1,18 +1,19 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Crown, BookOpen, Brain, Sparkles, Headphones, Globe, ArrowRight } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const BENEFITS = [
-  { icon: BookOpen, label: 'Conteúdo completo', desc: 'Acesso integral a todas as 6 camadas de profundidade' },
-  { icon: Brain, label: 'IA Logos ilimitada', desc: 'Respostas teológicas sem limite de uso' },
-  { icon: Sparkles, label: 'Jornadas avançadas', desc: 'Trilhas exclusivas de formação espiritual' },
-  { icon: Headphones, label: 'Áudio de conteúdos', desc: 'Ouça reflexões, meditações e orações' },
-  { icon: Globe, label: 'Santos em profundidade', desc: 'Vidas completas e conexões com jornadas' },
-  { icon: Crown, label: 'Apoie a evangelização', desc: '50% destinado a doações e missão' },
+  { icon: Icons.BookOpen, label: 'Conteúdo completo', desc: 'Acesso integral a todas as 6 camadas de profundidade' },
+  { icon: Icons.Brain, label: 'IA Logos ilimitada', desc: 'Respostas teológicas sem limite de uso' },
+  { icon: Icons.Sparkles, label: 'Jornadas avançadas', desc: 'Trilhas exclusivas de formação espiritual' },
+  { icon: Icons.Headphones, label: 'Áudio de conteúdos', desc: 'Ouça reflexões, meditações e orações' },
+  { icon: Icons.Globe, label: 'Santos em profundidade', desc: 'Vidas completas e conexões com jornadas' },
+  { icon: Icons.Crown, label: 'Apoie a evangelização', desc: '50% destinado a doações e missão' },
 ];
 
 const ProShowcase: React.FC = () => {
@@ -36,7 +37,7 @@ const ProShowcase: React.FC = () => {
         {/* Header */}
         <div className="text-center space-y-spacing-xs">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-secondary/20 border border-secondary/30">
-            <Crown className="w-spacing-sm h-spacing-sm text-secondary" />
+            <Icons.Crown className="w-spacing-sm h-spacing-sm text-secondary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-premium-xl md:text-premium-2xl font-black text-foreground leading-tight">
@@ -74,8 +75,8 @@ const ProShowcase: React.FC = () => {
             onClick={() => navigate(AppRoute.PRICING)}
             className="w-full max-w-spacing-sm rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
           >
-            <Crown className="w-spacing-md h-spacing-md" /> Conheça o PRO
-            <ArrowRight className="w-spacing-md h-spacing-md" />
+            <Icons.Crown className="w-spacing-md h-spacing-md" /> Conheça o PRO
+            <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
           </Button>
           <p className="text-premium-xs text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser

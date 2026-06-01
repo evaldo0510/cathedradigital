@@ -1,10 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
-  AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
-  ArrowUp, ArrowDown, Minus
-} from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -60,9 +57,9 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   const isBad = invertColor ? direction === 'up' : direction === 'down';
   const badge = (
     <span className={`inline-flex items-center gap-spacing-3xs text-premium-xs font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
-      {direction === 'up' && <ArrowUp className="w-spacing-sm h-spacing-sm" />}
-      {direction === 'down' && <ArrowDown className="w-spacing-sm h-spacing-sm" />}
-      {direction === 'flat' && <Minus className="w-spacing-sm h-spacing-sm" />}
+      {direction === 'up' && <Icons.ArrowUp className="w-spacing-sm h-spacing-sm" />}
+      {direction === 'down' && <Icons.ArrowDown className="w-spacing-sm h-spacing-sm" />}
+      {direction === 'flat' && <Icons.Minus className="w-spacing-sm h-spacing-sm" />}
       {pct}%
     </span>
   );
@@ -314,7 +311,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
   return (
     <TooltipProvider delayDuration={200}>
     <div className="space-y-spacing-lg">
-      {/* Period Filter + Export */}
+      {/* Period Icons.Filter + Export */}
       <div className="flex items-center justify-between flex-wrap gap-spacing-xs">
         <div className="flex gap-spacing-2xs">
           {PERIOD_OPTIONS.map(opt => (
@@ -330,7 +327,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           ))}
         </div>
         <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportRetentionCsv} disabled={filteredUsers.length === 0}>
-          <Download className="w-spacing-sm h-spacing-sm" /> Exportar CSV
+          <Icons.Download className="w-spacing-sm h-spacing-sm" /> Exportar CSV
         </Button>
       </div>
       {/* KPI Cards */}
@@ -338,7 +335,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
         {[
           {
             title: 'Taxa de Retenção',
-            icon: <TrendingUp className="h-spacing-md w-spacing-md text-primary" />,
+            icon: <Icons.TrendingUp className="h-spacing-md w-spacing-md text-primary" />,
             value: <span className="text-premium-3xl font-bold text-primary">{metrics.retentionRate}%</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} /> : null,
             sub: <>{metrics.active.length} ativos de {filteredUsers.length}</>,
@@ -346,7 +343,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           },
           {
             title: 'Taxa de Churn',
-            icon: <TrendingDown className="h-spacing-md w-spacing-md text-destructive" />,
+            icon: <Icons.TrendingDown className="h-spacing-md w-spacing-md text-destructive" />,
             value: <span className="text-premium-3xl font-bold text-destructive">{metrics.churnRate}%</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} /> : null,
             sub: <>{metrics.churned.length} inativos ({'>'}14 dias)</>,
@@ -354,7 +351,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           },
           {
             title: 'Streak Médio',
-            icon: <Flame className="h-spacing-md w-spacing-md text-accent-foreground" />,
+            icon: <Icons.Flame className="h-spacing-md w-spacing-md text-accent-foreground" />,
             value: <span className="text-premium-3xl font-bold">{metrics.avgStreak}</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} /> : null,
             sub: 'dias consecutivos',
@@ -362,7 +359,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           },
           {
             title: 'Novos (7d)',
-            icon: <UserPlus className="h-spacing-md w-spacing-md text-primary" />,
+            icon: <Icons.UserPlus className="h-spacing-md w-spacing-md text-primary" />,
             value: <span className="text-premium-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} /> : null,
             sub: <>{metrics.newUsers30d.length} nos últimos 30 dias</>,
@@ -370,7 +367,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           },
           {
             title: 'LTV Médio',
-            icon: <DollarSign className="h-spacing-md w-spacing-md text-primary" />,
+            icon: <Icons.DollarSign className="h-spacing-md w-spacing-md text-primary" />,
             value: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return <span className="text-premium-3xl font-bold">R$ {ltv.toFixed(2)}</span>; })(),
             delta: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} /> : null; })(),
             sub: 'receita / cliente PRO',
@@ -378,7 +375,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           },
           {
             title: 'ARPU',
-            icon: <DollarSign className="h-spacing-md w-spacing-md text-muted-foreground" />,
+            icon: <Icons.DollarSign className="h-spacing-md w-spacing-md text-muted-foreground" />,
             value: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return <span className="text-premium-3xl font-bold">R$ {arpu.toFixed(2)}</span>; })(),
             delta: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} /> : null; })(),
             sub: 'receita / usuário total',
@@ -517,7 +514,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
         <Card className="border-secondary/30 bg-secondary/5">
           <CardHeader className="pb-spacing-sm">
             <CardTitle className="text-premium-sm flex items-center gap-spacing-xs text-secondary">
-              <AlertTriangle className="w-spacing-md h-spacing-md" /> Usuários em Risco ({metrics.atRisk.length})
+              <Icons.AlertTriangle className="w-spacing-md h-spacing-md" /> Usuários em Risco ({metrics.atRisk.length})
             </CardTitle>
             <CardDescription>Não acessam há 4-14 dias. Considere enviar notificação de reengajamento.</CardDescription>
           </CardHeader>

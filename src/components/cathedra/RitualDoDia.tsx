@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles, CheckCircle2, ArrowRight, Book, Heart, VolumeX, Bell, Download, Settings2, Clock, Map } from 'lucide-react';
+
 import { DAILY_RITUALS } from '@/data/dailyRitual';
 import { CathedraButton } from './CathedraButton';
 import AudioContentPlayer from './AudioContentPlayer';
@@ -254,7 +255,7 @@ const RitualDoDia: React.FC = () => {
               className={cn("w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
               onClick={() => updateSettings(!isSilent, reminderTime)}
             >
-              {isSilent ? <VolumeX className="w-spacing-md h-spacing-md" strokeWidth={1.2} /> : <Sparkles className="w-spacing-md h-spacing-md" strokeWidth={1} />}
+              {isSilent ? <Icons.VolumeX className="w-spacing-md h-spacing-md" strokeWidth={1.2} /> : <Icons.Sparkles className="w-spacing-md h-spacing-md" strokeWidth={1} />}
             </CathedraButton>
 
             <CathedraButton 
@@ -263,7 +264,7 @@ const RitualDoDia: React.FC = () => {
               className="w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full text-primary/60 hover:text-primary transition-colors"
               onClick={exportPDF}
             >
-              <Download className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
+              <Icons.Download className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
             </CathedraButton>
             
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
@@ -273,7 +274,7 @@ const RitualDoDia: React.FC = () => {
                   size="sm" 
                   className="w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full text-primary/60 hover:text-primary transition-colors"
                 >
-                  <Settings2 className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
+                  <Icons.Settings2 className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
                 </CathedraButton>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border-primary/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2.5rem] dark:border-primary/20">
@@ -293,7 +294,7 @@ const RitualDoDia: React.FC = () => {
                   </div>
                   <div className="space-y-spacing-md">
                     <div className="flex items-center gap-spacing-sm">
-                      <Clock className="w-spacing-md h-spacing-md text-primary/40" />
+                      <Icons.Clock className="w-spacing-md h-spacing-md text-primary/40" />
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Lembrete</Label>
                     </div>
                     <div className="flex gap-spacing-sm">
@@ -440,12 +441,12 @@ const RitualDoDia: React.FC = () => {
                 }}
               >
                 {progress === 0 ? 'Iniciar' : 'Continuar'}
-                <ArrowRight className="ml-spacing-sm w-spacing-md h-spacing-md" />
+                <Icons.ArrowRight className="ml-spacing-sm w-spacing-md h-spacing-md" />
               </CathedraButton>
             )}
             {progress === 100 && (
               <div className="flex items-center gap-spacing-sm text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-spacing-xl py-spacing-md bg-primary/[0.01] rounded-premium-full border border-primary/5 shadow-premium-sm">
-                <CheckCircle2 className="w-spacing-md h-spacing-md" />
+                <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" />
                 Concluído
               </div>
             )}

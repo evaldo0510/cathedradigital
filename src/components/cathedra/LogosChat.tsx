@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Book, Sparkles } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
@@ -89,7 +90,7 @@ const LogosChat = () => {
             <div className="p-spacing-md border-b border-border bg-background flex items-center justify-between">
               <div className="flex items-center gap-spacing-xs">
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center">
-                  <Sparkles className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
                   <h3 className="text-premium-sm font-bold font-serif text-primary">Logos IA</h3>
@@ -97,7 +98,7 @@ const LogosChat = () => {
                 </div>
               </div>
               <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-                <X className="w-spacing-md h-spacing-md" />
+                <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
 
@@ -149,7 +150,7 @@ const LogosChat = () => {
                   onClick={handleSend}
                   className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-xl h-spacing-xl rounded-premium-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
                 >
-                  <Send className="w-spacing-md h-spacing-md" />
+                  <Icons.Send className="w-spacing-md h-spacing-md" />
                 </Button>
               </div>
             </div>
@@ -163,7 +164,7 @@ const LogosChat = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-premium-full shadow-premium font-black uppercase tracking-widest text-premium-xs min-w-spacing-0"
       >
-        <Sparkles className="w-spacing-md h-spacing-md shrink-0" />
+        <Icons.Sparkles className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>
       </motion.button>
     </div>

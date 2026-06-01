@@ -1,25 +1,10 @@
+import { Icons } from '@/constants';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  ExternalLink, 
-  CheckCircle2, 
-  AlertCircle, 
-  ImageIcon, 
-  Search, 
-  Share2, 
-  Copy, 
-  RefreshCcw,
-  Globe,
-  Twitter,
-  Facebook,
-  Code,
-  Download,
-  Loader2,
-  FileText
-} from 'lucide-react';
+
 import SEOHead from '@/components/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -265,14 +250,14 @@ const SEOVerificationPage = () => {
 ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 <link rel="canonical" href="${url}">
 
-<!-- Open Graph / Facebook -->
+<!-- Open Graph / Icons.Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
 <meta property="og:image" content="${image}">
 
-<!-- Twitter -->
+<!-- Icons.Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="${url}">
 <meta name="twitter:title" content="${title}">
@@ -305,7 +290,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
     <div className="min-h-screen bg-background py-spacing-2xl px-spacing-md sm:px-spacing-lg lg:px-spacing-xl">
       <SEOHead 
         title="Verificação de SEO e Metadados" 
-        description="Painel de controle para auditoria e verificação de metadados, imagens Open Graph e Twitter Cards com suporte a cache dinâmico."
+        description="Painel de controle para auditoria e verificação de metadados, imagens Open Graph e Icons.Twitter Cards com suporte a cache dinâmico."
         path="/admin/seo-verify"
       />
       
@@ -313,7 +298,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
           <div>
             <h1 className="text-premium-4xl font-serif font-bold text-foreground mb-spacing-xs flex items-center gap-spacing-sm">
-              <Search className="w-spacing-xl h-spacing-xl text-primary" />
+              <Icons.Search className="w-spacing-xl h-spacing-xl text-primary" />
               Auditoria de SEO & Social
             </h1>
             <p className="text-muted-foreground text-premium-lg">
@@ -322,11 +307,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           </div>
           <div className="flex flex-wrap gap-spacing-xs">
             <Button variant="outline" size="sm" onClick={() => window.open(`https://search.google.com/test/rich-results`, '_blank')}>
-              <Globe className="w-spacing-md h-spacing-md mr-spacing-xs" />
+              <Icons.Globe className="w-spacing-md h-spacing-md mr-spacing-xs" />
               Rich Results Test
             </Button>
             <Button variant="outline" size="sm" onClick={() => window.open(`https://developers.facebook.com/tools/debug/`, '_blank')}>
-              <Facebook className="w-spacing-md h-spacing-md mr-spacing-xs" />
+              <Icons.Facebook className="w-spacing-md h-spacing-md mr-spacing-xs" />
               FB Debugger
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
@@ -338,7 +323,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         <div className="bg-muted/30 p-spacing-md rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-spacing-md">
           <div className="flex items-center gap-spacing-md">
             <div className="p-spacing-xs bg-primary/10 rounded-premium-lg">
-              <RefreshCcw className={`w-spacing-md h-spacing-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
+              <Icons.RefreshCcw className={`w-spacing-md h-spacing-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
             </div>
             <div>
               <h3 className="font-medium">Auditoria de Rotas ({pages.length})</h3>
@@ -371,7 +356,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               onClick={scanAll}
               disabled={isScanningAll || isLoadingSitemap}
             >
-              {isScanningAll ? <Loader2 className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" /> : <Search className="w-spacing-md h-spacing-md mr-spacing-xs" />}
+              {isScanningAll ? <Icons.Loader2 className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" /> : <Icons.Search className="w-spacing-md h-spacing-md mr-spacing-xs" />}
               Varrer Todas
             </Button>
             <Button 
@@ -380,7 +365,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               onClick={exportCSV}
               disabled={pages.length === 0}
             >
-              <Download className="w-spacing-md h-spacing-md mr-spacing-xs" />
+              <Icons.Download className="w-spacing-md h-spacing-md mr-spacing-xs" />
               Exportar CSV
             </Button>
             <div className="h-spacing-xl w-[1px] bg-border mx-spacing-xs hidden md:block" />
@@ -389,7 +374,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               size="sm" 
               onClick={() => setActiveTab('preview')}
             >
-              <ImageIcon className="w-spacing-md h-spacing-md mr-spacing-xs" />
+              <Icons.ImageIcon className="w-spacing-md h-spacing-md mr-spacing-xs" />
               Visualização
             </Button>
             <Button 
@@ -397,7 +382,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               size="sm" 
               onClick={() => setActiveTab('tags')}
             >
-              <Code className="w-spacing-md h-spacing-md mr-spacing-xs" />
+              <Icons.Code className="w-spacing-md h-spacing-md mr-spacing-xs" />
               Tags HTML
             </Button>
           </div>
@@ -406,7 +391,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         <div className="grid grid-cols-1 gap-spacing-2xl">
           {isLoadingSitemap ? (
             <div className="flex flex-col items-center justify-center py-spacing-3xl gap-spacing-md">
-              <Loader2 className="w-spacing-xl h-spacing-xl text-primary animate-spin" />
+              <Icons.Loader2 className="w-spacing-xl h-spacing-xl text-primary animate-spin" />
               <p className="text-muted-foreground">Carregando rotas do sitemap...</p>
             </div>
           ) : pages.map((page) => (
@@ -431,20 +416,20 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                     onClick={() => scanRoute(page.path)}
                     disabled={page.status === 'scanning'}
                   >
-                    <RefreshCcw className={`w-spacing-sm h-spacing-sm mr-spacing-xs ${page.status === 'scanning' ? 'animate-spin' : ''}`} />
+                    <Icons.RefreshCcw className={`w-spacing-sm h-spacing-sm mr-spacing-xs ${page.status === 'scanning' ? 'animate-spin' : ''}`} />
                     Scan
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => window.open(`${BASE_URL}${page.path}`, '_blank')}>
-                    <ExternalLink className="w-spacing-md h-spacing-md" />
+                    <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')} title="Copiar Link">
-                    <Copy className="w-spacing-md h-spacing-md" />
+                    <Icons.Copy className="w-spacing-md h-spacing-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')} title="Copiar Tags HTML">
-                    <Code className="w-spacing-md h-spacing-md" />
+                    <Icons.Code className="w-spacing-md h-spacing-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => downloadHTML(page)} title="Baixar Tags HTML">
-                    <Download className="w-spacing-md h-spacing-md" />
+                    <Icons.Download className="w-spacing-md h-spacing-md" />
                   </Button>
                 </div>
               </div>
@@ -453,11 +438,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <Card className="overflow-hidden border-border/50 shadow-premium">
                   <CardContent className="p-spacing-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                      {/* Left Side: Metadata & Search Previews */}
+                      {/* Left Side: Metadata & Icons.Search Previews */}
                       <div className="p-spacing-lg space-y-spacing-lg border-r border-border/50">
                         <div className="space-y-spacing-md">
                           <div>
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-2xs">Google Search Preview</div>
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-2xs">Google Icons.Search Preview</div>
                             <div className="p-spacing-md bg-white dark:bg-[#1a1a1a] rounded-premium-lg border border-border/40 shadow-premium-md">
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-spacing-2xs flex items-center gap-spacing-2xs">
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
@@ -477,9 +462,9 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-premium-lg">{(page.title?.length || 0) + 18}</span>
                                 {(page.title?.length || 0) + 18 <= 60 && (page.title?.length || 0) > 0 ? (
-                                  <CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
+                                  <Icons.CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
                                 ) : (
-                                  <AlertCircle className="w-spacing-md h-spacing-md text-amber-500" />
+                                  <Icons.AlertCircle className="w-spacing-md h-spacing-md text-amber-500" />
                                 )}
                               </div>
                               <div className="text-[10px] text-muted-foreground mt-spacing-2xs">Ideal: 50-60 chars</div>
@@ -489,9 +474,9 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-premium-lg">{page.description?.length || 0}</span>
                                 {(page.description?.length || 0) <= 160 && (page.description?.length || 0) >= 120 ? (
-                                  <CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
+                                  <Icons.CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
                                 ) : (
-                                  <AlertCircle className="w-spacing-md h-spacing-md text-amber-500" />
+                                  <Icons.AlertCircle className="w-spacing-md h-spacing-md text-amber-500" />
                                 )}
                               </div>
                               <div className="text-[10px] text-muted-foreground mt-spacing-2xs">Ideal: 120-160 chars</div>
@@ -501,7 +486,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                           {(page.status === 'missing' || !page.title || !page.description) && (
                             <div className="p-spacing-md bg-amber-500/10 border border-amber-500/20 rounded-premium-lg">
                               <h4 className="text-premium-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-xs">
-                                <AlertCircle className="w-spacing-sm h-spacing-sm" /> Sugestões de Melhoria
+                                <Icons.AlertCircle className="w-spacing-sm h-spacing-sm" /> Sugestões de Melhoria
                               </h4>
                               <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-spacing-2xs list-disc pl-spacing-md">
                                 {!page.title && <li>O título está ausente. Use o componente SEOHead para definir um título único.</li>}
@@ -520,7 +505,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                         <div>
                           <div className="flex items-center justify-between mb-spacing-xs">
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-spacing-2xs">
-                              <Share2 className="w-spacing-sm h-spacing-sm" /> Facebook / WhatsApp
+                              <Icons.Share2 className="w-spacing-sm h-spacing-sm" /> Icons.Facebook / WhatsApp
                             </div>
                             <Button 
                               variant="ghost" 
@@ -528,7 +513,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               className="h-spacing-lg px-spacing-xs text-[10px] gap-spacing-2xs"
                               onClick={() => copyToClipboard(getSocialTagsOnly(page, 'facebook'), 'Tags Facebook')}
                             >
-                              <Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
+                              <Icons.Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
                             </Button>
                           </div>
                           <div className="border border-border/50 rounded-premium-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-premium">
@@ -540,7 +525,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               />
                               <div className="absolute top-spacing-xs right-spacing-xs flex gap-spacing-2xs">
                                 <Button size="icon" variant="secondary" className="h-spacing-lg w-spacing-lg rounded-premium-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
-                                  <ImageIcon className="h-spacing-sm w-spacing-sm" />
+                                  <Icons.ImageIcon className="h-spacing-sm w-spacing-sm" />
                                 </Button>
                               </div>
                             </div>
@@ -555,7 +540,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                         <div>
                           <div className="flex items-center justify-between mb-spacing-xs">
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-2xs">
-                              <Twitter className="w-spacing-sm h-spacing-sm" /> Twitter Card (Large)
+                              <Icons.Twitter className="w-spacing-sm h-spacing-sm" /> Icons.Twitter Card (Large)
                             </div>
                             <Button 
                               variant="ghost" 
@@ -563,7 +548,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               className="h-spacing-lg px-spacing-xs text-[10px] gap-spacing-2xs"
                               onClick={() => copyToClipboard(getSocialTagsOnly(page, 'twitter'), 'Tags Twitter')}
                             >
-                              <Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
+                              <Icons.Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
                             </Button>
                           </div>
                           <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-premium-md">
@@ -578,7 +563,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <div className="text-premium-sm font-bold truncate">{page.title || page.name}</div>
                               <div className="text-[13px] text-muted-foreground line-clamp-spacing-xs mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
                               <div className="text-premium-xs text-muted-foreground mt-spacing-2xs flex items-center">
-                                <Globe className="w-spacing-sm h-spacing-sm mr-spacing-2xs opacity-50" />
+                                <Icons.Globe className="w-spacing-sm h-spacing-sm mr-spacing-2xs opacity-50" />
                                 cathedradigital.com.br
                               </div>
                             </div>
@@ -597,11 +582,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                     </div>
                     <div className="flex gap-spacing-xs">
                       <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
-                        <Copy className="w-spacing-md h-spacing-md mr-spacing-xs" />
+                        <Icons.Copy className="w-spacing-md h-spacing-md mr-spacing-xs" />
                         Copiar Código
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => downloadHTML(page)}>
-                        <Download className="w-spacing-md h-spacing-md mr-spacing-xs" />
+                        <Icons.Download className="w-spacing-md h-spacing-md mr-spacing-xs" />
                         Baixar HTML
                       </Button>
                     </div>
@@ -621,7 +606,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           <Card className="bg-primary/5 border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-spacing-xs">
-                <AlertCircle className="w-spacing-md h-spacing-md text-primary" />
+                <Icons.AlertCircle className="w-spacing-md h-spacing-md text-primary" />
                 Dicas de Otimização e Cache
               </CardTitle>
             </CardHeader>
@@ -630,7 +615,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <strong>1. Cache de Imagem:</strong> As imagens dinâmicas utilizam o parâmetro <code>v=yyyy-mm</code>. Isso garante que as redes sociais não usem versões antigas por muito tempo, mas mantém a estabilidade durante o mês atual.
               </p>
               <p>
-                <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Home).
+                <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Icons.Home).
               </p>
               <p>
                 <strong>3. Auditoria Real:</strong> Use o botão <strong>Scan</strong> para ler o HTML que está sendo servido atualmente para cada rota. Isso valida se o <code>react-helmet-async</code> está configurado corretamente para aquela página.

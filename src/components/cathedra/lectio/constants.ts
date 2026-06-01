@@ -1,4 +1,5 @@
-import { Book, Brain, Sparkles, Sun, Zap } from 'lucide-react';
+import { Icons } from '@/constants';
+
 
 export type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio' | 'conclusio';
 
@@ -9,7 +10,7 @@ export const STEPS = [
     latin: 'Lectio',
     instruction: 'Leia o texto sagrado com atenção, lentamente, como quem escuta a voz de Deus. Repita a leitura quantas vezes precisar.',
     prompt: 'O que diz o texto? Quais palavras ou frases chamam sua atenção?',
-    icon: Book,
+    icon: Icons.Book,
     color: 'text-primary bg-primary/10',
     duration: '5-10 min',
   },
@@ -19,7 +20,7 @@ export const STEPS = [
     latin: 'Meditatio',
     instruction: 'Reflita sobre o que leu. Mastigue a Palavra como um alimento espiritual. Deixe-a penetrar no coração e na mente.',
     prompt: 'O que Deus está me dizendo através deste texto? Como isso se aplica à minha vida?',
-    icon: Brain,
+    icon: Icons.Brain,
     color: 'text-secondary bg-secondary/10',
     duration: '10-15 min',
   },
@@ -29,7 +30,7 @@ export const STEPS = [
     latin: 'Oratio',
     instruction: 'Responda a Deus com a oração que brota do coração. Fale com Ele sobre o que a meditação suscitou em você.',
     prompt: 'O que desejo dizer a Deus? Que graça pedir? Que louvor ou agradecimento oferecer?',
-    icon: Sparkles,
+    icon: Icons.Sparkles,
     color: 'text-secondary bg-secondary/10',
     duration: '5-10 min',
   },
@@ -39,7 +40,7 @@ export const STEPS = [
     latin: 'Contemplatio',
     instruction: 'Faça silêncio interior. Repouse na presença de Deus sem palavras, sem pensamentos, apenas acolhendo Seu amor.',
     prompt: 'Descanse em Deus. Não é preciso pensar nem falar — apenas estar.',
-    icon: Sun,
+    icon: Icons.Sun,
     color: 'text-secondary bg-secondary/10',
     duration: '5-15 min',
   },
@@ -49,7 +50,7 @@ export const STEPS = [
     latin: 'Actio',
     instruction: 'Leve a Palavra para a vida concreta. Que resolução prática você faz a partir deste encontro com Deus?',
     prompt: 'O que vou fazer hoje como resposta à Palavra de Deus?',
-    icon: Zap,
+    icon: Icons.Zap,
     color: 'text-primary bg-primary/10',
     duration: '2-5 min',
   },

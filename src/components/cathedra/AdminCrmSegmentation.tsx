@@ -1,8 +1,6 @@
+import { Icons } from '@/constants';
 import React, { useState, useMemo, useCallback } from 'react';
-import {
-  Users, Crown, AlertTriangle, Flame, UserCheck, Clock, Star,
-  Filter, ChevronDown, ChevronUp, Eye, Download, Search
-} from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -55,12 +53,12 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [users]);
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
-    { key: 'all', label: 'Todos', icon: <Users className="w-spacing-md h-spacing-md" />, color: 'text-foreground' },
-    { key: 'new', label: 'Novo', icon: <UserCheck className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
-    { key: 'active', label: 'Ativo', icon: <Flame className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
-    { key: 'engaged', label: 'Engajado', icon: <Star className="w-spacing-md h-spacing-md" />, color: 'text-orange-500' },
-    { key: 'deep', label: 'Profundo', icon: <Crown className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
-    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-spacing-md h-spacing-md" />, color: 'text-destructive' },
+    { key: 'all', label: 'Todos', icon: <Icons.Users className="w-spacing-md h-spacing-md" />, color: 'text-foreground' },
+    { key: 'new', label: 'Novo', icon: <Icons.UserCheck className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'active', label: 'Ativo', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'engaged', label: 'Engajado', icon: <Icons.Star className="w-spacing-md h-spacing-md" />, color: 'text-orange-500' },
+    { key: 'deep', label: 'Profundo', icon: <Icons.Crown className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'inactive', label: 'Inativo', icon: <Icons.Clock className="w-spacing-md h-spacing-md" />, color: 'text-destructive' },
   ];
 
   const filtered = segmentedUsers[segment]
@@ -133,7 +131,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
         ))}
       </div>
 
-      {/* User List */}
+      {/* Icons.User Icons.List */}
       <Card>
         <CardHeader className="pb-spacing-sm">
           <div className="flex items-center justify-between">
@@ -142,7 +140,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             </CardTitle>
             <div className="flex items-center gap-spacing-xs">
               <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
-                <Download className="w-spacing-sm h-spacing-sm" /> CSV
+                <Icons.Download className="w-spacing-sm h-spacing-sm" /> CSV
               </Button>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
               <SelectTrigger className="w-[160px] h-spacing-xl text-premium-xs">
@@ -204,7 +202,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                     </td>
                     <td className="p-spacing-sm text-center">
                       <Button size="sm" variant="ghost" className="h-spacing-lg px-spacing-xs text-premium-xs gap-spacing-2xs" onClick={() => onSelectUser(u)}>
-                        <Eye className="w-spacing-sm h-spacing-sm" /> Ver
+                        <Icons.Eye className="w-spacing-sm h-spacing-sm" /> Ver
                       </Button>
                     </td>
                   </tr>

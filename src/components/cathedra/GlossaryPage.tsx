@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
+
 
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
@@ -174,7 +174,7 @@ const GlossaryPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Search */}
+      {/* Icons.Search */}
       <FuzzySearchInput
         className="max-w-spacing-md mx-auto"
         value={searchQuery}
@@ -215,7 +215,7 @@ const GlossaryPage: React.FC = () => {
         </div>
       )}
 
-      {/* Search results as SearchResultCards */}
+      {/* Icons.Search results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
         <div className="space-y-spacing-xs">
           <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
@@ -226,7 +226,7 @@ const GlossaryPage: React.FC = () => {
               title={term.term}
               subtitle={term.definition}
               score={term.similarityScore}
-              icon={<BookOpen className="w-spacing-md h-spacing-md" />}
+              icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
               index={i}
             />
@@ -306,7 +306,7 @@ const GlossaryPage: React.FC = () => {
                           </div>
                         )}
 
-                        {/* Journey Link */}
+                        {/* Journey Icons.Link */}
                         {term.journey_id && (
                           <div className="bg-primary/10 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
                             <div className="flex items-center gap-spacing-xs">

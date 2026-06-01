@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -6,22 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Trash2, 
-  ExternalLink, 
-  Clock, 
-  ShieldCheck,
-  Building2,
-  Mail,
-  MoreHorizontal,
-  Edit,
-  Search,
-  Check,
-  X,
-  Filter
-} from 'lucide-react';
+
 import { toast } from 'sonner';
 import {
   DropdownMenu,
@@ -137,11 +123,11 @@ const AdminPartnersTab: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-spacing-2xs"><CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Aprovado</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-spacing-2xs"><Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Aprovado</Badge>;
       case 'rejected':
-        return <Badge variant="destructive" className="gap-spacing-2xs"><XCircle className="w-spacing-sm h-spacing-sm" /> Rejeitado</Badge>;
+        return <Badge variant="destructive" className="gap-spacing-2xs"><Icons.XCircle className="w-spacing-sm h-spacing-sm" /> Rejeitado</Badge>;
       default:
-        return <Badge variant="secondary" className="gap-spacing-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-spacing-sm h-spacing-sm" /> Pendente</Badge>;
+        return <Badge variant="secondary" className="gap-spacing-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> Pendente</Badge>;
     }
   };
 
@@ -172,7 +158,7 @@ const AdminPartnersTab: React.FC = () => {
         </div>
         <div className="flex items-center gap-spacing-xs">
           <div className="relative">
-            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
+            <Icons.Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input
               placeholder="Buscar parceiro..."
               className="pl-spacing-xl w-[200px] sm:w-[300px]"
@@ -203,7 +189,7 @@ const AdminPartnersTab: React.FC = () => {
             <Card className="border-dashed border-2 py-spacing-2xl">
               <CardContent className="flex flex-col items-center text-center space-y-spacing-md">
                 <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted flex items-center justify-center">
-                  <Building2 className="w-spacing-xl h-spacing-xl text-muted-foreground" />
+                  <Icons.Building2 className="w-spacing-xl h-spacing-xl text-muted-foreground" />
                 </div>
                 <div className="space-y-spacing-2xs">
                   <p className="font-semibold">Nenhum parceiro nesta categoria</p>
@@ -221,7 +207,7 @@ const AdminPartnersTab: React.FC = () => {
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (
-                          <Building2 className="w-spacing-lg h-spacing-lg text-muted-foreground" />
+                          <Icons.Building2 className="w-spacing-lg h-spacing-lg text-muted-foreground" />
                         )}
                       </div>
                       <div>
@@ -230,8 +216,8 @@ const AdminPartnersTab: React.FC = () => {
                           {getStatusBadge(partner.status)}
                         </CardTitle>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-premium-sm text-muted-foreground mt-spacing-2xs">
-                          <span className="flex items-center gap-spacing-2xs"><Mail className="w-spacing-sm h-spacing-sm" /> {partner.contact_email}</span>
-                          <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
+                          <span className="flex items-center gap-spacing-2xs"><Icons.Mail className="w-spacing-sm h-spacing-sm" /> {partner.contact_email}</span>
+                          <span className="flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
                         </div>
                       </div>
                     </div>
@@ -239,7 +225,7 @@ const AdminPartnersTab: React.FC = () => {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl">
-                          <MoreHorizontal className="w-spacing-md h-spacing-md" />
+                          <Icons.MoreHorizontal className="w-spacing-md h-spacing-md" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -247,18 +233,18 @@ const AdminPartnersTab: React.FC = () => {
                           setEditingPartner({...partner});
                           setIsEditDialogOpen(true);
                         }}>
-                          <Edit className="w-spacing-md h-spacing-md mr-spacing-xs" /> Editar Detalhes
+                          <Icons.Edit className="w-spacing-md h-spacing-md mr-spacing-xs" /> Editar Detalhes
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'approved')} className="text-emerald-500">
-                          <CheckCircle2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Aprovar
+                          <Icons.CheckCircle2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Aprovar
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'rejected')} className="text-destructive">
-                          <XCircle className="w-spacing-md h-spacing-md mr-spacing-xs" /> Rejeitar
+                          <Icons.XCircle className="w-spacing-md h-spacing-md mr-spacing-xs" /> Rejeitar
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleDelete(partner.id)} className="text-destructive">
-                          <Trash2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Excluir permanentemente
+                          <Icons.Trash2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Excluir permanentemente
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -275,7 +261,7 @@ const AdminPartnersTab: React.FC = () => {
                       {partner.website_url && (
                         <Button variant="ghost" size="sm" className="h-spacing-xl gap-spacing-2xs text-premium-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
                           <a href={partner.website_url} target="_blank" rel="noopener noreferrer">
-                            Site <ExternalLink className="w-spacing-sm h-spacing-sm" />
+                            Site <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
                           </a>
                         </Button>
                       )}
@@ -290,14 +276,14 @@ const AdminPartnersTab: React.FC = () => {
                             className="h-spacing-xl text-destructive hover:bg-destructive/10 hover:text-destructive gap-spacing-2xs" 
                             onClick={() => handleUpdateStatus(partner.id, 'rejected')}
                           >
-                            <X className="w-spacing-md h-spacing-md" /> Rejeitar
+                            <Icons.X className="w-spacing-md h-spacing-md" /> Rejeitar
                           </Button>
                           <Button 
                             size="sm" 
                             className="h-spacing-xl bg-emerald-500 hover:bg-emerald-600 text-white gap-spacing-2xs" 
                             onClick={() => handleUpdateStatus(partner.id, 'approved')}
                           >
-                            <Check className="w-spacing-md h-spacing-md" /> Aprovar
+                            <Icons.Check className="w-spacing-md h-spacing-md" /> Aprovar
                           </Button>
                         </>
                       )}
@@ -311,7 +297,7 @@ const AdminPartnersTab: React.FC = () => {
                             setIsEditDialogOpen(true);
                           }}
                         >
-                          <Edit className="w-spacing-md h-spacing-md" /> Editar
+                          <Icons.Edit className="w-spacing-md h-spacing-md" /> Editar
                         </Button>
                       )}
                     </div>
@@ -323,7 +309,7 @@ const AdminPartnersTab: React.FC = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Edit Dialog */}
+      {/* Icons.Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>

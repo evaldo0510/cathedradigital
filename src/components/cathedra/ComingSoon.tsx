@@ -4,7 +4,7 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Mail, CheckCircle2, ArrowRight, AlertCircle } from 'lucide-react';
+
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -127,7 +127,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-spacing-2xl pl-spacing-2xl pr-spacing-4xl rounded-premium-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-premium-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
               />
-              <Mail className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/60" />
+              <Icons.Mail className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/60" />
               <button 
                 type="submit" 
                 disabled={loading}
@@ -139,7 +139,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
           </form>
         ) : (
           <div className="flex items-center justify-center gap-spacing-sm text-primary/60 py-spacing-md px-spacing-xl rounded-premium-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
-            <CheckCircle2 className="w-spacing-md h-spacing-md" />
+            <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" />
             <span className="text-[9px] font-black uppercase tracking-widest">Inscrito no Santuário</span>
           </div>
         )}

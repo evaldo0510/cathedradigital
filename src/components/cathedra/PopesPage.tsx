@@ -6,7 +6,7 @@ import SacredImage from './SacredImage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Info, Calendar, Scroll, ChevronRight } from 'lucide-react';
+
 
 interface Pope {
   id: string;
@@ -185,7 +185,7 @@ const PopesPage: React.FC = () => {
       </div>
 
       <div className="relative max-w-spacing-md mx-auto">
-        <Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+        <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
         <Input
           placeholder="Buscar Papa..."
           value={search}
@@ -224,7 +224,7 @@ const PopesPage: React.FC = () => {
 
                 <CardContent className="p-spacing-md flex-1 flex flex-col space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary">
-                    <Calendar className="w-spacing-sm h-spacing-sm" /> {pope.reign}
+                    <Icons.Calendar className="w-spacing-sm h-spacing-sm" /> {pope.reign}
                   </div>
 
                   <p className="text-premium-sm text-muted-foreground leading-relaxed font-serif">
@@ -233,12 +233,12 @@ const PopesPage: React.FC = () => {
 
                   <div className="space-y-spacing-xs flex-1">
                     <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                      <Scroll className="w-spacing-sm h-spacing-sm" /> Legado Principal
+                      <Icons.Scroll className="w-spacing-sm h-spacing-sm" /> Legado Principal
                     </div>
                     <ul className="space-y-spacing-2xs">
                       {pope.contributions.map((item, i) => (
                         <li key={i} className="flex items-start gap-spacing-xs text-premium-small text-foreground font-bold">
-                          <ChevronRight className="w-spacing-sm h-spacing-sm text-primary mt-spacing-3xs shrink-0" />
+                          <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary mt-spacing-3xs shrink-0" />
                           <span>{item}</span>
                         </li>
                       ))}

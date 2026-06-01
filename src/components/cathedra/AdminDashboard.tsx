@@ -1,13 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Users, TrendingUp, Download, DollarSign, ArrowUpRight,
-  BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
-  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
-} from 'lucide-react';
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -292,7 +287,7 @@ const AdminDashboard: React.FC = () => {
             depth_level: crm.classification || 'Novo',
             reflections_count: crm.reflections_count || 0,
             current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity // Map view's activity to last_visit for UI consistency
+            last_visit: crm.last_activity // Icons.Map view's activity to last_visit for UI consistency
           };
         }) as UserProfile[]);
       } catch (err: any) {
@@ -398,7 +393,7 @@ const AdminDashboard: React.FC = () => {
 
   const SortIcon = ({ field }: { field: typeof sortField }) => {
     if (sortField !== field) return null;
-    return sortAsc ? <ChevronUp className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" /> : <ChevronDown className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" />;
+    return sortAsc ? <Icons.ChevronUp className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" /> : <Icons.ChevronDown className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" />;
   };
 
   // If a user profile is selected, show it
@@ -426,7 +421,7 @@ const AdminDashboard: React.FC = () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center p-spacing-2xl text-center bg-destructive/10 rounded-premium border border-destructive/20">
-        <AlertCircle className="h-spacing-2xl w-spacing-2xl text-destructive mb-spacing-md" />
+        <Icons.AlertCircle className="h-spacing-2xl w-spacing-2xl text-destructive mb-spacing-md" />
         <h2 className="text-premium-xl font-bold mb-spacing-xs">Erro ao carregar dados</h2>
         <p className="text-muted-foreground">{error}</p>
       </div>
@@ -442,10 +437,10 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div className="flex gap-spacing-xs">
           <Button variant="outline" size="sm" onClick={() => navigate('/')} className="rounded-premium-full gap-spacing-xs font-bold uppercase tracking-widest text-[10px]">
-            <Home className="w-spacing-md h-spacing-md" /> Ver Portal
+            <Icons.Home className="w-spacing-md h-spacing-md" /> Ver Portal
           </Button>
           <Button variant="outline" size="sm" onClick={() => navigate('/admin/security')} className="rounded-premium-full gap-spacing-xs font-bold uppercase tracking-widest text-[10px]">
-            <Shield className="w-spacing-md h-spacing-md" /> Segurança
+            <Icons.Shield className="w-spacing-md h-spacing-md" /> Segurança
           </Button>
         </div>
       </div>
@@ -455,63 +450,63 @@ const AdminDashboard: React.FC = () => {
         <div className="px-spacing-md sm:px-spacing-0 -mx-spacing-md sm:mx-spacing-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-spacing-2xs bg-muted/30 border border-border/10 rounded-premium-full no-scrollbar scroll-smooth snap-x">
             <TabsTrigger value="overview" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <LayoutGrid className="w-spacing-sm h-spacing-sm" /> Visão Geral
+              <Icons.LayoutGrid className="w-spacing-sm h-spacing-sm" /> Visão Geral
             </TabsTrigger>
             <TabsTrigger value="users" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Users className="w-spacing-sm h-spacing-sm" /> Usuários
+              <Icons.Users className="w-spacing-sm h-spacing-sm" /> Usuários
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <DollarSign className="w-spacing-sm h-spacing-sm" /> Financeiro
+              <Icons.DollarSign className="w-spacing-sm h-spacing-sm" /> Financeiro
             </TabsTrigger>
             <TabsTrigger value="design" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Palette className="w-spacing-sm h-spacing-sm" /> Design System
+              <Icons.Palette className="w-spacing-sm h-spacing-sm" /> Design System
             </TabsTrigger>
             <TabsTrigger value="regression" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Eye className="w-spacing-sm h-spacing-sm" /> Regressão Visual
+              <Icons.Eye className="w-spacing-sm h-spacing-sm" /> Regressão Visual
             </TabsTrigger>
 
             <TabsTrigger value="partners" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Handshake className="w-spacing-sm h-spacing-sm" /> Parceiros
+              <Icons.Handshake className="w-spacing-sm h-spacing-sm" /> Parceiros
             </TabsTrigger>
             <TabsTrigger value="content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
+              <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
             </TabsTrigger>
             <TabsTrigger value="journeys" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <MapIcon className="w-spacing-sm h-spacing-sm" /> Jornadas
+              <Icons.Map className="w-spacing-sm h-spacing-sm" /> Jornadas
             </TabsTrigger>
             <TabsTrigger value="segmentation" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Target className="w-spacing-sm h-spacing-sm" /> CRM: Segmentos
+              <Icons.Target className="w-spacing-sm h-spacing-sm" /> CRM: Segmentos
             </TabsTrigger>
             <TabsTrigger value="retention" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Activity className="w-spacing-sm h-spacing-sm" /> CRM: Retenção
+              <Icons.Activity className="w-spacing-sm h-spacing-sm" /> CRM: Retenção
             </TabsTrigger>
             <TabsTrigger value="automations" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Bell className="w-spacing-sm h-spacing-sm" /> CRM: Automações
+              <Icons.Bell className="w-spacing-sm h-spacing-sm" /> CRM: Automações
             </TabsTrigger>
             <TabsTrigger value="themes" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Tag className="w-spacing-sm h-spacing-sm" /> Nexus Temas
+              <Icons.Tag className="w-spacing-sm h-spacing-sm" /> Nexus Temas
             </TabsTrigger>
             <TabsTrigger value="seo" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Globe className="w-spacing-sm h-spacing-sm" /> SEO
+              <Icons.Globe className="w-spacing-sm h-spacing-sm" /> SEO
             </TabsTrigger>
             <TabsTrigger value="security" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start relative group">
-              <Shield className="w-spacing-sm h-spacing-sm text-red-500" /> Segurança
+              <Icons.Shield className="w-spacing-sm h-spacing-sm text-red-500" /> Segurança
               <span className="absolute -top-spacing-2xs -right-spacing-2xs flex h-spacing-xs w-spacing-xs">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-premium-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-premium-full h-spacing-xs w-spacing-xs bg-red-500"></span>
               </span>
             </TabsTrigger>
             <TabsTrigger value="tests" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <RefreshCcw className="w-spacing-sm h-spacing-sm" /> Testes
+              <Icons.RefreshCcw className="w-spacing-sm h-spacing-sm" /> Testes
             </TabsTrigger>
             <TabsTrigger value="geography" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <MapIcon className="w-spacing-sm h-spacing-sm" /> Geografia
+              <Icons.Map className="w-spacing-sm h-spacing-sm" /> Geografia
             </TabsTrigger>
             <TabsTrigger value="construction" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Building2 className="w-spacing-sm h-spacing-sm" /> Obras
+              <Icons.Building2 className="w-spacing-sm h-spacing-sm" /> Obras
             </TabsTrigger>
             <TabsTrigger value="design" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
-              <Shield className="w-spacing-sm h-spacing-sm" /> Design
+              <Icons.Shield className="w-spacing-sm h-spacing-sm" /> Design
             </TabsTrigger>
           </TabsList>
         </div>
@@ -522,7 +517,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
-                <Users className="h-spacing-sm w-spacing-sm text-muted-foreground" />
+                <Icons.Users className="h-spacing-sm w-spacing-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black tabular-nums">{stats?.totalUsers}</div>
@@ -533,7 +528,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
-                <UserCheck className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.UserCheck className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
@@ -544,7 +539,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
-                <Crown className="h-spacing-sm w-spacing-sm text-secondary" />
+                <Icons.Crown className="h-spacing-sm w-spacing-sm text-secondary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
@@ -555,7 +550,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
-                <TrendingUp className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.TrendingUp className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
@@ -568,7 +563,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-primary/5 border-primary/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
-                <DollarSign className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.DollarSign className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">
@@ -581,7 +576,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-amber-500/5 border-amber-500/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
-                <Clock className="h-spacing-sm w-spacing-sm text-amber-500" />
+                <Icons.Clock className="h-spacing-sm w-spacing-sm text-amber-500" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-amber-500 tabular-nums">
@@ -594,7 +589,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-destructive/5 border-destructive/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
-                <Heart className="h-spacing-sm w-spacing-sm text-destructive" />
+                <Icons.Heart className="h-spacing-sm w-spacing-sm text-destructive" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-destructive tabular-nums">
@@ -607,7 +602,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-primary/5 border-primary/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
-                <Wallet className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.Wallet className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">
@@ -622,7 +617,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-secondary/5 border-secondary/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
-                <Heart className="h-spacing-sm w-spacing-sm text-secondary" />
+                <Icons.Heart className="h-spacing-sm w-spacing-sm text-secondary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
@@ -633,7 +628,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-primary/5 border-primary/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
-                <MapIcon className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.Map className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
@@ -644,7 +639,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="bg-primary/5 border-primary/20 shadow-premium-none">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
-                <Activity className="h-spacing-sm w-spacing-sm text-primary" />
+                <Icons.Activity className="h-spacing-sm w-spacing-sm text-primary" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
@@ -658,7 +653,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
-                <UserCheck className="h-spacing-sm w-spacing-sm text-muted-foreground" />
+                <Icons.UserCheck className="h-spacing-sm w-spacing-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black tabular-nums">{stats?.activeToday}</div>
@@ -669,7 +664,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
-                <AlertCircle className="h-spacing-sm w-spacing-sm text-muted-foreground" />
+                <Icons.AlertCircle className="h-spacing-sm w-spacing-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
@@ -680,7 +675,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
-                <Smartphone className="h-spacing-sm w-spacing-sm text-muted-foreground" />
+                <Icons.Smartphone className="h-spacing-sm w-spacing-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
@@ -691,7 +686,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="shadow-premium-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm space-y-0">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
-                <Target className="h-spacing-sm w-spacing-sm text-muted-foreground" />
+                <Icons.Target className="h-spacing-sm w-spacing-sm text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm">
                 <div className="text-premium-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
@@ -754,7 +749,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Recent Activity Section */}
+          {/* Recent Icons.Activity Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
             <div className="lg:col-span-2">
               <Suspense fallback={<Skeleton className="h-[350px] rounded-premium-full" />}>
@@ -765,7 +760,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="border-border/40 shadow-premium-none bg-card ">
               <CardHeader className="pb-spacing-sm pt-spacing-sm px-spacing-sm">
                 <CardTitle className="text-premium-xs font-black uppercase tracking-widest text-primary flex items-center gap-spacing-xs">
-                  <MessageSquare className="w-spacing-sm h-spacing-sm" /> Últimas Reflexões
+                  <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Últimas Reflexões
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-spacing-sm pb-spacing-sm pt-spacing-2xs space-y-spacing-sm">
@@ -863,7 +858,7 @@ const AdminDashboard: React.FC = () => {
               <CardHeader>
                 <div className="flex items-center gap-spacing-sm">
                   <div className="p-spacing-xs bg-primary/10 rounded-premium">
-                    <Shield className="w-spacing-md h-spacing-md text-primary animate-spin" />
+                    <Icons.Shield className="w-spacing-md h-spacing-md text-primary animate-spin" />
                   </div>
                   <div>
                     <CardTitle className="text-primary uppercase font-black tracking-widest text-premium-xs">Verificando Segurança</CardTitle>
@@ -885,11 +880,11 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
-        {/* Users Tab */}
+        {/* Icons.Users Tab */}
         <TabsContent value="users" className="space-y-spacing-md">
           <div className="flex items-center gap-spacing-sm">
             <div className="relative flex-1">
-              <Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+              <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
               <Input 
                 placeholder="Buscar por nome ou email..." 
                 value={searchQuery} 
@@ -938,7 +933,7 @@ const AdminDashboard: React.FC = () => {
                         <td className="px-spacing-sm py-spacing-xs text-center">
                           {u.is_premium ? (
                             <Badge className="bg-primary/10 text-primary border-primary/20 gap-spacing-2xs text-premium-xs font-bold h-spacing-md px-spacing-2xs shadow-premium-none">
-                              <Crown className="w-spacing-xs h-spacing-xs" /> PRO
+                              <Icons.Crown className="w-spacing-xs h-spacing-xs" /> PRO
                             </Badge>
                           ) : (
                             <Badge variant="secondary" className="gap-spacing-2xs text-premium-xs font-bold h-spacing-md px-spacing-2xs shadow-premium-none">GRATUITO</Badge>
@@ -947,7 +942,7 @@ const AdminDashboard: React.FC = () => {
                         <td className="px-spacing-sm py-spacing-xs text-center">
                           {u.role === 'admin' ? (
                             <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-spacing-2xs text-premium-xs font-bold h-spacing-md px-spacing-2xs shadow-premium-none">
-                              <Shield className="w-spacing-xs h-spacing-xs" /> ADMIN
+                              <Icons.Shield className="w-spacing-xs h-spacing-xs" /> ADMIN
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="gap-spacing-2xs text-premium-xs font-bold h-spacing-md px-spacing-2xs shadow-premium-none">USER</Badge>
@@ -964,14 +959,14 @@ const AdminDashboard: React.FC = () => {
                               title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
                               variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary"
                             >
-                              <Crown />
+                              <Icons.Crown/>
                             </Button>
                             <Button
                               onClick={() => handleToggleRole(u.id, u.role)}
                               title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
                               variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                             >
-                              <UserCog />
+                              <Icons.UserCog/>
                             </Button>
                           </div>
                         </td>
@@ -989,7 +984,7 @@ const AdminDashboard: React.FC = () => {
           {/* Manual Control */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-spacing-xs text-premium-sm"><Crown className="w-spacing-md h-spacing-md text-primary" /> Controle Manual de Acesso</CardTitle>
+              <CardTitle className="flex items-center gap-spacing-xs text-premium-sm"><Icons.Crown className="w-spacing-md h-spacing-md text-primary" /> Controle Manual de Acesso</CardTitle>
               <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-spacing-md">
@@ -1008,7 +1003,7 @@ const AdminDashboard: React.FC = () => {
                     className="gap-spacing-xs"
                     size="sm"
                   >
-                    <Crown className="w-spacing-md h-spacing-md" /> Liberar PRO
+                    <Icons.Crown className="w-spacing-md h-spacing-md" /> Liberar PRO
                   </Button>
                   <Button
                     variant="outline"

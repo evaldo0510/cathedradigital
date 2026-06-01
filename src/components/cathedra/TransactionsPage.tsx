@@ -14,7 +14,7 @@ import { Icons } from '../../constants';
 import { format, startOfDay, endOfDay, parseISO, isBefore } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { Download, Filter, Search, Calendar as CalendarIcon, ArrowUpDown, Info, CheckCircle2, Clock, AlertCircle, XCircle, RotateCcw, ShieldAlert, Copy, Check, ChevronDown, Trash2, Eye } from 'lucide-react';
+
 
 const TransactionsPage: React.FC = () => {
   const { user, profile } = useAuth();
@@ -410,10 +410,10 @@ const TransactionsPage: React.FC = () => {
   const getStatusBadge = (status: string) => {
     const info = (s: string) => {
       switch (s) {
-        case 'approved': return { label: 'Aprovado', color: 'bg-green-500/10 text-green-500', icon: <CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
-        case 'pending': return { label: 'Pendente', color: 'bg-yellow-500/10 text-yellow-500', icon: <Clock className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
-        case 'rejected': return { label: 'Recusado', color: 'bg-red-500/10 text-red-500', icon: <XCircle className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
-        default: return { label: s, color: 'bg-muted text-muted-foreground', icon: <Info className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
+        case 'approved': return { label: 'Aprovado', color: 'bg-green-500/10 text-green-500', icon: <Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
+        case 'pending': return { label: 'Pendente', color: 'bg-yellow-500/10 text-yellow-500', icon: <Icons.Clock className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
+        case 'rejected': return { label: 'Recusado', color: 'bg-red-500/10 text-red-500', icon: <Icons.XCircle className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
+        default: return { label: s, color: 'bg-muted text-muted-foreground', icon: <Icons.Info className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> };
       }
     };
     const { label, color, icon } = info(status);
@@ -432,10 +432,10 @@ const TransactionsPage: React.FC = () => {
           {isAdmin && (
             <>
               <Button variant="outline" size="sm" onClick={() => setIsAuditOpen(true)} className="rounded-premium-full gap-spacing-xs border-primary/20 hover:bg-primary/5">
-                <ShieldAlert className="w-spacing-md h-spacing-md" /> Auditoria
+                <Icons.ShieldAlert className="w-spacing-md h-spacing-md" /> Auditoria
               </Button>
               <Button variant="outline" size="sm" onClick={() => setIsCleanupOpen(true)} disabled={loading || exporting} className="rounded-premium-full gap-spacing-xs text-destructive border-destructive/20 hover:bg-destructive/5">
-                <Trash2 className="w-spacing-md h-spacing-md" /> Limpar Período
+                <Icons.Trash2 className="w-spacing-md h-spacing-md" /> Limpar Período
               </Button>
             </>
           )}
@@ -443,9 +443,9 @@ const TransactionsPage: React.FC = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={loading || exporting} className="rounded-premium-full gap-spacing-xs border-primary/20 hover:bg-primary/5">
-                {exporting ? <Clock className="w-spacing-md h-spacing-md animate-spin" /> : <Download className="w-spacing-md h-spacing-md" />}
+                {exporting ? <Icons.Clock className="w-spacing-md h-spacing-md animate-spin" /> : <Icons.Download className="w-spacing-md h-spacing-md" />}
                 {exporting ? 'Exportando...' : 'Exportar CSV'}
-                <ChevronDown className="w-spacing-sm h-spacing-sm opacity-50" />
+                <Icons.ChevronDown className="w-spacing-sm h-spacing-sm opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-premium-full">
@@ -535,7 +535,7 @@ const TransactionsPage: React.FC = () => {
               {loading ? <TableRow><TableCell colSpan={6} className="h-spacing-4xl text-center italic font-serif text-muted-foreground">Consultando pergaminhos...</TableCell></TableRow> :
                transactions.length === 0 ? <TableRow><TableCell colSpan={6} className="h-spacing-4xl text-center">
                  <div className="flex flex-col items-center gap-spacing-sm">
-                   <Search className="w-spacing-xl h-spacing-xl text-muted/30" />
+                   <Icons.Search className="w-spacing-xl h-spacing-xl text-muted/30" />
                    <p className="font-serif italic text-muted-foreground">Nenhum registro encontrado.</p>
                    <Button variant="ghost" size="sm" className="text-premium-xs uppercase font-bold" onClick={() => { setStatusFilter('all'); setPlanFilter('all'); setUserSearch(''); setStartDate(''); setEndDate(''); }}>Limpar Filtros</Button>
                  </div>
@@ -550,7 +550,7 @@ const TransactionsPage: React.FC = () => {
                    <TableCell className="font-serif italic text-premium-sm">{tx.description}</TableCell>
                    <TableCell className="text-right font-bold text-primary">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}</TableCell>
                    <TableCell className="text-center flex justify-center py-spacing-md">{getStatusBadge(tx.status)}</TableCell>
-                   <TableCell className="text-right px-spacing-xl"><Button variant="ghost" size="sm" onClick={() => { setSelectedTx(tx); setPayloadSearch(''); setIsDetailsOpen(true); }}><Info className="w-spacing-md h-spacing-md" /></Button></TableCell>
+                   <TableCell className="text-right px-spacing-xl"><Button variant="ghost" size="sm" onClick={() => { setSelectedTx(tx); setPayloadSearch(''); setIsDetailsOpen(true); }}><Icons.Info className="w-spacing-md h-spacing-md" /></Button></TableCell>
                  </TableRow>
                ))
               }
@@ -625,9 +625,9 @@ const TransactionsPage: React.FC = () => {
               </div>
               <div className="space-y-spacing-md">
                 <div className="flex justify-between items-center"><p className="text-premium-xs font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-spacing-xs items-center">
-                  <div className="relative"><Search className="absolute left-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-spacing-lg text-premium-xs pl-spacing-lg w-spacing-4xl rounded-premium-full" /></div>
+                  <div className="relative"><Icons.Search className="absolute left-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-spacing-lg text-premium-xs pl-spacing-lg w-spacing-4xl rounded-premium-full" /></div>
                   <Badge variant="outline" className="text-premium-xs font-bold">{filteredJSON?.count} matches</Badge>
-                  <Button variant="ghost" size="sm" className="h-spacing-lg text-premium-xs" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-spacing-sm h-spacing-sm text-green-500" /> : <Copy className="w-spacing-sm h-spacing-sm" />}</Button>
+                  <Button variant="ghost" size="sm" className="h-spacing-lg text-premium-xs" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Icons.Check className="w-spacing-sm h-spacing-sm text-green-500" /> : <Icons.Copy className="w-spacing-sm h-spacing-sm" />}</Button>
                 </div></div>
                 <div className="max-h-spacing-4xl overflow-y-auto bg-slate-950 p-spacing-lg rounded-premium border border-white/5 custom-scrollbar"><pre className="text-premium-small text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
               </div>
@@ -642,7 +642,7 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-spacing-4xl rounded-[2.5rem] bg-background  max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-premium-2xl font-serif font-bold flex items-center gap-spacing-sm">
-              <div className="p-spacing-xs bg-primary/10 rounded-premium text-primary"><ShieldAlert className="w-spacing-lg h-spacing-lg" /></div>
+              <div className="p-spacing-xs bg-primary/10 rounded-premium text-primary"><Icons.ShieldAlert className="w-spacing-lg h-spacing-lg" /></div>
               Histórico de Exportações
             </DialogTitle>
             <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>
@@ -706,7 +706,7 @@ const TransactionsPage: React.FC = () => {
                               exportToCSV(log.metadata?.mode || 'all', log.metadata?.filters);
                             }}
                           >
-                            <Download className="w-spacing-sm h-spacing-sm" />
+                            <Icons.Download className="w-spacing-sm h-spacing-sm" />
                           </Button>
                           <Button 
                             variant="ghost" 
@@ -724,7 +724,7 @@ const TransactionsPage: React.FC = () => {
                               toast.success('Filtros aplicados.');
                             }}
                           >
-                            <RotateCcw className="w-spacing-sm h-spacing-sm" />
+                            <Icons.RotateCcw className="w-spacing-sm h-spacing-sm" />
                           </Button>
                         </div>
                       </TableCell>
@@ -737,7 +737,7 @@ const TransactionsPage: React.FC = () => {
 
             {hasMoreAudits && (
               <div ref={lastAuditElementRef} className="h-spacing-xl flex items-center justify-center">
-                {auditLoading && <Clock className="w-spacing-md h-spacing-md animate-spin text-muted-foreground" />}
+                {auditLoading && <Icons.Clock className="w-spacing-md h-spacing-md animate-spin text-muted-foreground" />}
               </div>
             )}
           </div>

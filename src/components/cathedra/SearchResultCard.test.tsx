@@ -1,8 +1,9 @@
+import { Icons } from '@/constants';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SearchResultCard } from './SearchResultCard';
-import { Star } from 'lucide-react';
+
 
 describe('SearchResultCard', () => {
   it('renders title and subtitle', () => {
@@ -40,7 +41,7 @@ describe('SearchResultCard', () => {
   });
 
   it('renders icon when provided', () => {
-    render(<SearchResultCard title="Test" icon={<Star data-testid="icon" />} />);
+    render(<SearchResultCard title="Test" icon={<Icons.Star data-testid="icon" />} />);
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });
 

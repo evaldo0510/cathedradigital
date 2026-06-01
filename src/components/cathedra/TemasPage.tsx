@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { normalizeText } from '@/lib/utils';
@@ -7,7 +8,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { AppRoute } from '@/types';
-import { Loader2, Sparkles, Tag as TagIcon, Search } from 'lucide-react';
+
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
@@ -183,7 +184,7 @@ const TemasPage = () => {
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-spacing-md py-spacing-2xl w-full justify-center">
                   <div className="relative">
-                    <Loader2 className="h-spacing-xl w-spacing-xl animate-spin text-primary/60" />
+                    <Icons.Loader2 className="h-spacing-xl w-spacing-xl animate-spin text-primary/60" />
                     <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-premium" />
                   </div>
                   <span className="text-premium-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
@@ -191,7 +192,7 @@ const TemasPage = () => {
               ) : filteredTags.length === 0 ? (
                 <div className="py-spacing-3xl px-spacing-xl text-center w-full space-y-spacing-md">
                   <div className="w-spacing-3xl h-spacing-3xl bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
-                    <Search className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
+                    <Icons.Search className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
                   </div>
                   <p className="text-premium-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
                 </div>
@@ -200,7 +201,7 @@ const TemasPage = () => {
                   {isSearchActive && activeCategory !== 'all' && (
                     <div className="px-spacing-lg pt-spacing-lg flex items-center justify-between">
                       <div className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/5 border border-primary/10">
-                        <Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
+                        <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
                         <span className="text-premium-xs font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
                       <Button 
@@ -234,7 +235,7 @@ const TemasPage = () => {
                         {filteredTags.length} conexões sagradas
                       </span>
                       <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-primary/30" />
-                      <Sparkles className="w-spacing-sm h-spacing-sm text-primary/40 animate-pulse" />
+                      <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40 animate-pulse" />
                     </div>
                   </div>
                 </>
@@ -251,7 +252,7 @@ const TemasPage = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
             <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5 flex items-center justify-center mb-spacing-xl border border-primary/10 shadow-premium-md group-hover:scale-110 transition-transform duration-500">
-              <TagIcon className="h-spacing-2xl w-spacing-2xl text-primary/60" />
+              <Icons.Tag className="h-spacing-2xl w-spacing-2xl text-primary/60" />
             </div>
             <h3 className="text-premium-3xl font-black mb-spacing-md text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
             <p className="text-muted-foreground text-premium-lg max-w-spacing-md font-serif italic">

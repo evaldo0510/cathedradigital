@@ -1,8 +1,9 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Check, X, ChevronRight, Sparkles, Crown, Zap } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -61,7 +62,7 @@ const PricingPage: React.FC = () => {
 
       <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center space-y-spacing-md mb-spacing-2xl">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/10 border border-primary/20 rounded-premium-full text-primary mb-spacing-md">
-          <Crown className="w-spacing-md h-spacing-md" />
+          <Icons.Crown className="w-spacing-md h-spacing-md" />
           <span className="text-premium-xs font-black uppercase tracking-[0.15em]">Planos</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-5xl font-display font-bold">Escolha seu Caminho</h1>
@@ -77,7 +78,7 @@ const PricingPage: React.FC = () => {
           <Card className="h-full rounded-premium border-border/50 bg-card shadow-premium">
             <CardHeader className="text-center pb-spacing-xs space-y-spacing-md">
               <div className="w-spacing-2xl h-spacing-2xl mx-auto rounded-premium bg-muted flex items-center justify-center">
-                <Zap className="w-spacing-lg h-spacing-lg text-muted-foreground" />
+                <Icons.Zap className="w-spacing-lg h-spacing-lg text-muted-foreground" />
               </div>
               <CardTitle className="text-premium-2xl font-serif">Peregrino</CardTitle>
               <div>
@@ -91,9 +92,9 @@ const PricingPage: React.FC = () => {
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-spacing-sm text-premium-sm">
                     {item.free ? (
-                      <Check className="w-spacing-md h-spacing-md text-primary shrink-0" />
+                      <Icons.Check className="w-spacing-md h-spacing-md text-primary shrink-0" />
                     ) : (
-                      <X className="w-spacing-md h-spacing-md text-muted-foreground/60 shrink-0" />
+                      <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground/60 shrink-0" />
                     )}
                     <span className={item.free ? '' : 'text-muted-foreground/40'}>{item.feature}</span>
                   </li>
@@ -118,7 +119,7 @@ const PricingPage: React.FC = () => {
             </div>
             <CardHeader className="text-center pb-spacing-xs space-y-spacing-md">
               <div className="w-spacing-2xl h-spacing-2xl mx-auto rounded-premium bg-primary/10 flex items-center justify-center">
-                <Sparkles className="w-spacing-lg h-spacing-lg text-primary" />
+                <Icons.Sparkles className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
               <CardTitle className="text-premium-2xl font-serif">Cathedra PRO</CardTitle>
               <div>
@@ -134,7 +135,7 @@ const PricingPage: React.FC = () => {
               <ul className="space-y-spacing-sm">
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-spacing-sm text-premium-sm">
-                    <Check className="w-spacing-md h-spacing-md text-primary shrink-0" />
+                    <Icons.Check className="w-spacing-md h-spacing-md text-primary shrink-0" />
                     <span>{item.feature}</span>
                   </li>
                 ))}
@@ -144,7 +145,7 @@ const PricingPage: React.FC = () => {
                 onClick={() => navigate(AppRoute.CHECKOUT)}
               >
                 {isPremium ? 'Você já é PRO ✓' : 'Assinar Agora'}
-                {!isPremium && <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />}
+                {!isPremium && <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />}
               </Button>
             </CardContent>
           </Card>
@@ -164,10 +165,10 @@ const PricingPage: React.FC = () => {
             <div key={item.feature} className={`grid grid-cols-3 px-spacing-lg py-spacing-sm items-center ${i % 2 === 0 ? '' : 'bg-muted/10'} ${i < FREE_VS_PRO.length - 1 ? 'border-b border-border/10' : ''}`}>
               <span className="text-premium-sm">{item.feature}</span>
               <span className="text-center">
-                {item.free ? <Check className="w-spacing-md h-spacing-md text-primary mx-auto" /> : <X className="w-spacing-md h-spacing-md text-muted-foreground/60 mx-auto" />}
+                {item.free ? <Icons.Check className="w-spacing-md h-spacing-md text-primary mx-auto" /> : <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground/60 mx-auto" />}
               </span>
               <span className="text-center">
-                <Check className="w-spacing-md h-spacing-md text-primary mx-auto" />
+                <Icons.Check className="w-spacing-md h-spacing-md text-primary mx-auto" />
               </span>
             </div>
           ))}
@@ -176,7 +177,7 @@ const PricingPage: React.FC = () => {
 
       {/* Mission note */}
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-spacing-2xl mx-auto mt-spacing-3xl text-center space-y-spacing-md p-spacing-xl rounded-premium bg-primary/5 border border-primary/10">
-        <Crown className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
+        <Icons.Crown className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
         <p className="text-muted-foreground leading-relaxed italic font-serif">
           "Parte de cada assinatura PRO é destinada a projetos de evangelização e formação católica. Ao assinar, você também contribui para levar a fé a mais pessoas."
         </p>

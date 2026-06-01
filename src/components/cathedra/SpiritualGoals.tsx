@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,7 +8,7 @@ import { CathedraCard } from './CathedraCard';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Target, Bell, Calendar, ChevronRight, Settings2, CheckCircle2, Trophy } from 'lucide-react';
+
 import { Progress } from '@/components/ui/progress';
 
 const SpiritualGoals: React.FC = () => {
@@ -121,7 +122,7 @@ const SpiritualGoals: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-spacing-sm">
             <div className="p-spacing-xs bg-primary/10 rounded-premium">
-              <Target className="w-spacing-md h-spacing-md text-primary" />
+              <Icons.Target className="w-spacing-md h-spacing-md text-primary" />
             </div>
             <div>
               <h3 className="text-premium-xl font-bold font-serif">Meta da Semana</h3>
@@ -134,7 +135,7 @@ const SpiritualGoals: React.FC = () => {
             onClick={() => setIsEditing(!isEditing)}
             className="text-[10px] font-black uppercase tracking-widest"
           >
-            {isEditing ? 'Cancelar' : <Settings2 className="w-spacing-md h-spacing-md" />}
+            {isEditing ? 'Cancelar' : <Icons.Settings2 className="w-spacing-md h-spacing-md" />}
           </Button>
         </div>
 
@@ -165,14 +166,14 @@ const SpiritualGoals: React.FC = () => {
                   onClick={() => toggleReminder('push')}
                   className="rounded-premium gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
-                  <Bell className="w-spacing-sm h-spacing-sm" /> Push {reminderSettings?.push_enabled ? 'ON' : 'OFF'}
+                  <Icons.Bell className="w-spacing-sm h-spacing-sm" /> Push {reminderSettings?.push_enabled ? 'ON' : 'OFF'}
                 </Button>
                 <Button 
                   variant={reminderSettings?.email_enabled ? "default" : "outline"}
                   onClick={() => toggleReminder('email')}
                   className="rounded-premium gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
-                  <Calendar className="w-spacing-sm h-spacing-sm" /> E-mail {reminderSettings?.email_enabled ? 'ON' : 'OFF'}
+                  <Icons.Calendar className="w-spacing-sm h-spacing-sm" /> E-mail {reminderSettings?.email_enabled ? 'ON' : 'OFF'}
                 </Button>
               </div>
             </motion.div>
@@ -190,7 +191,7 @@ const SpiritualGoals: React.FC = () => {
                 </div>
                 {progress === 100 && (
                   <Badge className="bg-primary/20 text-primary border-primary/10 animate-bounce">
-                    <CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Meta Alcançada
+                    <Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Meta Alcançada
                   </Badge>
                 )}
               </div>

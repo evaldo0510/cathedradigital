@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
+
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,56 +15,56 @@ import onboardingCommunity from '@/assets/onboarding-community.jpg';
 /* ── Intro slides ── */
 const SLIDES = [
   {
-    icon: <Sparkles className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Sparkles className="w-spacing-xl h-spacing-xl" />,
     title: 'O Ecossistema Cathedra',
     subtitle: 'Sua vida espiritual integrada',
     description: 'Um ambiente digital sagrado que une oração, estudo, formação e comunidade em uma experiência única e personalizada.',
     image: onboardingBible,
   },
   {
-    icon: <Sun className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Sun className="w-spacing-xl h-spacing-xl" />,
     title: 'A Aba "Hoje"',
     subtitle: 'Seu ponto de partida diário',
     description: 'Encontre aqui o que você precisa para o dia: Liturgia, o Santo do dia, orações recomendadas e seu progresso espiritual.',
     image: onboardingPrayer,
   },
   {
-    icon: <BookOpen className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.BookOpen className="w-spacing-xl h-spacing-xl" />,
     title: 'Biblioteca e Scriptuarium',
     subtitle: 'O tesouro da Tradição',
     description: 'Navegue pela Bíblia, Catecismo e documentos do Magistério. Use a busca inteligente para encontrar respostas em milênios de sabedoria.',
     image: onboardingBible,
   },
   {
-    icon: <Zap className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Zap className="w-spacing-xl h-spacing-xl" />,
     title: 'Logos IA: Estudo Profundo',
     subtitle: 'Inteligência Contemplativa',
     description: 'Dúvidas sobre a fé? O Logos IA explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
     image: onboardingStudy,
   },
   {
-    icon: <Compass className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Compass className="w-spacing-xl h-spacing-xl" />,
     title: 'Jornadas de Formação',
     subtitle: 'Caminhos de Santidade',
     description: 'Siga trilhas estruturadas de aprendizado. Do básico ao avançado, cada passo é uma nova descoberta na sua caminhada de fé.',
     image: onboardingCommunity,
   },
   {
-    icon: <Users className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Users className="w-spacing-xl h-spacing-xl" />,
     title: 'Aula Magna e Comunidade',
     subtitle: 'Crescendo em Fraternidade',
     description: 'Partilhe reflexões, veja o que outros fiéis estão meditando e sinta-se parte de uma comunidade viva e orante.',
     image: onboardingCommunity,
   },
   {
-    icon: <Heart className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Heart className="w-spacing-xl h-spacing-xl" />,
     title: 'Como Usar?',
     subtitle: 'Simples e Profundo',
     description: 'Navegue pelo menu inferior para alternar entre as áreas. Marque leituras como concluídas para ganhar XP e acompanhar sua evolução.',
     image: onboardingPrayer,
   },
   {
-    icon: <Compass className="w-spacing-xl h-spacing-xl" />,
+    icon: <Icons.Compass className="w-spacing-xl h-spacing-xl" />,
     title: 'Pronto para Começar?',
     subtitle: 'Seu Diagnóstico Espiritual',
     description: 'A seguir, faremos algumas perguntas para personalizar sua experiência e recomendar a jornada ideal para o seu momento.',
@@ -84,50 +84,50 @@ const QUESTIONS: DiagnosisQuestion[] = [
     id: 'moment',
     question: 'Como você descreveria seu momento espiritual atual?',
     options: [
-      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Heart className="w-spacing-md h-spacing-md" /> },
-      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'prayer',
     question: 'Qual é sua relação com a oração?',
     options: [
-      { label: 'Quase não rezo', value: 'rarely', icon: <Hand className="w-spacing-md h-spacing-md" /> },
-      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Quase não rezo', value: 'rarely', icon: <Icons.Hand className="w-spacing-md h-spacing-md" /> },
+      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'knowledge',
     question: 'Quanto você conhece da doutrina católica?',
     options: [
-      { label: 'Muito pouco, o básico', value: 'basic', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Conheço razoavelmente', value: 'moderate', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Estudo com frequência', value: 'advanced', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Tenho formação teológica', value: 'theological', icon: <Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Muito pouco, o básico', value: 'basic', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Conheço razoavelmente', value: 'moderate', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Estudo com frequência', value: 'advanced', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Tenho formação teológica', value: 'theological', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'sacraments',
     question: 'Como é sua vivência sacramental?',
     options: [
-      { label: 'Não frequento os sacramentos', value: 'none', icon: <Church className="w-spacing-md h-spacing-md" /> },
-      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Church className="w-spacing-md h-spacing-md" /> },
-      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
-      { label: 'Vida sacramental intensa', value: 'intense', icon: <Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Não frequento os sacramentos', value: 'none', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Vida sacramental intensa', value: 'intense', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
     ],
   },
   {
     id: 'goal',
     question: 'O que você mais deseja nesta jornada?',
     options: [
-      { label: 'Encontrar paz interior', value: 'peace', icon: <Heart className="w-spacing-md h-spacing-md" /> },
-      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <BookOpen className="w-spacing-md h-spacing-md" /> },
-      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Sun className="w-spacing-md h-spacing-md" /> },
-      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Sparkles className="w-spacing-md h-spacing-md" /> },
+      { label: 'Encontrar paz interior', value: 'peace', icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
+      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Icons.Sun className="w-spacing-md h-spacing-md" /> },
+      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" /> },
     ],
   },
 ];
@@ -191,7 +191,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const category = getRecommendedCategory(result);
     setRecommendedCategory(category);
 
-    // Map moment to spiritual profile for dashboard personalization
+    // Icons.Map moment to spiritual profile for dashboard personalization
     const spiritualProfileMap: Record<string, string> = {
       beginning: 'sedento_de_sentido',
       deepening: 'firme_aprofundando',
@@ -263,7 +263,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               transition={{ type: 'spring', delay: 0.2 }}
               className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium-full bg-primary/10 flex items-center justify-center"
             >
-              <Compass className="w-spacing-xl h-spacing-xl text-primary" />
+              <Icons.Compass className="w-spacing-xl h-spacing-xl text-primary" />
             </motion.div>
             <h1 className="text-premium-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
             <p className="text-muted-foreground text-premium-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
@@ -278,7 +278,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             onClick={handleGoToJourney}
             className="w-full flex items-center justify-center gap-spacing-xs px-spacing-lg py-spacing-md bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
-            Começar Minha Jornada <ChevronRight className="w-spacing-md h-spacing-md" />
+            Começar Minha Jornada <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </motion.div>
       </div>
@@ -383,7 +383,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
             <Button onClick={handleSlidePrev} className="flex items-center gap-spacing-2xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ChevronLeft className="w-spacing-md h-spacing-md" /> Voltar
+              <Icons.ChevronLeft className="w-spacing-md h-spacing-md" /> Voltar
             </Button>
           ) : (
             <Button onClick={handleSkipSlides} className="text-premium-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -396,7 +396,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             className="flex items-center gap-spacing-xs px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
-            <ChevronRight className="w-spacing-md h-spacing-md" />
+            <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </div>
       </div>

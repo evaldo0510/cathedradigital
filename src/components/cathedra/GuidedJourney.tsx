@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, ArrowLeft, Sparkles, Book, Cross, MessageSquare, Mail, User } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -117,7 +118,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           onClick={onClose}
           className="absolute top-spacing-lg right-spacing-lg text-muted-foreground hover:text-foreground p-spacing-xs rounded-premium-full hover:bg-muted transition-colors"
         >
-          <X className="w-spacing-lg h-spacing-lg" />
+          <Icons.X className="w-spacing-lg h-spacing-lg" />
         </Button>
 
         {!showResult ? (
@@ -126,7 +127,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <>
                 <div className="space-y-spacing-xs">
                   <div className="flex items-center gap-spacing-xs text-secondary">
-                    <Sparkles className="w-spacing-md h-spacing-md" />
+                    <Icons.Sparkles className="w-spacing-md h-spacing-md" />
                     <span className="text-premium-xs font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
                   </div>
                   <h2 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-primary leading-tight">
@@ -142,7 +143,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                       className="group flex items-center justify-between p-spacing-lg rounded-premium-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
                     >
                       <span className="text-premium-lg font-serif">{opt.label}</span>
-                      <ArrowRight className="w-spacing-md h-spacing-md opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
+                      <Icons.ArrowRight className="w-spacing-md h-spacing-md opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
                     </Button>
                   ))}
                 </div>
@@ -162,7 +163,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                       onClick={() => setCurrentStep(currentStep - 1)}
                       className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground font-serif"
                     >
-                      <ArrowLeft className="w-spacing-md h-spacing-md" /> Voltar
+                      <Icons.ArrowLeft className="w-spacing-md h-spacing-md" /> Voltar
                     </Button>
                   )}
                 </div>
@@ -171,7 +172,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <form onSubmit={handleSubmit} className="space-y-spacing-xl py-spacing-md">
                 <div className="space-y-spacing-xs">
                   <div className="flex items-center gap-spacing-xs text-secondary">
-                    <Mail className="w-spacing-md h-spacing-md" />
+                    <Icons.Mail className="w-spacing-md h-spacing-md" />
                     <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Quase lá</span>
                   </div>
                   <h2 className="text-premium-3xl font-serif font-bold text-primary">
@@ -184,7 +185,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <div className="space-y-spacing-md">
                   <div className="relative">
-                    <User className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+                    <Icons.User className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
                     <Input
                       placeholder="Seu nome"
                       value={name}
@@ -194,7 +195,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     />
                   </div>
                   <div className="relative">
-                    <Mail className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+                    <Icons.Mail className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
                     <Input
                       type="email"
                       placeholder="Seu melhor e-mail"
@@ -219,7 +220,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   onClick={() => setCurrentStep(steps.length - 1)}
                   className="w-full flex items-center justify-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground font-serif"
                 >
-                  <ArrowLeft className="w-spacing-md h-spacing-md" /> Revisar respostas
+                  <Icons.ArrowLeft className="w-spacing-md h-spacing-md" /> Revisar respostas
                 </Button>
               </form>
             )}
@@ -232,7 +233,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           >
             <div className="text-center space-y-spacing-xs">
               <div className="w-spacing-3xl h-spacing-3xl bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-spacing-md text-secondary">
-                <Sparkles className="w-spacing-xl h-spacing-xl" />
+                <Icons.Sparkles className="w-spacing-xl h-spacing-xl" />
               </div>
               <h2 className="text-premium-3xl font-serif font-bold text-primary">Seu Roteiro está pronto!</h2>
               <p className="text-muted-foreground font-serif italic">
@@ -243,7 +244,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             <div className="grid gap-spacing-lg">
               <div className="p-spacing-lg rounded-premium bg-secondary/5 border border-secondary/20 space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-xs text-secondary">
-                  <Book className="w-spacing-md h-spacing-md" />
+                  <Icons.Book className="w-spacing-md h-spacing-md" />
                   <span className="text-premium-xs font-black uppercase tracking-widest">A Palavra de Deus</span>
                 </div>
                 <p className="text-premium-lg font-serif italic text-primary">
@@ -253,7 +254,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
               <div className="p-spacing-lg rounded-premium bg-primary/5 border border-primary/10 space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-xs text-primary">
-                  <Cross className="w-spacing-md h-spacing-md" />
+                  <Icons.Cross className="w-spacing-md h-spacing-md" />
                   <span className="text-premium-xs font-black uppercase tracking-widest">Catecismo</span>
                 </div>
                 <p className="text-premium-sm font-serif text-muted-foreground">
@@ -263,7 +264,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
               <div className="p-spacing-lg rounded-premium bg-muted/30 border border-border space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-xs text-muted-foreground">
-                  <MessageSquare className="w-spacing-md h-spacing-md" />
+                  <Icons.MessageSquare className="w-spacing-md h-spacing-md" />
                   <span className="text-premium-xs font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
                 </div>
                 <p className="text-premium-sm font-serif italic leading-relaxed">

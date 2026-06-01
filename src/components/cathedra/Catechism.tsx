@@ -3,7 +3,7 @@ import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ChevronLeft } from 'lucide-react';
+
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
 import { Icons } from '../../constants';

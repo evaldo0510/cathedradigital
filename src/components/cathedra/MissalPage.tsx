@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
-import { ChevronDown } from 'lucide-react';
+
 
 interface MissalSection {
   id: string;
@@ -128,7 +128,7 @@ const MissalPage: React.FC = () => {
                 <h3 className="text-premium-lg font-serif font-bold text-foreground">{section.title}</h3>
                 {section.subtitle && <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground mt-spacing-3xs">{section.subtitle}</p>}
               </div>
-              <ChevronDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
+              <Icons.ChevronDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </Button>
 
             {expandedSection === section.id && (

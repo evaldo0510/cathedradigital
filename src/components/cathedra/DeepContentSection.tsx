@@ -5,7 +5,7 @@ import { DeepContent, AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Lock, CheckCircle2, Send } from 'lucide-react';
+
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
@@ -146,7 +146,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 <div className={`p-spacing-xs rounded-premium-full ${
                   isLocked ? 'bg-muted text-muted-foreground' : (section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground')
                 } transition-colors`}>
-                  {isLocked ? <Lock className="w-spacing-md h-spacing-md" /> : section.icon}
+                  {isLocked ? <Icons.Lock className="w-spacing-md h-spacing-md" /> : section.icon}
                 </div>
                 <h4 className={`text-premium-xs font-black uppercase tracking-widest ${
                   isLocked ? 'text-muted-foreground' : (section.id === 'textoBase' ? 'text-primary' : 'text-muted-foreground group-hover:text-primary')
@@ -198,7 +198,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
 
                 {isLocked && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center space-y-spacing-sm p-spacing-md text-center">
-                    <Sparkles className="w-spacing-lg h-spacing-lg text-primary animate-pulse" />
+                    <Icons.Sparkles className="w-spacing-lg h-spacing-lg text-primary animate-pulse" />
                     <p className="text-premium-sm font-bold text-foreground">
                       Continue aprofundando essa experiência
                     </p>
@@ -235,14 +235,14 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                           disabled={!reflectionText.trim() || isSubmitting}
                           className="rounded-premium-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
                         >
-                          {isSubmitting ? <Icons.Loader className="w-spacing-sm h-spacing-sm animate-spin" /> : <Send className="w-spacing-sm h-spacing-sm" />}
+                          {isSubmitting ? <Icons.Loader className="w-spacing-sm h-spacing-sm animate-spin" /> : <Icons.Send className="w-spacing-sm h-spacing-sm" />}
                           Guardar Reflexão
                         </Button>
                       </div>
                     </div>
                   ) : (
                     <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-emerald-500/5 border border-emerald-500/20 rounded-premium-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
-                      <CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Reflexão Integrada ao Diário
+                      <Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Reflexão Integrada ao Diário
                     </div>
                   )}
                 </div>

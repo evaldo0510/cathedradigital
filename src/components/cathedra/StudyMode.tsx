@@ -9,7 +9,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles, BookOpen, ArrowRight, Shield } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
@@ -61,7 +61,7 @@ const TheologicalAwareText: React.FC<{
   );
 };
 
-// ── Copy button ──
+// ── Icons.Copy button ──
 const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
@@ -76,7 +76,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   };
   return (
     <Button onClick={handleCopy} className="mt-spacing-xs inline-flex items-center gap-spacing-2xs text-premium-xs text-muted-foreground hover:text-primary transition-colors">
-      {copied ? <Check className="w-spacing-sm h-spacing-sm" /> : <Copy className="w-spacing-sm h-spacing-sm" />}
+      {copied ? <Icons.Check className="w-spacing-sm h-spacing-sm" /> : <Icons.Copy className="w-spacing-sm h-spacing-sm" />}
       {copied ? 'Copiado' : 'Copiar'}
     </Button>
   );
@@ -195,7 +195,7 @@ const StudyMode: React.FC = () => {
   // ── Persistence helpers ──
   const saveMessages = useCallback(async (conversationId: string, newMessages: Message[]) => {
     if (!user) return;
-    // Save only the last two messages (user + assistant)
+    // Icons.Save only the last two messages (user + assistant)
     const toSave = newMessages.slice(-2);
     for (const msg of toSave) {
       await supabase.from('colloquium_messages').insert({
@@ -290,7 +290,7 @@ const StudyMode: React.FC = () => {
       // Background save to DB to keep UI responsive
       if (convId && user) {
         const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
-        saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
+        saveMessages(convId, finalMessages).catch(e => console.error('BG Icons.Save failed:', e));
       }
     } catch (e: any) {
       console.error('Study mode error:', e);
@@ -340,7 +340,7 @@ const StudyMode: React.FC = () => {
         ]}
       />
       <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
-        <Shield className="w-spacing-2xl h-spacing-2xl text-primary" />
+        <Icons.Shield className="w-spacing-2xl h-spacing-2xl text-primary" />
       </div>
       
       <div className="space-y-spacing-md">

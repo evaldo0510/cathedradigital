@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
-import { Loader2, Play, Pause, Headphones, RotateCcw } from 'lucide-react';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
@@ -159,7 +159,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         }`}
       >
         {isLoading ? (
-          <Loader2 className="w-spacing-md h-spacing-md animate-spin" />
+          <Icons.Loader2 className="w-spacing-md h-spacing-md animate-spin" />
         ) : isPlaying ? (
           <div className="flex items-end gap-[1px] h-spacing-sm mb-spacing-3xs">
             <div className="w-[2px] h-spacing-xs bg-primary animate-[bounce_0.6s_infinite_ease-in-out]" />
@@ -168,7 +168,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
             <div className="w-[2px] h-spacing-xs bg-primary animate-[bounce_0.7s_infinite_ease-in-out]" />
           </div>
         ) : (
-          <Headphones className="w-spacing-md h-spacing-md" />
+          <Icons.Headphones className="w-spacing-md h-spacing-md" />
         )}
         {showTitle && <span className="text-premium-xs font-black uppercase tracking-widest">{title}</span>}
       </Button>
@@ -179,7 +179,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
           className="p-spacing-xs text-muted-foreground hover:text-foreground transition-colors"
           title="Reiniciar"
         >
-          <RotateCcw className="w-spacing-sm h-spacing-sm" />
+          <Icons.RotateCcw className="w-spacing-sm h-spacing-sm" />
         </Button>
       )}
     </div>
