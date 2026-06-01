@@ -16,9 +16,10 @@ const icons = [
   'Moon', 'MoreHorizontal', 'Mountain', 'Music', 'Orbit', 'Palette', 'PartyPopper', 'Pause', 'PenLine', 
   'PenTool', 'Pin', 'Play', 'Plus', 'Printer', 'Quote', 'RefreshCcw', 'RefreshCw', 'RotateCcw', 'Route', 
   'Save', 'ScrollText', 'Search', 'Send', 'Settings', 'Settings2', 'Share2', 'Shield', 'ShieldAlert', 
-  'Smartphone', 'Sparkle', 'Sparkles', 'Square', 'Star', 
-  'UserPlus', 'Users', 'Video', 'Volume', 'Volume1', 'Volume2', 'VolumeX', 'Wallet', 
-
+  'ShieldCheck', 'ShieldQuestion', 'Skull', 'Smartphone', 'Sparkle', 'Sparkles', 'Square', 'Star', 
+  'Stethoscope', 'StopCircle', 'Store', 'Sun', 'Swords', 'Tag', 'Target', 'Timer', 'Trash2', 
+  'TrendingDown', 'TrendingUp', 'Trophy', 'Twitter', 'Type', 'Upload', 'User', 'UserCheck', 'UserCog', 
+  'UserMinus', 'UserPlus', 'Users', 'Video', 'Volume', 'Volume1', 'Volume2', 'VolumeX', 'Wallet', 
   'Wheat', 'Wifi', 'WifiOff', 'Wind', 'Wine', 'X', 'XCircle', 'Youtube', 'Zap', 'ZapOff'
 ];
 
@@ -148,7 +149,7 @@ export const Icons = {
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe,
   Apple: IconsInternal.Smartphone,
-  PanelLeft: IconsInternal.Layout,
+  PanelLeft: IconsInternal.Layout, 
   ImageIcon: IconsInternal.Image,
   Stop: IconsInternal.StopCircle,
   StopCircle: IconsInternal.StopCircle,
@@ -164,4 +165,4 @@ if (import.meta.env.DEV) {
 `;
 
 fs.writeFileSync('src/constants.tsx', content);
-console.log('Regenerated src/constants.tsx with full icon list');
+console.log('Regenerated src/constants.tsx');
