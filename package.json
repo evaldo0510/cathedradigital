@@ -37,6 +37,8 @@
     "reports:tree": "bun run scripts/reports-tree.ts",
     "reports:verify": "bun run scripts/verify-reports.ts --fail-on-divergence",
     "reports:clean": "bun run scripts/reports-clean.ts",
+    "security-audit": "bun run scripts/security-audit.ts",
+    "governance:all": "bun x concurrently \"npm run token-audit\" \"npm run test:system-audit\" \"npm run test:spacing-audit\" \"npm run security-audit\" \"npm run test:sitemap\"",
     "prepare": "husky",
     "test:token-audit": "vitest run scripts/cathedra-audit.test.ts",
     "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe"
