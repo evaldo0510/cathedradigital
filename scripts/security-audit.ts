@@ -58,9 +58,11 @@ async function runSecurityAudit() {
       }
     } else if (exposedFunctions && Array.isArray(exposedFunctions) && (exposedFunctions as any[]).length > 0) {
       log('❌ ALERTA DE SEGURANÇA: Funções SECURITY DEFINER expostas detectadas!', true);
+      auditResults.vulnerabilities = exposedFunctions;
       (exposedFunctions as any[]).forEach((f: any) => {
         log(`  - Função: ${f.function_name} | Schema: ${f.schema_name}`, true);
       });
+      saveReport();
       process.exit(1);
     } else {
       log('✅ Nenhuma função SECURITY DEFINER vulnerável detectada.');
@@ -68,9 +70,11 @@ async function runSecurityAudit() {
 
     log('✅ Verificação de search_path concluída.');
     log('🎉 Auditoria finalizada com sucesso!');
+    saveReport();
   } catch (e: unknown) {
     const error = e as Error;
     log(`❌ ERRO CRÍTICO na Auditoria de Segurança: ${error.message || error}`, true);
+    saveReport();
     process.exit(1);
   }
 }
