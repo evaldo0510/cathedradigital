@@ -434,7 +434,7 @@ reports/
       // Arquivo com JSON inválido
       writeFileSync(join(MATRIX_DIR, 'corrupted.json'), '{ invalid }');
       
-      const result = runMatrix(['--update'], true);
+      const result = runMatrix(['--update'], true, true);
       expect(result.status).toBe(1);
       expect(result.output).toContain('Relatórios JSON corrompidos detectados');
     });
