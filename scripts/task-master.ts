@@ -201,9 +201,9 @@ function generateReport(report: Report) {
             </div>
 
             ${w.errors.length > 0 ? `
-            <h3>❌ Erros Identificados</h3>
+            <h3>${w.status === 'Success' ? '✅ Erros Corrigidos' : '❌ Erros Identificados'}</h3>
             <ul class="log-container" style="list-style: none;">
-                ${w.errors.map(err => `<li class="log-entry error-entry">ERROR: ${err}</li>`).join('')}
+                ${w.errors.map(err => `<li class="log-entry ${w.status === 'Success' ? '' : 'error-entry'}">${w.status === 'Success' ? 'FIXED: ' : 'ERROR: '}${err}</li>`).join('')}
             </ul>
             ` : ''}
         </section>
