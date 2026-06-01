@@ -20,12 +20,15 @@ const icons = [
   'Mountain', 'Pause', 'RefreshCcw', 'RefreshCw', 'Save', 'Settings2', 'ShieldAlert', 'Skull', 'StopCircle',
   'Store', 'TrendingUp', 'Wheat', 'Wind', 'ZapOff', 'Building2', 'DollarSign', 'Upload', 'FileSpreadsheet',
   'ArrowUp', 'Minus', 'TrendingDown', 'UserPlus', 'Palette', 'Wallet', 'Edit', 'Edit3', 'AlignLeft',
-  'Timer', 'Image', 'Code', 'MapPin', 'LineChart'
+  'Timer', 'Image', 'Code', 'MapPin', 'LineChart', 'Shield', 'Stop', 'Hash', 'VolumeX', 'StopCircle', 'ShieldCheck'
 ];
+
+// Deduplicate
+const uniqueIcons = [...new Set(icons)];
 
 const content = `import React, { forwardRef } from 'react';
 import { 
-  ${icons.join(',\n  ')}
+  ${uniqueIcons.join(',\n  ')}
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
@@ -99,7 +102,7 @@ const createIcon = (IconComponent: any) =>
 
 const IconsInternal = {
   Logo: Logo,
-  ${icons.map(name => `${name}: createIcon(${name})`).join(',\n  ')}
+  ${uniqueIcons.map(name => `${name}: createIcon(${name})`).join(',\n  ')}
 };
 
 export const Icons = {
@@ -149,7 +152,7 @@ export const Icons = {
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe,
   Apple: IconsInternal.Smartphone,
-  PanelLeft: IconsInternal.Layout, // Mapping PanelLeft to Layout as per original
+  PanelLeft: IconsInternal.Layout, 
   ImageIcon: IconsInternal.Image,
 };
 
