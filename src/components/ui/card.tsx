@@ -8,10 +8,11 @@ import { useReadingSettings } from "@/contexts/ReadingSettingsContext"
 interface CardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  as?: any;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', padding = 'md', children, ...props }, ref) => {
+  ({ className, variant = 'default', padding = 'md', as: Component = motion.div, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     
     const paddingMap = {
@@ -31,7 +32,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     };
 
     return (
-      <motion.div
+      <Component
         ref={ref}
         className={cn(
           "relative overflow-hidden transition-all duration-500 rounded-premium premium-card",
@@ -46,7 +47,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {children}
-      </motion.div>
+      </Component>
     );
   }
 )
