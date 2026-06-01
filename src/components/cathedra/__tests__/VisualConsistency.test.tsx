@@ -1,9 +1,28 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { CathedraCard } from '../CathedraCard';
 import React from 'react';
 
-// Mocking some dependencies if needed
+// Mocking useReadingSettings to avoid Provider issues in unit tests
+vi.mock('@/contexts/ReadingSettingsContext', () => ({
+  useReadingSettings: () => ({
+    settings: { reduceAnimations: false },
+    updateSettings: vi.fn(),
+    resetSettings: vi.fn(),
+  }),
+  ReadingSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mocking useAuth to avoid Provider issues
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: null,
+    profile: null,
+    loading: false,
+    isPremium: false,
+  }),
+}));
+
 describe('Visual Consistency - Design System', () => {
   it('CathedraCard should apply the premium-card class for consistent styling', () => {
     render(<CathedraCard data-testid="test-card">Test Content</CathedraCard>);
@@ -14,13 +33,15 @@ describe('Visual Consistency - Design System', () => {
   it('CathedraCard should have consistent rounded corners via design tokens', () => {
     render(<CathedraCard data-testid="test-card">Test Content</CathedraCard>);
     const card = screen.getByTestId('test-card');
-    // We expect the class to be there, Tailwind handles the actual CSS
-    expect(card.className).toContain('premium-card');
+    expect(card.className).toContain('rounded-premium');
   });
 
-  it('CathedraCard interactive state should apply the hover scale token', () => {
-    render(<CathedraCard variant="interactive" padding="none" onClick={() => {}} data-testid="test-card">Test Content</CathedraCard>);
+  it('CathedraCard interactive state should apply interactive variant styles', () => {
+    render(<CathedraCard variant="interactive" data-testid="test-card">Test Content</CathedraCard>);
     const card = screen.getByTestId('test-card');
-    expect(card.className).toContain('hover:-translate-y-1');
+    expect(card.className).toContain('cursor-pointer');
   });
 });
+
+
+

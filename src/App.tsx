@@ -380,7 +380,7 @@ const AppLayout: React.FC = () => {
         />
         
         <GlobalLogosAI />
-        {/* Consolidando apenas layout, card, navegação e tema únicos. Removendo melhorias visuais em excesso. */}
+        {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
           <SwipeNavigation>
