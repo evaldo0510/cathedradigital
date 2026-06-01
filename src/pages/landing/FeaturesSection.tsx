@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Sparkles, Hash } from "lucide-react";
+import { Icons } from "@/constants";
 import { AppRoute } from "@/types";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -9,25 +9,25 @@ const features = [
   { 
     title: "Logos IA", 
     description: "Um mentor espiritual para os tempos modernos, treinado com o Magistério da Igreja.", 
-    icon: <Sparkles className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.Sparkles />, 
     route: AppRoute.DASHBOARD 
   },
   { 
     title: "Enciclopédia Católica", 
     description: "Lexicon Theologicum digital completo, navegável de A a Z.", 
-    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.BookOpen />, 
     route: AppRoute.ENCYCLOPEDIA 
   },
   { 
     title: "Bíblia Sagrada", 
     description: "Escrituras com ferramentas de estudo avançadas e busca inteligente.", 
-    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.BookOpen />, 
     route: AppRoute.BIBLE 
   },
   { 
     title: "Catecismo da Igreja", 
     description: "Doutrina cristã sistemática e orgânica, fiel ao Magistério.", 
-    icon: <Hash className="h-spacing-lg w-spacing-lg" />, 
+    icon: <Icons.Hash />, 
     route: AppRoute.CATECHISM 
   },
 ];
