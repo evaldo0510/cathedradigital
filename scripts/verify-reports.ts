@@ -121,19 +121,20 @@ if (updateMode) {
   // JSON Validation first
   const corrupted = validateJsonFiles(actualFiles);
   if (corrupted.length > 0) {
-    console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
+    console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.map(c => c.file).join(', ')}${RESET}`);
     
     if (process.env.GITHUB_ACTIONS) {
       let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
       summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
       summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos detectados durante tentativa de atualização.\n\n`;
       summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-      corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+      corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
       writeSummary(summary);
     }
     
     process.exit(1);
   }
+
 
 
   const treeStr = generateTreeString(actualFiles);
@@ -211,7 +212,7 @@ const actualFiles = getActualFiles();
 const corrupted = validateJsonFiles(actualFiles);
 if (corrupted.length > 0) {
   console.log(`${RED}✗ Relatórios JSON corrompidos detectados:${RESET}`);
-  corrupted.forEach(f => console.log(`  - ${f}`));
+  corrupted.forEach(c => console.log(`  - ${c.file}: ${c.error}`));
   console.log("");
   
   if (process.env.GITHUB_ACTIONS) {
@@ -219,12 +220,13 @@ if (corrupted.length > 0) {
     summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
     summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos ou com schema inválido detectados.\n\n`;
     summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-    corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+    corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
     writeSummary(summary);
   }
   
   process.exit(1);
 }
+
 
 
 const readmeContent = readFileSync(README_PATH, "utf8");
@@ -294,8 +296,9 @@ if (process.env.GITHUB_ACTIONS) {
     summary += `#### 🔍 Detalhes das Divergências\n\n`;
     if (corrupted.length > 0) {
       summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-      corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+      corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
     }
+
     if (missing.length > 0) {
       summary += `#### Missing Files (${missing.length})\n`;
       missing.forEach(f => summary += `- \`${f}\` (Documentado no README mas não encontrado)\n`);
