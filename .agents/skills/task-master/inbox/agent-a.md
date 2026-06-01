@@ -1,3 +1,7 @@
-# Inbox Agente A (Core)
-Status: Aguardando Wave 1
----
+# Inbox: AGENT-A
+
+Status: Ready
+
+## Pending Requests
+
+- None
