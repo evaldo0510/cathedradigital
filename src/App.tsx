@@ -39,7 +39,7 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
-import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
+
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 
 const queryClient = new QueryClient({
@@ -380,7 +380,7 @@ const AppLayout: React.FC = () => {
         />
         
         <GlobalLogosAI />
-        <SpacingDebugger />
+        {/* Consolidando apenas layout, card, navegação e tema únicos. Removendo melhorias visuais em excesso. */}
 
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
           <SwipeNavigation>
