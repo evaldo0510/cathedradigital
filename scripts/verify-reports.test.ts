@@ -129,7 +129,7 @@ reports/
     
     const result = runVerify(['--fail-on-divergence']);
     expect(result.status).toBe(1);
-    expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+    expect(result.output).toContain('Relatórios JSON inválidos detectados');
   });
 
   describe('GitHub Step Summary - Motivo do Exit Code', () => {
@@ -436,7 +436,7 @@ reports/
       
       const result = runMatrix(['--update'], true, true);
       expect(result.status).toBe(1);
-      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+      expect(result.output).toContain('Relatórios JSON inválidos detectados');
     });
 
     it('deve garantir que o Step Summary reflita o caminho efetivo dos Overrides', () => {
@@ -503,9 +503,10 @@ reports/
 
       const result = runValidation();
       expect(result.status).toBe(1);
-      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
-      expect(result.summary).toContain('#### 🚨 Arquivos Corrompidos (1)');
-      expect(result.summary).toContain('- `compliance-history.json`: History must be an array');
+      expect(result.output).toContain('Relatórios JSON inválidos detectados');
+      expect(result.summary).toContain('#### 🚨 Detalhes Técnicos dos Erros de Schema');
+      expect(result.summary).toContain('`compliance-history.json`');
+      expect(result.summary).toContain('Schema Error: History must be an array');
 
       expect(result.summary).toContain('History must be an array');
     });
@@ -516,7 +517,7 @@ reports/
 
       const result = runValidation();
       expect(result.status).toBe(1);
-      expect(result.summary).toContain('Invalid audit report structure');
+      expect(result.summary).toContain('Schema Error: Missing \'timestamp\' field');
       expect(result.summary).toContain('token-audit.json');
     });
 
@@ -526,7 +527,7 @@ reports/
 
       const result = runValidation();
       expect(result.status).toBe(1);
-      expect(result.summary).toContain('Invalid audit report structure');
+      expect(result.summary).toContain('Schema Error: \'totalIssues\' must be a number');
     });
 
     it('deve falhar com JSON parcialmente corrompido (erro de sintaxe)', () => {
@@ -535,7 +536,7 @@ reports/
 
       const result = runValidation();
       expect(result.status).toBe(1);
-      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+      expect(result.output).toContain('Relatórios JSON inválidos detectados');
       expect(result.summary).toContain('compliance-history.json');
     });
 
@@ -545,9 +546,9 @@ reports/
 
       const result = runValidation();
       expect(result.status).toBe(1);
-      expect(result.summary).toContain('#### 🚨 Arquivos Corrompidos (2)');
-      expect(result.summary).toContain('- `compliance-history.json`');
-      expect(result.summary).toContain('- `token-audit.json`');
+      expect(result.summary).toContain('#### 🚨 Detalhes Técnicos dos Erros de Schema');
+      expect(result.summary).toContain('`compliance-history.json`');
+      expect(result.summary).toContain('`token-audit.json`');
     });
   });
 });
