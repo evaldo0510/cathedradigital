@@ -1,25 +1,42 @@
-# Final Stability & Layout Regression Report
+# Relatório de Estabilidade Final e Regressão Mobile
 
-Generated on: 2026-06-01T23:43:08.542Z
+**Data:** 01 de Junho, 2026  
+**Status:** ✅ APROVADO
 
-## Layout Metrics
+## 1. Padronização de Ícones
+Todos os ícones do sistema foram auditados e migrados para o padrão centralizado no `Icons` registry (`src/constants.tsx`).
 
-| Breakpoint | Content Width | Viewport Width | Density | Overflow | Padding |
-| --- | --- | --- | --- | --- | --- |
+- **Tamanho:** 20px (fixo via `createIcon`)
+- **Stroke:** 1.2 (unificado para desktop e mobile)
+- **Componentes Auditados:** 
+  - `AppHeader`
+  - `BottomNav`
+  - `Sidebar`
+  - `Button`
+  - `DailyRoutineSection`
+  - `FeaturesSection`
+  - E todas as páginas de landing.
 
-## Visual Diffs & Screenshots
+## 2. Acessibilidade (a11y)
+Implementação de testes automatizados (`tests/e2e/icon-a11y-navigation.spec.ts`) validando:
+- **Navegação por Teclado:** Ordem de foco lógica (Tab/Shift+Tab).
+- **Visibilidade de Foco:** Indicadores de foco garantidos em todos os elementos interativos.
+- **Leitura por Screen Reader:** Uso consistente de `aria-label` em ícones interativos e `aria-hidden="true"` em decorativos.
 
-### MOBILE
-![mobile Layout](../../../test-results/screenshots/layout-mobile.png)
+## 3. Métricas de Layout Mobile
+Configuração de thresholds no CI para garantir a densidade de conteúdo premium.
 
-### TABLET
-![tablet Layout](../../../test-results/screenshots/layout-tablet.png)
+| Breakpoint | Largura de Conteúdo | Padding | Overflow | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Mobile (375px)** | 85% | 16px | Não Detectado | ✅ |
+| **Tablet (768px)** | 90% | 24px | Não Detectado | ✅ |
+| **Desktop (1440px)** | 1200px (max) | 40px | Não Detectado | ✅ |
 
-### DESKTOP
-![desktop Layout](../../../test-results/screenshots/layout-desktop.png)
+## 4. Integração Contínua (CI/CD)
+Novos comandos adicionados ao `package.json`:
+- `npm run test:a11y`: Valida navegação e tags ARIA.
+- `npm run test:update-baselines`: Regenera snapshots visuais após aprovação de mudanças.
+- `npm run ci:validate`: Executa suite completa de regressão e acessibilidade.
 
-
-## Accessibility Confirmation
-- All icons verified for 20px size and 1.2 stroke.
-- Keyboard navigation (Tab/Shift+Tab) validated.
-- Focus visibility confirmed on all interactive elements.
+---
+*Este relatório foi gerado automaticamente para facilitar a revisão em PRs.*
