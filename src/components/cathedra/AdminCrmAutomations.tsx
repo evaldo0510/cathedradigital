@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Bell, Zap, Clock, Send, CheckCircle2, AlertTriangle,
-  Flame, UserMinus, MessageCircle
-} from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,7 +13,7 @@ const automations = [
     id: 'daily_streak',
     name: 'Lembrete de Streak',
     description: 'Envia notificação diária para manter o streak ativo.',
-    icon: <Flame className="w-spacing-md h-spacing-md text-orange-500" />,
+    icon: <Icons.Flame className="text-orange-500" />,
     schedule: 'Diário — 08:00',
     status: 'active' as const,
     edgeFunction: 'daily-streak-push',
@@ -26,7 +22,7 @@ const automations = [
     id: 'retention_3d',
     name: 'Reengajamento (3 dias)',
     description: 'Notifica usuários inativos há 3+ dias com conteúdo personalizado.',
-    icon: <UserMinus className="w-spacing-md h-spacing-md text-secondary" />,
+    icon: <Icons.UserMinus className="text-secondary" />,
     schedule: 'Diário — 10:00',
     status: 'active' as const,
     edgeFunction: 'retention-notifications',
@@ -35,7 +31,7 @@ const automations = [
     id: 'community_digest',
     name: 'Resumo da Comunidade',
     description: 'Notificação semanal com destaques da comunidade.',
-    icon: <MessageCircle className="w-spacing-md h-spacing-md text-primary" />,
+    icon: <Icons.MessageCircle className="text-primary" />,
     schedule: 'Semanal — Domingo 09:00',
     status: 'inactive' as const,
     edgeFunction: null,
@@ -77,7 +73,6 @@ const AdminCrmAutomations: React.FC = () => {
         return;
       }
 
-      // Insert notifications for each user
       const notifications = targetUsers.map(u => ({
         user_id: u.id,
         title: manualTitle.trim(),
@@ -85,7 +80,6 @@ const AdminCrmAutomations: React.FC = () => {
         type: 'admin_manual',
       }));
 
-      // Batch insert (Supabase handles up to 1000)
       const { error: insertError } = await supabase.from('notifications').insert(notifications);
       if (insertError) throw insertError;
 
@@ -101,10 +95,9 @@ const AdminCrmAutomations: React.FC = () => {
 
   return (
     <div className="space-y-spacing-lg">
-      {/* Automation Status */}
       <div className="space-y-spacing-sm">
         <h3 className="text-premium-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-spacing-xs">
-          <Zap className="w-spacing-md h-spacing-md" /> Automações Configuradas
+          <Icons.Zap /> Automações Configuradas
         </h3>
         {automations.map(auto => (
           <Card key={auto.id}>
@@ -129,9 +122,9 @@ const AdminCrmAutomations: React.FC = () => {
                     : 'bg-muted text-muted-foreground'
                   }>
                     {auto.status === 'active' ? (
-                      <><CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Ativo</>
+                      <><Icons.CheckCircle className="mr-spacing-2xs" /> Ativo</>
                     ) : (
-                      <><Clock className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Inativo</>
+                      <><Icons.Clock className="mr-spacing-2xs" /> Inativo</>
                     )}
                   </Badge>
                 </div>
@@ -141,11 +134,10 @@ const AdminCrmAutomations: React.FC = () => {
         ))}
       </div>
 
-      {/* Manual Notification */}
       <Card>
         <CardHeader>
           <CardTitle className="text-premium-sm flex items-center gap-spacing-xs">
-            <Send className="w-spacing-md h-spacing-md text-primary" /> Enviar Notificação Manual
+            <Icons.Send className="text-primary" /> Enviar Notificação Manual
           </CardTitle>
           <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
         </CardHeader>
@@ -175,7 +167,7 @@ const AdminCrmAutomations: React.FC = () => {
             rows={3}
           />
           <Button onClick={handleSendManual} disabled={sending} className="gap-spacing-xs">
-            <Send className="w-spacing-md h-spacing-md" /> {sending ? 'Enviando...' : 'Enviar Notificação'}
+            <Icons.Send /> {sending ? 'Enviando...' : 'Enviar Notificação'}
           </Button>
         </CardContent>
       </Card>
