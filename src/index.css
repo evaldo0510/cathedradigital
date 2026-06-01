@@ -81,7 +81,8 @@
     /* 6. Layout Constants */
     --layout-max-width: 1400px;
     --layout-padding: var(--spacing-xl);
-    --layout-padding-mobile: var(--spacing-md);
+    --layout-padding-mobile: var(--spacing-sm);
+    --layout-content-width-mobile: 85vw;
     --header-height: var(--spacing-2xl);
     --bottom-nav-height: var(--spacing-xl);
     

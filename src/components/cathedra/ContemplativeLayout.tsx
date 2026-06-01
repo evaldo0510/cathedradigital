@@ -21,7 +21,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   subtitle, 
   className,
   containerClassName,
-  maxW = 'max-w-[var(--layout-max-width)]',
+  maxW = 'max-w-[var(--layout-max-width)] md:max-w-[var(--layout-max-width)] w-[var(--layout-content-width-mobile)]',
   headerActions,
   icon: Icon,
   showPadding = true
