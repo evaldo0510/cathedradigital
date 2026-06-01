@@ -505,7 +505,8 @@ reports/
       expect(result.status).toBe(1);
       expect(result.output).toContain('Relatórios JSON corrompidos detectados');
       expect(result.summary).toContain('#### 🚨 Arquivos Corrompidos (1)');
-      expect(result.summary).toContain('- `compliance-history.json` (JSON inválido)');
+      expect(result.summary).toContain('- `compliance-history.json`: History must be an array');
+
       expect(result.summary).toContain('History must be an array');
     });
 
