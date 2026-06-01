@@ -67,7 +67,7 @@ function getActualFiles() {
 
 function validateJsonFiles(files: string[]) {
   const jsonFiles = files.filter(f => f.endsWith('.json'));
-  const corrupted: { file: string, error: string }[] = [];
+  const corrupted: { file: string, error: string, path: string }[] = [];
   
   jsonFiles.forEach(file => {
     const filePath = join(REPORTS_DIR, file);
@@ -76,13 +76,14 @@ function validateJsonFiles(files: string[]) {
       const data = JSON.parse(content);
       // Basic schema check
       if (file === 'compliance-history.json') {
-        if (!Array.isArray(data)) throw new Error("History must be an array");
+        if (!Array.isArray(data)) throw new Error("Schema Error: History must be an array");
       } else if (file.startsWith('token-audit')) {
-        if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
+        if (!data.timestamp) throw new Error("Schema Error: Missing 'timestamp' field");
+        if (typeof data.totalIssues !== 'number') throw new Error("Schema Error: 'totalIssues' must be a number");
       }
     } catch (e: any) {
-      corrupted.push({ file, error: e.message });
-      annotate('error', `Relatório JSON corrompido ou inválido: ${e.message}`, filePath);
+      corrupted.push({ file, error: e.message, path: filePath });
+      annotate('error', `Relatório JSON inválido: ${e.message}`, filePath);
     }
   });
   return corrupted;
@@ -121,14 +122,19 @@ if (updateMode) {
   // JSON Validation first
   const corrupted = validateJsonFiles(actualFiles);
   if (corrupted.length > 0) {
-    console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.map(c => c.file).join(', ')}${RESET}`);
+    console.log(`${RED}✗ Relatórios JSON inválidos detectados: ${corrupted.map(c => c.file).join(', ')}${RESET}`);
     
     if (process.env.GITHUB_ACTIONS) {
       let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
-      summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
-      summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos detectados durante tentativa de atualização.\n\n`;
-      summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-      corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
+      summary += `❌ **Status:** Falha (JSON Inválido)\n`;
+      summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos ou com schema inválido impediram a atualização.\n\n`;
+      summary += `#### 🚨 Detalhes Técnicos dos Erros de Schema\n`;
+      summary += `| Arquivo | Erro Detectado | Caminho Relativo |\n`;
+      summary += `| :--- | :--- | :--- |\n`;
+      corrupted.forEach(c => {
+        summary += `| \`${c.file}\` | ${c.error} | \`${c.path}\` |\n`;
+      });
+      summary += `\n`;
       writeSummary(summary);
     }
     
@@ -211,16 +217,21 @@ const actualFiles = getActualFiles();
 // JSON Validation
 const corrupted = validateJsonFiles(actualFiles);
 if (corrupted.length > 0) {
-  console.log(`${RED}✗ Relatórios JSON corrompidos detectados:${RESET}`);
-  corrupted.forEach(c => console.log(`  - ${c.file}: ${c.error}`));
+  console.log(`${RED}✗ Relatórios JSON inválidos detectados:${RESET}`);
+  corrupted.forEach(c => console.log(`  - ${c.file}: ${c.error} (${c.path})`));
   console.log("");
   
   if (process.env.GITHUB_ACTIONS) {
     let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
-    summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
+    summary += `❌ **Status:** Falha (JSON Inválido)\n`;
     summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos ou com schema inválido detectados.\n\n`;
-    summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-    corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
+    summary += `#### 🚨 Detalhes Técnicos dos Erros de Schema\n`;
+    summary += `| Arquivo | Erro Detectado | Caminho Relativo |\n`;
+    summary += `| :--- | :--- | :--- |\n`;
+    corrupted.forEach(c => {
+      summary += `| \`${c.file}\` | ${c.error} | \`${c.path}\` |\n`;
+    });
+    summary += `\n`;
     writeSummary(summary);
   }
   
@@ -295,8 +306,13 @@ if (process.env.GITHUB_ACTIONS) {
   if (hasDivergence) {
     summary += `#### 🔍 Detalhes das Divergências\n\n`;
     if (corrupted.length > 0) {
-      summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
-      corrupted.forEach(c => summary += `- \`${c.file}\`: ${c.error}\n`);
+      summary += `#### 🚨 Detalhes Técnicos dos Erros de Schema\n`;
+      summary += `| Arquivo | Erro Detectado | Caminho Relativo |\n`;
+      summary += `| :--- | :--- | :--- |\n`;
+      corrupted.forEach(c => {
+        summary += `| \`${c.file}\` | ${c.error} | \`${c.path}\` |\n`;
+      });
+      summary += `\n`;
     }
 
     if (missing.length > 0) {
