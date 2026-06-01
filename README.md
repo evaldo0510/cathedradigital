@@ -1,11 +1,11 @@
 # Cathedra Digital
 
-[![Playwright Tests](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
+[![Pipeline de Governança](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
+**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
 
 
 ## How can I edit this code?
@@ -80,33 +80,32 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/c
 
 Este projeto possui uma suíte robusta de testes para garantir a estabilidade e acessibilidade premium.
 
-### 1. Testes Unitários
+### 1. Pipeline de Governança (Completo & Paralelo)
+O projeto utiliza uma matriz de agentes que validam Segurança, Acessibilidade, SEO e Design System em paralelo para eliminar gargalos.
+```bash
+# Executar todos os agentes em paralelo localmente
+npm run governance:all
+```
+
+### 2. Testes Unitários
 Executados via Bun (rápido e leve).
 ```bash
 bun test
 ```
 
-### 2. Testes E2E (Playwright)
+### 3. Testes E2E (Playwright)
 Validam fluxos completos, navegação por swipe e regressão visual.
 ```bash
-# Instalar dependências do Playwright (executar uma vez)
-npx playwright install
-
 # Rodar todos os testes E2E (Chrome, Safari, Mobile)
 npx playwright test
-
-# Rodar em modo visual (UI Mode) para depuração
-npx playwright test --ui
-
-# Rodar apenas um arquivo específico
-npx playwright test tests/e2e/bottom-nav-navigation.spec.ts
 ```
 
-### 3. Testes de Acessibilidade (Axe-core)
-Verificam conformidade com WCAG 2.1 AA automaticamente.
-```bash
-# Rodar o audit global de acessibilidade
-npx playwright test tests/e2e/accessibility.spec.ts
+### 4. Auditorias Específicas
+- **Tokens (Cathedra):** `npm run token-audit`
+- **Segurança:** `npm run security-audit`
+- **Design System:** `npm run test:system-audit`
+- **Espaçamento:** `npm run test:spacing-audit`
+
 ```
 
 ### 4. Filtros e Comandos Úteis

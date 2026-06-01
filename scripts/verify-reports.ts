@@ -98,6 +98,8 @@ function generateTreeString(files: string[]) {
     if (file === 'compliance-history.json') comment = "    # Histórico de progresso";
     else if (file === 'token-audit.html') comment = "           # Dashboard visual (mais recente)";
     else if (file === 'token-audit.json') comment = "           # Logs técnicos brutos (mais recente)";
+    else if (file === 'security-audit.json') comment = "        # Relatório de segurança Supabase";
+    else if (file === 'spacing-audit-report.json') comment = "  # Auditoria de espaçamento e ritmo";
     else {
       const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2})/);
       if (match) {
