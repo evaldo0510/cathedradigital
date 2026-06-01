@@ -8,6 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "task-master": "bun run scripts/task-master.ts",
+    "task-master:run": "bun run scripts/task-master.ts run",
+    "task-master:status": "bun run scripts/task-master.ts status",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
