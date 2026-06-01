@@ -314,6 +314,11 @@ const IconsInternal = {
   Youtube: createIcon(Youtube),
   Printer: createIcon(Printer),
   Layers: createIcon(Layers),
+  PanelLeft: createIcon(Layout),
+  Hash: createIcon(Type),
+  Shield: createIcon(ShieldCheck),
+  VolumeX: createIcon(Volume),
+  Coffee: createIcon(Coffee),
 };
 
 
