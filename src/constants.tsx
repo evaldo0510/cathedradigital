@@ -501,7 +501,7 @@ export const Icons = {
   Hash: IconsInternal.Hash,
   Shield: IconsInternal.Shield,
   VolumeX: IconsInternal.VolumeX,
-
+  UserMinus: IconsInternal.UserMinus,
 };
 
 // Runtime Consistency Check
