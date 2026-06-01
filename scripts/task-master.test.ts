@@ -51,8 +51,9 @@ describe('TASK MASTER CLI', () => {
       expect(true).toBe(false);
     } catch (error: any) {
       expect(error.status).toBe(1);
-      const output = error.stdout.toString();
-      expect(output).toContain('Falha: Existem 1 pendências nos Inboxes');
+      const stdout = error.stdout.toString();
+      const stderr = error.stderr.toString();
+      expect(stdout + stderr).toContain('Falha: Existem 1 pendências nos Inboxes');
     }
   });
 
