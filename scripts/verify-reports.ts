@@ -121,8 +121,19 @@ if (updateMode) {
   const corrupted = validateJsonFiles(actualFiles);
   if (corrupted.length > 0) {
     console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
+    
+    if (process.env.GITHUB_ACTIONS) {
+      let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
+      summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
+      summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos detectados durante tentativa de atualização.\n\n`;
+      summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
+      corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+      writeSummary(summary);
+    }
+    
     process.exit(1);
   }
+
 
   const treeStr = generateTreeString(actualFiles);
   
