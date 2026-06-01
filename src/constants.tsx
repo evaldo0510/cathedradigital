@@ -155,7 +155,18 @@ import {
   TrendingUp,
   Wheat,
   Wind,
-  ZapOff
+  ZapOff,
+  Building2,
+  DollarSign,
+  Upload,
+  FileSpreadsheet,
+  ArrowUp,
+  Minus,
+  TrendingDown,
+  UserPlus,
+  Palette,
+  Wallet,
+  Edit
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
@@ -395,7 +406,9 @@ const IconsInternal = {
 
 // Semantic Groups for better organization
 export const Icons = {
+  ...IconsInternal,
   Logo: IconsInternal.Logo,
+
   
   // Navigation & Core
   Home: IconsInternal.Home,
