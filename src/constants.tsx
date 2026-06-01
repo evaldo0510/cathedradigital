@@ -660,16 +660,6 @@ export const Icons = {
   MapPin: IconsInternal.MapPin,
   LineChart: IconsInternal.LineChart,
 };
-  ShieldAlert: IconsInternal.ShieldAlert,
-  Skull: IconsInternal.Skull,
-  StopCircle: IconsInternal.StopCircle,
-  Store: IconsInternal.Store,
-  TrendingUp: IconsInternal.TrendingUp,
-  Wheat: IconsInternal.Wheat,
-  Wind: IconsInternal.Wind,
-  ZapOff: IconsInternal.ZapOff,
-  MoreHorizontal: IconsInternal.MoreHorizontal,
-};
 
 // Runtime Consistency Check
 if (import.meta.env.DEV) {
