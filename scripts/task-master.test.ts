@@ -100,8 +100,8 @@ describe('TASK MASTER CLI', () => {
     expect(htmlContent).toContain('Iniciando WAVE 1');
     expect(htmlContent).toContain('Arquivos afetados:');
 
-    // Nota: No dry-run do script atual, erros não são gerados se for sucesso.
-    // Mas a estrutura do HTML deve estar pronta para eles.
-    // Vamos garantir que se houver erros, eles apareçam.
+    // Validar Erros Corrigidos (conforme simulado no script para Wave 2)
+    expect(htmlContent).toContain('✅ Erros Corrigidos');
+    expect(htmlContent).toContain('FIXED: Linting errors in Dashboard.tsx');
   });
 });
