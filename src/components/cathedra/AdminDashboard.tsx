@@ -287,7 +287,7 @@ const AdminDashboard: React.FC = () => {
             depth_level: crm.classification || 'Novo',
             reflections_count: crm.reflections_count || 0,
             current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity // Map view's activity to last_visit for UI consistency
+            last_visit: crm.last_activity // Icons.Map view's activity to last_visit for UI consistency
           };
         }) as UserProfile[]);
       } catch (err: any) {
@@ -749,7 +749,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Recent Activity Section */}
+          {/* Recent Icons.Activity Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
             <div className="lg:col-span-2">
               <Suspense fallback={<Skeleton className="h-[350px] rounded-premium-full" />}>
@@ -880,7 +880,7 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
-        {/* Users Tab */}
+        {/* Icons.Users Tab */}
         <TabsContent value="users" className="space-y-spacing-md">
           <div className="flex items-center gap-spacing-sm">
             <div className="relative flex-1">

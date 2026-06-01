@@ -87,7 +87,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                 exit={{ opacity: 0, y: 20 }}
                 className="pointer-events-auto flex items-center gap-spacing-sm"
               >
-                {/* Bookmark Button */}
+                {/* Icons.Bookmark Button */}
                 <Button
                   onClick={handleBookmark}
                   variant="outline"

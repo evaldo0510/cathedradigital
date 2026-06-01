@@ -25,22 +25,22 @@ const BENEFITS = [
   { 
     title: "Jornadas Completas", 
     desc: "Acesse todos os caminhos de formação sem limites ou interrupções.",
-    icon: Compass 
+    icon: Icons.Compass 
   },
   { 
     title: "Respostas mais profundas da Logos", 
     desc: "Obtenha reflexões teológicas densas e personalizadas com nossa IA.",
-    icon: Sparkles 
+    icon: Icons.Sparkles 
   },
   { 
     title: "Acompanhamento Contínuo", 
     desc: "Métricas e lembretes para garantir sua constância na vida de oração.",
-    icon: Target 
+    icon: Icons.Target 
   },
   { 
     title: "Conteúdos Exclusivos", 
     desc: "Acesso total a documentos raros, meditações e estudos avançados.",
-    icon: Library 
+    icon: Icons.Library 
   }
 ];
 

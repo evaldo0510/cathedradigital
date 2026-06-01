@@ -131,7 +131,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
         ))}
       </div>
 
-      {/* User List */}
+      {/* Icons.User Icons.List */}
       <Card>
         <CardHeader className="pb-spacing-sm">
           <div className="flex items-center justify-between">

@@ -134,7 +134,7 @@ export const SpacingDebugger: React.FC = () => {
             text-transform: none;
           }
 
-          /* Rhythm Grid Overlay */
+          /* Rhythm Icons.Grid Overlay */
           body::after {
             content: '';
             position: fixed;

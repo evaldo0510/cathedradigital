@@ -173,7 +173,11 @@ import {
   Image,
   Code,
   MapPin,
-  LineChart
+  LineChart,
+  Shield,
+  Stop,
+  Hash,
+  VolumeX
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
@@ -420,7 +424,11 @@ const IconsInternal = {
   Image: createIcon(Image),
   Code: createIcon(Code),
   MapPin: createIcon(MapPin),
-  LineChart: createIcon(LineChart)
+  LineChart: createIcon(LineChart),
+  Shield: createIcon(Shield),
+  Stop: createIcon(Stop),
+  Hash: createIcon(Hash),
+  VolumeX: createIcon(VolumeX)
 };
 
 export const Icons = {
@@ -470,7 +478,7 @@ export const Icons = {
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe,
   Apple: IconsInternal.Smartphone,
-  PanelLeft: IconsInternal.Layout, // Mapping PanelLeft to Layout as per original
+  PanelLeft: IconsInternal.Layout, 
   ImageIcon: IconsInternal.Image,
 };
 

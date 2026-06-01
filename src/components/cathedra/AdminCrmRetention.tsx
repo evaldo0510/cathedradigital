@@ -311,7 +311,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
   return (
     <TooltipProvider delayDuration={200}>
     <div className="space-y-spacing-lg">
-      {/* Period Filter + Export */}
+      {/* Period Icons.Filter + Export */}
       <div className="flex items-center justify-between flex-wrap gap-spacing-xs">
         <div className="flex gap-spacing-2xs">
           {PERIOD_OPTIONS.map(opt => (

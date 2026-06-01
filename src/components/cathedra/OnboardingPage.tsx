@@ -191,7 +191,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const category = getRecommendedCategory(result);
     setRecommendedCategory(category);
 
-    // Map moment to spiritual profile for dashboard personalization
+    // Icons.Map moment to spiritual profile for dashboard personalization
     const spiritualProfileMap: Record<string, string> = {
       beginning: 'sedento_de_sentido',
       deepening: 'firme_aprofundando',

@@ -39,7 +39,7 @@ const MYSTERY_DATA: Record<MysteryKey, {
 }> = {
   gozosos: {
     title: 'Mistérios Gozosos',
-    icon: Sparkles,
+    icon: Icons.Sparkles,
     days: 'Segunda e Sábado',
     color: 'text-primary bg-primary/10',
     mysteries: [
@@ -52,7 +52,7 @@ const MYSTERY_DATA: Record<MysteryKey, {
   },
   dolorosos: {
     title: 'Mistérios Dolorosos',
-    icon: Flame,
+    icon: Icons.Flame,
     days: 'Terça e Sexta',
     color: 'text-secondary bg-secondary/10',
     mysteries: [
@@ -65,7 +65,7 @@ const MYSTERY_DATA: Record<MysteryKey, {
   },
   gloriosos: {
     title: 'Mistérios Gloriosos',
-    icon: Star,
+    icon: Icons.Star,
     days: 'Quarta e Domingo',
     color: 'text-secondary bg-secondary/10',
     mysteries: [
@@ -78,7 +78,7 @@ const MYSTERY_DATA: Record<MysteryKey, {
   },
   luminosos: {
     title: 'Mistérios Luminosos',
-    icon: Zap,
+    icon: Icons.Zap,
     days: 'Quinta',
     color: 'text-secondary bg-secondary/10',
     mysteries: [
@@ -439,7 +439,7 @@ const PrayerPage: React.FC = () => {
             </div>
           </div>
 
-          {/* All Mysteries Grid */}
+          {/* All Mysteries Icons.Grid */}
           <div className="space-y-spacing-lg">
             <div className="flex items-center justify-between px-spacing-xs">
               <h3 className="text-premium-2xl font-serif font-bold">Mistérios do Rosário</h3>
@@ -494,10 +494,10 @@ const PrayerPage: React.FC = () => {
             </div>
             <div className="space-y-spacing-sm">
               {[
-                { key: 'paiNosso', title: 'Pai Nosso', icon: Sun },
-                { key: 'aveMaria', title: 'Ave Maria', icon: Star },
-                { key: 'gloria', title: 'Glória ao Pai', icon: Sparkles },
-                { key: 'salveRainha', title: 'Salve Rainha', icon: Heart },
+                { key: 'paiNosso', title: 'Pai Nosso', icon: Icons.Sun },
+                { key: 'aveMaria', title: 'Ave Maria', icon: Icons.Star },
+                { key: 'gloria', title: 'Glória ao Pai', icon: Icons.Sparkles },
+                { key: 'salveRainha', title: 'Salve Rainha', icon: Icons.Heart },
               ].map(p => (
                 <div key={p.key} className="p-spacing-md rounded-premium bg-muted/30 border border-border/50 space-y-spacing-sm hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-spacing-sm">

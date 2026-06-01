@@ -54,7 +54,7 @@ const WebhookSimulator: React.FC = () => {
         await refreshProfile();
       }
       
-      // Check if premium status updated
+      // Icons.Check if premium status updated
       const { data: profile } = await supabase
         .from('profiles')
         .select('is_premium')

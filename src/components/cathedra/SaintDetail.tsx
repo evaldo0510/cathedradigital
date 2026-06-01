@@ -97,7 +97,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         <Icons.X className="w-spacing-md h-spacing-md" />
       </Button>
 
-      {/* Image Sidebar */}
+      {/* Icons.Image Sidebar */}
       <div className="w-full md:w-spacing-xs/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
         <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -114,7 +114,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       {/* Content Area */}
       <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
         
-        {/* Top Info Strip */}
+        {/* Top Icons.Info Strip */}
         <div className="flex flex-wrap items-center gap-spacing-lg">
           <div className="flex items-center gap-spacing-sm">
             <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
@@ -227,9 +227,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           title="Meditação e Aprofundamento" 
         />
 
-        {/* Quote & Practical Application */}
+        {/* Icons.Quote & Practical Application */}
         <div className="grid md:grid-cols-2 gap-spacing-xl">
-          {/* Quote Section */}
+          {/* Icons.Quote Section */}
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-xs text-primary">
               <Icons.Quote className="w-spacing-md h-spacing-md" />

@@ -235,7 +235,7 @@ const AdminSeoTab: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md pt-spacing-lg border-t border-border/50">
                   <div className="space-y-spacing-xs">
                     <Label className="text-premium-xs font-black uppercase tracking-widest opacity-70 flex items-center gap-spacing-2xs">
-                      <Icons.Search className="w-spacing-sm h-spacing-sm" /> GSC Verification Code
+                      <Icons.Search className="w-spacing-sm h-spacing-sm" /> GSC Verification Icons.Code
                     </Label>
                     <Input 
                       value={formData.gsc_verification_code || ''} 
@@ -440,7 +440,7 @@ const AdminSeoTab: React.FC = () => {
               </div>
               <div className="space-y-spacing-xs">
                 <a href="https://search.google.com/search-console" target="_blank" rel="noopener" className="flex items-center justify-between text-premium-xs hover:text-primary hover:underline group">
-                  Search Console <Icons.ExternalLink className="w-spacing-sm h-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Icons.Search Console <Icons.ExternalLink className="w-spacing-sm h-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
                 <a href="/sitemap.xml" target="_blank" className="flex items-center justify-between text-premium-xs hover:text-primary hover:underline group">
                   Sitemap XML <Icons.ExternalLink className="w-spacing-sm h-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity" />

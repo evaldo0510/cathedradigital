@@ -174,7 +174,7 @@ const GlossaryPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Search */}
+      {/* Icons.Search */}
       <FuzzySearchInput
         className="max-w-spacing-md mx-auto"
         value={searchQuery}
@@ -215,7 +215,7 @@ const GlossaryPage: React.FC = () => {
         </div>
       )}
 
-      {/* Search results as SearchResultCards */}
+      {/* Icons.Search results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
         <div className="space-y-spacing-xs">
           <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
@@ -306,7 +306,7 @@ const GlossaryPage: React.FC = () => {
                           </div>
                         )}
 
-                        {/* Journey Link */}
+                        {/* Journey Icons.Link */}
                         {term.journey_id && (
                           <div className="bg-primary/10 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
                             <div className="flex items-center gap-spacing-xs">

@@ -61,7 +61,7 @@ const TheologicalAwareText: React.FC<{
   );
 };
 
-// ── Copy button ──
+// ── Icons.Copy button ──
 const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
@@ -195,7 +195,7 @@ const StudyMode: React.FC = () => {
   // ── Persistence helpers ──
   const saveMessages = useCallback(async (conversationId: string, newMessages: Message[]) => {
     if (!user) return;
-    // Save only the last two messages (user + assistant)
+    // Icons.Save only the last two messages (user + assistant)
     const toSave = newMessages.slice(-2);
     for (const msg of toSave) {
       await supabase.from('colloquium_messages').insert({
@@ -290,7 +290,7 @@ const StudyMode: React.FC = () => {
       // Background save to DB to keep UI responsive
       if (convId && user) {
         const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
-        saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
+        saveMessages(convId, finalMessages).catch(e => console.error('BG Icons.Save failed:', e));
       }
     } catch (e: any) {
       console.error('Study mode error:', e);

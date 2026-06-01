@@ -157,7 +157,7 @@ const ItinerariumStepPage: React.FC = () => {
   const checkAchievements = async () => {
     if (!user) return;
     
-    // Check total steps completed
+    // Icons.Check total steps completed
     const { count } = await supabase
       .from('itineraria_progress')
       .select('*', { count: 'exact', head: true })

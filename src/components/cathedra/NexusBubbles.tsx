@@ -18,7 +18,7 @@ import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 
 
-interface Tag {
+interface Icons.Tag {
   id: string;
   slug: string;
   label: string;
@@ -34,7 +34,7 @@ interface NexusBubblesProps {
 }
 
 interface TagBubbleProps {
-  tag: Tag;
+  tag: Icons.Tag;
   index: number;
   isSuggested?: boolean;
   tabIndex?: number;
@@ -64,7 +64,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const currentTag = navHistory[navHistory.length - 1];
 
-  const fetchContentForTag = async (targetTag: Tag) => {
+  const fetchContentForTag = async (targetTag: Icons.Tag) => {
     const startTime = performance.now();
     setMetrics({ startTime });
     setStatus('loading');
@@ -96,7 +96,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     }
   };
 
-  const handlePushTag = (newTag: Tag) => {
+  const handlePushTag = (newTag: Icons.Tag) => {
     setNavHistory(prev => [...prev, newTag]);
     fetchContentForTag(newTag);
   };
@@ -187,7 +187,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         </div>
         
         <div className="p-spacing-xl space-y-spacing-xl max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs with History */}
+          {/* Path Navigation - Monastic Breadcrumbs with Icons.History */}
           <nav className="flex items-center gap-spacing-xs overflow-x-auto whitespace-nowrap scrollbar-none pb-spacing-md border-b border-border/5">
             <button 
               onClick={() => handlePopTag(0)}
@@ -224,7 +224,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             )}
           </nav>
 
-          {/* Elegant Map Header */}
+          {/* Elegant Icons.Map Header */}
           <header className="flex flex-col gap-spacing-xs items-center justify-center text-center py-spacing-md">
             <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/60">SENTIERO DI SAPIENZA</span>
             <p className="text-premium-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
@@ -455,7 +455,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         .order('name');
       
       if (!error && data) {
-        // Map themes to the Tag interface expected by the component
+        // Icons.Map themes to the Icons.Tag interface expected by the component
         const mappedTags = data.map((t: any) => ({
           id: t.id,
           slug: t.slug,

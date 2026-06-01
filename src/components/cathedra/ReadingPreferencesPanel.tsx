@@ -75,10 +75,10 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
   }, [isOpen, onClose]);
 
   const themes = [
-    { id: 'paper', name: 'Papel', icon: Sun, color: 'bg-[#FDFBF7]' },
-    { id: 'sepia', name: 'Sépia', icon: Palette, color: 'bg-[#F4ECD8]' },
-    { id: 'dark', name: 'Escuro', icon: Moon, color: 'bg-[#1A1A1A]' },
-    { id: 'night', name: 'Noite', icon: Moon, color: 'bg-[#000000]' },
+    { id: 'paper', name: 'Papel', icon: Icons.Sun, color: 'bg-[#FDFBF7]' },
+    { id: 'sepia', name: 'Sépia', icon: Icons.Palette, color: 'bg-[#F4ECD8]' },
+    { id: 'dark', name: 'Escuro', icon: Icons.Moon, color: 'bg-[#1A1A1A]' },
+    { id: 'night', name: 'Noite', icon: Icons.Moon, color: 'bg-[#000000]' },
   ];
 
   const fontSizes = [
@@ -181,7 +181,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 
                 <Separator className="opacity-50" />
 
-                {/* Typography Settings */}
+                {/* Typography Icons.Settings */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Type className="w-spacing-md h-spacing-md text-primary/60" />
@@ -243,7 +243,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 
                 <Separator className="opacity-50" />
 
-                {/* Contrast Settings */}
+                {/* Icons.Contrast Icons.Settings */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Sun className="w-spacing-md h-spacing-md text-primary/60" />
@@ -281,7 +281,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 
                 <Separator className="opacity-50" />
 
-                {/* Layout & Margins */}
+                {/* Icons.Layout & Margins */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Layout className="w-spacing-md h-spacing-md text-primary/60" />

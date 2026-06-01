@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import {Icons.Link} from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -12,7 +12,7 @@ const SecurityAuditPage = () => {
   const checklist = [
     { 
       id: 'migration-padh', 
-      label: 'Migração P.A.D.H. (Database)', 
+      label: 'Migração P.A.D.H. (Icons.Database)', 
       status: 'success', 
       detail: 'Chaves JSON renomeadas de pch para padh em journey_steps.',
       link: '/admin?tab=themes' // Mock link to related admin area
@@ -83,7 +83,7 @@ const SecurityAuditPage = () => {
                       <p className="text-premium-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
                     <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-premium-full">
-                      <Link to={item.link} className="flex items-center gap-spacing-2xs text-premium-xs font-black uppercase tracking-widest">
+                      <Icons.Link to={item.link} className="flex items-center gap-spacing-2xs text-premium-xs font-black uppercase tracking-widest">
                         Detalhes <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
                       </Link>
                     </Button>

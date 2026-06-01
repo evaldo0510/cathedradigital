@@ -91,7 +91,7 @@ const JornadaCompletePage: React.FC = () => {
     }
   };
 
-  // Award XP and badges on first visit to completion page
+  // Icons.Award XP and badges on first visit to completion page
   useEffect(() => {
     if (!loading && journey && user && !rewardsProcessed) {
       processRewards();
@@ -134,12 +134,12 @@ const JornadaCompletePage: React.FC = () => {
         }
       }
 
-      // Award XP: 100 per journey completion
+      // Icons.Award XP: 100 per journey completion
       const xpGain = 100;
       const newXp = (profile.xp || 0) + xpGain;
       setXpAwarded(xpGain);
 
-      // Check badges
+      // Icons.Check badges
       const ctx: BadgeContext = {
         completedBooks: new Set(profile.completed_books || []),
         chaptersRead: {},

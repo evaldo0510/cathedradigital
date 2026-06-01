@@ -18,7 +18,7 @@ import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
 
-interface Tag {
+interface Icons.Tag {
   id: string;
   label: string;
   slug: string;
@@ -77,7 +77,7 @@ const TemasPage = () => {
   const {
     results: fuzzyTags,
     isPending: isSearchPending,
-  } = useFuzzySearch<Tag>({
+  } = useFuzzySearch<Icons.Tag>({
     rpc: 'search_tags_fuzzy',
     query: searchQuery,
     primaryField: 'label',
@@ -117,11 +117,11 @@ const TemasPage = () => {
     }
   }, [searchParams, navigate]);
 
-  const handleTagSelect = (tag: Tag) => {
+  const handleTagSelect = (tag: Icons.Tag) => {
     navigate(`${AppRoute.TEMAS}/${tag.slug}`);
   };
 
-  const prefetchTag = useCallback((tag: Tag) => {
+  const prefetchTag = useCallback((tag: Icons.Tag) => {
     queryClient.prefetchQuery({
     queryKey: ['tag-contents', tag.id, tag.label],
     queryFn: () => fetchNexusTagContent(tag),

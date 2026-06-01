@@ -322,7 +322,7 @@ const AdminConstructionTab: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Upload Dialog */}
+      {/* Icons.Upload Dialog */}
       <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
         <DialogContent>
           <DialogHeader>

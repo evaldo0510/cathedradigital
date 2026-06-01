@@ -8,12 +8,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const BENEFITS = [
-  { icon: BookOpen, label: 'Conteúdo completo', desc: 'Acesso integral a todas as 6 camadas de profundidade' },
-  { icon: Brain, label: 'IA Logos ilimitada', desc: 'Respostas teológicas sem limite de uso' },
-  { icon: Sparkles, label: 'Jornadas avançadas', desc: 'Trilhas exclusivas de formação espiritual' },
-  { icon: Headphones, label: 'Áudio de conteúdos', desc: 'Ouça reflexões, meditações e orações' },
-  { icon: Globe, label: 'Santos em profundidade', desc: 'Vidas completas e conexões com jornadas' },
-  { icon: Crown, label: 'Apoie a evangelização', desc: '50% destinado a doações e missão' },
+  { icon: Icons.BookOpen, label: 'Conteúdo completo', desc: 'Acesso integral a todas as 6 camadas de profundidade' },
+  { icon: Icons.Brain, label: 'IA Logos ilimitada', desc: 'Respostas teológicas sem limite de uso' },
+  { icon: Icons.Sparkles, label: 'Jornadas avançadas', desc: 'Trilhas exclusivas de formação espiritual' },
+  { icon: Icons.Headphones, label: 'Áudio de conteúdos', desc: 'Ouça reflexões, meditações e orações' },
+  { icon: Icons.Globe, label: 'Santos em profundidade', desc: 'Vidas completas e conexões com jornadas' },
+  { icon: Icons.Crown, label: 'Apoie a evangelização', desc: '50% destinado a doações e missão' },
 ];
 
 const ProShowcase: React.FC = () => {

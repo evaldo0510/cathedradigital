@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
  * Encapsulates the four UI primitives that those modules duplicated:
  *   1. The leading search icon.
  *   2. The text input (controlled).
- *   3. A trailing clear button (X) that appears once the user types.
+ *   3. A trailing clear button (Icons.X) that appears once the user types.
  *   4. A "Buscando…" indicator shown while the debounce timer is pending
  *      or a fuzzy-search RPC is in flight.
  *

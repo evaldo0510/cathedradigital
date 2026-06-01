@@ -13,7 +13,7 @@ export const PWAInstallPrompt = () => {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      // Check if user has already dismissed it or if it's already installed
+      // Icons.Check if user has already dismissed it or if it's already installed
       const dismissed = localStorage.getItem('pwa-prompt-dismissed');
       if (!dismissed) {
         setShowPrompt(true);

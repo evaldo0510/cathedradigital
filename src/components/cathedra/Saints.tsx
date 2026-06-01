@@ -51,7 +51,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   
   const { data: officialSaint } = useOfficialSaint();
 
-  // Daily Saints from Database
+  // Daily Saints from Icons.Database
   const { data: localSaints = [], isLoading: isLoadingDaily } = useQuery({
     queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
     queryFn: () => getSaintsByDate(selectedDate.getMonth() + 1, selectedDate.getDate()),
@@ -73,7 +73,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   // Debounced search to avoid one DB hit per keystroke
   const debouncedSearch = useDebounce(search, 300);
 
-  // Search results
+  // Icons.Search results
   const { data: searchResults = [], isLoading: isSearchingLocal } = useQuery({
     queryKey: ['saints-search', debouncedSearch],
     queryFn: () => searchSaints(debouncedSearch),

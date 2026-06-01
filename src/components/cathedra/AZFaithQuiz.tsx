@@ -157,7 +157,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
     );
   }
 
-  // History view
+  // Icons.History view
   if (showHistory) {
     const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
     const avgScore = history.length > 0 ? Math.round(history.reduce((a, h) => a + h.percentage, 0) / history.length) : 0;

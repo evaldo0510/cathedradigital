@@ -37,7 +37,7 @@ const MYSTERIES: Record<MysterySet, {
   joyful: {
     name: 'Mistérios Gozosos',
     day: 'Segunda e Sábado',
-    icon: Sparkles,
+    icon: Icons.Sparkles,
     color: 'text-primary bg-primary/10',
     mysteries: [
       { title: 'A Anunciação do Anjo a Maria', scripture: 'Lc 1,26-38', meditation: 'O Anjo Gabriel anuncia a Maria que ela será Mãe do Salvador. Maria diz "sim" com fé total: "Eis a serva do Senhor."' },
@@ -50,7 +50,7 @@ const MYSTERIES: Record<MysterySet, {
   sorrowful: {
     name: 'Mistérios Dolorosos',
     day: 'Terça e Sexta',
-    icon: Flame,
+    icon: Icons.Flame,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'A Agonia de Jesus no Horto', scripture: 'Lc 22,39-46', meditation: 'Jesus sua sangue no Getsêmani. "Pai, se possível, afasta de mim este cálice; porém, não a minha vontade, mas a Tua."' },
@@ -63,7 +63,7 @@ const MYSTERIES: Record<MysterySet, {
   glorious: {
     name: 'Mistérios Gloriosos',
     day: 'Quarta e Domingo',
-    icon: Star,
+    icon: Icons.Star,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'A Ressurreição de Jesus', scripture: 'Mc 16,1-7', meditation: '"Ele ressuscitou, não está aqui!" A pedra foi removida. A morte foi vencida. Cristo é a Vida que triunfa para sempre.' },
@@ -76,7 +76,7 @@ const MYSTERIES: Record<MysterySet, {
   luminous: {
     name: 'Mistérios Luminosos',
     day: 'Quinta',
-    icon: Zap,
+    icon: Icons.Zap,
     color: 'text-secondary bg-secondary/10',
     mysteries: [
       { title: 'O Batismo de Jesus no Jordão', scripture: 'Mt 3,13-17', meditation: '"Este é o meu Filho amado." Jesus desce às águas do Jordão, santificando o Batismo e revelando a Trindade.' },

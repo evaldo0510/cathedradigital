@@ -250,14 +250,14 @@ const SEOVerificationPage = () => {
 ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 <link rel="canonical" href="${url}">
 
-<!-- Open Graph / Facebook -->
+<!-- Open Graph / Icons.Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
 <meta property="og:image" content="${image}">
 
-<!-- Twitter -->
+<!-- Icons.Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="${url}">
 <meta name="twitter:title" content="${title}">
@@ -290,7 +290,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
     <div className="min-h-screen bg-background py-spacing-2xl px-spacing-md sm:px-spacing-lg lg:px-spacing-xl">
       <SEOHead 
         title="Verificação de SEO e Metadados" 
-        description="Painel de controle para auditoria e verificação de metadados, imagens Open Graph e Twitter Cards com suporte a cache dinâmico."
+        description="Painel de controle para auditoria e verificação de metadados, imagens Open Graph e Icons.Twitter Cards com suporte a cache dinâmico."
         path="/admin/seo-verify"
       />
       
@@ -438,11 +438,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <Card className="overflow-hidden border-border/50 shadow-premium">
                   <CardContent className="p-spacing-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                      {/* Left Side: Metadata & Search Previews */}
+                      {/* Left Side: Metadata & Icons.Search Previews */}
                       <div className="p-spacing-lg space-y-spacing-lg border-r border-border/50">
                         <div className="space-y-spacing-md">
                           <div>
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-2xs">Google Search Preview</div>
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-2xs">Google Icons.Search Preview</div>
                             <div className="p-spacing-md bg-white dark:bg-[#1a1a1a] rounded-premium-lg border border-border/40 shadow-premium-md">
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-spacing-2xs flex items-center gap-spacing-2xs">
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
@@ -505,7 +505,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                         <div>
                           <div className="flex items-center justify-between mb-spacing-xs">
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-spacing-2xs">
-                              <Icons.Share2 className="w-spacing-sm h-spacing-sm" /> Facebook / WhatsApp
+                              <Icons.Share2 className="w-spacing-sm h-spacing-sm" /> Icons.Facebook / WhatsApp
                             </div>
                             <Button 
                               variant="ghost" 
@@ -540,7 +540,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                         <div>
                           <div className="flex items-center justify-between mb-spacing-xs">
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-2xs">
-                              <Icons.Twitter className="w-spacing-sm h-spacing-sm" /> Twitter Card (Large)
+                              <Icons.Twitter className="w-spacing-sm h-spacing-sm" /> Icons.Twitter Card (Large)
                             </div>
                             <Button 
                               variant="ghost" 
@@ -615,7 +615,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <strong>1. Cache de Imagem:</strong> As imagens dinâmicas utilizam o parâmetro <code>v=yyyy-mm</code>. Isso garante que as redes sociais não usem versões antigas por muito tempo, mas mantém a estabilidade durante o mês atual.
               </p>
               <p>
-                <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Home).
+                <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Icons.Home).
               </p>
               <p>
                 <strong>3. Auditoria Real:</strong> Use o botão <strong>Scan</strong> para ler o HTML que está sendo servido atualmente para cada rota. Isso valida se o <code>react-helmet-async</code> está configurado corretamente para aquela página.

@@ -11,7 +11,7 @@ export const VisualSilenceControls: React.FC = () => {
     {
       id: 'visualSilence',
       label: 'Silêncio Visual',
-      icon: EyeOff,
+      icon: Icons.EyeOff,
       active: settings.visualSilence,
       description: 'Oculta interface e foca no essencial'
     },
@@ -25,21 +25,21 @@ export const VisualSilenceControls: React.FC = () => {
     {
       id: 'reduceAnimations',
       label: 'Reduzir Animações',
-      icon: ZapOff,
+      icon: Icons.ZapOff,
       active: settings.reduceAnimations,
       description: 'Torna a interface estática e calma'
     },
     {
       id: 'highContrast',
       label: 'Alto Contraste',
-      icon: Contrast,
+      icon: Icons.Contrast,
       active: settings.highContrast,
       description: 'Aumenta a legibilidade para leitura focada'
     },
     {
       id: 'contemplativeMode',
       label: 'Modo Contemplativo',
-      icon: Compass,
+      icon: Icons.Compass,
       active: settings.contemplativeMode,
       description: 'Tons suaves e luz reduzida para oração'
     }

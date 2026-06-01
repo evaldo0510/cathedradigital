@@ -24,7 +24,7 @@ import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
 
-interface Tag {
+interface Icons.Tag {
   id: string;
   label: string;
   slug: string;
@@ -66,7 +66,7 @@ const ThemeContentCard = ({
     if (!content.tags || !allThemes) return [];
     return content.tags
       .map(tLabel => allThemes.find(at => at.label.toLowerCase() === tLabel.toLowerCase()))
-      .filter((t): t is Tag => !!t && t.id !== currentTagId)
+      .filter((t): t is Icons.Tag => !!t && t.id !== currentTagId)
       .filter((t, i, arr) => arr.findIndex(x => x.id === t.id) === i);
   }, [content.tags, allThemes, currentTagId]);
 
@@ -211,7 +211,7 @@ const TemaDetailPage = () => {
   }, [profileId, tags]);
 
 
-  const prefetchTag = useCallback((tag: Tag) => {
+  const prefetchTag = useCallback((tag: Icons.Tag) => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {

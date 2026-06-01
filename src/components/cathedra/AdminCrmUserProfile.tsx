@@ -120,7 +120,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         </CardContent>
       </Card>
 
-      {/* Stats Grid */}
+      {/* Stats Icons.Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-spacing-sm">
         {[
           { icon: <Icons.Star className="w-spacing-md h-spacing-md text-primary" />, label: 'Nível', value: user.level ?? 1 },
