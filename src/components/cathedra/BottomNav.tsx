@@ -111,7 +111,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
           isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
         )}
         size={20}
-        strokeWidth={isActive ? 1.5 : 1.2}
+        strokeWidth={1.2}
         aria-hidden="true"
       />
     </motion.div>
