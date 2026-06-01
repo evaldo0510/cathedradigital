@@ -1,34 +1,31 @@
 import fs from 'fs';
 
 const icons = [
-  'Home', 'Book', 'BookOpen', 'BookText', 'Cross', 'Map', 'Users', 'Flame', 'Sparkle', 'FileText', 'Database',
-  'Type', 'Columns', 'Search', 'ChevronLeft', 'ChevronRight', 'ChevronDown', 'ChevronUp', 'Star',
-  'MessageCircle', 'Zap', 'Layout', 'Globe', 'ExternalLink', 'Pin', 'Heart', 'Download', 'RotateCcw',
-  'Instagram', 'Facebook', 'Twitter', 'Youtube', 'Menu', 'Feather', 'History', 'Volume2', 'Volume1',
-  'Volume', 'Square', 'Brain', 'Sparkles', 'User', 'Crown', 'ArrowDown', 'ArrowLeft', 'Music', 'Bell',
-  'Sun', 'Moon', 'LogOut', 'PenLine', 'Calendar', 'Compass', 'Loader2', 'Award', 'ArrowRight', 'Quote',
-  'Share2', 'Check', 'Circle', 'Dot', 'X', 'ShieldQuestion', 'MessageSquare', 'Send', 'Trophy',
-  'ShieldCheck', 'Clock', 'CheckCircle2', 'PenTool', 'Copy', 'Plus', 'Trash2', 'GripVertical', 'Lock',
-  'HelpCircle', 'PartyPopper', 'MoreHorizontal', 'Coffee', 'Church', 'Bookmark', 'Smartphone',
-  'MonitorSmartphone', 'Activity', 'UserCog', 'LayoutGrid', 'UserCheck', 'Stethoscope', 'Route',
-  'Library', 'Hand', 'Handshake', 'ScrollText', 'Swords', 'Mail', 'Settings', 'Info', 'Maximize2',
-  'Minimize2', 'List', 'Grid', 'Filter', 'Eye', 'EyeOff', 'AlertTriangle', 'XCircle', 'CreditCard',
-  'WifiOff', 'Wine', 'Play', 'Target', 'Link', 'Video', 'Tag', 'Orbit', 'Disc', 'Layers', 'Languages',
-  'BookMarked', 'Wifi', 'Printer', 'UserMinus', 'Edit2', 'AlertCircle', 'Anchor', 'ArrowUpDown',
-  'ArrowUpRight', 'Bird', 'CheckCircle', 'Contrast', 'CornerRightUp', 'Droplets', 'FileCode', 'FileDown',
-  'FlaskConical', 'Frown', 'Headphones', 'Highlighter', 'Key', 'LayoutPanelLeft', 'Lightbulb', 'Megaphone',
-  'Mountain', 'Pause', 'RefreshCcw', 'RefreshCw', 'Save', 'Settings2', 'ShieldAlert', 'Skull', 'StopCircle',
-  'Store', 'TrendingUp', 'Wheat', 'Wind', 'ZapOff', 'Building2', 'DollarSign', 'Upload', 'FileSpreadsheet',
-  'ArrowUp', 'Minus', 'TrendingDown', 'UserPlus', 'Palette', 'Wallet', 'Edit', 'Edit3', 'AlignLeft',
-  'Timer', 'Image', 'Code', 'MapPin', 'LineChart', 'Shield', 'Stop', 'Hash', 'VolumeX', 'StopCircle', 'ShieldCheck'
+  'Activity', 'AlertCircle', 'AlertTriangle', 'AlignLeft', 'Anchor', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 
+  'ArrowUp', 'ArrowUpDown', 'ArrowUpRight', 'Award', 'Bell', 'Bird', 'Book', 'BookMarked', 'BookOpen', 
+  'BookText', 'Bookmark', 'Brain', 'Building2', 'Calendar', 'Check', 'CheckCircle', 'CheckCircle2', 
+  'ChevronDown', 'ChevronLeft', 'ChevronRight', 'ChevronUp', 'Church', 'Circle', 'Clock', 'Code', 'Coffee', 
+  'Columns', 'Compass', 'Contrast', 'Copy', 'CornerRightUp', 'CreditCard', 'Cross', 'Crown', 'Database', 
+  'Disc', 'DollarSign', 'Dot', 'Download', 'Droplets', 'Edit', 'Edit2', 'Edit3', 'ExternalLink', 'Eye', 
+  'EyeOff', 'Facebook', 'Feather', 'FileCode', 'FileDown', 'FileSpreadsheet', 'FileText', 'Filter', 
+  'Flame', 'FlaskConical', 'Frown', 'Globe', 'Grid', 'GripVertical', 'Hand', 'Handshake', 'Hash', 
+  'Headphones', 'Heart', 'HelpCircle', 'Highlighter', 'History', 'Home', 'Image', 'Info', 'Instagram', 
+  'Key', 'Languages', 'Layers', 'Layout', 'LayoutGrid', 'LayoutPanelLeft', 'Library', 'Lightbulb', 
+  'LineChart', 'Link', 'List', 'Loader2', 'Lock', 'LogOut', 'Mail', 'Map', 'MapPin', 'Maximize2', 
+  'Megaphone', 'Menu', 'MessageCircle', 'MessageSquare', 'Minimize2', 'Minus', 'MonitorSmartphone', 
+  'Moon', 'MoreHorizontal', 'Mountain', 'Music', 'Orbit', 'Palette', 'PartyPopper', 'Pause', 'PenLine', 
+  'PenTool', 'Pin', 'Play', 'Plus', 'Printer', 'Quote', 'RefreshCcw', 'RefreshCw', 'RotateCcw', 'Route', 
+  'Save', 'ScrollText', 'Search', 'Send', 'Settings', 'Settings2', 'Share2', 'Shield', 'ShieldAlert', 
+  'ShieldCheck', 'ShieldQuestion', 'Skull', 'Smartphone', 'Sparkle', 'Sparkles', 'Square', 'Star', 
+  'Stethoscope', 'StopCircle', 'Store', 'Sun', 'Swords', 'Tag', 'Target', 'Timer', 'Trash2', 
+  'TrendingDown', 'TrendingUp', 'Trophy', 'Twitter', 'Type', 'Upload', 'User', 'UserCheck', 'UserCog', 
+  'UserMinus', 'UserPlus', 'Users', 'Video', 'Volume', 'Volume1', 'Volume2', 'VolumeX', 'Wallet', 
+  'Wheat', 'Wifi', 'WifiOff', 'Wind', 'Wine', 'X', 'XCircle', 'Youtube', 'Zap', 'ZapOff'
 ];
-
-// Deduplicate
-const uniqueIcons = [...new Set(icons)];
 
 const content = `import React, { forwardRef } from 'react';
 import { 
-  ${uniqueIcons.join(',\n  ')}
+  ${icons.join(',\n  ')}
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
@@ -102,13 +99,13 @@ const createIcon = (IconComponent: any) =>
 
 const IconsInternal = {
   Logo: Logo,
-  ${uniqueIcons.map(name => `${name}: createIcon(${name})`).join(',\n  ')}
+  ${icons.map(name => `${name}: createIcon(${name})`).join(',\n  ')}
 };
 
 export const Icons = {
   ...IconsInternal,
   
-  // Semantic Aliases
+  // Semantic Aliases & Compatibility
   Dashboard: IconsInternal.LayoutGrid,
   Creator: IconsInternal.Crown,
   Notifications: IconsInternal.Bell,
@@ -152,8 +149,10 @@ export const Icons = {
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe,
   Apple: IconsInternal.Smartphone,
-  PanelLeft: IconsInternal.Layout, 
+  PanelLeft: IconsInternal.Layout,
   ImageIcon: IconsInternal.Image,
+  Stop: IconsInternal.StopCircle,
+  StopCircle: IconsInternal.StopCircle,
 };
 
 if (import.meta.env.DEV) {
@@ -166,4 +165,4 @@ if (import.meta.env.DEV) {
 `;
 
 fs.writeFileSync('src/constants.tsx', content);
-console.log('Regenerated src/constants.tsx');
+console.log('Regenerated src/constants.tsx with full icon list');
