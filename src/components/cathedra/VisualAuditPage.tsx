@@ -1,11 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
-import { 
-  ShieldAlert, CheckCircle2, XCircle, Clock, 
-  ChevronRight, FileText, AlertTriangle, ExternalLink,
-  Search, Filter, ArrowLeft
-} from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
@@ -93,10 +90,10 @@ const VisualAuditPage: React.FC = () => {
             onClick={() => navigate(-1)}
             className="mb-spacing-md"
           >
-            <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
           </CathedraButton>
           <h1 className="text-premium-3xl font-black tracking-tight flex items-center gap-spacing-sm">
-            <ShieldAlert className="w-spacing-xl h-spacing-xl text-primary" />
+            <Icons.ShieldAlert className="w-spacing-xl h-spacing-xl text-primary" />
             Auditoria Visual
           </h1>
           <p className="text-muted-foreground mt-spacing-2xs">
@@ -135,7 +132,7 @@ const VisualAuditPage: React.FC = () => {
           <div className="space-y-spacing-md pt-spacing-md border-t border-border/10">
             <h3 className="text-premium-xs font-black uppercase tracking-widest opacity-50">Filtros</h3>
             <div className="relative">
-              <Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md opacity-40" />
+              <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md opacity-40" />
               <input 
                 type="text"
                 placeholder="Filtrar arquivos..."
@@ -152,7 +149,7 @@ const VisualAuditPage: React.FC = () => {
             <CathedraCard key={file} className="overflow-hidden">
               <div className="p-spacing-md bg-muted/10 border-b border-border/10 flex items-center justify-between">
                 <div className="flex items-center gap-spacing-sm">
-                  <FileText className="w-spacing-md h-spacing-md opacity-50" />
+                  <Icons.FileText className="w-spacing-md h-spacing-md opacity-50" />
                   <span className="text-premium-xs font-black tracking-wider font-mono">{file}</span>
                 </div>
                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest">
@@ -166,7 +163,7 @@ const VisualAuditPage: React.FC = () => {
                       <div key={i} className="p-spacing-md flex items-start justify-between group hover:bg-primary/5 transition-colors">
                         <div className="space-y-spacing-2xs">
                           <div className="flex items-center gap-spacing-xs">
-                            <AlertTriangle className="w-spacing-sm h-spacing-sm text-yellow-500" />
+                            <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm text-yellow-500" />
                             <span className="text-premium-sm font-bold">{v.pattern}</span>
                             <code className="text-[10px] bg-red-500/10 text-red-500 px-spacing-2xs py-spacing-3xs rounded font-mono">{v.match}</code>
                           </div>
@@ -195,7 +192,7 @@ const VisualAuditPage: React.FC = () => {
 
           {Object.keys(violationsByFile).length === 0 && (
             <div className="flex flex-col items-center justify-center py-spacing-3xl opacity-50 italic space-y-spacing-md">
-              <CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-green-500/50" />
+              <Icons.CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-green-500/50" />
               <p>Nenhuma violação encontrada com os filtros atuais.</p>
             </div>
           )}

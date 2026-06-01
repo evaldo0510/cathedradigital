@@ -1,9 +1,10 @@
+import { Icons } from '@/constants';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Shield, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
+
 
 const SecurityDashboard = () => {
   const [logs, setLogs] = useState<any[]>([]);
@@ -38,11 +39,11 @@ const SecurityDashboard = () => {
     <div className="p-spacing-xl space-y-spacing-xl">
       <div className="flex items-center justify-between">
         <h1 className="text-premium-3xl font-bold flex items-center gap-spacing-xs">
-          <Shield className="w-spacing-xl h-spacing-xl text-primary" />
+          <Icons.Shield className="w-spacing-xl h-spacing-xl text-primary" />
           Painel de Segurança & Auditoria
         </h1>
         <button onClick={fetchData} className="p-spacing-xs hover:bg-muted rounded-premium-full transition-colors">
-          <RefreshCw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
+          <Icons.RefreshCw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
@@ -53,7 +54,7 @@ const SecurityDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs">
-              <CheckCircle className="text-green-500" />
+              <Icons.CheckCircle className="text-green-500" />
               <span>Proteção Ativa em 142 tabelas</span>
             </div>
           </CardContent>
@@ -64,7 +65,7 @@ const SecurityDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs">
-              <CheckCircle className="text-green-500" />
+              <Icons.CheckCircle className="text-green-500" />
               <span>MercadoPago: Rotacionado há 2h</span>
             </div>
           </CardContent>
@@ -75,7 +76,7 @@ const SecurityDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs text-yellow-500">
-              <AlertTriangle />
+              <Icons.AlertTriangle/>
               <span>3 tentativas de payload excedido</span>
             </div>
           </CardContent>

@@ -1,4 +1,5 @@
-import { Book, Brain, Sparkles, Sun, Zap } from 'lucide-react';
+import { Icons } from '@/constants';
+
 
 export type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio' | 'conclusio';
 

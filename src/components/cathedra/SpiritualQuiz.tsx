@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain, Users, Church } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -116,10 +117,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Respire fundo.\nEsta primeira pergunta é sobre onde você está agora.',
     question: 'Como está o seu interior neste momento?',
     options: [
-      { label: 'Pesado, cansado por dentro', value: 'pesado', icon: <Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Inquieto, procurando algo', value: 'inquieto', icon: <Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Estável, mas querendo mais', value: 'estavel', icon: <Anchor className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Aceso, pronto para agir', value: 'aceso', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'Pesado, cansado por dentro', value: 'pesado', icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Inquieto, procurando algo', value: 'inquieto', icon: <Icons.Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Estável, mas querendo mais', value: 'estavel', icon: <Icons.Anchor className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Aceso, pronto para agir', value: 'aceso', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -127,10 +128,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Não tenha medo de olhar para dentro.\nDeus já conhece essa dor — e quer curá-la.',
     question: 'O que mais pesa no seu coração?',
     options: [
-      { label: 'Ansiedade ou medo do futuro', value: 'ansiedade', icon: <Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Culpa, remorso ou mágoas', value: 'culpa', icon: <Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Vazio, falta de propósito', value: 'vazio', icon: <Eye className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Desejo de fazer mais por Deus', value: 'chamado', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 4 } },
+      { label: 'Ansiedade ou medo do futuro', value: 'ansiedade', icon: <Icons.Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Culpa, remorso ou mágoas', value: 'culpa', icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Vazio, falta de propósito', value: 'vazio', icon: <Icons.Eye className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Desejo de fazer mais por Deus', value: 'chamado', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 4 } },
     ],
   },
   {
@@ -138,10 +139,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'A fé e a razão caminham juntas.\nConhecer a verdade nos liberta.',
     question: 'Como você avalia seu conhecimento sobre a Fé?',
     options: [
-      { label: 'Estou começando agora', value: 'iniciante', icon: <BookOpen className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Conheço o básico, mas quero mais', value: 'medio', icon: <Brain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Tenho uma boa base doutrinária', value: 'avancado', icon: <Shield className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Estudo profundamente há anos', value: 'mestre', icon: <Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'Estou começando agora', value: 'iniciante', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Conheço o básico, mas quero mais', value: 'medio', icon: <Icons.Brain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Tenho uma boa base doutrinária', value: 'avancado', icon: <Icons.Shield className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Estudo profundamente há anos', value: 'mestre', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -149,10 +150,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'A oração é o termômetro da alma.\nEla revela onde você está — sem julgamento.',
     question: 'Qual a sua relação com a oração?',
     options: [
-      { label: 'Quase não rezo', value: 'raro', icon: <Sun className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 1, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Rezo nos momentos difíceis', value: 'crise', icon: <Shield className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Tenho tentado criar uma rotina', value: 'rotina', icon: <Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
-      { label: 'Rezo diariamente com profundidade', value: 'profunda', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+      { label: 'Quase não rezo', value: 'raro', icon: <Icons.Sun className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 1, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Rezo nos momentos difíceis', value: 'crise', icon: <Icons.Shield className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Tenho tentado criar uma rotina', value: 'rotina', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
+      { label: 'Rezo diariamente com profundidade', value: 'profunda', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
     ],
   },
   {
@@ -160,10 +161,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Deus habita no agora.\nO tempo que damos a Ele é sagrado.',
     question: 'Quanto tempo você dedica a Deus por dia?',
     options: [
-      { label: 'Menos de 15 minutos', value: 'pouco', icon: <Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Entre 15 e 30 minutos', value: 'medio', icon: <Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 2, ardente_missionario: 0 } },
-      { label: 'Mais de 30 minutos', value: 'muito', icon: <Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 2 } },
-      { label: 'Vivo em constante oração', value: 'contemplativo', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'Menos de 15 minutos', value: 'pouco', icon: <Icons.Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Entre 15 e 30 minutos', value: 'medio', icon: <Icons.Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 2, ardente_missionario: 0 } },
+      { label: 'Mais de 30 minutos', value: 'muito', icon: <Icons.Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 2 } },
+      { label: 'Vivo em constante oração', value: 'contemplativo', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -171,10 +172,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Os sacramentos são o toque de Deus\nna concretude da sua vida.',
     question: 'Como você vive os Sacramentos?',
     options: [
-      { label: 'Fui batizado mas não pratico', value: 'batizado', icon: <Church className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Church className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+      { label: 'Fui batizado mas não pratico', value: 'batizado', icon: <Icons.Church className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Icons.Church className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
+      { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
     ],
   },
   {
@@ -182,10 +183,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Identificar o obstáculo\né o primeiro passo para a superação.',
     question: 'O que mais te impede de crescer hoje?',
     options: [
-      { label: 'Cansaço ou esgotamento mental', value: 'cansaco', icon: <Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Falta de tempo e correria', value: 'tempo', icon: <Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Falta de foco ou preguiça', value: 'foco', icon: <Brain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
-      { label: 'Sentir-se sozinho na caminhada', value: 'solidao', icon: <Users className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 3 } },
+      { label: 'Cansaço ou esgotamento mental', value: 'cansaco', icon: <Icons.Wind className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de tempo e correria', value: 'tempo', icon: <Icons.Clock className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de foco ou preguiça', value: 'foco', icon: <Icons.Brain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
+      { label: 'Sentir-se sozinho na caminhada', value: 'solidao', icon: <Icons.Users className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 3 } },
     ],
   },
   {
@@ -193,10 +194,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Ninguém caminha sozinho.\nA fé se fortalece na comunhão.',
     question: 'Como é a sua relação com a comunidade?',
     options: [
-      { label: 'Não participo de nenhum grupo', value: 'sozinho', icon: <Sun className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Gostaria, mas não sei como', value: 'desejo', icon: <Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 2, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Participo de um grupo ou pastoral', value: 'ativo', icon: <Users className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Lidero ou sirvo ativamente', value: 'lider', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 3 } },
+      { label: 'Não participo de nenhum grupo', value: 'sozinho', icon: <Icons.Sun className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Gostaria, mas não sei como', value: 'desejo', icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 2, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Participo de um grupo ou pastoral', value: 'ativo', icon: <Icons.Users className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
+      { label: 'Lidero ou sirvo ativamente', value: 'lider', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 3 } },
     ],
   },
   {
@@ -204,10 +205,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'O desejo mais profundo do coração\nrevela a direção que Deus traçou para você.',
     question: 'O que o seu coração mais pede agora?',
     options: [
-      { label: 'Paz, silêncio interior', value: 'paz', icon: <Mountain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Cura, libertação de algo', value: 'cura', icon: <Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Sentido, propósito claro', value: 'sentido', icon: <Eye className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Servir, fazer diferença', value: 'servir', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'Paz, silêncio interior', value: 'paz', icon: <Icons.Mountain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Cura, libertação de algo', value: 'cura', icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Sentido, propósito claro', value: 'sentido', icon: <Icons.Eye className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Servir, fazer diferença', value: 'servir', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -215,10 +216,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Esta é a última pergunta.\nResponda com sinceridade — não para acertar,\nmas para se encontrar.',
     question: 'Qual seria o próximo passo ideal para você?',
     options: [
-      { label: 'Parar, respirar e acolher a dor', value: 'parar', icon: <Mountain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Entender melhor a fé católica', value: 'entender', icon: <BookOpen className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Aprofundar na vida espiritual', value: 'aprofundar', icon: <Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Evangelizar e servir na missão', value: 'missao', icon: <Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 4 } },
+      { label: 'Parar, respirar e acolher a dor', value: 'parar', icon: <Icons.Mountain className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Entender melhor a fé católica', value: 'entender', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Aprofundar na vida espiritual', value: 'aprofundar', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Evangelizar e servir na missão', value: 'missao', icon: <Icons.Flame className="w-spacing-md h-spacing-md" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 4 } },
     ],
   },
 ];
@@ -342,10 +343,10 @@ const SpiritualQuiz: React.FC = () => {
         </div>
         <div className="flex gap-spacing-xs">
           <Button size="sm" className="flex-1 rounded-premium-full text-premium-xs bg-primary text-primary-foreground" onClick={() => navigate(AppRoute.JORNADAS)}>
-            <Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> {p.journeyName}
+            <Icons.Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> {p.journeyName}
           </Button>
           <Button size="sm" variant="outline" className="rounded-premium-full text-premium-xs" onClick={() => navigate(AppRoute.STUDY_MODE)}>
-            <Brain className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Logos
+            <Icons.Brain className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Logos
           </Button>
         </div>
       </motion.div>
@@ -395,15 +396,15 @@ const SpiritualQuiz: React.FC = () => {
           <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-spacing-xs text-premium-sm">
             <div className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs rounded-premium bg-primary/[0.04] border border-primary/10">
-              <Sparkles className="w-spacing-md h-spacing-md text-primary shrink-0" />
+              <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary shrink-0" />
               <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
             </div>
             <div className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs rounded-premium bg-primary/[0.04] border border-primary/10">
-              <BookOpen className="w-spacing-md h-spacing-md text-primary shrink-0" />
+              <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary shrink-0" />
               <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
             </div>
             <div className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs rounded-premium bg-secondary/[0.06] border border-secondary/10">
-              <Brain className="w-spacing-md h-spacing-md text-secondary shrink-0" />
+              <Icons.Brain className="w-spacing-md h-spacing-md text-secondary shrink-0" />
               <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
             </div>
           </div>
@@ -411,10 +412,10 @@ const SpiritualQuiz: React.FC = () => {
 
         <div className="flex flex-col gap-spacing-sm">
           <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest bg-primary text-primary-foreground">
-            <Sparkles className="w-spacing-md h-spacing-md" /> Começar agora
+            <Icons.Sparkles className="w-spacing-md h-spacing-md" /> Começar agora
           </Button>
           <Button variant="outline" onClick={() => navigate(AppRoute.STUDY_MODE)} className="rounded-premium-full h-spacing-xl gap-spacing-xs text-premium-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5">
-            <Brain className="w-spacing-md h-spacing-md" /> Refletir com Logos
+            <Icons.Brain className="w-spacing-md h-spacing-md" /> Refletir com Logos
           </Button>
           <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-premium-xs text-muted-foreground">
             Continuar navegando
@@ -440,14 +441,14 @@ const SpiritualQuiz: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center justify-center gap-spacing-2xs text-muted-foreground">
-          <Clock className="w-spacing-sm h-spacing-sm" />
+          <Icons.Clock className="w-spacing-sm h-spacing-sm" />
           <span className="text-premium-small font-medium">Leva menos de 2 minutos</span>
         </div>
         <Button
           onClick={() => setPhase('quiz')}
           className="w-full rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90"
         >
-          Começar <ArrowRight className="w-spacing-md h-spacing-md" />
+          Começar <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
         </Button>
       </motion.div>
     );
@@ -504,7 +505,7 @@ const SpiritualQuiz: React.FC = () => {
 
       {step > 0 && (
         <Button onClick={() => setStep(s => s - 1)} className="flex items-center gap-spacing-2xs text-premium-xs text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-spacing-sm h-spacing-sm" /> Voltar
+          <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm" /> Voltar
         </Button>
       )}
     </motion.div>

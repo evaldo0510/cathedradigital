@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Crown, BookOpen, Brain, Sparkles, Headphones, Globe, ArrowRight } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -36,7 +37,7 @@ const ProShowcase: React.FC = () => {
         {/* Header */}
         <div className="text-center space-y-spacing-xs">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-secondary/20 border border-secondary/30">
-            <Crown className="w-spacing-sm h-spacing-sm text-secondary" />
+            <Icons.Crown className="w-spacing-sm h-spacing-sm text-secondary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-premium-xl md:text-premium-2xl font-black text-foreground leading-tight">
@@ -74,8 +75,8 @@ const ProShowcase: React.FC = () => {
             onClick={() => navigate(AppRoute.PRICING)}
             className="w-full max-w-spacing-sm rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
           >
-            <Crown className="w-spacing-md h-spacing-md" /> Conheça o PRO
-            <ArrowRight className="w-spacing-md h-spacing-md" />
+            <Icons.Crown className="w-spacing-md h-spacing-md" /> Conheça o PRO
+            <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
           </Button>
           <p className="text-premium-xs text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
+
 import { CathedraCard } from './CathedraCard';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
@@ -13,10 +13,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
-  reading: <BookOpen className="w-spacing-md h-spacing-md" />,
-  prayer: <Hand className="w-spacing-md h-spacing-md" />,
-  reflection: <PenLine className="w-spacing-md h-spacing-md" />,
-  quiz: <HelpCircle className="w-spacing-md h-spacing-md" />,
+  reading: <Icons.BookOpen className="w-spacing-md h-spacing-md" />,
+  prayer: <Icons.Hand className="w-spacing-md h-spacing-md" />,
+  reflection: <Icons.PenLine className="w-spacing-md h-spacing-md" />,
+  quiz: <Icons.HelpCircle className="w-spacing-md h-spacing-md" />,
 };
 
 const JornadaDetailPage: React.FC = () => {
@@ -85,7 +85,7 @@ const JornadaDetailPage: React.FC = () => {
       <div className="text-center space-y-spacing-md py-spacing-2xl">
         <p className="text-muted-foreground">Jornada não encontrada.</p>
         <Button variant="outline" onClick={() => navigate(AppRoute.JORNADAS)}>
-          <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
         </Button>
       </div>
     );
@@ -107,7 +107,7 @@ const JornadaDetailPage: React.FC = () => {
         </div>
         {journey.is_premium && (
           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-            <Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> PRO
+            <Icons.Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> PRO
           </Badge>
         )}
       </div>
@@ -121,7 +121,7 @@ const JornadaDetailPage: React.FC = () => {
           <Progress value={progressPercent} className="h-spacing-2xs" />
           <div className="flex items-center justify-between">
             <div className="flex gap-spacing-md text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-              <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> ~{journey.estimated_days} dias</span>
+              <span className="flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> ~{journey.estimated_days} dias</span>
               <span className="px-spacing-xs py-spacing-3xs rounded-premium-full bg-muted border border-border/40">{journey.difficulty}</span>
             </div>
             {isJourneyComplete && (
@@ -140,14 +140,14 @@ const JornadaDetailPage: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <CathedraCard padding="md" className="premium-card border-primary/10 bg-gradient-to-r from-primary/5 to-transparent shadow-premium flex items-center gap-spacing-md">
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Award className="w-spacing-lg h-spacing-lg text-primary" />
+                <Icons.Award className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
               <div className="flex-1">
                 <p className="font-bold text-premium-sm text-foreground"><Icons.PartyPopper className="w-spacing-md h-spacing-md inline mr-spacing-xs text-primary" /> Jornada Concluída!</p>
                 <p className="text-premium-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
               </div>
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
-                Ver <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
+                Ver <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
               </Button>
           </CathedraCard>
         </motion.div>
@@ -180,7 +180,7 @@ const JornadaDetailPage: React.FC = () => {
                         ? 'bg-muted text-muted-foreground'
                         : 'bg-primary/10 text-primary'
                   }`}>
-                    {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : isStepLocked ? <Lock className="w-spacing-md h-spacing-md" /> : index + 1}
+                    {isCompleted ? <Icons.Check className="w-spacing-md h-spacing-md" /> : isStepLocked ? <Icons.Lock className="w-spacing-md h-spacing-md" /> : index + 1}
                   </div>
 
                   {/* Content */}
@@ -206,7 +206,7 @@ const JornadaDetailPage: React.FC = () => {
                       onClick={() => navigate(`/jornadas/${id}/step?step=${step.id}`)}
                     >
                       {isCompleted ? 'Rever' : isNext ? 'Iniciar' : 'Abrir'}
-                      <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
+                      <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
                     </Button>
                   )}
               </CathedraCard>
@@ -217,7 +217,7 @@ const JornadaDetailPage: React.FC = () => {
 
       {isLocked && (
         <CathedraCard padding="md" className="premium-card border-primary/10 bg-primary/[0.01] shadow-premium text-center space-y-spacing-sm">
-            <Sparkles className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
+            <Icons.Sparkles className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
             <p className="text-premium-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">
               Ver Planos

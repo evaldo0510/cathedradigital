@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -5,7 +6,7 @@ import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Clock, XCircle, Download } from 'lucide-react';
+
 import confetti from 'canvas-confetti';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
@@ -98,7 +99,7 @@ const CheckoutResultPage: React.FC = () => {
     secondaryAction?: { label: string; route: string };
   }> = {
     success: {
-      icon: <CheckCircle2 className="w-spacing-xl h-spacing-xl text-primary" />,
+      icon: <Icons.CheckCircle2 className="w-spacing-xl h-spacing-xl text-primary" />,
       iconBg: 'bg-primary/10',
       title: 'Pagamento aprovado!',
       description: 'Seu acesso PRO foi liberado. Aproveite todos os recursos exclusivos do Cathedra.',
@@ -106,14 +107,14 @@ const CheckoutResultPage: React.FC = () => {
       secondaryAction: { label: 'Explorar Trilhas', route: AppRoute.TRILHAS },
     },
     pending: {
-      icon: <Clock className="w-spacing-xl h-spacing-xl text-accent-foreground" />,
+      icon: <Icons.Clock className="w-spacing-xl h-spacing-xl text-accent-foreground" />,
       iconBg: 'bg-accent',
       title: 'Pagamento em análise',
       description: 'Seu pagamento foi recebido e está sendo processado. Assim que for aprovado, seu acesso PRO será liberado automaticamente.',
       primaryAction: { label: 'Voltar ao Dashboard', route: AppRoute.DASHBOARD },
     },
     failure: {
-      icon: <XCircle className="w-spacing-xl h-spacing-xl text-destructive" />,
+      icon: <Icons.XCircle className="w-spacing-xl h-spacing-xl text-destructive" />,
       iconBg: 'bg-destructive/10',
       title: 'Pagamento não concluído',
       description: 'O pagamento foi cancelado ou recusado. Nenhuma cobrança foi realizada. Você pode tentar novamente quando quiser.',
@@ -186,7 +187,7 @@ const CheckoutResultPage: React.FC = () => {
               className="w-full h-spacing-xl text-premium-xs font-bold uppercase text-muted-foreground gap-spacing-xs"
               onClick={() => window.print()}
             >
-              <Download className="w-spacing-sm h-spacing-sm" /> Baixar Comprovante
+              <Icons.Download className="w-spacing-sm h-spacing-sm" /> Baixar Comprovante
             </Button>
           )}
         </motion.div>

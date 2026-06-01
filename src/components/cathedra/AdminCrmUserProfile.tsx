@@ -1,8 +1,6 @@
+import { Icons } from '@/constants';
 import React, { useEffect, useState } from 'react';
-import {
-  ArrowLeft, Crown, Shield, Flame, Calendar, Mail, Star,
-  BookOpen, MessageCircle, Route, Brain, Clock
-} from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -89,7 +87,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       {/* Header */}
       <div className="flex items-center gap-spacing-sm">
         <Button variant="ghost" size="sm" onClick={onBack} className="gap-spacing-2xs">
-          <ArrowLeft className="w-spacing-md h-spacing-md" /> Voltar
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md" /> Voltar
         </Button>
       </div>
 
@@ -103,19 +101,19 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             <div className="flex-1 min-w-spacing-0 space-y-spacing-xs">
               <div className="flex items-center gap-spacing-xs flex-wrap">
                 <h2 className="text-premium-xl font-bold">{user.name || 'Sem nome'}</h2>
-                {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}
-                {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-spacing-2xs"><Shield className="w-spacing-sm h-spacing-sm" /> Admin</Badge>}
+                {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Icons.Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}
+                {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-spacing-2xs"><Icons.Shield className="w-spacing-sm h-spacing-sm" /> Admin</Badge>}
                 <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-xs`}>{statusLabel}</Badge>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-premium-sm text-muted-foreground">
-                <span className="flex items-center gap-spacing-2xs"><Mail className="w-spacing-sm h-spacing-sm" /> {user.email}</span>
-                <span className="flex items-center gap-spacing-2xs"><Calendar className="w-spacing-sm h-spacing-sm" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
-                <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
+                <span className="flex items-center gap-spacing-2xs"><Icons.Mail className="w-spacing-sm h-spacing-sm" /> {user.email}</span>
+                <span className="flex items-center gap-spacing-2xs"><Icons.Calendar className="w-spacing-sm h-spacing-sm" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
+                <span className="flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
               </div>
             </div>
             <div className="flex gap-spacing-xs">
               <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-spacing-2xs text-premium-xs">
-                <Crown className="w-spacing-sm h-spacing-sm" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
+                <Icons.Crown className="w-spacing-sm h-spacing-sm" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
               </Button>
             </div>
           </div>
@@ -125,10 +123,10 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-spacing-sm">
         {[
-          { icon: <Star className="w-spacing-md h-spacing-md text-primary" />, label: 'Nível', value: user.level ?? 1 },
-          { icon: <MessageCircle className="w-spacing-md h-spacing-md text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
-          { icon: <Flame className="w-spacing-md h-spacing-md text-secondary" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
-          { icon: <Brain className="w-spacing-md h-spacing-md text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
+          { icon: <Icons.Star className="w-spacing-md h-spacing-md text-primary" />, label: 'Nível', value: user.level ?? 1 },
+          { icon: <Icons.MessageCircle className="w-spacing-md h-spacing-md text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
+          { icon: <Icons.Flame className="w-spacing-md h-spacing-md text-secondary" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
+          { icon: <Icons.Brain className="w-spacing-md h-spacing-md text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>
             <CardContent className="pt-spacing-md pb-spacing-sm px-spacing-md flex items-center gap-spacing-sm">
@@ -146,7 +144,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {/* Diagnosis */}
         <Card>
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Brain className="w-spacing-md h-spacing-md text-primary" /> Diagnóstico Espiritual</CardTitle>
+            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Icons.Brain className="w-spacing-md h-spacing-md text-primary" /> Diagnóstico Espiritual</CardTitle>
           </CardHeader>
           <CardContent>
             {diagnosis ? (
@@ -167,7 +165,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {/* Journey Progress */}
         <Card>
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Route className="w-spacing-md h-spacing-md text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
+            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Icons.Route className="w-spacing-md h-spacing-md text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
           </CardHeader>
           <CardContent>
             {journeyProgress.length > 0 ? (

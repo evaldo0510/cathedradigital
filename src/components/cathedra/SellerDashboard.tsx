@@ -1,8 +1,9 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Store } from 'lucide-react';
+
 
 const WalletHistory: React.FC = () => {
   return (
@@ -69,7 +70,7 @@ const SellerDashboard: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-spacing-xl py-spacing-xl px-spacing-md animate-in fade-in duration-700">
       <div className="flex items-center gap-spacing-md">
         <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-          <Store className="w-spacing-lg h-spacing-lg" />
+          <Icons.Store className="w-spacing-lg h-spacing-lg" />
         </div>
         <div>
           <h1 className="text-premium-3xl font-serif font-bold tracking-tight">Painel do Vendedor</h1>

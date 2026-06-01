@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
-import { Layout, Eye, EyeOff } from 'lucide-react';
+
 import { Button } from "@/components/ui/button";
 
 export const SpacingDebugger: React.FC = () => {
@@ -33,7 +34,7 @@ export const SpacingDebugger: React.FC = () => {
             className="rounded-premium-full shadow-premium border border-white/20 backdrop-blur-sm"
             title="Alternar Debug de Espaçamentos (Alt+D)"
           >
-            {isEnabled ? <EyeOff className="h-spacing-md w-spacing-md" /> : <Layout className="h-spacing-md w-spacing-md" />}
+            {isEnabled ? <Icons.EyeOff className="h-spacing-md w-spacing-md" /> : <Icons.Layout className="h-spacing-md w-spacing-md" />}
           </Button>
         </div>
       )}

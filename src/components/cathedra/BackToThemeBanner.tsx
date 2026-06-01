@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Tag } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { AppRoute } from '@/types';
 
@@ -21,8 +22,8 @@ const BackToThemeBanner: React.FC = () => {
           onClick={() => navigate(`${AppRoute.TEMAS}/${tema}`)}
           className="rounded-premium-full h-spacing-xl sm:h-spacing-xl px-spacing-sm text-primary hover:bg-primary/5 font-bold text-premium-xs sm:text-premium-xs uppercase tracking-widest gap-spacing-2xs"
         >
-          <ArrowLeft className="w-spacing-sm h-spacing-sm" />
-          <Tag className="w-spacing-sm h-spacing-sm" />
+          <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm" />
+          <Icons.Tag className="w-spacing-sm h-spacing-sm" />
           Voltar ao tema: {tema.replace(/-/g, ' ')}
         </Button>
       </div>

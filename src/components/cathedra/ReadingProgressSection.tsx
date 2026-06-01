@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { CathedraCard } from './CathedraCard';
 import { Icons } from '@/constants';
-import { ArrowRight, Clock } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 
 export const ReadingProgressSection: React.FC = () => {
@@ -24,7 +24,7 @@ export const ReadingProgressSection: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-lg md:gap-spacing-xl">
           <div className="flex items-center gap-spacing-lg md:gap-spacing-xl">
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary/[0.005] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:text-primary/50 transition-all duration-1000 border border-primary/[0.01]">
-              <Clock className="w-spacing-lg h-spacing-lg" strokeWidth={0.5} />
+              <Icons.Clock className="w-spacing-lg h-spacing-lg" strokeWidth={0.5} />
             </div>
             <div className="space-y-spacing-xs md:space-y-spacing-md">
               <div className="flex items-center gap-spacing-md">
@@ -47,7 +47,7 @@ export const ReadingProgressSection: React.FC = () => {
               </p>
             </div>
             <div className="w-spacing-xl h-spacing-xl rounded-premium-full border border-primary/[0.01] flex items-center justify-center text-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000">
-              <ArrowRight className="w-spacing-md h-spacing-md" />
+              <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
             </div>
           </div>
         </div>

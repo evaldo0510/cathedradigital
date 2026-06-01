@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink } from 'lucide-react';
+
 
 interface DocumentViewerProps {
   url: string;
@@ -29,7 +30,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
             onClick={onClose}
             className="p-spacing-xs rounded-premium-full hover:bg-secondary transition-colors flex-shrink-0"
           >
-            <X className="w-spacing-md h-spacing-md text-foreground" />
+            <Icons.X className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
           <h3 className="text-premium-sm font-bold text-foreground truncate">{title}</h3>
         </div>
@@ -39,7 +40,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
           rel="noopener noreferrer"
           className="flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs text-premium-xs font-bold text-primary hover:underline flex-shrink-0"
         >
-          Abrir original <ExternalLink className="w-spacing-sm h-spacing-sm" />
+          Abrir original <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
         </a>
       </motion.div>
       <div className="flex-1" onClick={e => e.stopPropagation()}>

@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Highlighter, FileText, X, Sparkles } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
@@ -83,7 +84,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
               onClick={() => setPosition(null)}
               className="text-primary/60 hover:text-primary transition-colors"
             >
-              <X className="w-spacing-sm h-spacing-sm" />
+              <Icons.X className="w-spacing-sm h-spacing-sm" />
             </button>
           </div>
 
@@ -114,7 +115,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                 }}
                 className="h-spacing-xl rounded-premium px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1"
               >
-                <FileText className="w-spacing-sm h-spacing-sm" /> Nota
+                <Icons.FileText className="w-spacing-sm h-spacing-sm" /> Nota
               </Button>
 
               <Button
@@ -127,7 +128,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                 className="h-spacing-xl rounded-premium px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1 text-primary/60"
                 title={settings.totalSilence ? "Aprofundar em silêncio (Logos IA)" : "Aprofundar com Logos IA"}
               >
-                <Sparkles className="w-spacing-sm h-spacing-sm stroke-[1]" /> Logos
+                <Icons.Sparkles className="w-spacing-sm h-spacing-sm stroke-[1]" /> Logos
               </Button>
 
               {activeHighlightId && onDeleteHighlight && (
@@ -141,7 +142,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                   className="h-spacing-xl w-spacing-xl rounded-premium text-destructive hover:bg-destructive/5"
                   title="Excluir Destaque"
                 >
-                  <Highlighter className="w-spacing-md h-spacing-md" />
+                  <Icons.Highlighter className="w-spacing-md h-spacing-md" />
                 </Button>
               )}
             </div>

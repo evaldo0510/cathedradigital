@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 /**
  * RelevanceBadge — shared visual indicator for fuzzy-search relevance.
  *
@@ -6,7 +7,7 @@
  * (see `scoreToTone` in `@/lib/similarity`).
  */
 import React from 'react';
-import { Target } from 'lucide-react';
+
 import { scoreToTone } from '@/lib/similarity';
 import { cn } from '@/lib/utils';
 
@@ -46,7 +47,7 @@ export const RelevanceBadge: React.FC<RelevanceBadgeProps> = ({
         className,
       )}
     >
-      <Target className="w-spacing-xs h-spacing-xs" />
+      <Icons.Target className="w-spacing-xs h-spacing-xs" />
       {tone.pct}%
     </span>
   );

@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Book, Bookmark, Globe, Target, Quote, Brain, Compass, Heart } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FaithTerm } from '../AZFaithPage';
@@ -36,7 +37,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             exit={{ opacity: 0 }}
             className="h-full flex flex-col items-center justify-center text-center p-spacing-xl bg-muted/10 rounded-premium-full border border-dashed border-border/40"
           >
-            <Sparkles className="h-spacing-xl w-spacing-xl text-primary/60 mb-spacing-md" />
+            <Icons.Sparkles className="h-spacing-xl w-spacing-xl text-primary/60 mb-spacing-md" />
             <h3 className="text-premium-xl font-bold text-foreground mb-spacing-xs">Selecione um termo</h3>
             <p className="text-muted-foreground text-premium-sm">Escolha um termo da lista para explorar sua profundidade teológica.</p>
           </motion.div>
@@ -71,7 +72,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             {(selectedTerm.bibleVerses || selectedTerm.reference) && (
               <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
                 <div className="flex items-center gap-spacing-xs">
-                  <Book className="w-spacing-md h-spacing-md text-blue-600" />
+                  <Icons.Book className="w-spacing-md h-spacing-md text-blue-600" />
                   <p className="text-premium-xs font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                 </div>
                 <div className="flex flex-wrap gap-spacing-xs">
@@ -108,7 +109,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             {selectedTerm.catechismReferences && (
               <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
                 <div className="flex items-center gap-spacing-xs">
-                  <Bookmark className="w-spacing-md h-spacing-md text-amber-600" />
+                  <Icons.Bookmark className="w-spacing-md h-spacing-md text-amber-600" />
                   <p className="text-premium-xs font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                 </div>
                 <div className="flex flex-wrap gap-spacing-xs">
@@ -139,7 +140,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             {selectedTerm.magisteriumReferences && (
               <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
                 <div className="flex items-center gap-spacing-xs">
-                  <Globe className="w-spacing-md h-spacing-md text-emerald-600" />
+                  <Icons.Globe className="w-spacing-md h-spacing-md text-emerald-600" />
                   <p className="text-premium-xs font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                 </div>
                 <div className="flex flex-wrap gap-spacing-xs">
@@ -162,7 +163,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             {selectedTerm.practicalApplication && (
               <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md space-y-spacing-xs">
                 <div className="flex items-center gap-spacing-xs">
-                  <Target className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.Target className="w-spacing-md h-spacing-md text-primary" />
                   <p className="text-premium-xs font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
                 </div>
                 <p className="text-foreground/80 leading-relaxed text-premium-sm font-medium">
@@ -175,7 +176,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             {selectedTerm.deepInterpretation && (
               <div className="bg-muted/30 rounded-premium p-spacing-md space-y-spacing-xs">
                 <div className="flex items-center gap-spacing-xs">
-                  <Quote className="w-spacing-md h-spacing-md text-muted-foreground" />
+                  <Icons.Quote className="w-spacing-md h-spacing-md text-muted-foreground" />
                   <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
                 </div>
                 <p className="text-foreground/70 leading-relaxed text-premium-sm italic font-serif">
@@ -191,7 +192,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
                 variant="outline"
                 className="w-full rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
               >
-                <Brain className="w-spacing-md h-spacing-md" />
+                <Icons.Brain className="w-spacing-md h-spacing-md" />
                 🤖 Refletir com Logos
               </Button>
 
@@ -200,7 +201,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
                 className={`w-full rounded-premium-full h-spacing-2xl gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
                 variant={selectedTerm.journey_id ? 'default' : 'outline'}
               >
-                {selectedTerm.journey_id ? <Compass className="w-spacing-md h-spacing-md" /> : <Heart className="w-spacing-md h-spacing-md" />}
+                {selectedTerm.journey_id ? <Icons.Compass className="w-spacing-md h-spacing-md" /> : <Icons.Heart className="w-spacing-md h-spacing-md" />}
                 🚀 Viver isso {selectedTerm.journey_id ? '— Jornada Prática' : ''}
               </Button>
             </div>

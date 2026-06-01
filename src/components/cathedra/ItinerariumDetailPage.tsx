@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Icons } from '@/constants';
-import { ChevronRight, ArrowLeft, Check, Lock, Clock, FileDown } from 'lucide-react';
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'sonner';
@@ -150,7 +150,7 @@ const ItinerariumDetailPage: React.FC = () => {
           onClick={() => navigate('/itineraria')} 
           className="group gap-spacing-xs text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors"
         >
-          <ArrowLeft className="w-spacing-sm h-spacing-sm group-hover:-translate-x-0.5 transition-transform" /> Voltar para Trilhas
+          <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm group-hover:-translate-x-0.5 transition-transform" /> Voltar para Trilhas
         </Button>
       </motion.div>
 
@@ -166,7 +166,7 @@ const ItinerariumDetailPage: React.FC = () => {
             className="rounded-premium-full gap-spacing-xs border-primary/10 text-[10px] font-black uppercase tracking-widest"
             onClick={exportFullPDF}
           >
-            <FileDown className="w-spacing-md h-spacing-md" /> Exportar Reflexões
+            <Icons.FileDown className="w-spacing-md h-spacing-md" /> Exportar Reflexões
           </Button>
         </div>
         <p className="text-premium-lg md:text-premium-xl text-muted-foreground/80 font-serif italic leading-relaxed">{itinerarium.description}</p>
@@ -217,7 +217,7 @@ const ItinerariumDetailPage: React.FC = () => {
                         ? 'bg-primary text-primary-foreground shadow-premium' 
                         : 'bg-primary/5 text-primary/40 border border-primary/10'
                     }`}>
-                      {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : <span className="text-premium-sm font-bold">{idx + 1}</span>}
+                      {isCompleted ? <Icons.Check className="w-spacing-md h-spacing-md" /> : <span className="text-premium-sm font-bold">{idx + 1}</span>}
                     </div>
                     
                     <div className="flex-1 min-w-spacing-0">
@@ -226,7 +226,7 @@ const ItinerariumDetailPage: React.FC = () => {
                         {!step.is_free && <Icons.Lock className="w-spacing-sm h-spacing-sm text-primary/60" />}
                       </div>
                       <div className="flex items-center gap-spacing-sm text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                        <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> {step.duration_minutes} MIN</span>
+                        <span className="flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {step.duration_minutes} MIN</span>
                         <div className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-border" />
                         <span>{step.step_type}</span>
                       </div>
@@ -241,7 +241,7 @@ const ItinerariumDetailPage: React.FC = () => {
                       className="group/btn h-spacing-2xl px-spacing-lg rounded-premium-full border border-primary/5 hover:bg-primary hover:text-primary-foreground transition-all duration-500 text-[10px] font-black uppercase tracking-widest"
                     >
                       {isCompleted ? 'Revisitar' : 'Iniciar'}
-                      <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs group-hover/btn:translate-x-1 transition-transform" />
+                      <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   )}
                 </CardContent>

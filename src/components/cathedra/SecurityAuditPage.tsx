@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, XCircle, ShieldAlert, FileCode, RotateCcw, AlertTriangle, Search, ExternalLink, ShieldCheck } from 'lucide-react';
+
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
 
@@ -50,7 +50,7 @@ const SecurityAuditPage = () => {
     <div className="max-w-spacing-4xl mx-auto py-spacing-md md:py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
       <header className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-red-500/10 rounded-premium text-red-600 border border-red-500/20">
-          <ShieldAlert className="w-spacing-md h-spacing-md" />
+          <Icons.ShieldAlert className="w-spacing-md h-spacing-md" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
         <h1 className="text-premium-4xl font-serif font-bold text-foreground text-primary">Painel de Segurança & Integridade</h1>
@@ -63,7 +63,7 @@ const SecurityAuditPage = () => {
           <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-premium-hover overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/40 p-spacing-lg">
               <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center gap-spacing-xs">
-                <ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
+                <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
                 Status de Integridade
               </CardTitle>
             </CardHeader>
@@ -75,16 +75,16 @@ const SecurityAuditPage = () => {
                       <div className="flex items-center gap-spacing-xs">
                         <span className="text-premium-sm font-bold text-foreground">{item.label}</span>
                         {item.status === 'success' ? (
-                          <CheckCircle className="w-spacing-sm h-spacing-sm text-green-500" />
+                          <Icons.CheckCircle className="w-spacing-sm h-spacing-sm text-green-500" />
                         ) : (
-                          <AlertTriangle className="w-spacing-sm h-spacing-sm text-amber-500" />
+                          <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm text-amber-500" />
                         )}
                       </div>
                       <p className="text-premium-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
                     <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-premium-full">
                       <Link to={item.link} className="flex items-center gap-spacing-2xs text-premium-xs font-black uppercase tracking-widest">
-                        Detalhes <ExternalLink className="w-spacing-sm h-spacing-sm" />
+                        Detalhes <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
                       </Link>
                     </Button>
                   </div>
@@ -97,7 +97,7 @@ const SecurityAuditPage = () => {
             <Card className="border-red-500/20 bg-red-500/5 rounded-premium p-spacing-lg space-y-spacing-md">
               <div className="flex items-center gap-spacing-sm">
                 <div className="p-spacing-xs bg-red-500/10 rounded-premium text-red-600">
-                  <RotateCcw className="w-spacing-md h-spacing-md" />
+                  <Icons.RotateCcw className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-premium-sm font-bold uppercase tracking-widest">Rollback Crítico</h3>
               </div>
@@ -116,7 +116,7 @@ const SecurityAuditPage = () => {
             <Card className="border-primary/20 bg-primary/5 rounded-premium p-spacing-lg space-y-spacing-md">
               <div className="flex items-center gap-spacing-sm">
                 <div className="p-spacing-xs bg-primary/10 rounded-premium text-primary">
-                  <FileCode className="w-spacing-md h-spacing-md" />
+                  <Icons.FileCode className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-premium-sm font-bold uppercase tracking-widest">Scan de Segredos</h3>
               </div>
@@ -137,7 +137,7 @@ const SecurityAuditPage = () => {
         <aside className="space-y-spacing-lg">
           <Card className="border-border/40 bg-card rounded-[2rem] p-spacing-lg space-y-spacing-lg">
             <h3 className="text-premium-xs font-black uppercase tracking-widest text-foreground/60 flex items-center gap-spacing-xs">
-              <Search className="w-spacing-md h-spacing-md" /> Monitoramento
+              <Icons.Search className="w-spacing-md h-spacing-md" /> Monitoramento
             </h3>
             <div className="space-y-spacing-md">
               <div className="space-y-spacing-xs">

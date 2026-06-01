@@ -36,7 +36,7 @@ const LogosAI = lazy(() => import('./LogosAI'));
 const LogosContextualSuggestions = lazy(() => import('./LogosContextualSuggestions').then(m => ({ default: m.LogosContextualSuggestions })));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
+
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
@@ -826,7 +826,7 @@ const Bible: React.FC = memo(() => {
               onClick={goBack}
               className="group flex items-center gap-spacing-xs text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
             >
-              <ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
+              <Icons.ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
               Sumário
             </Button>
 
@@ -836,7 +836,7 @@ const Bible: React.FC = memo(() => {
                 onClick={() => navigate(lastReadMark.url)}
                 className="flex items-center gap-spacing-xs text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary"
               >
-                <History className="w-spacing-md h-spacing-md" />
+                <Icons.History className="w-spacing-md h-spacing-md" />
                 Ponto salvo
               </Button>
             )}

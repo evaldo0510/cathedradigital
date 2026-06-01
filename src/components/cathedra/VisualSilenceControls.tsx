@@ -2,7 +2,7 @@ import React from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Icons } from '@/constants';
 import { motion } from 'framer-motion';
-import { EyeOff, ZapOff, Contrast, Compass, VolumeX } from 'lucide-react';
+
 
 export const VisualSilenceControls: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();

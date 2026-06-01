@@ -1,9 +1,7 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, ChevronRight, ChevronLeft, Timer, 
-  Feather, PenTool, Book, CheckCircle2 
-} from 'lucide-react';
+
 import { STEPS, Step } from './constants';
 import { Button } from '@/components/ui/button';
 import ShareButton from '../ShareButton';
@@ -38,11 +36,11 @@ const LectioStep: React.FC<LectioStepProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg px-spacing-xs">
         <Button variant="outline" size="icon" onClick={onBack} className="rounded-premium-full shadow-premium-md self-start md:self-center">
-          <ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
+          <Icons.ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
         </Button>
         <div className="flex-1 space-y-spacing-2xs">
           <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60">
-            <Feather className="w-spacing-sm h-spacing-sm" />
+            <Icons.Feather className="w-spacing-sm h-spacing-sm" />
             Lectio Divina
           </div>
           <h2 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground leading-tight">{selectedPassage}</h2>
@@ -53,7 +51,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
           <div className="flex items-center gap-spacing-sm px-spacing-md py-spacing-sm rounded-premium bg-card border border-border shadow-premium-md">
-            <Timer className="w-spacing-md h-spacing-md text-primary/60" />
+            <Icons.Timer className="w-spacing-md h-spacing-md text-primary/60" />
             <span className="font-mono text-premium-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>
         </div>
@@ -133,7 +131,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
               ) : bibleText.length > 0 ? (
                 <div className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs justify-center opacity-40">
-                    <Book className="w-spacing-md h-spacing-md" />
+                    <Icons.Book className="w-spacing-md h-spacing-md" />
                     <p className="text-premium-xs font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
                   </div>
                   <div className="font-serif leading-relaxed text-premium-xl text-foreground/90 text-center">
@@ -160,7 +158,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
 
               <div className="space-y-spacing-md group">
                 <div className="flex items-center gap-spacing-xs justify-center text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
-                  <PenTool className="w-spacing-sm h-spacing-sm" /> Sua Reflexão
+                  <Icons.PenTool className="w-spacing-sm h-spacing-sm" /> Sua Reflexão
                 </div>
                 <textarea
                   value={notes[activeStep.id] || ''}
@@ -183,7 +181,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           onClick={() => onStepChange(STEPS[stepIndex - 1].id)}
           className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full"
         >
-          <ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
+          <Icons.ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
         </Button>
         
         {stepIndex < STEPS.length - 1 ? (
@@ -191,14 +189,14 @@ const LectioStep: React.FC<LectioStepProps> = ({
             onClick={() => onStepChange(STEPS[stepIndex + 1].id)}
             className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-foreground text-background hover:bg-primary"
           >
-            Próximo <ChevronRight className="w-spacing-md h-spacing-md" />
+            Próximo <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         ) : (
           <Button
             onClick={() => onStepChange('conclusio')}
             className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
           >
-            <CheckCircle2 className="w-spacing-md h-spacing-md" /> Concluir
+            <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" /> Concluir
           </Button>
         )}
       </div>

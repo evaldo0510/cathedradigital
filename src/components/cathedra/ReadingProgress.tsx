@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { ChevronUp, Bookmark, CornerRightUp } from 'lucide-react';
+
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
 
@@ -95,7 +95,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                   className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                   aria-label="Marcar posição atual"
                 >
-                  <Bookmark className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.Bookmark className="w-spacing-md h-spacing-md text-primary" />
                 </Button>
 
                 {/* Return to Paragraph Button */}
@@ -107,7 +107,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                     className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                     aria-label="Retornar ao último parágrafo"
                   >
-                    <CornerRightUp className="w-spacing-md h-spacing-md text-primary" />
+                    <Icons.CornerRightUp className="w-spacing-md h-spacing-md text-primary" />
                   </Button>
                 )}
 
@@ -137,7 +137,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                   className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                   aria-label="Voltar ao topo"
                 >
-                  <ChevronUp className="w-spacing-md h-spacing-md" />
+                  <Icons.ChevronUp className="w-spacing-md h-spacing-md" />
                 </Button>
               </motion.div>
             )}

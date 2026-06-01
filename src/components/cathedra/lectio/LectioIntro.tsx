@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
-import { Feather, Heart, Clock, ArrowRight } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 import { STEPS, SUGGESTED_PASSAGES, getDailyPassage, Step } from './constants';
 
@@ -23,7 +24,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         transition={{ duration: 0.8 }}
       >
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-          <Feather className="w-spacing-md h-spacing-md text-primary" />
+          <Icons.Feather className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
@@ -48,7 +49,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         <div className={`w-spacing-2xl h-spacing-2xl rounded-premium-full flex items-center justify-center shrink-0 ${
           selectedPassage === dailyPassage.ref ? 'bg-white/20' : 'bg-primary/10'
         }`}>
-          <Heart className={`w-spacing-lg h-spacing-lg ${selectedPassage === dailyPassage.ref ? 'text-white' : 'text-primary'}`} />
+          <Icons.Heart className={`w-spacing-lg h-spacing-lg ${selectedPassage === dailyPassage.ref ? 'text-white' : 'text-primary'}`} />
         </div>
         <div className="text-left flex-1">
           <p className={`text-premium-xs font-black uppercase tracking-[0.2em] ${
@@ -58,11 +59,11 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
             selectedPassage === dailyPassage.ref ? 'text-white' : 'text-foreground'
           }`}>{dailyPassage.title}</p>
           <div className="flex items-center gap-spacing-xs mt-spacing-2xs">
-            <Clock className={`w-spacing-sm h-spacing-sm ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`} />
+            <Icons.Clock className={`w-spacing-sm h-spacing-sm ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`} />
             <span className={`text-premium-xs ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`}>~15 min · {dailyPassage.ref}</span>
           </div>
         </div>
-        <ArrowRight className={`w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform ${
+        <Icons.ArrowRight className={`w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform ${
           selectedPassage === dailyPassage.ref ? 'text-white/80' : 'text-muted-foreground'
         }`} />
       </motion.button>

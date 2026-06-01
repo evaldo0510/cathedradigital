@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 /**
  * FuzzySearchInput — shared search input used by Saints, Glossary,
@@ -24,7 +25,7 @@ import { Button } from '@/components/ui/button';
  *   />
  */
 import React from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 
 export interface FuzzySearchInputProps {
@@ -87,8 +88,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
 
   return (
     <div className={cn('relative', className)}>
-      <Search
-        className={cn(
+      <Icons.Search className={cn(
           'absolute top-spacing-2xs/2 -translate-y-1/2 text-muted-foreground pointer-events-none',
           tokens.icon,
           tokens.iconWrap,
@@ -118,7 +118,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
             tokens.clearWrap,
           )}
         >
-          <X className={tokens.icon} />
+          <Icons.X className={tokens.icon} />
         </Button>
       )}
       {showHint && (
@@ -126,7 +126,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           aria-live="polite"
           className="absolute -bottom-spacing-lg left-spacing-2xs/2 -translate-x-1/2 flex items-center gap-spacing-2xs text-premium-xs font-bold uppercase tracking-widest text-muted-foreground"
         >
-          <Loader2 className="w-spacing-sm h-spacing-sm animate-spin" />
+          <Icons.Loader2 className="w-spacing-sm h-spacing-sm animate-spin" />
           Buscando…
         </div>
       )}

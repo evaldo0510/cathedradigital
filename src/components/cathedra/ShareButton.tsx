@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import React from 'react';
-import { Share2 } from 'lucide-react';
+
 import { useShare } from '@/hooks/useShare';
 import { Button } from '@/components/ui/button';
 
@@ -32,7 +33,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       className={className}
       title="Compartilhar"
     >
-      <Share2 className="w-spacing-md h-spacing-md" />
+      <Icons.Share2 className="w-spacing-md h-spacing-md" />
       {!isIcon && "Compartilhar"}
     </Button>
   );

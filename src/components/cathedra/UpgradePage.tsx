@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Crown, Sparkles, Target, Library, Compass, ArrowRight, Zap, FlaskConical } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
@@ -88,7 +89,7 @@ const UpgradePage: React.FC = () => {
           className="flex justify-center"
         >
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 border border-primary/20 rounded-premium text-primary">
-            <Crown className="w-spacing-md h-spacing-md" />
+            <Icons.Crown className="w-spacing-md h-spacing-md" />
             <span className="text-premium-xs font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
         </motion.div>
@@ -140,11 +141,11 @@ const UpgradePage: React.FC = () => {
             disabled={isPremium}
           >
             {isPremium ? (
-              <span className="flex items-center gap-spacing-xs">Experiência Desbloqueada <Zap className="w-spacing-md h-spacing-md fill-current" /></span>
+              <span className="flex items-center gap-spacing-xs">Experiência Desbloqueada <Icons.Zap className="w-spacing-md h-spacing-md fill-current" /></span>
             ) : (
               <span className="flex items-center gap-spacing-xs">
                 Desbloquear experiência completa
-                <ArrowRight className="w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform" />
+                <Icons.ArrowRight className="w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform" />
               </span>
             )}
           </Button>
@@ -166,7 +167,7 @@ const UpgradePage: React.FC = () => {
           >
             <div className="flex flex-col items-center gap-spacing-md bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30">
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-xs">
-                <FlaskConical className="w-spacing-lg h-spacing-lg" />
+                <Icons.FlaskConical className="w-spacing-lg h-spacing-lg" />
               </div>
               <h3 className="text-premium-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
               <p className="text-premium-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm">

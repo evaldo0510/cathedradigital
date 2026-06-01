@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
-import { Share2, Trophy, BookOpen, Heart, RotateCcw } from 'lucide-react';
+
 
 interface QuizQuestion {
   question: string;
@@ -137,7 +137,7 @@ const Certamen: React.FC = () => {
       <div className="max-w-spacing-2xl mx-auto space-y-spacing-xl p-spacing-md">
         <div className="bg-card border border-border rounded-premium p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
-            {pct >= 80 ? <Trophy className="w-spacing-xl h-spacing-xl" /> : pct >= 50 ? <BookOpen className="w-spacing-xl h-spacing-xl" /> : <Heart className="w-spacing-xl h-spacing-xl" />}
+            {pct >= 80 ? <Icons.Trophy className="w-spacing-xl h-spacing-xl" /> : pct >= 50 ? <Icons.BookOpen className="w-spacing-xl h-spacing-xl" /> : <Icons.Heart className="w-spacing-xl h-spacing-xl" />}
           </div>
           <h2 className="text-premium-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
           <p className="text-premium-5xl font-black text-primary">{score}/{answered}</p>
@@ -150,11 +150,11 @@ const Certamen: React.FC = () => {
           
           <div className="flex flex-col sm:flex-row gap-spacing-md justify-center pt-spacing-md">
             <Button onClick={restart} className="px-spacing-xl py-spacing-md bg-secondary text-secondary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-spacing-xs">
-              <RotateCcw className="w-spacing-md h-spacing-md" />
+              <Icons.RotateCcw className="w-spacing-md h-spacing-md" />
               Tentar Novamente
             </Button>
             <Button onClick={shareResult} className="px-spacing-xl py-spacing-md bg-primary text-primary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs shadow-premium shadow-primary/20">
-              <Share2 className="w-spacing-md h-spacing-md" />
+              <Icons.Share2 className="w-spacing-md h-spacing-md" />
               Compartilhar Resultado
             </Button>
           </div>

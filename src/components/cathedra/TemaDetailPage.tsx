@@ -6,7 +6,7 @@ import { getSearchTermsForTag } from '@/lib/tagNormalization';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame, AlertTriangle } from 'lucide-react';
+
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -91,7 +91,7 @@ const ThemeContentCard = ({
               onClick={onAction}
               className={`h-spacing-xl rounded-premium-full text-premium-xs font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-spacing-2xs px-spacing-md transition-all duration-300`}
             >
-              {buttonText} <ExternalLink className="w-spacing-sm h-spacing-sm" />
+              {buttonText} <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
             </Button>
           </div>
           <p className="text-premium-base sm:text-premium-lg text-foreground/80 leading-relaxed font-serif">
@@ -366,7 +366,7 @@ const TemaDetailPage = () => {
           onClick={() => navigate(AppRoute.HOME)}
           className="hover:text-primary transition-colors flex items-center gap-spacing-2xs"
         >
-          <ChevronLeft className="w-spacing-sm h-spacing-sm" /> Início
+          <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm" /> Início
         </Button>
         <span className="opacity-30">/</span>
         <Button 
@@ -422,10 +422,10 @@ const TemaDetailPage = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
             {loadingLogos ? (
-              <Loader2 className="w-spacing-md h-spacing-md animate-spin" />
+              <Icons.Loader2 className="w-spacing-md h-spacing-md animate-spin" />
             ) : (
               <>
-                <Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs group-hover:rotate-12 transition-transform" />
+                <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs group-hover:rotate-12 transition-transform" />
                 Insight do Logos
               </>
             )}
@@ -445,7 +445,7 @@ const TemaDetailPage = () => {
                   <div className="flex items-center justify-between mb-spacing-xl">
                     <div className="flex items-center gap-spacing-sm">
                       <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium-md">
-                        <Sparkles className="w-spacing-lg h-spacing-lg text-secondary" />
+                        <Icons.Sparkles className="w-spacing-lg h-spacing-lg text-secondary" />
                       </div>
                       <div>
                         <p className="text-premium-small font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
@@ -496,7 +496,7 @@ const TemaDetailPage = () => {
 
             {contentError ? (
               <div className="p-spacing-2xl text-center space-y-spacing-md bg-red-500/5 rounded-[2rem] border border-red-500/10">
-                <AlertTriangle className="w-spacing-2xl h-spacing-2xl text-red-500 mx-auto" />
+                <Icons.AlertTriangle className="w-spacing-2xl h-spacing-2xl text-red-500 mx-auto" />
                 <p className="text-premium-lg font-bold text-red-600">Erro ao carregar conexões de {activeTab === 'bible' ? 'Escrituras' : activeTab === 'tradition' ? 'Tradição' : activeTab === 'magisterium' ? 'Magistério' : 'Jornadas'} no Nexus</p>
                 <p className="text-premium-sm text-muted-foreground italic max-w-spacing-md mx-auto">
                   Não foi possível estabelecer uma conexão estável com o banco de dados teológico. Por favor, tente novamente em alguns instantes.
@@ -532,7 +532,7 @@ const TemaDetailPage = () => {
                         key={c.id}
                         content={c}
                         index={i}
-                        icon={BookOpen}
+                        icon={Icons.BookOpen}
                         accentColor="text-primary"
                         buttonText="Ler na Bíblia"
                         onAction={() => navigate(`/bible?ref=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
@@ -569,7 +569,7 @@ const TemaDetailPage = () => {
                         key={c.id}
                         content={c}
                         index={i}
-                        icon={Shield}
+                        icon={Icons.Shield}
                         accentColor="text-amber-600"
                         buttonText="Ver no Catecismo"
                         onAction={() => {
@@ -609,7 +609,7 @@ const TemaDetailPage = () => {
                         key={c.id}
                         content={c}
                         index={i}
-                        icon={Globe}
+                        icon={Icons.Globe}
                         accentColor="text-blue-600"
                         buttonText="Ver Documento"
                         onAction={() => navigate(`/magisterium?doc=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
@@ -645,7 +645,7 @@ const TemaDetailPage = () => {
                       key={c.id}
                       content={c}
                       index={i}
-                      icon={Flame}
+                      icon={Icons.Flame}
                       accentColor="text-orange-500"
                       buttonText="Iniciar Jornada"
                       onAction={() => navigate(`/jornadas/${c.id}`)}
@@ -693,7 +693,7 @@ const TemaDetailPage = () => {
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
             <CardContent className="p-spacing-lg space-y-spacing-md">
               <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center">
-                <Quote className="w-spacing-md h-spacing-md text-primary" />
+                <Icons.Quote className="w-spacing-md h-spacing-md text-primary" />
               </div>
               <p className="text-premium-xs text-muted-foreground leading-relaxed italic">
                 "A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade."

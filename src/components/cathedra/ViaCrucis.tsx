@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Cross, 
-  ArrowLeft, 
-  ChevronRight, 
-  Play, 
-  MessageSquare, 
-  BookOpen, 
-  Flame, 
-  Sparkles, 
-  Activity,
-  ChevronLeft
-} from 'lucide-react';
+
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
@@ -42,7 +31,7 @@ const ViaCrucis: React.FC = () => {
       <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-            <Cross className="w-spacing-md h-spacing-md text-primary" />
+            <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
           <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
@@ -51,7 +40,7 @@ const ViaCrucis: React.FC = () => {
 
         <div className="flex justify-center">
           <Button onClick={() => setIsJourney(true)} size="lg" className="h-spacing-3xl px-spacing-xl gap-spacing-sm rounded-premium-full shadow-premium-hover">
-            <Play className="w-spacing-md h-spacing-md fill-current" /> Iniciar Via Sacra
+            <Icons.Play className="w-spacing-md h-spacing-md fill-current" /> Iniciar Via Sacra
           </Button>
         </div>
 
@@ -60,7 +49,7 @@ const ViaCrucis: React.FC = () => {
             <Button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
               className="text-left p-spacing-lg rounded-premium-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
               <div className="absolute top-spacing-0 right-0 p-spacing-lg opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
-                <Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
+                <Icons.Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
               </div>
               <div className="relative z-10 flex items-center gap-spacing-md">
                 <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-premium-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
@@ -83,7 +72,7 @@ const ViaCrucis: React.FC = () => {
       {/* Navigation */}
       <div className="flex items-center justify-between px-spacing-xs">
         <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-premium-full shadow-premium-md gap-spacing-xs">
-          <ArrowLeft className="w-spacing-md h-spacing-md text-foreground" />
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md text-foreground" />
           <span className="text-premium-xs font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </Button>
         <div className="text-center">
@@ -105,7 +94,7 @@ const ViaCrucis: React.FC = () => {
       {/* Station content */}
       <div className="bg-card border border-border rounded-[3rem] p-spacing-xl md:p-spacing-3xl space-y-spacing-2xl shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
         <div className="absolute top-spacing-0 right-0 p-spacing-2xl opacity-[0.02]">
-          <Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
+          <Icons.Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
         </div>
         
         <div className="relative text-center space-y-spacing-lg">
@@ -113,7 +102,7 @@ const ViaCrucis: React.FC = () => {
           <div className="space-y-spacing-xs">
             <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
             <p className="text-premium-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-spacing-xs">
-              <BookOpen className="w-spacing-md h-spacing-md" /> {station.scripture}
+              <Icons.BookOpen className="w-spacing-md h-spacing-md" /> {station.scripture}
             </p>
           </div>
         </div>
@@ -125,7 +114,7 @@ const ViaCrucis: React.FC = () => {
           </div>
           
           <div className="bg-primary/5 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl border border-primary/10 relative">
-            <Flame className="absolute -top-spacing-sm -right-spacing-sm w-spacing-xl h-spacing-xl text-primary/60 rotate-12" />
+            <Icons.Flame className="absolute -top-spacing-sm -right-spacing-sm w-spacing-xl h-spacing-xl text-primary/60 rotate-12" />
             <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Oração</h3>
             <p className="text-premium-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>
@@ -154,7 +143,7 @@ const ViaCrucis: React.FC = () => {
           onClick={() => setCurrentStation(currentStation - 1)}
           className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full"
         >
-          <ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
+          <Icons.ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
         </Button>
         
         {currentStation < STATIONS.length - 1 ? (
@@ -162,7 +151,7 @@ const ViaCrucis: React.FC = () => {
             onClick={() => setCurrentStation(currentStation + 1)}
             className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-foreground text-background hover:bg-primary"
           >
-            Próxima <ChevronRight className="w-spacing-md h-spacing-md" />
+            Próxima <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         ) : (
           <Button 

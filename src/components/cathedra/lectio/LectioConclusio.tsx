@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';
+
 import { STEPS } from './constants';
 import ShareButton from '../ShareButton';
 import FlowConnector from '../FlowConnector';
@@ -46,7 +47,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
         >
-          <CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-primary" />
+          <Icons.CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-primary" />
         </motion.div>
         <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">
           Amém.
@@ -64,14 +65,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         transition={{ delay: 0.5 }}
       >
         <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
-          <Clock className="w-spacing-md h-spacing-md text-primary/60" />
+          <Icons.Clock className="w-spacing-md h-spacing-md text-primary/60" />
           <div>
             <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-premium-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
         <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
-          <PenTool className="w-spacing-md h-spacing-md text-primary/60" />
+          <Icons.PenTool className="w-spacing-md h-spacing-md text-primary/60" />
           <div>
             <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
             <p className="font-mono text-premium-xl font-bold text-foreground">{notesWritten.length}/{STEPS.length}</p>
@@ -113,12 +114,12 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        <Heart className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
+        <Icons.Heart className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
         <p className="text-premium-lg font-serif text-foreground leading-relaxed max-w-spacing-lg mx-auto">
           "A fidelidade à oração diária transforma a alma silenciosamente."
         </p>
         <div className="flex items-center justify-center gap-spacing-xs text-primary">
-          <Calendar className="w-spacing-md h-spacing-md" />
+          <Icons.Calendar className="w-spacing-md h-spacing-md" />
           <span className="text-premium-sm font-bold">Volte amanhã para uma nova Lectio</span>
         </div>
       </motion.div>
@@ -143,7 +144,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
           onClick={onRestart}
           className="flex items-center gap-spacing-xs px-spacing-xl py-spacing-md rounded-premium-full bg-card border border-border text-premium-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-premium-md"
         >
-          <RotateCcw className="w-spacing-md h-spacing-md" /> Nova Lectio
+          <Icons.RotateCcw className="w-spacing-md h-spacing-md" /> Nova Lectio
         </Button>
       </div>
     </div>

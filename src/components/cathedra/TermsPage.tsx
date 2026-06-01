@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { ChevronLeft } from 'lucide-react';
+
 
 const TermsPage: React.FC = () => {
   const navigate = useNavigate();

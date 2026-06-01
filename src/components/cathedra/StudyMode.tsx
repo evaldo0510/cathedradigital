@@ -9,7 +9,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles, BookOpen, ArrowRight, Shield } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
@@ -76,7 +76,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   };
   return (
     <Button onClick={handleCopy} className="mt-spacing-xs inline-flex items-center gap-spacing-2xs text-premium-xs text-muted-foreground hover:text-primary transition-colors">
-      {copied ? <Check className="w-spacing-sm h-spacing-sm" /> : <Copy className="w-spacing-sm h-spacing-sm" />}
+      {copied ? <Icons.Check className="w-spacing-sm h-spacing-sm" /> : <Icons.Copy className="w-spacing-sm h-spacing-sm" />}
       {copied ? 'Copiado' : 'Copiar'}
     </Button>
   );
@@ -340,7 +340,7 @@ const StudyMode: React.FC = () => {
         ]}
       />
       <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
-        <Shield className="w-spacing-2xl h-spacing-2xl text-primary" />
+        <Icons.Shield className="w-spacing-2xl h-spacing-2xl text-primary" />
       </div>
       
       <div className="space-y-spacing-md">

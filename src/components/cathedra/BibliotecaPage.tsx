@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
-import { ChevronRight, Search } from 'lucide-react';
+
 import { Input } from '@/components/ui/input';
 
 import { AppRoute } from '@/types';

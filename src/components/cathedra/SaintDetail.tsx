@@ -10,7 +10,7 @@ import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
 
 import { AppRoute } from '@/types';
-import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -152,7 +152,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           <div className="flex items-center gap-spacing-sm">
             <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
-              <Shield className="w-spacing-md h-spacing-md" />
+              <Icons.Shield className="w-spacing-md h-spacing-md" />
             </div>
             <div>
               <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
@@ -194,7 +194,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {/* Short Biography */}
         <section className="space-y-spacing-md">
           <div className="flex items-center gap-spacing-xs text-primary">
-            <Info className="w-spacing-md h-spacing-md" />
+            <Icons.Info className="w-spacing-md h-spacing-md" />
             <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Sua História</h3>
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -232,11 +232,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           {/* Quote Section */}
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-xs text-primary">
-              <Quote className="w-spacing-md h-spacing-md" />
+              <Icons.Quote className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
             </div>
             <div className="bg-secondary/30 p-spacing-xl rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
-              <Quote className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/5 group-hover:text-primary/60 transition-colors" />
+              <Icons.Quote className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/5 group-hover:text-primary/60 transition-colors" />
               <p className="text-premium-xl font-serif italic text-foreground relative z-10 leading-relaxed">
                 {parseTheologicalReferences(saint.quotes?.[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -250,11 +250,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           {/* Practical Application */}
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-xs text-primary">
-              <Heart className="w-spacing-md h-spacing-md" />
+              <Icons.Heart className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
             </div>
             <div className="bg-primary/5 p-spacing-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
-              <Lightbulb className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/60 group-hover:scale-110 transition-all" />
+              <Icons.Lightbulb className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/60 group-hover:scale-110 transition-all" />
               <p className="text-premium-sm font-medium text-foreground relative z-10 leading-relaxed italic">
                 {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -270,7 +270,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {saint.works && saint.works.length > 0 && (
           <section className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-xs text-primary">
-              <BookOpen className="w-spacing-md h-spacing-md" />
+              <Icons.BookOpen className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">

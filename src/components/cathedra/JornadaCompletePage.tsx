@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Star } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -230,7 +231,7 @@ const JornadaCompletePage: React.FC = () => {
     <div className="space-y-spacing-xl max-w-spacing-2xl mx-auto pb-spacing-2xl">
       {/* Back */}
       <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
-        <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Jornadas
+        <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Jornadas
       </Button>
 
       {/* Certificate */}
@@ -243,7 +244,7 @@ const JornadaCompletePage: React.FC = () => {
           <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
             <CardContent className="p-spacing-xl text-center space-y-spacing-lg">
               <div className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-                <Award className="w-spacing-xl h-spacing-xl text-primary" />
+                <Icons.Award className="w-spacing-xl h-spacing-xl text-primary" />
               </div>
 
               <div className="space-y-spacing-xs">
@@ -258,9 +259,9 @@ const JornadaCompletePage: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-center gap-spacing-xs text-premium-xs text-muted-foreground">
-                <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
+                <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
                 <span>CATHEDRA — Digital Sanctuarium</span>
-                <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
+                <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -275,7 +276,7 @@ const JornadaCompletePage: React.FC = () => {
             disabled={sharing}
             className="flex items-center gap-spacing-xs"
           >
-            <Share2 className="w-spacing-md h-spacing-md" />
+            <Icons.Share2 className="w-spacing-md h-spacing-md" />
             {sharing ? 'Gerando imagem...' : 'Compartilhar Certificado'}
           </Button>
         </div>
@@ -291,7 +292,7 @@ const JornadaCompletePage: React.FC = () => {
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
             <CardContent className="p-spacing-lg space-y-spacing-md">
               <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
-                <Star className="w-spacing-md h-spacing-md text-primary" /> Recompensas
+                <Icons.Star className="w-spacing-md h-spacing-md text-primary" /> Recompensas
               </h2>
               {xpAwarded > 0 && (
                 <div className="flex items-center gap-spacing-sm p-spacing-sm bg-primary/10 rounded-premium">
@@ -329,7 +330,7 @@ const JornadaCompletePage: React.FC = () => {
           className="space-y-spacing-md"
         >
           <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
-            <BookOpen className="w-spacing-md h-spacing-md text-primary" /> Suas Reflexões
+            <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary" /> Suas Reflexões
           </h2>
 
           <div className="space-y-spacing-sm">
@@ -344,7 +345,7 @@ const JornadaCompletePage: React.FC = () => {
                   <CardContent className="p-spacing-md space-y-spacing-xs">
                     <p className="text-premium-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
                     <div className="flex gap-spacing-xs">
-                      <Quote className="w-spacing-md h-spacing-md text-muted-foreground flex-shrink-0 mt-spacing-3xs" />
+                      <Icons.Quote className="w-spacing-md h-spacing-md text-muted-foreground flex-shrink-0 mt-spacing-3xs" />
                       <p className="text-premium-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
                     </div>
                   </CardContent>
@@ -371,7 +372,7 @@ const JornadaCompletePage: React.FC = () => {
           >
             <CardContent className="p-spacing-md flex items-center gap-spacing-md">
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
+                <Icons.ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
               <div className="flex-1 min-w-spacing-0">
                 <h3 className="font-bold text-premium-sm text-foreground">{nextJourney.title}</h3>
@@ -379,7 +380,7 @@ const JornadaCompletePage: React.FC = () => {
                   <p className="text-premium-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
                 )}
               </div>
-              <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />
+              <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />
             </CardContent>
           </Card>
         </motion.div>

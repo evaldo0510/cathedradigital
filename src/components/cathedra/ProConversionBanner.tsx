@@ -1,8 +1,9 @@
+import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, X, ArrowRight, Flame } from 'lucide-react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -88,7 +89,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           className="absolute top-spacing-sm right-spacing-sm p-spacing-2xs rounded-premium-full hover:bg-primary/10 transition-colors"
           aria-label="Fechar"
         >
-          <X className="w-spacing-md h-spacing-md text-muted-foreground" />
+          <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground" />
         </Button>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-spacing-md">
@@ -98,7 +99,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
             animate={{ rotate: [0, -5, 5, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
           >
-            <Crown className="w-spacing-lg h-spacing-lg text-primary" />
+            <Icons.Crown className="w-spacing-lg h-spacing-lg text-primary" />
           </motion.div>
 
           {/* Content */}
@@ -107,7 +108,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
             <p className="text-premium-xs text-muted-foreground leading-relaxed">{copy.message}</p>
             {reflectionCount >= 2 && context !== 'logos' && (
               <div className="flex items-center gap-spacing-2xs text-premium-xs text-primary/70">
-                <Flame className="w-spacing-sm h-spacing-sm" />
+                <Icons.Flame className="w-spacing-sm h-spacing-sm" />
                 <span>{reflectionCount} reflexões escritas</span>
               </div>
             )}
@@ -118,7 +119,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
             onClick={() => navigate(AppRoute.UPGRADE)}
             className="flex items-center gap-spacing-xs px-spacing-md py-spacing-sm bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
           >
-            Desbloquear experiência completa <ArrowRight className="w-spacing-sm h-spacing-sm" />
+            Desbloquear experiência completa <Icons.ArrowRight className="w-spacing-sm h-spacing-sm" />
           </Button>
         </div>
       </motion.div>

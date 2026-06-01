@@ -1,10 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, Type, Layout, AlignLeft, Sun, Moon, 
-  Minus, Plus, ChevronRight, Check,
-  Maximize2, Minimize2, Settings2, Palette
-} from 'lucide-react';
+
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -127,7 +124,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 onClick={onClose}
                 className="rounded-premium-full h-spacing-xl w-spacing-xl hover:bg-muted/50 transition-colors"
               >
-                <X className="w-spacing-md h-spacing-md" />
+                <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
 
@@ -136,7 +133,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 {/* Theme Selection */}
                 <section className="space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
-                    <Sun className="w-spacing-md h-spacing-md text-primary/60" />
+                    <Icons.Sun className="w-spacing-md h-spacing-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Ambiente e Profundidade</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-spacing-sm">
@@ -173,7 +170,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                             className="absolute top-spacing-xs right-spacing-xs z-10"
                           >
                             <div className="w-spacing-md h-spacing-md bg-primary rounded-premium-full flex items-center justify-center">
-                              <Check className="w-spacing-xs h-spacing-xs text-primary-foreground" />
+                              <Icons.Check className="w-spacing-xs h-spacing-xs text-primary-foreground" />
                             </div>
                           </motion.div>
                         )}
@@ -187,7 +184,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 {/* Typography Settings */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
-                    <Type className="w-spacing-md h-spacing-md text-primary/60" />
+                    <Icons.Type className="w-spacing-md h-spacing-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Tipografia</h3>
                   </div>
                   
@@ -228,7 +225,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         <span className="text-primary capitalize">{settings.fontSize.replace('-', ' ')}</span>
                       </div>
                       <div className="flex items-center gap-spacing-md bg-muted/5 rounded-premium p-spacing-md border border-muted/20">
-                        <Minus className="w-spacing-md h-spacing-md text-muted-foreground" />
+                        <Icons.Minus className="w-spacing-md h-spacing-md text-muted-foreground" />
                         <Slider
                           value={[
                             fontSizes.findIndex(f => f.id === settings.fontSize)
@@ -238,7 +235,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           onValueChange={([val]) => updateSettings({ fontSize: fontSizes[val].id as any })}
                           className="flex-1"
                         />
-                        <Plus className="w-spacing-md h-spacing-md text-muted-foreground" />
+                        <Icons.Plus className="w-spacing-md h-spacing-md text-muted-foreground" />
                       </div>
                     </div>
                   </div>
@@ -249,7 +246,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 {/* Contrast Settings */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
-                    <Sun className="w-spacing-md h-spacing-md text-primary/60" />
+                    <Icons.Sun className="w-spacing-md h-spacing-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Contraste e Nitidez</h3>
                   </div>
 
@@ -287,7 +284,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 {/* Layout & Margins */}
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
-                    <Layout className="w-spacing-md h-spacing-md text-primary/60" />
+                    <Icons.Layout className="w-spacing-md h-spacing-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Densidade</h3>
                   </div>
 
@@ -305,13 +302,13 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           className="w-full"
                         >
                           <ToggleGroupItem value="tight" className="flex-1 py-spacing-md rounded-premium">
-                            <AlignLeft className="w-spacing-md h-spacing-md scale-y-75" />
+                            <Icons.AlignLeft className="w-spacing-md h-spacing-md scale-y-75" />
                           </ToggleGroupItem>
                           <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-premium">
-                            <AlignLeft className="w-spacing-md h-spacing-md" />
+                            <Icons.AlignLeft className="w-spacing-md h-spacing-md" />
                           </ToggleGroupItem>
                           <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-premium">
-                            <AlignLeft className="w-spacing-md h-spacing-md scale-y-125" />
+                            <Icons.AlignLeft className="w-spacing-md h-spacing-md scale-y-125" />
                           </ToggleGroupItem>
                         </ToggleGroup>
                       </div>
@@ -383,7 +380,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 {/* Advanced Experience */}
                 <section className="space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
-                    <Settings2 className="w-spacing-md h-spacing-md text-primary/60" />
+                    <Icons.Settings2 className="w-spacing-md h-spacing-md text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Imersiva</h3>
                   </div>
                   
@@ -404,7 +401,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.focusMode ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
-                        {settings.focusMode ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
+                        {settings.focusMode ? <Icons.Check className="w-spacing-sm h-spacing-sm" /> : null}
                       </div>
                     </Button>
 
@@ -424,7 +421,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.visualSilence ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
-                        {settings.visualSilence ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
+                        {settings.visualSilence ? <Icons.Check className="w-spacing-sm h-spacing-sm" /> : null}
                       </div>
                     </Button>
 
@@ -444,7 +441,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.reduceAnimations ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
-                        {settings.reduceAnimations ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
+                        {settings.reduceAnimations ? <Icons.Check className="w-spacing-sm h-spacing-sm" /> : null}
                       </div>
                     </Button>
                   </div>

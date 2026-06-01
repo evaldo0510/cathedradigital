@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -5,19 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-  Plus, 
-  Search,
-  Building2,
-  Upload,
-  FileSpreadsheet,
-  Trash2,
-  Calendar,
-  DollarSign,
-  AlertCircle,
-  CheckCircle2,
-  Loader2
-} from 'lucide-react';
+
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import * as XLSX from 'xlsx';
@@ -204,7 +193,7 @@ const AdminConstructionTab: React.FC = () => {
         </div>
         <div className="flex gap-spacing-xs">
           <div className="relative">
-            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
+            <Icons.Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input
               placeholder="Buscar obra..."
               className="pl-spacing-xl w-full sm:w-[250px]"
@@ -213,7 +202,7 @@ const AdminConstructionTab: React.FC = () => {
             />
           </div>
           <Button className="gap-spacing-xs" onClick={() => setIsAddProjectDialogOpen(true)}>
-            <Plus className="w-spacing-md h-spacing-md" /> Nova Obra
+            <Icons.Plus className="w-spacing-md h-spacing-md" /> Nova Obra
           </Button>
         </div>
       </div>
@@ -228,7 +217,7 @@ const AdminConstructionTab: React.FC = () => {
         <Card className="border-dashed border-2 py-spacing-2xl">
           <CardContent className="flex flex-col items-center text-center space-y-spacing-md">
             <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted flex items-center justify-center">
-              <Building2 className="w-spacing-xl h-spacing-xl text-muted-foreground" />
+              <Icons.Building2 className="w-spacing-xl h-spacing-xl text-muted-foreground" />
             </div>
             <div className="space-y-spacing-2xs">
               <p className="font-semibold">Nenhuma obra cadastrada</p>
@@ -254,7 +243,7 @@ const AdminConstructionTab: React.FC = () => {
                 <div className="grid grid-cols-2 gap-spacing-md">
                   <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
                     <div className="flex items-center gap-spacing-xs text-premium-xs font-bold text-muted-foreground uppercase tracking-widest">
-                      <DollarSign className="w-spacing-sm h-spacing-sm" /> Orçamento
+                      <Icons.DollarSign className="w-spacing-sm h-spacing-sm" /> Orçamento
                     </div>
                     <Button 
                       variant="outline" 
@@ -266,12 +255,12 @@ const AdminConstructionTab: React.FC = () => {
                         setIsUploadDialogOpen(true);
                       }}
                     >
-                      <Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
+                      <Icons.Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
                     </Button>
                   </div>
                   <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
                     <div className="flex items-center gap-spacing-xs text-premium-xs font-bold text-muted-foreground uppercase tracking-widest">
-                      <Calendar className="w-spacing-sm h-spacing-sm" /> Cronograma
+                      <Icons.Calendar className="w-spacing-sm h-spacing-sm" /> Cronograma
                     </div>
                     <Button 
                       variant="outline" 
@@ -283,7 +272,7 @@ const AdminConstructionTab: React.FC = () => {
                         setIsUploadDialogOpen(true);
                       }}
                     >
-                      <Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
+                      <Icons.Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
                     </Button>
                   </div>
                 </div>
@@ -291,7 +280,7 @@ const AdminConstructionTab: React.FC = () => {
               <CardFooter className="bg-muted/10 py-spacing-sm flex justify-between">
                 <span className="text-premium-xs text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-spacing-lg text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
-                  <Trash2 className="w-spacing-sm h-spacing-sm" />
+                  <Icons.Trash2 className="w-spacing-sm h-spacing-sm" />
                 </Button>
               </CardFooter>
             </Card>
@@ -345,7 +334,7 @@ const AdminConstructionTab: React.FC = () => {
           </DialogHeader>
           <div className="flex flex-col items-center justify-center py-spacing-xl border-2 border-dashed rounded-premium gap-spacing-md bg-muted/5">
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center">
-              <FileSpreadsheet className="w-spacing-lg h-spacing-lg text-primary" />
+              <Icons.FileSpreadsheet className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
             <div className="text-center px-spacing-md">
               <p className="text-premium-sm font-medium">Arraste sua planilha aqui ou clique no botão</p>
@@ -353,7 +342,7 @@ const AdminConstructionTab: React.FC = () => {
             </div>
             <div className="relative">
               <Button disabled={uploading} className="relative z-10">
-                {uploading ? <Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : <Upload className="w-spacing-md h-spacing-md mr-spacing-xs" />}
+                {uploading ? <Icons.Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : <Icons.Upload className="w-spacing-md h-spacing-md mr-spacing-xs" />}
                 Selecionar Arquivo
               </Button>
               <input 
@@ -366,7 +355,7 @@ const AdminConstructionTab: React.FC = () => {
             </div>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium p-spacing-sm flex gap-spacing-sm">
-            <AlertCircle className="w-spacing-md h-spacing-md text-amber-500 shrink-0" />
+            <Icons.AlertCircle className="w-spacing-md h-spacing-md text-amber-500 shrink-0" />
             <div className="text-premium-xs text-amber-800">
               <p className="font-bold">Atenção!</p>
               <p>Ao subir uma nova planilha, os dados serão adicionados aos já existentes. Para atualizar um dado real, certifique-se que o nome do item é idêntico.</p>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare, User, Settings, Heart } from 'lucide-react';
+
 import { SectionHeader } from './SectionHeader';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import { CathedraButton } from './CathedraButton';
@@ -137,7 +137,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 type="submit"
                 className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
               >
-                <ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
+                <Icons.ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </form>

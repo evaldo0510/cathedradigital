@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X } from 'lucide-react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -71,11 +72,11 @@ export const PWAInstallPrompt = () => {
         onClick={handleDismiss}
         className="absolute top-spacing-xs right-spacing-xs text-muted-foreground hover:text-foreground"
       >
-        <X className="h-spacing-md w-spacing-md" />
+        <Icons.X className="h-spacing-md w-spacing-md" />
       </Button>
       <div className="flex items-start gap-spacing-md">
         <div className="h-spacing-2xl w-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <Download className="h-spacing-lg w-spacing-lg text-primary" />
+          <Icons.Download className="h-spacing-lg w-spacing-lg text-primary" />
         </div>
         <div>
           <h3 className="text-premium-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h3>

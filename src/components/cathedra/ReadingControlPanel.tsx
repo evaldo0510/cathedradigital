@@ -2,7 +2,7 @@ import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { Settings2, Feather, Type, Check, Printer, RotateCcw } from 'lucide-react';
+
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { toast } from 'sonner';
@@ -52,7 +52,7 @@ const ReadingControlPanel: React.FC = memo(() => {
               }`}
               title={t.label}
             >
-               {settings.theme === t.id && <Check className={`w-spacing-md h-spacing-md mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
+               {settings.theme === t.id && <Icons.Check className={`w-spacing-md h-spacing-md mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
             </button>
           ))}
         </div>
@@ -84,7 +84,7 @@ const ReadingControlPanel: React.FC = memo(() => {
               settings.fontFamily === 'serif' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
-            <Feather className="w-spacing-md h-spacing-md" /> Serifada
+            <Icons.Feather className="w-spacing-md h-spacing-md" /> Serifada
           </button>
           <button
             onClick={() => updateSettings({ fontFamily: 'sans' })}
@@ -92,7 +92,7 @@ const ReadingControlPanel: React.FC = memo(() => {
               settings.fontFamily === 'sans' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
-            <Type className="w-spacing-md h-spacing-md" /> Sans
+            <Icons.Type className="w-spacing-md h-spacing-md" /> Sans
           </button>
         </div>
         
@@ -226,7 +226,7 @@ const ReadingControlPanel: React.FC = memo(() => {
           variant="outline"
           className="w-full rounded-premium flex items-center justify-center gap-spacing-sm py-spacing-xl border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-700"
         >
-          <Printer className="w-spacing-md h-spacing-md text-primary/40" />
+          <Icons.Printer className="w-spacing-md h-spacing-md text-primary/40" />
           <div className="text-left">
             <p className="text-premium-xs font-bold uppercase tracking-widest">Gerar PDF Premium</p>
             <p className="text-[10px] text-muted-foreground italic">Otimizado para arquivo</p>
@@ -238,7 +238,7 @@ const ReadingControlPanel: React.FC = memo(() => {
           variant="ghost"
           className="w-full rounded-premium-full py-spacing-md text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all"
         >
-          <RotateCcw className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Restaurar Padrões
+          <Icons.RotateCcw className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Restaurar Padrões
         </Button>
       </div>
     </div>
@@ -251,7 +251,7 @@ const ReadingControlPanel: React.FC = memo(() => {
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-premium-full h-spacing-xl w-spacing-xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all">
-              <Settings2 className="w-spacing-md h-spacing-md" />
+              <Icons.Settings2 className="w-spacing-md h-spacing-md" />
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl px-spacing-lg">
@@ -267,7 +267,7 @@ const ReadingControlPanel: React.FC = memo(() => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-md flex items-center gap-spacing-xs border-primary/10 hover:border-primary/30 transition-all bg-card/40 backdrop-blur-md shadow-premium-md">
-              <Settings2 className="w-spacing-sm h-spacing-sm" />
+              <Icons.Settings2 className="w-spacing-sm h-spacing-sm" />
               <span className="text-[10px] font-black uppercase tracking-widest">Estética</span>
             </Button>
           </DropdownMenuTrigger>

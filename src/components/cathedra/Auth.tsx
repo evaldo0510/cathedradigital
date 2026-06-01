@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import { ArrowLeft } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { CathedraCard } from './CathedraCard';
 
@@ -89,7 +89,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         onClick={() => navigate(AppRoute.HOME)}
         className="absolute -top-spacing-2xl left-0 flex items-center gap-spacing-xs text-muted-foreground hover:text-primary transition-colors group shadow-premium-none"
       >
-        <ArrowLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
+        <Icons.ArrowLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
         <span className="text-premium-xs font-black uppercase tracking-widest">Voltar para Início</span>
       </Button>
 

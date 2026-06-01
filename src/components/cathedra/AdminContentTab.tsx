@@ -1,21 +1,11 @@
+import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Trash2, 
-  Clock, 
-  Search,
-  Check,
-  X,
-  MessageSquare,
-  User,
-  Filter
-} from 'lucide-react';
+
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -99,11 +89,11 @@ const AdminContentTab: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-spacing-2xs"><CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Aprovado</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-spacing-2xs"><Icons.CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Aprovado</Badge>;
       case 'rejected':
-        return <Badge variant="destructive" className="gap-spacing-2xs"><XCircle className="w-spacing-sm h-spacing-sm" /> Rejeitado</Badge>;
+        return <Badge variant="destructive" className="gap-spacing-2xs"><Icons.XCircle className="w-spacing-sm h-spacing-sm" /> Rejeitado</Badge>;
       default:
-        return <Badge variant="secondary" className="gap-spacing-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-spacing-sm h-spacing-sm" /> Pendente</Badge>;
+        return <Badge variant="secondary" className="gap-spacing-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> Pendente</Badge>;
     }
   };
 
@@ -134,7 +124,7 @@ const AdminContentTab: React.FC = () => {
           <p className="text-premium-sm text-muted-foreground">Modere postagens da comunidade.</p>
         </div>
         <div className="relative">
-          <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
+          <Icons.Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
           <Input
             placeholder="Buscar conteúdo ou autor..."
             className="pl-spacing-xl w-full sm:w-[300px]"
@@ -163,7 +153,7 @@ const AdminContentTab: React.FC = () => {
         <TabsContent value={activeTab} className="space-y-spacing-md">
           {filteredPosts.length === 0 ? (
             <Card className="border-dashed border-2 py-spacing-2xl text-center">
-              <MessageSquare className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto mb-spacing-md opacity-20" />
+              <Icons.MessageSquare className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto mb-spacing-md opacity-20" />
               <p className="font-medium">Nenhum conteúdo encontrado</p>
             </Card>
           ) : (
@@ -171,7 +161,7 @@ const AdminContentTab: React.FC = () => {
               <Card key={post.id} className="overflow-hidden shadow-premium-none border-border/40">
                 <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm">
                   <div className="flex items-center gap-spacing-xs">
-                    <User className="w-spacing-sm h-spacing-sm text-muted-foreground" />
+                    <Icons.User className="w-spacing-sm h-spacing-sm text-muted-foreground" />
                     <span className="text-premium-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
                     <span className="text-premium-xs text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
                     {post.category && <Badge variant="outline" className="text-premium-xs uppercase h-spacing-md px-spacing-2xs">{post.category}</Badge>}
@@ -186,15 +176,15 @@ const AdminContentTab: React.FC = () => {
                 </CardContent>
                 <CardFooter className="bg-muted/10 border-t border-border/10 py-spacing-2xs px-spacing-sm flex justify-end gap-spacing-2xs">
                   <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs">
-                    <Trash2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Excluir
+                    <Icons.Trash2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
                       <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs">
-                        <X className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Rejeitar
+                        <Icons.X className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Rejeitar
                       </Button>
                       <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs bg-emerald-600 hover:bg-emerald-700 text-white">
-                        <Check className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Aprovar
+                        <Icons.Check className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Aprovar
                       </Button>
                     </>
                   )}

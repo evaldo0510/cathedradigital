@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
+
 import { SOCIAL_LINKS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 
@@ -20,7 +20,7 @@ const TransparencyPage: React.FC = () => {
         {/* Header */}
         <div className="text-center space-y-spacing-md">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary text-premium-xs font-black uppercase tracking-[0.2em] border border-primary/20">
-            <ShieldCheck className="w-spacing-sm h-spacing-sm" />
+            <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />
             Integridade Doutrinária
           </div>
           <h1 className="text-premium-4xl md:text-premium-6xl font-display font-black text-primary leading-tight tracking-tight">
@@ -43,7 +43,7 @@ const TransparencyPage: React.FC = () => {
           </div>
           <div className="relative space-y-spacing-lg">
             <div className="flex items-center gap-spacing-sm text-primary">
-              <CheckCircle className="w-spacing-lg h-spacing-lg" />
+              <Icons.CheckCircle className="w-spacing-lg h-spacing-lg" />
               <h2 className="text-premium-xl font-bold uppercase tracking-wider">Compromisso 100% Sem IA</h2>
             </div>
             <p className="text-foreground/80 leading-relaxed font-serif text-premium-lg">
@@ -60,7 +60,7 @@ const TransparencyPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-sm text-primary">
-              <Search className="w-spacing-md h-spacing-md" />
+              <Icons.Search className="w-spacing-md h-spacing-md" />
               <h3 className="font-bold uppercase tracking-widest text-premium-xs">Fontes Primárias</h3>
             </div>
             <p className="text-premium-sm text-muted-foreground leading-relaxed">
@@ -69,7 +69,7 @@ const TransparencyPage: React.FC = () => {
           </div>
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-sm text-primary">
-              <FileText className="w-spacing-md h-spacing-md" />
+              <Icons.FileText className="w-spacing-md h-spacing-md" />
               <h3 className="font-bold uppercase tracking-widest text-premium-xs">Revisão Manual</h3>
             </div>
             <p className="text-premium-sm text-muted-foreground leading-relaxed">
@@ -92,7 +92,7 @@ const TransparencyPage: React.FC = () => {
               className="h-spacing-2xl px-spacing-xl w-full sm:w-auto shadow-premium-hover"
             >
               <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-spacing-sm">
-                <Mail className="w-spacing-md h-spacing-md" />
+                <Icons.Mail className="w-spacing-md h-spacing-md" />
                 Enviar E-mail
               </a>
             </Button>

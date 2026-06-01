@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
+
 
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
@@ -226,7 +226,7 @@ const GlossaryPage: React.FC = () => {
               title={term.term}
               subtitle={term.definition}
               score={term.similarityScore}
-              icon={<BookOpen className="w-spacing-md h-spacing-md" />}
+              icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
               index={i}
             />

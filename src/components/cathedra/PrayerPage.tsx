@@ -6,30 +6,7 @@ import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import DeepContentSection from './DeepContentSection';
-import { 
-  Heart, 
-  ArrowLeft, 
-  ChevronRight, 
-  Play, 
-  Pause, 
-  Video, 
-  MessageSquare, 
-  Flame, 
-  Sun, 
-  Cloud, 
-  Moon,
-  Zap,
-  Star,
-  Activity,
-  Calendar,
-  Sparkles,
-  BookOpen,
-  Music,
-  Clock,
-  Youtube,
-  Search,
-  Cross
-} from 'lucide-react';
+
 import PrayerAudioPlayer from './PrayerAudioPlayer';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
@@ -169,7 +146,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-spacing-md sticky top-spacing-0 z-10 bg-inherit/80 ">
         <Button onClick={onClose} className="p-spacing-xs rounded-premium-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
-          <ArrowLeft className="w-spacing-md h-spacing-md text-secondary/70" />
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md text-secondary/70" />
         </Button>
         <span className="text-premium-xs font-black uppercase tracking-widest text-secondary/40">{data.title}</span>
         <div className="w-spacing-xl" />
@@ -223,7 +200,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <div key={p.key} className="group bg-white/[0.04] rounded-premium p-spacing-md cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-premium-sm text-secondary/90">{p.label}</p>
-                      <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
+                      <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
                     </div>
                     {expandedPrayer === p.key && (
                       <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-sm font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
@@ -293,7 +270,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <div key={p.key} className="group bg-white/[0.04] rounded-premium p-spacing-md cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-premium-sm text-secondary/90">{p.label}</p>
-                      <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
+                      <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
                     </div>
                     {expandedPrayer === p.key && (
                       <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-sm font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
@@ -323,7 +300,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
               <div className="bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-premium-sm text-secondary/90">Salve Rainha</p>
-                  <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === 'salve' ? 'rotate-90' : ''}`} />
+                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === 'salve' ? 'rotate-90' : ''}`} />
                 </div>
                 {expandedPrayer === 'salve' && (
                   <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha}</p>
@@ -331,8 +308,8 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
               </div>
               <div className="text-center space-y-spacing-md py-spacing-xl">
                 <div className="relative inline-block font-serif">
-                  <Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
-                  <Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-lg h-spacing-lg text-secondary/40 animate-pulse" />
+                  <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
+                  <Icons.Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-lg h-spacing-lg text-secondary/40 animate-pulse" />
                 </div>
                 <div className="space-y-spacing-xs">
                   <p className="text-secondary font-serif font-bold text-premium-2xl">Rosário Completo!</p>
@@ -380,7 +357,7 @@ const PrayerPage: React.FC = () => {
         transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-          <Heart className="w-spacing-md h-spacing-md text-primary" />
+          <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Oração e Devoção</h1>
@@ -404,7 +381,7 @@ const PrayerPage: React.FC = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
                 <div className="space-y-spacing-2xs">
                   <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60">
-                    <Calendar className="w-spacing-sm h-spacing-sm" />
+                    <Icons.Calendar className="w-spacing-sm h-spacing-sm" />
                     {getDayName()}
                   </div>
                   <h2 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground">Terço de Hoje</h2>
@@ -420,7 +397,7 @@ const PrayerPage: React.FC = () => {
                   <div className="space-y-spacing-md">
                     <div className="flex items-center gap-spacing-sm">
                       <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                        <MessageSquare className="w-spacing-md h-spacing-md" />
+                        <Icons.MessageSquare className="w-spacing-md h-spacing-md" />
                       </div>
                       <p className="text-premium-sm font-serif text-muted-foreground italic leading-relaxed">
                         "Rezai o Terço todos os dias para alcançar a paz para o mundo."
@@ -428,7 +405,7 @@ const PrayerPage: React.FC = () => {
                     </div>
                     <div className="space-y-spacing-sm">
                       <label className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-spacing-xs">
-                        <Activity className="w-spacing-sm h-spacing-sm" /> Suas Intenções
+                        <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Suas Intenções
                       </label>
                       <textarea
                         value={intention}
@@ -443,7 +420,7 @@ const PrayerPage: React.FC = () => {
                     onClick={() => setPrayingMystery(todayKey)}
                     className="w-full inline-flex items-center justify-center gap-spacing-sm px-spacing-xl py-spacing-md bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95"
                   >
-                    <Play className="w-spacing-md h-spacing-md fill-current" /> Começar Rosário
+                    <Icons.Play className="w-spacing-md h-spacing-md fill-current" /> Começar Rosário
                   </Button>
                 </div>
 
@@ -470,7 +447,7 @@ const PrayerPage: React.FC = () => {
                 onClick={() => navigate('/rosary')}
                 className="text-premium-xs font-black uppercase tracking-widest text-primary hover:underline transition-all"
               >
-                Ver Rosário Completo <ChevronRight className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" />
+                Ver Rosário Completo <Icons.ChevronRight className="w-spacing-sm h-spacing-sm inline ml-spacing-2xs" />
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
@@ -494,7 +471,7 @@ const PrayerPage: React.FC = () => {
                     </div>
                     <p className="text-premium-xs text-muted-foreground mt-spacing-2xs uppercase tracking-widest font-black opacity-60">{val.days}</p>
                   </div>
-                  <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground/60 group-hover:text-primary/50 group-hover:translate-x-1 transition-all" />
+                  <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground/60 group-hover:text-primary/50 group-hover:translate-x-1 transition-all" />
                 </Button>
               ))}
             </div>
@@ -511,7 +488,7 @@ const PrayerPage: React.FC = () => {
           <div className="bg-card border border-border rounded-[2rem] p-spacing-xl shadow-premium-md space-y-spacing-lg">
             <div className="flex items-center gap-spacing-sm">
               <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                <BookOpen className="w-spacing-md h-spacing-md" />
+                <Icons.BookOpen className="w-spacing-md h-spacing-md" />
               </div>
               <h3 className="text-premium-xl font-serif font-bold">Orações Comuns</h3>
             </div>
@@ -541,7 +518,7 @@ const PrayerPage: React.FC = () => {
           </div>
           
           <div className="bg-primary text-primary-foreground rounded-[2rem] p-spacing-xl space-y-spacing-md shadow-premium-hover shadow-primary/20">
-            <Cross className="w-spacing-xl h-spacing-xl opacity-50" />
+            <Icons.Cross className="w-spacing-xl h-spacing-xl opacity-50" />
             <h4 className="text-premium-xl font-serif font-bold">Via-Sacra</h4>
             <p className="text-premium-sm opacity-80 leading-relaxed font-serif">
               Medite sobre a Paixão de Cristo em 14 estações de profunda oração.

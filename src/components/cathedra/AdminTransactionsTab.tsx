@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import React from 'react';
-import { ArrowUpRight, User } from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -21,14 +22,14 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
             <div key={t.id} className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/30 border border-border/50">
               <div className="flex items-center gap-spacing-sm">
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center">
-                  <ArrowUpRight className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.ArrowUpRight className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
                   <div className="flex items-center gap-spacing-xs">
                     <p className="font-medium text-premium-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
                       <span className="text-premium-xs bg-muted px-spacing-2xs py-spacing-3xs rounded text-muted-foreground flex items-center gap-spacing-2xs">
-                        <User className="w-spacing-xs h-spacing-xs" />
+                        <Icons.User className="w-spacing-xs h-spacing-xs" />
                         {t.profiles.name}
                       </span>
                     )}

@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 /**
  * SearchResultCard — shared card for fuzzy-search results across all modules.
  *
@@ -5,7 +6,7 @@
  * Saints, Glossary, Community, and Journeys.
  */
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 import { CathedraCard } from './CathedraCard';
 import { RelevanceBadge } from './RelevanceBadge';
@@ -88,7 +89,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       <div className="flex items-center gap-spacing-xs flex-shrink-0">
         <RelevanceBadge score={score} size="xs" />
         {showArrow && (
-          <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
     </div>
