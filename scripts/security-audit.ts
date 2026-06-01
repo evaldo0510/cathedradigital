@@ -2,16 +2,30 @@ import { supabase } from '../src/integrations/supabase/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const logsDir = path.join(process.cwd(), 'scripts', 'logs');
-if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
-const auditLogPath = path.join(logsDir, 'security-audit.log');
+const reportsDir = path.join(process.cwd(), 'reports');
+if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
+const auditLogPath = path.join(reportsDir, 'security-audit.json');
+
+const auditResults: any = {
+  timestamp: new Date().toISOString(),
+  logs: [] as string[],
+  vulnerabilities: [] as any[],
+  status: 'passed'
+};
 
 function log(msg: string, isError = false) {
   const timestamp = new Date().toISOString();
-  const line = `[${timestamp}] ${msg}\n`;
-  if (isError) console.error(msg);
-  else console.log(msg);
-  fs.appendFileSync(auditLogPath, line);
+  if (isError) {
+    console.error(msg);
+    auditResults.status = 'failed';
+  } else {
+    console.log(msg);
+  }
+  auditResults.logs.push(`[${timestamp}] ${msg}`);
+}
+
+function saveReport() {
+  fs.writeFileSync(auditLogPath, JSON.stringify(auditResults, null, 2));
 }
 
 async function runSecurityAudit() {
