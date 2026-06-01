@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { Icons } from '../constants';
+import { Icons } from '../../constants';
+
 
 describe('Icons & A11y Audit', () => {
   it('should have a standard strokeWidth of 1.2 and size 20', () => {
