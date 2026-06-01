@@ -445,4 +445,110 @@ reports/
       expect(result.summary).toContain(`Caminho do README:** \`${MATRIX_README}\``);
     });
   });
+
+  describe('Validação de JSON e Schema (Corrompido e Inválido)', () => {
+    const VALID_DIR = 'json-val-reports-test';
+    const VALID_README = 'JSON-VAL-README-test.md';
+
+    beforeEach(() => {
+      if (existsSync(VALID_DIR)) rmSync(VALID_DIR, { recursive: true, force: true });
+      mkdirSync(VALID_DIR);
+      writeFileSync(VALID_README, `
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+├── compliance-history.json
+└── token-audit.json
+\`\`\`
+`);
+    });
+
+    afterEach(() => {
+      if (existsSync(VALID_DIR)) rmSync(VALID_DIR, { recursive: true, force: true });
+      if (existsSync(VALID_README)) rmSync(VALID_README);
+    });
+
+    const runValidation = (env: any = {}) => {
+      const summaryPath = 'summary-json-validation.md';
+      const fullEnv = {
+        ...process.env,
+        GITHUB_ACTIONS: 'true',
+        GITHUB_STEP_SUMMARY: summaryPath,
+        REPORTS_DIR_OVERRIDE: VALID_DIR,
+        README_PATH_OVERRIDE: VALID_README,
+        ...env
+      };
+
+      try {
+        const result = execSync(`bun run ${SCRIPT_PATH}`, {
+          env: fullEnv,
+          encoding: 'utf8',
+        });
+        const summary = existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: 0, output: result, summary };
+      } catch (error: any) {
+        const summary = existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: error.status, output: error.stdout, summary };
+      }
+    };
+
+    it('deve falhar e listar no Step Summary quando compliance-history.json não for um array', () => {
+      writeFileSync(join(VALID_DIR, 'compliance-history.json'), JSON.stringify({ notAnArray: true }));
+      writeFileSync(join(VALID_DIR, 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+
+      const result = runValidation();
+      expect(result.status).toBe(1);
+      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+      expect(result.summary).toContain('#### 🚨 Arquivos Corrompidos (1)');
+      expect(result.summary).toContain('- `compliance-history.json`: History must be an array');
+
+      expect(result.summary).toContain('History must be an array');
+    });
+
+    it('deve falhar quando token-audit.json tiver schema inválido (campos faltando)', () => {
+      writeFileSync(join(VALID_DIR, 'compliance-history.json'), JSON.stringify([]));
+      writeFileSync(join(VALID_DIR, 'token-audit.json'), JSON.stringify({ totalIssues: 0 })); // missing timestamp
+
+      const result = runValidation();
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('Invalid audit report structure');
+      expect(result.summary).toContain('token-audit.json');
+    });
+
+    it('deve falhar quando token-audit.json tiver tipo de dado incorreto', () => {
+      writeFileSync(join(VALID_DIR, 'compliance-history.json'), JSON.stringify([]));
+      writeFileSync(join(VALID_DIR, 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: "zero" }));
+
+      const result = runValidation();
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('Invalid audit report structure');
+    });
+
+    it('deve falhar com JSON parcialmente corrompido (erro de sintaxe)', () => {
+      writeFileSync(join(VALID_DIR, 'compliance-history.json'), '{"valid": true, "corrupted": }'); // Syntax error
+      writeFileSync(join(VALID_DIR, 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+
+      const result = runValidation();
+      expect(result.status).toBe(1);
+      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+      expect(result.summary).toContain('compliance-history.json');
+    });
+
+    it('deve reportar múltiplos arquivos corrompidos simultaneamente', () => {
+      writeFileSync(join(VALID_DIR, 'compliance-history.json'), '{ invalid }');
+      writeFileSync(join(VALID_DIR, 'token-audit.json'), '{"timestamp": "2026", "totalIssues": }');
+
+      const result = runValidation();
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('#### 🚨 Arquivos Corrompidos (2)');
+      expect(result.summary).toContain('- `compliance-history.json`');
+      expect(result.summary).toContain('- `token-audit.json`');
+    });
+  });
 });
+
