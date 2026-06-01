@@ -61,7 +61,7 @@ const DailyRoutineSection = () => {
               <ul className="space-y-spacing-sm pt-spacing-lg border-t border-border/10 mt-auto">
                 {step.items.map((item) => (
                   <li key={item} className="flex items-center gap-spacing-sm text-premium-xs font-medium text-foreground/70">
-                    <CheckCircle2 className="w-spacing-md h-spacing-md text-secondary" />
+                    <Icons.CheckCircle className="text-secondary" />
                     {item}
                   </li>
                 ))}
