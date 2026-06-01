@@ -82,6 +82,8 @@
     --layout-max-width: 1400px;
     --layout-padding: var(--spacing-xl);
     --layout-padding-mobile: var(--spacing-md);
+    --header-height: var(--spacing-2xl);
+    --bottom-nav-height: var(--spacing-xl);
     
     /* 7. Transitions */
     --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
