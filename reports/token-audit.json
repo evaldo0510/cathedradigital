@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-06-01T23:25:50.077Z",
-  "totalIssues": 0,
+  "timestamp": "2026-06-01T23:32:47.482Z",
+  "totalIssues": 21,
   "categories": [
     {
       "id": "spacing",
-      "count": 0
+      "count": 21
     },
     {
       "id": "typography",
@@ -37,8 +37,135 @@
         "min-h-0"
       ],
       "suggestion": "Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap=\"md\" />",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 21,
+      "details": [
+        {
+          "file": "src/components/cathedra/mobile-layout.test.ts",
+          "line": "26",
+          "match": "w-5",
+          "content": "// We updated AppHeader and BottomNav to use 20px (w-5 or size={20})"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "53",
+          "match": "w-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "53",
+          "match": "h-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "53",
+          "match": "w-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "53",
+          "match": "h-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "73",
+          "match": "w-5",
+          "content": "<Icons.ChevronLeft className=\"w-5 h-5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "73",
+          "match": "h-5",
+          "content": "<Icons.ChevronLeft className=\"w-5 h-5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "73",
+          "match": "w-5",
+          "content": "<Icons.ChevronLeft className=\"w-5 h-5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "73",
+          "match": "h-5",
+          "content": "<Icons.ChevronLeft className=\"w-5 h-5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "85",
+          "match": "w-5",
+          "content": "<Icons.Search className=\"w-5 h-5 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "85",
+          "match": "h-5",
+          "content": "<Icons.Search className=\"w-5 h-5 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "85",
+          "match": "w-5",
+          "content": "<Icons.Search className=\"w-5 h-5 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "85",
+          "match": "h-5",
+          "content": "<Icons.Search className=\"w-5 h-5 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "96",
+          "match": "w-5",
+          "content": "<Icons.Sun className=\"w-5 h-5 opacity-70\" /> :"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "96",
+          "match": "h-5",
+          "content": "<Icons.Sun className=\"w-5 h-5 opacity-70\" /> :"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "97",
+          "match": "w-5",
+          "content": "<Icons.Moon className=\"w-5 h-5 opacity-70\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "97",
+          "match": "h-5",
+          "content": "<Icons.Moon className=\"w-5 h-5 opacity-70\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "115",
+          "match": "w-5",
+          "content": "<Icons.User className=\"w-5 h-5 md:w-5 md:h-5 opacity-70\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "115",
+          "match": "h-5",
+          "content": "<Icons.User className=\"w-5 h-5 md:w-5 md:h-5 opacity-70\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "115",
+          "match": "w-5",
+          "content": "<Icons.User className=\"w-5 h-5 md:w-5 md:h-5 opacity-70\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "115",
+          "match": "h-5",
+          "content": "<Icons.User className=\"w-5 h-5 md:w-5 md:h-5 opacity-70\" />"
+        }
+      ]
     },
     {
       "name": "Direct Typography",
@@ -516,6 +643,72 @@
         {
           "id": "spacing",
           "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-01T23:32:46.677Z",
+      "totalIssues": 21,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 21
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-01T23:32:47.108Z",
+      "totalIssues": 21,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 21
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-01T23:32:47.482Z",
+      "totalIssues": 21,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 21
         },
         {
           "id": "typography",
