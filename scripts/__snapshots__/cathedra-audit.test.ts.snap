@@ -1,5 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Cathedra Audit Token Mapping > Dry-run Mode and Codemod Snapshots > dry-run mode should output correct suggested replacements (Snapshot) 1`] = `[]`;
+
 exports[`Cathedra Audit Token Mapping > Dry-run Mode and Codemod Snapshots > should match the expected codemod output snapshot 1`] = `
 [
   {

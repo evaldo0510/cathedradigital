@@ -167,7 +167,7 @@ forbiddenPatterns.forEach(pattern => {
                       console.log(`  [DRY RUN] Would replace "${match}" with "${fixedValue}" in ${file}:${lineNumber}`);
                       fixedCount++;
                     } else if (fixMode) {
-                      let fileContent = filesToFix.get(file) || readFileSync(file, 'utf8');
+                      const fileContent = filesToFix.get(file) || readFileSync(file, 'utf8');
                       const newContent = fileContent.replace(new RegExp(`\\b${match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), fixedValue);
                       if (newContent !== fileContent) {
                         filesToFix.set(file, newContent);

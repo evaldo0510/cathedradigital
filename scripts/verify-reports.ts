@@ -150,7 +150,7 @@ if (updateMode) {
     process.exit(1);
   }
   
-  let readmeContent = readFileSync(README_PATH, "utf8");
+  const readmeContent = readFileSync(README_PATH, "utf8");
   const treeRegex = /#### Estrutura de Relatórios e Logs \(Exemplo Real\)\n\nAo executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pasta `\.\/reports` é populada com a seguinte estrutura:\n\n```text\n([\s\S]*?)```/;
   
   let hasDivergence = false; // For summary purposes in update mode
