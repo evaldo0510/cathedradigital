@@ -135,11 +135,28 @@ jobs:
       - name: Run A11y Tests
         run: bun run test:local:axe
 
+  visual-regression:
+    name: 📸 Chromatic Visual Regression
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Chromatic
+        run: npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --playwright --exit-once-uploaded --auto-accept-changes "main"
+        env:
+          CI: true
+
   governance-finalizer:
     name: 🏁 Governance Verification
-    needs: [unit-tests, token-audit, security-audit, visual-system-audit, spacing-audit, seo-audit, a11y-audit]
+    needs: [unit-tests, token-audit, security-audit, visual-system-audit, spacing-audit, seo-audit, a11y-audit, visual-regression]
     runs-on: ubuntu-latest
     if: always()
+
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
