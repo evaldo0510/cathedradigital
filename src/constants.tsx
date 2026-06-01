@@ -166,7 +166,14 @@ import {
   UserPlus,
   Palette,
   Wallet,
-  Edit
+  Edit,
+  Edit3,
+  AlignLeft,
+  Timer,
+  Image,
+  Code,
+  MapPin,
+  LineChart
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
