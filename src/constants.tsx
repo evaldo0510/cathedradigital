@@ -401,6 +401,19 @@ const IconsInternal = {
   Wind: createIcon(Wind),
   ZapOff: createIcon(ZapOff),
   MoreHorizontal: createIcon(MoreHorizontal),
+  Building2: createIcon(Building2),
+  DollarSign: createIcon(DollarSign),
+  Upload: createIcon(Upload),
+  FileSpreadsheet: createIcon(FileSpreadsheet),
+  ArrowUp: createIcon(ArrowUp),
+  Minus: createIcon(Minus),
+  TrendingDown: createIcon(TrendingDown),
+  UserPlus: createIcon(UserPlus),
+  Palette: createIcon(Palette),
+  Wallet: createIcon(Wallet),
+  Edit: createIcon(Edit),
+  MapPin: createIcon(Pin),
+  LineChart: createIcon(Activity),
 };
 
 
