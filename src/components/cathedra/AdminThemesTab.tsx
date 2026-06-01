@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit2, Tag, Book, Bookmark, FileText, Loader2, Hash, Search, Sparkles, Heart, Cross, Compass, History } from 'lucide-react';
+import { Icons } from '@/constants';
 
 interface Theme {
   id: string;
