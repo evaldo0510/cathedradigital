@@ -215,7 +215,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-spacing-xs group-hover:scale-105 transition-transform duration-[2000ms]">
-                  <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} />
+                  <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} aria-hidden="true" />
                 </div>
                 <div className="space-y-spacing-3xs">
                   <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
@@ -270,9 +270,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                     ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-premium-none'
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
                               >
-                                <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
-                                  {React.cloneElement(item.icon as React.ReactElement, { size: 16, strokeWidth: isActive ? 1.5 : 1.2 })}
-                                </span>
+                                  <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
+                                    {React.cloneElement(item.icon as React.ReactElement, { size: 20, strokeWidth: isActive ? 1.5 : 1.2, "aria-hidden": "true" })}
+                                  </span>
                                 <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
