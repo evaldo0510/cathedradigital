@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Icons } from '../constants';
+import { Icons } from '@/constants';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
