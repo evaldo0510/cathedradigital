@@ -16,10 +16,9 @@ const icons = [
   'Moon', 'MoreHorizontal', 'Mountain', 'Music', 'Orbit', 'Palette', 'PartyPopper', 'Pause', 'PenLine', 
   'PenTool', 'Pin', 'Play', 'Plus', 'Printer', 'Quote', 'RefreshCcw', 'RefreshCw', 'RotateCcw', 'Route', 
   'Save', 'ScrollText', 'Search', 'Send', 'Settings', 'Settings2', 'Share2', 'Shield', 'ShieldAlert', 
-  'ShieldCheck', 'ShieldQuestion', 'Skull', 'Smartphone', 'Sparkle', 'Sparkles', 'Square', 'Star', 
-  'Stethoscope', 'StopCircle', 'Store', 'Sun', 'Swords', 'Tag', 'Target', 'Timer', 'Trash2', 
-  'TrendingDown', 'TrendingUp', 'Trophy', 'Twitter', 'Type', 'Upload', 'User', 'UserCheck', 'UserCog', 
-  'UserMinus', 'UserPlus', 'Users', 'Video', 'Volume', 'Volume1', 'Volume2', 'VolumeX', 'Wallet', 
+  'Smartphone', 'Sparkle', 'Sparkles', 'Square', 'Star', 
+  'UserPlus', 'Users', 'Video', 'Volume', 'Volume1', 'Volume2', 'VolumeX', 'Wallet', 
+
   'Wheat', 'Wifi', 'WifiOff', 'Wind', 'Wine', 'X', 'XCircle', 'Youtube', 'Zap', 'ZapOff'
 ];
 
