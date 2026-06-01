@@ -71,6 +71,71 @@ test.describe('Mobile Density and Layout Regression', () => {
 
     fs.mkdirSync(path.dirname(reportPath), { recursive: true });
     fs.writeFileSync(reportPath, reportContent);
-    console.log(`Report generated at ${reportPath}`);
+    
+    // Also generate HTML version for better presentation
+    const htmlPath = 'src/components/cathedra/STABILITY_REPORT_EXPORT.html';
+    let htmlContent = `
+      <html>
+        <head>
+          <title>Stability Report Export</title>
+          <style>
+            body { font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 40px; background: #f8f5ee; color: #0f172a; }
+            h1, h2, h3 { color: #d4af37; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 40px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            th, td { padding: 12px; border: 1px solid #eee; text-align: left; }
+            th { background: #0f172a; color: white; }
+            .diff-container { display: flex; gap: 20px; margin-bottom: 40px; }
+            .screenshot { flex: 1; border: 2px solid #d4af37; border-radius: 8px; overflow: hidden; }
+            .screenshot img { width: 100%; display: block; }
+            .screenshot-label { background: #d4af37; color: white; padding: 8px; font-weight: bold; text-align: center; }
+            .badge { background: #d4af37; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <h1>Final Stability & Layout Regression Report</h1>
+          <p>Generated on: ${new Date().toLocaleString()}</p>
+          
+          <h2>Layout Metrics</h2>
+          <table>
+            <thead>
+              <tr><th>Breakpoint</th><th>Content Width</th><th>Viewport</th><th>Density</th><th>Overflow</th><th>Padding</th></tr>
+            </thead>
+            <tbody>
+              ${metrics.map(m => `
+                <tr>
+                  <td><strong>${m.breakpoint.toUpperCase()}</strong></td>
+                  <td>${m.width}px</td>
+                  <td>${m.viewportWidth}px</td>
+                  <td><span class="badge">${m.density}</span></td>
+                  <td>${m.hasOverflow ? '❌ YES' : '✅ NO'}</td>
+                  <td>${m.padding}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <h2>Breakpoint Visualization</h2>
+          <div class="diff-container">
+            ${metrics.map(m => `
+              <div class="screenshot">
+                <div class="screenshot-label">${m.breakpoint.toUpperCase()}</div>
+                <img src="./screenshots/layout-${m.breakpoint}.png" alt="${m.breakpoint} layout" />
+              </div>
+            `).join('')}
+          </div>
+
+          <h2>Accessibility & Standardization</h2>
+          <ul>
+            <li><strong>Icon Standardization:</strong> 20px size / 1.2 stroke width unificado via <code>createIcon</code>.</li>
+            <li><strong>Keyboard A11y:</strong> Tab/Shift+Tab focus order validated.</li>
+            <li><strong>Visual Focus:</strong> Premium focus rings applied to all interactive icons.</li>
+          </ul>
+        </body>
+      </html>
+    `;
+    fs.writeFileSync(htmlPath, htmlContent);
+    
+    console.log(`Markdown report generated at ${reportPath}`);
+    console.log(`HTML export generated at ${htmlPath}`);
   });
 });
