@@ -339,16 +339,18 @@ reports/
       if (existsSync('divergences.md')) rmSync('divergences.md');
     });
 
-    const runMatrix = (args: string[], hasDivergence: boolean) => {
+    const runMatrix = (args: string[], hasDivergence: boolean, skipSetup: boolean = false) => {
       // Setup environment based on hasDivergence
-      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
-      mkdirSync(MATRIX_DIR);
-      
-      if (hasDivergence) {
-        writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
-      } else {
-        // Files matching the README
-        writeFileSync(join(MATRIX_DIR, 'expected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      if (!skipSetup) {
+        if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+        mkdirSync(MATRIX_DIR);
+        
+        if (hasDivergence) {
+          writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+        } else {
+          // Files matching the README
+          writeFileSync(join(MATRIX_DIR, 'expected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+        }
       }
 
       const summaryPath = `summary-matrix-${args.join('-') || 'no-args'}-${hasDivergence ? 'divergent' : 'aligned'}.md`;
@@ -423,6 +425,24 @@ reports/
       expect(result.status).toBe(1);
       expect(result.summary).toContain('❌ **Status:** Falha (Divergência Detectada)');
       expect(result.summary).toMatchSnapshot();
+    });
+
+    // Testes de regressão e verificações de "gargalos" lógicos
+    it('deve priorizar erro de JSON corrompido sobre divergência de árvore', () => {
+      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+      mkdirSync(MATRIX_DIR);
+      // Arquivo com JSON inválido
+      writeFileSync(join(MATRIX_DIR, 'corrupted.json'), '{ invalid }');
+      
+      const result = runMatrix(['--update'], true, true);
+      expect(result.status).toBe(1);
+      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+    });
+
+    it('deve garantir que o Step Summary reflita o caminho efetivo dos Overrides', () => {
+      const result = runMatrix(['--update'], true);
+      expect(result.summary).toContain(`Diretório de Relatórios:** \`${MATRIX_DIR}\``);
+      expect(result.summary).toContain(`Caminho do README:** \`${MATRIX_README}\``);
     });
   });
 });
