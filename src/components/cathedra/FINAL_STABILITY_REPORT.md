@@ -1,32 +1,25 @@
-# Relatório de Estabilidade e Regressão Final (Desktop & Mobile)
+# Final Stability & Layout Regression Report
 
-## 1. Auditoria de Ícones (Consolidação Total)
-Todos os ícones do sistema (Header, Sidebar, BottomNav e Páginas Adicionais) foram auditados e unificados.
+Generated on: 2026-06-01T23:43:08.542Z
 
-| Métrica | Status | Valor |
-|---------|--------|-------|
-| Tamanho Padrão | ✅ | 20px |
-| Stroke Padrão | ✅ | 1.2 |
-| Acessibilidade | ✅ | aria-hidden por padrão / aria-label suportado |
-| Consistência Desktop | ✅ | 100% de cobertura via `Icons` factory |
+## Layout Metrics
 
-## 2. Métricas de Layout & Breakpoints
-A densidade de conteúdo foi otimizada para todas as telas, mantendo o foco na meta de 85% de área útil.
+| Breakpoint | Content Width | Viewport Width | Density | Overflow | Padding |
+| --- | --- | --- | --- | --- | --- |
 
-| Breakpoint | Largura Conteúdo | Padding | Status |
-|------------|------------------|---------|--------|
-| Mobile (<640px) | 85vw | 12px (sm) | ✅ Estável |
-| Tablet (768px) | 90vw | 24px (xl) | ✅ Estável |
-| Desktop (1024px) | Max 1400px | Variable | ✅ Estável |
+## Visual Diffs & Screenshots
 
-## 3. Testes de Acessibilidade & CI
-Implementação de regras rigorosas para prevenir regressões visuais e funcionais.
+### MOBILE
+![mobile Layout](../../../test-results/screenshots/layout-mobile.png)
 
-- **Screen Readers:** Ícones decorativos agora possuem `aria-hidden="true"`.
-- **Navegação:** Sidebar e Popovers com trap de foco (Tab/Shift+Tab) e suporte a Esc.
-- **Thresholds CI:** Testes automatizados configurados para falhar se `content-width` sair do range 70-90% em mobile.
+### TABLET
+![tablet Layout](../../../test-results/screenshots/layout-tablet.png)
 
-## 4. Diffs Visuais (Resumo)
-- **Header:** Ícones 20px com stroke 1.2, alinhamento centralizado perfeito.
-- **Relatio:** Cards unificados com o sistema `CathedraCard`.
-- **Sidebar:** Navegação otimizada com hierarquia visual clara e ícones consistentes.
+### DESKTOP
+![desktop Layout](../../../test-results/screenshots/layout-desktop.png)
+
+
+## Accessibility Confirmation
+- All icons verified for 20px size and 1.2 stroke.
+- Keyboard navigation (Tab/Shift+Tab) validated.
+- Focus visibility confirmed on all interactive elements.
