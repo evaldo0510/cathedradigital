@@ -67,7 +67,7 @@ function getActualFiles() {
 
 function validateJsonFiles(files: string[]) {
   const jsonFiles = files.filter(f => f.endsWith('.json'));
-  const corrupted: string[] = [];
+  const corrupted: { file: string, error: string }[] = [];
   
   jsonFiles.forEach(file => {
     const filePath = join(REPORTS_DIR, file);
@@ -81,12 +81,13 @@ function validateJsonFiles(files: string[]) {
         if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
       }
     } catch (e: any) {
-      corrupted.push(file);
+      corrupted.push({ file, error: e.message });
       annotate('error', `Relatório JSON corrompido ou inválido: ${e.message}`, filePath);
     }
   });
   return corrupted;
 }
+
 
 function generateTreeString(files: string[]) {
   let tree = "reports/\n";
