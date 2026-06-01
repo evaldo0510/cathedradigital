@@ -1,0 +1,173 @@
+name: Governance & Quality Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  unit-tests:
+    name: 🧪 Unit & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Tests
+        run: bun run test:ci
+
+  token-audit:
+    name: 🪙 Token Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Token Audit
+        run: bun run token-audit:ci
+      - name: Generate PR Comment
+        if: github.event_name == 'pull_request'
+        run: bun run scripts/generate-pr-comment.ts > pr-comment.md
+      - name: Post PR Comment
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: pr-comment.md
+          comment_tag: cathedra-token-audit
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-audit-reports
+          path: reports/
+
+  security-audit:
+    name: 🛡️ Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Security Audit
+        run: bun run security-audit
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} # Use service role for audit if possible
+
+  visual-system-audit:
+    name: 🎨 Visual System Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Visual System Audit
+        run: bun run test:system-audit
+
+  spacing-audit:
+    name: 📐 Spacing & Rhythm Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Run Spacing Audit
+        run: bun run test:spacing-audit
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spacing-audit-reports
+          path: spacing-audit-report.json
+
+  seo-audit:
+    name: 🔍 SEO & Sitemap Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Generate Sitemap
+        run: bun run generate:seo
+      - name: Run SEO Audit
+        run: npx playwright test tests/e2e/home-seo.spec.ts tests/e2e/internal-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts
+      - name: Generate SEO Comment
+        if: always() && github.event_name == 'pull_request'
+        run: bun run scripts/generate-seo-comment.ts
+      - name: Post SEO Comment
+        if: always() && github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: seo-comment.md
+          comment_tag: seo-audit-summary
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-audit-reports
+          path: |
+            test-results/
+            public/sitemap.xml
+
+  a11y-audit:
+    name: ♿ Accessibility Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run A11y Tests
+        run: bun run test:local:axe
+
+  governance-finalizer:
+    name: 🏁 Governance Verification
+    needs: [unit-tests, token-audit, security-audit, visual-system-audit, spacing-audit, seo-audit, a11y-audit]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Download Token Audit Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: token-audit-reports
+          path: reports/
+      
+      - name: Download Spacing Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: spacing-audit-reports
+          path: reports/
+          
+      - name: Verify Reports & Update README
+        run: bun run reports:verify -- --update
+        env:
+          REPORTS_FAIL_ON_DIVERGENCES: 'true'
+          
+      - name: Commit Updated README
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "docs: auto-update governance reports tree [skip ci]"
+          git push
