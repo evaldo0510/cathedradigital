@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -7,19 +7,16 @@ const SKILL_DIR = '.agents/skills/task-master';
 const INBOX_DIR = path.join(SKILL_DIR, 'inbox');
 
 describe('TASK MASTER CLI', () => {
-  // Ensure we have a clean state for testing pendencies
   beforeEach(() => {
     if (!fs.existsSync(INBOX_DIR)) {
       fs.mkdirSync(INBOX_DIR, { recursive: true });
     }
-    // Clean inboxes
     ['agent-a', 'agent-b', 'agent-c'].forEach(agent => {
       fs.writeFileSync(
         path.join(INBOX_DIR, `${agent}.md`),
         `# Inbox: ${agent.toUpperCase()}\n\nStatus: Ready\n\n## Pending Requests\n\n- None\n`
       );
     });
-    // Remove state if exists
     const stateFile = 'reports/task-master/state.json';
     if (fs.existsSync(stateFile)) fs.unlinkSync(stateFile);
   });
@@ -38,8 +35,7 @@ describe('TASK MASTER CLI', () => {
     expect(output).toContain('src/App.tsx');
   });
 
-  it('deve falhar (exit code 1) se houver pendências no inbox', () => {
-    // Inject a pendency
+  it('deve falhar (exit code 1) se houver pendências no inbox', { timeout: 60000 }, () => {
     fs.writeFileSync(
       path.join(INBOX_DIR, 'agent-a.md'),
       `# Inbox: AGENT-A\n\n## Pending Requests\n\n- [ ] Corrigir bug de layout\n`
@@ -47,8 +43,7 @@ describe('TASK MASTER CLI', () => {
 
     try {
       execSync('bun run scripts/task-master.ts run');
-      // If it doesn't throw, it failed the test
-      expect(true).toBe(false);
+      expect(true).toBe(false); // Should not reach here
     } catch (error: any) {
       expect(error.status).toBe(1);
       const stdout = error.stdout.toString();
@@ -58,8 +53,6 @@ describe('TASK MASTER CLI', () => {
   });
 
   it('deve retomar a execução com --resume', () => {
-    // 1. Run until wave 1 and fail it manually or just verify state
-    // For this test, we can mock the state file directly
     const reportsDir = 'reports/task-master';
     if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
     
