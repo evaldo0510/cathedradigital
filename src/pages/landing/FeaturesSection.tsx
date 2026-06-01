@@ -55,7 +55,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       tabIndex={0}
     >
       <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-spacing-lg h-spacing-lg" })}
+        {feature.icon}
       </div>
       <div className="space-y-spacing-xs w-full">
         <h3 className="text-premium-xl font-display font-bold text-center">{feature.title}</h3>
