@@ -82,7 +82,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-2xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
+      "flex flex-col items-center justify-center gap-spacing-2xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
       isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
     )}
   >
@@ -111,7 +111,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
           isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
         )}
         size={20}
-        strokeWidth={isActive ? 1.5 : 1.2}
+        strokeWidth={1.2}
         aria-hidden="true"
       />
     </motion.div>

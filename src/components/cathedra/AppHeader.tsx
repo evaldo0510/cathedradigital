@@ -70,7 +70,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-5 h-5 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icons.ChevronLeft className="opacity-50 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
@@ -82,7 +82,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   className="w-spacing-lg h-spacing-lg md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
-                  <Icons.Search className="w-5 h-5 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Search className="opacity-60 group-hover:opacity-100 transition-opacity" />
                 </Button>
 
                 <Button
@@ -93,8 +93,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
                 >
                   {isDark ? 
-                    <Icons.Sun className="w-5 h-5 opacity-70" /> : 
-                    <Icons.Moon className="w-5 h-5 opacity-70" />
+                    <Icons.Sun className="opacity-70" /> : 
+                    <Icons.Moon className="opacity-70" />
                   }
                 </Button>
               </div>
@@ -112,7 +112,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Icons.User className="w-5 h-5 md:w-5 md:h-5 opacity-70" />
+                        <Icons.User className="opacity-70" />
                       )}
                     </Button>
                   ) : (

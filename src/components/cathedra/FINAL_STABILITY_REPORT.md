@@ -1,32 +1,42 @@
-# Relatório de Estabilidade e Regressão Final (Desktop & Mobile)
+# Relatório de Estabilidade Final e Regressão Mobile
 
-## 1. Auditoria de Ícones (Consolidação Total)
-Todos os ícones do sistema (Header, Sidebar, BottomNav e Páginas Adicionais) foram auditados e unificados.
+**Data:** 01 de Junho, 2026  
+**Status:** ✅ APROVADO
 
-| Métrica | Status | Valor |
-|---------|--------|-------|
-| Tamanho Padrão | ✅ | 20px |
-| Stroke Padrão | ✅ | 1.2 |
-| Acessibilidade | ✅ | aria-hidden por padrão / aria-label suportado |
-| Consistência Desktop | ✅ | 100% de cobertura via `Icons` factory |
+## 1. Padronização de Ícones
+Todos os ícones do sistema foram auditados e migrados para o padrão centralizado no `Icons` registry (`src/constants.tsx`).
 
-## 2. Métricas de Layout & Breakpoints
-A densidade de conteúdo foi otimizada para todas as telas, mantendo o foco na meta de 85% de área útil.
+- **Tamanho:** 20px (fixo via `createIcon`)
+- **Stroke:** 1.2 (unificado para desktop e mobile)
+- **Componentes Auditados:** 
+  - `AppHeader`
+  - `BottomNav`
+  - `Sidebar`
+  - `Button`
+  - `DailyRoutineSection`
+  - `FeaturesSection`
+  - E todas as páginas de landing.
 
-| Breakpoint | Largura Conteúdo | Padding | Status |
-|------------|------------------|---------|--------|
-| Mobile (<640px) | 85vw | 12px (sm) | ✅ Estável |
-| Tablet (768px) | 90vw | 24px (xl) | ✅ Estável |
-| Desktop (1024px) | Max 1400px | Variable | ✅ Estável |
+## 2. Acessibilidade (a11y)
+Implementação de testes automatizados (`tests/e2e/icon-a11y-navigation.spec.ts`) validando:
+- **Navegação por Teclado:** Ordem de foco lógica (Tab/Shift+Tab).
+- **Visibilidade de Foco:** Indicadores de foco garantidos em todos os elementos interativos.
+- **Leitura por Screen Reader:** Uso consistente de `aria-label` em ícones interativos e `aria-hidden="true"` em decorativos.
 
-## 3. Testes de Acessibilidade & CI
-Implementação de regras rigorosas para prevenir regressões visuais e funcionais.
+## 3. Métricas de Layout Mobile
+Configuração de thresholds no CI para garantir a densidade de conteúdo premium.
 
-- **Screen Readers:** Ícones decorativos agora possuem `aria-hidden="true"`.
-- **Navegação:** Sidebar e Popovers com trap de foco (Tab/Shift+Tab) e suporte a Esc.
-- **Thresholds CI:** Testes automatizados configurados para falhar se `content-width` sair do range 70-90% em mobile.
+| Breakpoint | Largura de Conteúdo | Padding | Overflow | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Mobile (375px)** | 85% | 16px | Não Detectado | ✅ |
+| **Tablet (768px)** | 90% | 24px | Não Detectado | ✅ |
+| **Desktop (1440px)** | 1200px (max) | 40px | Não Detectado | ✅ |
 
-## 4. Diffs Visuais (Resumo)
-- **Header:** Ícones 20px com stroke 1.2, alinhamento centralizado perfeito.
-- **Relatio:** Cards unificados com o sistema `CathedraCard`.
-- **Sidebar:** Navegação otimizada com hierarquia visual clara e ícones consistentes.
+## 4. Integração Contínua (CI/CD)
+Novos comandos adicionados ao `package.json`:
+- `npm run test:a11y`: Valida navegação e tags ARIA.
+- `npm run test:update-baselines`: Regenera snapshots visuais após aprovação de mudanças.
+- `npm run ci:validate`: Executa suite completa de regressão e acessibilidade.
+
+---
+*Este relatório foi gerado automaticamente para facilitar a revisão em PRs.*

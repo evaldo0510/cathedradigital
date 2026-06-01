@@ -23,8 +23,8 @@
     "test:seo-audit": "playwright test tests/e2e/home-seo.spec.ts tests/e2e/seo-consistency.spec.ts",
     "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
     "test:audit": "bun run scripts/run-visual-regression.ts",
-    "test:a11y": "playwright test tests/e2e/accessibility.spec.ts",
-    "test:report": "bun run scripts/generate-test-report.ts",
+    "test:a11y": "playwright test tests/e2e/icon-a11y-navigation.spec.ts",
+    "test:report": "playwright test tests/e2e/generate-final-report.spec.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts",
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
@@ -44,7 +44,9 @@
     "governance:all": "bun x concurrently \"npm run token-audit\" \"npm run test:system-audit\" \"npm run test:spacing-audit\" \"npm run security-audit\" \"npm run test:sitemap\"",
     "prepare": "husky",
     "test:token-audit": "vitest run scripts/cathedra-audit.test.ts",
-    "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe"
+    "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe",
+    "test:update-baselines": "playwright test --update-snapshots",
+    "ci:validate": "npm run test:a11y && npm run test:report"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
