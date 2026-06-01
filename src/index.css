@@ -271,11 +271,11 @@
 @layer components {
   /* Layout Único - Sistema de Containers */
   .app-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-md sm:px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm sm:px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl;
   }
 
   .contemplative-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--layout-padding-mobile)] md:px-[var(--layout-padding)] py-[var(--layout-padding)] md:py-[calc(var(--layout-padding)*2)];
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm md:px-[var(--layout-padding)] py-[var(--layout-padding)] md:py-[calc(var(--layout-padding)*2)];
   }
 
   /* Shared Module Header Style - Deprecated in favor of ContemplativeLayout props */
