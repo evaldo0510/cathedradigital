@@ -21,7 +21,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   subtitle, 
   className,
   containerClassName,
-  maxW = 'max-w-[var(--layout-max-width)] md:max-w-[var(--layout-max-width)] w-[var(--layout-content-width-mobile)]',
+  maxW = 'max-w-[var(--layout-max-width)] w-[var(--layout-content-width-mobile)] md:w-full',
   headerActions,
   icon: Icon,
   showPadding = true
@@ -31,7 +31,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   return (
     <div className={cn(
       "min-h-screen will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
-      showPadding && "pt-[var(--layout-padding)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
+      showPadding && "pt-[calc(var(--layout-padding-mobile)*1.5)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
       containerClassName
     )}>
       {(title || subtitle || Icon) && (
