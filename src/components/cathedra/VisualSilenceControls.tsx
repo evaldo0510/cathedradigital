@@ -18,7 +18,7 @@ export const VisualSilenceControls: React.FC = () => {
     {
       id: 'totalSilence',
       label: 'Silêncio Total',
-      icon: VolumeX,
+      icon: Icons.VolumeX,
       active: settings.totalSilence,
       description: 'Oculta loaders, skeletons e desativa todos os áudios'
     },

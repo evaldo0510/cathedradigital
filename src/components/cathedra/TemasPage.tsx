@@ -77,7 +77,7 @@ const TemasPage = () => {
   const {
     results: fuzzyTags,
     isPending: isSearchPending,
-  } = useFuzzySearch<Icons.Tag>({
+  } = useFuzzySearch<Tag>({
     rpc: 'search_tags_fuzzy',
     query: searchQuery,
     primaryField: 'label',
