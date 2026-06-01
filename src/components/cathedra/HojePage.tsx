@@ -163,7 +163,7 @@ const HojePage: React.FC = () => {
                     className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.BIBLE)}
                  >
-                    <Icons.Bible className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <Icons.Bible className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={1.2} size={20} aria-hidden="true" />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Bíblia</span>
                  </CathedraButton>
                  <CathedraButton 
@@ -171,7 +171,7 @@ const HojePage: React.FC = () => {
                     className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.CATECHISM)}
                  >
-                    <Icons.Catechism className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <Icons.Catechism className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={1.2} size={20} aria-hidden="true" />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Catecismo</span>
                  </CathedraButton>
               </div>

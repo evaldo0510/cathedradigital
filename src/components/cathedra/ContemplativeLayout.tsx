@@ -41,7 +41,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         )}>
           {Icon && (
             <div className="mb-spacing-sm md:mb-spacing-lg">
-              <Icon className="w-spacing-md h-spacing-md md:w-spacing-xl md:h-spacing-xl text-primary/20 mx-auto transition-all duration-1000 group-hover:text-primary/40 group-hover:scale-110" strokeWidth={0.3} />
+              <Icon className="w-spacing-md h-spacing-md md:w-spacing-xl md:h-spacing-xl text-primary/20 mx-auto transition-all duration-1000 group-hover:text-primary/40 group-hover:scale-110" strokeWidth={1.2} size={20} aria-hidden="true" />
             </div>
           )}
           {subtitle && (
