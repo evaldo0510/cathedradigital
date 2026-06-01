@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test tests/e2e/icon-a11y-navigation.spec.ts",
+    "test:report": "playwright test tests/e2e/generate-final-report.spec.ts",
+    "test:update-baselines": "playwright test --update-snapshots",
+    "ci:validate": "npm run test:e2e && npm run test:report"
+  }
+}
