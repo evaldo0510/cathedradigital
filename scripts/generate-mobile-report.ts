@@ -105,7 +105,7 @@ async function generateMobileRefinementReport() {
   const htmlPath = path.join(reportDir, 'mobile-refinement.html');
   fs.writeFileSync(htmlPath, htmlContent);
 
-  console.log(\`Relatório de refinamento mobile gerado em: \${htmlPath}\`);
+  console.log("Relatório de refinamento mobile gerado em: " + htmlPath);
 }
 
 generateMobileRefinementReport();
