@@ -504,6 +504,7 @@ export const Icons = {
   Shield: IconsInternal.Shield,
   VolumeX: IconsInternal.VolumeX,
   UserMinus: IconsInternal.UserMinus,
+  Edit2: IconsInternal.Edit2,
 };
 
 // Runtime Consistency Check
