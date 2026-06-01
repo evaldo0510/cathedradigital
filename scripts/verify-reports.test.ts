@@ -424,5 +424,23 @@ reports/
       expect(result.summary).toContain('❌ **Status:** Falha (Divergência Detectada)');
       expect(result.summary).toMatchSnapshot();
     });
+
+    // Testes de regressão e verificações de "gargalos" lógicos
+    it('deve priorizar erro de JSON corrompido sobre divergência de árvore', () => {
+      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+      mkdirSync(MATRIX_DIR);
+      // Arquivo com JSON inválido
+      writeFileSync(join(MATRIX_DIR, 'corrupted.json'), '{ invalid }');
+      
+      const result = runMatrix(['--update'], true);
+      expect(result.status).toBe(1);
+      expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+    });
+
+    it('deve garantir que o Step Summary reflita o caminho efetivo dos Overrides', () => {
+      const result = runMatrix(['--update'], true);
+      expect(result.summary).toContain(`Diretório de Relatórios:** \`${MATRIX_DIR}\``);
+      expect(result.summary).toContain(`Caminho do README:** \`${MATRIX_README}\``);
+    });
   });
 });
