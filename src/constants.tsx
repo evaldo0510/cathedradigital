@@ -120,7 +120,8 @@ import {
   Languages,
   BookMarked,
   Wifi,
-  Printer
+  Printer,
+  UserMinus
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
