@@ -320,6 +320,7 @@ const IconsInternal = {
   Shield: createIcon(ShieldCheck),
   VolumeX: createIcon(Volume),
   Coffee: createIcon(Coffee),
+  UserMinus: createIcon(UserMinus),
 };
 
 
