@@ -18,7 +18,7 @@ import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 
 
-interface Icons.Tag {
+interface Tag {
   id: string;
   slug: string;
   label: string;
@@ -34,7 +34,7 @@ interface NexusBubblesProps {
 }
 
 interface TagBubbleProps {
-  tag: Icons.Tag;
+  tag: Tag;
   index: number;
   isSuggested?: boolean;
   tabIndex?: number;
@@ -64,7 +64,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const currentTag = navHistory[navHistory.length - 1];
 
-  const fetchContentForTag = async (targetTag: Icons.Tag) => {
+  const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
     setMetrics({ startTime });
     setStatus('loading');
@@ -96,7 +96,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     }
   };
 
-  const handlePushTag = (newTag: Icons.Tag) => {
+  const handlePushTag = (newTag: Tag) => {
     setNavHistory(prev => [...prev, newTag]);
     fetchContentForTag(newTag);
   };

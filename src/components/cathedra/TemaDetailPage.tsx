@@ -24,7 +24,7 @@ import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
 
-interface Icons.Tag {
+interface Tag {
   id: string;
   label: string;
   slug: string;
@@ -211,7 +211,7 @@ const TemaDetailPage = () => {
   }, [profileId, tags]);
 
 
-  const prefetchTag = useCallback((tag: Icons.Tag) => {
+  const prefetchTag = useCallback((tag: Tag) => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
