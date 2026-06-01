@@ -121,7 +121,8 @@ import {
   BookMarked,
   Wifi,
   Printer,
-  UserMinus
+  UserMinus,
+  Edit2
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
