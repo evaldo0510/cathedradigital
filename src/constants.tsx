@@ -322,6 +322,7 @@ const IconsInternal = {
   VolumeX: createIcon(Volume),
   Coffee: createIcon(Coffee),
   UserMinus: createIcon(UserMinus),
+  Edit2: createIcon(Edit2),
 };
 
 
