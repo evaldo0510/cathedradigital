@@ -39,7 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         )}
         role="banner"
       >
-        <div className={cn("app-container flex items-center justify-between py-spacing-2xs", !isLanding || user ? "h-full" : "")}>
+        <div className={cn("app-container flex items-center justify-between py-spacing-2xs px-spacing-sm md:px-0", !isLanding || user ? "h-full" : "")}>
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
