@@ -1,11 +1,11 @@
 # Cathedra Digital
 
-[![Playwright Tests](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
+[![Pipeline de Governança](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
+**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
 
 
 ## How can I edit this code?
