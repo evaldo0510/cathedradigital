@@ -275,7 +275,7 @@ switch (command) {
         number: i, 
         status: success ? 'Success' : 'Failed', 
         logs: wResult.logs, 
-        errors: wResult.errors,
+        errors: [...wResult.errors, ...wResult.fixedErrors],
         summaryLink: '#' 
       });
 
