@@ -10,6 +10,17 @@ vi.mock('@/contexts/ReadingSettingsContext', () => ({
     updateSettings: vi.fn(),
     resetSettings: vi.fn(),
   }),
+  ReadingSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mocking useAuth to avoid Provider issues
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: null,
+    profile: null,
+    loading: false,
+    isPremium: false,
+  }),
 }));
 
 describe('Visual Consistency - Design System', () => {
@@ -31,5 +42,6 @@ describe('Visual Consistency - Design System', () => {
     expect(card.className).toContain('cursor-pointer');
   });
 });
+
 
 
