@@ -127,6 +127,9 @@ function startWave(waveNumber: number, dryRun: boolean = false): { logs: string[
       // Simulating some "fixes"
       const fixMsg = `Wave ${waveNumber} aplicada com sucesso no código.`;
       logs.push(fixMsg);
+      if (waveNumber === 2) {
+        errors.push('Linting errors in Dashboard.tsx', 'Type mismatch in useData.ts');
+      }
       
     } catch (e: any) {
       const errMsg = `Erro no CI: ${e.message}`;
