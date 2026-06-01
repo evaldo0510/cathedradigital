@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Sun, Coffee, Moon, CheckCircle2 } from "lucide-react";
+import { Icons } from "@/constants";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const DailyRoutineSection = () => {
