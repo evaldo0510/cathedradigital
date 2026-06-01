@@ -201,8 +201,19 @@ if (corrupted.length > 0) {
   console.log(`${RED}✗ Relatórios JSON corrompidos detectados:${RESET}`);
   corrupted.forEach(f => console.log(`  - ${f}`));
   console.log("");
+  
+  if (process.env.GITHUB_ACTIONS) {
+    let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
+    summary += `❌ **Status:** Falha (JSON Corrompido)\n`;
+    summary += `📝 **Motivo do Exit Code:** Relatórios JSON corrompidos ou com schema inválido detectados.\n\n`;
+    summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
+    corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+    writeSummary(summary);
+  }
+  
   process.exit(1);
 }
+
 
 const readmeContent = readFileSync(README_PATH, "utf8");
 const treeRegex = /```text\nreports\/\n([\s\S]*?)```/;
