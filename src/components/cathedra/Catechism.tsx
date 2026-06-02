@@ -318,17 +318,17 @@ const Catechism: React.FC = memo(() => {
             <div 
               key={part.part} 
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-lg text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2rem] border border-transparent hover:border-primary/[0.03]"
+              className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-md text-left transition-all duration-700 hover:bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] hover:border-primary/[0.08]"
             >
               <div className="space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-sm">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30">{part.part}</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30 shrink-0">{part.part}</span>
                   <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
                 </div>
-                <h2 className="text-premium-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight">{part.title}</h2>
+                <h2 className="text-premium-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight break-words">{part.title}</h2>
               </div>
-              <div className="flex items-center justify-between pt-spacing-xs opacity-0 group-hover:opacity-100 transition-all duration-1000">
-                 <p className="text-[9px] text-muted-foreground/40 italic uppercase tracking-widest">{part.sections.length} Seções</p>
+              <div className="flex items-center justify-between pt-spacing-xs opacity-40 group-hover:opacity-100 transition-all duration-500">
+                 <p className="text-[9px] text-muted-foreground/60 italic uppercase tracking-widest">{part.sections.length} Seções</p>
                  <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/20" />
               </div>
             </div>
