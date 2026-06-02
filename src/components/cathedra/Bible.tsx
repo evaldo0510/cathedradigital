@@ -1369,7 +1369,6 @@ const Bible: React.FC = memo(() => {
           </div>
         </div>
       </ContemplativeLayout>
-      </>
     );
   }
 
