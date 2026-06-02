@@ -84,7 +84,7 @@ const AdminDashboard: React.FC = () => {
         (crmUsers as CRMUser[] | null)?.forEach(u => crmMap.set(u.id, u));
 
         setUsers(allProfiles?.map(p => {
-          const crm = crmMap.get(p.id) || {};
+          const crm = (crmMap.get(p.id) || {}) as CRMUser;
           return {
             ...p,
             email: crm.email || '',
