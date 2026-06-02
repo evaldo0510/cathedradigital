@@ -189,6 +189,7 @@ const Catechism: React.FC = memo(() => {
     const p = searchParams.get('p');
     return p ? parseInt(p) : 1;
   });
+  const [lastFocusedElement, setLastFocusedElement] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -197,6 +198,26 @@ const Catechism: React.FC = memo(() => {
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (viewMode === 'reading') {
+          setViewMode('sections');
+          setTimeout(() => {
+            if (lastFocusedElement) {
+              document.getElementById(lastFocusedElement)?.focus();
+            }
+          }, 100);
+        } else if (viewMode === 'sections') {
+          setViewMode('parts');
+          setSelectedPart(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [viewMode, lastFocusedElement]);
 
   useEffect(() => {
     if (viewMode !== 'reading') return;
@@ -254,7 +275,7 @@ const Catechism: React.FC = memo(() => {
         <div className="w-full">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
-             <Button variant="ghost" onClick={goBack} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
+             <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
              <div className="flex items-center gap-spacing-lg">
                 <Button 
                   disabled={selectedSection.id <= 1}
@@ -300,7 +321,7 @@ const Catechism: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
             {selectedPart.sections.map((sec, idx) => (
-              <CathedraCard key={sec.id} variant="interactive" padding="none" role="button" aria-label={`Seção ${sec.id}: ${sec.title}`} onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
+              <CathedraCard key={sec.id} id={`section-card-${sec.id}`} variant="interactive" padding="none" role="button" tabIndex={0} aria-label={`Seção ${sec.id}: ${sec.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); } }} onClick={() => { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
                 <div className="p-spacing-lg flex items-center justify-between h-full">
                   <div className="space-y-spacing-xs text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
