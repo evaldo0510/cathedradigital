@@ -229,7 +229,7 @@ const AdminDashboard: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg px-spacing-md sm:px-spacing-0">
             <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
-              <AdminChartsTab stats={stats} />
+              <AdminChartsTab userGrowth={stats.userGrowth} revenueData={stats.revenueData} />
             </Suspense>
             
             <Card className="rounded-premium-lg border-primary/5">
