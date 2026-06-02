@@ -368,7 +368,7 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="w-full pb-spacing-4xl relative reader-container overflow-x-hidden">
+    <div className="w-full pb-spacing-4xl relative overflow-x-hidden">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
