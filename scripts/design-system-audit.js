@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const PAGES = [
   { name: 'Home', path: 'src/components/cathedra/HojePage.tsx' },
@@ -14,7 +14,6 @@ const LAYOUT_COMPONENTS = ['ContemplativeLayout', 'motion', 'CathedraOverlay', '
 const CARD_COMPONENTS = ['CathedraCard'];
 const THEME_CLASSES = ['bg-background', 'text-foreground', 'bg-primary', 'text-primary', 'bg-secondary', 'text-secondary', 'border-border', 'bg-muted', 'text-muted-foreground'];
 const SPACING_TOKENS = ['spacing-xs', 'spacing-sm', 'spacing-md', 'spacing-lg', 'spacing-xl', 'spacing-2xl', 'spacing-3xl', 'spacing-4xl'];
-const RADIUS_TOKENS = ['rounded-premium', 'rounded-premium-sm', 'rounded-premium-lg', 'rounded-premium-full'];
 
 function auditFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -37,11 +36,10 @@ function auditFile(filePath) {
   else if (hasGenericCards) {
     cardScore = 20;
     violations.push('Uses generic card classes instead of <CathedraCard />');
-  } else cardScore = 100; // No cards, so compliant by omission or just simple divs
+  } else cardScore = 100;
 
   // Theme compliance
   const hardcodedColors = content.match(/#[0-9A-Fa-f]{3,6}/g) || [];
-  const themeTokens = THEME_CLASSES.filter(token => content.includes(token));
   let themeScore = Math.max(0, 100 - (hardcodedColors.length * 10));
   if (hardcodedColors.length > 0) {
     violations.push(`Found ${hardcodedColors.length} hardcoded hex colors`);
@@ -49,10 +47,9 @@ function auditFile(filePath) {
 
   // Token compliance
   const hardcodedSpacing = content.match(/\b(p|m|gap)-[0-9]+\b/g) || [];
-  const tokenSpacing = SPACING_TOKENS.filter(token => content.includes(token));
   let tokenScore = Math.max(0, 100 - (hardcodedSpacing.length * 5));
   if (hardcodedSpacing.length > 0) {
-    violations.push(`Found ${hardcodedSpacing.length} hardcoded Tailwind spacing classes (e.g., p-4)`);
+    violations.push(`Found ${hardcodedSpacing.length} hardcoded Tailwind spacing classes`);
   }
 
   return {
@@ -67,11 +64,8 @@ function auditFile(filePath) {
 
 const results = PAGES.map(page => {
   const audit = auditFile(page.path);
-  return {
-    ...page,
-    ...audit
-  };
-}).filter(r => r.layout !== null);
+  return audit ? { ...page, ...audit } : null;
+}).filter(Boolean);
 
 results.sort((a, b) => a.total - b.total);
 
@@ -91,6 +85,9 @@ uniqueViolations.forEach((v, i) => {
   report += `${i + 1}. ${v}\n`;
 });
 
-fs.writeFileSync('src/components/cathedra/COMPLIANCE_REPORT.md', report);
-console.log('Compliance report generated at src/components/cathedra/COMPLIANCE_REPORT.md');
+if (!fs.existsSync('src/components/cathedra/reports')) {
+  fs.mkdirSync('src/components/cathedra/reports', { recursive: true });
+}
+fs.writeFileSync('src/components/cathedra/reports/COMPLIANCE_REPORT.md', report);
+console.log('Compliance report generated at src/components/cathedra/reports/COMPLIANCE_REPORT.md');
 console.log(JSON.stringify(results, null, 2));

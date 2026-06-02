@@ -1,0 +1,33 @@
+name: Design System Compliance & Icon Audit
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Run Icon Audit
+        run: |
+          # Check for direct lucide-react imports
+          if grep -r "from 'lucide-react'" src/ --exclude="src/constants.tsx" --exclude="src/components/ui/icons/index.tsx"; then
+            echo "Error: Direct lucide-react imports found. Please use Icons from @/constants."
+            exit 1
+          fi
+      - name: Generate Compliance Report
+        run: node scripts/design-system-audit.js
+      - name: Check for non-standard icons
+        run: |
+          # Verify that Icons.X are used without overriding size or strokeWidth to non-standard values
+          # This is a simplified check for the CI
+          if grep -r "size={[0-9]\+}" src/ | grep -v "size={20}"; then
+            echo "Warning: Non-standard icon size detected. Standard is 20px."
+          fi
