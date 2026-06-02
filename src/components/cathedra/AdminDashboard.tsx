@@ -163,6 +163,7 @@ const AdminDashboard: React.FC = () => {
     });
 
   const toggleSort = (field: typeof sortField) => {
+    // Adicionando data-test para ordenação
     if (sortField === field) setSortAsc(!sortAsc);
     else { setSortField(field); setSortAsc(true); }
   };
