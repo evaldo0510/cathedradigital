@@ -262,8 +262,8 @@ const TemasPage = () => {
           </motion.div>
         </div>
       </div>
-
     </ContemplativeLayout>
+  );
 };
 
 export default TemasPage;
