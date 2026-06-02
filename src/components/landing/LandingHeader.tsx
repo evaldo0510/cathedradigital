@@ -2,7 +2,6 @@ import { Icons } from '@/constants';
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
