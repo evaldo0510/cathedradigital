@@ -40,7 +40,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-spacing-md md:px-spacing-xl text-center flex flex-col items-center w-full", 
-          !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-spacing-md duration-[1000ms] ease-out"
+          !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-spacing-md duration-1000 ease-out"
         )}>
           {Icon && (
             <div className="mb-spacing-sm md:mb-spacing-lg">
