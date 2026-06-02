@@ -1231,34 +1231,6 @@ const Bible: React.FC = memo(() => {
         </div>
 
 
-          <div className="mt-spacing-4xl pt-spacing-4xl border-t border-primary/5">
-            <Relatio 
-              context={{
-                type: 'bible',
-                id: `bible-${selectedBook.abbr}-${selectedChapter}`,
-                abbr: selectedBook.abbr,
-                chapter: selectedChapter,
-                tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
-              }}
-              onNavigateToBible={(abbr, ch) => {
-                const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
-                  .flatMap(cat => cat.books)
-                  .find(b => b.abbr === abbr);
-                if (book) {
-                  setSelectedBook(book);
-                  setSelectedChapter(ch);
-                  setViewMode('reading');
-                  window.scrollTo(0, 0);
-                }
-              }}
-              onNavigateToCIC={handleNavigateToCIC}
-              onNavigateToDoc={handleNavigateToDoc}
-              onSelectLogosQuery={(prompt) => {
-                setLogosAIInitialQuery(prompt);
-                setLogosAIContext(`${selectedBook.name} ${selectedChapter}`);
-                setShowLogosAI(true);
-              }}
-            />
           </div>
         </div>
 
