@@ -821,15 +821,15 @@ const Bible: React.FC = memo(() => {
           path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
         />
         
-        <div className="space-y-spacing-2xl">
-          <div className="space-y-spacing-2xl">
+        <div className="max-w-[70ch] mx-auto">
+          {/* Unified Reading Navigation */}
+          <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
             <Button 
               variant="ghost" 
               onClick={goBack}
-              className="group flex items-center gap-spacing-xs text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
             >
-              <Icons.ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
-              Sumário
+              ← Sumário
             </Button>
 
             {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
@@ -843,6 +843,40 @@ const Bible: React.FC = memo(() => {
               </Button>
             )}
           </div>
+
+          <div className="flex items-center gap-spacing-lg">
+            <button 
+              disabled={selectedChapter <= 1} 
+              onClick={() => {
+                const prevCh = selectedChapter - 1;
+                setSelectedChapter(prevCh);
+                setVerses([]);
+                navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary disabled:opacity-20"
+            >
+              Anterior
+            </button>
+            <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+            <button 
+              disabled={selectedChapter >= selectedBook.chapters} 
+              onClick={() => {
+                const nextCh = selectedChapter + 1;
+                setSelectedChapter(nextCh);
+                setVerses([]);
+                navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+              }}
+              className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary disabled:opacity-20"
+            >
+              Próximo
+            </button>
+          </div>
+          
+          <ReadingControlPanel />
+        </div>
 
         {/* Highlighted verse indicator (when ?v= is active) */}
         {highlightedVerse && (
@@ -928,8 +962,8 @@ const Bible: React.FC = memo(() => {
 
 
         {/* Content with Side Nav */}
-        <div className="mt-spacing-2xl md:mt-spacing-4xl">
-          <div className="flex flex-col gap-spacing-2xl lg:gap-spacing-4xl items-start">
+        <div className="mt-spacing-md md:mt-spacing-xl">
+          <div className="flex flex-col gap-spacing-md lg:gap-spacing-xl items-start">
             <div className="flex-1 w-full max-w-[70ch] mx-auto relative">
               {currentChapterNotes.length > 0 && (
                 <div className="space-y-spacing-md animate-in fade-in slide-in-from-left-spacing-md duration-1000">
@@ -1158,75 +1192,36 @@ const Bible: React.FC = memo(() => {
         </div>
 
 
-          <div className="mt-spacing-2xl pt-spacing-2xl border-t border-primary/5 space-y-spacing-2xl">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-spacing-lg">
-            <Button 
-              variant="ghost" 
-              disabled={selectedChapter <= 1}
-              onClick={() => {
-                if (selectedChapter > 1) {
-                  const prevCh = selectedChapter - 1;
-                  setSelectedChapter(prevCh);
-                  setVerses([]);
-                  navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+          <div className="mt-spacing-4xl pt-spacing-4xl border-t border-primary/5">
+            <Relatio 
+              context={{
+                type: 'bible',
+                id: `bible-${selectedBook.abbr}-${selectedChapter}`,
+                abbr: selectedBook.abbr,
+                chapter: selectedChapter,
+                tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
+              }}
+              onNavigateToBible={(abbr, ch) => {
+                const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
+                  .flatMap(cat => cat.books)
+                  .find(b => b.abbr === abbr);
+                if (book) {
+                  setSelectedBook(book);
+                  setSelectedChapter(ch);
+                  setViewMode('reading');
+                  window.scrollTo(0, 0);
                 }
               }}
-              className="rounded-premium group px-spacing-lg py-spacing-xl flex flex-col items-start gap-spacing-xs hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
-            >
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
-              <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-premium-2xl">
-                <Icons.ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform opacity-40" />
-                {selectedBook.name} {selectedChapter - 1}
-              </div>
-            </Button>
-
-
-
-                <Button 
-                  variant="ghost" 
-                  disabled={selectedChapter >= selectedBook.chapters}
-                  onClick={() => {
-                    if (selectedChapter < selectedBook.chapters) {
-                      const nextCh = selectedChapter + 1;
-                      setSelectedChapter(nextCh);
-                      setVerses([]);
-                      navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
-                    }
-                  }}
-                  className="rounded-premium group px-spacing-lg py-spacing-xl flex flex-col items-end gap-spacing-xs hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
-                >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
-                  <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-premium-2xl">
-                    {selectedBook.name} {selectedChapter + 1}
-                    <Icons.ChevronRight className="w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform opacity-40" />
-                  </div>
-                </Button>
-              </div>
-
-              <div className="text-center space-y-spacing-xl py-spacing-3xl">
-                <Icons.CheckCircle2 className="w-spacing-3xl h-spacing-3xl text-primary/60 mx-auto" strokeWidth={1} />
-                <div className="space-y-spacing-xs">
-                  <h3 className="text-premium-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
-                  <p className="text-premium-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-spacing-md">
-                  <Button 
-                    onClick={() => {
-                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
-                      toast.success("Capítulo contemplado!", { icon: '📖' });
-                      setViewMode('chapters');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="rounded-premium-full px-spacing-2xl py-spacing-lg bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-premium-xs font-black uppercase tracking-widest"
-                  >
-                    Finalizar e Voltar
-                  </Button>
-                </div>
-              </div>
-            </div>
+              onNavigateToCIC={handleNavigateToCIC}
+              onNavigateToDoc={handleNavigateToDoc}
+              onSelectLogosQuery={(prompt) => {
+                setLogosAIInitialQuery(prompt);
+                setLogosAIContext(`${selectedBook.name} ${selectedChapter}`);
+                setShowLogosAI(true);
+              }}
+            />
+          </div>
+        </div>
 
             
             <TextSelectionToolbar 
