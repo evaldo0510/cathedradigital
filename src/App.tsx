@@ -377,6 +377,7 @@ const AppLayout: React.FC = () => {
           onToggleHighContrast={toggleHighContrast}
           isSpeaking={isSpeaking}
           onToggleSpeak={toggleSpeak}
+          onOpenA11y={handleOpenA11y}
           onSignOut={signOut}
         />
         
