@@ -1,37 +1,65 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Mobile Premium Constraints Audit', () => {
-  const mobileViewports = [
-    { name: 'iPhone-SE', width: 375, height: 667 },
-    { name: 'iPhone-14', width: 390, height: 844 },
-  ];
+const MOBILE_TARGETS = [
+  { name: 'iPhone-SE', width: 375, height: 667 },
+  { name: 'iPhone-14', width: 390, height: 844 },
+  { name: 'Pixel-7', width: 412, height: 915 },
+];
 
-  for (const vp of mobileViewports) {
-    test(`Layout metrics check on ${vp.name}`, async ({ page }) => {
-      await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.goto('/bible');
-      
-      const metrics = await page.evaluate(() => {
-        const header = document.querySelector('header');
-        const mainContent = document.getElementById('main-content');
-        const bottomNav = document.querySelector('nav[aria-label*="Navegação móvel"]');
+const PAGES_TO_TEST = [
+  { path: '/', name: 'home' },
+  { path: '/bible', name: 'bible' },
+  { path: '/catechism', name: 'catechism' },
+];
+
+test.describe('Above the Fold Visual Regression (Multi-target)', () => {
+  for (const viewport of MOBILE_TARGETS) {
+    for (const pageInfo of PAGES_TO_TEST) {
+      test(`Above the fold visual on ${viewport.name} - ${pageInfo.name}`, async ({ page }) => {
+        await page.setViewportSize({ width: viewport.width, height: viewport.height });
         
-        return {
-          headerHeight: header?.getBoundingClientRect().height || 0,
-          contentTop: mainContent?.getBoundingClientRect().top || 0,
-          bottomNavHeight: bottomNav?.getBoundingClientRect().height || 0,
-          viewportHeight: window.innerHeight
-        };
-      });
+        // Inject stabilization CSS
+        await page.addInitScript(() => {
+          const style = document.createElement('style');
+          style.innerHTML = `
+            *, *::before, *::after {
+              animation: none !important;
+              transition: none !important;
+              animation-duration: 0s !important;
+              animation-delay: 0s !important;
+            }
+            [data-testid="ritual-content"], 
+            [data-testid="reading-progress"],
+            .ritual-date-text,
+            .dynamic-date,
+            [data-testid="user-name"] {
+               visibility: hidden !important;
+            }
+            ::-webkit-scrollbar { display: none; }
+          `;
+          document.head.appendChild(style);
+        });
 
-      console.log(`${vp.name} Metrics:`, metrics);
-      
-      // Premium constraints: Header <= 40px, Bottom Nav <= 52px
-      expect(metrics.headerHeight).toBeLessThanOrEqual(40);
-      expect(metrics.bottomNavHeight).toBeLessThanOrEqual(52);
-      
-      // Above the fold: Content should be within top 25% of viewport
-      expect(metrics.contentTop).toBeLessThan(metrics.viewportHeight * 0.25);
-    });
+        await page.goto(pageInfo.path);
+        await page.waitForLoadState('networkidle');
+        await page.evaluate(() => document.fonts.ready);
+
+        // Verify content is actually above the fold numerically before screenshot
+        const contentTop = await page.evaluate(() => {
+          const mainContent = document.getElementById('main-content');
+          return mainContent?.getBoundingClientRect().top || 0;
+        });
+
+        // Fail if content is pushed down (Constraint: Content must start within top 15% of viewport height)
+        expect(contentTop).toBeLessThan(viewport.height * 0.15);
+
+        // Screenshot ONLY the above-the-fold area (fullPage: false)
+        await expect(page).toHaveScreenshot(`${pageInfo.name}-${viewport.name}-fold.png`, {
+          fullPage: false,
+          maxDiffPixelRatio: 0.01,
+          animations: 'disabled',
+        });
+      });
+    }
   }
 });
