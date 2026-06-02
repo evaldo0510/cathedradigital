@@ -295,7 +295,7 @@ const Magisterium: React.FC = () => {
       <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
         {/* Unified Search & Filters */}
         <div className="space-y-spacing-xl">
-          <div className="relative group max-w-spacing-4xl mx-auto">
+          <div className="relative group w-full">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
             <input
