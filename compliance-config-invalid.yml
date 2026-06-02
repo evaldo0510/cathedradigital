@@ -1,0 +1,7 @@
+compliance_thresholds:
+  overall: 150
+  unknown_prop: true
+  pages:
+    InvalidPage:
+      layout: -10
+      invalid_inner: "wrong"
