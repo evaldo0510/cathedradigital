@@ -1,7 +1,8 @@
+import { Icons } from '@/constants';
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+
 
 describe("Button Component", () => {
   it("renders with default variants", () => {
@@ -43,7 +44,7 @@ describe("Button Component", () => {
   it("standardizes icon size and alignment", () => {
     render(
       <Button size="icon" aria-label="search">
-        <Search data-testid="search-icon" />
+        <Icons.Search data-testid="search-icon" />
       </Button>
     );
     const button = screen.getByRole("button", { name: /search/i });

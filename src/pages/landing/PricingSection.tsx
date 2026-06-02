@@ -1,4 +1,5 @@
-import { Check, Sparkles, Zap, Heart } from "lucide-react";
+import { Icons } from '@/constants';
+
 import { HomeButton } from "@/components/cathedra/HomeButton";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
@@ -17,7 +18,7 @@ const PricingSection = () => {
       ],
       button: "Começar Agora",
       popular: false,
-      icon: <Heart className="w-spacing-md h-spacing-md text-primary" />
+      icon: <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
     },
     {
       name: "Irmandade Premium",
@@ -34,7 +35,7 @@ const PricingSection = () => {
       ],
       button: "Ser Premium",
       popular: true,
-      icon: <Sparkles className="w-spacing-md h-spacing-md text-primary" />
+      icon: <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
     },
     {
       name: "Benfeitor Anual",
@@ -50,7 +51,7 @@ const PricingSection = () => {
       ],
       button: "Apoiar a Missão",
       popular: false,
-      icon: <Zap className="w-spacing-md h-spacing-md text-primary" />
+      icon: <Icons.Zap className="w-spacing-md h-spacing-md text-primary" />
     }
   ];
 
@@ -100,7 +101,7 @@ const PricingSection = () => {
                 <ul className="space-y-spacing-md py-spacing-lg border-t border-border/10">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-spacing-sm text-premium-small">
-                      <Check className="w-spacing-md h-spacing-md text-secondary mt-spacing-3xs flex-shrink-0" />
+                      <Icons.Check className="w-spacing-md h-spacing-md text-secondary mt-spacing-3xs flex-shrink-0" />
                       <span className="text-muted-foreground leading-snug">{feature}</span>
                     </li>
                   ))}

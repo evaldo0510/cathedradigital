@@ -1,3 +1,4 @@
+import { Icons } from '@/constants';
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -5,7 +6,7 @@ import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, ChevronRight, Globe, ShieldCheck } from "lucide-react";
+
 import { useLang } from "@/hooks/useLang";
 import { HomeButton } from "../cathedra/HomeButton";
 
@@ -99,7 +100,7 @@ const LandingHeader = () => {
               aria-expanded={showLangMenu}
               type="button"
             >
-              <Globe className="w-spacing-md h-spacing-md" />
+              <Icons.Globe className="w-spacing-md h-spacing-md" />
               <span className="uppercase">{lang}</span>
             </Button>
             <AnimatePresence>
@@ -137,7 +138,7 @@ const LandingHeader = () => {
             className="w-spacing-xl h-spacing-xl rounded-premium-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Configurações de acessibilidade"
           >
-            <ShieldCheck className="w-spacing-md h-spacing-md" />
+            <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />
           </Button>
 
           <Button
@@ -157,7 +158,7 @@ const LandingHeader = () => {
             className={`hidden xs:flex rounded-premium-full px-spacing-md sm:px-spacing-lg shadow-premium-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
-            Começar <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
+            Começar <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
           </HomeButton>
 
           {/* Mobile Menu Toggle - Hidden when BottomNav is likely present */}
@@ -169,7 +170,7 @@ const LandingHeader = () => {
             aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isMobileMenuOpen ? <Icons.X /> : <Icons.Menu />}
           </Button>
         </div>
       </div>

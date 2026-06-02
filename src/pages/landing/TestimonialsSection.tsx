@@ -1,4 +1,5 @@
-import { Quote } from "lucide-react";
+import { Icons } from '@/constants';
+
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -28,7 +29,7 @@ const TestimonialsSection = () => {
               key={t.name}
               className="p-spacing-xl space-y-spacing-xl flex flex-col"
             >
-              <Quote className="w-spacing-lg h-spacing-lg text-secondary/20" />
+              <Icons.Quote className="w-spacing-lg h-spacing-lg text-secondary/20" />
               <p className="text-premium-base text-muted-foreground leading-relaxed font-serif flex-1">
                 "{t.text}"
               </p>

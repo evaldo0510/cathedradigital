@@ -1,4 +1,5 @@
-import { Church, ChevronRight } from "lucide-react";
+import { Icons } from '@/constants';
+
 import { HomeButton } from "@/components/cathedra/HomeButton";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
@@ -15,7 +16,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
         
         <div className="relative z-10 space-y-spacing-xl">
           <div className="relative inline-flex items-center justify-center">
-            <Church className="w-spacing-3xl h-spacing-3xl text-primary" />
+            <Icons.Church className="w-spacing-3xl h-spacing-3xl text-primary" />
           </div>
           <div className="space-y-spacing-md">
             <h2 className="font-display font-bold leading-tight text-foreground">

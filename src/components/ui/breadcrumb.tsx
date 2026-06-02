@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+
 
 import { cn } from "@/lib/utils";
 
@@ -61,7 +62,7 @@ BreadcrumbPage.displayName = "BreadcrumbPage";
 
 const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
   <li role="presentation" aria-hidden="true" className={cn("[&>svg]:size-spacing-sm", className)} {...props}>
-    {children ?? <ChevronRight />}
+    {children ?? <Icons.ChevronRight />}
   </li>
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
@@ -73,7 +74,7 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span"
     className={cn("flex h-spacing-xl w-spacing-xl items-center justify-center", className)}
     {...props}
   >
-    <MoreHorizontal className="h-spacing-md w-spacing-md" />
+    <Icons.MoreHorizontal className="h-spacing-md w-spacing-md" />
     <span className="sr-only">More</span>
   </span>
 );
