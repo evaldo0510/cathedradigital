@@ -47,7 +47,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         
         {/* Welcome Section - Reduced Height */}
         <FadeUp>
-          <header className="text-center space-y-spacing-md mb-spacing-2xl">
+          <header className="text-center space-y-spacing-md mb-spacing-lg md:mb-spacing-2xl">
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30">
               Cathedra Digital
             </p>
@@ -76,7 +76,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
         {/* Sacred Library Access - Simplified Doors */}
         <FadeUp delay={0.3}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md mt-spacing-2xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md mt-spacing-lg md:mt-spacing-2xl">
             {[
               { label: t('bible'), icon: Icons.Bible, route: AppRoute.BIBLE },
               { label: t('catechism'), icon: Icons.Catechism, route: AppRoute.CATECHISM },
