@@ -39,6 +39,7 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
+import AboveTheFoldTest from './components/cathedra/AboveTheFoldTest';
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 
@@ -383,6 +384,7 @@ const AppLayout: React.FC = () => {
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
+          <AboveTheFoldTest />
           <SwipeNavigation>
             <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>

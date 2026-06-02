@@ -83,8 +83,8 @@
     --layout-padding: var(--spacing-xl);
     --layout-padding-mobile: var(--spacing-sm);
     --layout-content-width-mobile: 85vw;
-    --header-height: 48px;
-    --bottom-nav-height: 54px;
+    --header-height: 36px;
+    --bottom-nav-height: 48px;
     
     /* 8. Icons */
     --icon-size-sm: 16px;
@@ -184,7 +184,7 @@
     @apply h-full overflow-x-hidden bg-background text-foreground selection:bg-secondary/20;
     font-family: 'Inter', sans-serif;
     text-rendering: optimizeLegibility;
-    line-height: 1.7;
+    line-height: 1.6;
     scroll-behavior: smooth;
   }
 
@@ -209,9 +209,9 @@
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/60;
+    @apply font-ui font-normal text-foreground/80;
     font-size: clamp(var(--text-premium-sm), 1vw, var(--text-premium-base));
-    line-height: 1.8;
+    line-height: 1.6;
     max-width: 65ch;
     letter-spacing: 0.01em;
   }

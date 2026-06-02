@@ -194,7 +194,7 @@ export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
   { label: lang === 'pt' ? 'Início' : 'Home', icon: 'Home', route: '/' },
   { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: 'Bible', route: AppRoute.BIBLE },
   { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: 'Catechism', route: AppRoute.CATECHISM },
-  { label: 'Logos', icon: 'Sparkles', route: '/logos' },
+  { label: lang === 'pt' ? 'Santos' : 'Saints', icon: 'Saints', route: AppRoute.SAINTS },
   { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
 ];
 

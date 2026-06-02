@@ -108,9 +108,9 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full mb-spacing-xl md:mb-spacing-3xl"
+      className="w-full mb-spacing-lg md:mb-spacing-3xl"
     >
-      <CathedraCard variant={variant} padding="none" className="p-spacing-md md:p-spacing-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-premium-none">
+      <CathedraCard variant={variant} padding="none" className="p-spacing-sm md:p-spacing-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-premium-none">
         <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-premium-full -mr-spacing-4xl -mt-spacing-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-spacing-md md:gap-spacing-xl relative z-10">
