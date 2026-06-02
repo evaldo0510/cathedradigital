@@ -810,6 +810,7 @@ const Bible: React.FC = memo(() => {
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
     return (
+      <>
       <ContemplativeLayout
         subtitle={`${selectedBook.name}`}
         title={`Capítulo ${selectedChapter}`}
@@ -1373,6 +1374,7 @@ const Bible: React.FC = memo(() => {
           </div>
         </div>
       </ContemplativeLayout>
+      </>
     );
   }
 
