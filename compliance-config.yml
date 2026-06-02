@@ -1,0 +1,38 @@
+compliance_thresholds:
+  overall: 85
+  pages:
+    Home:
+      layout: 90
+      cards: 90
+      theme: 85
+      tokens: 95
+    Bible:
+      layout: 95
+      cards: 95
+      theme: 90
+      tokens: 95
+    Catechism:
+      layout: 85
+      cards: 85
+      theme: 80
+      tokens: 90
+    Library:
+      layout: 85
+      cards: 85
+      theme: 80
+      tokens: 90
+    Documents:
+      layout: 80
+      cards: 80
+      theme: 75
+      tokens: 85
+    Search:
+      layout: 80
+      cards: 80
+      theme: 75
+      tokens: 85
+  metrics:
+    layout: 80
+    cards: 80
+    theme: 80
+    tokens: 90
