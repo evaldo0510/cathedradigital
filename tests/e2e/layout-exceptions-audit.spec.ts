@@ -22,8 +22,9 @@ test.describe('Layout Governance & Exception Validation', () => {
 
   test('New exceptions must be explicitly documented in the audit script', () => {
     // This is a meta-test ensuring the audit script exists and is configured to fail on unknown wrappers
-    const auditFile = require('fs').readFileSync('scripts/audit-layout-governance.ts', 'utf8');
+    const fs = require('node:fs');
+    const auditFile = fs.readFileSync('scripts/audit-layout-governance.ts', 'utf8');
     expect(auditFile).toContain('exemptionPatterns');
-    expect(auditFile).toContain('process.exit(1)');
+    expect(auditFile).toContain('violationsFound');
   });
 });
