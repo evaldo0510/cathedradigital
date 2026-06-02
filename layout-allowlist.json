@@ -1,16 +1,13 @@
 [
-  "src/components/cathedra/ContemplativeLayout.tsx",
-  "src/components/cathedra/AppHeader.tsx",
-  "src/components/cathedra/ItinerariumStepPage.tsx",
+  "src/components/cathedra/",
   "src/components/ui/",
+  "src/pages/",
   "src/lib/design-system.ts",
+  "src/lib/design-system-audit.ts",
   "src/index.css",
-  "src/pages/landing/",
-  "src/components/landing/",
+  "src/scripts/",
   "test",
   ".snap",
   "node_modules",
-  "src/components/cathedra/",
-  "src/pages/",
-  "src/lib/utils.ts"
+  "scripts/"
 ]
