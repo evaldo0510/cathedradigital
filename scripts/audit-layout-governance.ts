@@ -1,7 +1,5 @@
 #!/usr/bin/env bun
 import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 const forbiddenWrappers = [
   'max-w-',
@@ -14,8 +12,9 @@ const forbiddenWrappers = [
 const exceptions = [
   'src/components/cathedra/ContemplativeLayout.tsx',
   'src/components/cathedra/AppHeader.tsx',
-  'src/pages/ItinerariumStepPage.tsx',
-  // Allow nested layouts that need to re-apply constraints (rare but possible if justified)
+  'src/components/cathedra/ItinerariumStepPage.tsx',
+  'src/components/cathedra/AppHeader.tsx',
+  'src/components/ui/' // Library components
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
@@ -24,12 +23,14 @@ let violationsFound = 0;
 
 forbiddenWrappers.forEach(pattern => {
   try {
-    const command = `rg -n "\\b${pattern}" src --glob "!**/node_modules/**" --glob "!src/components/cathedra/ContemplativeLayout.tsx" --glob "!src/components/cathedra/AppHeader.tsx" --glob "!src/pages/ItinerariumStepPage.tsx" --glob "!src/components/ui/**"`;
+    // Exclude library components and valid authorities
+    const command = `rg -n "\\b${pattern}" src --glob "!**/node_modules/**" --glob "!src/components/cathedra/ContemplativeLayout.tsx" --glob "!src/components/cathedra/AppHeader.tsx" --glob "!src/components/cathedra/ItinerariumStepPage.tsx" --glob "!src/components/ui/**"`;
     const output = execSync(command, { encoding: 'utf8' }).trim();
     
     if (output) {
       const lines = output.split('\n');
       lines.forEach(line => {
+        // If it's max-w-spacing-4xl in AppHeader, it might be caught if glob fails
         console.error(`❌ Layout Wrapper Violation: ${line}`);
         violationsFound++;
       });
@@ -45,3 +46,4 @@ if (violationsFound > 0) {
 } else {
   console.log('✅ Layout governance check passed.');
 }
+
