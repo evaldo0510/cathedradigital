@@ -10,6 +10,8 @@
     "task-master": "bun run scripts/task-master.ts",
     "task-master:run": "bun run scripts/task-master.ts run",
     "task-master:status": "bun run scripts/task-master.ts status",
+    "design-system:audit": "node scripts/design-system-audit.js",
+    "design-system:fix-icons": "node scripts/fix-icons.js",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
