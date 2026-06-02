@@ -152,7 +152,7 @@ const LoadingFallback = () => (
         className="absolute inset-0 w-spacing-3xl h-spacing-3xl rounded-premium-full border-t border-primary/[0.05] z-20" 
       />
     </div>
-    <div className="space-y-spacing-2xl w-full max-w-spacing-sm flex flex-col items-center">
+    <div className="space-y-spacing-2xl w-full flex flex-col items-center">
       <div className="h-[0.5px] w-spacing-4xl bg-primary/[0.03] rounded-premium-full overflow-hidden">
         <motion.div 
           className="h-full bg-primary/[0.08]"

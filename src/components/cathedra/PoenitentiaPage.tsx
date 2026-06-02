@@ -59,14 +59,14 @@ const PoenitentiaPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl">
+    <div className="w-full space-y-spacing-2xl pb-spacing-2xl">
       <div className="text-center space-y-spacing-md pt-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
-        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
+        <p className="text-premium-lg text-muted-foreground font-serif italic">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md px-spacing-xs">
@@ -96,7 +96,7 @@ const PoenitentiaPage: React.FC = () => {
           <Icons.Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
         </div>
 
-        <div className="relative space-y-spacing-xl max-w-spacing-3xl mx-auto">
+        <div className="relative space-y-spacing-xl w-full mx-auto">
           <div className="space-y-spacing-md text-center">
             <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{CONFESSION_STEPS[activeStep].title}</h2>
             <p className="text-premium-xl text-muted-foreground italic font-serif leading-relaxed">"{CONFESSION_STEPS[activeStep].description}"</p>
@@ -119,7 +119,7 @@ const PoenitentiaPage: React.FC = () => {
           {activeStep === 0 && (
             <div className="mt-spacing-2xl p-spacing-xl bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-spacing-md shadow-premium-md">
               <Icons.BookOpen className="w-spacing-xl h-spacing-xl text-primary/60 mx-auto" />
-              <p className="text-premium-lg text-foreground/80 font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
+              <p className="text-premium-lg text-foreground/80 font-serif italic w-full mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
               </p>
             </div>

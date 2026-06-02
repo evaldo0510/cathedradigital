@@ -123,7 +123,7 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-premium-lg text-muted-foreground max-w-spacing-2xl mx-auto"
+          className="text-premium-lg text-muted-foreground w-full mx-auto"
         >
           Instituições, empresas e indivíduos que apoiam a disseminação da Fé e da Cultura Católica através do Cathedra.
         </motion.p>
@@ -199,7 +199,7 @@ const PartnersPage: React.FC = () => {
               <h3 className="text-premium-2xl font-semibold text-foreground/80">
                 Em breve novos parceiros farão parte desta missão
               </h3>
-              <p className="text-muted-foreground max-w-spacing-md mx-auto">
+              <p className="text-muted-foreground w-full mx-auto">
                 Estamos construindo alianças sólidas para expandir o acesso à Verdade. Sua instituição também pode fazer parte.
               </p>
             </div>
@@ -309,7 +309,7 @@ const PartnersPage: React.FC = () => {
           viewport={{ once: true }}
           className="bg-primary/5 rounded-premium-full p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg border border-primary/10"
         >
-          <div className="max-w-spacing-2xl mx-auto space-y-spacing-md">
+          <div className="w-full mx-auto space-y-spacing-md">
             <h2 className="text-premium-2xl md:text-premium-3xl font-bold">Quer apoiar esta causa?</h2>
             <p className="text-muted-foreground">
               Junte-se a nós como um patrocinador e ajude a manter o Cathedra gratuito e acessível para milhares de fiéis em todo o mundo.
