@@ -363,7 +363,7 @@ const CommandCenter: React.FC = () => {
 
   return (
     <div 
-      className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" 
+      className="fixed inset-0 z-[200] flex items-start justify-center pt-spacing-md sm:pt-[12vh] px-spacing-sm sm:px-spacing-0" 
       onClick={() => setIsOpen(false)}
       role="dialog"
       aria-modal="true"
@@ -407,7 +407,7 @@ const CommandCenter: React.FC = () => {
         )}
 
         {/* Results */}
-        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-spacing-2xs">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[40vh] sm:max-h-[55vh] overflow-y-auto py-spacing-2xs">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
             <div className="px-spacing-md py-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
