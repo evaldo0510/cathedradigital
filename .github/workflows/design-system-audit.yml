@@ -22,6 +22,17 @@ jobs:
           # Detect and fix direct lucide-react imports using the standardized registry
           bun run scripts/fix-icons.js || echo "Some icons could not be fixed automatically"
           
+      - name: Layout and Performance Audit
+        run: |
+          npm run test:performance
+          npm run test:visual
+          
+      - name: Verify Above the Fold Height
+        run: |
+          # Custom check for header height in built CSS
+          grep -q "--header-height: 40px" src/index.css || (echo "Header height exceeded premium limit!" && exit 1)
+          grep -q "--bottom-nav-height: 52px" src/index.css || (echo "Bottom nav height exceeded premium limit!" && exit 1)
+          
       - name: 🔍 Icon Standard Audit
         run: |
           # Ensure no direct imports remain and icons use standard 20px / 1.2 stroke
