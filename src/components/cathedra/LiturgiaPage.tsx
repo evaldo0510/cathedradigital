@@ -219,10 +219,10 @@ const LiturgiaPage: React.FC = () => {
     >
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
       <div className="desktop-layout">
-        <div className="desktop-main px-spacing-md">
+        <div className="desktop-main">
         <Suspense fallback={<div className="flex justify-center py-spacing-3xl"><Icons.Loader2 className="w-spacing-xl h-spacing-xl text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
-            <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-spacing-2xl mx-auto space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
+            <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "w-full space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-spacing-md text-center">
                 <div className="flex items-center justify-center gap-spacing-md">
                   <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior" className="rounded-premium-full"><Icons.ChevronLeft className="w-spacing-md h-spacing-md" /></Button>

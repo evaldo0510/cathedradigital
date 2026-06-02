@@ -215,7 +215,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   if (loading) {
     return (
-      <div className="space-y-spacing-lg max-w-spacing-2xl mx-auto pb-spacing-4xl">
+      <div className="space-y-spacing-lg w-full pb-spacing-4xl">
         <div className="text-center space-y-spacing-sm pt-spacing-md">
           <div className="w-spacing-xl h-spacing-xl mx-auto rounded-premium bg-primary/20 animate-pulse" />
           <div className="h-spacing-lg w-spacing-4xl mx-auto bg-muted/60 rounded-premium animate-pulse" />

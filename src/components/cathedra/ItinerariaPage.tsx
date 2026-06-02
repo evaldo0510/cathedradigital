@@ -32,26 +32,12 @@ const ItinerariaPage: React.FC = () => {
   return (
     <>
       <SEOHead title="Trilhas Espirituais" description="Caminhadas contemplativas para aprofundamento na vida espiritual." path="/itineraria" />
-      <div className="app-container py-spacing-2xl md:py-spacing-4xl space-y-spacing-3xl md:space-y-spacing-4xl">
-        <motion.div 
-          className="text-center space-y-spacing-xl max-w-spacing-3xl mx-auto"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="inline-flex items-center gap-spacing-sm px-spacing-md py-spacing-xs bg-primary/[0.03] rounded-premium-full border border-primary/10 mb-spacing-xs">
-            <Icons.Compass className="w-spacing-md h-spacing-md text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Itinerarium Mentis</span>
-          </div>
-          <h1 className="text-premium-5xl md:text-premium-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Trilhas</h1>
-          <p className="text-muted-foreground font-serif italic text-premium-lg md:text-premium-xl leading-relaxed">
-            "Aquele que me segue não andará em trevas, mas terá a luz da vida." — João 8,12
-          </p>
-        </motion.div>
-
-        <div className="max-w-spacing-3xl mx-auto">
-          <SpiritualGoals />
-        </div>
+      <ContemplativeLayout
+        subtitle="Itinerarium Mentis"
+        title="Trilhas"
+        icon={Icons.Compass}
+      >
+        <div className="space-y-spacing-3xl md:space-y-spacing-4xl">
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
@@ -118,8 +104,8 @@ const ItinerariaPage: React.FC = () => {
             ))}
           </motion.div>
         )}
-      </div>
-    </>
+        </div>
+      </ContemplativeLayout>
   );
 };
 
