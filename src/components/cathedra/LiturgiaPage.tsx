@@ -218,7 +218,7 @@ const LiturgiaPage: React.FC = () => {
       }
     >
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
-      <div className="desktop-layout">
+      <div className="w-full">
         <div className="desktop-main">
         <Suspense fallback={<div className="flex justify-center py-spacing-3xl"><Icons.Loader2 className="w-spacing-xl h-spacing-xl text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
@@ -275,23 +275,6 @@ const LiturgiaPage: React.FC = () => {
         </Suspense>
         </div>
         
-        <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Liturgia das Horas</h3><p className="text-premium-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
-          {saintsToday.length > 0 && (
-            <div className="desktop-card">
-              <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-md">Santos de Hoje</h3>
-              <div className="space-y-spacing-md">
-                {saintsToday.slice(0, 2).map(s => (
-                  <div key={s.id} className="flex items-center gap-spacing-sm group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
-                    <img src={s.image} alt={s.name} className="w-spacing-xl h-spacing-xl rounded-premium-full object-cover border border-border group-hover:border-primary transition-all" />
-                    <div><p className="text-premium-xs font-bold text-foreground leading-tight">{s.name}</p><p className="text-premium-xs text-muted-foreground uppercase font-medium">{s.title}</p></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </aside>
-      </div>
     </ContemplativeLayout>
   );
 };
