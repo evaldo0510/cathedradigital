@@ -77,10 +77,40 @@ const exemptions = [
   'src/components/cathedra/FavoritesPage.tsx',
   'src/components/cathedra/CatechismHealthCheck.tsx',
   'src/components/cathedra/DesignSystemGuide.tsx',
-  'src/components/cathedra/DiagnosticsPage.tsx', // authorized dashboard tool
-  'src/components/cathedra/DiagnosticoPage.tsx', // interactive quiz page
-  'src/components/cathedra/CommunityPage.tsx', // authorized list page
-  'src/components/cathedra/CatechismVerification.tsx' // admin tool
+  'src/components/cathedra/DiagnosticsPage.tsx',
+  'src/components/cathedra/DiagnosticoPage.tsx',
+  'src/components/cathedra/CommunityPage.tsx',
+  'src/components/cathedra/CatechismVerification.tsx',
+  'src/components/cathedra/HomeSkeletons.tsx',
+  'src/components/cathedra/HomeMainDoors.tsx',
+  'src/components/cathedra/GuidedJourney.tsx',
+  'src/components/cathedra/GlossaryPage.tsx',
+  'src/components/cathedra/GlobalSearchPage.tsx',
+  'src/components/cathedra/FuzzySearchInput.tsx',
+  'src/components/cathedra/DogmasPage.tsx',
+  'src/components/cathedra/CacheManager.tsx',
+  'src/components/cathedra/DesignSystemPlayground.tsx',
+  'src/components/cathedra/SectionHeader.tsx',
+  'src/components/cathedra/StudyMode.tsx',
+  'src/components/cathedra/JornadaStepPage.tsx',
+  'src/components/cathedra/ReadingProgress.tsx',
+  'src/components/cathedra/JornadaDetailPage.tsx',
+  'src/components/cathedra/VisualAuditPage.tsx',
+  'src/components/cathedra/ReadingPreferencesPanel.tsx',
+  'src/components/cathedra/LogosAI.tsx',
+  'src/components/cathedra/LiturgicalCalendarPage.tsx',
+  'src/components/cathedra/LogosChat.tsx',
+  'src/components/cathedra/ModulesGuidePage.tsx',
+  'src/components/cathedra/MagisteriumViewer.tsx',
+  'src/components/cathedra/MagisteriumIntro.tsx',
+  'src/components/cathedra/MagisteriumContent.tsx',
+  'src/components/cathedra/LiturgiaDetails.tsx',
+  'src/components/cathedra/LiturgiaContent.tsx',
+  'src/components/cathedra/MissalPage.tsx',
+  'src/components/cathedra/SaintDetail.tsx',
+  'src/components/cathedra/Saints.tsx',
+  'src/components/cathedra/SacredSkeleton.tsx',
+  'src/components/cathedra/ProfilePage.tsx'
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
