@@ -1,6 +1,7 @@
 [
   "src/components/cathedra/",
   "src/components/ui/",
+  "src/components/landing/",
   "src/pages/",
   "src/lib/design-system.ts",
   "src/lib/design-system-audit.ts",
