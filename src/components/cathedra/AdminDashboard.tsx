@@ -2,8 +2,6 @@ import { Icons } from '@/constants';
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,6 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { AdminHeader } from './admin/AdminHeader';
+import { AdminStatsCards } from './admin/AdminStatsCards';
+import { useAdminDashboardData, AdminStats, AdminUser } from '@/hooks/useAdminDashboardData';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
@@ -29,49 +30,7 @@ const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
-
-interface Stats {
-  totalUsers: number;
-  premiumUsers: number;
-  totalVisits: number;
-  totalDownloads: number;
-  totalRevenue: number;
-  pendingRevenue: number;
-  pwaInstalls: number;
-  pwaOpens: number;
-  activeToday: number;
-  activeLast30Days: number;
-  inactiveUsers: number;
-  journeysInProgress: number;
-  totalReflections: number;
-  totalJourneysStarted: number;
-  totalJourneysCompleted: number;
-  returnRate: number;
-  recentTransactions: any[];
-  userGrowth: any[];
-  revenueData: any[];
-  diocesesStats: { name: string; count: number }[];
-  statesStats: { name: string; count: number }[];
-  movementsStats: { name: string; count: number }[];
-}
-
-
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  role: string | null;
-  is_premium: boolean;
-  created_at: string;
-  xp: number | null;
-  level: number | null;
-  streak: number | null;
-  last_visit: string | null;
-  reflections_count?: number;
-  depth_level?: string;
-  current_journey?: string;
-  access_frequency?: string;
-}
+interface UserProfile extends AdminUser {}
 
 interface SensitiveRow {
   user_id: string;
@@ -81,25 +40,16 @@ interface SensitiveRow {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  useEffect(() => {
+  const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
 
-    // Force specific body class for admin layout
-    document.body.classList.add('admin-mode');
-    return () => document.body.classList.remove('admin-mode');
-  }, []);
-
-
-  const [stats, setStats] = useState<any>(null);
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [manualEmail, setManualEmail] = useState('');
   const [manualLoading, setManualLoading] = useState(false);
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   
   // Sync with URL query param for persistence
