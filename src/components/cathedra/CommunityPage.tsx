@@ -14,6 +14,7 @@ import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -275,7 +276,7 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="max-w-spacing-3xl mx-auto space-y-spacing-lg py-spacing-xl px-spacing-md">
+      <div className="w-full space-y-spacing-lg py-spacing-xl px-spacing-md">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-premium-full px-spacing-xs py-spacing-2xs"
@@ -352,7 +353,7 @@ const CommunityPage: React.FC = () => {
   }
 
   return (
-    <div className="desktop-layout py-spacing-xl">
+    <ContemplativeLayout>
       <div className="desktop-main px-spacing-md">
         {loading && posts.length === 0 ? (
           <div className="space-y-spacing-xl">
@@ -464,32 +465,7 @@ const CommunityPage: React.FC = () => {
           </div>
         )}
       </div>
-
-      <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-        <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Comunhão de Santos</h3>
-          <p className="text-premium-xs text-muted-foreground leading-relaxed italic">
-            Participar da comunidade é viver a comunhão cristã. Compartilhe suas graças e edifique seus irmãos.
-          </p>
-        </div>
-        <div className="desktop-card">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-md">Líderes de Engajamento</h3>
-          <div className="space-y-spacing-md">
-            {leaderboard.slice(0, 3).map((entry, i) => (
-              <div key={entry.id} className="flex items-center gap-spacing-sm">
-                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-premium-xs">
-                  {i + 1}
-                </div>
-                <div className="flex-1 min-w-spacing-0">
-                  <p className="text-premium-xs font-bold text-foreground truncate">{entry.name}</p>
-                  <p className="text-premium-xs text-muted-foreground uppercase font-medium">{entry.levelName}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </aside>
-    </div>
+    </ContemplativeLayout>
   );
 };
 

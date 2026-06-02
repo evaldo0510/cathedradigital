@@ -255,7 +255,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-spacing-3xl overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-spacing-lg md:p-spacing-2xl lg:p-spacing-3xl space-y-spacing-md md:space-y-spacing-xl relative overflow-hidden shadow-premium rounded-[3rem]">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-spacing-lg md:p-spacing-2xl lg:p-spacing-3xl space-y-spacing-md md:space-y-spacing-xl relative overflow-hidden shadow-premium rounded-[3rem] w-full">
               <div className="absolute top-spacing-0 left-0 w-full h-spacing-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
               <div className="absolute top-spacing-md right-spacing-md md:top-spacing-lg md:right-spacing-lg flex items-center gap-spacing-xs">
@@ -302,7 +302,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-spacing-md md:space-y-spacing-xl max-w-spacing-3xl mx-auto">
+              <div className="space-y-spacing-md md:space-y-spacing-xl w-full">
                 {history.length > visibleMessages && (
                   <div className="flex justify-center pb-spacing-xs">
                     <Button 
@@ -356,7 +356,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-spacing-xl mx-auto pt-spacing-lg md:pt-spacing-xl border-t border-primary/5">
+              <div className="w-full pt-spacing-lg md:pt-spacing-xl border-t border-primary/5">
                 <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"

@@ -113,7 +113,7 @@ const Bible: React.FC = () => {
   const verseToCic: Record<number, number[]> = {};
 
   return (
-    <div className="bible-container min-h-screen bg-background text-foreground">
+    <>
       {viewMode === 'books' && (
         <ContemplativeLayout
           subtitle="Verbum Domini"
@@ -196,7 +196,7 @@ const Bible: React.FC = () => {
           title={`Capítulo ${selectedChapter}`}
           icon={Icons.Bible}
         >
-          <div className="max-w-[70ch] mx-auto pb-spacing-4xl">
+          <div className="pb-spacing-4xl">
             <div className="flex justify-between items-center mb-spacing-xl border-b border-primary/5 pb-spacing-sm">
               <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
                 ← Sumário
@@ -250,7 +250,7 @@ const Bible: React.FC = () => {
           </Suspense>
         </ContemplativeLayout>
       )}
-    </div>
+    </>
   );
 };
 

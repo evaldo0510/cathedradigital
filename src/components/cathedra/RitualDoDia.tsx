@@ -225,7 +225,7 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-spacing-2xs md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-spacing-2xs md:pt-spacing-0">
+      <div className="relative z-10 p-spacing-2xs md:padding-rhythm stack-rhythm-sm w-full pt-spacing-2xs md:pt-spacing-0">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-xs md:gap-spacing-2xl pb-spacing-xs md:pb-spacing-2xl">
           <div className="flex flex-col gap-spacing-xs md:gap-spacing-md">
@@ -324,7 +324,7 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-spacing-md md:gap-spacing-2xl lg:gap-spacing-3xl">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-spacing-xs md:space-y-spacing-md max-w-spacing-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+          <section className="space-y-spacing-xs md:space-y-spacing-md w-full text-center" aria-labelledby="lectio-heading">
             <h4 id="lectio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/15 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
@@ -344,7 +344,7 @@ const RitualDoDia: React.FC = () => {
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-spacing-xs md:space-y-spacing-lg max-w-spacing-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+          <section className="space-y-spacing-xs md:space-y-spacing-lg w-full text-center" aria-labelledby="meditatio-heading">
             <h4 id="meditatio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(

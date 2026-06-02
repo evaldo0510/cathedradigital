@@ -16,6 +16,7 @@ import { TagBubble } from './NexusBubbles';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
+import ContemplativeLayout from './ContemplativeLayout';
 
 
 interface Tag {
@@ -130,7 +131,7 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="desktop-layout section-rhythm animate-in fade-in slide-in-from-bottom-spacing-md duration-700">
+    <ContemplativeLayout>
       <div className="desktop-main px-spacing-md stack-rhythm">
         <header className="space-y-spacing-md text-center header-margin-rhythm">
           <div className="flex justify-center mb-spacing-md">
@@ -261,22 +262,7 @@ const TemasPage = () => {
           </motion.div>
         </div>
       </div>
-
-      <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-        <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Conexões Nexus</h3>
-          <p className="text-premium-xs text-muted-foreground leading-relaxed italic">
-            O Nexus utiliza inteligência teológica para conectar temas da Escritura, Magistério e Tradição. Clique em uma bolha para iniciar o mergulho.
-          </p>
-        </div>
-        <div className="desktop-card">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Dica de Estudo</h3>
-          <p className="text-premium-xs text-muted-foreground leading-relaxed">
-            Use as setas do teclado para navegar rapidamente entre os temas e "Home" para voltar ao início.
-          </p>
-        </div>
-      </aside>
-    </div>
+    </ContemplativeLayout>
   );
 };
 

@@ -218,11 +218,11 @@ const LiturgiaPage: React.FC = () => {
       }
     >
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
-      <div className="desktop-layout">
-        <div className="desktop-main px-spacing-md">
+      <div className="w-full">
+        <div className="desktop-main">
         <Suspense fallback={<div className="flex justify-center py-spacing-3xl"><Icons.Loader2 className="w-spacing-xl h-spacing-xl text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
-            <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-spacing-2xl mx-auto space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
+            <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "w-full space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-spacing-md text-center">
                 <div className="flex items-center justify-center gap-spacing-md">
                   <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior" className="rounded-premium-full"><Icons.ChevronLeft className="w-spacing-md h-spacing-md" /></Button>
@@ -274,24 +274,8 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'calendario' && <div id="panel-calendario" role="tabpanel" aria-labelledby="tab-calendario" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><LiturgicalCalendarPage /></div>}
         </Suspense>
         </div>
-        
-        <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Liturgia das Horas</h3><p className="text-premium-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
-          {saintsToday.length > 0 && (
-            <div className="desktop-card">
-              <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-md">Santos de Hoje</h3>
-              <div className="space-y-spacing-md">
-                {saintsToday.slice(0, 2).map(s => (
-                  <div key={s.id} className="flex items-center gap-spacing-sm group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
-                    <img src={s.image} alt={s.name} className="w-spacing-xl h-spacing-xl rounded-premium-full object-cover border border-border group-hover:border-primary transition-all" />
-                    <div><p className="text-premium-xs font-bold text-foreground leading-tight">{s.name}</p><p className="text-premium-xs text-muted-foreground uppercase font-medium">{s.title}</p></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </aside>
       </div>
+        
     </ContemplativeLayout>
   );
 };

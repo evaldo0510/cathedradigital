@@ -18,7 +18,7 @@ const DesignSystemPlayground: React.FC = () => {
         path="/design-system"
       />
       
-      <div className="app-container py-spacing-3xl md:py-spacing-4xl stack-spacing">
+      <div className="w-full py-spacing-3xl md:py-spacing-4xl stack-spacing">
         {/* Header Section */}
         <section className="text-center space-y-spacing-xl">
           <div className="inline-flex items-center gap-spacing-sm px-spacing-lg py-spacing-xs bg-primary/[0.03] border border-primary/10 rounded-premium-full animate-in fade-in duration-1000">

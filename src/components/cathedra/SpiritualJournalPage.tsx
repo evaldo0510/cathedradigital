@@ -13,6 +13,7 @@ import { ptBR } from 'date-fns/locale';
 import { CathedraCard } from './CathedraCard';
 import { HomeButton } from './HomeButton';
 import StudyJournal from './StudyJournal';
+import ContemplativeLayout from './ContemplativeLayout';
 
 interface JournalEntry {
   id: string;
@@ -93,21 +94,9 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container py-spacing-2xl md:py-spacing-4xl space-y-spacing-3xl md:space-y-spacing-4xl">
+    <ContemplativeLayout>
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-spacing-xl max-w-spacing-3xl mx-auto">
-        <div className="premium-tag mx-auto">
-          <Icons.PenLine className="w-spacing-md h-spacing-md text-secondary" />
-          <span>Diarium Spirituale</span>
-        </div>
-        <h1 className="text-premium-4xl md:text-premium-7xl font-display font-bold text-primary tracking-tight">
-          Diário Espiritual
-        </h1>
-        <p className="text-premium-lg md:text-premium-xl text-primary/60 italic font-serif leading-relaxed">
-          "Examina, ó minha alma, o que fizeste hoje diante de Deus."
-        </p>
-      </header>
 
       <div className="flex justify-center">
         <div className="inline-flex bg-muted/20 p-spacing-xs rounded-premium-full border border-border/10 backdrop-blur-sm">
@@ -145,7 +134,7 @@ const SpiritualJournalPage = () => {
             className="space-y-spacing-3xl md:space-y-spacing-4xl"
           >
             {/* Entry Form */}
-            <section className="max-w-spacing-4xl mx-auto w-full">
+            <section className="w-full">
               <CathedraCard padding="lg" className="space-y-spacing-3xl">
                 <div className="space-y-spacing-xl">
                   <h3 className="text-premium-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
@@ -189,7 +178,7 @@ const SpiritualJournalPage = () => {
             </section>
 
             {/* History */}
-            <section className="space-y-spacing-2xl max-w-spacing-4xl mx-auto w-full">
+            <section className="space-y-spacing-2xl w-full">
               <div className="flex items-center gap-spacing-xl">
                 <div className="h-px flex-1 bg-border/40" />
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap uppercase">
@@ -261,7 +250,7 @@ const SpiritualJournalPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-spacing-4xl mx-auto w-full space-y-spacing-2xl"
+            className="w-full space-y-spacing-2xl"
           >
             <div className="flex items-center gap-spacing-xl">
               <div className="h-px flex-1 bg-border/40" />
@@ -275,7 +264,7 @@ const SpiritualJournalPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </ContemplativeLayout>
   );
 };
 

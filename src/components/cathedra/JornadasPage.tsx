@@ -215,7 +215,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   if (loading) {
     return (
-      <div className="space-y-spacing-lg max-w-spacing-2xl mx-auto pb-spacing-4xl">
+      <div className="space-y-spacing-lg w-full pb-spacing-4xl">
         <div className="text-center space-y-spacing-sm pt-spacing-md">
           <div className="w-spacing-xl h-spacing-xl mx-auto rounded-premium bg-primary/20 animate-pulse" />
           <div className="h-spacing-lg w-spacing-4xl mx-auto bg-muted/60 rounded-premium animate-pulse" />
@@ -239,8 +239,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       icon={Icons.Journeys}
     >
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
-      <div ref={ref} className="desktop-layout">
-        <div className="desktop-main space-y-spacing-xl md:space-y-spacing-2xl">
+      <div ref={ref} className="w-full">
+        <div className="w-full space-y-spacing-xl md:space-y-spacing-2xl">
           
           {/* Journey Reminder Settings */}
           {user && (
@@ -701,22 +701,6 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
       )}
         </div>
-        <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-          <div className="desktop-card bg-primary/5 border-primary/20">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Sua Formação</h3>
-            <p className="text-premium-xs text-muted-foreground leading-relaxed italic">
-              Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
-            </p>
-          </div>
-          <div className="desktop-card">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Mais Populares</h3>
-            <div className="space-y-spacing-sm">
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">1. O Caminho da Perfeição</div>
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">2. Catecismo Explicado</div>
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">3. Mistérios Gloriosos</div>
-            </div>
-          </div>
-        </aside>
       </div>
     </ContemplativeLayout>
   );

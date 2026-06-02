@@ -222,7 +222,7 @@
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/10 max-w-[65ch] mx-auto;
+    @apply font-reader text-foreground selection:bg-primary/10 w-full;
     font-size: clamp(var(--text-premium-base), 1.4vw, var(--text-premium-xl));
     line-height: 2.1;
     letter-spacing: var(--letter-spacing-wide);
@@ -247,11 +247,7 @@
   .font-size-large .reader-text { font-size: var(--text-premium-2xl) !important; }
   .font-size-extra-large .reader-text { font-size: var(--text-premium-3xl) !important; }
 
-  /* Specific Reader Container */
-  .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm sm:px-spacing-xl md:px-spacing-2xl lg:px-spacing-4xl py-spacing-md md:py-spacing-2xl transition-all duration-1000;
-    scroll-behavior: smooth;
-  }
+  
 
   /* Premium Editorial Styling for Bible/Catechism */
   .prose-premium {
@@ -276,14 +272,6 @@
 }
 
 @layer components {
-  /* Layout Único - Sistema de Containers */
-  .app-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm sm:px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl;
-  }
-
-  .contemplative-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm md:px-[var(--layout-padding)] py-[var(--layout-padding)] md:py-[calc(var(--layout-padding)*2)];
-  }
 
   /* Shared Module Header Style - Deprecated in favor of ContemplativeLayout props */
   .module-header {
@@ -368,30 +356,7 @@
     @apply btn-premium bg-transparent text-primary/30 hover:text-primary hover:bg-primary/[0.04];
   }
 
-  /* Desktop two-column layout: main content + optional side panel */
-  .desktop-layout {
-    @apply w-full;
-  }
-  @screen lg {
-    .desktop-layout {
-      @apply grid gap-spacing-xl;
-      grid-template-columns: 1fr 320px;
-    }
-  }
-  @screen xl {
-    .desktop-layout {
-      grid-template-columns: 1fr 360px;
-      @apply gap-spacing-2xl;
-    }
-  }
 
-  .desktop-main {
-    @apply min-w-spacing-0;
-  }
-
-  .desktop-aside {
-    @apply hidden lg:flex flex-col gap-spacing-lg sticky top-spacing-4xl self-start;
-  }
 
   .btn-full-mobile {
     @apply w-full md:w-auto min-h-[44px] flex items-center justify-center;

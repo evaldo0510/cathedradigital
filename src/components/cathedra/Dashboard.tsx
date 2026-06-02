@@ -12,6 +12,7 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { CathedraCard } from './CathedraCard';
 import { SpiritualContinuity } from './SpiritualContinuity';
+import ContemplativeLayout from './ContemplativeLayout';
 
 interface DashboardProps {
   user: User | null;
@@ -41,7 +42,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }
 
   return (
-    <div className="app-container py-spacing-xl md:py-spacing-4xl max-w-spacing-4xl mx-auto">
+    <ContemplativeLayout className="md:px-0">
       <div className="stack-spacing-lg">
         
         {/* Welcome Section - Reduced Height */}
@@ -111,7 +112,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           </FadeUp>
         )}
       </div>
-    </div>
+    </ContemplativeLayout>
   );
 };
 

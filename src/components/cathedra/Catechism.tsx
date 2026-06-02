@@ -238,7 +238,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
-        <div className="max-w-[70ch] mx-auto">
+        <div className="w-full">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
              <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>

@@ -139,7 +139,7 @@ const ItinerariumDetailPage: React.FC = () => {
   const progress = (completedSteps.size / steps.length) * 100;
 
   return (
-    <div className="max-w-spacing-2xl mx-auto py-spacing-2xl md:py-spacing-4xl space-y-spacing-3xl">
+    <div className="w-full py-spacing-2xl md:py-spacing-4xl space-y-spacing-3xl">
       <motion.div 
         initial={{ opacity: 0, x: -10 }} 
         animate={{ opacity: 1, x: 0 }}
