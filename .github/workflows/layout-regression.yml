@@ -29,8 +29,8 @@ jobs:
         run: bun install
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps chromium
-      - name: Run Accessibility Tests
-        run: bunx playwright test tests/e2e/catecismo-a11y-avancado.spec.ts --project=chromium --project=mobile-chrome --project=mobile-safari --project=mobile-320 --project=mobile-412
+      - name: Run Accessibility & Reduced Motion Tests
+        run: bunx playwright test tests/e2e/catecismo-a11y-avancado.spec.ts tests/e2e/bottom-nav-reduced-motion.spec.ts --project=chromium --project=mobile-chrome --project=mobile-safari --project=mobile-320 --project=mobile-412
         env:
           DEVICE_NAME: ${{ matrix.device }}
       - name: Upload Accessibility Evidence
