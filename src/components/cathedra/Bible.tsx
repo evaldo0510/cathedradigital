@@ -1364,7 +1364,7 @@ const Bible: React.FC = memo(() => {
                     </React.Suspense>
                   </div>
                 )}
-                )}
+              </>
               </>
             )}
           </div>
