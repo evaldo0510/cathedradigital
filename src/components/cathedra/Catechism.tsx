@@ -140,24 +140,37 @@ const LazyParagraph: React.FC<{
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+    <article 
+      ref={ref} 
+      id={`p${p}`} 
+      className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}
+      aria-labelledby={`heading-p${p}`}
+    >
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
-          <span className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
-          <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all">
+          <span id={`heading-p${p}`} className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
+          <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+            <Button 
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} 
+              className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              aria-label={`${isFavorite('catechism', `CIC §${p}`) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'} - Parágrafo ${p}`}
+            >
               <Icons.Heart className={`w-spacing-sm h-spacing-sm transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
             </Button>
-            <Button onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary">
+            <Button 
+              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} 
+              className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              aria-label={`Perguntar à Logos IA sobre o Parágrafo ${p}`}
+            >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
-              <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
+            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} highlights={highlights} />
-    </div>
+    </article>
   );
 };
 
@@ -287,7 +300,7 @@ const Catechism: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
             {selectedPart.sections.map((sec, idx) => (
-              <CathedraCard key={sec.id} variant="interactive" padding="none" onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group">
+              <CathedraCard key={sec.id} variant="interactive" padding="none" onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
                 <div className="p-spacing-lg flex items-center justify-between h-full">
                   <div className="space-y-spacing-xs text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
@@ -312,7 +325,15 @@ const Catechism: React.FC = memo(() => {
           <div className="relative group">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-            <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-spacing-3xl bg-background/50" />
+            <input 
+              type="text" 
+              placeholder="Buscar por parágrafo (§) ou tema..." 
+              aria-label="Buscar no Catecismo por parágrafo ou tema"
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} 
+              className="search-input-premium pl-spacing-3xl bg-background/50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none" 
+            />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
@@ -320,7 +341,11 @@ const Catechism: React.FC = memo(() => {
             <div 
               key={part.part} 
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-md text-left transition-all duration-700 hover:bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] hover:border-primary/[0.08]"
+              className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-md text-left transition-all duration-700 hover:bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] hover:border-primary/[0.08] focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              tabIndex={0}
+              role="button"
+              aria-label={`Ver ${part.part}: ${part.title}`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setSelectedPart(part); setViewMode('sections'); } }}
             >
               <div className="space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-sm">
