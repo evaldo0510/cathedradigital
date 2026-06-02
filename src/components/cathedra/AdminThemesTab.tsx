@@ -214,7 +214,7 @@ const AdminThemesTab = () => {
             <DialogTrigger asChild>
               <Button size="sm" className="gap-spacing-xs shrink-0"><Icons.Plus className="w-spacing-md h-spacing-md" /> Novo Tema</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-spacing-md">
+            <DialogContent className="w-full">
               <DialogHeader><DialogTitle>Criar Novo Tema</DialogTitle></DialogHeader>
               <div className="space-y-spacing-md pt-spacing-md">
                 <div className="grid grid-cols-2 gap-spacing-md">
@@ -314,7 +314,7 @@ const AdminThemesTab = () => {
                   <Icons.Tag className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
                 </div>
                 <h3 className="font-bold text-premium-lg mb-spacing-2xs">Nenhum tema selecionado</h3>
-                <p className="text-muted-foreground text-premium-sm max-w-[250px]">Selecione um tema à esquerda para gerenciar seus conteúdos conectados.</p>
+                <p className="text-muted-foreground text-premium-sm">Selecione um tema à esquerda para gerenciar seus conteúdos conectados.</p>
               </CardContent>
             </Card>
           ) : (
@@ -461,7 +461,7 @@ const AdminThemesTab = () => {
 
       {/* Edit Theme Dialog */}
       <Dialog open={showEditTheme} onOpenChange={setShowEditTheme}>
-        <DialogContent className="max-w-spacing-md">
+        <DialogContent className="w-full">
           <DialogHeader><DialogTitle>Editar Tema</DialogTitle></DialogHeader>
           {editingTheme && (
             <div className="space-y-spacing-md pt-spacing-md">
