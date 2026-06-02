@@ -138,9 +138,10 @@ async function generateReport() {
                     
                     <div style="margin-top: 1rem;">
                         <strong>Status:</strong>
-                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
                             <span class="badge ${v.hasCuts ? 'badge-danger' : 'badge-success'}">Cortes: ${v.hasCuts ? 'SIM' : 'NÃO'}</span>
                             <span class="badge ${v.hasOverlaps ? 'badge-danger' : 'badge-success'}">Sobreposições: ${v.hasOverlaps ? 'SIM' : 'NÃO'}</span>
+                            <span class="badge ${(v as any).smallTouchArea ? 'badge-danger' : 'badge-success'}">Área de Toque (44px): ${(v as any).smallTouchArea ? 'FALHA' : 'OK'}</span>
                         </div>
                     </div>
 

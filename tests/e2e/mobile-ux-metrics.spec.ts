@@ -3,10 +3,12 @@ import fs from 'fs';
 import path from 'path';
 
 const MOBILE_VIEWPORTS = [
-  { name: 'mobile-xs', width: 320, height: 568 }, // iPhone SE
-  { name: 'mobile-standard', width: 390, height: 844 }, // iPhone 14
-  { name: 'mobile-large', width: 430, height: 932 }, // iPhone 14 Pro Max
-  { name: 'foldable', width: 280, height: 653 }, // Galaxy Fold
+  { name: 'mobile-320', width: 320, height: 568 },
+  { name: 'mobile-360', width: 360, height: 800 },
+  { name: 'mobile-390', width: 390, height: 844 },
+  { name: 'mobile-412', width: 412, height: 915 },
+  { name: 'mobile-480', width: 480, height: 853 },
+  { name: 'foldable', width: 280, height: 653 },
 ];
 
 const TARGET_ROUTES = [
@@ -112,16 +114,23 @@ test.describe('Mobile UX Metrics & Catechism Integrity', () => {
               }
             });
 
-            // Check clickability of buttons
-            const buttons = document.querySelectorAll('button, a[role="button"]');
+            // Check clickability of buttons and minimum touch area (44x44px)
+            const buttons = document.querySelectorAll('button, a[role="button"], .clickable, .btn');
+            const MIN_TOUCH_SIZE = 44;
+            let smallTouchAreaCount = 0;
+
             buttons.forEach((btn, i) => {
               const rect = btn.getBoundingClientRect();
-              const elAtPoint = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
               
               if (rect.height > 0 && rect.width > 0) {
+                // Minimum touch area check
+                if (rect.width < MIN_TOUCH_SIZE || rect.height < MIN_TOUCH_SIZE) {
+                  smallTouchAreaCount++;
+                  issues.push(`Small touch area on button ${i}: ${Math.round(rect.width)}x${Math.round(rect.height)}px (Target: 44x44px)`);
+                }
+
+                const elAtPoint = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
                 if (!elAtPoint || (!btn.contains(elAtPoint) && !elAtPoint.contains(btn))) {
-                   // Only report if the element at point is not a child/parent of the button (e.g. an icon inside or an overlay)
-                   // and if the overlay is not something we expect
                    const isOverlay = elAtPoint?.classList.contains('overlay') || elAtPoint?.tagName === 'SVG';
                    if (!isOverlay) {
                      issues.push(`Button ${i} ("${btn.textContent?.trim().substring(0, 15)}") might be obscured by ${elAtPoint?.tagName}.${elAtPoint?.className}`);
@@ -133,6 +142,7 @@ test.describe('Mobile UX Metrics & Catechism Integrity', () => {
             return {
               hasCuts,
               hasOverlaps: issues.some(i => i.includes('overlap')),
+              smallTouchArea: smallTouchAreaCount > 0,
               issues
             };
           });
