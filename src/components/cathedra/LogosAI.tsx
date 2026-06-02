@@ -376,12 +376,15 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Reflexão..."}
+                    aria-label={settings.totalSilence ? "Logos IA desativada no Modo Silêncio" : "Digite sua dúvida teológica para a Logos IA"}
                     disabled={settings.totalSilence}
                     className="w-full bg-transparent border-none text-premium-sm md:text-premium-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-spacing-sm md:py-spacing-md transition-all text-primary"
                   />
                   <button 
                     type="submit" 
+                    aria-label="Enviar pergunta"
                     disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
+
                     className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-spacing-xs"
                   >
                     <Icons.ArrowRight className="w-spacing-md h-spacing-md stroke-[1]" />

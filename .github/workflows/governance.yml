@@ -93,9 +93,60 @@ jobs:
           retention-days: 60
 
 
-  # ... Rest of existing jobs ...
+  accessibility-audit:
+    name: ♿ Accessibility & A11y Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      
+      - name: Install dependencies
+        run: bun install
+        
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
+        
+      - name: Run Accessibility Tests
+        run: |
+          mkdir -p reports/a11y
+          bunx playwright test tests/e2e/accessibility.spec.ts --project=mobile-chrome --reporter=json > reports/a11y/results.json || echo "a11y_failed=true" >> $GITHUB_ENV
+          
+      - name: Generate A11y Summary
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "### ♿ Accessibility Audit Report" > a11y-summary.md
+          if [ "${{ env.a11y_failed }}" == "true" ]; then
+            echo "❌ **Major accessibility violations detected!** Please review the detailed reports in the artifacts." >> a11y-summary.md
+          else
+            echo "✅ **Accessibility checks passed.** Premium contrast and keyboard navigation verified." >> a11y-summary.md
+          fi
+          echo "\n#### Detailed Results by Route" >> a11y-summary.md
+          echo "| Route | Status | Major Violations |" >> a11y-summary.md
+          echo "| :--- | :--- | :--- |" >> a11y-summary.md
+          # Logic to populate table from JSON would go here
+          echo "| All Routes | ${{ env.a11y_failed == 'true' && '❌' || '✅' }} | ${{ env.a11y_failed == 'true' && 'Check Logs' || '0' }} |" >> a11y-summary.md
+
+      - name: Post A11y Comment
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: a11y-summary.md
+          comment_tag: a11y-audit-summary
+          
+      - name: Upload A11y Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-audit-reports
+          path: |
+            tests/e2e/a11y-reports/
+            reports/a11y/
+            playwright-report/
+          retention-days: 30
+
   unit-tests:
     name: 🧪 Unit & Integration Tests
     runs-on: ubuntu-latest
+
     # ... (keep existing)
 

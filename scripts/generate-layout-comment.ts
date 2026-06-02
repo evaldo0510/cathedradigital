@@ -76,6 +76,25 @@ if (existsSync(METRICS_REPORT_PATH)) {
   }
 }
 
+// 3. Accessibility Summary
+const A11Y_RESULTS_PATH = 'reports/a11y/results.json';
+if (existsSync(A11Y_RESULTS_PATH)) {
+  try {
+    const a11yData = JSON.parse(readFileSync(A11Y_RESULTS_PATH, 'utf8'));
+    const failedTests = a11yData.suites?.[0]?.specs?.filter(s => !s.ok) || [];
+    
+    console.log('#### ♿ Acessibilidade & Navegação\n');
+    if (failedTests.length === 0) {
+      console.log('✅ Todos os testes de acessibilidade e navegação por teclado passaram.\n');
+    } else {
+      console.log(`⚠️ **${failedTests.length} Falhas de Acessibilidade** detectadas. Verifique os logs do CI para detalhes de contraste, ARIA e foco.\n`);
+    }
+  } catch (e) {
+    console.log('⚠️ Erro ao processar relatório de acessibilidade: ' + (e as Error).message);
+  }
+}
+
 console.log('\n> [!TIP]\n> Relatório HTML detalhado disponível nos artefatos do CI.');
+
 
 
