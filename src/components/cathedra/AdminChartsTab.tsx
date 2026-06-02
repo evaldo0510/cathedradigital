@@ -5,8 +5,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 const RechartsCharts = lazy(() => import('./AdminChartsRecharts'));
 
 interface AdminChartsTabProps {
-  userGrowth: any[];
-  revenueData: any[];
+  userGrowth: { name: string; total: number }[];
+  revenueData: { name: string; amount: number }[];
 }
 
 // Fixed ref warning by wrapping with forwardRef (though we don't use the ref here, 
