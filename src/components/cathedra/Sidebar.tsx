@@ -308,6 +308,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
                   <Button 
                     variant="ghost"
+                    data-testid="a11y-trigger"
                     onClick={onOpenA11y} 
                     className={`h-spacing-xl rounded-premium border flex items-center justify-center gap-spacing-xs transition-all ${
                       isHighContrast 
