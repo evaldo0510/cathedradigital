@@ -14,6 +14,7 @@ interface ValidationResult {
   viewport: string;
   hasCuts: boolean;
   hasOverlaps: boolean;
+  smallTouchArea?: boolean;
   issues: string[];
 }
 
