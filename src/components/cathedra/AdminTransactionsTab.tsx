@@ -4,8 +4,19 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
+interface Transaction {
+  id: string;
+  description: string | null;
+  amount: number;
+  status: string;
+  created_at: string;
+  profiles?: {
+    name: string | null;
+  };
+}
+
 interface AdminTransactionsTabProps {
-  transactions: any[];
+  transactions: Transaction[];
 }
 
 const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transactions }) => (
