@@ -99,7 +99,7 @@ const HORAS: HoraInfo[] = [
 ];
 
 const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, onBack }) => (
-  <div className="max-w-spacing-3xl mx-auto space-y-spacing-lg">
+  <div className="w-full space-y-spacing-lg">
     <div className="flex items-center gap-spacing-md">
       <Button onClick={onBack} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
         <Icons.ChevronLeft className="w-spacing-md h-spacing-md text-foreground" />
@@ -187,14 +187,14 @@ const BreviaryPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl">
+    <div className="w-full space-y-spacing-xl">
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.History className="w-spacing-sm h-spacing-sm text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
         </div>
         <h1 className="text-premium-3xl md:text-premium-5xl font-display font-bold text-foreground">Breviário</h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto leading-relaxed">
+        <p className="text-muted-foreground font-serif italic leading-relaxed">
           A Liturgia das Horas santifica cada momento do dia pela oração da Igreja.
         </p>
       </div>

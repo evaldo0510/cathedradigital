@@ -50,7 +50,7 @@ export const CathedraOverlay: React.FC<CathedraOverlayProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "relative w-full max-w-spacing-4xl bg-card border border-primary/5 rounded-premium shadow-premium p-spacing-xl md:p-spacing-3xl max-h-[90dvh] overflow-y-auto",
+              "relative w-full bg-card border border-primary/5 rounded-premium shadow-premium p-spacing-xl md:p-spacing-3xl max-h-[90dvh] overflow-y-auto",
               className
             )}
           >

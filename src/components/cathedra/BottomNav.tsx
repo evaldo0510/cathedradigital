@@ -174,7 +174,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
-      <div className="flex items-center justify-between h-full w-full max-w-spacing-md mx-auto relative">
+      <div className="flex items-center justify-between h-full w-full relative">
         {items.map((item: any, i: number) => {
           const isActive = item.isMenu 
             ? false 

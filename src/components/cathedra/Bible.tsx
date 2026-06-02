@@ -232,7 +232,7 @@ const Bible: React.FC = () => {
           <Suspense fallback={null}>
             {showLogosAI && (
               <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md p-spacing-xl flex items-center justify-center">
-                 <div className="w-full max-w-[70ch] bg-card rounded-premium-lg border border-primary/10 shadow-premium p-spacing-xl">
+                 <div className="w-full bg-card rounded-premium-lg border border-primary/10 shadow-premium p-spacing-xl">
                     <div className="flex justify-between items-center mb-spacing-lg">
                       <h3 className="font-display text-premium-lg">Reflexão Logos</h3>
                       <Button variant="ghost" size="icon" onClick={() => setShowLogosAI(false)}><Icons.X /></Button>
