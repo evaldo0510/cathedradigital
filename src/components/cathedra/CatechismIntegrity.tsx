@@ -127,7 +127,7 @@ const CatechismIntegrity: React.FC = () => {
   }
 
   return (
-    <div className="max-w-spacing-4xl mx-auto p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500">
+    <div className="w-full p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
         <div>
           <h1 className="text-premium-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
