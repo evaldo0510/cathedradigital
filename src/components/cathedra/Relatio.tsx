@@ -195,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-spacing-2xl pt-spacing-2xl border-t border-primary/[0.01] space-y-spacing-lg mb-spacing-2xl", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-spacing-2xl pt-spacing-2xl border-t border-primary/[0.01] space-y-spacing-lg mb-spacing-2xl w-full", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-spacing-sm">
           <div className="w-spacing-lg h-spacing-lg rounded-premium-full bg-primary/[0.03] flex items-center justify-center">
