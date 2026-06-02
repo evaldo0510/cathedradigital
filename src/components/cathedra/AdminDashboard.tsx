@@ -270,7 +270,7 @@ const AdminDashboard: React.FC = () => {
 
         <TabsContent value="transactions">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
-            <AdminTransactionsTab />
+            <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
           </Suspense>
         </TabsContent>
 
