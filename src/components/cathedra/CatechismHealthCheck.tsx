@@ -63,7 +63,7 @@ const CatechismHealthCheck: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-spacing-3xl mx-auto p-spacing-xl space-y-spacing-xl">
+    <div className="w-full p-spacing-xl space-y-spacing-xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-premium-2xl font-serif font-bold">Validação do Catecismo</h1>
