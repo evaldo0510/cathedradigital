@@ -156,7 +156,7 @@ const DesignSystemGuide: React.FC = () => {
                 <h5 className="text-secondary uppercase tracking-widest text-[9px] font-bold">Layout Margins</h5>
                 <div className="aspect-video bg-primary/[0.02] border border-dashed border-primary/10 rounded-premium flex items-center justify-center p-spacing-xl">
                   <div className="w-full h-full border border-dashed border-secondary/40 rounded-premium-sm flex items-center justify-center text-[10px] font-mono text-secondary/60">
-                    .app-container (1440px max)
+                    ContemplativeLayout max-w-spacing-4xl
                   </div>
                 </div>
               </CathedraCard>
