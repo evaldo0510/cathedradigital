@@ -1,0 +1,78 @@
+{
+  "last_updated": "2026-06-02T00:30:18.410Z",
+  "overall_score": 98.95833333333333,
+  "page_metrics": [
+    {
+      "name": "Search",
+      "overall": 93.75,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 75,
+        "theme": 100,
+        "tokens": 100
+      }
+    },
+    {
+      "name": "Home",
+      "overall": 100,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100
+      }
+    },
+    {
+      "name": "Bible",
+      "overall": 100,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100
+      }
+    },
+    {
+      "name": "Catechism",
+      "overall": 100,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100
+      }
+    },
+    {
+      "name": "Library",
+      "overall": 100,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100
+      }
+    },
+    {
+      "name": "Documents",
+      "overall": 100,
+      "variation": 0,
+      "metrics": {
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100
+      }
+    }
+  ],
+  "history_trends": [
+    {
+      "date": "2026-06-02T00:30:18.405Z",
+      "score": 98.95833333333333
+    }
+  ]
+}

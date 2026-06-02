@@ -1,19 +1,24 @@
-## 🏛️ Governança de Design System
+## 🏛️ Governança de Design System (Audit Summary)
 
-### Ranking de Conformidade por Página
+**Score Geral: 99.0%** | Última Auditoria: 6/2/2026
 
-| Página | Layout | Cards | Tema | Tokens | Geral |
+| Página | Geral | Tendência | Tokens | Layout | Status |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| Search | 100% | 75% | 100% | 100% | ✅ **93.8%** |
-| Home | 100% | 100% | 100% | 100% | ✅ **100.0%** |
-| Bible | 100% | 100% | 100% | 100% | ✅ **100.0%** |
-| Catechism | 100% | 100% | 100% | 100% | ✅ **100.0%** |
-| Library | 100% | 100% | 100% | 100% | ✅ **100.0%** |
-| Documents | 100% | 100% | 100% | 100% | ✅ **100.0%** |
+| Search | **93.8%** | ➖ 0% | 100% | 100% | ✅ |
+| Home | **100.0%** | ➖ 0% | 100% | 100% | ✅ |
+| Bible | **100.0%** | ➖ 0% | 100% | 100% | ✅ |
+| Catechism | **100.0%** | ➖ 0% | 100% | 100% | ✅ |
+| Library | **100.0%** | ➖ 0% | 100% | 100% | ✅ |
+| Documents | **100.0%** | ➖ 0% | 100% | 100% | ✅ |
 
-### 🚩 Top Violações Identificadas
+### 🚩 Checklist de Ação (Violações Priorizadas)
 
-#### Search
-- **Card Violation** (Linha 0): Custom card-like div detected.
-  - 💡 *Sugerido*: Replace with <CathedraCard /> for visual consistency.
+<details>
+<summary><b>Search</b> (1 problemas encontrados)</summary>
+
+| Linha | Tipo | Descrição | Ação Sugerida |
+| :--- | :--- | :--- | :--- |
+| 0 | `Card Violation` | Custom card-like div detected. | Replace with <CathedraCard /> for visual consistency. |
+
+</details>
 

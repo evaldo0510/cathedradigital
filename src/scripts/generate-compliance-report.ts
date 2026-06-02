@@ -1,15 +1,6 @@
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-
-interface Violation {
-  file: string;
-  line: number;
-  type: string;
-  description: string;
-  suggestion: string;
-  codeSnippet?: string;
-}
+import * as yaml from 'js-yaml';
 
 interface PageCompliance {
   name: string;
@@ -20,15 +11,20 @@ interface PageCompliance {
   tokens: number;
   overall: number;
   violations: Violation[];
-  trends?: {
-    overall: number;
-    layout: number;
-    cards: number;
-    theme: number;
-    tokens: number;
-  };
+  trends?: any;
 }
 
+interface Violation {
+  file: string;
+  line: number;
+  type: string;
+  description: string;
+  suggestion: string;
+  codeSnippet?: string;
+}
+
+const HISTORY_FILE = 'src/scripts/history/compliance-history.json';
+const CONFIG_FILE = 'compliance-config.yml';
 const PAGES = [
   { name: 'Home', path: 'src/components/cathedra/HomeMainContent.tsx' },
   { name: 'Bible', path: 'src/components/cathedra/Bible.tsx' },
@@ -37,8 +33,6 @@ const PAGES = [
   { name: 'Documents', path: 'src/components/cathedra/DocumentViewer.tsx' },
   { name: 'Search', path: 'src/components/cathedra/GlobalSearchPage.tsx' }
 ];
-
-const HISTORY_FILE = 'src/scripts/history/compliance-history.json';
 
 function getCodeSnippet(filePath: string, line: number) {
   if (line === 0) return '';
@@ -67,7 +61,6 @@ function runAudit() {
     lines.forEach((line, index) => {
       const lineNum = index + 1;
 
-      // 1. Icon Violation
       if (line.includes("from 'lucide-react'") && !page.path.includes('constants.tsx')) {
         violations.push({
           file: page.path,
@@ -79,7 +72,6 @@ function runAudit() {
         });
       }
 
-      // 2. Token Violation (Hardcoded colors)
       const hexMatch = line.match(/#[0-9a-fA-F]{3,8}/);
       if (hexMatch && !line.includes('sacredPalette') && !line.includes('// audit-ignore')) {
         violations.push({
@@ -92,7 +84,6 @@ function runAudit() {
         });
       }
 
-      // 3. Layout Violation (Inline styles)
       if (line.includes('style={{') && !line.includes('// audit-ignore')) {
         violations.push({
           file: page.path,
@@ -105,7 +96,6 @@ function runAudit() {
       }
     });
 
-    // 4. Card Violation
     if (content.includes('<div') && content.includes('rounded') && content.includes('shadow') && !content.includes('CathedraCard')) {
       violations.push({
         file: page.path,
@@ -134,7 +124,6 @@ function runAudit() {
     });
   }
 
-  // Handle history and trends
   let history: any[] = [];
   if (fs.existsSync(HISTORY_FILE)) {
     try {
@@ -161,22 +150,52 @@ function runAudit() {
     }
   });
 
-  // Save to history (keep last 50 builds)
   history.push({
     timestamp: new Date().toISOString(),
     reports: reports.map(({ trends, ...r }) => r)
   });
   if (history.length > 50) history.shift();
+  fs.mkdirSync(path.dirname(HISTORY_FILE), { recursive: true });
   fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
 
   reports.sort((a, b) => a.overall - b.overall);
 
-  return { reports, lastBuild };
+  return { reports, lastBuild, history };
 }
 
-const { reports, lastBuild } = runAudit();
+const { reports, lastBuild, history } = runAudit();
+
+// Load Config
+let config: any = { compliance_thresholds: { overall: 80 } };
+if (fs.existsSync(CONFIG_FILE)) {
+  try {
+    config = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+  } catch (e) {}
+}
 
 fs.writeFileSync('compliance-report.json', JSON.stringify(reports, null, 2));
+
+// Generate Summary.json (Requested for easier integrations)
+const summary = {
+  last_updated: new Date().toISOString(),
+  overall_score: reports.reduce((acc, r) => acc + r.overall, 0) / reports.length,
+  page_metrics: reports.map(r => ({
+    name: r.name,
+    overall: r.overall,
+    variation: r.trends?.overall || 0,
+    metrics: {
+      layout: r.layout,
+      cards: r.cards,
+      theme: r.theme,
+      tokens: r.tokens
+    }
+  })),
+  history_trends: history.map((h: any) => ({
+    date: h.timestamp,
+    score: h.reports.reduce((acc: number, r: any) => acc + r.overall, 0) / h.reports.length
+  })).slice(-10)
+};
+fs.writeFileSync('summary.json', JSON.stringify(summary, null, 2));
 
 function getTrendIcon(val: number = 0) {
   if (val > 0) return `<span style="color: #10b981;">↑ ${val.toFixed(1)}%</span>`;
@@ -184,12 +203,13 @@ function getTrendIcon(val: number = 0) {
   return `<span style="color: #666;">--</span>`;
 }
 
+// HTML Dashboard with Expandable Diffs and History Chart
 let html = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Design System Compliance Report</title>
+    <title>Design System Governance Dashboard</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdfcfb; padding: 40px; color: #1a1a1a; }
         .container { max-width: 1100px; margin: 0 auto; }
@@ -204,40 +224,52 @@ let html = `
         .score-bad { color: #ef4444; }
         .code-diff { background: #1a1a1a; color: #f8f8f2; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; margin-top: 8px; }
         .suggestion { color: #b58b3a; font-weight: 600; }
-        .trend { font-size: 0.8rem; margin-left: 8px; }
+        details summary { cursor: pointer; color: #b58b3a; font-weight: 600; outline: none; }
+        .history-chart { display: flex; align-items: flex-end; height: 100px; gap: 4px; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .bar { background: #b58b3a; width: 20px; border-radius: 4px 4px 0 0; transition: height 0.3s; position: relative; }
+        .bar:hover { background: #1a1a1a; }
+        .bar::after { content: attr(data-score) "%"; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0; }
+        .bar:hover::after { opacity: 1; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Governança de Design System</h1>
-        <p>Relatório Consolidado de Conformidade • ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
+        <h1>Dashboard de Governança Digital</h1>
         
         <div class="card">
-            <h2>Ranking de Páginas & Tendência</h2>
+            <h2>Histórico de Conformidade (Últimos Builds)</h2>
+            <div class="history-chart">
+                ${summary.history_trends.map(h => `
+                    <div class="bar" style="height: ${h.score}%" data-score="${h.score.toFixed(1)}"></div>
+                `).join('')}
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">Médias globais por build para acompanhamento de tendência.</p>
+        </div>
+
+        <div class="card">
+            <h2>Ranking de Páginas & Variação vs Último Build</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Página</th>
-                        <th>Layout</th>
-                        <th>Cards</th>
-                        <th>Tema</th>
-                        <th>Tokens</th>
                         <th>Geral</th>
                         <th>Variação</th>
+                        <th>Tokens</th>
+                        <th>Layout</th>
+                        <th>Tema</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${reports.map(r => {
-                        const scoreClass = r.overall >= 80 ? 'score-good' : 'score-bad';
+                        const scoreClass = r.overall >= (config.compliance_thresholds.pages?.[r.name]?.overall || config.compliance_thresholds.overall) ? 'score-good' : 'score-bad';
                         return `
                         <tr>
                             <td style="font-weight: 600;">${r.name}</td>
-                            <td>${r.layout}%</td>
-                            <td>${r.cards}%</td>
-                            <td>${r.theme}%</td>
-                            <td>${r.tokens}%</td>
                             <td class="score ${scoreClass}">${r.overall.toFixed(1)}%</td>
                             <td>${getTrendIcon(r.trends?.overall)}</td>
+                            <td>${r.tokens}%</td>
+                            <td>${r.layout}%</td>
+                            <td>${r.theme}%</td>
                         </tr>`;
                     }).join('')}
                 </tbody>
@@ -246,28 +278,29 @@ let html = `
 
         ${reports.map(r => `
         <div class="card">
-            <h2>Violações: ${r.name}</h2>
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Arquivo: <code>${r.path}</code></p>
-            ${r.violations.length === 0 ? '<p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>' : `
+            <h2>Página: ${r.name}</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>${r.path}</code></p>
+            ${r.violations.length === 0 ? '<p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>' : `
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 150px;">Tipo</th>
-                        <th style="width: 80px;">Linha</th>
-                        <th>Descrição & Contexto</th>
-                        <th>Ação Sugerida</th>
+                        <th style="width: 180px;">Violação</th>
+                        <th>Ação & Contexto Detalhado</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${r.violations.map(v => `
                     <tr>
-                        <td><span style="color: #ef4444; font-weight: 600;">${v.type}</span></td>
-                        <td><code>${v.line}</code></td>
+                        <td><span style="color: #ef4444; font-weight: 600;">${v.type}</span><br><code style="font-size: 0.75rem;">Linha: ${v.line}</code></td>
                         <td>
-                            <div>${v.description}</div>
-                            ${v.codeSnippet ? `<pre class="code-diff"><code>${v.codeSnippet}</code></pre>` : ''}
+                            <details>
+                                <summary>Visualizar Diff e Sugestão</summary>
+                                <div style="margin-top: 10px;">
+                                    <p class="suggestion">💡 Sugestão: ${v.suggestion}</p>
+                                    ${v.codeSnippet ? `<pre class="code-diff"><code>${v.codeSnippet}</code></pre>` : ''}
+                                </div>
+                            </details>
                         </td>
-                        <td class="suggestion">${v.suggestion}</td>
                     </tr>`).join('')}
                 </tbody>
             </table>
@@ -280,26 +313,30 @@ let html = `
 `;
 fs.writeFileSync('compliance-report.html', html);
 
-let md = `## 🏛️ Governança de Design System\n\n`;
-md += `### Ranking de Conformidade & Tendência\n\n`;
-md += `| Página | Layout | Cards | Tema | Tokens | Geral | Tendência |\n`;
-md += `| :--- | :---: | :---: | :---: | :---: | :---: | :---: |\n`;
+// Markdown for PR
+let md = `## 🏛️ Governança de Design System (Audit Summary)\n\n`;
+md += `**Score Geral: ${summary.overall_score.toFixed(1)}%** | Última Auditoria: ${new Date().toLocaleDateString()}\n\n`;
+md += `| Página | Geral | Tendência | Tokens | Layout | Status |\n`;
+md += `| :--- | :---: | :---: | :---: | :---: | :---: |\n`;
 reports.forEach(r => {
-    const trendIcon = (r.trends?.overall || 0) > 0 ? '📈' : (r.trends?.overall || 0) < 0 ? '📉' : '➖';
-    const statusIcon = r.overall >= 80 ? '✅' : '⚠️';
-    md += `| ${r.name} | ${r.layout}% | ${r.cards}% | ${r.theme}% | ${r.tokens}% | ${statusIcon} **${r.overall.toFixed(1)}%** | ${trendIcon} ${r.trends?.overall?.toFixed(1) || 0}% |\n`;
+    const trend = (r.trends?.overall || 0) > 0 ? '📈' : (r.trends?.overall || 0) < 0 ? '📉' : '➖';
+    const limit = config.compliance_thresholds.pages?.[r.name]?.overall || config.compliance_thresholds.overall;
+    const status = r.overall >= limit ? '✅' : '❌';
+    md += `| ${r.name} | **${r.overall.toFixed(1)}%** | ${trend} ${r.trends?.overall?.toFixed(1) || 0}% | ${r.tokens}% | ${r.layout}% | ${status} |\n`;
 });
 
-md += `\n### 🚩 Checklist de Correção (Top 10 por Página)\n\n`;
+md += `\n### 🚩 Checklist de Ação (Violações Priorizadas)\n\n`;
 reports.forEach(r => {
     if (r.violations.length > 0) {
-        md += `#### ${r.name} (\`${r.path}\`)\n`;
+        md += `<details>\n<summary><b>${r.name}</b> (${r.violations.length} problemas encontrados)</summary>\n\n`;
+        md += `| Linha | Tipo | Descrição | Ação Sugerida |\n`;
+        md += `| :--- | :--- | :--- | :--- |\n`;
         r.violations.forEach(v => {
-            md += `- [ ] **${v.type}** (L${v.line}): ${v.description}\n  - 🛠️ **Ação**: ${v.suggestion}\n`;
+            md += `| ${v.line} | \`${v.type}\` | ${v.description} | ${v.suggestion} |\n`;
         });
-        md += `\n`;
+        md += `\n</details>\n\n`;
     }
 });
 
 fs.writeFileSync('compliance-report.md', md);
-console.log('Relatórios de conformidade gerados com sucesso.');
+console.log('Relatórios e Dashboard gerados com sucesso.');
