@@ -275,7 +275,7 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="max-w-spacing-3xl mx-auto space-y-spacing-lg py-spacing-xl px-spacing-md">
+      <div className="w-full space-y-spacing-lg py-spacing-xl px-spacing-md">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-premium-full px-spacing-xs py-spacing-2xs"
@@ -352,7 +352,7 @@ const CommunityPage: React.FC = () => {
   }
 
   return (
-    <div className="desktop-layout py-spacing-xl">
+    <div className="w-full py-spacing-xl">
       <div className="desktop-main px-spacing-md">
         {loading && posts.length === 0 ? (
           <div className="space-y-spacing-xl">

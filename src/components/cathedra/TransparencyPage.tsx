@@ -9,14 +9,14 @@ import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
   return (
-    <div className="desktop-layout pt-spacing-2xl pb-spacing-4xl">
+    <div className="w-full pt-spacing-2xl pb-spacing-4xl">
       <SEOHead 
         title="Transparência e Integridade | Cathedra" 
         description="Saiba como os conteúdos da Cathedra são gerados e revisados. Nosso compromisso com a verdade sem uso de Inteligência Artificial."
         path="/transparencia"
       />
       
-      <div className="max-w-spacing-3xl mx-auto space-y-spacing-3xl px-spacing-md">
+      <div className="w-full space-y-spacing-3xl px-spacing-md">
         {/* Header */}
         <div className="text-center space-y-spacing-md">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary text-premium-xs font-black uppercase tracking-[0.2em] border border-primary/20">
