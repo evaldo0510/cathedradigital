@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
+import ContemplativeLayout from './ContemplativeLayout';
 
 import { SOCIAL_LINKS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
   return (
-    <div className="w-full pt-spacing-2xl pb-spacing-4xl">
+    <ContemplativeLayout>
       <SEOHead 
         title="Transparência e Integridade | Cathedra" 
         description="Saiba como os conteúdos da Cathedra são gerados e revisados. Nosso compromisso com a verdade sem uso de Inteligência Artificial."
@@ -125,8 +126,7 @@ const TransparencyPage: React.FC = () => {
         </div>
 
       </div>
-    </div>
-  );
+    </ContemplativeLayout>
 };
 
 export default TransparencyPage;

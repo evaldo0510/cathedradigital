@@ -16,6 +16,7 @@ import { TagBubble } from './NexusBubbles';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
+import ContemplativeLayout from './ContemplativeLayout';
 
 
 interface Tag {
@@ -130,7 +131,7 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="w-full section-rhythm animate-in fade-in slide-in-from-bottom-spacing-md duration-700">
+    <ContemplativeLayout>
       <div className="desktop-main px-spacing-md stack-rhythm">
         <header className="space-y-spacing-md text-center header-margin-rhythm">
           <div className="flex justify-center mb-spacing-md">
@@ -262,8 +263,7 @@ const TemasPage = () => {
         </div>
       </div>
 
-    </div>
-  );
+    </ContemplativeLayout>
 };
 
 export default TemasPage;

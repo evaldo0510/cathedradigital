@@ -14,6 +14,7 @@ import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -352,7 +353,7 @@ const CommunityPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full py-spacing-xl">
+    <ContemplativeLayout>
       <div className="desktop-main px-spacing-md">
         {loading && posts.length === 0 ? (
           <div className="space-y-spacing-xl">
@@ -465,8 +466,7 @@ const CommunityPage: React.FC = () => {
         )}
       </div>
 
-    </div>
-  );
+    </ContemplativeLayout>
 };
 
 export default CommunityPage;
