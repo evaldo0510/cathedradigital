@@ -436,5 +436,78 @@
         ]
       }
     ]
+  },
+  {
+    "timestamp": "2026-06-02T00:35:29.988Z",
+    "reports": [
+      {
+        "name": "Home",
+        "path": "src/components/cathedra/HomeMainContent.tsx",
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 100,
+        "violations": []
+      },
+      {
+        "name": "Bible",
+        "path": "src/components/cathedra/Bible.tsx",
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 100,
+        "violations": []
+      },
+      {
+        "name": "Catechism",
+        "path": "src/components/cathedra/Catechism.tsx",
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 100,
+        "violations": []
+      },
+      {
+        "name": "Library",
+        "path": "src/components/cathedra/BibliotecaPage.tsx",
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 100,
+        "violations": []
+      },
+      {
+        "name": "Documents",
+        "path": "src/components/cathedra/DocumentViewer.tsx",
+        "layout": 100,
+        "cards": 100,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 100,
+        "violations": []
+      },
+      {
+        "name": "Search",
+        "path": "src/components/cathedra/GlobalSearchPage.tsx",
+        "layout": 100,
+        "cards": 75,
+        "theme": 100,
+        "tokens": 100,
+        "overall": 93.75,
+        "violations": [
+          {
+            "file": "src/components/cathedra/GlobalSearchPage.tsx",
+            "line": 0,
+            "type": "Card Violation",
+            "description": "Custom card-like div detected.",
+            "suggestion": "Replace with <CathedraCard /> for visual consistency."
+          }
+        ]
+      }
+    ]
   }
 ]

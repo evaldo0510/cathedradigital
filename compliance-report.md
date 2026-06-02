@@ -1,24 +1,12 @@
-## 🏛️ Governança de Design System (Audit Summary)
+### ⚠️ Erro de Validação: `compliance-config.yml`
 
-**Score Geral: 99.0%** | Última Auditoria: 6/2/2026
+A configuração de thresholds contém erros que bloqueiam o build. Corrija-os para prosseguir:
 
-| Página | Geral | Tendência | Tokens | Layout | Status |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| Search | **93.8%** | ➖ 0.0% | 100% | 100% | ✅ |
-| Home | **100.0%** | ➖ 0.0% | 100% | 100% | ✅ |
-| Bible | **100.0%** | ➖ 0.0% | 100% | 100% | ✅ |
-| Catechism | **100.0%** | ➖ 0.0% | 100% | 100% | ✅ |
-| Library | **100.0%** | ➖ 0.0% | 100% | 100% | ✅ |
-| Documents | **100.0%** | ➖ 0.0% | 100% | 100% | ✅ |
+#### 📍 Campo: `compliance_thresholds → overall` (Linha 1)
+- **Erro:** O valor máximo é 100
+- **Valor recebido:** `{ overall`
 
-### 🚩 Checklist de Ação (Violações Priorizadas)
-
-<details>
-<summary><b>Search</b> (1 problemas encontrados)</summary>
-
-| Linha | Tipo | Descrição | Ação Sugerida |
-| :--- | :--- | :--- | :--- |
-| 0 | `Card Violation` | Custom card-like div detected. | Replace with <CathedraCard /> for visual consistency. |
-
-</details>
+```yaml
+1: compliance_thresholds: { overall: 150 }
+```
 

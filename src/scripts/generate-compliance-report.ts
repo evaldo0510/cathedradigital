@@ -209,23 +209,44 @@ const ComplianceConfigSchema = z.object({
 
 // Load and Validate Config
 let config: z.infer<typeof ComplianceConfigSchema> = { compliance_thresholds: { overall: 80 } };
+const configRawContent = fs.existsSync(CONFIG_FILE) ? fs.readFileSync(CONFIG_FILE, 'utf-8') : null;
 
-if (fs.existsSync(CONFIG_FILE)) {
+if (configRawContent) {
   try {
-    const rawConfig = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+    const rawConfig = yaml.load(configRawContent);
     const result = ComplianceConfigSchema.safeParse(rawConfig);
     
     if (!result.success) {
       console.error('\x1b[31m%s\x1b[0m', '❌ ERRO DE VALIDAÇÃO DE CONFIGURAÇÃO');
-      console.error(`O arquivo '${CONFIG_FILE}' possui erros que precisam ser corrigidos:\n`);
+      
+      const configLines = configRawContent.split('\n');
+      let annotationMd = `### ⚠️ Erro de Validação: \`${CONFIG_FILE}\`\n\n`;
+      annotationMd += `A configuração de thresholds contém erros que bloqueiam o build. Corrija-os para prosseguir:\n\n`;
       
       result.error.issues.forEach(issue => {
-        const path = issue.path.join(' → ');
-        console.error(`  📍 Campo: \x1b[33m${path}\x1b[0m`);
+        const pathStr = issue.path.join(' → ');
+        // Attempt to find the line number in the YAML (very basic heuristic)
+        const key = issue.path[issue.path.length - 1];
+        const lineIndex = configLines.findIndex(l => l.includes(String(key)));
+        const lineNum = lineIndex !== -1 ? lineIndex + 1 : 1;
+        
+        console.error(`  📍 Campo: \x1b[33m${pathStr}\x1b[0m (Linha ${lineNum})`);
         console.error(`     Erro: ${issue.message}\n`);
+
+        annotationMd += `#### 📍 Campo: \`${pathStr}\` (Linha ${lineNum})\n`;
+        annotationMd += `- **Erro:** ${issue.message}\n`;
+        
+        if (lineIndex !== -1) {
+          const rawValue = configLines[lineIndex].split(':')[1]?.trim() || 'N/A';
+          annotationMd += `- **Valor recebido:** \`${rawValue}\`\n`;
+          if (issue.message.includes('0 e 100')) {
+             annotationMd += `- **Valor esperado:** Um número entre \`0\` e \`100\`\n`;
+          }
+          annotationMd += `\n\`\`\`yaml\n${lineNum}: ${configLines[lineIndex]}\n\`\`\`\n\n`;
+        }
       });
       
-      console.log('\x1b[36m%s\x1b[0m', '💡 Dica: Thresholds devem ser números entre 0 e 100.');
+      fs.writeFileSync('compliance-report.md', annotationMd);
       process.exit(1);
     }
     config = result.data;
@@ -236,12 +257,10 @@ if (fs.existsSync(CONFIG_FILE)) {
     configPageNames.forEach(pageName => {
       if (!knownPageNames.includes(pageName)) {
         console.warn('\x1b[33m%s\x1b[0m', `⚠️  AVISO: A página '${pageName}' definida no config não existe no sistema.`);
-        console.warn(`    Páginas válidas: ${knownPageNames.join(', ')}\n`);
       }
     });
   } catch (e) {
     console.error('\x1b[31m%s\x1b[0m', `❌ ERRO CRÍTICO: Falha ao processar ${CONFIG_FILE}.`);
-    console.error('Verifique se o arquivo é um YAML válido (indentação, dois pontos, etc).\n');
     process.exit(1);
   }
 }
