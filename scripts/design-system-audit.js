@@ -10,6 +10,14 @@ const PAGES = [
   { name: 'Search', path: 'src/components/cathedra/GlobalSearchPage.tsx' },
 ];
 
+const THRESHOLDS = {
+  total: 85,
+  layout: 75,
+  card: 90,
+  theme: 90,
+  tokens: 85
+};
+
 const LAYOUT_COMPONENTS = ['ContemplativeLayout', 'motion', 'CathedraOverlay', 'SectionHeader'];
 const CARD_COMPONENTS = ['CathedraCard'];
 const THEME_CLASSES = ['bg-background', 'text-foreground', 'bg-primary', 'text-primary', 'bg-secondary', 'text-secondary', 'border-border', 'bg-muted', 'text-muted-foreground'];
@@ -78,16 +86,42 @@ results.forEach(r => {
 });
 
 report += '\n## Top 10 Violations\n\n';
-const allViolations = results.flatMap(r => r.violations.map(v => `${r.name}: ${v}`));
-const uniqueViolations = [...new Set(allViolations)].slice(0, 10);
+const allViolations = results.flatMap(r => r.violations.map(v => ({ page: r.name, msg: v })));
+const uniqueViolations = allViolations.slice(0, 10);
 
 uniqueViolations.forEach((v, i) => {
-  report += `${i + 1}. ${v}\n`;
+  report += `${i + 1}. **${v.page}**: ${v.msg}\n`;
 });
+
+// History Tracking
+const historyPath = 'reports/compliance-history.json';
+let history = [];
+if (fs.existsSync(historyPath)) {
+  history = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
+}
+const snapshot = {
+  timestamp: new Date().toISOString(),
+  avgTotal: results.reduce((acc, r) => acc + r.total, 0) / results.length,
+  pages: results.map(r => ({ name: r.name, total: r.total }))
+};
+history.push(snapshot);
+if (history.length > 50) history.shift();
+if (!fs.existsSync('reports')) fs.mkdirSync('reports');
+fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
 
 if (!fs.existsSync('src/components/cathedra/reports')) {
   fs.mkdirSync('src/components/cathedra/reports', { recursive: true });
 }
 fs.writeFileSync('src/components/cathedra/reports/COMPLIANCE_REPORT.md', report);
-console.log('Compliance report generated at src/components/cathedra/reports/COMPLIANCE_REPORT.md');
-console.log(JSON.stringify(results, null, 2));
+
+// CI Enforcement
+const failures = results.filter(r => r.total < THRESHOLDS.total);
+if (failures.length > 0) {
+  console.error('❌ DESIGN SYSTEM COMPLIANCE FAILED');
+  failures.forEach(f => {
+    console.error(`- ${f.name}: ${f.total.toFixed(1)}% (Threshold: ${THRESHOLDS.total}%)`);
+  });
+  process.exit(1);
+}
+
+console.log('✅ Compliance check passed');
