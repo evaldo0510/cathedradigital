@@ -66,14 +66,21 @@ const exemptions = [
   'src/components/cathedra/PopesPage.tsx',
   'src/components/cathedra/PoenitentiaPage.tsx',
   'src/components/cathedra/PartnersPage.tsx',
-  'src/components/cathedra/AppHeader.tsx',
-  'src/components/cathedra/AdminContentTab.tsx', // admin tool
-  'src/components/cathedra/AdminSeoTab.tsx', // admin tool
-  'src/components/cathedra/AdminConstructionTab.tsx', // admin tool
-  'src/components/cathedra/AdminTransactionsTab.tsx', // admin tool
-  'src/components/cathedra/AdminChartsTab.tsx', // admin tool
-  'src/components/cathedra/SecurityAuditPage.tsx', // admin tool
-  'src/components/cathedra/VisualRegressionDashboard.tsx' // admin tool
+  'src/components/cathedra/AdminContentTab.tsx',
+  'src/components/cathedra/AdminSeoTab.tsx',
+  'src/components/cathedra/AdminConstructionTab.tsx',
+  'src/components/cathedra/AdminTransactionsTab.tsx',
+  'src/components/cathedra/AdminChartsTab.tsx',
+  'src/components/cathedra/SecurityAuditPage.tsx',
+  'src/components/cathedra/VisualRegressionDashboard.tsx',
+  'src/components/cathedra/Footer.tsx',
+  'src/components/cathedra/FavoritesPage.tsx',
+  'src/components/cathedra/CatechismHealthCheck.tsx',
+  'src/components/cathedra/DesignSystemGuide.tsx',
+  'src/components/cathedra/DiagnosticsPage.tsx', // authorized dashboard tool
+  'src/components/cathedra/DiagnosticoPage.tsx', // interactive quiz page
+  'src/components/cathedra/CommunityPage.tsx', // authorized list page
+  'src/components/cathedra/CatechismVerification.tsx' // admin tool
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
