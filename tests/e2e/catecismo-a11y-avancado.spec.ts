@@ -87,6 +87,3 @@ test.describe('Catecismo - Acessibilidade Avançada', () => {
     expect(box?.width).toBeLessThanOrEqual(640);
   });
 });
-
-
-
