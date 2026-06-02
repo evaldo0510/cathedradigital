@@ -361,7 +361,7 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar reader-container" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
+      <div className="flex-1 overflow-y-auto custom-scrollbar" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
         <div className="mx-auto px-spacing-md md:px-spacing-lg py-spacing-2xl space-y-spacing-2xl pb-spacing-4xl reader-text">
 
           <header className="text-center space-y-spacing-md">
