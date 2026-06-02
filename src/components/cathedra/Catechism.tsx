@@ -212,6 +212,11 @@ const Catechism: React.FC = memo(() => {
         } else if (viewMode === 'sections') {
           setViewMode('parts');
           setSelectedPart(null);
+          setTimeout(() => {
+            if (lastFocusedElement) {
+              document.getElementById(lastFocusedElement)?.focus();
+            }
+          }, 100);
         }
       }
     };
@@ -238,8 +243,18 @@ const Catechism: React.FC = memo(() => {
   }, [viewMode, selectedSection]);
 
   const goBack = () => {
-    if (viewMode === 'reading') setViewMode('sections');
-    else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
+    if (viewMode === 'reading') {
+      setViewMode('sections');
+      setTimeout(() => {
+        if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus();
+      }, 100);
+    } else if (viewMode === 'sections') {
+      setViewMode('parts');
+      setSelectedPart(null);
+      setTimeout(() => {
+        if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus();
+      }, 100);
+    }
   };
 
   const jumpToParagraph = (p: number) => {
@@ -361,12 +376,13 @@ const Catechism: React.FC = memo(() => {
           {CIC_SECTIONS.map((part, idx) => (
             <div 
               key={part.part} 
-              onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
+              id={`part-card-${idx}`}
+              onClick={() => { setLastFocusedElement(`part-card-${idx}`); setSelectedPart(part); setViewMode('sections'); }} 
               className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-md text-left transition-all duration-700 hover:bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] hover:border-primary/[0.08] focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
               tabIndex={0}
               role="button"
               aria-label={`Ver ${part.part}: ${part.title}`}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setSelectedPart(part); setViewMode('sections'); } }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`part-card-${idx}`); setSelectedPart(part); setViewMode('sections'); } }}
             >
               <div className="space-y-spacing-sm">
                 <div className="flex items-center gap-spacing-sm">
