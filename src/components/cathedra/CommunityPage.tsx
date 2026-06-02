@@ -488,7 +488,6 @@ const CommunityPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </aside>
     </div>
   );
 };
