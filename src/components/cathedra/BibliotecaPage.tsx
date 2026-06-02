@@ -154,21 +154,21 @@ const BibliotecaPage: React.FC = () => {
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-md md:gap-spacing-lg">
                 {group.items.map((item, i) => (
                   <CathedraCard
                     key={item.title}
                     variant="interactive"
-                    padding="lg"
+                    padding="sm"
+                    className="md:p-spacing-lg flex flex-col gap-spacing-md md:gap-spacing-lg group h-full"
                     onClick={() => navigate(item.route)}
-                    className="flex flex-col gap-spacing-lg group"
                   >
-                    <div className={cn("w-spacing-2xl h-spacing-2xl rounded-premium flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
+                    <div className={cn("w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
                       {item.icon}
                     </div>
-                    <div className="space-y-spacing-xs flex-1">
-                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-premium-base tracking-tight">{item.title}</h3>
-                      <p className="text-premium-xs leading-relaxed text-muted-foreground/40 line-clamp-spacing-xs italic">{item.description}</p>
+                    <div className="space-y-spacing-2xs md:space-y-spacing-xs flex-1">
+                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-premium-xs md:text-premium-base tracking-tight leading-tight">{item.title}</h3>
+                      <p className="text-[10px] md:text-premium-xs leading-relaxed text-muted-foreground/40 line-clamp-2 italic">{item.description}</p>
                     </div>
                   </CathedraCard>
                 ))}
