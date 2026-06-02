@@ -140,7 +140,7 @@ const LazyParagraph: React.FC<{
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
           <span className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
@@ -262,13 +262,13 @@ const Catechism: React.FC = memo(() => {
              <ReadingControlPanel />
           </div>
 
-          <div className="space-y-spacing-3xl">
+          <div className="space-y-spacing-xl md:space-y-spacing-3xl">
             {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
             ))}
           </div>
 
-          <div className="mt-spacing-4xl pt-spacing-4xl border-t border-primary/5">
+          <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
              <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
           </div>
         </div>
