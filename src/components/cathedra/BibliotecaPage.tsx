@@ -154,21 +154,21 @@ const BibliotecaPage: React.FC = () => {
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-spacing-2xs md:gap-spacing-lg -mx-spacing-xs md:mx-0">
+              <div className="grid grid-cols-2 min-[370px]:grid-cols-3 lg:grid-cols-4 gap-spacing-2xs md:gap-spacing-lg -mx-spacing-sm md:mx-0">
                 {group.items.map((item, i) => (
                   <CathedraCard
                     key={item.title}
                     variant="interactive"
                     padding="none"
-                    className="p-spacing-xs md:p-spacing-lg flex flex-col gap-spacing-xs md:gap-spacing-lg group h-full border-transparent bg-primary/[0.01] hover:bg-primary/[0.03] transition-all"
+                    className="p-spacing-xs md:p-spacing-lg flex flex-col gap-spacing-2xs md:gap-spacing-lg group h-full border-transparent bg-primary/[0.01] hover:bg-primary/[0.03] transition-all items-center md:items-start text-center md:text-left"
                     onClick={() => navigate(item.route)}
                   >
-                    <div className={cn("w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
+                    <div className={cn("w-spacing-lg h-spacing-lg md:w-spacing-2xl md:h-spacing-2xl rounded-premium flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
                       {item.icon}
                     </div>
-                    <div className="space-y-spacing-2xs md:space-y-spacing-xs flex-1">
-                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-premium-xs md:text-premium-base tracking-tight leading-tight">{item.title}</h3>
-                      <p className="text-[10px] md:text-premium-xs leading-relaxed text-muted-foreground/40 line-clamp-2 italic">{item.description}</p>
+                    <div className="space-y-[2px] md:space-y-spacing-xs flex-1">
+                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-[9px] md:text-premium-base tracking-tight leading-tight">{item.title}</h3>
+                      <p className="text-[7px] md:text-premium-xs leading-tight text-muted-foreground/30 line-clamp-1 italic hidden md:block">{item.description}</p>
                     </div>
                   </CathedraCard>
                 ))}

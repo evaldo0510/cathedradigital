@@ -80,6 +80,14 @@ export default defineConfig({
       use: { viewport: { width: 360, height: 800 }, deviceScaleFactor: 3 },
     },
     {
+      name: 'mobile-375-iphone8',
+      use: { ...devices['iPhone 8'], viewport: { width: 375, height: 667 } },
+    },
+    {
+      name: 'mobile-414-iphone8plus',
+      use: { ...devices['iPhone 8 Plus'], viewport: { width: 414, height: 736 } },
+    },
+    {
       name: 'mobile-390',
       use: { ...devices['iPhone 13'], viewport: { width: 390, height: 844 } },
     },
@@ -90,6 +98,10 @@ export default defineConfig({
     {
       name: 'mobile-480',
       use: { viewport: { width: 480, height: 853 }, deviceScaleFactor: 2 },
+    },
+    {
+      name: 'ipad-portrait',
+      use: { ...devices['iPad Pro 11'], viewport: { width: 768, height: 1024 } },
     },
   ],
 

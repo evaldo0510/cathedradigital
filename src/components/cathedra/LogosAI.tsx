@@ -348,22 +348,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
                         <motion.div 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="w-full space-y-spacing-sm py-spacing-md"
+                          className="w-full py-spacing-md"
                         >
-                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-3/4 animate-pulse" />
-                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-1/2 animate-pulse" />
+                          <LogosChatSkeleton />
                         </motion.div>
                       )}
-                      {isTyping && (
-                        <div className="flex gap-spacing-sm opacity-10 py-spacing-md">
-                          {[0, 1, 2].map((i) => (
-                            <motion.div 
-                              key={i}
-                              animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
-                              transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
-                              className="w-spacing-2xs h-spacing-2xs bg-primary rounded-premium-full" 
-                            />
-                          ))}
+                      {isTyping && !isLoading && (
+                        <div className="flex gap-spacing-sm opacity-20 py-spacing-md items-center">
+                          <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.3s]" />
+                          <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.15s]" />
+                          <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce" />
+                          <span className="text-[8px] font-black uppercase tracking-widest ml-spacing-xs text-primary/40">Logos está contemplando...</span>
                         </div>
                       )}
                     </div>
