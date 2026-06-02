@@ -201,11 +201,21 @@ if (fs.existsSync(CONFIG_FILE)) {
     if (!result.success) {
       console.error('❌ ERRO DE VALIDAÇÃO: compliance-config.yml possui erros de esquema:');
       result.error.issues.forEach(issue => {
-        console.error(`   - [${issue.path.join('.')}] : ${issue.message}`);
+        const path = issue.path.join('.');
+        console.error(`   - [${path}] : ${issue.message}`);
       });
       process.exit(1);
     }
     config = result.data;
+
+    // Additional check: Ensure page names in config match known pages
+    const knownPageNames = PAGES.map(p => p.name);
+    const configPageNames = Object.keys(config.compliance_thresholds.pages || {});
+    configPageNames.forEach(pageName => {
+      if (!knownPageNames.includes(pageName)) {
+        console.warn(`⚠️  AVISO: Página '${pageName}' no compliance-config.yml não foi encontrada no registro do script. Será ignorada.`);
+      }
+    });
   } catch (e) {
     console.error(`❌ ERRO: Falha ao carregar ${CONFIG_FILE}. Verifique se o formato YAML está correto.`);
     process.exit(1);
