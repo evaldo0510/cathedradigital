@@ -1,8 +1,0 @@
-compliance_thresholds:
-  overall: 150 # Invalid: max 100
-  pages:
-    Home:
-      layout: -10 # Invalid: min 0
-      invalid_key: 50 # Not in schema, but zod record/object might allow it unless strictly configured
-  metrics:
-    layout: "invalid" # Invalid: should be number
