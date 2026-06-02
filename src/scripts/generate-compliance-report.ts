@@ -432,6 +432,33 @@ fs.writeFileSync('compliance-report.html', html);
 // Markdown for PR
 let md = `## 🏛️ Governança de Design System (Audit Summary)\n\n`;
 md += `**Score Geral: ${summary.overall_score.toFixed(1)}%** | Última Auditoria: ${new Date().toLocaleDateString()}\n\n`;
+
+// Calculate totals for summary
+const totalViolationsByPage = reports.reduce((acc, r) => {
+    acc[r.name] = r.violations.length;
+    return acc;
+}, {} as Record<string, number>);
+
+const totalViolationsByType = reports.reduce((acc, r) => {
+    r.violations.forEach(v => {
+        acc[v.type] = (acc[v.type] || 0) + 1;
+    });
+    return acc;
+}, {} as Record<string, number>);
+
+md += `### 📊 Resumo Executivo\n`;
+md += `| Métrica | Total de Violações |\n`;
+md += `| :--- | :---: |\n`;
+Object.entries(totalViolationsByType).forEach(([type, count]) => {
+    md += `| ${type} | ${count} |\n`;
+});
+md += `\n| Página | Total de Violações |\n`;
+md += `| :--- | :---: |\n`;
+Object.entries(totalViolationsByPage).forEach(([page, count]) => {
+    md += `| ${page} | ${count} |\n`;
+});
+
+md += `\n### 📈 Detalhamento por Página\n\n`;
 md += `| Página | Geral | Tendência | Tokens | Layout | Status |\n`;
 md += `| :--- | :---: | :---: | :---: | :---: | :---: |\n`;
 reports.forEach(r => {
