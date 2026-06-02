@@ -11,7 +11,11 @@ const targetPages = [
 
 const viewports = [
   { name: 'mobile', width: 375, height: 812 },
-  { name: 'tablet', width: 768, height: 1024 },
+  { name: 'mobile-landscape', width: 812, height: 375 },
+  { name: 'tablet-portrait', width: 834, height: 1112 },
+  { name: 'tablet-landscape', width: 1112, height: 834 },
+  { name: 'foldable-portrait', width: 512, height: 800 },
+  { name: 'foldable-landscape', width: 1024, height: 600 },
   { name: 'desktop', width: 1440, height: 900 },
 ];
 
