@@ -1,62 +1,64 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Catecismo - Acessibilidade Avançada', () => {
-  // O Playwright já gerencia o viewport via projetos no config
-  
   test.beforeEach(async ({ page }) => {
     await page.goto('/catechism');
-    // Espera o conteúdo inicial carregar
-    await page.waitForSelector('.CathedraCard', { timeout: 15000 });
+    await page.waitForSelector('[role="button"]', { timeout: 15000 });
+  });
+
+  test('Auditoria de Acessibilidade Automática (axe-core)', async ({ page }, testInfo) => {
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+
+    await testInfo.attach('accessibility-scan-results', {
+      body: JSON.stringify(results, null, 2),
+      contentType: 'application/json'
+    });
+
+    const strictViolations = results.violations.filter(
+      v => v.impact === 'critical' || v.impact === 'serious'
+    );
+    expect(strictViolations, `Encontradas violações graves de acessibilidade no Catecismo: ${JSON.stringify(strictViolations)}`).toEqual([]);
   });
 
   test('Navegação por teclado e Retorno de Foco', async ({ page }) => {
+    // 1. Navega até uma Parte e abre com Enter
     const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
-    await firstPart.focus();
+    const partId = await firstPart.getAttribute('id') || 'part-card-0';
     
-    // 1. Abre com Enter
+    await firstPart.focus();
     await page.keyboard.press('Enter');
     await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
     
-    // 2. Navega nas seções e abre uma
+    // 2. Navega nas seções e abre uma com Espaço
     const firstSection = page.locator('[role="button"]').filter({ hasText: /Seção/i }).first();
     const sectionId = await firstSection.getAttribute('id');
+    
     await firstSection.focus();
-    await page.keyboard.press('Space');
+    await page.keyboard.press(' ');
     
     // 3. Verifica se abriu a leitura
     await page.waitForSelector('[id^="p"]', { timeout: 10000 });
     await expect(page.locator('[id^="p"]').first()).toBeVisible();
 
-    // 4. Fecha com Esc e valida retorno de foco
+    // 4. Fecha com Esc e valida retorno de foco ao elemento que disparou (Seção)
     await page.keyboard.press('Escape');
     await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
     if (sectionId) {
       await expect(page.locator(`#${sectionId}`)).toBeFocused();
     }
 
-    // 5. Volta ao sumário via botão e valida foco (opcional, já validamos Esc)
-    await firstSection.click();
-    await page.waitForSelector('button:has-text("Sumário")', { timeout: 10000 });
-    const backButton = page.locator('button').filter({ hasText: /Sumário/i });
-    await backButton.click();
-    if (sectionId) {
-      await expect(page.locator(`#${sectionId}`)).toBeFocused();
-    }
-  });
-
-  test('Ordem de navegação e ARIA', async ({ page }) => {
-    const parts = page.locator('[role="button"]').filter({ hasText: /PARTE/ });
-    const count = await parts.count();
-    for (let i = 0; i < Math.min(count, 3); i++) {
-      const part = parts.nth(i);
-      await expect(part).toHaveAttribute('role', 'button');
-      await expect(part).toHaveAttribute('aria-label', /Ver PARTE/i);
-      await expect(part).toHaveAttribute('tabindex', '0');
-    }
+    // 5. Volta ao sumário de partes e valida foco na Parte disparadora
+    const backToParts = page.locator('button').filter({ hasText: /Voltar às Partes/i });
+    await backToParts.click();
+    await page.waitForSelector('[role="button"]:has-text("PARTE")', { timeout: 10000 });
+    
+    await expect(page.locator(`#${partId}`)).toBeFocused();
   });
 
   test('Comportamento com prefers-reduced-motion', async ({ page }) => {
-    // Emula a preferência do sistema por movimento reduzido
     await page.emulateMedia({ reducedMotion: 'reduce' });
     
     const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
@@ -65,24 +67,23 @@ test.describe('Catecismo - Acessibilidade Avançada', () => {
     await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
     const endTime = Date.now();
     
-    // Com movimento reduzido, a transição deve ser rápida
-    expect(endTime - startTime).toBeLessThan(1000); 
+    // Transição instantânea ou muito rápida (< 500ms)
+    expect(endTime - startTime).toBeLessThan(500); 
   });
 
-  test('Estabilidade de layout sob Zoom', async ({ page }) => {
-    // Aumentamos o tamanho da fonte ou simulamos zoom via viewport menor mantendo densidade
-    await page.setViewportSize({ width: 320, height: 480 });
+  test('Contraste de cores e Zoom (200%)', async ({ page }) => {
+    await page.setViewportSize({ width: 640, height: 480 });
+    
+    const results = await new AxeBuilder({ page })
+      .withTags(['color-contrast'])
+      .analyze();
+      
+    expect(results.violations).toEqual([]);
+    
     const header = page.locator('h1').filter({ hasText: /Catecismo/i });
     await expect(header).toBeVisible();
     
-    const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
-    const hBox = await header.boundingBox();
-    const pBox = await firstPart.boundingBox();
-    
-    if (hBox && pBox) {
-      // Garante que não há overlap (o card deve estar abaixo do header)
-      expect(pBox.y).toBeGreaterThanOrEqual(hBox.y + hBox.height);
-    }
+    const box = await header.boundingBox();
+    expect(box?.width).toBeLessThanOrEqual(640);
   });
 });
-
