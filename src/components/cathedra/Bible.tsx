@@ -38,8 +38,8 @@ import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 import ContemplativeLayout from './ContemplativeLayout';
-import SectionHeader from './SectionHeader';
-import CathedraOverlay from './CathedraOverlay';
+import { SectionHeader } from './SectionHeader';
+import { CathedraOverlay } from './CathedraOverlay';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
