@@ -128,7 +128,7 @@ const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; c
 SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-spacing-xl animate-in fade-in duration-[2000ms] ease-out">
+  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-spacing-xl animate-in fade-in duration-2000 ease-out">
     <div className="relative mb-spacing-4xl">
       <motion.div 
         animate={{ 
