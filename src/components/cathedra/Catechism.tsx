@@ -313,7 +313,7 @@ const Catechism: React.FC = memo(() => {
           <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
           <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-spacing-3xl" />
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-spacing-md w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md w-full">
           {CIC_SECTIONS.map((part, idx) => (
             <div 
               key={part.part} 
