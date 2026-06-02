@@ -117,7 +117,7 @@ const CatechismExplorer: React.FC = () => {
   };
 
   return (
-    <div className="p-spacing-md md:p-spacing-xl space-y-spacing-md md:space-y-spacing-xl min-h-screen pb-spacing-3xl">
+    <div className="p-spacing-md md:p-spacing-xl space-y-spacing-md md:space-y-spacing-xl min-h-screen pb-spacing-xl md:pb-spacing-3xl">
       <SEOHead 
         title="Explorador do Catecismo | Cathedra" 
         description="Navegue pelos parágrafos do Catecismo da Igreja Católica com filtros inteligentes e temas."
