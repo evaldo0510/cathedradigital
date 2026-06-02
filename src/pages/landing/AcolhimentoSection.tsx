@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import { motion } from "framer-motion";
-import { Heart, Coffee, Home, Users } from "lucide-react";
+
 import { fadeUp } from "./animations";
 
 const AcolhimentoSection = () => {
@@ -14,7 +15,7 @@ const AcolhimentoSection = () => {
           className="text-center space-y-spacing-lg"
         >
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
-            <Heart className="w-spacing-md h-spacing-md fill-current" aria-hidden="true" />
+            <Icons.Heart className="w-spacing-md h-spacing-md fill-current" aria-hidden="true" />
             <span className="text-premium-xs font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
           <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold">Um Espaço Feito por Fiéis para Fiéis</h2>
@@ -27,17 +28,17 @@ const AcolhimentoSection = () => {
           {[
             { 
               title: "Ambiente Familiar", 
-              icon: <Home className="w-spacing-md h-spacing-md" />, 
+              icon: <Icons.Home className="w-spacing-md h-spacing-md" />, 
               desc: "Desenvolvemos cada detalhe para que sua experiência de oração e estudo seja tranquila e sem distrações. Aqui, o foco é o seu encontro com Deus." 
             },
             { 
               title: "Acolhimento e Suporte", 
-              icon: <Coffee className="w-spacing-md h-spacing-md" />, 
+              icon: <Icons.Coffee className="w-spacing-md h-spacing-md" />, 
               desc: "Dúvidas sobre a fé ou sobre o app? Nossa equipe e comunidade estão prontas para caminhar com você. Não é apenas um app, é uma irmandade." 
             },
             { 
               title: "Construído Juntos", 
-              icon: <Users className="w-spacing-md h-spacing-md" />, 
+              icon: <Icons.Users className="w-spacing-md h-spacing-md" />, 
               desc: "O Cathedra cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos." 
             }
           ].map((item, i) => (

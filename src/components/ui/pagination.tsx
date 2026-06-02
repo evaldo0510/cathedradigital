@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import * as React from "react";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+
 
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
@@ -48,7 +49,7 @@ PaginationLink.displayName = "PaginationLink";
 
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink aria-label="Go to previous page" size="default" className={cn("gap-spacing-2xs pl-spacing-xs", className)} {...props}>
-    <ChevronLeft className="h-spacing-md w-spacing-md" />
+    <Icons.ChevronLeft className="h-spacing-md w-spacing-md" />
     <span>Previous</span>
   </PaginationLink>
 );
@@ -57,14 +58,14 @@ PaginationPrevious.displayName = "PaginationPrevious";
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink aria-label="Go to next page" size="default" className={cn("gap-spacing-2xs pr-spacing-xs", className)} {...props}>
     <span>Next</span>
-    <ChevronRight className="h-spacing-md w-spacing-md" />
+    <Icons.ChevronRight className="h-spacing-md w-spacing-md" />
   </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
   <span aria-hidden className={cn("flex h-spacing-xl w-spacing-xl items-center justify-center", className)} {...props}>
-    <MoreHorizontal className="h-spacing-md w-spacing-md" />
+    <Icons.MoreHorizontal className="h-spacing-md w-spacing-md" />
     <span className="sr-only">More pages</span>
   </span>
 );

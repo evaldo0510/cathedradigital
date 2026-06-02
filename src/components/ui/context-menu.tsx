@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import * as React from "react";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
-import { Check, ChevronRight, Circle } from "lucide-react";
+
 
 import { cn } from "@/lib/utils";
 
@@ -32,7 +33,7 @@ const ContextMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-spacing-md w-spacing-md" />
+    <Icons.ChevronRight className="ml-auto h-spacing-md w-spacing-md" />
   </ContextMenuPrimitive.SubTrigger>
 ));
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
@@ -102,7 +103,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-spacing-xs flex h-spacing-sm w-spacing-sm items-center justify-center">
       <ContextMenuPrimitive.ItemIndicator>
-        <Check className="h-spacing-md w-spacing-md" />
+        <Icons.Check className="h-spacing-md w-spacing-md" />
       </ContextMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -124,7 +125,7 @@ const ContextMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-spacing-xs flex h-spacing-sm w-spacing-sm items-center justify-center">
       <ContextMenuPrimitive.ItemIndicator>
-        <Circle className="h-spacing-xs w-spacing-xs fill-current" />
+        <Icons.Circle className="h-spacing-xs w-spacing-xs fill-current" />
       </ContextMenuPrimitive.ItemIndicator>
     </span>
     {children}

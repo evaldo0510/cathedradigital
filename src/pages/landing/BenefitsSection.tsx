@@ -1,6 +1,7 @@
+import { Icons } from '@/constants';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
+
 import { HomeButton } from "@/components/cathedra/HomeButton";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
@@ -8,22 +9,22 @@ const registerBenefits = [
   { 
     title: "Vida de Oração", 
     description: "Sincronize seu plano de leitura bíblica e estudos teológicos em todos os seus dispositivos.", 
-    icon: <Bookmark className="h-spacing-md w-spacing-md text-primary" /> 
+    icon: <Icons.Bookmark className="h-spacing-md w-spacing-md text-primary" /> 
   },
   { 
     title: "Tesouros Pessoais", 
     description: "Guarde versículos, orações e meditações que tocam seu coração para consultas rápidas.", 
-    icon: <Star className="h-spacing-md w-spacing-md text-primary" /> 
+    icon: <Icons.Star className="h-spacing-md w-spacing-md text-primary" /> 
   },
   { 
     title: "Constância", 
     description: "Acompanhe sua jornada com metas de estudo, insígnias e lembretes para manter o hábito espiritual.", 
-    icon: <Trophy className="h-spacing-md w-spacing-md text-primary" /> 
+    icon: <Icons.Trophy className="h-spacing-md w-spacing-md text-primary" /> 
   },
   { 
     title: "Estudo Guiado", 
     description: "Desbloqueie o acesso completo ao Logos IA para diálogos teológicos sem limites.", 
-    icon: <ShieldCheck className="h-spacing-md w-spacing-md text-primary" /> 
+    icon: <Icons.ShieldCheck className="h-spacing-md w-spacing-md text-primary" /> 
   },
 ];
 

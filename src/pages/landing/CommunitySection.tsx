@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import { motion } from "framer-motion";
-import { Users, Globe, Shield, MessageSquare } from "lucide-react";
+
 import { fadeUp } from "./animations";
 
 const CommunitySection = () => {
@@ -7,25 +8,25 @@ const CommunitySection = () => {
     {
       title: "Rede de Oração Viva",
       desc: "Milhares de fiéis unidos em oração simultânea. Peça orações e interceda pelos seus irmãos em Cristo.",
-      icon: <Users className="w-spacing-lg h-spacing-lg" />,
+      icon: <Icons.Users className="w-spacing-lg h-spacing-lg" />,
       tag: "Intercessão"
     },
     {
       title: "Irmandades Digitais",
       desc: "Grupos de estudo e partilha focados em temas específicos do Magistério e da vida dos santos.",
-      icon: <Globe className="h-spacing-lg w-spacing-lg" />,
+      icon: <Icons.Globe className="h-spacing-lg w-spacing-lg" />,
       tag: "Comunidade"
     },
     {
       title: "Ambiente Seguro",
       desc: "Espaço moderado e livre de distrações, focado exclusivamente no crescimento espiritual e teológico.",
-      icon: <Shield className="h-spacing-lg w-spacing-lg" />,
+      icon: <Icons.Shield className="h-spacing-lg w-spacing-lg" />,
       tag: "Privacidade"
     },
     {
       title: "Partilha de Graças",
       desc: "Um mural para testemunhar as maravilhas que Deus opera em sua vida através do estudo e da oração.",
-      icon: <MessageSquare className="h-spacing-lg w-spacing-lg" />,
+      icon: <Icons.MessageSquare className="h-spacing-lg w-spacing-lg" />,
       tag: "Testemunho"
     }
   ];

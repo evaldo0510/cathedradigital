@@ -1,9 +1,10 @@
+import { Icons } from '@/constants';
 
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Button } from "./button";
-import { Search, Mail, Bell } from "lucide-react";
+
 
 describe("Button Accessibility & Keyboard Navigation", () => {
   it("navigates through buttons using the keyboard in order", async () => {
@@ -83,7 +84,7 @@ describe("Button Accessibility & Keyboard Navigation", () => {
   it("ensures icon-only buttons have labels and consistent sizing", () => {
     render(
       <Button size="icon" aria-label="Search Settings">
-        <Search />
+        <Icons.Search />
       </Button>
     );
     
@@ -98,9 +99,9 @@ describe("Button Accessibility & Keyboard Navigation", () => {
   it("handles multiple icons or complex children without breaking alignment", () => {
     render(
       <Button>
-        <Mail />
+        <Icons.Mail />
         <span>Contact</span>
-        <Bell />
+        <Icons.Bell />
       </Button>
     );
     

@@ -1,11 +1,12 @@
+import { Icons } from '@/constants';
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Sparkles, Cross, Flame } from "lucide-react";
+
 
 const steps = [
-  { num: "01", title: "Crie sua conta", desc: "Registro rápido e gratuito para começar sua jornada espiritual.", icon: <Sparkles className="h-spacing-md w-spacing-md" /> },
-  { num: "02", title: "Escolha seu caminho", desc: "Bíblia, Catecismo, Santos ou orações — comece por onde o coração pedir.", icon: <Cross className="h-spacing-md w-spacing-md" /> },
-  { num: "03", title: "Aprofunde-se diariamente", desc: "Mantenha sua streak, ganhe badges e cresça na fé com constância.", icon: <Flame className="h-spacing-md w-spacing-md" /> },
+  { num: "01", title: "Crie sua conta", desc: "Registro rápido e gratuito para começar sua jornada espiritual.", icon: <Icons.Sparkles className="h-spacing-md w-spacing-md" /> },
+  { num: "02", title: "Escolha seu caminho", desc: "Bíblia, Catecismo, Santos ou orações — comece por onde o coração pedir.", icon: <Icons.Cross className="h-spacing-md w-spacing-md" /> },
+  { num: "03", title: "Aprofunde-se diariamente", desc: "Mantenha sua streak, ganhe badges e cresça na fé com constância.", icon: <Icons.Flame className="h-spacing-md w-spacing-md" /> },
 ];
 
 const HowItWorksSection = () => {

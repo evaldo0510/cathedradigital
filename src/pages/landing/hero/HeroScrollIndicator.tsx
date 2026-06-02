@@ -1,5 +1,6 @@
+import { Icons } from '@/constants';
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+
 
 const HeroScrollIndicator = () => (
   <motion.div
