@@ -50,5 +50,33 @@ if (existsSync(TOKEN_REPORT)) {
   } catch (e) {}
 }
 
+// 4. Ergonomics Alert (Regression threshold: 15%)
+const METRICS_REPORT = join(process.cwd(), 'reports/mobile-ux-metrics.json');
+const BASELINE_METRICS = join(process.cwd(), 'reports/baseline-mobile-ux-metrics.json');
+
+if (existsSync(METRICS_REPORT) && existsSync(BASELINE_METRICS)) {
+  try {
+    const current = JSON.parse(readFileSync(METRICS_REPORT, 'utf8'));
+    const baseline = JSON.parse(readFileSync(BASELINE_METRICS, 'utf8'));
+    const THRESHOLD = 15;
+    let alerts = [];
+
+    current.metrics.forEach((m: any) => {
+      const b = baseline.metrics.find((bm: any) => bm.route === m.route && bm.viewport === m.viewport);
+      if (b) {
+        const heightDiff = ((m.totalPageHeight - b.totalPageHeight) / b.totalPageHeight) * 100;
+        if (heightDiff > THRESHOLD) {
+          alerts.push(`⚠️ **Regression Alert:** \`${m.route}\` (${m.viewport}) length increased by **${heightDiff.toFixed(1)}%**`);
+        }
+      }
+    });
+
+    if (alerts.length > 0) {
+      console.log('\n#### 🚨 Ergonomics Regressions Detected');
+      alerts.forEach(a => console.log(`- ${a}`));
+    }
+  } catch (e) {}
+}
+
 console.log('\n---');
 console.log('*Note: This build will fail if performance budgets (LCP > 2.5s) or layout constraints (Header > 40px) are violated.*');

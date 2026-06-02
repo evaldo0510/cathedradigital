@@ -340,16 +340,30 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 ))}
 
                 {(isLoading || isTyping) && (
-                  <div className="flex justify-start">
-                    <div className="flex gap-spacing-sm opacity-10 py-spacing-lg">
-                      {[0, 1, 2].map((i) => (
+                  <div className="flex justify-start w-full">
+                    <div className="w-full space-y-spacing-md">
+                      {isLoading && (
                         <motion.div 
-                          key={i}
-                          animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
-                          className="w-spacing-2xs h-spacing-2xs bg-primary rounded-premium-full" 
-                        />
-                      ))}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="w-full space-y-spacing-sm py-spacing-md"
+                        >
+                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-3/4 animate-pulse" />
+                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-1/2 animate-pulse" />
+                        </motion.div>
+                      )}
+                      {isTyping && (
+                        <div className="flex gap-spacing-sm opacity-10 py-spacing-md">
+                          {[0, 1, 2].map((i) => (
+                            <motion.div 
+                              key={i}
+                              animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
+                              transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+                              className="w-spacing-2xs h-spacing-2xs bg-primary rounded-premium-full" 
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

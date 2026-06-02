@@ -28,11 +28,15 @@ const CURRENT_REPORT_PATH = path.join(REPORT_DIR, 'mobile-ux-metrics.json');
 const BASELINE_REPORT_PATH = path.join(REPORT_DIR, 'baseline-mobile-ux-metrics.json');
 const OUTPUT_HTML_PATH = path.join(REPORT_DIR, 'mobile-ux-report.html');
 
-function formatDiff(current: number, baseline: number) {
+function formatDiff(current: number, baseline: number, threshold = 10) {
   if (baseline === 0) return 'N/A';
   const diff = ((current - baseline) / baseline) * 100;
-  const color = Math.abs(diff) < 1 ? '#10b981' : (diff > 0 ? '#ef4444' : '#3b82f6'); // green if negligible, red if larger, blue if smaller
+  
+  // Logic for UI indicators
+  const isBad = diff > threshold; // Worsening if height increases significantly
+  const color = Math.abs(diff) < 1 ? '#10b981' : (isBad ? '#ef4444' : '#3b82f6');
   const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '');
+  
   return `<span style="color: ${color}; font-weight: bold;">${arrow} ${Math.abs(diff).toFixed(1)}%</span>`;
 }
 
