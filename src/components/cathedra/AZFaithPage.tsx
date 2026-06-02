@@ -133,7 +133,7 @@ const AZFaithPage: React.FC = () => {
           <AZFaithQuiz terms={allTerms} onClose={() => setQuizMode(false)} />
         ) : (
           <>
-            <div className="relative max-w-spacing-lg mx-auto mb-spacing-lg">
+            <div className="relative w-full mb-spacing-lg">
               <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
               <input
                 type="text"
@@ -152,7 +152,7 @@ const AZFaithPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex justify-center gap-spacing-md mb-spacing-2xl flex-wrap max-w-spacing-4xl mx-auto px-spacing-md">
+            <div className="flex justify-center gap-spacing-md mb-spacing-2xl flex-wrap w-full px-spacing-md">
               {FEATURED_TERMS.map((name, idx) => {
                 const term = allTerms.find(t => t.term === name);
                 if (!term) return null;
