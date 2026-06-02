@@ -247,7 +247,7 @@
   .font-size-large .reader-text { font-size: var(--text-premium-2xl) !important; }
   .font-size-extra-large .reader-text { font-size: var(--text-premium-3xl) !important; }
 
-  /* Specific Reader Container */
+  
 
   /* Premium Editorial Styling for Bible/Catechism */
   .prose-premium {
@@ -357,13 +357,6 @@
   }
 
 
-  .desktop-main {
-    @apply min-w-spacing-0;
-  }
-
-  .desktop-aside {
-    @apply hidden lg:flex flex-col gap-spacing-lg sticky top-spacing-4xl self-start;
-  }
 
   .btn-full-mobile {
     @apply w-full md:w-auto min-h-[44px] flex items-center justify-center;
