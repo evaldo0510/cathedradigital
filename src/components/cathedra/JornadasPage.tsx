@@ -701,22 +701,6 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
       )}
         </div>
-        <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-          <div className="desktop-card bg-primary/5 border-primary/20">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Sua Formação</h3>
-            <p className="text-premium-xs text-muted-foreground leading-relaxed italic">
-              Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
-            </p>
-          </div>
-          <div className="desktop-card">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Mais Populares</h3>
-            <div className="space-y-spacing-sm">
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">1. O Caminho da Perfeição</div>
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">2. Catecismo Explicado</div>
-              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-premium-xs font-bold text-foreground">3. Mistérios Gloriosos</div>
-            </div>
-          </div>
-        </aside>
       </div>
     </ContemplativeLayout>
   );
