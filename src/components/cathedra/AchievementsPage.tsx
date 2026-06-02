@@ -52,7 +52,7 @@ const AchievementsPage: React.FC = () => {
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Sacra Victoria</span>
         </motion.div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-display font-bold text-foreground tracking-tight">Suas Conquistas</h1>
-        <p className="text-muted-foreground font-serif italic text-premium-lg max-w-spacing-2xl mx-auto">
+        <p className="text-muted-foreground font-serif italic text-premium-lg">
           "Combati o bom combate, terminei a corrida, guardei a fé." — 2 Timóteo 4,7
         </p>
       </div>

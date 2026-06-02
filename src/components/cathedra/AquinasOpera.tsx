@@ -195,7 +195,7 @@ const AquinasOpera: React.FC = () => {
   };
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-3xl">
+    <div className="w-full space-y-spacing-xl pb-spacing-3xl">
       <div className="text-center space-y-spacing-lg">
         <div className="space-y-spacing-sm">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
