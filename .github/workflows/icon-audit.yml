@@ -34,6 +34,8 @@ jobs:
           path: |
             compliance-report.json
             compliance-report.html
+            compliance-report.md
+            src/scripts/history/compliance-history.json
             
       - name: Check Thresholds
         run: |
