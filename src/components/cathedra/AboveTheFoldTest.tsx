@@ -11,24 +11,30 @@ const AboveTheFoldTest: React.FC = () => {
       const header = document.querySelector('header');
       const headerHeight = header?.getBoundingClientRect().height || 0;
       const viewportHeight = window.innerHeight;
-      const foldThreshold = viewportHeight * 0.5; // Content should start well before 50% height
+      const foldThreshold = viewportHeight * 0.15; // Tightened: Premium requirement is content very high
 
       const mainContent = document.getElementById('main-content');
       const contentTop = mainContent?.getBoundingClientRect().top || 0;
+
+      // Detection for Layout Shifts
+      const entries = performance.getEntriesByType('layout-shift');
+      const cls = entries.reduce((sum, entry: any) => sum + (entry.hadRecentInput ? 0 : entry.value), 0);
 
       const results = {
         path: location.pathname,
         headerHeight,
         contentTop,
         viewportHeight,
-        status: contentTop < foldThreshold ? 'PASS' : 'FAIL',
-        details: `Content starts at ${contentTop}px (Viewport: ${viewportHeight}px, Fold: ${foldThreshold}px)`
+        cls,
+        status: (contentTop < foldThreshold && cls < 0.05) ? 'PASS' : 'FAIL',
+        details: `Top: ${contentTop}px (Fold: ${foldThreshold.toFixed(0)}px), CLS: ${cls.toFixed(4)}`
       };
 
-      console.log('--- ABOVE THE FOLD TEST ---');
+      console.log('--- PREMIUM SPRINT AUDIT ---');
       console.log(JSON.stringify(results, null, 2));
       setReport(results);
-    }, 2000);
+    }, 3000);
+
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
