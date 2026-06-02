@@ -52,8 +52,8 @@ const CatechismContent: React.FC<{
 }> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, highlights = [] }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
-  const settingsContext = useReadingSettings();
-  const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
+  const { settings } = useReadingSettings();
+
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
@@ -130,6 +130,8 @@ const LazyParagraph: React.FC<{
   onHighlightClick?: (note: UserNote) => void;
   highlights?: UserNote[];
 }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, highlights = [] }) => {
+  const { settings } = useReadingSettings();
+
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 

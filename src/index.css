@@ -498,25 +498,39 @@
 
 .visual-silence .sidebar-reading-auto-hide,
 .visual-silence .header-reading-auto-hide {
-  @apply grayscale opacity-50;
+  @apply opacity-[0.3];
+}
+
+/* 9. Reduced Motion System */
+.reduce-animations * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Ensure focus is highly visible when animations are reduced */
+.reduce-animations :focus-visible {
+  @apply ring-4 ring-primary ring-offset-2 !important;
+  outline: 2px solid hsl(var(--primary)) !important;
+}
+
+/* 10. Visible Focus Mode */
+.visible-focus-mode :focus-visible {
+  @apply ring-4 ring-primary ring-offset-4 ring-offset-background !important;
+  outline: 3px solid hsl(var(--primary)) !important;
+}
+
+.visible-focus-mode [role="button"]:focus,
+.visible-focus-mode button:focus,
+.visible-focus-mode a:focus {
+  @apply ring-4 ring-primary ring-offset-4 !important;
 }
 
 /* Layout Density & Reading Rhythm */
 [data-line-spacing='tight'] .reader-text { line-height: 1.5; }
 [data-line-spacing='normal'] .reader-text { line-height: 1.9; }
 [data-line-spacing='wide'] .reader-text { line-height: 2.4; }
-
-/* Global Reduced Motion Overrides */
-.reduce-motion * {
-  transition-duration: 0.1s !important;
-  animation-duration: 0.1s !important;
-}
-
-.reduce-motion .animate-pulse,
-.reduce-motion .animate-bounce,
-.reduce-motion .animate-spin {
-  animation: none !important;
-}
 
 [data-letter-spacing='tight'] .reader-text { letter-spacing: -0.01em; }
 [data-letter-spacing='normal'] .reader-text { letter-spacing: 0.015em; }
@@ -531,3 +545,4 @@
 .font-size-medium .reader-text { font-size: 1.4rem; }
 .font-size-large .reader-text { font-size: 1.75rem; }
 .font-size-extra-large .reader-text { font-size: 2.2rem; }
+
