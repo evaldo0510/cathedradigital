@@ -334,7 +334,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-[16px] md:text-premium-4xl lg:text-premium-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-spacing-md md:px-spacing-xs transition-all duration-[2000ms] group-hover:text-primary">
+              <blockquote className="text-[16px] md:text-premium-4xl lg:text-premium-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-spacing-md md:px-spacing-xs transition-all duration-2000 group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-spacing-md md:mt-spacing-lg text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
