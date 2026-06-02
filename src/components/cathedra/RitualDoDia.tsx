@@ -354,7 +354,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-[14px] md:text-premium-2xl lg:text-premium-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-spacing-md transition-colors duration-[2000ms]">
+              <p className="text-[14px] md:text-premium-2xl lg:text-premium-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-spacing-md transition-colors duration-2000">
                 {ritual.reflection}
               </p>
             </button>
