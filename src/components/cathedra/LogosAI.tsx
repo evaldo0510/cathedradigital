@@ -405,7 +405,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
             transition={springConfig}
-            className="fixed right-0 top-spacing-0 bottom-spacing-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
+            className="fixed right-0 inset-y-0 h-[100dvh] w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
           >
             <div className="p-spacing-lg md:p-spacing-xl border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-spacing-md">
