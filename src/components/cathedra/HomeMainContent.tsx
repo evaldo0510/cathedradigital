@@ -64,7 +64,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div className="w-full space-y-spacing-3xl md:space-y-spacing-4xl outline-none flex flex-col items-center" tabIndex={-1}>
+    <div className="w-full space-y-spacing-xl md:space-y-spacing-4xl outline-none flex flex-col items-center" tabIndex={-1}>
       {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
       <section className="w-full">
         <SpiritualContinuity />

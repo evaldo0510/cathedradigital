@@ -140,7 +140,7 @@ const LazyParagraph: React.FC<{
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
           <span className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
@@ -262,13 +262,13 @@ const Catechism: React.FC = memo(() => {
              <ReadingControlPanel />
           </div>
 
-          <div className="space-y-spacing-3xl">
+          <div className="space-y-spacing-xl md:space-y-spacing-3xl">
             {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
             ))}
           </div>
 
-          <div className="mt-spacing-4xl pt-spacing-4xl border-t border-primary/5">
+          <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
              <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
           </div>
         </div>
@@ -279,7 +279,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'sections' && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
-        <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+        <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Voltar às Partes
@@ -307,7 +307,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
-      <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+      <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
