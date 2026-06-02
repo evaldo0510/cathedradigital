@@ -78,4 +78,43 @@ test.describe('Preferência de redução de movimento', () => {
     await page.reload();
     await expect(page.locator('html')).toHaveClass(/reduce-animations/);
   });
+
+  test('remove a classe e restaura animações ao desligar a preferência', async ({ page }) => {
+    await abrirPainelAcessibilidade(page);
+
+    // Ativar primeiro
+    const toggle = page.locator('[data-testid="reducao-movimento-toggle"]');
+    const isChecked = await toggle.getAttribute('aria-checked');
+    
+    if (isChecked !== 'true') {
+      await toggle.click();
+    }
+    await expect(page.locator('html')).toHaveClass(/reduce-animations/);
+
+    // Desligar
+    await toggle.click();
+    
+    // Verificar se a classe foi removida
+    await expect(page.locator('html')).not.toHaveClass(/reduce-animations/);
+
+    // Fechar painel
+    await page.mouse.click(0, 0);
+    await page.waitForTimeout(300);
+
+    // Navegar para o Catecismo e verificar se as animações voltaram ao padrão
+    // Nota: O padrão pode ser o valor definido no CSS (ex: 300ms ou similar)
+    await page.locator('[data-testid="nav-catechism"]').click();
+    await page.click('text=Prólogo');
+    
+    const secao1 = page.locator('[data-testid="secao-1"]');
+    await secao1.click();
+    
+    const conteudo = page.locator('[data-testid="secao-1-conteudo"]');
+    await expect(conteudo).toBeVisible();
+
+    const duration = await conteudo.evaluate(el => window.getComputedStyle(el).transitionDuration);
+    // Verifica se NÃO é '0s' (ou '0ms'), indicando que há animação
+    expect(duration).not.toBe('0s');
+    expect(duration).not.toBe('0ms');
+  });
 });
