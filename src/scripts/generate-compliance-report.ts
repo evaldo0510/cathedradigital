@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import { z } from 'zod';
 
 interface PageCompliance {
   name: string;
@@ -165,12 +166,60 @@ function runAudit() {
 
 const { reports, lastBuild, history } = runAudit();
 
-// Load Config
-let config: any = { compliance_thresholds: { overall: 80 } };
+// Schema Validation for compliance-config.yml
+const ThresholdSchema = z.number().min(0).max(100);
+
+const PageThresholdsSchema = z.object({
+  layout: ThresholdSchema.optional(),
+  cards: ThresholdSchema.optional(),
+  theme: ThresholdSchema.optional(),
+  tokens: ThresholdSchema.optional(),
+  overall: ThresholdSchema.optional(),
+});
+
+const ComplianceConfigSchema = z.object({
+  compliance_thresholds: z.object({
+    overall: ThresholdSchema,
+    pages: z.record(z.string(), PageThresholdsSchema).optional(),
+    metrics: z.object({
+      layout: ThresholdSchema.optional(),
+      cards: ThresholdSchema.optional(),
+      theme: ThresholdSchema.optional(),
+      tokens: ThresholdSchema.optional(),
+    }).optional(),
+  }),
+});
+
+// Load and Validate Config
+let config: z.infer<typeof ComplianceConfigSchema> = { compliance_thresholds: { overall: 80 } };
+
 if (fs.existsSync(CONFIG_FILE)) {
   try {
-    config = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
-  } catch (e) {}
+    const rawConfig = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+    const result = ComplianceConfigSchema.safeParse(rawConfig);
+    
+    if (!result.success) {
+      console.error('❌ ERRO DE VALIDAÇÃO: compliance-config.yml possui erros de esquema:');
+      result.error.issues.forEach(issue => {
+        const path = issue.path.join('.');
+        console.error(`   - [${path}] : ${issue.message}`);
+      });
+      process.exit(1);
+    }
+    config = result.data;
+
+    // Additional check: Ensure page names in config match known pages
+    const knownPageNames = PAGES.map(p => p.name);
+    const configPageNames = Object.keys(config.compliance_thresholds.pages || {});
+    configPageNames.forEach(pageName => {
+      if (!knownPageNames.includes(pageName)) {
+        console.warn(`⚠️  AVISO: Página '${pageName}' no compliance-config.yml não foi encontrada no registro do script. Será ignorada.`);
+      }
+    });
+  } catch (e) {
+    console.error(`❌ ERRO: Falha ao carregar ${CONFIG_FILE}. Verifique se o formato YAML está correto.`);
+    process.exit(1);
+  }
 }
 
 fs.writeFileSync('compliance-report.json', JSON.stringify(reports, null, 2));
