@@ -1,11 +1,11 @@
-import guadalupeImg from '@/assets/aparicao-guadalupe.jpg';
-import lourdesImg from '@/assets/aparicao-lourdes.jpg';
-import fatimaImg from '@/assets/aparicao-fatima.jpg';
-import aparecidaImg from '@/assets/aparicao-aparecida.jpg';
-import laSaletteImg from '@/assets/aparicao-la-salette.jpg';
-import knockImg from '@/assets/aparicao-knock.jpg';
-import kibehoImg from '@/assets/aparicao-kibeho.jpg';
-import akitaImg from '@/assets/aparicao-akita.jpg';
+import guadalupeImg from '@/assets/aparicao-guadalupe.webp';
+import lourdesImg from '@/assets/aparicao-lourdes.webp';
+import fatimaImg from '@/assets/aparicao-fatima.webp';
+import aparecidaImg from '@/assets/aparicao-aparecida.webp';
+import laSaletteImg from '@/assets/aparicao-la-salette.webp';
+import knockImg from '@/assets/aparicao-knock.webp';
+import kibehoImg from '@/assets/aparicao-kibeho.webp';
+import akitaImg from '@/assets/aparicao-akita.webp';
 import { DeepContent } from '@/types';
 
 export interface Apparition extends Partial<DeepContent> {
