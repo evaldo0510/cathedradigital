@@ -31,12 +31,20 @@ const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard
 
 interface UserProfile extends AdminUser {}
 
+interface CRMUser {
+  id: string;
+  email?: string;
+  classification?: string;
+  reflections_count?: number;
+  current_journey?: string;
+  last_activity?: string;
+}
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
 
   const [users, setUsers] = useState<UserProfile[]>([]);
-  const [recentJournal, setRecentJournal] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [manualEmail, setManualEmail] = useState('');
   const [manualLoading, setManualLoading] = useState(false);
@@ -68,14 +76,12 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     if (stats) {
-      // Logic for users list
-      // In a real app, this should probably be a separate query, but keeping current logic
       const fetchUsers = async () => {
         const { data: allProfiles } = await supabase.from('profiles').select('*');
         const { data: crmUsers } = await supabase.from('user_management_stats').select('*').limit(1000);
         
-        const crmMap = new Map<string, any>();
-        crmUsers?.forEach(u => crmMap.set(u.id, u));
+        const crmMap = new Map<string, CRMUser>();
+        (crmUsers as CRMUser[] | null)?.forEach(u => crmMap.set(u.id, u));
 
         setUsers(allProfiles?.map(p => {
           const crm = crmMap.get(p.id) || {};
@@ -114,8 +120,9 @@ const AdminDashboard: React.FC = () => {
       return;
     }
     setManualLoading(true);
-    const { data: sensitiveData, error: sensitiveError } = await (supabase as any)
-      .from('user_sensitive_data')
+    
+    const { data: sensitiveData, error: sensitiveError } = await supabase
+      .from('user_sensitive_data' as any)
       .select('user_id')
       .eq('email', manualEmail.trim())
       .maybeSingle();
@@ -129,7 +136,7 @@ const AdminDashboard: React.FC = () => {
     const { error } = await supabase
       .from('profiles')
       .update({ is_premium: grant })
-      .eq('id', sensitiveData.user_id);
+      .eq('id', (sensitiveData as any).user_id);
 
     setManualLoading(false);
 
@@ -229,7 +236,7 @@ const AdminDashboard: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg px-spacing-md sm:px-spacing-0">
             <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
-              <AdminChartsTab userGrowth={stats.userGrowth} revenueData={stats.revenueData} />
+              <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
             </Suspense>
             
             <Card className="rounded-premium-lg border-primary/5">
