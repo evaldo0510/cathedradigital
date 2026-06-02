@@ -308,10 +308,12 @@ const Catechism: React.FC = memo(() => {
     <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
       <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
-        <div className="relative group">
-          <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-          <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-          <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-spacing-3xl" />
+        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+            <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-spacing-3xl bg-background/50" />
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
           {CIC_SECTIONS.map((part, idx) => (

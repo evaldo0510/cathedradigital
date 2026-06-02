@@ -90,8 +90,10 @@ const LogosAI: React.FC<LogosAIProps> = ({
   }, [history, context, variant, settings.totalSilence]);
 
   useEffect(() => {
-    if (history.length) scrollToBottom();
-  }, [history.length, isTyping, isLoading]);
+    if (history.length && !query) {
+      scrollToBottom();
+    }
+  }, [history.length, isTyping, isLoading, query]);
 
   const springConfig = useMemo(() => {
     if (settings.reduceAnimations) {

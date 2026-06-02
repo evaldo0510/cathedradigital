@@ -129,15 +129,17 @@ const BibliotecaPage: React.FC = () => {
       icon={Icons.Compass}
     >
       <div className="w-full space-y-spacing-3xl pb-spacing-4xl">
-        <div className="relative group w-full">
-          <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-          <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-          <input
-            placeholder="Buscar módulo..."
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            className="search-input-premium pl-spacing-3xl"
-          />
+        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
+          <div className="relative group w-full">
+            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+            <input
+              placeholder="Buscar módulo..."
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              className="search-input-premium pl-spacing-3xl bg-background/50"
+            />
+          </div>
         </div>
 
         <div className="space-y-spacing-4xl">
@@ -154,7 +156,7 @@ const BibliotecaPage: React.FC = () => {
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
 
-              <div className="grid grid-cols-2 min-[370px]:grid-cols-3 lg:grid-cols-4 gap-spacing-2xs md:gap-spacing-lg -mx-spacing-sm md:mx-0">
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-spacing-xs md:gap-spacing-lg -mx-spacing-sm md:mx-0">
                 {group.items.map((item, i) => (
                   <CathedraCard
                     key={item.title}

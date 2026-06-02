@@ -28,7 +28,7 @@ const REPORT_DIR = path.join(process.cwd(), 'reports');
 const CURRENT_REPORT_PATH = path.join(REPORT_DIR, 'mobile-ux-metrics.json');
 const BASELINE_REPORT_PATH = path.join(REPORT_DIR, 'baseline-mobile-ux-metrics.json');
 
-const REGRESSION_THRESHOLD_PERCENT = 15; // Alerta se as métricas piorarem > 15%
+const REGRESSION_THRESHOLD_PERCENT = Number(process.env.UX_REGRESSION_THRESHOLD) || 15; // Alerta se as métricas piorarem > 15% (configurável via ENV)
 
 function checkRegressions() {
   if (!fs.existsSync(CURRENT_REPORT_PATH)) {
