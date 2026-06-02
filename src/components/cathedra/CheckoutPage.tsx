@@ -149,7 +149,7 @@ const CheckoutPage: React.FC = () => {
   const finalChargePrice = getDiscountedPrice(plan.chargePrice);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-spacing-2xl py-spacing-xl">
+    <div className="w-full space-y-spacing-2xl py-spacing-xl">
       {/* Hero */}
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
@@ -160,7 +160,7 @@ const CheckoutPage: React.FC = () => {
           Eleve sua experiência <br />
           <span className="text-primary italic">espiritual.</span>
         </h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-premium-lg">
+        <p className="text-muted-foreground font-serif italic w-full mx-auto text-premium-lg">
           Acesse ferramentas exclusivas de estudo e oração para aprofundar sua vida interior.
         </p>
       </div>
@@ -275,7 +275,7 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Plan Comparison */}
-      <div className="max-w-spacing-3xl mx-auto">
+      <div className="w-full mx-auto">
         <h2 className="text-premium-2xl font-serif font-bold text-center mb-spacing-xl">Gratuito vs PRO</h2>
         <Card className="rounded-premium overflow-hidden border border-border/50">
           <CardContent className="p-spacing-0">
@@ -310,14 +310,14 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Donation */}
-      <div className="max-w-spacing-2xl mx-auto">
+      <div className="w-full mx-auto">
         <Card className="border border-border/50 rounded-premium overflow-hidden bg-muted/30">
           <CardHeader className="text-center space-y-spacing-sm pb-spacing-md">
             <div className="mx-auto w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
             <CardTitle className="text-premium-xl font-serif font-bold">Doação Voluntária</CardTitle>
-            <CardDescription className="text-premium-sm max-w-spacing-md mx-auto">
+            <CardDescription className="text-premium-sm w-full mx-auto">
               Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
