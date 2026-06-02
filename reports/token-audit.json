@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-02T01:44:53.033Z",
-  "totalIssues": 0,
+  "timestamp": "2026-06-02T20:07:31.082Z",
+  "totalIssues": 4,
   "categories": [
     {
       "id": "spacing",
@@ -16,7 +16,7 @@
     },
     {
       "id": "shadows",
-      "count": 0
+      "count": 4
     }
   ],
   "results": [
@@ -64,77 +64,36 @@
       "regex": "\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b",
       "exclude": [],
       "suggestion": "Use shadow-premium-sm to premium-hover (e.g., shadow-premium)",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 4,
+      "details": [
+        {
+          "file": "src/components/cathedra/GlobalSearchPage.tsx",
+          "line": "94",
+          "match": "shadow-sm",
+          "content": "<div className=\"sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none\">"
+        },
+        {
+          "file": "src/components/cathedra/GlobalSearchPage.tsx",
+          "line": "94",
+          "match": "shadow-none",
+          "content": "<div className=\"sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none\">"
+        },
+        {
+          "file": "src/components/cathedra/GlobalSearchPage.tsx",
+          "line": "114",
+          "match": "shadow-sm",
+          "content": "className=\"max-w-none shadow-sm md:shadow-none\""
+        },
+        {
+          "file": "src/components/cathedra/GlobalSearchPage.tsx",
+          "line": "114",
+          "match": "shadow-none",
+          "content": "className=\"max-w-none shadow-sm md:shadow-none\""
+        }
+      ]
     }
   ],
   "history": [
-    {
-      "timestamp": "2026-05-30T15:46:56.437Z",
-      "totalIssues": 5,
-      "categories": [
-        {
-          "id": "spacing",
-          "count": 5
-        },
-        {
-          "id": "typography",
-          "count": 0
-        },
-        {
-          "id": "rounding",
-          "count": 0
-        },
-        {
-          "id": "shadows",
-          "count": 0
-        }
-      ]
-    },
-    {
-      "timestamp": "2026-05-30T15:48:57.450Z",
-      "totalIssues": 5,
-      "categories": [
-        {
-          "id": "spacing",
-          "count": 5
-        },
-        {
-          "id": "typography",
-          "count": 0
-        },
-        {
-          "id": "rounding",
-          "count": 0
-        },
-        {
-          "id": "shadows",
-          "count": 0
-        }
-      ]
-    },
-    {
-      "timestamp": "2026-05-30T15:49:14.071Z",
-      "totalIssues": 5,
-      "categories": [
-        {
-          "id": "spacing",
-          "count": 5
-        },
-        {
-          "id": "typography",
-          "count": 0
-        },
-        {
-          "id": "rounding",
-          "count": 0
-        },
-        {
-          "id": "shadows",
-          "count": 0
-        }
-      ]
-    },
     {
       "timestamp": "2026-05-30T15:50:46.986Z",
       "totalIssues": 5,
@@ -758,6 +717,72 @@
         {
           "id": "shadows",
           "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-02T20:07:30.255Z",
+      "totalIssues": 4,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-02T20:07:30.685Z",
+      "totalIssues": 4,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-02T20:07:31.082Z",
+      "totalIssues": 4,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 4
         }
       ]
     }
