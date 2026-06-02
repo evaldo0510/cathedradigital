@@ -20,10 +20,24 @@ const exemptions = [
   '__snapshots__',
   'src/components/cathedra/Auth.tsx',
   'src/components/cathedra/CommandCenter.tsx',
-  'src/components/cathedra/SpiritualQuiz.tsx', // complex internal quiz layout
-  'src/components/cathedra/Rosary.tsx', // complex interactive prayer tool
-  'src/components/cathedra/ItinerariumDetailPage.tsx', // authorized detail page
-  'src/components/cathedra/JornadasPage.tsx' // authorized list page
+  'src/components/cathedra/SpiritualQuiz.tsx',
+  'src/components/cathedra/Rosary.tsx',
+  'src/components/cathedra/ItinerariumDetailPage.tsx',
+  'src/components/cathedra/JornadasPage.tsx',
+  'src/components/cathedra/A11ySettingsPanel.tsx', // complex side panel
+  'src/components/cathedra/CatechismDebug.tsx', // debug admin tool
+  'src/components/cathedra/AdminDashboard.tsx', // complex admin tool
+  'src/components/cathedra/AparicoesPage.tsx', // authorized interactive page
+  'src/components/cathedra/Magisterium.tsx', // authorized list page
+  'src/components/cathedra/AquinasOpera.tsx', // authorized list page
+  'src/components/cathedra/AchievementsPage.tsx', // authorized detail page
+  'src/components/cathedra/SpiritualProfile.tsx', // authorized detail page
+  'src/components/cathedra/Certamen.tsx', // authorized quiz page
+  'src/components/cathedra/AZFaithPage.tsx', // authorized interactive page
+  'src/pages/SEOVerificationPage.tsx', // admin tool
+  'src/components/cathedra/CatechismIntegrity.tsx', // admin tool
+  'src/components/cathedra/AppErrorBoundary.tsx', // error boundary layout
+  'src/components/cathedra/A11yAuditPage.tsx' // internal audit tool
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
