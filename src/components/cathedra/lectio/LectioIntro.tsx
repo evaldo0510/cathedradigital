@@ -15,7 +15,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
   const dailyPassage = getDailyPassage();
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-2xl pb-spacing-2xl">
+    <div className="w-full space-y-spacing-2xl pb-spacing-2xl">
       {/* Emotional welcome */}
       <motion.div 
         className="text-center space-y-spacing-lg pt-spacing-xl"
@@ -28,7 +28,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
-        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto leading-relaxed">
+        <p className="text-premium-lg text-muted-foreground font-serif italic leading-relaxed">
           Que bom ter você aqui. Reserve este momento só para Deus e para você.<br />
           <span className="text-primary/80">Respire fundo. Silencie o coração. Comece.</span>
         </p>
@@ -37,7 +37,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       {/* Daily suggestion card */}
       <motion.button
         onClick={() => onPassageChange(dailyPassage.ref)}
-        className={`w-full max-w-spacing-lg mx-auto flex items-center gap-spacing-lg p-spacing-lg rounded-[2rem] border transition-all shadow-premium group ${
+        className={`w-full flex items-center gap-spacing-lg p-spacing-lg rounded-[2rem] border transition-all shadow-premium group ${
           selectedPassage === dailyPassage.ref
             ? 'bg-primary border-primary text-primary-foreground shadow-primary/20'
             : 'bg-card border-border hover:border-primary/30 hover:shadow-premium-hover'
@@ -95,7 +95,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.6 }}
       >
-        <div className="space-y-spacing-lg max-w-spacing-md mx-auto">
+        <div className="space-y-spacing-lg w-full mx-auto">
           <div className="text-center space-y-spacing-xs">
             <h3 className="text-premium-sm font-black uppercase tracking-widest text-primary/60">Ou escolha outra passagem</h3>
             <p className="text-premium-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
