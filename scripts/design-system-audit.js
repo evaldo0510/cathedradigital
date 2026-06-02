@@ -23,6 +23,17 @@ const CARD_COMPONENTS = ['CathedraCard'];
 const THEME_CLASSES = ['bg-background', 'text-foreground', 'bg-primary', 'text-primary', 'bg-secondary', 'text-secondary', 'border-border', 'bg-muted', 'text-muted-foreground'];
 const SPACING_TOKENS = ['spacing-xs', 'spacing-sm', 'spacing-md', 'spacing-lg', 'spacing-xl', 'spacing-2xl', 'spacing-3xl', 'spacing-4xl'];
 
+// Allowed Design Tokens
+const ALLOWED_TOKENS = [
+  ...THEME_CLASSES,
+  ...SPACING_TOKENS.map(s => `p-${s}`),
+  ...SPACING_TOKENS.map(s => `m-${s}`),
+  ...SPACING_TOKENS.map(s => `gap-${s}`),
+  'rounded-premium', 'rounded-premium-lg', 'rounded-premium-full',
+  'shadow-premium', 'shadow-premium-hover', 'shadow-premium-xl',
+  'text-premium-xs', 'text-premium-sm', 'text-premium-base', 'text-premium-lg', 'text-premium-xl'
+];
+
 function auditFile(filePath) {
   if (!fs.existsSync(filePath)) {
     return null;

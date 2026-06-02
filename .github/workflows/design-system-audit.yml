@@ -34,6 +34,10 @@ jobs:
           # This script now enforces thresholds and fails the PR
           node scripts/design-system-audit.js
           
+      - name: 📈 Update README Compliance Badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: bun run scripts/update-readme-badge.ts
+        
       - name: 📊 Upload Compliance Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,3 +46,12 @@ jobs:
           path: |
             src/components/cathedra/reports/COMPLIANCE_REPORT.md
             reports/compliance-history.json
+
+      - name: 🚀 Commit Badge Updates
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "docs: update compliance badge [skip ci]"
+          git push
