@@ -1,17 +1,16 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Above the Fold Layout Metrics', () => {
+test.describe('Mobile Premium Constraints Audit', () => {
   const mobileViewports = [
     { name: 'iPhone-SE', width: 375, height: 667 },
     { name: 'iPhone-14', width: 390, height: 844 },
   ];
 
   for (const vp of mobileViewports) {
-    test(`Metric check on ${vp.name}`, async ({ page }) => {
+    test(`Layout metrics check on ${vp.name}`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/bible');
       
-      // We check metrics directly in the DOM
       const metrics = await page.evaluate(() => {
         const header = document.querySelector('header');
         const mainContent = document.getElementById('main-content');
@@ -27,9 +26,11 @@ test.describe('Above the Fold Layout Metrics', () => {
 
       console.log(`${vp.name} Metrics:`, metrics);
       
-      // Premium constraints
+      // Premium constraints: Header <= 40px, Bottom Nav <= 52px
       expect(metrics.headerHeight).toBeLessThanOrEqual(40);
       expect(metrics.bottomNavHeight).toBeLessThanOrEqual(52);
+      
+      // Above the fold: Content should be within top 25% of viewport
       expect(metrics.contentTop).toBeLessThan(metrics.viewportHeight * 0.25);
     });
   }
