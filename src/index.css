@@ -222,7 +222,7 @@
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/10 max-w-[65ch] mx-auto;
+    @apply font-reader text-foreground selection:bg-primary/10 w-full;
     font-size: clamp(var(--text-premium-base), 1.4vw, var(--text-premium-xl));
     line-height: 2.1;
     letter-spacing: var(--letter-spacing-wide);
