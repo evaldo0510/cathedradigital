@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import { z } from 'zod';
 
 interface PageCompliance {
   name: string;
@@ -165,12 +166,50 @@ function runAudit() {
 
 const { reports, lastBuild, history } = runAudit();
 
-// Load Config
-let config: any = { compliance_thresholds: { overall: 80 } };
+// Schema Validation for compliance-config.yml
+const ThresholdSchema = z.number().min(0).max(100);
+
+const PageThresholdsSchema = z.object({
+  layout: ThresholdSchema.optional(),
+  cards: ThresholdSchema.optional(),
+  theme: ThresholdSchema.optional(),
+  tokens: ThresholdSchema.optional(),
+  overall: ThresholdSchema.optional(),
+});
+
+const ComplianceConfigSchema = z.object({
+  compliance_thresholds: z.object({
+    overall: ThresholdSchema,
+    pages: z.record(z.string(), PageThresholdsSchema).optional(),
+    metrics: z.object({
+      layout: ThresholdSchema.optional(),
+      cards: ThresholdSchema.optional(),
+      theme: ThresholdSchema.optional(),
+      tokens: ThresholdSchema.optional(),
+    }).optional(),
+  }),
+});
+
+// Load and Validate Config
+let config: z.infer<typeof ComplianceConfigSchema> = { compliance_thresholds: { overall: 80 } };
+
 if (fs.existsSync(CONFIG_FILE)) {
   try {
-    config = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
-  } catch (e) {}
+    const rawConfig = yaml.load(fs.readFileSync(CONFIG_FILE, 'utf-8'));
+    const result = ComplianceConfigSchema.safeParse(rawConfig);
+    
+    if (!result.success) {
+      console.error('❌ ERRO DE VALIDAÇÃO: compliance-config.yml possui erros de esquema:');
+      result.error.issues.forEach(issue => {
+        console.error(`   - [${issue.path.join('.')}] : ${issue.message}`);
+      });
+      process.exit(1);
+    }
+    config = result.data;
+  } catch (e) {
+    console.error(`❌ ERRO: Falha ao carregar ${CONFIG_FILE}. Verifique se o formato YAML está correto.`);
+    process.exit(1);
+  }
 }
 
 fs.writeFileSync('compliance-report.json', JSON.stringify(reports, null, 2));
