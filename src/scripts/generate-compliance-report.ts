@@ -75,7 +75,7 @@ function runAudit() {
 
     // 3. Check for inline styles
     try {
-      const output = execSync(`rg "style={{" ${page.path} -n || true`).toString().trim();
+      const output = execSync(`rg "style=\\{\\{" ${page.path} -n || true`).toString().trim();
       if (output) {
         output.split('\n').forEach(line => {
           const [lineNum, ...content] = line.split(':');
