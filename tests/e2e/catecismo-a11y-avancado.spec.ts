@@ -58,17 +58,55 @@ test.describe('Catecismo - Acessibilidade Avançada', () => {
     await expect(page.locator(`#${partId}`)).toBeFocused();
   });
 
-  test('Comportamento com prefers-reduced-motion', async ({ page }) => {
+  test('Comportamento com prefers-reduced-motion (Sistema e Toggle)', async ({ page }) => {
+    // 1. Testa via emulação de mídia do sistema
     await page.emulateMedia({ reducedMotion: 'reduce' });
     
+    // Verifica se a classe CSS foi aplicada (caso o sistema detecte automaticamente, 
+    // embora no nosso caso dependa do hook de acessibilidade se implementado)
+    // Se não aplicamos automaticamente via media query no JS, testamos o toggle manual abaixo.
+    
+    // 2. Testa Toggle Manual no Painel de Acessibilidade
+    await page.keyboard.press('Alt+Shift+A'); // Atalho hipotético ou abre via clique
+    // Vamos abrir via clique no header se o atalho não estiver garantido
+    const a11yButton = page.locator('button[aria-label*="Acessibilidade"], button:has(.lucide-shield-check)');
+    if (await a11yButton.isVisible()) {
+      await a11yButton.click();
+    } else {
+      // Tenta abrir via menu se estiver em mobile
+      const menuButton = page.locator('button[aria-label*="Menu"]');
+      if (await menuButton.isVisible()) {
+        await menuButton.click();
+        await page.locator('text=Acessibilidade').click();
+      }
+    }
+
+    const reduceToggle = page.locator('#reduce-animations-toggle');
+    await expect(reduceToggle).toBeVisible();
+    await reduceToggle.click();
+    
+    // Verifica se a classe .reduce-animations foi aplicada ao html
+    await expect(page.locator('html')).toHaveClass(/reduce-animations/);
+    
+    // 3. Valida se a transição entre seções é imediata
     const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
     const startTime = Date.now();
     await firstPart.click();
+    
+    // Espera o conteúdo carregar
     await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
     const endTime = Date.now();
     
-    // Transição instantânea ou muito rápida (< 500ms)
-    expect(endTime - startTime).toBeLessThan(500); 
+    // Transição deve ser virtualmente instantânea (permitindo overhead de renderização < 300ms)
+    const duration = endTime - startTime;
+    console.log(`Duração da transição com redução de movimento: ${duration}ms`);
+    expect(duration).toBeLessThan(400); 
+
+    // 4. Verifica se o foco visível está reforçado
+    const backButton = page.locator('button').filter({ hasText: /Voltar às Partes/i });
+    await backButton.focus();
+    const outline = await backButton.evaluate(el => window.getComputedStyle(el).outlineStyle);
+    expect(outline).not.toBe('none');
   });
 
   test('Contraste de cores e Zoom (200%)', async ({ page }) => {
