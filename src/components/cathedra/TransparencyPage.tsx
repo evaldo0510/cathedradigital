@@ -127,6 +127,7 @@ const TransparencyPage: React.FC = () => {
 
       </div>
     </ContemplativeLayout>
+  );
 };
 
 export default TransparencyPage;
