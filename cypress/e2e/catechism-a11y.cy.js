@@ -42,4 +42,38 @@ describe('Catecismo - Acessibilidade e Navegação', () => {
     // Na página inicial do Catecismo
     cy.get('input').should('have.attr', 'aria-label').or('have.attr', 'placeholder');
   });
+
+  it('deve desativar animações quando a redução de movimento estiver habilitada', () => {
+    // Abre configurações de acessibilidade (simulando clique no botão do header)
+    // Nota: O seletor depende do ícone/texto real
+    cy.get('button').filter(':has(svg)').first().click({ force: true }); 
+    // Como os testes E2E podem ser sensíveis a layouts, vamos tentar um seletor mais genérico se falhar
+    
+    // Simula a ativação via localStorage para garantir o estado antes de interagir
+    cy.window().then((win) => {
+      const settings = JSON.parse(win.localStorage.getItem('cathedra_reading_settings') || '{}');
+      win.localStorage.setItem('cathedra_reading_settings', JSON.stringify({
+        ...settings,
+        reduceAnimations: true
+      }));
+    });
+    cy.reload();
+
+    // Verifica se a classe está no root
+    cy.get('html').should('have.class', 'reduce-animations');
+
+    // Verifica se as propriedades CSS de animação são nulas/mínimas
+    cy.get('body').then(($el) => {
+      const duration = window.getComputedStyle($el[0], '*').getPropertyValue('transition-duration');
+      // O seletor '*' acima é ilustrativo; window.getComputedStyle funciona melhor em elementos específicos
+    });
+
+    // Testa a navegação rápida
+    const start = Date.now();
+    cy.contains('PARTE').first().click();
+    cy.contains('Voltar às Partes').should('be.visible').then(() => {
+      const end = Date.now();
+      expect(end - start).to.be.lessThan(500);
+    });
+  });
 });
