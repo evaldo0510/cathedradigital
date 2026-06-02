@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -68,20 +69,27 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-spacing-2xl">
-        <motion.div className="text-center space-y-spacing-md pt-spacing-xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
-            <Icons.Search className="w-spacing-xl h-spacing-xl text-white" />
+      <div ref={ref} className="space-y-spacing-md md:space-y-spacing-2xl">
+        <motion.div 
+          className={cn(
+            "text-center space-y-spacing-xs md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
+            hasQuery && "hidden md:block"
+          )} 
+          initial={{ opacity: 0, y: -10 }} 
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="w-spacing-xl h-spacing-xl md:w-spacing-3xl md:h-spacing-3xl rounded-[1rem] md:rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
+            <Icons.Search className="w-spacing-sm h-spacing-sm md:w-spacing-xl md:h-spacing-xl text-white" />
           </div>
-          <h2 className="text-premium-3xl md:text-premium-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
-          <p className="text-muted-foreground font-serif italic text-premium-lg max-w-spacing-lg mx-auto leading-relaxed">
+          <h2 className="text-premium-xl md:text-premium-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
+          <p className="text-muted-foreground font-serif italic text-premium-sm md:text-premium-lg max-w-spacing-lg mx-auto leading-relaxed hidden md:block">
             "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
 
         {/* LOGOS IA CHAT INTERFACE */}
-        <div className="bg-card border border-border/40 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl shadow-premium space-y-spacing-xl">
-           <div className="flex flex-col gap-spacing-md">
+        <div className="bg-card border border-border/40 rounded-[1.5rem] md:rounded-[2.5rem] p-spacing-lg md:p-spacing-2xl shadow-premium space-y-spacing-md md:space-y-spacing-xl">
+           <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
               <div className="flex items-center gap-spacing-sm">
                  <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
                     <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
@@ -104,8 +112,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </div>
 
         <div className="space-y-spacing-lg">
-          <div className="flex items-center gap-spacing-xl">
-            <h2 className="text-premium-xs font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+          <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
+            <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
             </h2>
             <div className="h-px flex-1 bg-border/30" />
