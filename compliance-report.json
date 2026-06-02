@@ -10,8 +10,8 @@
         "file": "src/components/cathedra/GlobalSearchPage.tsx",
         "line": 0,
         "type": "Card Violation",
-        "description": "Hardcoded card-like div found.",
-        "suggestion": "Replace custom card divs with <CathedraCard /> component."
+        "description": "Custom card-like div detected.",
+        "suggestion": "Replace with <CathedraCard /> for visual consistency."
       }
     ]
   },

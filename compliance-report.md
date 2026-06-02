@@ -1,19 +1,19 @@
-## 🏛️ Design System Compliance Report
+## 🏛️ Governança de Design System
 
-### Page Ranking (Worst to Best)
+### Ranking de Conformidade por Página
 
-| Page | Layout | Cards | Theme | Tokens | Overall |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| Search | 100% | 75% | 100% | 100% | **93.8%** |
-| Home | 100% | 100% | 100% | 100% | **100.0%** |
-| Bible | 100% | 100% | 100% | 100% | **100.0%** |
-| Catechism | 100% | 100% | 100% | 100% | **100.0%** |
-| Library | 100% | 100% | 100% | 100% | **100.0%** |
-| Documents | 100% | 100% | 100% | 100% | **100.0%** |
+| Página | Layout | Cards | Tema | Tokens | Geral |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| Search | 100% | 75% | 100% | 100% | ✅ **93.8%** |
+| Home | 100% | 100% | 100% | 100% | ✅ **100.0%** |
+| Bible | 100% | 100% | 100% | 100% | ✅ **100.0%** |
+| Catechism | 100% | 100% | 100% | 100% | ✅ **100.0%** |
+| Library | 100% | 100% | 100% | 100% | ✅ **100.0%** |
+| Documents | 100% | 100% | 100% | 100% | ✅ **100.0%** |
 
-### 🚩 Top Violations by Page
+### 🚩 Top Violações Identificadas
 
 #### Search
-- **Card Violation** (Line 0): Hardcoded card-like div found.
-  - 💡 *Suggestion*: Replace custom card divs with <CathedraCard /> component.
+- **Card Violation** (Linha 0): Custom card-like div detected.
+  - 💡 *Sugerido*: Replace with <CathedraCard /> for visual consistency.
 
