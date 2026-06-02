@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-02T01:44:07.500Z",
+  "timestamp": "2026-06-02T01:44:47.301Z",
   "totalIssues": 7,
   "categories": [
     {
@@ -40,40 +40,40 @@
       "issuesCount": 7,
       "details": [
         {
-          "file": "src/components/cathedra/AboveTheFoldTest.tsx",
-          "line": "45",
-          "match": "p-2",
-          "content": "<div className=\"fixed bottom-0 right-0 z-[1000] p-2 bg-black/80 text-white text-[8px] font-mono pointer-events-none\">"
-        },
-        {
-          "file": "src/components/cathedra/AppHeader.tsx",
-          "line": "60",
-          "match": "w-5",
-          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
-        },
-        {
-          "file": "src/components/cathedra/AppHeader.tsx",
-          "line": "60",
-          "match": "h-5",
-          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
-        },
-        {
-          "file": "src/components/cathedra/AppHeader.tsx",
-          "line": "60",
-          "match": "w-5",
-          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
-        },
-        {
-          "file": "src/components/cathedra/AppHeader.tsx",
-          "line": "60",
-          "match": "h-5",
-          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
-        },
-        {
           "file": "src/components/cathedra/mobile-layout.test.ts",
           "line": "26",
           "match": "w-5",
           "content": "// We updated AppHeader and BottomNav to use 20px (w-5 or size={20})"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "60",
+          "match": "w-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "60",
+          "match": "h-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "60",
+          "match": "w-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AppHeader.tsx",
+          "line": "60",
+          "match": "h-5",
+          "content": "<Icons.Logo className=\"w-5 h-5 md:w-5 md:h-5 transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60\" variant={isDark ? \"light\" : \"dark\"} aria-hidden=\"true\" />"
+        },
+        {
+          "file": "src/components/cathedra/AboveTheFoldTest.tsx",
+          "line": "45",
+          "match": "p-2",
+          "content": "<div className=\"fixed bottom-0 right-0 z-[1000] p-2 bg-black/80 text-white text-[8px] font-mono pointer-events-none\">"
         },
         {
           "file": "src/components/cathedra/Saints.tsx",
@@ -762,6 +762,28 @@
     },
     {
       "timestamp": "2026-06-02T01:44:07.500Z",
+      "totalIssues": 7,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 7
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-06-02T01:44:47.301Z",
       "totalIssues": 7,
       "categories": [
         {
