@@ -368,7 +368,7 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-[70ch] mx-auto pb-spacing-4xl relative reader-container overflow-x-hidden">
+    <div className="w-full pb-spacing-4xl relative reader-container overflow-x-hidden">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
@@ -417,7 +417,7 @@ const MagisteriumViewer: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 w-full max-w-[70ch] mx-auto relative"
+          className="flex-1 w-full relative"
         >
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (

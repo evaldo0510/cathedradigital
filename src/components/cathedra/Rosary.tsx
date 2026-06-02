@@ -111,7 +111,7 @@ const Rosary: React.FC = () => {
 
   if (!selectedSet) {
     return (
-      <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+      <motion.div className="w-full space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
             <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
@@ -177,7 +177,7 @@ const Rosary: React.FC = () => {
 
   if (!isPraying) {
     return (
-      <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl">
+      <div className="w-full space-y-spacing-xl pb-spacing-2xl">
         <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg justify-between">
           <div className="flex items-center gap-spacing-lg">
             <Button onClick={() => setSelectedSet(null)} className="p-spacing-sm rounded-premium-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-premium-md">

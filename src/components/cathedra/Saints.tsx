@@ -280,7 +280,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 </div>
               </div>
 
-              <div className="max-w-spacing-4xl mx-auto space-y-spacing-lg">
+              <div className="w-full space-y-spacing-lg">
                 {isLoadingDaily ? (
                   <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
@@ -292,7 +292,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       className="premium-card overflow-hidden group relative transition-all"
                     >
                       <div className="flex flex-col md:flex-row h-full">
-                        <div className="w-full md:w-spacing-2xs/3 h-spacing-4xl md:h-auto relative">
+                        <div className="w-full md:w-1/3 h-spacing-4xl md:h-auto relative">
                           <SacredImage 
                             src={saint.image} 
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
