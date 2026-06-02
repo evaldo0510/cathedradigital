@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import SpiritualGoals from './SpiritualGoals';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const ItinerariaPage: React.FC = () => {
   const navigate = useNavigate();
