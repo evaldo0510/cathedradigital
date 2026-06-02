@@ -223,27 +223,51 @@ if (configRawContent) {
       let annotationMd = `### ⚠️ Erro de Validação: \`${CONFIG_FILE}\`\n\n`;
       annotationMd += `A configuração de thresholds contém erros que bloqueiam o build. Corrija-os para prosseguir:\n\n`;
       
+      // Group issues by path for better organization
+      const groupedIssues: Record<string, z.ZodIssue[]> = {};
       result.error.issues.forEach(issue => {
-        const pathStr = issue.path.join(' → ');
-        // Attempt to find the line number in the YAML (very basic heuristic)
-        const key = issue.path[issue.path.length - 1];
-        const lineIndex = configLines.findIndex(l => l.includes(String(key)));
-        const lineNum = lineIndex !== -1 ? lineIndex + 1 : 1;
-        
-        console.error(`  📍 Campo: \x1b[33m${pathStr}\x1b[0m (Linha ${lineNum})`);
-        console.error(`     Erro: ${issue.message}\n`);
+        const pathKey = issue.path.join('.') || 'root';
+        if (!groupedIssues[pathKey]) groupedIssues[pathKey] = [];
+        groupedIssues[pathKey].push(issue);
+      });
 
-        annotationMd += `#### 📍 Campo: \`${pathStr}\` (Linha ${lineNum})\n`;
-        annotationMd += `- **Erro:** ${issue.message}\n`;
+      Object.entries(groupedIssues).forEach(([pathKey, issues]) => {
+        annotationMd += `#### 📍 Propriedade: \`${pathKey}\`\n`;
         
-        if (lineIndex !== -1) {
-          const rawValue = configLines[lineIndex].split(':')[1]?.trim() || 'N/A';
-          annotationMd += `- **Valor recebido:** \`${rawValue}\`\n`;
-          if (issue.message.includes('0 e 100')) {
-             annotationMd += `- **Valor esperado:** Um número entre \`0\` e \`100\`\n`;
+        issues.forEach(issue => {
+          // Find line number and column if possible
+          const key = issue.path[issue.path.length - 1];
+          let lineNum = 1;
+          let colNum = 1;
+          let lineContent = '';
+
+          const lineIndex = configLines.findIndex(l => l.includes(String(key)));
+          if (lineIndex !== -1) {
+            lineNum = lineIndex + 1;
+            lineContent = configLines[lineIndex];
+            colNum = lineContent.indexOf(String(key)) + 1;
           }
-          annotationMd += `\n\`\`\`yaml\n${lineNum}: ${configLines[lineIndex]}\n\`\`\`\n\n`;
-        }
+
+          const rawValue = lineIndex !== -1 ? lineContent.split(':')[1]?.trim() || 'N/A' : 'N/A';
+          
+          annotationMd += `##### ❌ Erro na Linha ${lineNum}${colNum > 1 ? `, Coluna ${colNum}` : ''}\n`;
+          annotationMd += `- **Problema:** ${issue.message}\n`;
+          annotationMd += `- **Valor recebido:** \`${rawValue}\`\n`;
+          
+          if (issue.code === 'invalid_type') {
+            annotationMd += `- **Esperado:** \`${issue.expected}\`\n`;
+          } else if (issue.message.includes('0 e 100')) {
+            annotationMd += `- **Esperado:** Número entre \`0\` e \`100\`\n`;
+          }
+
+          if (lineContent) {
+            annotationMd += `\n\`\`\`yaml\n${lineNum} | ${lineContent}\n${' '.repeat(String(lineNum).length + 3 + (colNum - 1))}^\n\`\`\`\n`;
+          }
+          annotationMd += `\n---\n`;
+          
+          console.error(`  📍 Propriedade: \x1b[33m${pathKey}\x1b[0m (Linha ${lineNum}:${colNum})`);
+          console.error(`     Erro: ${issue.message}\n`);
+        });
       });
       
       fs.writeFileSync('compliance-report.md', annotationMd);
@@ -420,10 +444,21 @@ reports.forEach(r => {
 md += `\n### 🚩 Checklist de Ação (Violações Priorizadas)\n\n`;
 reports.forEach(r => {
     if (r.violations.length > 0) {
+        // Sort violations by severity (Icon/Token > Layout/Card as a simple heuristic)
+        const severityOrder: Record<string, number> = {
+            'Icon Violation': 1,
+            'Token Violation': 2,
+            'Layout Violation': 3,
+            'Card Violation': 4
+        };
+        const sortedViolations = [...r.violations].sort((a, b) => 
+            (severityOrder[a.type] || 5) - (severityOrder[b.type] || 5)
+        );
+
         md += `<details>\n<summary><b>${r.name}</b> (${r.violations.length} problemas encontrados)</summary>\n\n`;
         md += `| Linha | Tipo | Descrição | Ação Sugerida |\n`;
         md += `| :--- | :--- | :--- | :--- |\n`;
-        r.violations.forEach(v => {
+        sortedViolations.forEach(v => {
             md += `| ${v.line} | \`${v.type}\` | ${v.description} | ${v.suggestion} |\n`;
         });
         md += `\n</details>\n\n`;
