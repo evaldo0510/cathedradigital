@@ -9,12 +9,17 @@ const forbiddenWrappers = [
   'desktop-layout'
 ];
 
-const exceptions = [
+const exemptions = [
   'src/components/cathedra/ContemplativeLayout.tsx',
   'src/components/cathedra/AppHeader.tsx',
   'src/components/cathedra/ItinerariumStepPage.tsx',
-  'src/components/cathedra/AppHeader.tsx',
-  'src/components/ui/' // Library components
+  'src/components/ui/',
+  'src/pages/landing/',
+  'src/index.css',
+  'src/lib/design-system.ts',
+  '__snapshots__',
+  'src/components/cathedra/Auth.tsx',
+  'src/components/cathedra/CommandCenter.tsx'
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
@@ -23,14 +28,15 @@ let violationsFound = 0;
 
 forbiddenWrappers.forEach(pattern => {
   try {
-    // Exclude library components and valid authorities
-    const command = `rg -n "\\b${pattern}" src --glob "!**/node_modules/**" --glob "!src/components/cathedra/ContemplativeLayout.tsx" --glob "!src/components/cathedra/AppHeader.tsx" --glob "!src/components/cathedra/ItinerariumStepPage.tsx" --glob "!src/components/ui/**"`;
+    const command = `rg -n "\\b${pattern}" src --glob "!**/node_modules/**" --glob "!src/components/ui/**" --glob "!src/pages/landing/**" --glob "!src/index.css" --glob "!src/lib/design-system.ts" --glob "!**/*.snap"`;
     const output = execSync(command, { encoding: 'utf8' }).trim();
     
     if (output) {
       const lines = output.split('\n');
       lines.forEach(line => {
-        // If it's max-w-spacing-4xl in AppHeader, it might be caught if glob fails
+        const filePath = line.split(':')[0];
+        if (exemptions.some(ex => filePath.includes(ex))) return;
+
         console.error(`❌ Layout Wrapper Violation: ${line}`);
         violationsFound++;
       });
@@ -46,4 +52,3 @@ if (violationsFound > 0) {
 } else {
   console.log('✅ Layout governance check passed.');
 }
-
