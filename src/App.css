@@ -1,58 +1,14 @@
-/* Desktop Grid and Layout Optimization */
-.desktop-layout {
-  @apply max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-spacing-xl px-spacing-md sm:px-spacing-lg lg:px-spacing-xl;
+/* Estilos migrados para index.css e consolidados no ContemplativeLayout */
+
+.btn-premium {
+  @apply relative overflow-hidden px-spacing-xl py-spacing-md h-spacing-3xl font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300;
+  border-radius: 9999px;
 }
 
-.desktop-main {
-  @apply w-full max-w-spacing-4xl mx-auto space-y-spacing-xl;
+.premium-card {
+  @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-700;
 }
 
-.desktop-aside {
-  @apply sticky top-spacing-4xl h-fit;
-}
-
-.content-section {
-  @apply space-y-spacing-xl;
-}
-
-#root {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.search-input-premium {
+  @apply w-full pl-spacing-2xl pr-spacing-lg py-spacing-md rounded-premium-full border border-primary/[0.03] bg-transparent focus:bg-primary/[0.01] focus:ring-1 focus:ring-primary/5 transition-all font-serif italic text-premium-lg placeholder:text-primary/10;
 }
