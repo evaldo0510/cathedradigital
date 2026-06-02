@@ -190,9 +190,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
               onClick={(e) => {
-              if (item.onClick) item.onClick();
-              else if (item.route) navigate(item.route);
-            }}
+                if (item.isMenu) onOpenSidebar();
+                else if (item.route) navigate(item.route);
+              }}
             onRipple={triggerRipple}
           />
         );
