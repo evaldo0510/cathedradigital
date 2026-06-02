@@ -107,6 +107,7 @@ const ItinerariaPage: React.FC = () => {
         )}
         </div>
       </ContemplativeLayout>
+    </>
   );
 };
 
