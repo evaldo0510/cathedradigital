@@ -294,7 +294,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         path="/admin/seo-verify"
       />
       
-      <div className="max-w-6xl mx-auto space-y-spacing-xl">
+      <div className="w-full space-y-spacing-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
           <div>
             <h1 className="text-premium-4xl font-serif font-bold text-foreground mb-spacing-xs flex items-center gap-spacing-sm">

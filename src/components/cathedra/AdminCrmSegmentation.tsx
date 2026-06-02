@@ -193,7 +193,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                       <span className="text-premium-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-spacing-sm text-center hidden lg:table-cell">
-                      <span className="text-premium-xs text-muted-foreground truncate max-w-[150px] block mx-auto">
+                      <span className="text-premium-xs text-muted-foreground truncate w-full block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>

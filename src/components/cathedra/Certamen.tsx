@@ -134,7 +134,7 @@ const Certamen: React.FC = () => {
   if (showResult) {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
-      <div className="max-w-spacing-2xl mx-auto space-y-spacing-xl p-spacing-md">
+      <div className="w-full space-y-spacing-xl p-spacing-md">
         <div className="bg-card border border-border rounded-premium p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Icons.Trophy className="w-spacing-xl h-spacing-xl" /> : pct >= 50 ? <Icons.BookOpen className="w-spacing-xl h-spacing-xl" /> : <Icons.Heart className="w-spacing-xl h-spacing-xl" />}
@@ -166,7 +166,7 @@ const Certamen: React.FC = () => {
   if (!question) return null;
 
   return (
-    <div className="max-w-spacing-3xl mx-auto space-y-spacing-xl p-spacing-md">
+    <div className="w-full space-y-spacing-xl p-spacing-md">
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Star className="w-spacing-md h-spacing-md text-primary" />

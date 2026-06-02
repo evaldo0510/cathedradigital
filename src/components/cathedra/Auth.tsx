@@ -82,7 +82,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="max-w-spacing-md mx-auto space-y-spacing-xl relative">
+    <div className="w-full space-y-spacing-xl relative">
       <Button 
         variant="ghost"
         size="sm"

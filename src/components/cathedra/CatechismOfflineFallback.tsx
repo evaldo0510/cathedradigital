@@ -167,7 +167,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         <h3 className="text-premium-xl font-serif font-bold text-foreground">
           {paragraph ? `Parágrafo §${paragraph} Offline` : 'Catecismo Offline'}
         </h3>
-        <p className="text-premium-sm text-muted-foreground leading-relaxed max-w-spacing-sm mx-auto">
+        <p className="text-premium-sm text-muted-foreground leading-relaxed w-full mx-auto">
           {isForcedOffline 
             ? 'Você está no modo somente-cache. Este parágrafo ainda não foi baixado para o seu dispositivo.'
             : 'Parece que você está sem conexão. Este parágrafo não está disponível no cache local.'}

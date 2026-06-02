@@ -42,7 +42,7 @@ const DesignSystemGuide: React.FC = () => {
     <div className="min-h-screen bg-background py-spacing-3xl md:py-spacing-4xl px-spacing-lg transition-colors duration-1000">
       <SEOHead title="Design System Documentation | Cathedra" description="Tokens, regras e componentes do ecossistema visual Cathedra Digital." path="/design-system" />
       
-      <div className="max-w-6xl mx-auto space-y-spacing-4xl">
+      <div className="w-full space-y-spacing-4xl">
         {/* Header */}
         <header className="space-y-spacing-2xl text-center py-spacing-3xl">
           <motion.div 
@@ -63,7 +63,7 @@ const DesignSystemGuide: React.FC = () => {
               Cathedra <br />
               <span className="text-secondary/60 italic font-serif">Artes Docendi</span>
             </motion.h1>
-            <p className="font-serif italic text-muted-foreground/60 text-premium-xl max-w-spacing-2xl mx-auto leading-relaxed">
+            <p className="font-serif italic text-muted-foreground/60 text-premium-xl leading-relaxed">
               "A beleza é o esplendor da ordem." — Documentação oficial dos tokens e componentes premium.
             </p>
           </div>
@@ -114,7 +114,7 @@ const DesignSystemGuide: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-2xl items-baseline">
                   <div>
                     <h4 className="font-ui font-bold text-secondary mb-spacing-xs uppercase tracking-[0.2em] text-[10px]">{font.name}</h4>
-                    <p className="text-premium-xs text-muted-foreground max-w-spacing-xs">{font.desc}</p>
+                    <p className="text-premium-xs text-muted-foreground">{font.desc}</p>
                   </div>
                   <div className="lg:col-span-2">
                     <p className={`${font.class} text-premium-4xl md:text-premium-6xl text-primary leading-tight`}>
@@ -232,7 +232,7 @@ const DesignSystemGuide: React.FC = () => {
               </div>
               <div className="space-y-spacing-sm">
                 <h3 className="text-premium-2xl font-serif">Micro-interações</h3>
-                <p className="text-premium-sm text-muted-foreground leading-relaxed max-w-spacing-sm">
+                <p className="text-premium-sm text-muted-foreground leading-relaxed">
                   Passe o mouse sobre este card para sentir o feedback premium: elevação sutil, sombreamento profundo e blur dinâmico.
                 </p>
               </div>

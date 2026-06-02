@@ -50,7 +50,7 @@ const A11yAuditPage = () => {
   ];
 
   return (
-    <div className="max-w-spacing-4xl mx-auto py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
+    <div className="w-full py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
       <header className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
           <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />

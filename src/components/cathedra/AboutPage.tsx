@@ -12,7 +12,7 @@ const AboutPage: React.FC = () => (
         <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>
       <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Sobre a Cathedra Digital</h1>
-      <p className="text-muted-foreground text-premium-lg max-w-spacing-2xl mx-auto">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
+      <p className="text-muted-foreground text-premium-lg">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
     </div>
 
     {/* Quick Navigation Anchors */}

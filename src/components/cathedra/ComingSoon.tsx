@@ -98,7 +98,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
   return (
     <div className={cn("space-y-spacing-3xl", className)}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-mobile-stack)] md:gap-spacing-3xl max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-mobile-stack)] md:gap-spacing-3xl w-full mx-auto">
         {items.map((item, idx) => (
           <div
             key={idx}
@@ -115,7 +115,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
         ))}
       </div>
       
-      <div className="max-w-spacing-md mx-auto w-full pt-spacing-xl">
+      <div className="w-full mx-auto pt-spacing-xl">
         {!submitted ? (
           <form onSubmit={handleSubmit} className="relative group">
             <div className="relative">

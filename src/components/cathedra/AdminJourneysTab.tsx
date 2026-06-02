@@ -454,7 +454,7 @@ const AdminJourneysTab: React.FC = () => {
       </div>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="w-full">
           <DialogHeader>
             <DialogTitle>Editar Jornada</DialogTitle>
           </DialogHeader>
@@ -510,7 +510,7 @@ const AdminJourneysTab: React.FC = () => {
       </Dialog>
 
       <Dialog open={isEditStepDialogOpen} onOpenChange={setIsEditStepDialogOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+        <DialogContent className="w-full max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Editar Passo da Jornada</DialogTitle>
           </DialogHeader>
@@ -570,7 +570,7 @@ const AdminJourneysTab: React.FC = () => {
       </Dialog>
 
       <Dialog open={isAddJourneyDialogOpen} onOpenChange={setIsAddJourneyDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="w-full">
           <DialogHeader>
             <DialogTitle>Nova Jornada</DialogTitle>
             <DialogDescription>Crie uma nova trilha espiritual para os usuários.</DialogDescription>

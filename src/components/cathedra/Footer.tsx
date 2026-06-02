@@ -174,7 +174,7 @@ const Footer: React.FC = React.memo(() => {
     <footer className="mt-auto w-full border-t border-border/10 pt-spacing-4xl lg:pt-spacing-4xl pb-spacing-4xl lg:pb-spacing-4xl bg-background relative overflow-hidden contain-layout footer-reading-auto-hide" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 520px' }} aria-label="Rodapé">
       <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
       
-      <div className="max-w-[1600px] mx-auto px-spacing-xl md:px-spacing-2xl relative z-10">
+      <div className="w-full relative z-10 px-spacing-xl md:px-spacing-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-3xl lg:gap-spacing-4xl mb-spacing-4xl">
           
           <div className="flex flex-col gap-spacing-xl">
@@ -185,7 +185,7 @@ const Footer: React.FC = React.memo(() => {
                  <p className="text-premium-small font-black uppercase text-primary tracking-[0.4em]">Digital Sanctuarium</p>
                </div>
             </div>
-            <p className="text-premium-base text-muted-foreground leading-relaxed max-w-spacing-sm">
+            <p className="text-premium-base text-muted-foreground leading-relaxed">
               {lang === 'pt' 
                 ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica, unindo a tradição milenar à tecnologia moderna.'
                 : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}

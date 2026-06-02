@@ -328,7 +328,7 @@ const Magisterium: React.FC = () => {
         </div>
 
         {/* Documents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
           {filteredDocs.map((doc, idx) => (
             <CathedraCard
               key={doc.id}

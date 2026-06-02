@@ -44,7 +44,7 @@ const GuidedReadingPage: React.FC = () => {
 
       <ContemplativeLayout>
         <div className="flex flex-col items-center">
-          <header className="text-center space-y-spacing-xl mb-spacing-3xl md:mb-spacing-4xl max-w-spacing-2xl mx-auto">
+          <header className="text-center space-y-spacing-xl mb-spacing-3xl md:mb-spacing-4xl">
             <div className="inline-flex items-center gap-spacing-md px-spacing-lg py-spacing-xs bg-primary/[0.01] border border-border/10 rounded-premium-full text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">
               <div className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary animate-pulse" />
               Experiência Guiada

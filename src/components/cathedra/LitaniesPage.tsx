@@ -223,7 +223,7 @@ const LitaniesPage: React.FC = () => {
 
   if (litany) {
     return (
-      <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
+      <div className="w-full space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg">
           <Button onClick={() => setSelectedId(null)} className="p-spacing-sm rounded-premium-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-premium-md self-start md:self-center">
             <Icons.ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
@@ -246,7 +246,7 @@ const LitaniesPage: React.FC = () => {
           )}
 
           {/* Invocations */}
-          <div className="space-y-spacing-2xs max-w-spacing-2xl mx-auto">
+          <div className="space-y-spacing-2xs w-full">
             {litany.invocations.map((inv, i) => (
               <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-spacing-2xs md:gap-spacing-md py-spacing-sm border-b border-border/30 last:border-0 group">
                 <p className="flex-1 font-serif text-premium-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
@@ -267,19 +267,19 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl">
+    <div className="w-full space-y-spacing-2xl pb-spacing-2xl">
       <div className="text-center space-y-spacing-md pt-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
-        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">
+        <p className="text-premium-lg text-muted-foreground font-serif italic">
           Orações de invocação e súplica consagradas pela tradição secular da Igreja.
         </p>
       </div>
 
-      <div className="max-w-spacing-md mx-auto relative group">
+      <div className="w-full relative group">
         <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground transition-colors group-focus-within:text-primary" />
         <input 
           value={searchQuery} 

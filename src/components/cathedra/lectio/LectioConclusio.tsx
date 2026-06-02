@@ -33,7 +33,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
   }, [user?.id, allNotesText]);
 
   return (
-    <div className="max-w-spacing-3xl mx-auto space-y-spacing-xl pb-spacing-3xl animate-in fade-in duration-700">
+    <div className="w-full space-y-spacing-xl pb-spacing-3xl animate-in fade-in duration-700">
       {/* Celebration */}
       <motion.div 
         className="text-center space-y-spacing-lg pt-spacing-xl"
@@ -52,7 +52,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">
           Amém.
         </h1>
-        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
+        <p className="text-premium-lg text-muted-foreground font-serif italic leading-relaxed">
           Você completou a Lectio Divina de hoje. A Palavra de Deus agora habita mais profundamente em seu coração.
         </p>
       </motion.div>
@@ -115,7 +115,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         transition={{ delay: 1 }}
       >
         <Icons.Heart className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
-        <p className="text-premium-lg font-serif text-foreground leading-relaxed max-w-spacing-lg mx-auto">
+        <p className="text-premium-lg font-serif text-foreground leading-relaxed w-full mx-auto">
           "A fidelidade à oração diária transforma a alma silenciosamente."
         </p>
         <div className="flex items-center justify-center gap-spacing-xs text-primary">

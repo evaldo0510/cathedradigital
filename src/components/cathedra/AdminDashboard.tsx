@@ -768,7 +768,7 @@ const AdminDashboard: React.FC = () => {
                   recentJournal.map((entry) => (
                     <div key={entry.id} className="p-spacing-xs rounded-premium bg-muted/20 border border-border/10 space-y-spacing-2xs hover:bg-muted/30 transition-colors">
                       <div className="flex items-center justify-between text-premium-xs font-bold">
-                        <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
+                        <span className="text-primary truncate w-full">{entry.profiles?.name || 'Anônimo'}</span>
                         <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                       <p className="text-premium-small leading-relaxed line-clamp-spacing-xs italic opacity-80">"{entry.content}"</p>
@@ -926,10 +926,10 @@ const AdminDashboard: React.FC = () => {
                             <div className="w-spacing-lg h-spacing-lg rounded bg-foreground text-background flex items-center justify-center font-black text-premium-xs shrink-0">
                               {u.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
-                            <span className="font-bold text-premium-xs truncate max-w-[120px]">{u.name || '—'}</span>
+                            <span className="font-bold text-premium-xs truncate w-full">{u.name || '—'}</span>
                           </div>
                         </td>
-                        <td className="px-spacing-sm py-spacing-xs text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-premium-xs font-medium">{u.email}</td>
+                        <td className="px-spacing-sm py-spacing-xs text-muted-foreground hidden md:table-cell truncate w-full text-premium-xs font-medium">{u.email}</td>
                         <td className="px-spacing-sm py-spacing-xs text-center">
                           {u.is_premium ? (
                             <Badge className="bg-primary/10 text-primary border-primary/20 gap-spacing-2xs text-premium-xs font-bold h-spacing-md px-spacing-2xs shadow-premium-none">

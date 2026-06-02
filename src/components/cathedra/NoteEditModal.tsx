@@ -70,7 +70,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-spacing-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium overflow-hidden p-spacing-xl md:p-spacing-2xl space-y-spacing-xl"
+            className="relative w-full bg-card border border-primary/10 rounded-[2.5rem] shadow-premium overflow-hidden p-spacing-xl md:p-spacing-2xl space-y-spacing-xl"
           >
             <div className="flex items-center justify-between">
               <div className="space-y-spacing-2xs">

@@ -13,7 +13,7 @@ const FavoritesPage: React.FC = () => {
   const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas' };
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl">
+    <div className="w-full space-y-spacing-xl">
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
@@ -40,7 +40,7 @@ const FavoritesPage: React.FC = () => {
             <Icons.Heart className="w-spacing-xl h-spacing-xl text-muted-foreground" />
           </div>
           <h3 className="text-premium-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
-          <p className="text-muted-foreground font-serif italic max-w-spacing-md">
+          <p className="text-muted-foreground font-serif italic">
             Ao navegar pela Bíblia, Catecismo e orações, toque no ícone de coração para salvar seus conteúdos favoritos aqui.
           </p>
         </div>

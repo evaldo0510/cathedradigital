@@ -32,7 +32,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
   if (!activeStep) return null;
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl">
+    <div className="w-full space-y-spacing-xl pb-spacing-2xl">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg px-spacing-xs">
         <Button variant="outline" size="icon" onClick={onBack} className="rounded-premium-full shadow-premium-md self-start md:self-center">
@@ -118,7 +118,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             </div>
           </div>
           
-          <div className="relative space-y-spacing-xl max-w-spacing-2xl mx-auto">
+          <div className="relative space-y-spacing-xl w-full mx-auto">
             <div className="bg-muted/50 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl border border-border/50 space-y-spacing-lg">
               {isBibleLoading ? (
                 <div className="space-y-spacing-md py-spacing-md">
@@ -179,7 +179,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           variant="outline"
           disabled={stepIndex <= 0}
           onClick={() => onStepChange(STEPS[stepIndex - 1].id)}
-          className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full"
+          className="flex-1 h-spacing-2xl rounded-premium-full"
         >
           <Icons.ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
         </Button>
@@ -187,14 +187,14 @@ const LectioStep: React.FC<LectioStepProps> = ({
         {stepIndex < STEPS.length - 1 ? (
           <Button
             onClick={() => onStepChange(STEPS[stepIndex + 1].id)}
-            className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-foreground text-background hover:bg-primary"
+            className="flex-1 h-spacing-2xl rounded-premium-full bg-foreground text-background hover:bg-primary"
           >
             Próximo <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         ) : (
           <Button
             onClick={() => onStepChange('conclusio')}
-            className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
+            className="flex-1 h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
           >
             <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" /> Concluir
           </Button>

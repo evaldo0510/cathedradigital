@@ -228,7 +228,7 @@ const JornadaCompletePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-spacing-xl max-w-spacing-2xl mx-auto pb-spacing-2xl">
+    <div className="space-y-spacing-xl w-full pb-spacing-2xl">
       {/* Back */}
       <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
         <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Jornadas

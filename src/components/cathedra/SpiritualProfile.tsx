@@ -121,7 +121,7 @@ const SpiritualProfile: React.FC = () => {
     <ContemplativeLayout
       subtitle="Itinerarium Animae"
       title="Perfil Espiritual"
-      maxW="max-w-5xl"
+      maxW="max-w-spacing-4xl"
     >
       <div className="space-y-spacing-4xl md:space-y-spacing-4xl">
         {/* Header/Summary */}

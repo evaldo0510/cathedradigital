@@ -26,7 +26,7 @@ const AparicoesPage: React.FC = () => {
   if (selectedApparition) {
     const isFav = isFavorite('aparicao', selectedApparition.title);
     return (
-      <div className="max-w-spacing-4xl mx-auto space-y-spacing-lg">
+      <div className="w-full space-y-spacing-lg">
         {/* Back + Header */}
         <div className="flex items-center gap-spacing-md">
           <Button onClick={() => setSelectedApparition(null)} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
@@ -161,7 +161,7 @@ const AparicoesPage: React.FC = () => {
 
   // Overview
   return (
-    <div className="max-w-5xl mx-auto space-y-spacing-xl">
+    <div className="w-full space-y-spacing-xl">
       {/* Header */}
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">

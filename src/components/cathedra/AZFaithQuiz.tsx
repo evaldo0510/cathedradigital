@@ -163,7 +163,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
     const avgScore = history.length > 0 ? Math.round(history.reduce((a, h) => a + h.percentage, 0) / history.length) : 0;
 
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-spacing-md mx-auto space-y-spacing-lg">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full space-y-spacing-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-premium-lg font-bold text-foreground">Histórico de Quizzes</h2>
           <Button variant="ghost" size="xs" onClick={() => setShowHistory(false)}>Voltar</Button>
@@ -219,7 +219,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-card border border-border rounded-premium-full p-spacing-xl text-center space-y-spacing-lg max-w-spacing-md mx-auto"
+        className="bg-card border border-border rounded-premium-full p-spacing-xl text-center space-y-spacing-lg w-full"
       >
         <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto">
           <Icons.Trophy className="w-spacing-xl h-spacing-xl text-primary" />
@@ -265,7 +265,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
   }
 
   return (
-    <div className="max-w-spacing-lg mx-auto space-y-spacing-lg">
+    <div className="w-full space-y-spacing-lg">
       {/* Header with history button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-spacing-md text-premium-xs text-muted-foreground">

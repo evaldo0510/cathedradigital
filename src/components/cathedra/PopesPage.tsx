@@ -168,7 +168,7 @@ const PopesPage: React.FC = () => {
   }, [search]);
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-3xl px-spacing-md">
+    <div className="w-full space-y-spacing-xl pb-spacing-3xl px-spacing-md">
       <SEOHead 
         title="Os Papas - Sucessores de Pedro" 
         description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais." 
@@ -181,10 +181,10 @@ const PopesPage: React.FC = () => {
           <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-5xl font-serif font-bold text-foreground">Os Papas</h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
+        <p className="text-muted-foreground font-serif italic">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
       </div>
 
-      <div className="relative max-w-spacing-md mx-auto">
+      <div className="relative w-full mx-auto">
         <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
         <Input
           placeholder="Buscar Papa..."

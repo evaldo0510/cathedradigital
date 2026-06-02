@@ -139,7 +139,7 @@ const CheckoutResultPage: React.FC = () => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-xl max-w-spacing-lg mx-auto py-spacing-2xl"
+      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-xl w-full py-spacing-2xl"
     >
       <div className={`w-spacing-4xl h-spacing-4xl rounded-premium-full ${c.iconBg} flex items-center justify-center`}>
         {c.icon}

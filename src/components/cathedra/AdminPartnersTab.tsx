@@ -311,7 +311,7 @@ const AdminPartnersTab: React.FC = () => {
 
       {/* Icons.Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[550px]">
+        <DialogContent className="w-full">
           <DialogHeader>
             <DialogTitle>Editar Parceiro</DialogTitle>
             <DialogDescription>
