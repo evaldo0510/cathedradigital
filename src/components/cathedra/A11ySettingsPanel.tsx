@@ -174,6 +174,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     </div>
                     <Switch 
                       id="reduce-animations-toggle" 
+                      data-testid="reducao-movimento-toggle"
                       checked={settings.reduceAnimations} 
                       onCheckedChange={(val) => updateSettings({ reduceAnimations: val })} 
                     />

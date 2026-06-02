@@ -298,7 +298,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
-        <div className="w-full">
+        <div className="w-full" data-testid={`secao-${selectedSection.id}-conteudo`}>
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
              <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
@@ -347,7 +347,7 @@ const Catechism: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
             {selectedPart.sections.map((sec, idx) => (
-              <CathedraCard key={sec.id} id={`section-card-${sec.id}`} variant="interactive" padding="none" role="button" tabIndex={0} aria-label={`Seção ${sec.id}: ${sec.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); } }} onClick={() => { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
+              <CathedraCard key={sec.id} id={`section-card-${sec.id}`} data-testid={`secao-${sec.id}`} variant="interactive" padding="none" role="button" tabIndex={0} aria-label={`Seção ${sec.id}: ${sec.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); } }} onClick={() => { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
                 <div className="p-spacing-lg flex items-center justify-between h-full">
                   <div className="space-y-spacing-xs text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>

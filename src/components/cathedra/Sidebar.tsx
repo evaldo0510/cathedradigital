@@ -20,10 +20,11 @@ interface SidebarProps {
   onToggleHighContrast?: () => void;
   isSpeaking?: boolean;
   onToggleSpeak?: () => void;
+  onOpenA11y?: () => void;
   onSignOut?: () => void;
 }
 
-const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }: SidebarProps) => {
+const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onOpenA11y, onSignOut }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -307,7 +308,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
                   <Button 
                     variant="ghost"
-                    onClick={onToggleHighContrast} 
+                    data-testid="a11y-trigger"
+                    onClick={onOpenA11y} 
                     className={`h-spacing-xl rounded-premium border flex items-center justify-center gap-spacing-xs transition-all ${
                       isHighContrast 
                         ? 'bg-primary/10 border-primary/20 text-primary' 

@@ -58,6 +58,7 @@ interface BottomNavItemProps {
   onClick: (e: React.MouseEvent | React.TouchEvent) => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
   shouldReduceMotion?: boolean;
+  "data-testid"?: string;
 }
 
 const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({ 
@@ -67,7 +68,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
   isActive, 
   onClick, 
   onRipple,
-  shouldReduceMotion = false
+  shouldReduceMotion = false,
+  "data-testid": dataTestId,
 }) => {
   const navigate = useNavigate();
   return (
@@ -81,6 +83,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     onMouseEnter={() => route && prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
+    data-testid={dataTestId}
     className={cn(
       "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
       isActive 
@@ -189,10 +192,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
+              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.icon.toLowerCase()}`}
               onClick={(e) => {
-              if (item.onClick) item.onClick();
-              else if (item.route) navigate(item.route);
-            }}
+                if (item.isMenu) onOpenSidebar();
+                else if (item.route) navigate(item.route);
+              }}
             onRipple={triggerRipple}
           />
         );
