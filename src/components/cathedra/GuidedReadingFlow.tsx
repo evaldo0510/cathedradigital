@@ -60,7 +60,7 @@ export const GuidedReadingFlow: React.FC = () => {
   const Icon = (Icons as any)[step.icon] || Icons.Book;
 
   return (
-    <div className="w-full max-w-spacing-4xl mx-auto">
+    <div className="w-full">
       <AnimatePresence mode="wait">
         <motion.div
           key={step.id}

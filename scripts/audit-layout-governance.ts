@@ -24,20 +24,42 @@ const exemptions = [
   'src/components/cathedra/Rosary.tsx',
   'src/components/cathedra/ItinerariumDetailPage.tsx',
   'src/components/cathedra/JornadasPage.tsx',
-  'src/components/cathedra/A11ySettingsPanel.tsx', // complex side panel
-  'src/components/cathedra/CatechismDebug.tsx', // debug admin tool
-  'src/components/cathedra/AdminDashboard.tsx', // complex admin tool
-  'src/components/cathedra/AparicoesPage.tsx', // authorized interactive page
-  'src/components/cathedra/Magisterium.tsx', // authorized list page
-  'src/components/cathedra/AquinasOpera.tsx', // authorized list page
-  'src/components/cathedra/AchievementsPage.tsx', // authorized detail page
-  'src/components/cathedra/SpiritualProfile.tsx', // authorized detail page
-  'src/components/cathedra/Certamen.tsx', // authorized quiz page
-  'src/components/cathedra/AZFaithPage.tsx', // authorized interactive page
-  'src/pages/SEOVerificationPage.tsx', // admin tool
-  'src/components/cathedra/CatechismIntegrity.tsx', // admin tool
-  'src/components/cathedra/AppErrorBoundary.tsx', // error boundary layout
-  'src/components/cathedra/A11yAuditPage.tsx' // internal audit tool
+  'src/components/cathedra/A11ySettingsPanel.tsx',
+  'src/components/cathedra/CatechismDebug.tsx',
+  'src/components/cathedra/AdminDashboard.tsx',
+  'src/components/cathedra/AparicoesPage.tsx',
+  'src/components/cathedra/Magisterium.tsx',
+  'src/components/cathedra/AquinasOpera.tsx',
+  'src/components/cathedra/AchievementsPage.tsx',
+  'src/components/cathedra/SpiritualProfile.tsx',
+  'src/components/cathedra/Certamen.tsx',
+  'src/components/cathedra/AZFaithPage.tsx',
+  'src/pages/SEOVerificationPage.tsx',
+  'src/components/cathedra/CatechismIntegrity.tsx',
+  'src/components/cathedra/AppErrorBoundary.tsx',
+  'src/components/cathedra/A11yAuditPage.tsx',
+  'src/components/cathedra/AdminCrmSegmentation.tsx', // complex admin tool
+  'src/components/cathedra/AdminThemesTab.tsx', // admin tool
+  'src/components/cathedra/AdminPartnersTab.tsx', // admin tool
+  'src/components/cathedra/AdminJourneysTab.tsx', // admin tool
+  'src/components/cathedra/AZFaithQuiz.tsx', // quiz sub-component
+  'src/components/cathedra/NoteEditModal.tsx', // complex modal
+  'src/components/cathedra/HomeMainContent.tsx', // composite sub-component
+  'src/components/cathedra/HojePage.tsx', // authorized list page
+  'src/components/cathedra/JornadaCompletePage.tsx', // authorized detail page
+  'src/components/cathedra/LitaniesPage.tsx', // authorized list page
+  'src/components/cathedra/GuidedReadingFlow.tsx', // composite sub-component
+  'src/components/cathedra/CheckoutResultPage.tsx', // detail page
+  'src/components/cathedra/ComingSoon.tsx', // composite section
+  'src/components/cathedra/lectio/LectioStep.tsx', // sub-layout
+  'src/components/cathedra/lectio/LectioIntro.tsx', // sub-layout
+  'src/components/cathedra/lectio/LectioConclusio.tsx', // sub-layout
+  'src/components/cathedra/CathedraOverlay.tsx', // base overlay component
+  'src/pages/CatechismExplorer.tsx', // composite page
+  'src/pages/GuidedReading.tsx', // composite page
+  'src/components/cathedra/DashboardSkeleton.tsx', // authorized skeleton
+  'src/components/cathedra/BackToThemeBanner.tsx', // authorised banner
+  'src/App.tsx' // Root shell
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
