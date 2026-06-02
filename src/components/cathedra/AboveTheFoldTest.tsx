@@ -42,7 +42,7 @@ const AboveTheFoldTest: React.FC = () => {
   if (!import.meta.env.DEV) return null;
 
   return (
-    <div className="fixed bottom-0 right-0 z-[1000] p-2 bg-black/80 text-white text-[8px] font-mono pointer-events-none">
+    <div className="fixed bottom-0 right-0 z-[1000] p-spacing-xs bg-black/80 text-white text-[8px] font-mono pointer-events-none">
       {report && (
         <div className={report.status === 'PASS' ? 'text-green-400' : 'text-red-400'}>
           {report.status}: {report.details}

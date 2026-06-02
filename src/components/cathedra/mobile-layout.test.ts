@@ -23,7 +23,7 @@ describe('Mobile Layout Stability & Content Density', () => {
   });
 
   it('should have consistent icon sizes across mobile components', () => {
-    // We updated AppHeader and BottomNav to use 20px (w-5 or size={20})
+    // We updated AppHeader and BottomNav to use 20px (w-spacing-lg or size={20})
     const standardIconSize = 20;
     
     // This is a placeholder for actual DOM inspection if we were running in a browser-enabled test runner
