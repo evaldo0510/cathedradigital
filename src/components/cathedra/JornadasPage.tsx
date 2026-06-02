@@ -239,8 +239,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       icon={Icons.Journeys}
     >
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
-      <div ref={ref} className="desktop-layout">
-        <div className="desktop-main space-y-spacing-xl md:space-y-spacing-2xl">
+      <div ref={ref} className="w-full">
+        <div className="w-full space-y-spacing-xl md:space-y-spacing-2xl">
           
           {/* Journey Reminder Settings */}
           {user && (
