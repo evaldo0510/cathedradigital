@@ -1,0 +1,96 @@
+const fs = require('fs');
+const path = require('path');
+
+const PAGES = [
+  { name: 'Home', path: 'src/components/cathedra/HojePage.tsx' },
+  { name: 'Bible', path: 'src/components/cathedra/Bible.tsx' },
+  { name: 'Catechism', path: 'src/components/cathedra/Catechism.tsx' },
+  { name: 'Library', path: 'src/components/cathedra/BibliotecaPage.tsx' },
+  { name: 'Documents', path: 'src/components/cathedra/Magisterium.tsx' },
+  { name: 'Search', path: 'src/components/cathedra/GlobalSearchPage.tsx' },
+];
+
+const LAYOUT_COMPONENTS = ['ContemplativeLayout', 'motion', 'CathedraOverlay', 'SectionHeader'];
+const CARD_COMPONENTS = ['CathedraCard'];
+const THEME_CLASSES = ['bg-background', 'text-foreground', 'bg-primary', 'text-primary', 'bg-secondary', 'text-secondary', 'border-border', 'bg-muted', 'text-muted-foreground'];
+const SPACING_TOKENS = ['spacing-xs', 'spacing-sm', 'spacing-md', 'spacing-lg', 'spacing-xl', 'spacing-2xl', 'spacing-3xl', 'spacing-4xl'];
+const RADIUS_TOKENS = ['rounded-premium', 'rounded-premium-sm', 'rounded-premium-lg', 'rounded-premium-full'];
+
+function auditFile(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+
+  const content = fs.readFileSync(filePath, 'utf8');
+  const violations = [];
+  
+  // Layout compliance
+  let layoutScore = 0;
+  LAYOUT_COMPONENTS.forEach(comp => {
+    if (content.includes(comp)) layoutScore += 25;
+  });
+
+  // Card compliance
+  let cardScore = 0;
+  const hasGenericCards = /className="[^"]*rounded-(xl|2xl|3xl)[^"]*bg-(white|card)/.test(content);
+  if (content.includes('CathedraCard')) cardScore = 100;
+  else if (hasGenericCards) {
+    cardScore = 20;
+    violations.push('Uses generic card classes instead of <CathedraCard />');
+  } else cardScore = 100; // No cards, so compliant by omission or just simple divs
+
+  // Theme compliance
+  const hardcodedColors = content.match(/#[0-9A-Fa-f]{3,6}/g) || [];
+  const themeTokens = THEME_CLASSES.filter(token => content.includes(token));
+  let themeScore = Math.max(0, 100 - (hardcodedColors.length * 10));
+  if (hardcodedColors.length > 0) {
+    violations.push(`Found ${hardcodedColors.length} hardcoded hex colors`);
+  }
+
+  // Token compliance
+  const hardcodedSpacing = content.match(/\b(p|m|gap)-[0-9]+\b/g) || [];
+  const tokenSpacing = SPACING_TOKENS.filter(token => content.includes(token));
+  let tokenScore = Math.max(0, 100 - (hardcodedSpacing.length * 5));
+  if (hardcodedSpacing.length > 0) {
+    violations.push(`Found ${hardcodedSpacing.length} hardcoded Tailwind spacing classes (e.g., p-4)`);
+  }
+
+  return {
+    layout: layoutScore,
+    card: cardScore,
+    theme: themeScore,
+    tokens: tokenScore,
+    total: (layoutScore + cardScore + themeScore + tokenScore) / 4,
+    violations
+  };
+}
+
+const results = PAGES.map(page => {
+  const audit = auditFile(page.path);
+  return {
+    ...page,
+    ...audit
+  };
+}).filter(r => r.layout !== null);
+
+results.sort((a, b) => a.total - b.total);
+
+let report = '# Design System Compliance Report\n\n';
+report += '| Page | Layout % | Card % | Theme % | Token % | Overall % |\n';
+report += '| :--- | :---: | :---: | :---: | :---: | :---: |\n';
+
+results.forEach(r => {
+  report += `| ${r.name} | ${r.layout}% | ${r.card}% | ${r.theme}% | ${r.tokens}% | **${r.total.toFixed(1)}%** |\n`;
+});
+
+report += '\n## Top 10 Violations\n\n';
+const allViolations = results.flatMap(r => r.violations.map(v => `${r.name}: ${v}`));
+const uniqueViolations = [...new Set(allViolations)].slice(0, 10);
+
+uniqueViolations.forEach((v, i) => {
+  report += `${i + 1}. ${v}\n`;
+});
+
+fs.writeFileSync('src/components/cathedra/COMPLIANCE_REPORT.md', report);
+console.log('Compliance report generated at src/components/cathedra/COMPLIANCE_REPORT.md');
+console.log(JSON.stringify(results, null, 2));
