@@ -2,9 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Catecismo Mobile - Clicabilidade e Integridade', () => {
   const viewports = [
-    { name: 'iPhone 6/7/8', width: 375, height: 667 },
-    { name: 'iPhone 8 Plus', width: 414, height: 736 },
-    { name: 'Android Small', width: 360, height: 640 },
+    { name: 'iPhone SE (Small)', width: 320, height: 568 },
+    { name: 'iPhone 12/13/14 (Standard)', width: 390, height: 844 },
+    { name: 'iPhone 14 Pro Max (Large)', width: 430, height: 932 },
+    { name: 'Pixel 7', width: 412, height: 915 },
+    { name: 'Galaxy S23', width: 360, height: 780 },
     { name: 'iPad Portrait', width: 768, height: 1024 },
   ];
 
