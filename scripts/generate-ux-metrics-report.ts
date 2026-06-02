@@ -14,6 +14,7 @@ interface ValidationResult {
   viewport: string;
   hasCuts: boolean;
   hasOverlaps: boolean;
+  smallTouchArea?: boolean;
   issues: string[];
 }
 
@@ -28,11 +29,15 @@ const CURRENT_REPORT_PATH = path.join(REPORT_DIR, 'mobile-ux-metrics.json');
 const BASELINE_REPORT_PATH = path.join(REPORT_DIR, 'baseline-mobile-ux-metrics.json');
 const OUTPUT_HTML_PATH = path.join(REPORT_DIR, 'mobile-ux-report.html');
 
-function formatDiff(current: number, baseline: number) {
+function formatDiff(current: number, baseline: number, threshold = 10) {
   if (baseline === 0) return 'N/A';
   const diff = ((current - baseline) / baseline) * 100;
-  const color = Math.abs(diff) < 1 ? '#10b981' : (diff > 0 ? '#ef4444' : '#3b82f6'); // green if negligible, red if larger, blue if smaller
+  
+  // Logic for UI indicators
+  const isBad = diff > threshold; // Worsening if height increases significantly
+  const color = Math.abs(diff) < 1 ? '#10b981' : (isBad ? '#ef4444' : '#3b82f6');
   const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '');
+  
   return `<span style="color: ${color}; font-weight: bold;">${arrow} ${Math.abs(diff).toFixed(1)}%</span>`;
 }
 
@@ -134,9 +139,10 @@ async function generateReport() {
                     
                     <div style="margin-top: 1rem;">
                         <strong>Status:</strong>
-                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
                             <span class="badge ${v.hasCuts ? 'badge-danger' : 'badge-success'}">Cortes: ${v.hasCuts ? 'SIM' : 'NÃO'}</span>
                             <span class="badge ${v.hasOverlaps ? 'badge-danger' : 'badge-success'}">Sobreposições: ${v.hasOverlaps ? 'SIM' : 'NÃO'}</span>
+                            <span class="badge ${(v as any).smallTouchArea ? 'badge-danger' : 'badge-success'}">Área de Toque (44px): ${(v as any).smallTouchArea ? 'FALHA' : 'OK'}</span>
                         </div>
                     </div>
 

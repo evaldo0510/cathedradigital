@@ -70,6 +70,27 @@ export default defineConfig({
       name: 'tablet-safari',
       use: { ...devices['iPad Air'] },
     },
+    /* Extended Mobile Matrix */
+    {
+      name: 'mobile-320',
+      use: { ...devices['iPhone SE'], viewport: { width: 320, height: 568 } },
+    },
+    {
+      name: 'mobile-360',
+      use: { viewport: { width: 360, height: 800 }, deviceScaleFactor: 3 },
+    },
+    {
+      name: 'mobile-390',
+      use: { ...devices['iPhone 13'], viewport: { width: 390, height: 844 } },
+    },
+    {
+      name: 'mobile-412',
+      use: { ...devices['Pixel 7'], viewport: { width: 412, height: 915 } },
+    },
+    {
+      name: 'mobile-480',
+      use: { viewport: { width: 480, height: 853 }, deviceScaleFactor: 2 },
+    },
   ],
 
   /* Run your local dev server before starting the tests */

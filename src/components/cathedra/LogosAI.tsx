@@ -9,6 +9,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { LogosChatSkeleton } from './SacredSkeleton';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
+import { useVisualViewport } from '@/hooks/useVisualViewport';
 
 interface LogosAIProps {
   context?: string;
@@ -33,6 +34,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 }) => {
   useRenderPerf('LogosAI', 15);
   const { settings } = useReadingSettings();
+  const viewportHeight = useVisualViewport();
   const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
     return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
   });
@@ -340,16 +342,30 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 ))}
 
                 {(isLoading || isTyping) && (
-                  <div className="flex justify-start">
-                    <div className="flex gap-spacing-sm opacity-10 py-spacing-lg">
-                      {[0, 1, 2].map((i) => (
+                  <div className="flex justify-start w-full">
+                    <div className="w-full space-y-spacing-md">
+                      {isLoading && (
                         <motion.div 
-                          key={i}
-                          animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
-                          className="w-spacing-2xs h-spacing-2xs bg-primary rounded-premium-full" 
-                        />
-                      ))}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="w-full space-y-spacing-sm py-spacing-md"
+                        >
+                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-3/4 animate-pulse" />
+                          <div className="h-spacing-md bg-primary/5 rounded-premium-full w-1/2 animate-pulse" />
+                        </motion.div>
+                      )}
+                      {isTyping && (
+                        <div className="flex gap-spacing-sm opacity-10 py-spacing-md">
+                          {[0, 1, 2].map((i) => (
+                            <motion.div 
+                              key={i}
+                              animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
+                              transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+                              className="w-spacing-2xs h-spacing-2xs bg-primary rounded-premium-full" 
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -405,7 +421,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
             transition={springConfig}
-            className="fixed right-0 inset-y-0 h-[100dvh] w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
+            className="fixed right-0 inset-y-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
+            style={{ height: viewportHeight ? `${viewportHeight}px` : '100dvh' }}
           >
             <div className="p-spacing-lg md:p-spacing-xl border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-spacing-md">

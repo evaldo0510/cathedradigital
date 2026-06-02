@@ -24,10 +24,13 @@ type CommunityPost = Tables<'community_posts'>;
 type Tag = Tables<'tags'>;
 type Journey = Tables<'journeys'>;
 
+import { useVisualViewport } from '@/hooks/useVisualViewport';
+
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
   useAutoFocus();
   const [query, setQuery] = useState('');
+  const viewportHeight = useVisualViewport();
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
@@ -87,31 +90,36 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </p>
         </motion.div>
 
-        {/* LOGOS IA CHAT INTERFACE */}
-        <div className="bg-card border border-border/40 rounded-[1.5rem] md:rounded-[2.5rem] p-spacing-lg md:p-spacing-2xl shadow-premium space-y-spacing-md md:space-y-spacing-xl">
-           <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
-              <div className="flex items-center gap-spacing-sm">
-                 <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
-                    <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
-                 </div>
-                 <h2 className="text-premium-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
-              </div>
-              <p className="text-premium-sm text-muted-foreground leading-relaxed">
-                Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
-              </p>
-           </div>
-           
-           <FuzzySearchInput
-            value={query}
-            onChange={setQuery}
-            placeholder="Qual é a sua dúvida espiritual hoje?"
-            isSearching={anyPending}
-            size="lg"
-            className="max-w-none"
-          />
+        {/* LOGOS IA CHAT INTERFACE - STICKY SEARCH ON MOBILE */}
+        <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/80 backdrop-blur-md md:bg-transparent md:backdrop-blur-none transition-all duration-300">
+          <div className="bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-lg md:p-spacing-2xl md:shadow-premium space-y-spacing-md md:space-y-spacing-xl">
+             <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
+                <div className="flex items-center gap-spacing-sm">
+                   <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
+                      <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
+                   </div>
+                   <h2 className="text-premium-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                </div>
+                <p className="text-premium-sm text-muted-foreground leading-relaxed">
+                  Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
+                </p>
+             </div>
+             
+             <FuzzySearchInput
+              value={query}
+              onChange={setQuery}
+              placeholder="Qual é a sua dúvida espiritual hoje?"
+              isSearching={anyPending}
+              size="lg"
+              className="max-w-none shadow-sm md:shadow-none"
+            />
+          </div>
         </div>
 
-        <div className="space-y-spacing-lg pb-spacing-4xl">
+        <div 
+          className="space-y-spacing-lg pb-spacing-4xl transition-all duration-300"
+          style={{ maxHeight: viewportHeight ? `${viewportHeight - 200}px` : 'auto', overflowY: 'auto' }}
+        >
           <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
             <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
