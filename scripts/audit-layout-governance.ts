@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
+import { LayoutAllowlistSchema } from './layout-allowlist.schema';
 
 /**
  * CATHEDRA LAYOUT GOVERNANCE AUDIT
@@ -10,16 +11,41 @@ import { readFileSync } from 'fs';
 const ALLOWLIST_PATH = './layout-allowlist.json';
 const forbiddenWrappers = ['max-w-', 'mx-auto', 'container'];
 
-let allowlist: string[] = [];
-try {
-  allowlist = JSON.parse(readFileSync(ALLOWLIST_PATH, 'utf8'));
-} catch (e) {
-  console.error(`❌ Failed to read allowlist at ${ALLOWLIST_PATH}`);
+console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
+
+if (!existsSync(ALLOWLIST_PATH)) {
+  console.error(`❌ Allowlist file missing at ${ALLOWLIST_PATH}`);
   process.exit(1);
 }
 
-console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
-console.log(`Allowlist versioned at: ${ALLOWLIST_PATH}`);
+let allowlist: string[] = [];
+try {
+  const rawData = JSON.parse(readFileSync(ALLOWLIST_PATH, 'utf8'));
+  const validation = LayoutAllowlistSchema.safeParse(rawData);
+  
+  if (!validation.success) {
+    console.error('❌ Invalid Allowlist Schema:');
+    console.error(JSON.stringify(validation.error.format(), null, 2));
+    process.exit(1);
+  }
+  allowlist = validation.data;
+} catch (e) {
+  console.error(`❌ Failed to parse allowlist at ${ALLOWLIST_PATH}. Ensure it is valid JSON.`);
+  process.exit(1);
+}
+
+// Check for explicit approval if the allowlist was modified
+const isAllowlistModified = process.env.ALLOWLIST_MODIFIED === 'true';
+const hasApprovalLabel = process.env.HAS_APPROVAL_LABEL === 'true';
+
+if (isAllowlistModified && !hasApprovalLabel) {
+  console.error('\n❌ PERMISSION DENIED:');
+  console.error('You have modified "layout-allowlist.json" but the PR lacks the "layout-exception-approved" label.');
+  console.error('New exceptions must be explicitly reviewed and approved by a maintainer.\n');
+  process.exit(1);
+}
+
+console.log(`Allowlist validated: ${allowlist.length} exceptions documented.`);
 
 let violationsFound = 0;
 const violationDetails: { file: string; line: number; content: string }[] = [];
@@ -63,11 +89,10 @@ if (violationsFound > 0) {
   console.error('\nHow to fix:');
   console.error('1. Move the layout logic to ContemplativeLayout if possible.');
   console.error(`2. If this is a valid exception, add the file path to "${ALLOWLIST_PATH}".`);
-  console.error('3. Commit the updated allowlist with your PR.\n');
+  console.error('3. Ensure the PR has the "layout-exception-approved" label.\n');
   process.exit(1);
 }
 
 console.log('✅ Governance Status: PASSED');
-console.log(`- Active Violations: 0`);
-console.log(`- Documented Exceptions: ${allowlist.length}`);
 console.log('-------------------------------------------\n');
+
