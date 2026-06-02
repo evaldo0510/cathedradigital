@@ -66,14 +66,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   return (
     <div className="w-full space-y-spacing-3xl md:space-y-spacing-4xl outline-none flex flex-col items-center" tabIndex={-1}>
       {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
-      <section className="w-full max-w-spacing-4xl">
+      <section className="w-full">
         <SpiritualContinuity />
       </section>
 
       {/* 2. NÚCLEO SAGRADO - CORE FOCUS */}
       <section className="w-full">
         <h2 className="sr-only">Núcleo Sagrado</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg md:gap-spacing-xl w-full max-w-spacing-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg md:gap-spacing-xl w-full mx-auto">
           <CathedraCard 
             variant="interactive"
             className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* 3. LOGOS IA - SMART SEARCH */}
-      <section className="w-full max-w-spacing-2xl mx-auto">
+      <section className="w-full mx-auto">
         <CathedraCard
           ref={logosCardRef}
           variant="glass"

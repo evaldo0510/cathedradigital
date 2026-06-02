@@ -157,7 +157,7 @@ const HojePage: React.FC = () => {
                 </h2>
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl w-full max-w-spacing-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl w-full">
                  <CathedraButton 
                     variant="outline" 
                     className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
