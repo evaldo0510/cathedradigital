@@ -40,7 +40,7 @@ const AchievementsPage: React.FC = () => {
   const progress = Math.round((totalEarned / totalPossible) * 100);
 
   return (
-    <div className="max-w-spacing-4xl mx-auto space-y-spacing-2xl py-spacing-2xl md:py-spacing-4xl px-spacing-lg">
+    <div className="w-full space-y-spacing-2xl py-spacing-2xl md:py-spacing-4xl px-spacing-lg">
       {/* Header */}
       <div className="text-center space-y-spacing-lg">
         <motion.div 
