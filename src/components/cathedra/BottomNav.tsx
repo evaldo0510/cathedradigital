@@ -82,8 +82,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-2xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
+      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
+      isActive 
+        ? 'text-primary' 
+        : 'text-muted-foreground/40 hover:text-primary/60'
     )}
   >
     {isActive && (
@@ -108,10 +110,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-300",
-          isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
+          isActive ? "text-primary opacity-100 scale-110" : "text-muted-foreground/30 group-hover:text-primary/50 group-active:scale-95"
         )}
-        size={16}
-        strokeWidth={1.2}
+        size={18}
+        strokeWidth={isActive ? 1.5 : 1.2}
         aria-hidden="true"
       />
     </motion.div>
@@ -119,15 +121,15 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 1 : 0.4,
-        scale: isActive ? 1 : 0.92,
+        opacity: isActive ? 1 : 0.3,
+        scale: isActive ? 1.05 : 0.9,
         y: isActive ? 0 : (shouldReduceMotion ? 0 : 1)
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
         "text-[8px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
-        isActive ? 'text-primary' : 'text-muted-foreground/60'
+        isActive ? 'text-primary font-bold' : 'text-muted-foreground/40 font-medium'
       )}
     >
       {label}

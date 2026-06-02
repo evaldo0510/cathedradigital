@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, Language } from '@/types';
@@ -26,6 +26,12 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useLang();
+  const [isReady, setIsReady] = useState(false);
+  
+  useEffect(() => {
+    // Avoid layout shift by delaying the backdrop/blur until after mount
+    setIsReady(true);
+  }, []);
   
   
   const isDashboard = pathname === '/';
@@ -35,6 +41,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
       <header 
         className={cn(
           "sticky top-spacing-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]",
+          !isReady && "opacity-0 translate-y-[-10px]",
           isLanding && !user ? "bg-transparent border-none py-spacing-lg" : "bg-background/20 backdrop-blur-3xl h-[var(--header-height)]"
         )}
         role="banner"
