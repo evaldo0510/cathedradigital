@@ -54,8 +54,13 @@ const exemptionPatterns = [
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
+console.log('Rules:');
+console.log('1. All layout-critical utility classes (max-w-*, mx-auto, container) must reside in ContemplativeLayout.');
+console.log('2. Exceptions are allowed for AppHeader (sticky positioning) and ItinerariumStepPage (portal-based full-screen).');
+console.log('3. Any new exception requires explicit approval and entry in exemptionPatterns.');
 
 let violationsFound = 0;
+const violationDetails: string[] = [];
 
 forbiddenWrappers.forEach(pattern => {
   try {
@@ -68,11 +73,9 @@ forbiddenWrappers.forEach(pattern => {
         const filePath = line.split(':')[0];
         if (exemptionPatterns.some(ex => filePath.includes(ex))) return;
 
-        // Final secondary filter for specific allowed Tailwind patterns that are NOT layout wrappers
-        // e.g., max-w-none on prose, or specific max-w on images/icons (not containers)
         if (line.includes('max-w-none') || line.includes('max-w-[12px]') || line.includes('max-w-fit')) return;
 
-        console.error(`❌ Layout Governance Violation: ${line}`);
+        violationDetails.push(line);
         violationsFound++;
       });
     }
@@ -81,9 +84,15 @@ forbiddenWrappers.forEach(pattern => {
   }
 });
 
+if (violationDetails.length > 0) {
+  console.error('\n❌ VIOLATIONS DETECTED:');
+  violationDetails.forEach(v => console.error(`  - ${v}`));
+}
+
 console.log('\n--- CATHEDRA LAYOUT CONSOLIDATION REPORT ---');
-console.log(`- Governance Status: ${violationsFound === 0 ? '✅ PASSED' : '⚠️ WARNING'}`);
-console.log(`- Violations Blocking CI: ${violationsFound}`);
+console.log(`- Governance Status: ${violationsFound === 0 ? '✅ PASSED' : '⚠️ FAILED'}`);
+console.log(`- Active Violations: ${violationsFound}`);
+console.log(`- Documented Exceptions: ${exemptionPatterns.length}`);
 console.log('-------------------------------------------\n');
 
 // During migration phase, we warn. Once ready, uncomment next line:
