@@ -83,8 +83,8 @@
     --layout-padding: var(--spacing-xl);
     --layout-padding-mobile: var(--spacing-sm);
     --layout-content-width-mobile: 85vw;
-    --header-height: 36px;
-    --bottom-nav-height: 48px;
+    --header-height: 40px;
+    --bottom-nav-height: 52px;
     
     /* 8. Icons */
     --icon-size-sm: 16px;

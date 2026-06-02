@@ -28,6 +28,7 @@
     "test:a11y": "playwright test tests/e2e/icon-a11y-navigation.spec.ts",
     "test:report": "playwright test tests/e2e/generate-final-report.spec.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts",
+    "test:performance": "playwright test tests/performance/mobile-performance.spec.ts",
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
     "test:spacing-audit": "bun run scripts/audit-spacing.ts",
