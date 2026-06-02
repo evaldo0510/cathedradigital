@@ -89,7 +89,12 @@ const CatechismContent: React.FC<{
   }
 
   return (
-    <div className={`reader-text text-foreground/90 font-size-${settings.fontSize} font-family-${settings.fontFamily} prose prose-lg dark:prose-invert max-w-none transition-all duration-300`}>
+    <div className={cn(
+      "reader-text text-foreground/90 font-size-", settings.fontSize, 
+      "font-family-", settings.fontFamily, 
+      "prose prose-lg dark:prose-invert max-w-none transition-all",
+      settings.reduceAnimations ? "duration-0" : "duration-300"
+    )}>
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateToBible} />
@@ -143,7 +148,11 @@ const LazyParagraph: React.FC<{
     <article 
       ref={ref} 
       id={`p${p}`} 
-      className={`scroll-mt-spacing-4xl transition-all duration-700 pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}
+      className={cn(
+        "scroll-mt-spacing-4xl transition-all pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0",
+        settings.reduceAnimations ? "duration-0" : "duration-700",
+        currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'
+      )}
       aria-labelledby={`heading-p${p}`}
     >
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
