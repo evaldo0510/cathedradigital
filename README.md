@@ -1,6 +1,7 @@
 # Cathedra Digital
 
 [![Pipeline de Governança](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
+[![Design System Compliance](https://img.shields.io/badge/Design%20System-85%25%20Compliance-emerald)](src/components/cathedra/reports/COMPLIANCE_REPORT.md)
 
 ## Project info
 
