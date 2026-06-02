@@ -60,9 +60,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-spacing-lg md:mb-spacing-3xl lg:mb-spacing-3xl"
       >
-        <h2 className="text-[3.5rem] sm:text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-[2000ms] group">
+        <h2 className="text-[3.5rem] sm:text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-2000 group">
           Cathedra
-          <span className="block h-[1px] w-spacing-0 group-hover:w-full bg-primary/10 transition-all duration-[3000ms] mx-auto mt-spacing-md" />
+          <span className="block h-[1px] w-spacing-0 group-hover:w-full bg-primary/10 transition-all duration-3000 mx-auto mt-spacing-md" />
         </h2>
       </motion.div>
 
