@@ -15,7 +15,7 @@ const BackToThemeBanner: React.FC = () => {
 
   return (
     <div className="fixed top-spacing-3xl left-0 right-0 z-50 px-spacing-md py-spacing-xs bg-background  border-b border-primary/20 shadow-premium-md animate-in fade-in slide-in-from-top-spacing-xs duration-300 back-to-theme-banner">
-      <div className="max-w-spacing-3xl mx-auto">
+      <div className="w-full">
         <Button
           variant="ghost"
           size="sm"
