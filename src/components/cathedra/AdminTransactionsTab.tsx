@@ -20,13 +20,13 @@ interface AdminTransactionsTabProps {
 }
 
 const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transactions }) => (
-  <Card>
+  <Card data-test="listagem-2">
     <CardHeader>
       <CardTitle>Últimas Transações</CardTitle>
     </CardHeader>
     <CardContent>
       {transactions.length === 0 ? (
-        <p className="text-center text-muted-foreground py-spacing-xl">Nenhuma transação registrada.</p>
+        <p data-test="estado-vazio-2" className="text-center text-muted-foreground py-spacing-xl">Nenhuma transação registrada.</p>
       ) : (
         <div className="space-y-spacing-sm">
           {transactions.map((t: any) => (

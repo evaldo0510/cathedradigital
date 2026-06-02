@@ -109,7 +109,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [filtered, segment]);
 
   return (
-    <div className="space-y-spacing-md">
+    <div data-test="listagem-1" className="space-y-spacing-md">
       {/* Segment Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-spacing-xs">
         {segments.map(s => (
@@ -142,7 +142,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
                 <Icons.Download className="w-spacing-sm h-spacing-sm" /> CSV
               </Button>
-            <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
+            <Select data-test="filtro-1" value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
               <SelectTrigger className="w-[160px] h-spacing-xl text-premium-xs">
                 <SelectValue />
               </SelectTrigger>
@@ -208,7 +208,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="p-spacing-xl text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
+                  <tr><td colSpan={7} data-test="estado-vazio-1" className="p-spacing-xl text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
                 )}
               </tbody>
             </table>
