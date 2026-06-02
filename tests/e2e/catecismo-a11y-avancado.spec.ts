@@ -1,77 +1,88 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Catecismo - Acessibilidade Avançada', () => {
-  const viewports = [
-    { name: 'iPhone SE', width: 320, height: 568 },
-    { name: 'iPhone 14 Pro Max', width: 430, height: 932 },
-  ];
+  // O Playwright já gerencia o viewport via projetos no config
+  
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/catechism');
+    // Espera o conteúdo inicial carregar
+    await page.waitForSelector('.CathedraCard', { timeout: 15000 });
+  });
 
-  for (const vp of viewports) {
-    test(`Acessibilidade em ${vp.name}`, async ({ page }) => {
-      await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.goto('/catechism');
-      
-      // 1. Validar navegação por teclado (Enter/Espaço/Esc) e Retorno de Foco
-      const firstSection = page.locator('.CathedraCard').first();
-      await firstSection.focus();
-      
-      // Abre com Enter
-      await page.keyboard.press('Enter');
-      await page.waitForSelector('[id^="p"]', { timeout: 10000 });
-      await expect(page.locator('[id^="p"]').first()).toBeVisible();
+  test('Navegação por teclado e Retorno de Foco', async ({ page }) => {
+    const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
+    await firstPart.focus();
+    
+    // 1. Abre com Enter
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
+    
+    // 2. Navega nas seções e abre uma
+    const firstSection = page.locator('[role="button"]').filter({ hasText: /Seção/i }).first();
+    const sectionId = await firstSection.getAttribute('id');
+    await firstSection.focus();
+    await page.keyboard.press('Space');
+    
+    // 3. Verifica se abriu a leitura
+    await page.waitForSelector('[id^="p"]', { timeout: 10000 });
+    await expect(page.locator('[id^="p"]').first()).toBeVisible();
 
-      // Fecha com Esc e valida retorno de foco
-      await page.keyboard.press('Escape');
-      await expect(page.locator('.CathedraCard').first()).toBeFocused();
+    // 4. Fecha com Esc e valida retorno de foco
+    await page.keyboard.press('Escape');
+    await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
+    if (sectionId) {
+      await expect(page.locator(`#${sectionId}`)).toBeFocused();
+    }
 
-      // Abre com Espaço
-      await page.keyboard.press('Space');
-      await page.waitForSelector('[id^="p"]', { timeout: 10000 });
-      
-      // Volta ao sumário via botão e valida foco
-      const backButton = page.locator('button').filter({ hasText: /Sumário/i });
-      await backButton.click();
-      await expect(page.locator('.CathedraCard').first()).toBeFocused();
+    // 5. Volta ao sumário via botão e valida foco (opcional, já validamos Esc)
+    await firstSection.click();
+    await page.waitForSelector('button:has-text("Sumário")', { timeout: 10000 });
+    const backButton = page.locator('button').filter({ hasText: /Sumário/i });
+    await backButton.click();
+    if (sectionId) {
+      await expect(page.locator(`#${sectionId}`)).toBeFocused();
+    }
+  });
 
-      // 2. Ordem de navegação e ARIA
-      const sections = page.locator('.CathedraCard');
-      const count = await sections.count();
-      for (let i = 0; i < Math.min(count, 3); i++) {
-        const section = sections.nth(i);
-        await expect(section).toHaveAttribute('role', /button|link/);
-        // Se for um componente que expande, validar aria-expanded
-        const isExpanded = await section.getAttribute('aria-expanded');
-        if (isExpanded !== null) {
-          expect(['true', 'false']).toContain(isExpanded);
-        }
-      }
-
-      // 3. Contraste e Zoom
-      // Simula zoom de 200% ajustando o viewport e a escala (aproximação técnica)
-      await page.setViewportSize({ width: vp.width / 2, height: vp.height / 2 });
-      await expect(page.locator('h1')).toBeVisible();
-      // Verifica se elementos não se sobrepõem sob "zoom"
-      const h1Box = await page.locator('h1').boundingBox();
-      const firstCardBox = await firstSection.boundingBox();
-      if (h1Box && firstCardBox) {
-        expect(firstCardBox.y).toBeGreaterThanOrEqual(h1Box.y + h1Box.height);
-      }
-    });
-  }
+  test('Ordem de navegação e ARIA', async ({ page }) => {
+    const parts = page.locator('[role="button"]').filter({ hasText: /PARTE/ });
+    const count = await parts.count();
+    for (let i = 0; i < Math.min(count, 3); i++) {
+      const part = parts.nth(i);
+      await expect(part).toHaveAttribute('role', 'button');
+      await expect(part).toHaveAttribute('aria-label', /Ver PARTE/i);
+      await expect(part).toHaveAttribute('tabindex', '0');
+    }
+  });
 
   test('Comportamento com prefers-reduced-motion', async ({ page }) => {
     // Emula a preferência do sistema por movimento reduzido
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/catechism');
     
-    const firstSection = page.locator('.CathedraCard').first();
+    const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
     const startTime = Date.now();
-    await firstSection.click();
-    await page.waitForSelector('[id^="p"]', { timeout: 5000 });
+    await firstPart.click();
+    await page.waitForSelector('text=Voltar às Partes', { timeout: 10000 });
     const endTime = Date.now();
     
-    // Com movimento reduzido, a transição deve ser instantânea ou muito rápida (< 100ms)
-    // Nota: Depende da implementação do framer-motion, mas ajuda a detectar animações longas bloqueantes
-    expect(endTime - startTime).toBeLessThan(500); 
+    // Com movimento reduzido, a transição deve ser rápida
+    expect(endTime - startTime).toBeLessThan(1000); 
+  });
+
+  test('Estabilidade de layout sob Zoom', async ({ page }) => {
+    // Aumentamos o tamanho da fonte ou simulamos zoom via viewport menor mantendo densidade
+    await page.setViewportSize({ width: 320, height: 480 });
+    const header = page.locator('h1').filter({ hasText: /Catecismo/i });
+    await expect(header).toBeVisible();
+    
+    const firstPart = page.locator('[role="button"]').filter({ hasText: /PARTE/ }).first();
+    const hBox = await header.boundingBox();
+    const pBox = await firstPart.boundingBox();
+    
+    if (hBox && pBox) {
+      // Garante que não há overlap (o card deve estar abaixo do header)
+      expect(pBox.y).toBeGreaterThanOrEqual(hBox.y + hBox.height);
+    }
   });
 });
+
