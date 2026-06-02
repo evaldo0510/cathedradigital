@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: write
@@ -16,10 +17,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: oven-sh/setup-bun@v1
+      
       - name: Install dependencies
         run: bun install
+
+      - name: Check if Allowlist Modified
+        id: check_allowlist
+        run: |
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "layout-allowlist.json"; then
+            echo "modified=true" >> $GITHUB_OUTPUT
+          else
+            echo "modified=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for Approval Label
+        id: check_label
+        if: github.event_name == 'pull_request'
+        run: |
+          LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
+          if echo "$LABELS" | grep -q "layout-exception-approved"; then
+            echo "approved=true" >> $GITHUB_OUTPUT
+          else
+            echo "approved=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Layout Audit
+        env:
+          ALLOWLIST_MODIFIED: ${{ steps.check_allowlist.outputs.modified }}
+          HAS_APPROVAL_LABEL: ${{ steps.check_label.outputs.approved }}
         run: bun run scripts/audit-layout-governance.ts
 
   visual-regression:
@@ -28,28 +57,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
+      
       - name: Install dependencies
         run: bun install
+        
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps chromium
+        
       - name: Run Visual Tests
-        run: bunx playwright test tests/e2e/visual-regression-consolidated.spec.ts --reporter=json > test-results/visual-regression-consolidated.json || true
-      - name: Generate PR Comment
+        id: run_tests
+        run: |
+          mkdir -p test-results
+          bunx playwright test tests/e2e/visual-regression-consolidated.spec.ts --reporter=json > test-results/visual-regression-consolidated.json || echo "tests_failed=true" >> $GITHUB_ENV
+          
+      - name: Generate PR Comment & HTML Table
         if: github.event_name == 'pull_request'
         run: bun run scripts/generate-layout-comment.ts > layout-comment.md
+        
       - name: Post Layout Comment
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: layout-comment.md
           comment_tag: layout-regression-summary
-      - name: Upload Results
+          
+      - name: Upload Visual Artifacts (Full)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-visual-report
-          path: playwright-report/
-          retention-days: 30
+          name: layout-regression-artifacts-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            test-results/visual-regression-consolidated.json
+          retention-days: 60
+
 
   # ... Rest of existing jobs ...
   unit-tests:
