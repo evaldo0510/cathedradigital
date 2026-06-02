@@ -254,7 +254,7 @@ const Catechism: React.FC = memo(() => {
         <div className="w-full">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
-             <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>
+             <Button variant="ghost" onClick={goBack} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
              <div className="flex items-center gap-spacing-lg">
                 <Button 
                   disabled={selectedSection.id <= 1}
@@ -300,7 +300,7 @@ const Catechism: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
             {selectedPart.sections.map((sec, idx) => (
-              <CathedraCard key={sec.id} variant="interactive" padding="none" onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
+              <CathedraCard key={sec.id} variant="interactive" padding="none" role="button" aria-label={`Seção ${sec.id}: ${sec.title}`} onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
                 <div className="p-spacing-lg flex items-center justify-between h-full">
                   <div className="space-y-spacing-xs text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
