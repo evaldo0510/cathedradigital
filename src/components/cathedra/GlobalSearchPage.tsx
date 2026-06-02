@@ -111,7 +111,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           />
         </div>
 
-        <div className="space-y-spacing-lg">
+        <div className="space-y-spacing-lg pb-spacing-4xl">
           <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
             <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
