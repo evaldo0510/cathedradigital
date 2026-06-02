@@ -274,6 +274,7 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'calendario' && <div id="panel-calendario" role="tabpanel" aria-labelledby="tab-calendario" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><LiturgicalCalendarPage /></div>}
         </Suspense>
         </div>
+      </div>
         
     </ContemplativeLayout>
   );
