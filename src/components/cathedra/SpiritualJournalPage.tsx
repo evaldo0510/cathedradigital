@@ -265,6 +265,7 @@ const SpiritualJournalPage = () => {
         )}
       </AnimatePresence>
     </ContemplativeLayout>
+  );
 };
 
 const RelatioFavoritesList = () => {
