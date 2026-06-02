@@ -3,91 +3,105 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Design System Compliance Report</title>
+    <title>Design System Governance Dashboard</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdfcfb; padding: 40px; color: #1a1a1a; }
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 1100px; margin: 0 auto; }
         .card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(181, 139, 58, 0.08); margin-bottom: 32px; border: 1px solid rgba(181, 139, 58, 0.1); }
-        h1 { color: #b58b3a; font-family: "Cinzel", serif; border-bottom: 2px solid #b58b3a; padding-bottom: 12px; margin-bottom: 40px; }
-        h2 { font-family: "Cinzel", serif; color: #1a1a1a; margin-top: 0; }
+        h1 { color: #b58b3a; border-bottom: 2px solid #b58b3a; padding-bottom: 12px; margin-bottom: 40px; }
+        h2 { color: #1a1a1a; margin-top: 0; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { text-align: left; padding: 16px; border-bottom: 1px solid #f0f0f0; }
-        th { background: #fdfcfb; color: #b58b3a; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        th { background: #fdfcfb; color: #b58b3a; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
         .score { font-weight: 700; font-size: 1.1rem; }
         .score-good { color: #10b981; }
         .score-bad { color: #ef4444; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-        .violation-type { color: #ef4444; font-weight: 600; }
-        .suggestion { color: #b58b3a; font-style: italic; }
+        .code-diff { background: #1a1a1a; color: #f8f8f2; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; margin-top: 8px; }
+        .suggestion { color: #b58b3a; font-weight: 600; }
+        details summary { cursor: pointer; color: #b58b3a; font-weight: 600; outline: none; }
+        .history-chart { display: flex; align-items: flex-end; height: 100px; gap: 4px; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .bar { background: #b58b3a; width: 20px; border-radius: 4px 4px 0 0; transition: height 0.3s; position: relative; }
+        .bar:hover { background: #1a1a1a; }
+        .bar::after { content: attr(data-score) "%"; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0; }
+        .bar:hover::after { opacity: 1; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Governança de Design System</h1>
-        <p>Relatório Consolidado de Conformidade • 02/06/2026 00:27:54</p>
+        <h1>Dashboard de Governança Digital</h1>
         
         <div class="card">
-            <h2>Ranking de Páginas</h2>
+            <h2>Histórico de Conformidade (Últimos Builds)</h2>
+            <div class="history-chart">
+                
+                    <div class="bar" style="height: 98.95833333333333%" data-score="99.0"></div>
+                
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">Médias globais por build para acompanhamento de tendência.</p>
+        </div>
+
+        <div class="card">
+            <h2>Ranking de Páginas & Variação vs Último Build</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Página</th>
-                        <th>Layout</th>
-                        <th>Cards</th>
-                        <th>Tema</th>
-                        <th>Tokens</th>
                         <th>Geral</th>
+                        <th>Variação</th>
+                        <th>Tokens</th>
+                        <th>Layout</th>
+                        <th>Tema</th>
                     </tr>
                 </thead>
                 <tbody>
                     
                         <tr>
                             <td style="font-weight: 600;">Search</td>
-                            <td>100%</td>
-                            <td>75%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">93.8%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                         <tr>
                             <td style="font-weight: 600;">Home</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">100.0%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                         <tr>
                             <td style="font-weight: 600;">Bible</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">100.0%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                         <tr>
                             <td style="font-weight: 600;">Catechism</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">100.0%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                         <tr>
                             <td style="font-weight: 600;">Library</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">100.0%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                         <tr>
                             <td style="font-weight: 600;">Documents</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
-                            <td>100%</td>
                             <td class="score score-good">100.0%</td>
+                            <td><span style="color: #666;">--</span></td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>100%</td>
                         </tr>
                 </tbody>
             </table>
@@ -95,24 +109,29 @@
 
         
         <div class="card">
-            <h2>Violações: Search</h2>
+            <h2>Página: Search</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/GlobalSearchPage.tsx</code></p>
             
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 150px;">Tipo</th>
-                        <th style="width: 80px;">Linha</th>
-                        <th>Descrição</th>
-                        <th>Ação Sugerida</th>
+                        <th style="width: 180px;">Violação</th>
+                        <th>Ação & Contexto Detalhado</th>
                     </tr>
                 </thead>
                 <tbody>
                     
                     <tr>
-                        <td><span class="violation-type">Card Violation</span></td>
-                        <td><code>0</code></td>
-                        <td>Custom card-like div detected.</td>
-                        <td class="suggestion">Replace with <CathedraCard /> for visual consistency.</td>
+                        <td><span style="color: #ef4444; font-weight: 600;">Card Violation</span><br><code style="font-size: 0.75rem;">Linha: 0</code></td>
+                        <td>
+                            <details>
+                                <summary>Visualizar Diff e Sugestão</summary>
+                                <div style="margin-top: 10px;">
+                                    <p class="suggestion">💡 Sugestão: Replace with <CathedraCard /> for visual consistency.</p>
+                                    
+                                </div>
+                            </details>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -120,28 +139,33 @@
         </div>
         
         <div class="card">
-            <h2>Violações: Home</h2>
-            <p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>
+            <h2>Página: Home</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/HomeMainContent.tsx</code></p>
+            <p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>
         </div>
         
         <div class="card">
-            <h2>Violações: Bible</h2>
-            <p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>
+            <h2>Página: Bible</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/Bible.tsx</code></p>
+            <p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>
         </div>
         
         <div class="card">
-            <h2>Violações: Catechism</h2>
-            <p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>
+            <h2>Página: Catechism</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/Catechism.tsx</code></p>
+            <p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>
         </div>
         
         <div class="card">
-            <h2>Violações: Library</h2>
-            <p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>
+            <h2>Página: Library</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/BibliotecaPage.tsx</code></p>
+            <p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>
         </div>
         
         <div class="card">
-            <h2>Violações: Documents</h2>
-            <p style="color: #10b981; font-weight: 600;">✓ Conformidade total atingida.</p>
+            <h2>Página: Documents</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Localização: <code>src/components/cathedra/DocumentViewer.tsx</code></p>
+            <p style="color: #10b981; font-weight: 600;">✓ 100% de conformidade detectada.</p>
         </div>
         
     </div>

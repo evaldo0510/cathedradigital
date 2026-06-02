@@ -13,13 +13,15 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       
       - name: Install dependencies
-        run: bun install
+        run: bun install --ignore-scripts
         
       - name: Run Icon Audit
         run: bun test src/components/__tests__/icon-audit.test.tsx
         
       - name: Generate Compliance Report
-        run: bun run src/scripts/generate-compliance-report.ts
+        run: |
+          bun add js-yaml --ignore-scripts
+          bun run src/scripts/generate-compliance-report.ts
         
       - name: Post PR Comment
         if: github.event_name == 'pull_request'
@@ -33,16 +35,17 @@ jobs:
           name: compliance-reports
           path: |
             compliance-report.json
+            summary.json
             compliance-report.html
             compliance-report.md
             src/scripts/history/compliance-history.json
             
       - name: Check Thresholds
         run: |
-          OVERALL_SCORE=$(node -e "const r=require('./compliance-report.json'); console.log(r.reduce((acc, curr) => acc + (curr.layout+curr.cards+curr.theme+curr.tokens)/4, 0) / r.length)")
-          echo "Overall Design System Compliance: $OVERALL_SCORE%"
-          if (( $(echo "$OVERALL_SCORE < 80" | bc -l) )); then
-            echo "Compliance score is below threshold (80%)"
+          OVERALL_SCORE=$(node -e "const fs=require('fs'); const s=JSON.parse(fs.readFileSync('./summary.json', 'utf8')); console.log(s.overall_score)")
+          THRESHOLD=$(node -e "const fs=require('fs'); const yaml=require('js-yaml'); const c=yaml.load(fs.readFileSync('./compliance-config.yml', 'utf8')); console.log(c.compliance_thresholds.overall)")
+          echo "Overall Design System Compliance: $OVERALL_SCORE% (Threshold: $THRESHOLD%)"
+          if (( $(echo "$OVERALL_SCORE < $THRESHOLD" | bc -l) )); then
+            echo "Compliance score is below threshold!"
             exit 1
           fi
-
