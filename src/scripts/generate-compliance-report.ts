@@ -167,7 +167,10 @@ function runAudit() {
 const { reports, lastBuild, history } = runAudit();
 
 // Schema Validation for compliance-config.yml
-const ThresholdSchema = z.number().min(0).max(100);
+const ThresholdSchema = z.number({
+  invalid_type_error: "Deve ser um número",
+  required_error: "Threshold é obrigatório"
+}).min(0, "O valor mínimo é 0").max(100, "O valor máximo é 100");
 
 const PageThresholdsSchema = z.object({
   layout: ThresholdSchema.optional(),
@@ -175,7 +178,7 @@ const PageThresholdsSchema = z.object({
   theme: ThresholdSchema.optional(),
   tokens: ThresholdSchema.optional(),
   overall: ThresholdSchema.optional(),
-});
+}).strict("Propriedade não permitida na configuração de página");
 
 const ComplianceConfigSchema = z.object({
   compliance_thresholds: z.object({
@@ -186,9 +189,23 @@ const ComplianceConfigSchema = z.object({
       cards: ThresholdSchema.optional(),
       theme: ThresholdSchema.optional(),
       tokens: ThresholdSchema.optional(),
-    }).optional(),
-  }),
-});
+    }).optional().superRefine((val, ctx) => {
+      if (val) {
+        const keys = Object.keys(val);
+        const allowed = ['layout', 'cards', 'theme', 'tokens'];
+        keys.forEach(k => {
+          if (!allowed.includes(k)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Métrica '${k}' não é reconhecida. Use: layout, cards, theme ou tokens.`,
+              path: [k]
+            });
+          }
+        });
+      }
+    }),
+  }).strict("Propriedade não permitida em compliance_thresholds"),
+}).strict("O arquivo de configuração deve conter apenas a chave 'compliance_thresholds'");
 
 // Load and Validate Config
 let config: z.infer<typeof ComplianceConfigSchema> = { compliance_thresholds: { overall: 80 } };
@@ -199,11 +216,16 @@ if (fs.existsSync(CONFIG_FILE)) {
     const result = ComplianceConfigSchema.safeParse(rawConfig);
     
     if (!result.success) {
-      console.error('❌ ERRO DE VALIDAÇÃO: compliance-config.yml possui erros de esquema:');
+      console.error('\x1b[31m%s\x1b[0m', '❌ ERRO DE VALIDAÇÃO DE CONFIGURAÇÃO');
+      console.error(`O arquivo '${CONFIG_FILE}' possui erros que precisam ser corrigidos:\n`);
+      
       result.error.issues.forEach(issue => {
-        const path = issue.path.join('.');
-        console.error(`   - [${path}] : ${issue.message}`);
+        const path = issue.path.join(' → ');
+        console.error(`  📍 Campo: \x1b[33m${path}\x1b[0m`);
+        console.error(`     Erro: ${issue.message}\n`);
       });
+      
+      console.log('\x1b[36m%s\x1b[0m', '💡 Dica: Thresholds devem ser números entre 0 e 100.');
       process.exit(1);
     }
     config = result.data;
@@ -213,11 +235,13 @@ if (fs.existsSync(CONFIG_FILE)) {
     const configPageNames = Object.keys(config.compliance_thresholds.pages || {});
     configPageNames.forEach(pageName => {
       if (!knownPageNames.includes(pageName)) {
-        console.warn(`⚠️  AVISO: Página '${pageName}' no compliance-config.yml não foi encontrada no registro do script. Será ignorada.`);
+        console.warn('\x1b[33m%s\x1b[0m', `⚠️  AVISO: A página '${pageName}' definida no config não existe no sistema.`);
+        console.warn(`    Páginas válidas: ${knownPageNames.join(', ')}\n`);
       }
     });
   } catch (e) {
-    console.error(`❌ ERRO: Falha ao carregar ${CONFIG_FILE}. Verifique se o formato YAML está correto.`);
+    console.error('\x1b[31m%s\x1b[0m', `❌ ERRO CRÍTICO: Falha ao processar ${CONFIG_FILE}.`);
+    console.error('Verifique se o arquivo é um YAML válido (indentação, dois pontos, etc).\n');
     process.exit(1);
   }
 }
