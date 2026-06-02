@@ -53,10 +53,10 @@
     --border-medium: 2px;
     
     /* 4. Shadows */
-    --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-premium-md: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
-    --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.02);
-    --shadow-premium-hover: 0 30px 80px -20px rgba(0, 0, 0, 0.04);
+    --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+    --shadow-premium-md: 0 2px 4px -1px rgb(0 0 0 / 0.01);
+    --shadow-premium: 0 4px 20px -10px rgba(0, 0, 0, 0.01);
+    --shadow-premium-hover: 0 10px 30px -15px rgba(0, 0, 0, 0.02);
     
     /* 5. Typography Scale */
     --text-premium-xs: 0.75rem;
@@ -83,8 +83,8 @@
     --layout-padding: var(--spacing-xl);
     --layout-padding-mobile: var(--spacing-sm);
     --layout-content-width-mobile: 85vw;
-    --header-height: 56px;
-    --bottom-nav-height: 64px;
+    --header-height: 48px;
+    --bottom-nav-height: 54px;
     
     /* 8. Icons */
     --icon-size-sm: 16px;
@@ -249,7 +249,7 @@
 
   /* Specific Reader Container */
   .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-xl sm:px-spacing-2xl md:px-spacing-4xl py-spacing-3xl md:py-spacing-4xl transition-all duration-1000;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-spacing-sm sm:px-spacing-xl md:px-spacing-2xl lg:px-spacing-4xl py-spacing-md md:py-spacing-2xl transition-all duration-1000;
     scroll-behavior: smooth;
   }
 
