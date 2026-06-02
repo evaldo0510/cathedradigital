@@ -136,7 +136,7 @@ const HojePage: React.FC = () => {
       
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday: allSaintsToday || [], activeJourney: activeJourney || null, profile: profile?._sensitive || null }} />}
       
-      <div className="w-full space-y-spacing-4xl md:space-y-spacing-4xl">
+      <div className="w-full space-y-spacing-2xl md:space-y-spacing-4xl">
         {/* CONTINUIDADE ESPIRITUAL - RETOMADA DINÂMICA */}
         <motion.section 
           initial={{ opacity: 0, y: 10 }}

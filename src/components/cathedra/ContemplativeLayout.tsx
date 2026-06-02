@@ -31,7 +31,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   return (
     <div className={cn(
       "min-h-screen will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
-      showPadding && "pt-[calc(var(--layout-padding-mobile)*1.5)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
+      showPadding && "pt-[calc(var(--layout-padding-mobile)*0.75)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
       containerClassName
     )}>
       {(title || subtitle || Icon) && (

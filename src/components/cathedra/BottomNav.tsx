@@ -110,7 +110,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
           shouldReduceMotion ? "duration-0" : "duration-300",
           isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
         )}
-        size={18}
+        size={16}
         strokeWidth={1.2}
         aria-hidden="true"
       />
