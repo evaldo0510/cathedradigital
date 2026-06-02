@@ -68,7 +68,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
   isActive, 
   onClick, 
   onRipple,
-  shouldReduceMotion = false
+  shouldReduceMotion = false,
   "data-testid": dataTestId,
 }) => {
   const navigate = useNavigate();
