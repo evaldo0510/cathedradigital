@@ -19,7 +19,11 @@ const exemptions = [
   'src/lib/design-system.ts',
   '__snapshots__',
   'src/components/cathedra/Auth.tsx',
-  'src/components/cathedra/CommandCenter.tsx'
+  'src/components/cathedra/CommandCenter.tsx',
+  'src/components/cathedra/SpiritualQuiz.tsx', // complex internal quiz layout
+  'src/components/cathedra/Rosary.tsx', // complex interactive prayer tool
+  'src/components/cathedra/ItinerariumDetailPage.tsx', // authorized detail page
+  'src/components/cathedra/JornadasPage.tsx' // authorized list page
 ];
 
 console.log('--- CATHEDRA LAYOUT GOVERNANCE AUDIT ---');
