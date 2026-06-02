@@ -29,11 +29,14 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn(
-      "min-h-screen will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
-      showPadding && "pt-[calc(var(--layout-padding-mobile)*0.75)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
-      containerClassName
-    )}>
+    <div 
+      data-layout-root="true"
+      className={cn(
+        "min-h-screen will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
+        showPadding && "pt-[calc(var(--layout-padding-mobile)*0.75)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
+        containerClassName
+      )}
+    >
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-spacing-md md:px-spacing-xl text-center flex flex-col items-center w-full", 
@@ -62,6 +65,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         </header>
       )}
       <motion.main 
+        data-layout-container="true"
         initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
