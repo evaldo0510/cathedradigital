@@ -34,6 +34,7 @@
     "test:spacing-audit": "bun run scripts/audit-spacing.ts",
     "test:mobile-ux": "playwright test tests/e2e/mobile-ux-metrics.spec.ts && bun run scripts/check-ux-regressions.ts && bun run scripts/generate-ux-metrics-report.ts",
     "test:clicabilidade": "playwright test tests/e2e/catecismo-clicabilidade.spec.ts",
+    "test:catecismo:a11y": "playwright test tests/e2e/catecismo-a11y-avancado.spec.ts",
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --playwright",
     "generate:seo": "bun run scripts/generate-sitemap.ts",
     "token-audit": "bun run scripts/cathedra-audit.ts",

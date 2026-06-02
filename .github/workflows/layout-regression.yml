@@ -16,6 +16,33 @@ jobs:
       - name: Run Layout Audit
         run: bun run scripts/audit-layout-governance.ts
 
+  accessibility:
+    name: Accessibility & UX Audit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        device: [ 'iPhone SE', 'iPhone 14 Pro Max', 'Pixel 7' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Run Accessibility Tests
+        run: bunx playwright test tests/e2e/catecismo-a11y-avancado.spec.ts --project=chromium
+        env:
+          DEVICE_NAME: ${{ matrix.device }}
+      - name: Upload Accessibility Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-evidence-${{ matrix.device }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+
   visual:
     name: Visual Regression
     runs-on: ubuntu-latest
@@ -35,11 +62,3 @@ jobs:
           name: playwright-visual-report
           path: playwright-report/
           retention-days: 30
-      - name: Summary to PR
-        if: failure()
-        run: |
-          echo "### ❌ Visual Regression Failed" >> $GITHUB_STEP_SUMMARY
-          echo "Layout shifts detected in the following pages. Check the [artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for diffs." >> $GITHUB_STEP_SUMMARY
-          echo "| Page | Breakpoint | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "| --- | --- | --- |" >> $GITHUB_STEP_SUMMARY
-          # This would be populated by parsing test-results.json in a real workflow
