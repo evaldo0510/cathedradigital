@@ -465,8 +465,8 @@ const CommunityPage: React.FC = () => {
           </div>
         )}
       </div>
-
     </ContemplativeLayout>
+  );
 };
 
 export default CommunityPage;
