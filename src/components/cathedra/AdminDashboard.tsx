@@ -44,7 +44,6 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
 
-  const [users, setUsers] = useState<UserProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [manualEmail, setManualEmail] = useState('');
   const [manualLoading, setManualLoading] = useState(false);
@@ -65,39 +64,7 @@ const AdminDashboard: React.FC = () => {
     setSearchParams({ tab: value }, { replace: true });
   };
 
-  useEffect(() => {
-    if (activeTab && tabsListRef.current) {
-      const activeTrigger = tabsListRef.current.querySelector(`[data-state="active"]`);
-      if (activeTrigger) {
-        activeTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [activeTab]);
-
-  useEffect(() => {
-    if (stats) {
-      const fetchUsers = async () => {
-        const { data: allProfiles } = await supabase.from('profiles').select('*');
-        const { data: crmUsers } = await supabase.from('user_management_stats').select('*').limit(1000);
-        
-        const crmMap = new Map<string, CRMUser>();
-        (crmUsers as CRMUser[] | null)?.forEach(u => crmMap.set(u.id, u));
-
-        setUsers(allProfiles?.map(p => {
-          const crm = (crmMap.get(p.id) || {}) as CRMUser;
-          return {
-            ...p,
-            email: crm.email || '',
-            depth_level: crm.classification || 'Novo',
-            reflections_count: crm.reflections_count || 0,
-            current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity
-          };
-        }) as UserProfile[] || []);
-      };
-      fetchUsers();
-    }
-  }, [stats]);
+  const users = stats?.users || [];
 
   const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
     const { error } = await supabase
