@@ -1,5 +1,5 @@
 import { Icons } from '@/constants';
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { AdminHeader } from './admin/AdminHeader';
 import { AdminStatsCards } from './admin/AdminStatsCards';
 import { useAdminDashboardData, AdminUser } from '@/hooks/useAdminDashboardData';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
