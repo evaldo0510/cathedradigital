@@ -43,6 +43,7 @@ interface CRMUser {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
 
   const [searchQuery, setSearchQuery] = useState('');
