@@ -114,7 +114,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    setUsers(prev => prev.map(u => u.email === manualEmail.trim() ? { ...u, is_premium: grant } : u));
+    queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] });
     toast.success(grant ? `Premium ativado para ${manualEmail}` : `Premium removido de ${manualEmail}`);
     setManualEmail('');
   };
