@@ -142,9 +142,17 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
                 <Icons.Download className="w-spacing-sm h-spacing-sm" /> CSV
               </Button>
-            <Select data-test="filtro-1" value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-              <SelectTrigger className="w-[160px] h-spacing-xl text-premium-xs">
-                <SelectValue />
+            <Select data-test="filtro-1" value={segment} onValueChange={(v) => setSegment(v as typeof segment)}>
+              <SelectTrigger className="w-[120px] h-spacing-xl text-premium-xs">
+                <SelectValue placeholder="Filtrar" />
+              </SelectTrigger>
+              <SelectContent>
+                {segments.map(s => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select data-test="ordenacao-1" value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
+              <SelectTrigger className="w-[140px] h-spacing-xl text-premium-xs">
+                <SelectValue placeholder="Ordenar" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="last_visit">Última visita</SelectItem>
