@@ -162,6 +162,18 @@ export const useAdminDashboardData = () => {
         diocesesStats: Array.from(dioceseMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
         statesStats: Array.from(stateMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
         movementsStats: Array.from(movementMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
+        users: allProfiles.map(p => {
+          const crm = ((crmRes.data || []) as any[]).find(u => u.id === p.id) || {};
+          return {
+            ...p,
+            name: (p as any).name || 'Usuário',
+            email: crm.email || '',
+            depth_level: crm.classification || 'Novo',
+            reflections_count: crm.reflections_count || 0,
+            current_journey: crm.current_journey || 'Nenhuma',
+            last_visit: crm.last_activity || p.last_visit
+          } as AdminUser;
+        })
       };
     },
     refetchInterval: 60000,
