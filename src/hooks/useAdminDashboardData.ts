@@ -54,7 +54,7 @@ export const useAdminDashboardData = () => {
       const iso30 = thirtyDaysAgoStart.toISOString();
 
       const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
-        supabase.from('profiles').select('id, is_premium, created_at, last_visit, diocese, estado, movimento_pastoral'),
+        supabase.from('profiles').select('id, is_premium, created_at, last_visit, diocese, estado, movimento_pastoral, name, role, xp, level, streak'),
         supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30),
         supabase.from('transactions').select('amount, status, created_at, profiles(name)').order('created_at', { ascending: false }).limit(100),
         supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
