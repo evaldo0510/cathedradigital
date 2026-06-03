@@ -211,22 +211,22 @@ const AdminDashboard: React.FC = () => {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-spacing-lg">
         <div className="px-spacing-md sm:px-spacing-0 -mx-spacing-md sm:mx-spacing-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-spacing-2xs bg-muted/30 border border-border/10 rounded-premium-full no-scrollbar scroll-smooth snap-x">
-            <TabsTrigger value="overview" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="overview" data-test="tab-overview" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.LayoutGrid className="w-spacing-sm h-spacing-sm" /> Visão Geral
             </TabsTrigger>
-            <TabsTrigger value="users" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="users" data-test="tab-users" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Users className="w-spacing-sm h-spacing-sm" /> Usuários
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="transactions" data-test="tab-transactions" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.DollarSign className="w-spacing-sm h-spacing-sm" /> Financeiro
             </TabsTrigger>
-            <TabsTrigger value="design" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="design" data-test="tab-design" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Palette className="w-spacing-sm h-spacing-sm" /> Design
             </TabsTrigger>
-            <TabsTrigger value="regression" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="regression" data-test="tab-regression" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Eye className="w-spacing-sm h-spacing-sm" /> Regressão
             </TabsTrigger>
-            <TabsTrigger value="content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+            <TabsTrigger value="content" data-test="tab-content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
             </TabsTrigger>
           </TabsList>
