@@ -79,7 +79,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_premium: !currentStatus } : u));
+    queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] });
     toast.success(!currentStatus ? 'Usuário promovido a PRO' : 'Acesso PRO removido');
   };
 
