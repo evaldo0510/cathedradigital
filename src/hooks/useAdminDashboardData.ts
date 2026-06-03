@@ -25,6 +25,7 @@ export interface AdminStats {
   diocesesStats: { name: string; count: number }[];
   statesStats: { name: string; count: number }[];
   movementsStats: { name: string; count: number }[];
+  users: AdminUser[];
 }
 
 export interface AdminUser {
