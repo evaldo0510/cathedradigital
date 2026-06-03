@@ -166,12 +166,12 @@ export const useAdminDashboardData = () => {
           const crm = ((crmRes.data || []) as any[]).find(u => u.id === p.id) || {};
           return {
             ...p,
-            name: (p as any).name || 'Usuário',
             email: crm.email || '',
             depth_level: crm.classification || 'Novo',
             reflections_count: crm.reflections_count || 0,
             current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity || p.last_visit
+            last_visit: crm.last_activity || p.last_visit,
+            name: (p as any).name || 'Usuário'
           } as AdminUser;
         })
       };
