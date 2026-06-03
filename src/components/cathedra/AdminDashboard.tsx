@@ -119,17 +119,19 @@ const AdminDashboard: React.FC = () => {
     setManualEmail('');
   };
 
-  const filteredUsers = users
-    .filter(u => 
-      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      u.email?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      const valA = a[sortField] ?? '';
-      const valB = b[sortField] ?? '';
-      const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
-      return sortAsc ? cmp : -cmp;
-    });
+  const filteredUsers = useMemo(() => {
+    return users
+      .filter(u => 
+        u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .sort((a, b) => {
+        const valA = a[sortField] ?? '';
+        const valB = b[sortField] ?? '';
+        const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
+        return sortAsc ? cmp : -cmp;
+      });
+  }, [users, searchQuery, sortField, sortAsc]);
 
   const toggleSort = (field: typeof sortField) => {
     // Adicionando data-test para ordenação
