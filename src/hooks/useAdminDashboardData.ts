@@ -25,6 +25,7 @@ export interface AdminStats {
   diocesesStats: { name: string; count: number }[];
   statesStats: { name: string; count: number }[];
   movementsStats: { name: string; count: number }[];
+  users: AdminUser[];
 }
 
 export interface AdminUser {
@@ -53,13 +54,13 @@ export const useAdminDashboardData = () => {
       const iso30 = thirtyDaysAgoStart.toISOString();
 
       const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
-        supabase.from('profiles').select('id, is_premium, created_at, last_visit, role, diocese, estado, movimento_pastoral, name, xp, level, streak'),
+        supabase.from('profiles').select('id, is_premium, created_at, last_visit, diocese, estado, movimento_pastoral, name, role, xp, level, streak'),
         supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30),
-        supabase.from('transactions').select('*, profiles(name)').order('created_at', { ascending: false }).limit(100),
+        supabase.from('transactions').select('amount, status, created_at, profiles(name)').order('created_at', { ascending: false }).limit(100),
         supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
         supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
         supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
-        supabase.from('user_management_stats').select('*').limit(1000),
+        supabase.from('user_management_stats').select('id, email, classification, reflections_count, current_journey, last_activity').limit(1000),
       ]);
 
       if (statsRes.error) throw statsRes.error;
@@ -161,6 +162,18 @@ export const useAdminDashboardData = () => {
         diocesesStats: Array.from(dioceseMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
         statesStats: Array.from(stateMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
         movementsStats: Array.from(movementMap.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
+        users: allProfiles.map(p => {
+          const crm = ((crmRes.data || []) as any[]).find(u => u.id === p.id) || {};
+          return {
+            ...p,
+            email: crm.email || '',
+            depth_level: crm.classification || 'Novo',
+            reflections_count: crm.reflections_count || 0,
+            current_journey: crm.current_journey || 'Nenhuma',
+            last_visit: crm.last_activity || p.last_visit,
+            name: (p as any).name || 'Usuário'
+          } as AdminUser;
+        })
       };
     },
     refetchInterval: 60000,

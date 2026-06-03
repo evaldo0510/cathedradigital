@@ -1,5 +1,5 @@
 import { Icons } from '@/constants';
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { AdminHeader } from './admin/AdminHeader';
 import { AdminStatsCards } from './admin/AdminStatsCards';
 import { useAdminDashboardData, AdminUser } from '@/hooks/useAdminDashboardData';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
@@ -42,9 +43,9 @@ interface CRMUser {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
 
-  const [users, setUsers] = useState<UserProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [manualEmail, setManualEmail] = useState('');
   const [manualLoading, setManualLoading] = useState(false);
@@ -65,39 +66,7 @@ const AdminDashboard: React.FC = () => {
     setSearchParams({ tab: value }, { replace: true });
   };
 
-  useEffect(() => {
-    if (activeTab && tabsListRef.current) {
-      const activeTrigger = tabsListRef.current.querySelector(`[data-state="active"]`);
-      if (activeTrigger) {
-        activeTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [activeTab]);
-
-  useEffect(() => {
-    if (stats) {
-      const fetchUsers = async () => {
-        const { data: allProfiles } = await supabase.from('profiles').select('*');
-        const { data: crmUsers } = await supabase.from('user_management_stats').select('*').limit(1000);
-        
-        const crmMap = new Map<string, CRMUser>();
-        (crmUsers as CRMUser[] | null)?.forEach(u => crmMap.set(u.id, u));
-
-        setUsers(allProfiles?.map(p => {
-          const crm = (crmMap.get(p.id) || {}) as CRMUser;
-          return {
-            ...p,
-            email: crm.email || '',
-            depth_level: crm.classification || 'Novo',
-            reflections_count: crm.reflections_count || 0,
-            current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity
-          };
-        }) as UserProfile[] || []);
-      };
-      fetchUsers();
-    }
-  }, [stats]);
+  const users = stats?.users || [];
 
   const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
     const { error } = await supabase
@@ -110,7 +79,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_premium: !currentStatus } : u));
+    queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] });
     toast.success(!currentStatus ? 'Usuário promovido a PRO' : 'Acesso PRO removido');
   };
 
@@ -145,22 +114,24 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    setUsers(prev => prev.map(u => u.email === manualEmail.trim() ? { ...u, is_premium: grant } : u));
+    queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] });
     toast.success(grant ? `Premium ativado para ${manualEmail}` : `Premium removido de ${manualEmail}`);
     setManualEmail('');
   };
 
-  const filteredUsers = users
-    .filter(u => 
-      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      u.email?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      const valA = a[sortField] ?? '';
-      const valB = b[sortField] ?? '';
-      const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
-      return sortAsc ? cmp : -cmp;
-    });
+  const filteredUsers = useMemo(() => {
+    return users
+      .filter(u => 
+        u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      .sort((a, b) => {
+        const valA = a[sortField] ?? '';
+        const valB = b[sortField] ?? '';
+        const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
+        return sortAsc ? cmp : -cmp;
+      });
+  }, [users, searchQuery, sortField, sortAsc]);
 
   const toggleSort = (field: typeof sortField) => {
     // Adicionando data-test para ordenação

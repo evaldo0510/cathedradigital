@@ -198,7 +198,7 @@ export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
   { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
 ];
 
-import cathedraLogo from './assets/cathedra-logo.png';
+import cathedraLogo from './assets/cathedra-logo.webp';
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
   className = "w-spacing-2xl h-spacing-2xl", 
