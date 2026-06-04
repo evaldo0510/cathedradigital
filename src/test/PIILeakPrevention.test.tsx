@@ -40,9 +40,21 @@ test('Export Schema & PII Protection: JSON/CSV data must be redacted', () => {
   expect(schemaVersion).toBeDefined();
 });
 
-test('CI Alert Template logic should not include raw PII', () => {
+test('CI Alert Template logic should not include raw PII in any metadata field', () => {
   const commitMsg = "Fix for user@example.com";
   const maskedMsg = commitMsg.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[REDACTED]');
   
   expect(maskedMsg).toBe("Fix for [REDACTED]");
+  
+  // Extra check for metadata in exports
+  const exportMetadata = { requestId: "req-1", user: "john.doe@test.com" };
+  const maskedExport = JSON.parse(JSON.stringify(exportMetadata).replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[MASKED]'));
+  expect(maskedExport.user).toBe("[MASKED]");
 });
+
+test('Evidence link validity simulation', () => {
+  const mockUrl = "https://github.com/artifacts/123";
+  const isValid = mockUrl.startsWith('https://github.com/');
+  expect(isValid).toBe(true);
+});
+

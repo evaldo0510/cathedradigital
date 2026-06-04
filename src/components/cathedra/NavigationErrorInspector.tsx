@@ -25,10 +25,28 @@ const NavigationErrorInspector: React.FC = () => {
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const [activeTab, setActiveTab] = useState('errors');
   const [auditFilterUser, setAuditFilterUser] = useState('');
+  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string }>>({});
   const navigate = useNavigate();
 
+  const checkEvidenceHealth = async (errorLogs: any[]) => {
+    const health: Record<string, { ok: boolean; reason?: string }> = {};
+    for (const err of errorLogs) {
+      const url = err.metadata?.screenshotUrl;
+      if (!url) {
+        health[err.id] = { ok: false, reason: 'No URL' };
+        continue;
+      }
+      try {
+        const resp = await fetch(url, { method: 'HEAD' });
+        health[err.id] = resp.ok ? { ok: true } : { ok: false, reason: `HTTP ${resp.status}` };
+      } catch (e) {
+        health[err.id] = { ok: false, reason: 'Network Error' };
+      }
+    }
+    setEvidenceStatus(health);
+  };
+
   const handleImportLegacy = (rawData: any) => {
-    // Compatibilidade retroativa: se for array, migra para o formato v2.1
     if (Array.isArray(rawData)) {
       return {
         version: 'v2.0-legacy',
@@ -39,19 +57,6 @@ const NavigationErrorInspector: React.FC = () => {
     return rawData;
   };
 
-  const fetchErrors = async () => {
-    let query = supabase
-      .from('security_logs')
-      .select('*')
-      .or('event_type.eq.error,action.eq.type_error')
-      .order('created_at', { ascending: false });
-
-    if (dateRange.from) query = query.gte('created_at', dateRange.from);
-    if (dateRange.to) query = query.lte('created_at', dateRange.to);
-
-    const { data, error } = await query.limit(100);
-    if (!error && data) setErrors(data);
-  };
 
 
   const fetchAuditLogs = async () => {
@@ -223,9 +228,17 @@ const NavigationErrorInspector: React.FC = () => {
                     className={`p-spacing-md cursor-pointer transition-colors hover:bg-primary/5 ${selectedError?.id === err.id ? 'bg-primary/10 border-l-4 border-l-primary' : ''}`}
                   >
                     <div className="flex justify-between items-start mb-1">
-                      <Badge variant="destructive" className="text-[8px] uppercase">{err.metadata?.type || 'UI_ERROR'}</Badge>
+                      <div className="flex gap-1 items-center">
+                        <Badge variant="destructive" className="text-[8px] uppercase">{err.metadata?.type || 'UI_ERROR'}</Badge>
+                        {evidenceStatus[err.id] && !evidenceStatus[err.id].ok && (
+                          <Badge variant="outline" className="text-[8px] text-orange-500 border-orange-500/20 bg-orange-500/5">
+                            Link Quebrado: {evidenceStatus[err.id].reason}
+                          </Badge>
+                        )}
+                      </div>
                       <span className="text-[10px] font-mono opacity-40">{format(new Date(err.created_at), 'HH:mm:ss')}</span>
                     </div>
+
                     <div className="text-premium-sm font-bold truncate text-primary/80">{err.metadata?.route || '/'}</div>
                     <div className="text-[10px] font-mono opacity-60 truncate mt-1">ID: {err.metadata?.requestId || err.id.split('-')[0]}</div>
                   </div>
