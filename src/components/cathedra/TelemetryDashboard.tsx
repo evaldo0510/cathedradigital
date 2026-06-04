@@ -36,21 +36,22 @@ const TelemetryDashboard: React.FC = () => {
   const downloadTelemetry = (format: 'json' | 'csv') => {
     const data = format === 'json' 
       ? JSON.stringify(filteredLogs, null, 2)
-      : "ID,Data,Rota,Tipo,Acao,Contexto\n" + filteredLogs.map(log => 
-          `${log.id},${log.created_at},"${log.metadata?.route || ''}",${log.event_type},"${log.action || ''}","${JSON.stringify(log.metadata || {}).replace(/"/g, '""')}"`
+      : "ID,Data,Rota,Tipo,CLS,INP,TBT,Contexto\n" + filteredLogs.map(log => 
+          `${log.id},${log.created_at},"${log.metadata?.route || ''}",${log.event_type},${log.metadata?.cls || ''},${log.metadata?.inp || ''},${log.metadata?.tbt || ''},"${JSON.stringify(log.metadata || {}).replace(/"/g, '""')}"`
         ).join("\n");
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `telemetry-mobile-${new Date().toISOString()}.${format}`;
+    a.download = `telemetry-performance-${new Date().toISOString()}.${format}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success(`Telemetria exportada em ${format.toUpperCase()}`);
   };
+
 
   const filteredLogs = logs.filter(log => 
     JSON.stringify(log).toLowerCase().includes(filter.toLowerCase())
