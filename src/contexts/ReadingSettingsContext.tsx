@@ -174,6 +174,11 @@ const SettingsSideEffects: React.FC = () => {
       root.classList.add(`contrast-${settings.contrast}`);
     }
 
+    // Apply Font Size to Root for UI scalability
+    root.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-extra-large');
+    root.classList.add(`font-size-${settings.fontSize}`);
+
+
     // Apply Spacing
     root.setAttribute('data-line-spacing', settings.lineSpacing);
     root.setAttribute('data-letter-spacing', settings.letterSpacing);

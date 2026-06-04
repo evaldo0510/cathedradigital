@@ -1,153 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import { runA11yAudit } from '@/lib/a11y-audit';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { runMobileA11yAudit } from '@/lib/mobile-a11y-audit';
+import { CathedraCard } from './CathedraCard';
+import { CathedraButton } from './CathedraButton';
 import { Icons } from '@/constants';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-const A11yAuditPage = () => {
-  const [auditResults, setAuditResults] = useState<{ success: boolean; issues: string[] } | null>(null);
-  const [checklist, setChecklist] = useState<Record<string, boolean>>({});
-
-  const toggleCheck = (id: string) => {
-    setChecklist(prev => ({ ...prev, [id]: !prev[id] }));
-  };
+const A11yAuditPage: React.FC = () => {
+  const [issues, setIssues] = useState<Array<{ message: string; type: 'error' | 'warning' | 'info'; selector?: string }>>([]);
+  const [isAuditing, setIsAuditing] = useState(false);
+  const navigate = useNavigate();
 
   const performAudit = () => {
-    const results = runA11yAudit();
-    setAuditResults(results);
+    setIsAuditing(true);
+    setTimeout(() => {
+      const result = runMobileA11yAudit();
+      setIssues(result.issues);
+      setIsAuditing(false);
+      
+      if (result.success) {
+        toast.success("Auditoria completa: Nenhum problema crítico encontrado!");
+      } else {
+        const errors = result.issues.filter(i => i.type === 'error').length;
+        toast.warning(`Encontrados ${result.issues.length} pontos de atenção (${errors} erros).`);
+      }
+    }, 500);
   };
 
-  const sections = [
-    {
-      title: "SearchResultCard & Teclado",
-      items: [
-        { id: 'src-role', label: "SearchResultCard tem role='button'?" },
-        { id: 'src-keyboard', label: "SearchResultCard ativa com Enter e Espaço?" },
-        { id: 'src-focus', label: "SearchResultCard tem anel de foco visível (ring)?" },
-        { id: 'src-label', label: "Aria-label anuncia Título + Subtítulo + Ação?" },
-        { id: 'src-empty', label: "Foco pula para o próximo item quando não há resultados?" }
-      ]
-    },
-    {
-      title: "Roving Tabindex (Tags/Bolhas)",
-      items: [
-        { id: 'tag-nav', label: "Navegação por setas (Dir/Esq) funciona entre tags?" },
-        { id: 'tag-home-end', label: "Home/End levam ao início/fim da lista de tags?" },
-        { id: 'tag-tabindex', label: "Apenas a tag ativa tem tabIndex=0?" },
-        { id: 'tag-active-reset', label: "Foco reseta para a primeira tag ao trocar filtro/categoria?" },
-        { id: 'tag-aria-pressed', label: "Estado de seleção é anunciado (aria-pressed)?" }
-      ]
-    },
-    {
-      title: "Abas & Estrutura ARIA",
-      items: [
-        { id: 'tab-aria', label: "Abas usam role='tablist', 'tab' e 'tabpanel'?" },
-        { id: 'tab-controls', label: "aria-controls e aria-labelledby estão corretos?" },
-        { id: 'tab-ids', label: "Não existem IDs duplicados em runtime?" }
-      ]
-    }
-  ];
+  useEffect(() => {
+    performAudit();
+  }, []);
 
   return (
-    <div className="w-full py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
-      <header className="text-center space-y-spacing-md">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
-          <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Quality Assurance</span>
+    <div className="max-w-4xl mx-auto p-spacing-lg space-y-spacing-xl pb-spacing-4xl">
+      <div className="flex flex-col gap-spacing-md">
+        <CathedraButton 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate(-1)}
+          className="w-fit"
+        >
+          <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+        </CathedraButton>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-premium-2xl font-black tracking-tight flex items-center gap-spacing-sm">
+              <Icons.Activity className="text-primary" /> Auditoria A11y Mobile
+            </h1>
+            <p className="text-muted-foreground text-premium-sm">Verificação automática de WCAG AA e áreas de toque.</p>
+          </div>
+          <CathedraButton 
+            onClick={performAudit} 
+            disabled={isAuditing}
+            className="rounded-premium-full"
+          >
+            {isAuditing ? "Auditando..." : "Nova Varredura"}
+          </CathedraButton>
         </div>
-        <h1 className="text-premium-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
-        <p className="text-muted-foreground italic font-serif">Validação manual e automatizada para NVDA e VoiceOver.</p>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-        <Card className="border-primary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
-          <CardHeader className="bg-primary/5 border-b border-border/50">
-            <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center gap-spacing-xs">
-              <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
-              Checklist Manual
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-spacing-lg space-y-spacing-lg">
-            {sections.map(section => (
-              <div key={section.title} className="space-y-spacing-sm">
-                <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-spacing-2xs">
-                  {section.title}
-                </h3>
-                <div className="space-y-spacing-xs">
-                  {section.items.map(item => (
-                    <Button
-                      key={item.id}
-                      onClick={() => toggleCheck(item.id)}
-                      className="w-full flex items-center justify-between p-spacing-sm rounded-premium-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
-                    >
-                      <span className="text-premium-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
-                      {checklist[item.id] ? (
-                        <Icons.CheckCircle className="w-spacing-md h-spacing-md text-green-500 fill-green-500/10" />
-                      ) : (
-                        <div className="w-spacing-md h-spacing-md rounded-premium border-2 border-border/60" />
-                      )}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card className="border-secondary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
-          <CardHeader className="bg-secondary/5 border-b border-border/50">
-            <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center justify-between">
-              <div className="flex items-center gap-spacing-xs">
-                <Icons.Key className="w-spacing-md h-spacing-md text-secondary" />
-                Auditoria Técnica
-              </div>
-              <Button size="sm" onClick={performAudit} className="rounded-premium-full h-spacing-xl text-premium-xs font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
-                Escanear DOM
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-spacing-lg space-y-spacing-md">
-            {!auditResults ? (
-              <div className="flex flex-col items-center justify-center py-spacing-3xl text-center space-y-spacing-md opacity-40">
-                <Icons.Search className="w-spacing-2xl h-spacing-2xl" />
-                <p className="text-premium-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
-              </div>
-            ) : (
-              <div className="space-y-spacing-md">
-                <div className={`p-spacing-md rounded-premium-full flex items-center gap-spacing-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
-                  {auditResults.success ? (
-                    <>
-                      <Icons.CheckCircle className="w-spacing-lg h-spacing-lg text-green-500" />
-                      <p className="text-premium-sm font-bold text-green-600">Nenhum problema técnico detectado no DOM atual.</p>
-                    </>
-                  ) : (
-                    <>
-                      <Icons.XCircle className="w-spacing-lg h-spacing-lg text-red-500" />
-                      <p className="text-premium-sm font-bold text-red-600">{auditResults.issues.length} problemas encontrados.</p>
-                    </>
-                  )}
-                </div>
-
-                <div className="space-y-spacing-xs max-h-[400px] overflow-y-auto pr-spacing-xs scrollbar-thin">
-                  {auditResults.issues.map((issue, idx) => (
-                    <div key={idx} className="flex gap-spacing-sm p-spacing-sm rounded-premium bg-muted/20 border border-border/40">
-                      <Icons.AlertTriangle className="w-spacing-md h-spacing-md text-amber-500 shrink-0 mt-spacing-3xs" />
-                      <span className="text-premium-xs text-muted-foreground leading-relaxed">{issue}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
-      <footer className="text-center pt-spacing-xl">
-        <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
-          Cathedra Digital — Protocolo de Acessibilidade v2.0
-        </p>
-      </footer>
+      <div className="grid grid-cols-1 gap-spacing-lg">
+        <CathedraCard className="p-spacing-lg">
+          <div className="flex items-center justify-between mb-spacing-lg">
+            <h3 className="text-premium-xs font-black uppercase tracking-widest opacity-50">Findings ({issues.length})</h3>
+            <div className="flex gap-spacing-xs">
+              <Badge variant="outline">{issues.filter(i => i.type === 'warning').length} Warnings</Badge>
+              <Badge variant="destructive">{issues.filter(i => i.type === 'error').length} Errors</Badge>
+            </div>
+          </div>
+
+          <ScrollArea className="h-[60vh]">
+            {issues.length > 0 ? (
+              <div className="space-y-spacing-md">
+                {issues.map((issue, i) => (
+                  <div key={i} className="flex flex-col gap-spacing-xs p-spacing-md bg-muted/20 rounded-premium-md border border-border/10 group">
+                    <div className="flex items-start gap-spacing-md">
+                      {issue.type === 'error' ? (
+                        <Icons.AlertCircle className="text-red-500 shrink-0 mt-1" />
+                      ) : (
+                        <Icons.AlertTriangle className="text-orange-500 shrink-0 mt-1" />
+                      )}
+                      <div className="flex-1">
+                        <span className="text-premium-sm font-bold">{issue.message}</span>
+                        {issue.selector && (
+                          <div className="mt-spacing-xs">
+                            <code className="text-[10px] bg-primary/5 text-primary/60 px-spacing-xs py-spacing-3xs rounded block font-mono break-all">
+                              Classes: {issue.selector}
+                            </code>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-spacing-4xl opacity-50 italic">
+                <Icons.CheckCircle className="w-spacing-2xl h-spacing-2xl text-green-500 mb-spacing-md" />
+                <p>Nenhum problema de acessibilidade detectado nesta página.</p>
+              </div>
+            )}
+          </ScrollArea>
+        </CathedraCard>
+      </div>
     </div>
   );
 };

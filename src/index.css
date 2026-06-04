@@ -242,10 +242,16 @@
     }
   }
 
+  .font-size-small { font-size: 0.875rem !important; }
+  .font-size-medium { font-size: 1rem !important; }
+  .font-size-large { font-size: 1.25rem !important; }
+  .font-size-extra-large { font-size: 1.5rem !important; }
+
   .font-size-small .reader-text { font-size: var(--text-premium-lg) !important; }
   .font-size-medium .reader-text { font-size: var(--text-premium-xl) !important; }
   .font-size-large .reader-text { font-size: var(--text-premium-2xl) !important; }
   .font-size-extra-large .reader-text { font-size: var(--text-premium-3xl) !important; }
+
 
   
 
