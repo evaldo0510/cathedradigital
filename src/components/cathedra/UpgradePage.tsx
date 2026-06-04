@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Papa from 'papaparse';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { format } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,40 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw, Activity } from "lucide-react";
+
+const WebhookAlerts = () => {
+  const [alerts, setAlerts] = useState<any[]>([]);
+  
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      const { data } = await supabase
+        .from('webhook_alerts')
+        .select('*')
+        .order('last_occurrence', { ascending: false })
+        .limit(5);
+      if (data) setAlerts(data);
+    };
+    fetchAlerts();
+  }, []);
+
+  if (alerts.length === 0) return <p className="text-sm text-muted-foreground italic">Sem alertas críticos no momento.</p>;
+
+  return (
+    <div className="space-y-3">
+      {alerts.map(alert => (
+        <div key={alert.id} className="p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-4 h-4 text-red-500 mt-1 shrink-0" />
+          <div>
+            <p className="text-xs font-bold text-red-700 uppercase">{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
+            <p className="text-[11px] text-red-600 line-clamp-2">{alert.message}</p>
+            <p className="text-[10px] text-red-400 mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
 
@@ -166,6 +199,13 @@ const UpgradePage: React.FC = () => {
         }
       });
       if (error) throw error;
+      
+      // Increment retry count in UI for feedback
+      await supabase
+        .from('webhook_logs')
+        .update({ retry_count: (log.retry_count || 0) + 1 })
+        .eq('id', log.id);
+
       toast.success('Evento reprocessado com sucesso');
       fetchLogs();
     } catch (error: any) {
@@ -173,6 +213,40 @@ const UpgradePage: React.FC = () => {
     } finally {
       setIsReprocessing(null);
     }
+  };
+
+  const generateMonthlyReport = () => {
+    const doc = new jsPDF();
+    const now = new Date();
+    const monthYear = format(now, 'MMMM yyyy', { locale: ptBR });
+    
+    doc.setFontSize(18);
+    doc.text(`Relatório Mensal Webhooks - ${monthYear}`, 14, 20);
+    
+    doc.setFontSize(12);
+    doc.text(`Total de Logs: ${webhookLogs.length}`, 14, 30);
+    doc.text(`Falhas: ${webhookLogs.filter(l => l.status === 'failed').length}`, 14, 37);
+    doc.text(`Sucessos: ${webhookLogs.filter(l => l.status === 'success').length}`, 14, 44);
+
+    const tableData = webhookLogs.map(log => [
+      format(new Date(log.created_at), 'dd/MM HH:mm'),
+      log.event_type,
+      log.status.toUpperCase(),
+      log.event_id || '-',
+      log.retry_count || 0,
+      log.error_message ? 'SIM' : 'NÃO'
+    ]);
+
+    (doc as any).autoTable({
+      head: [['Data', 'Tipo', 'Status', 'ID Transação', 'Retentativas', 'Erro']],
+      body: tableData,
+      startY: 50,
+      theme: 'striped',
+      headStyles: { fillStyle: '#8B5CF6' }
+    });
+
+    doc.save(`relatorio_mensal_${format(now, 'yyyy_MM')}.pdf`);
+    toast.success('Relatório mensal gerado com sucesso.');
   };
 
   const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
@@ -351,8 +425,35 @@ const UpgradePage: React.FC = () => {
                 <TabsList className="bg-muted/50 rounded-premium-full p-1">
                   <TabsTrigger value="tests" className="rounded-premium-full font-bold">Simulações E2E</TabsTrigger>
                   <TabsTrigger value="logs" className="rounded-premium-full font-bold">Monitor de Webhooks</TabsTrigger>
+                  <TabsTrigger value="alerts" className="rounded-premium-full font-bold">Alertas e Relatórios</TabsTrigger>
                 </TabsList>
               </div>
+
+              <TabsContent value="alerts">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                    <h4 className="font-bold mb-4 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-red-500" />
+                      Alertas Recentes
+                    </h4>
+                    <WebhookAlerts />
+                  </div>
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                    <h4 className="font-bold mb-4 flex items-center gap-2">
+                      <Icons.FileText className="w-4 h-4 text-primary" />
+                      Relatórios e Exportação
+                    </h4>
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">Gere relatórios consolidados de falhas, reprocessamentos e transações.</p>
+                      <div className="flex flex-wrap gap-2">
+                        <Button onClick={exportCSV} className="rounded-premium-full">Exportar CSV</Button>
+                        <Button onClick={exportPDF} variant="outline" className="rounded-premium-full">Gerar Relatório PDF</Button>
+                        <Button onClick={generateMonthlyReport} variant="secondary" className="rounded-premium-full">Relatório Mensal PDF</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
 
               <TabsContent value="tests">
                 <div className="bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30 text-center">
@@ -482,7 +583,7 @@ const UpgradePage: React.FC = () => {
                                     className="h-7 px-2 text-[10px] font-bold uppercase text-primary"
                                   >
                                     <RefreshCcw className={`w-3 h-3 mr-1 ${isReprocessing === log.id ? 'animate-spin' : ''}`} />
-                                    Reprocessar
+                                    Reprocessar {log.retry_count > 0 && `(#${log.retry_count})`}
                                   </Button>
                                 )}
                               </TableCell>

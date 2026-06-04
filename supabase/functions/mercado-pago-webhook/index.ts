@@ -154,6 +154,23 @@ serve(async (req) => {
     })
   } catch (error) {
     console.error('Webhook error:', error)
+    
+    // Categorize error for alerts
+    let alertType = 'unknown_error'
+    if (error.message.includes('Timeout')) alertType = 'timeout'
+    if (error.message.includes('signature')) alertType = 'invalid_signature'
+    if (error.message.includes('database') || error.message.includes('Simulated Database Error')) alertType = 'db_error'
+
+    // Track alert in DB (using RPC to avoid exposing complex logic here)
+    try {
+      await supabase.rpc('track_webhook_alert', { 
+        p_type: alertType, 
+        p_message: error.message 
+      })
+    } catch (alertErr) {
+      console.error('Failed to track alert:', alertErr)
+    }
+
     if (logId) {
       await supabase.from('webhook_logs').update({ 
         status: 'failed', 

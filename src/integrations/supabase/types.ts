@@ -2450,6 +2450,33 @@ export type Database = {
           },
         ]
       }
+      webhook_alerts: {
+        Row: {
+          alert_type: string
+          count: number | null
+          created_at: string | null
+          id: string
+          last_occurrence: string | null
+          message: string
+        }
+        Insert: {
+          alert_type: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          last_occurrence?: string | null
+          message: string
+        }
+        Update: {
+          alert_type?: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          last_occurrence?: string | null
+          message?: string
+        }
+        Relationships: []
+      }
       webhook_logs: {
         Row: {
           created_at: string | null
@@ -2461,6 +2488,7 @@ export type Database = {
           payload: Json | null
           processed_at: string | null
           provider: string
+          retry_count: number | null
           status: string
         }
         Insert: {
@@ -2473,6 +2501,7 @@ export type Database = {
           payload?: Json | null
           processed_at?: string | null
           provider: string
+          retry_count?: number | null
           status: string
         }
         Update: {
@@ -2485,6 +2514,7 @@ export type Database = {
           payload?: Json | null
           processed_at?: string | null
           provider?: string
+          retry_count?: number | null
           status?: string
         }
         Relationships: []
@@ -2878,6 +2908,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      track_webhook_alert: {
+        Args: { p_message: string; p_type: string }
+        Returns: undefined
       }
     }
     Enums: {
