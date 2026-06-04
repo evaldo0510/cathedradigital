@@ -395,42 +395,52 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-center mb-spacing-xl">
-              <div className="flex bg-primary/[0.02] p-spacing-2xs rounded-premium-full border border-primary/5">
-                {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-                  <Button
-                    key={t}
-                    variant="ghost"
-                    onClick={() => setTestament(t)}
-                    className={`px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.2em] transition-all ${
-                      testament === t ? 'bg-background text-primary shadow-premium' : 'text-muted-foreground/30'
-                    }`}
-                  >
-                    {t}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-spacing-xl">
-              {filteredCategories.map(cat => (
-                <div key={cat.name} className="space-y-spacing-md">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">{cat.name}</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-sm">
-                    {cat.books.map(book => (
-                      <CathedraCard key={book.abbr} variant="interactive" onClick={() => selectBook(book)}>
-                        <div className="p-spacing-md flex items-center justify-between">
-                          <div>
-                            <span className="text-[7px] font-black tracking-widest text-primary/20">{book.abbr}</span>
-                            <h3 className="text-premium-xs font-bold">{book.name}</h3>
-                          </div>
-                          <Icons.ChevronRight className="w-spacing-sm h-spacing-sm opacity-20" />
-                        </div>
-                      </CathedraCard>
+            <div className="flex flex-col md:flex-row gap-spacing-xl">
+              <div className="w-full md:w-1/3 shrink-0">
+                <div className="sticky top-24 space-y-spacing-md">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">Testamento</h4>
+                  <div className="flex flex-col bg-primary/[0.02] p-spacing-2xs rounded-premium border border-primary/5">
+                    {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
+                      <Button
+                        key={t}
+                        variant="ghost"
+                        onClick={() => setTestament(t)}
+                        className={`justify-start px-spacing-xl py-spacing-md h-auto rounded-premium text-[9px] font-black uppercase tracking-[0.2em] transition-all ${
+                          testament === t ? 'bg-background text-primary shadow-premium' : 'text-muted-foreground/30 hover:bg-primary/[0.02]'
+                        }`}
+                      >
+                        {t}
+                      </Button>
                     ))}
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="flex-1 space-y-spacing-2xl">
+                {filteredCategories.map(cat => (
+                  <div key={cat.name} className="space-y-spacing-lg">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs">{cat.name}</h4>
+                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                      {cat.books.map(book => (
+                        <button 
+                          key={book.abbr} 
+                          onClick={() => selectBook(book)}
+                          className="group flex items-center justify-between p-spacing-lg bg-background hover:bg-primary/[0.02] transition-colors text-left"
+                        >
+                          <div className="flex items-baseline gap-spacing-md">
+                            <span className="text-[8px] font-black tracking-widest text-primary/20 w-8">{book.abbr}</span>
+                            <h3 className="text-premium-sm font-bold group-hover:text-primary transition-colors">{book.name}</h3>
+                          </div>
+                          <div className="flex items-center gap-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[8px] font-serif italic text-primary/20">{book.chapters} capítulos</span>
+                            <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/20" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </ContemplativeLayout>
@@ -438,21 +448,35 @@ const Bible: React.FC = () => {
 
       {viewMode === 'chapters' && selectedBook && (
         <ContemplativeLayout
-          subtitle="Selectio Capitulorum"
+          subtitle="Sumário do Livro"
           title={selectedBook.name}
           icon={Icons.Bible}
+          maxW="max-w-prose"
         >
-          <div className="w-full space-y-spacing-3xl pb-spacing-4xl">
-             <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
-               ← Voltar aos Livros
-             </Button>
-             <div className="grid grid-cols-5 sm:grid-cols-10 gap-spacing-xs">
-               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-                 <CathedraCard key={ch} variant="interactive" onClick={() => selectChapter(ch)} className="aspect-square flex items-center justify-center">
-                   <span className="text-premium-sm font-display">{ch}</span>
-                 </CathedraCard>
-               ))}
-             </div>
+          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+            <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 mb-spacing-xl">
+              ← Todos os Livros
+            </Button>
+            
+            <div className="space-y-spacing-md">
+              <div className="flex items-center justify-between px-spacing-md border-b border-primary/5 pb-spacing-sm">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Selecione o Capítulo</h4>
+                <span className="text-[9px] font-serif italic text-primary/20">{selectedBook.chapters} capítulos disponíveis</span>
+              </div>
+              
+              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                  <button 
+                    key={ch} 
+                    onClick={() => selectChapter(ch)} 
+                    className="aspect-square flex flex-col items-center justify-center bg-background hover:bg-primary/5 transition-all group"
+                  >
+                    <span className="text-premium-sm font-display group-hover:scale-110 transition-transform">{ch}</span>
+                    <span className="text-[6px] font-black uppercase tracking-tighter opacity-0 group-hover:opacity-20 transition-opacity mt-1">Cap.</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </ContemplativeLayout>
       )}
