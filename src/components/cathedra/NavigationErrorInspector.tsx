@@ -1,6 +1,8 @@
 import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+
 import { supabase } from '@/integrations/supabase/client';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
@@ -35,8 +37,24 @@ const NavigationErrorInspector: React.FC = () => {
   const [activeTab, setActiveTab] = useState('errors');
   const [auditFilterUser, setAuditFilterUser] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [auditMode, setAuditMode] = useState(false);
   const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string }>>({});
   const navigate = useNavigate();
+
+  // Métricas
+  const metrics = {
+    total: errors.length,
+    broken: Object.values(evidenceStatus).filter(s => !s.ok).length,
+    ok: Object.values(evidenceStatus).filter(s => s.ok).length,
+    404: Object.values(evidenceStatus).filter(s => s.reason === 'HTTP 404').length,
+    403: Object.values(evidenceStatus).filter(s => s.reason === 'HTTP 403').length,
+  };
+
+  const generateSecureLink = (err: any) => {
+    const baseUrl = window.location.origin;
+    const token = btoa(`${err.id}-${Date.now() + 3600000}`).substring(0, 16);
+    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${Date.now() + 3600000}`;
+  };
 
   const checkEvidenceHealth = async (errorLogs: any[]) => {
     const health: Record<string, { ok: boolean; reason?: string; detail?: string }> = {};
@@ -254,9 +272,19 @@ const NavigationErrorInspector: React.FC = () => {
             <p className="text-muted-foreground text-premium-sm">Diagnóstico de TypeErrors e falhas de navegação mobile.</p>
           </div>
           <div className="flex items-center gap-spacing-sm">
+            <CathedraButton 
+              variant={auditMode ? "primary" : "outline"} 
+              size="sm" 
+              onClick={() => setAuditMode(!auditMode)}
+              className={cn("rounded-premium-full transition-all duration-300", auditMode && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-premium")}
+            >
+              <Icons.ShieldCheck className="w-4 h-4 mr-2" /> 
+              {auditMode ? "Modo Auditoria Ativo" : "Modo Auditoria"}
+            </CathedraButton>
+
             {activeTab === 'errors' && (
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10">
+                <SelectTrigger className={cn("w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10", auditMode && statusFilter !== 'all' && "border-primary/50 bg-primary/5")}>
                   <SelectValue placeholder="Status Link" />
                 </SelectTrigger>
                 <SelectContent>
@@ -273,10 +301,10 @@ const NavigationErrorInspector: React.FC = () => {
                 placeholder="Filtrar por Inspetor..." 
                 value={auditFilterUser}
                 onChange={(e) => setAuditFilterUser(e.target.value)}
-                className="max-w-[150px] rounded-premium-full"
+                className={cn("max-w-[150px] rounded-premium-full", auditMode && auditFilterUser && "border-primary/50 bg-primary/5")}
               />
             )}
-            <div className="flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9">
+            <div className={cn("flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9", auditMode && (dateRange.from || dateRange.to) && "border-primary/50 bg-primary/5")}>
               <Input 
                 type="date"
                 value={dateRange.from}
@@ -350,7 +378,41 @@ const NavigationErrorInspector: React.FC = () => {
         </div>
       </div>
 
+      {auditMode && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md animate-in slide-in-from-top duration-500">
+          <CathedraCard className="p-spacing-md flex items-center gap-spacing-md bg-primary/5 border-primary/20">
+            <div className="p-2 bg-primary/10 rounded-premium-lg text-primary"><Icons.Activity className="w-5 h-5" /></div>
+            <div>
+              <p className="text-[10px] uppercase font-black opacity-50">Total Ocorrências</p>
+              <p className="text-premium-xl font-bold">{metrics.total}</p>
+            </div>
+          </CathedraCard>
+          <CathedraCard className="p-spacing-md flex items-center gap-spacing-md bg-orange-500/5 border-orange-500/20">
+            <div className="p-2 bg-orange-500/10 rounded-premium-lg text-orange-600"><Icons.AlertTriangle className="w-5 h-5" /></div>
+            <div>
+              <p className="text-[10px] uppercase font-black opacity-50">Links Quebrados</p>
+              <p className="text-premium-xl font-bold">{metrics.broken}</p>
+            </div>
+          </CathedraCard>
+          <CathedraCard className="p-spacing-md flex items-center gap-spacing-md bg-green-500/5 border-green-500/20">
+            <div className="p-2 bg-green-500/10 rounded-premium-lg text-green-600"><Icons.CheckCircle className="w-5 h-5" /></div>
+            <div>
+              <p className="text-[10px] uppercase font-black opacity-50">Integridade Ok</p>
+              <p className="text-premium-xl font-bold">{metrics.ok}</p>
+            </div>
+          </CathedraCard>
+          <CathedraCard className="p-spacing-md flex items-center gap-spacing-md bg-red-500/5 border-red-500/20">
+            <div className="p-2 bg-red-500/10 rounded-premium-lg text-red-600"><Icons.ShieldAlert className="w-5 h-5" /></div>
+            <div>
+              <p className="text-[10px] uppercase font-black opacity-50">Falhas 404/403</p>
+              <p className="text-premium-xl font-bold">{metrics['404'] + metrics['403']}</p>
+            </div>
+          </CathedraCard>
+        </div>
+      )}
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-spacing-lg">
+
         <TabsList className="bg-muted/30 p-1 rounded-premium-full border border-border/10">
           <TabsTrigger value="errors" className="rounded-premium-full text-premium-xs font-black uppercase tracking-widest px-spacing-xl">
             <Icons.Activity className="w-3 h-3 mr-2" /> Falhas Detectadas
@@ -390,6 +452,24 @@ const NavigationErrorInspector: React.FC = () => {
 
                     <div className="text-premium-sm font-bold truncate text-primary/80">{err.metadata?.route || '/'}</div>
                     <div className="text-[10px] font-mono opacity-60 truncate mt-1">ID: {err.metadata?.requestId || err.id.split('-')[0]}</div>
+                    
+                    {auditMode && (
+                      <div className="mt-2 flex gap-2">
+                        <CathedraButton 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const link = generateSecureLink(err);
+                            navigator.clipboard.writeText(link);
+                            toast.success("Link seguro copiado!");
+                          }}
+                          className="h-6 px-2 text-[8px] rounded-premium-full bg-primary/5 hover:bg-primary/10"
+                        >
+                          <Icons.Share2 className="w-2 h-2 mr-1" /> Link Seguro
+                        </CathedraButton>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {filteredErrors.length === 0 && !loading && (
@@ -407,11 +487,26 @@ const NavigationErrorInspector: React.FC = () => {
                     <h2 className="text-premium-xl font-bold text-primary">Detalhes da Ocorrência</h2>
                     <p className="text-muted-foreground text-premium-xs font-mono">{selectedError.metadata?.requestId}</p>
                   </div>
-                  <div className="text-right">
-                    <Badge className="rounded-premium-full mb-1">{selectedError.metadata?.viewport || 'unknown'}</Badge>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge className="rounded-premium-full">{selectedError.metadata?.viewport || 'unknown'}</Badge>
+                    {auditMode && (
+                       <CathedraButton 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => {
+                          const link = generateSecureLink(selectedError);
+                          navigator.clipboard.writeText(link);
+                          toast.success("Link seguro copiado!");
+                        }}
+                        className="h-7 px-3 text-[10px] rounded-premium-full"
+                      >
+                        <Icons.Lock className="w-3 h-3 mr-2" /> Compartilhar Evidência
+                      </CathedraButton>
+                    )}
                     <div className="text-[10px] opacity-40 uppercase font-black">{format(new Date(selectedError.created_at), 'PPPP p')}</div>
                   </div>
                 </div>
+
 
                 <div className="grid grid-cols-2 gap-spacing-md">
                   <div className="p-spacing-md bg-muted/20 rounded-premium-lg border border-border/10">
