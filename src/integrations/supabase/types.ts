@@ -1888,6 +1888,7 @@ export type Database = {
           id: string
           inspected_at: string | null
           inspector_id: string | null
+          masked_ip: string | null
           request_id: string
         }
         Insert: {
@@ -1895,6 +1896,7 @@ export type Database = {
           id?: string
           inspected_at?: string | null
           inspector_id?: string | null
+          masked_ip?: string | null
           request_id: string
         }
         Update: {
@@ -1902,6 +1904,7 @@ export type Database = {
           id?: string
           inspected_at?: string | null
           inspector_id?: string | null
+          masked_ip?: string | null
           request_id?: string
         }
         Relationships: []
@@ -2667,10 +2670,9 @@ export type Database = {
     }
     Functions: {
       check_daily_reminders: { Args: never; Returns: undefined }
-      cleanup_telemetry_logs: {
-        Args: { retention_days?: number }
-        Returns: undefined
-      }
+      cleanup_telemetry_logs:
+        | { Args: never; Returns: undefined }
+        | { Args: { retention_days?: number }; Returns: undefined }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
@@ -2682,6 +2684,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mask_ip: { Args: { ip: string }; Returns: string }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
