@@ -16,6 +16,8 @@ import DevDataInspector from './DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import ContemplativeLayout from './ContemplativeLayout';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -89,6 +91,8 @@ function useRecommendedJourney(userId: string | undefined, profile: any, userLev
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
+  useRenderPerf('Sanctuarium (Home)', 15);
+
   const { user, profile, userLevel } = useAuth();
   const { t, lang } = useContext(LangContext);
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);

@@ -24,13 +24,14 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md",
-        sm: "h-spacing-xl px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
-        xs: "h-spacing-xl px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
+        sm: "h-[44px] md:h-spacing-xl px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
+        xs: "h-[44px] md:h-spacing-xl px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
         lg: "h-spacing-3xl px-spacing-2xl text-premium-sm [&_svg]:size-spacing-lg",
         xl: "h-spacing-3xl px-spacing-3xl text-premium-base [&_svg]:size-spacing-lg",
         icon: "h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-sm": "h-spacing-xl w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-xs": "h-spacing-xl w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
+        "icon-sm": "h-[44px] w-[44px] md:h-spacing-xl md:w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-xs": "h-[44px] w-[44px] md:h-spacing-xl md:w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
+
       },
     },
     defaultVariants: {

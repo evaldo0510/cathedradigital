@@ -16,6 +16,8 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 import ContemplativeLayout from './ContemplativeLayout';
 import { ListSkeleton, SearchResultSkeleton, TagSkeleton } from './SacredSkeleton';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+
 
 
 type Saint = Tables<'saints'>;
@@ -28,10 +30,29 @@ import { useVisualViewport } from '@/hooks/useVisualViewport';
 
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
+  useRenderPerf('Logos Search', 20);
+
   useAutoFocus();
   const [query, setQuery] = useState('');
   const viewportHeight = useVisualViewport();
+  const [lastHeight, setLastHeight] = useState(viewportHeight);
+  const [savedScroll, setSavedScroll] = useState(0);
   
+  useEffect(() => {
+    if (lastHeight && viewportHeight) {
+      const delta = viewportHeight - lastHeight;
+      // Keyboard Closing (viewport height increases significantly)
+      if (delta > 150) {
+        window.scrollTo({ top: savedScroll, behavior: 'smooth' });
+      } 
+      // Keyboard Opening (viewport height decreases significantly)
+      else if (delta < -150) {
+        setSavedScroll(window.scrollY);
+      }
+    }
+    setLastHeight(viewportHeight);
+  }, [viewportHeight, lastHeight, savedScroll]);
+
   useEffect(() => {
     if (query.length >= 2 && viewportHeight && viewportHeight < 600) {
       const container = document.getElementById('search-results-container');
@@ -40,6 +61,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       }
     }
   }, [query, viewportHeight]);
+
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
@@ -243,7 +265,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     onKeyDown={(e) => handleTagsKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${t.slug}`))}
                     tabIndex={tagsActiveIndex === idx ? 0 : -1}
                     data-roving-item="true"
-                    className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
+                    className="inline-flex items-center gap-spacing-2xs px-spacing-md py-spacing-sm min-h-[48px] md:min-h-0 rounded-premium-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
                     aria-label={`Tema: ${t.label}`}
                   >
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}

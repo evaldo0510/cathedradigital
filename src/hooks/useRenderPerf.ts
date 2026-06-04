@@ -1,52 +1,95 @@
 import { useEffect, useRef } from 'react';
 import * as Sentry from "@sentry/react";
+import { onCLS, onINP, onLCP, onFCP } from 'web-vitals';
+import { useLocation } from 'react-router-dom';
 
 /**
  * A hook to monitor component render performance and re-render counts.
- * Also measures CLS and transition stability.
+ * Also measures CLS, INP, and LCP for performance regression tracking.
  */
 export function useRenderPerf(componentName: string, threshold = 5) {
   const renderCount = useRef(0);
   const startTime = useRef(performance.now());
-  const clsValue = useRef(0);
+  const location = useLocation();
+  const metrics = useRef({
+    cls: 0,
+    inp: 0,
+    lcp: 0,
+    fcp: 0,
+    tbt: 0
+  });
 
   renderCount.current++;
 
   useEffect(() => {
-    // CLS Measurement (Simplified Web Vitals)
-    let cls = 0;
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries() as any[]) {
-        if (!entry.hadRecentInput) {
-          cls += entry.value;
-        }
-      }
-      clsValue.current = cls;
+    // Track Web Vitals
+    const unsubCLS = onCLS((metric) => {
+      metrics.current.cls = metric.value;
+    });
+    const unsubINP = onINP((metric) => {
+      metrics.current.inp = metric.value;
+    });
+    const unsubLCP = onLCP((metric) => {
+      metrics.current.lcp = metric.value;
+    });
+    const unsubFCP = onFCP((metric) => {
+      metrics.current.fcp = metric.value;
     });
 
-    observer.observe({ type: 'layout-shift', buffered: true });
+    // Measure TBT (Estimated from Long Tasks during session)
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.duration > 50) {
+          metrics.current.tbt += (entry.duration - 50);
+        }
+      }
+    });
+
+    try {
+      observer.observe({ type: 'longtask', buffered: true });
+    } catch (e) {
+      // Browser might not support longtask
+    }
 
     return () => {
       observer.disconnect();
+
+
       const duration = performance.now() - startTime.current;
+      const route = location.pathname;
       
+      const report = {
+        component: componentName,
+        route,
+        duration: `${duration.toFixed(2)}ms`,
+        renders: renderCount.current,
+        cls: metrics.current.cls.toFixed(4),
+        inp: `${metrics.current.inp.toFixed(2)}ms`,
+        lcp: `${metrics.current.lcp.toFixed(2)}ms`,
+        tbt: `${metrics.current.tbt.toFixed(2)}ms`,
+      };
+
       if (import.meta.env.DEV) {
-        console.log(`[Perf] ${componentName}: ${duration.toFixed(2)}ms, CLS: ${clsValue.current.toFixed(4)}, Renders: ${renderCount.current}`);
+        console.group(`[Perf Audit] ${componentName} @ ${route}`);
+        console.table(report);
+        console.groupEnd();
       }
 
-      if (clsValue.current > 0.1 || renderCount.current > threshold) {
+      // Log to Sentry if metrics exceed thresholds
+      if (metrics.current.cls > 0.1 || metrics.current.inp > 200 || renderCount.current > threshold) {
         Sentry.addBreadcrumb({
-          category: 'performance',
-          message: `${componentName} Metrics: CLS=${clsValue.current.toFixed(4)}, Renders=${renderCount.current}`,
+          category: 'performance_audit',
+          message: `Perf Regression in ${componentName}`,
           level: 'warning',
-          data: { componentName, renderCount: renderCount.current, duration, cls: clsValue.current }
+          data: report
         });
       }
     };
-  }, [componentName, threshold]);
+  }, [componentName, threshold, location.pathname]);
 
   useEffect(() => {
     startTime.current = performance.now();
   });
 }
+
 
