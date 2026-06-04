@@ -74,6 +74,7 @@ const defaultSettings: ReadingSettings = {
   contemplativeMode: false,
   autoHideUI: false,
   focusMode: false,
+  immersiveMode: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
   sideMargins: 'standard',
