@@ -78,12 +78,20 @@ const WebhookAlerts = () => {
           <p className="text-sm text-muted-foreground italic">Sem alertas críticos no momento.</p>
         ) : (
           alerts.map(alert => (
-            <div key={alert.id} className="p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
-              <AlertCircle className="w-4 h-4 text-red-500 mt-1 shrink-0" />
+            <div key={alert.id} className={`p-3 border rounded-xl flex items-start gap-3 ${
+              alert.severity === 'critical' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+            }`}>
+              <AlertCircle className={`w-4 h-4 mt-1 shrink-0 ${
+                alert.severity === 'critical' ? 'text-red-500' : 'text-amber-500'
+              }`} />
               <div>
-                <p className="text-xs font-bold text-red-700 uppercase">{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
-                <p className="text-[11px] text-red-600 line-clamp-2">{alert.message}</p>
-                <p className="text-[10px] text-red-400 mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
+                <p className={`text-xs font-bold uppercase ${
+                  alert.severity === 'critical' ? 'text-red-700' : 'text-amber-700'
+                }`}>{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
+                <p className={`text-[11px] line-clamp-2 ${
+                  alert.severity === 'critical' ? 'text-red-600' : 'text-amber-600'
+                }`}>{alert.message}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
               </div>
             </div>
           ))
@@ -104,12 +112,59 @@ const WebhookAlerts = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="1">1% (Crítico)</SelectItem>
                   <SelectItem value="5">5%</SelectItem>
                   <SelectItem value="10">10%</SelectItem>
                   <SelectItem value="20">20%</SelectItem>
                   <SelectItem value="50">50%</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Assinaturas Inválidas p/ Alerta (%)</label>
+              <Select 
+                value={(settings.alert_threshold_invalid_sig * 100).toString()} 
+                onValueChange={(val) => updateSettings('alert_threshold_invalid_sig', parseFloat(val) / 100)}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-lg">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Qualquer falha (0%)</SelectItem>
+                  <SelectItem value="1">1%</SelectItem>
+                  <SelectItem value="5">5%</SelectItem>
+                  <SelectItem value="10">10%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Janela de Observação (min)</label>
+              <Select 
+                value={(settings.alert_window_minutes || 60).toString()} 
+                onValueChange={(val) => updateSettings('alert_window_minutes', parseInt(val))}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-lg">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15 minutos</SelectItem>
+                  <SelectItem value="60">1 hora</SelectItem>
+                  <SelectItem value="360">6 horas</SelectItem>
+                  <SelectItem value="1440">24 horas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">E-mail para Alertas Críticos</label>
+              <div className="flex gap-2">
+                <input 
+                  type="email" 
+                  placeholder="admin@exemplo.com"
+                  className="flex h-8 w-full rounded-lg border border-input bg-background px-3 py-1 text-xs shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  defaultValue={settings.alert_notification_email || ''}
+                  onBlur={(e) => updateSettings('alert_notification_email', e.target.value)}
+                />
+              </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Máximo de Retentativas</label>
@@ -580,6 +635,9 @@ const UpgradePage: React.FC = () => {
                         </Button>
                         <Button variant="outline" size="sm" onClick={exportPDF} className="rounded-premium-full text-[10px] font-bold uppercase">
                           <Icons.FileText className="w-3 h-3 mr-1" /> PDF
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={generateMonthlyReport} className="rounded-premium-full text-[10px] font-bold uppercase border-primary/20 text-primary">
+                          <Icons.FileText className="w-3 h-3 mr-1" /> Relatório Mensal
                         </Button>
                         <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs} className="rounded-premium-full">
                           <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />

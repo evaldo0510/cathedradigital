@@ -83,28 +83,64 @@ const PremiumAuditTrail: React.FC = () => {
 
   const exportTimelinePDF = () => {
     const doc = new jsPDF();
-    doc.text("Trilha de Auditoria Premium - Cathedra", 14, 15);
-    doc.setFontSize(10);
-    doc.text(`Usuário: ${user?.email}`, 14, 22);
     
+    // Header
+    doc.setFillColor(139, 92, 246); // Primary color
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("Cathedra Premium", 14, 25);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text("Relatório de Auditoria e Transações", 14, 32);
+    
+    // Summary Info
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(10);
+    doc.text(`Usuário: ${user?.email}`, 14, 50);
+    doc.text(`ID do Usuário: ${user?.id}`, 14, 55);
+    doc.text(`Data do Relatório: ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 60);
+    
+    const approvedCount = auditLogs.filter(l => l.status === 'approved' || l.status === 'success').length;
+    doc.text(`Total de Eventos: ${auditLogs.length}`, 140, 50);
+    doc.text(`Eventos com Sucesso: ${approvedCount}`, 140, 55);
+
     const tableData = auditLogs.map(item => [
-      format(item.date, "dd/MM/yyyy HH:mm"),
+      format(item.date, "dd/MM/yy HH:mm"),
       item.type === 'transaction' ? 'Transação' : 'Webhook',
       item.event_type || (item.status === 'approved' ? 'Ativação PRO' : 'Pagamento'),
       item.status.toUpperCase(),
       item.payment_id || item.event_id || '-',
-      item.error_message || '-'
+      item.error_message || (item.amount ? `R$ ${item.amount}` : '-')
     ]);
 
     (doc as any).autoTable({
-      head: [['Data', 'Tipo', 'Evento', 'Status', 'ID', 'Detalhes']],
+      head: [['Data', 'Tipo', 'Evento', 'Status', 'ID Referência', 'Detalhes']],
       body: tableData,
-      startY: 28,
-      theme: 'grid',
-      styles: { fontSize: 8 }
+      startY: 70,
+      theme: 'striped',
+      headStyles: { fillColor: [139, 92, 246], textColor: 255, fontStyle: 'bold' },
+      styles: { fontSize: 8, cellPadding: 3 },
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 35 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 35 },
+        5: { cellWidth: 'auto' }
+      }
     });
     
-    doc.save(`auditoria_premium_${user?.id}.pdf`);
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Página ${i} de ${pageCount} · Documento gerado automaticamente pelo Sistema Cathedra`, 105, 290, { align: 'center' });
+    }
+
+    doc.save(`auditoria_premium_${user?.id}_${format(new Date(), 'yyyyMMdd')}.pdf`);
     toast.success('Linha do tempo exportada (PDF)');
   };
 

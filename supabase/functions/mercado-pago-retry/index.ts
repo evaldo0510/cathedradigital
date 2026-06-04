@@ -29,28 +29,35 @@ serve(async (req) => {
     }
 
     console.log(`Processing ${pendingLogs.length} pending retries...`)
-    const results = []
+    
+    // Process in parallel with a limit to avoid overloading
+    const batchSize = 5;
+    const results = [];
+    
+    for (let i = 0; i < pendingLogs.length; i += batchSize) {
+      const batch = pendingLogs.slice(i, i + batchSize);
+      const batchPromises = batch.map(async (log) => {
+        try {
+          console.log(`Retrying log ${log.id} (Attempt #${log.retry_count + 1})`)
+          
+          const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
+            body: log.payload,
+            headers: {
+              'x-request-id': log.event_id,
+              'x-is-retry': 'true',
+              'x-retry-log-id': log.id
+            }
+          })
 
-    for (const log of pendingLogs) {
-      try {
-        console.log(`Retrying log ${log.id} (Attempt #${log.retry_count + 1})`)
-        
-        // Call the webhook function again
-        // We use service role to call it internally
-        const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
-          body: log.payload,
-          headers: {
-            'x-request-id': log.event_id,
-            'x-is-retry': 'true',
-            'x-retry-log-id': log.id
-          }
-        })
-
-        results.push({ id: log.id, success: !error, error: error?.message })
-      } catch (err) {
-        console.error(`Error retrying log ${log.id}:`, err)
-        results.push({ id: log.id, success: false, error: err.message })
-      }
+          return { id: log.id, success: !error, error: error?.message };
+        } catch (err) {
+          console.error(`Error retrying log ${log.id}:`, err)
+          return { id: log.id, success: false, error: err.message };
+        }
+      });
+      
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
     }
 
     return new Response(JSON.stringify({ processed: results.length, results }), {
