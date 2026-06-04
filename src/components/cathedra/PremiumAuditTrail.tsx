@@ -203,6 +203,7 @@ const PremiumAuditTrail: React.FC = () => {
         ))}
       </div>
     </ScrollArea>
+    </div>
   );
 };
 
