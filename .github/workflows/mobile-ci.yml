@@ -54,9 +54,11 @@ jobs:
                 "fields": [
                   { "title": "Commit", "value": "${GITHUB_SHA:0:7}", "short": true },
                   { "title": "Action ID", "value": "${GITHUB_RUN_ID}", "short": true },
+                  { "title": "Evidence Artifacts", "value": "<${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts|Download Screenshots & Logs>", "short": false },
                   { "title": "Status", "value": "FAILURE", "short": true },
-                  { "title": "Evidence", "value": "Screenshots & Masked Stack Traces available in CI artifacts.", "short": false }
+                  { "title": "Security", "value": "PII Redacted", "short": true }
                 ],
+
                 "footer": "AD MAIOREM DEI GLORIAM — PII Protected Stability Guard",
                 "ts": $(date +%s)
               }

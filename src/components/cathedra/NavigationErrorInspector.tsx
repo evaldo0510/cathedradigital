@@ -84,21 +84,29 @@ const NavigationErrorInspector: React.FC = () => {
   const downloadReport = (type: 'errors' | 'audit', formatExt: 'json' | 'csv') => {
     const dataToExport = type === 'errors' ? filteredErrors : filteredAuditLogs;
     const fileName = type === 'errors' ? 'ui-failures' : 'inspection-audit';
+    const SCHEMA_VERSION = 'v2.1'; // Versionamento do formato de exportação
     
     let content = '';
     if (formatExt === 'json') {
-      content = JSON.stringify(dataToExport, null, 2);
+      content = JSON.stringify({
+        version: SCHEMA_VERSION,
+        exported_at: new Date().toISOString(),
+        data: dataToExport
+      }, null, 2);
     } else {
       if (type === 'errors') {
-        content = "ID,RequestID,Data,Rota,Mensagem,Viewport,Dispositivo,EvidenciaURL\n" + dataToExport.map(e => 
+        content = `FormatVersion,${SCHEMA_VERSION}\n` +
+          "ID,RequestID,Data,Rota,Mensagem,Viewport,Dispositivo,EvidenciaURL\n" + dataToExport.map(e => 
           `${e.id},${e.metadata?.requestId || ''},${e.created_at},"${e.metadata?.route || ''}","${(e.metadata?.message || '').replace(/"/g, '""')}",${e.metadata?.viewport || ''},${e.metadata?.isMobile ? 'Mobile' : 'Desktop'},"${e.metadata?.screenshotUrl || ''}"`
         ).join("\n");
       } else {
-        content = "ID,Inspetor,RequestID,DataHora,IP\n" + dataToExport.map(a => 
+        content = `FormatVersion,${SCHEMA_VERSION}\n` +
+          "ID,Inspetor,RequestID,DataHora,IP\n" + dataToExport.map(a => 
           `${a.id},"${a.profiles?.name || 'Admin'}",${a.request_id},${a.inspected_at},${a.masked_ip}`
         ).join("\n");
       }
     }
+
 
     
     const blob = new Blob([content], { type: formatExt === 'json' ? 'application/json' : 'text/csv' });
@@ -150,11 +158,20 @@ const NavigationErrorInspector: React.FC = () => {
             <CathedraButton 
               variant="outline" 
               size="sm" 
+              onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'json')} 
+              className="rounded-premium-full mr-2"
+            >
+              <Icons.Code className="w-4 h-4 mr-2" /> JSON
+            </CathedraButton>
+            <CathedraButton 
+              variant="outline" 
+              size="sm" 
               onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
               className="rounded-premium-full"
             >
-              <Icons.Download className="w-4 h-4 mr-2" /> Exportar
+              <Icons.Download className="w-4 h-4 mr-2" /> CSV
             </CathedraButton>
+
              <Input 
               placeholder="Buscar..." 
 
