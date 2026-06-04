@@ -5,9 +5,14 @@ import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Webhook, CreditCard, Activity, Zap, RefreshCcw, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Webhook, CreditCard, Activity, Zap, RefreshCcw, AlertCircle, Download, FileJson } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import Papa from 'papaparse';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const PremiumAuditTrail: React.FC = () => {
   const { user } = useAuth();
@@ -56,6 +61,53 @@ const PremiumAuditTrail: React.FC = () => {
     fetchAuditTrail();
   }, [user]);
 
+  const exportTimelineCSV = () => {
+    const dataToExport = auditLogs.map(item => ({
+      data: format(item.date, "dd/MM/yyyy HH:mm"),
+      tipo: item.type === 'transaction' ? 'Transação' : 'Webhook',
+      evento: item.event_type || (item.status === 'approved' ? 'Ativação PRO' : 'Pagamento'),
+      status: item.status.toUpperCase(),
+      id: item.payment_id || item.event_id,
+      valor: item.amount || '-',
+      erro: item.error_message || '-'
+    }));
+    
+    const csv = Papa.unparse(dataToExport);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `auditoria_premium_${user?.id}_${Date.now()}.csv`;
+    link.click();
+    toast.success('Linha do tempo exportada (CSV)');
+  };
+
+  const exportTimelinePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Trilha de Auditoria Premium - Cathedra", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Usuário: ${user?.email}`, 14, 22);
+    
+    const tableData = auditLogs.map(item => [
+      format(item.date, "dd/MM/yyyy HH:mm"),
+      item.type === 'transaction' ? 'Transação' : 'Webhook',
+      item.event_type || (item.status === 'approved' ? 'Ativação PRO' : 'Pagamento'),
+      item.status.toUpperCase(),
+      item.payment_id || item.event_id || '-',
+      item.error_message || '-'
+    ]);
+
+    (doc as any).autoTable({
+      head: [['Data', 'Tipo', 'Evento', 'Status', 'ID', 'Detalhes']],
+      body: tableData,
+      startY: 28,
+      theme: 'grid',
+      styles: { fontSize: 8 }
+    });
+    
+    doc.save(`auditoria_premium_${user?.id}.pdf`);
+    toast.success('Linha do tempo exportada (PDF)');
+  };
+
   if (loading) return <div className="p-4 text-center animate-pulse">Carregando trilha de auditoria...</div>;
 
   if (auditLogs.length === 0) return (
@@ -65,7 +117,26 @@ const PremiumAuditTrail: React.FC = () => {
   );
 
   return (
-    <ScrollArea className="h-[300px] pr-4">
+    <div className="space-y-4">
+      <div className="flex gap-2 mb-2">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="text-[10px] h-7 rounded-lg gap-1.5 border-primary/20 text-primary"
+          onClick={exportTimelineCSV}
+        >
+          <Download className="w-3 h-3" /> Exportar CSV
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="text-[10px] h-7 rounded-lg gap-1.5 border-primary/20 text-primary"
+          onClick={exportTimelinePDF}
+        >
+          <Icons.FileText className="w-3 h-3" /> Exportar PDF
+        </Button>
+      </div>
+      <ScrollArea className="h-[350px] pr-4">
       <div className="space-y-4 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-border before:h-full">
         {auditLogs.map((item, idx) => (
           <div key={idx} className="relative pl-10">

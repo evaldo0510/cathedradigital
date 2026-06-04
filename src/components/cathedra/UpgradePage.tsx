@@ -37,33 +37,99 @@ import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw, Activity } f
 
 const WebhookAlerts = () => {
   const [alerts, setAlerts] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   useEffect(() => {
-    const fetchAlerts = async () => {
-      const { data } = await supabase
-        .from('webhook_alerts')
-        .select('*')
-        .order('last_occurrence', { ascending: false })
-        .limit(5);
-      if (data) setAlerts(data);
-    };
-    fetchAlerts();
+    fetchData();
   }, []);
 
-  if (alerts.length === 0) return <p className="text-sm text-muted-foreground italic">Sem alertas críticos no momento.</p>;
+  const fetchData = async () => {
+    const [{ data: alertData }, { data: settingsData }] = await Promise.all([
+      supabase.from('webhook_alerts').select('*').order('last_occurrence', { ascending: false }).limit(5),
+      supabase.from('webhook_settings').select('*').single()
+    ]);
+    if (alertData) setAlerts(alertData);
+    if (settingsData) setSettings(settingsData);
+  };
+
+  const updateSettings = async (field: string, value: any) => {
+    setIsSaving(true);
+    const { error } = await supabase
+      .from('webhook_settings')
+      .update({ [field]: value, updated_at: new Date().toISOString() })
+      .eq('id', settings.id);
+    
+    if (error) toast.error('Erro ao salvar configurações');
+    else {
+      setSettings({ ...settings, [field]: value });
+      toast.success('Configuração atualizada');
+    }
+    setIsSaving(false);
+  };
+
+  if (alerts.length === 0 && !settings) return <p className="text-sm text-muted-foreground italic">Carregando...</p>;
 
   return (
-    <div className="space-y-3">
-      {alerts.map(alert => (
-        <div key={alert.id} className="p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
-          <AlertCircle className="w-4 h-4 text-red-500 mt-1 shrink-0" />
-          <div>
-            <p className="text-xs font-bold text-red-700 uppercase">{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
-            <p className="text-[11px] text-red-600 line-clamp-2">{alert.message}</p>
-            <p className="text-[10px] text-red-400 mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Alertas Ativos</h5>
+        {alerts.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic">Sem alertas críticos no momento.</p>
+        ) : (
+          alerts.map(alert => (
+            <div key={alert.id} className="p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+              <AlertCircle className="w-4 h-4 text-red-500 mt-1 shrink-0" />
+              <div>
+                <p className="text-xs font-bold text-red-700 uppercase">{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
+                <p className="text-[11px] text-red-600 line-clamp-2">{alert.message}</p>
+                <p className="text-[10px] text-red-400 mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {settings && (
+        <div className="space-y-4 pt-4 border-t border-border/50">
+          <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Limites e Retentativas</h5>
+          <div className="grid gap-4">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Taxa de Timeout p/ Alerta (%)</label>
+              <Select 
+                value={(settings.alert_threshold_timeout * 100).toString()} 
+                onValueChange={(val) => updateSettings('alert_threshold_timeout', parseFloat(val) / 100)}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-lg">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5%</SelectItem>
+                  <SelectItem value="10">10%</SelectItem>
+                  <SelectItem value="20">20%</SelectItem>
+                  <SelectItem value="50">50%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Máximo de Retentativas</label>
+              <Select 
+                value={settings.max_retries.toString()} 
+                onValueChange={(val) => updateSettings('max_retries', parseInt(val))}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-lg">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="3">3 tentativas</SelectItem>
+                  <SelectItem value="5">5 tentativas</SelectItem>
+                  <SelectItem value="10">10 tentativas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };
@@ -431,23 +497,35 @@ const UpgradePage: React.FC = () => {
 
               <TabsContent value="alerts">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6 shadow-sm">
                     <h4 className="font-bold mb-4 flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-red-500" />
-                      Alertas Recentes
+                      <Activity className="w-4 h-4 text-primary" />
+                      Status e Configurações
                     </h4>
                     <WebhookAlerts />
                   </div>
-                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6 shadow-sm">
                     <h4 className="font-bold mb-4 flex items-center gap-2">
                       <Icons.FileText className="w-4 h-4 text-primary" />
                       Relatórios e Exportação
                     </h4>
                     <div className="space-y-4">
-                      <p className="text-sm text-muted-foreground">Gere relatórios consolidados de falhas, reprocessamentos e transações.</p>
-                      <div className="flex flex-wrap gap-2">
-                        <Button onClick={exportCSV} className="rounded-premium-full">Exportar CSV</Button>
-                        <Button onClick={exportPDF} variant="outline" className="rounded-premium-full">Gerar Relatório PDF</Button>
+                      <p className="text-sm text-muted-foreground">Gere relatórios consolidados de falhas, reprocessamentos e transações por período.</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button onClick={exportCSV} className="rounded-xl h-12 gap-2" variant="outline">
+                          <Icons.Download className="w-4 h-4" /> CSV
+                        </Button>
+                        <Button onClick={exportPDF} className="rounded-xl h-12 gap-2" variant="outline">
+                          <Icons.FileText className="w-4 h-4" /> PDF
+                        </Button>
+                      </div>
+                      <Button onClick={generateMonthlyReport} className="w-full rounded-xl h-12 bg-primary/10 text-primary hover:bg-primary/20 border-none font-bold">
+                        Gerar Relatório Mensal PRO
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
                         <Button onClick={generateMonthlyReport} variant="secondary" className="rounded-premium-full">Relatório Mensal PDF</Button>
                       </div>
                     </div>
