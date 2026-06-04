@@ -38,7 +38,7 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
 
   console.error(`[${errorType.toUpperCase()}] ID: ${requestId}, Route: ${route}`, error, safeContext);
   
-  trackEvent('error', {
+  const properties = {
     type: errorType,
     requestId,
     route,
@@ -47,7 +47,9 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
     isMobile,
     viewport,
     ...safeContext
-  });
+  };
+
+  trackEvent('error', properties);
 
   return requestId;
 };
