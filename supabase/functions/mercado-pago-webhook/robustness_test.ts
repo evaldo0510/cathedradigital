@@ -1,8 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 import { assert, assertEquals } from "https://deno.land/std@0.168.0/testing/asserts.ts"
 
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || 'http://localhost:54321';
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || 'mock-key';
 const WEBHOOK_URL = `${SUPABASE_URL}/functions/v1/mercado-pago-webhook`;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
