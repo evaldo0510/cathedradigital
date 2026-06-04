@@ -29,7 +29,14 @@ jobs:
           TEST_VIEWPORTS: "320x568,375x667,414x896,768x1024"
           CI: true
 
+      - name: Verify PII Leak in Logs & Artifacts
+        run: |
+          # Fails if common PII patterns (emails/tokens) are found in logs
+          ! grep -rE "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" logs/ test-results/ || (echo "PII Leak Detected in Artifacts!" && exit 1)
+          ! grep -rE "ey[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}" logs/ test-results/ || (echo "JWT Token Leak Detected!" && exit 1)
+
       - name: Upload Test Reports & Screenshots on Failure
+
         if: failure()
         uses: actions/upload-artifact@v4
         with:
