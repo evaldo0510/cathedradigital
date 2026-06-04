@@ -30,6 +30,7 @@ import {
 const NavigationErrorInspector: React.FC = () => {
   const [errors, setErrors] = useState<any[]>([]);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [shareTrail, setShareTrail] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [selectedError, setSelectedError] = useState<any>(null);
@@ -55,7 +56,19 @@ const NavigationErrorInspector: React.FC = () => {
     const baseUrl = window.location.origin;
     const expiration = Date.now() + 3600000;
     const token = btoa(`${err.id}-${expiration}-${revocationVersion}`).substring(0, 16);
-    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+    const link = `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+    
+    // Registrar na trilha de auditoria local
+    setShareTrail(prev => [{
+      id: crypto.randomUUID(),
+      requestId: err.metadata?.requestId || err.id,
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(expiration).toISOString(),
+      filters: { user: auditFilterUser, status: statusFilter, date: dateRange },
+      link: link
+    }, ...prev]);
+
+    return link;
   };
 
   const revokeAllLinks = () => {
@@ -204,12 +217,35 @@ const NavigationErrorInspector: React.FC = () => {
   });
 
   const downloadReport = (type: 'errors' | 'audit' | 'broken' | 'summary', formatExt: 'json' | 'csv' | 'pdf') => {
-    let dataToExport: any[] = [];
+    let dataToExport: any = [];
     let fileName = '';
     const SCHEMA_VERSION = 'v2.1';
 
     if (type === 'summary') {
       fileName = 'consolidated-audit-summary';
+      const topEndpoints = Object.entries(
+        filteredErrors.reduce((acc: any, e) => {
+          acc[e.metadata?.route || '/'] = (acc[e.metadata?.route || '/'] || 0) + 1;
+          return acc;
+        }, {})
+      ).sort((a: any, b: any) => b[1] - a[1]).slice(0, 5);
+
+      const reasons = Object.entries(
+        Object.values(evidenceStatus).reduce((acc: any, s) => {
+          if (!s.ok) acc[s.reason || 'Desconhecido'] = (acc[s.reason || 'Desconhecido'] || 0) + 1;
+          return acc;
+        }, {})
+      );
+
+      dataToExport = {
+        metrics: {
+          total: metrics.total,
+          broken: metrics.broken,
+          integrityRate: `${((metrics.ok / (metrics.total || 1)) * 100).toFixed(1)}%`
+        },
+        topEndpoints,
+        reasons
+      };
     } else if (type === 'errors') {
       dataToExport = filteredErrors;
       fileName = 'ui-failures';
@@ -428,15 +464,64 @@ const NavigationErrorInspector: React.FC = () => {
                   >
                     <Icons.ShieldAlert className="w-4 h-4 mr-2" /> Links Quebrados
                   </CathedraButton>
+      {/* Filter Chips */}
+      {(filter || dateRange.from || dateRange.to || auditFilterUser || statusFilter !== 'all') && (
+        <div className="flex flex-wrap gap-2 items-center px-1">
+          <span className="text-[10px] font-black uppercase opacity-40 mr-2">Filtros Ativos:</span>
+          {filter && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Busca: {filter}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setFilter('')} />
+            </Badge>
+          )}
+          {auditFilterUser && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Inspetor: {auditFilterUser}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setAuditFilterUser('')} />
+            </Badge>
+          )}
+          {statusFilter !== 'all' && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Status: {statusFilter.replace('http_', 'HTTP ')}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setStatusFilter('all')} />
+            </Badge>
+          )}
+          {(dateRange.from || dateRange.to) && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Período: {dateRange.from || '...'} - {dateRange.to || '...'}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setDateRange({ from: '', to: '' })} />
+            </Badge>
+          )}
+          <CathedraButton 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearFilters}
+            className="h-7 text-[10px] uppercase font-black opacity-60 hover:opacity-100"
+          >
+            Limpar Todos
+          </CathedraButton>
+        </div>
+      )}
+
                   {auditMode && (
-                    <CathedraButton 
-                      variant="primary" 
-                      size="sm" 
-                      onClick={() => downloadReport('summary', 'pdf')} 
-                      className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
-                    >
-                      <Icons.Activity className="w-4 h-4 mr-2" /> Resumo Auditoria
-                    </CathedraButton>
+                    <div className="flex gap-2">
+                      <CathedraButton 
+                        variant="primary" 
+                        size="sm" 
+                        onClick={() => downloadReport('summary', 'pdf')} 
+                        className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
+                      >
+                        <Icons.Activity className="w-4 h-4 mr-2" /> PDF Resumo
+                      </CathedraButton>
+                      <CathedraButton 
+                        variant="primary" 
+                        size="sm" 
+                        onClick={() => downloadReport('summary', 'json')} 
+                        className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-secondary to-secondary/80"
+                      >
+                        <Icons.Download className="w-4 h-4 mr-2" /> JSON Resumo
+                      </CathedraButton>
+                    </div>
                   )}
                 </div>
               )}
@@ -638,43 +723,77 @@ const NavigationErrorInspector: React.FC = () => {
           </CathedraCard>
         </TabsContent>
 
-        <TabsContent value="audit" className="animate-in fade-in duration-500">
-          <CathedraCard className="p-0 overflow-hidden">
-            <ScrollArea className="h-[70vh]">
-              <table className="w-full text-left text-premium-xs">
-                <thead className="bg-muted/30 border-b border-border/50 sticky top-0 z-10">
-                  <tr>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Data/Hora</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Inspetor</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Request ID</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50 text-right">IP Mascarado</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/10">
-                  {filteredAuditLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-primary/[0.01] transition-colors">
-
-                      <td className="p-spacing-md font-mono opacity-60">
-                        {format(new Date(log.inspected_at), 'dd/MM/yy HH:mm:ss')}
-                      </td>
-                      <td className="p-spacing-md font-bold text-primary/80">
-                        {log.profiles?.name || 'Admin'}
-                      </td>
-                      <td className="p-spacing-md font-mono text-primary/60">
-                        {log.request_id}
-                      </td>
-                      <td className="p-spacing-md text-right font-mono opacity-40">
-                        {log.masked_ip}
-                      </td>
+        <TabsContent value="audit" className="animate-in fade-in duration-500 space-y-spacing-lg">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-spacing-lg">
+            <CathedraCard className="xl:col-span-2 p-0 overflow-hidden">
+              <div className="p-spacing-md bg-muted/20 border-b border-border/10 flex justify-between items-center">
+                <span className="font-bold text-premium-xs uppercase tracking-widest">Acessos dos Inspetores</span>
+              </div>
+              <ScrollArea className="h-[60vh]">
+                <table className="w-full text-left text-premium-xs">
+                  <thead className="bg-muted/30 border-b border-border/50 sticky top-0 z-10">
+                    <tr>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Data/Hora</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Inspetor</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Request ID</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50 text-right">IP Mascarado</th>
                     </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/10">
+                    {filteredAuditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-primary/[0.01] transition-colors">
+                        <td className="p-spacing-md font-mono opacity-60">
+                          {format(new Date(log.inspected_at), 'dd/MM/yy HH:mm:ss')}
+                        </td>
+                        <td className="p-spacing-md font-bold text-primary/80">
+                          {log.profiles?.name || 'Admin'}
+                        </td>
+                        <td className="p-spacing-md font-mono text-primary/60">
+                          {log.request_id}
+                        </td>
+                        <td className="p-spacing-md text-right font-mono opacity-40">
+                          {log.masked_ip}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {auditLogs.length === 0 && !loading && (
+                  <div className="p-spacing-4xl text-center opacity-40 italic">Nenhum registro de auditoria.</div>
+                )}
+              </ScrollArea>
+            </CathedraCard>
+
+            <CathedraCard className="p-0 overflow-hidden flex flex-col">
+              <div className="p-spacing-md bg-muted/20 border-b border-border/10 flex justify-between items-center">
+                <span className="font-bold text-premium-xs uppercase tracking-widest">Trilha de Links Compartilhados</span>
+              </div>
+              <ScrollArea className="h-[60vh]">
+                <div className="p-spacing-md space-y-spacing-md">
+                  {shareTrail.map((item) => (
+                    <div key={item.id} className="p-spacing-sm bg-muted/20 rounded-premium-lg border border-border/10 text-[10px] space-y-1">
+                      <div className="flex justify-between font-bold">
+                        <span className="text-primary">{item.requestId}</span>
+                        <span className={cn(new Date(item.expiresAt) < new Date() ? "text-destructive" : "text-green-600")}>
+                          {new Date(item.expiresAt) < new Date() ? "Expirado" : "Ativo"}
+                        </span>
+                      </div>
+                      <div className="opacity-60 flex justify-between">
+                        <span>Criado: {format(new Date(item.createdAt), 'dd/MM HH:mm')}</span>
+                        <span>Expira: {format(new Date(item.expiresAt), 'dd/MM HH:mm')}</span>
+                      </div>
+                      <div className="pt-1 border-t border-border/5 text-[9px] opacity-40">
+                        Filtros: {Object.entries(item.filters).filter(([_,v]) => v && v !== 'all').map(([k,v]) => `${k}:${JSON.stringify(v)}`).join(', ') || 'Nenhum'}
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-              {auditLogs.length === 0 && !loading && (
-                <div className="p-spacing-4xl text-center opacity-40 italic">Nenhum registro de auditoria.</div>
-              )}
-            </ScrollArea>
-          </CathedraCard>
+                  {shareTrail.length === 0 && (
+                    <div className="p-spacing-xl text-center opacity-30 italic text-[10px]">Nenhum link gerado nesta sessão.</div>
+                  )}
+                </div>
+              </ScrollArea>
+            </CathedraCard>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
