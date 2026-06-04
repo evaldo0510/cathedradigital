@@ -16,6 +16,8 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 import ContemplativeLayout from './ContemplativeLayout';
 import { ListSkeleton, SearchResultSkeleton, TagSkeleton } from './SacredSkeleton';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+
 
 
 type Saint = Tables<'saints'>;
