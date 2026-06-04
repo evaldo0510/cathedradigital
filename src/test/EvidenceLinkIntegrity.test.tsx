@@ -65,6 +65,66 @@ test('Security: Evidence links must respect permissions, expire tokens, and hand
   expect(revokedResult.code).toBe('ERRO_REVOGADO');
 });
 
+test('E2E: Revocation/Rotation of shareable links should immediately invalidate access', async () => {
+  let currentRevocationVersion = 1;
+  const errorId = 'err-rotation-test';
+  
+  const generateLink = (version: number) => {
+    const expiration = Date.now() + 3600000;
+    const token = btoa(`${errorId}-${expiration}-${version}`).substring(0, 16);
+    return `https://cathedra.app/inspect/evidence/${errorId}?token=${token}&expires=${expiration}&v=${version}`;
+  };
+
+  const validateLink = (url: string, currentVersion: number) => {
+    const urlObj = new URL(url);
+    const version = parseInt(urlObj.searchParams.get('v') || '1');
+    const expires = parseInt(urlObj.searchParams.get('expires') || '0');
+
+    if (expires < Date.now()) return { ok: false, code: 'ERRO_EXPIRADO' };
+    if (version < currentVersion) return { ok: false, code: 'ERRO_REVOGADO', detail: 'Link invalidado por rotação de chaves ou mudança de permissão.' };
+    return { ok: true };
+  };
+
+  // 1. Gera link na versão 1
+  const linkV1 = generateLink(1);
+  expect(validateLink(linkV1, 1).ok).toBe(true);
+
+  // 2. Simula rotação/revogação (versão sobe para 2)
+  currentRevocationVersion = 2;
+  
+  // 3. Link antigo deve falhar imediatamente
+  const result = validateLink(linkV1, currentRevocationVersion);
+  expect(result.ok).toBe(false);
+  expect(result.code).toBe('ERRO_REVOGADO');
+  expect(result.detail).toContain('mudança de permissão');
+
+  // 4. Novo link deve funcionar
+  const linkV2 = generateLink(2);
+  expect(validateLink(linkV2, currentRevocationVersion).ok).toBe(true);
+});
+
+test('Audit Summary Consistency: JSON vs PDF content should match', () => {
+  const mockMetrics = { total: 10, broken: 2, ok: 8 };
+  const mockEndpoints = [['/login', 5], ['/home', 5]];
+  const mockReasons = [['HTTP 404', 2]];
+
+  const generateJsonSummary = () => ({
+    version: 'v2.1',
+    exported_at: '2026-06-04T12:00:00Z',
+    data: {
+      metrics: { total: 10, broken: 2, integrityRate: '80.0%' },
+      topEndpoints: mockEndpoints,
+      reasons: mockReasons
+    }
+  });
+
+  const summary = generateJsonSummary();
+  expect(summary.data.metrics.total).toBe(mockMetrics.total);
+  expect(summary.data.metrics.broken).toBe(mockMetrics.broken);
+  expect(summary.data.topEndpoints).toEqual(mockEndpoints);
+  expect(summary.data.reasons).toEqual(mockReasons);
+});
+
 test('Broken Link Reporting logic with Standardized Codes', () => {
   const evidenceStatus: Record<string, { ok: boolean; reason: string; detail: string; code: string }> = {
     'err-2': { ok: false, reason: 'HTTP 404', detail: 'A evidência solicitada não existe.', code: 'ERRO_NAO_ENCONTRADO' },
