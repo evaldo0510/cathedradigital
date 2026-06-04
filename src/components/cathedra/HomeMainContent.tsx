@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
+import { motion } from 'framer-motion';
+
 
 import { Input } from '@/components/ui/input';
 
