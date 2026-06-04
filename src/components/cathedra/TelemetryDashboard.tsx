@@ -1,9 +1,7 @@
 import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-
 import { supabase } from '@/integrations/supabase/client';
-import { Icons } from '@/constants';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
+
 
 const TelemetryDashboard: React.FC = () => {
   const [logs, setLogs] = useState<any[]>([]);
