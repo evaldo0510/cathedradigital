@@ -91,6 +91,8 @@ function useRecommendedJourney(userId: string | undefined, profile: any, userLev
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
+  useRenderPerf('Sanctuarium (Home)', 15);
+
   const { user, profile, userLevel } = useAuth();
   const { t, lang } = useContext(LangContext);
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
