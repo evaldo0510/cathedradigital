@@ -377,9 +377,10 @@ const Bible: React.FC = () => {
       
       {viewMode === 'books' && (
         <ContemplativeLayout
-          subtitle="Verbum Domini"
+          subtitle="Sacra Scriptura"
           title="Bíblia Sagrada"
           icon={Icons.Bible}
+          maxW="max-w-spacing-4xl"
         >
           <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
             <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
