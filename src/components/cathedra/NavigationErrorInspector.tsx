@@ -115,10 +115,26 @@ const NavigationErrorInspector: React.FC = () => {
     return userMatch && generalMatch;
   });
 
-  const downloadReport = (type: 'errors' | 'audit', formatExt: 'json' | 'csv') => {
-    const dataToExport = type === 'errors' ? filteredErrors : filteredAuditLogs;
-    const fileName = type === 'errors' ? 'ui-failures' : 'inspection-audit';
-    const SCHEMA_VERSION = 'v2.1'; // Versionamento do formato de exportação
+  const downloadReport = (type: 'errors' | 'audit' | 'broken', formatExt: 'json' | 'csv') => {
+    let dataToExport: any[] = [];
+    let fileName = '';
+    const SCHEMA_VERSION = 'v2.1';
+
+    if (type === 'errors') {
+      dataToExport = filteredErrors;
+      fileName = 'ui-failures';
+    } else if (type === 'audit') {
+      dataToExport = filteredAuditLogs;
+      fileName = 'inspection-audit';
+    } else {
+      dataToExport = errors.filter(e => evidenceStatus[e.id] && !evidenceStatus[e.id].ok).map(e => ({
+        requestId: e.metadata?.requestId || e.id,
+        route: e.metadata?.route || '/',
+        status: 'Broken',
+        reason: evidenceStatus[e.id].reason
+      }));
+      fileName = 'broken-links';
+    }
     
     let content = '';
     if (formatExt === 'json') {
@@ -133,15 +149,18 @@ const NavigationErrorInspector: React.FC = () => {
           "ID,RequestID,Data,Rota,Mensagem,Viewport,Dispositivo,EvidenciaURL\n" + dataToExport.map(e => 
           `${e.id},${e.metadata?.requestId || ''},${e.created_at},"${e.metadata?.route || ''}","${(e.metadata?.message || '').replace(/"/g, '""')}",${e.metadata?.viewport || ''},${e.metadata?.isMobile ? 'Mobile' : 'Desktop'},"${e.metadata?.screenshotUrl || ''}"`
         ).join("\n");
-      } else {
+      } else if (type === 'audit') {
         content = `FormatVersion,${SCHEMA_VERSION}\n` +
           "ID,Inspetor,RequestID,DataHora,IP\n" + dataToExport.map(a => 
           `${a.id},"${a.profiles?.name || 'Admin'}",${a.request_id},${a.inspected_at},${a.masked_ip}`
         ).join("\n");
+      } else {
+        content = `FormatVersion,${SCHEMA_VERSION}\n` +
+          "RequestID,Rota,Status,Motivo\n" + dataToExport.map(e => 
+          `${e.requestId},"${e.route}",${e.status},"${e.reason}"`
+        ).join("\n");
       }
     }
-
-
     
     const blob = new Blob([content], { type: formatExt === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -199,26 +218,24 @@ const NavigationErrorInspector: React.FC = () => {
                 <Icons.Download className="w-4 h-4 mr-2" /> Exportar
               </CathedraButton>
               {activeTab === 'errors' && (
-                <CathedraButton 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => {
-                    const broken = errors.filter(e => evidenceStatus[e.id] && !evidenceStatus[e.id].ok);
-                    const content = "RequestID,Rota,Status,Motivo\n" + broken.map(e => 
-                      `${e.metadata?.requestId || e.id},"${e.metadata?.route || ''}",Broken,"${evidenceStatus[e.id].reason}"`
-                    ).join("\n");
-                    const blob = new Blob([content], { type: 'text/csv' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `broken-links-${new Date().toISOString()}.csv`;
-                    a.click();
-                    toast.success("Relatório de links quebrados exportado.");
-                  }}
-                  className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
-                >
-                  <Icons.AlertTriangle className="w-4 h-4 mr-2" /> Links Quebrados
-                </CathedraButton>
+                <div className="flex gap-2">
+                  <CathedraButton 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => downloadReport('broken', 'csv')} 
+                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
+                  >
+                    <Icons.AlertTriangle className="w-4 h-4 mr-2" /> CSV Quebrados
+                  </CathedraButton>
+                  <CathedraButton 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => downloadReport('broken', 'json')} 
+                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
+                  >
+                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON Quebrados
+                  </CathedraButton>
+                </div>
               )}
             </div>
 

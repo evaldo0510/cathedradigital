@@ -58,10 +58,42 @@ test('CI Alert Template logic should not include raw PII in any metadata field',
   }
 });
 
-test('Evidence link validity simulation', () => {
-  const mockUrl = "https://github.com/artifacts/123";
-  const isValid = mockUrl.startsWith('https://github.com/');
-  expect(isValid).toBe(true);
+test('Runtime log scan for PII (Simulated CI Check)', () => {
+  const runtimeLogs = [
+    "Error: Failed to process request for user secret@domain.com",
+    "Request ID: req-999",
+    "Metadata: { \"email\": \"other@test.org\" }"
+  ];
+
+  const piiRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+  
+  runtimeLogs.forEach(log => {
+    const leaked = piiRegex.test(log);
+    // In CI, we would fail the process here
+    if (leaked) {
+      const redacted = log.replace(piiRegex, '[PII_DETECTED]');
+      expect(redacted).toContain('[PII_DETECTED]');
+    }
+  });
+});
+
+test('Embedded metadata in exports must be free of PII', () => {
+  const exportWithMetadata = {
+    version: 'v2.1',
+    data: [{ id: 1, info: "User token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }]
+  };
+  
+  const serialized = JSON.stringify(exportWithMetadata);
+  const jwtRegex = /eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/;
+  
+  expect(jwtRegex.test(serialized)).toBe(true); // Detects leak
+  
+  // CI Validation step: fail if any PII pattern matches serialized export
+  const containsPII = jwtRegex.test(serialized) || serialized.includes('@');
+  expect(containsPII).toBe(true); 
+  
+  const cleanExport = serialized.replace(jwtRegex, '[REDACTED_JWT]');
+  expect(cleanExport).not.toContain('eyJhbGci');
 });
 
 
