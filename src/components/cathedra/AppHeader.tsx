@@ -117,7 +117,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       variant="outline"
                       size="icon"
                       onClick={() => navigate(AppRoute.PROFILE)}
-                      className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
+                      className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
