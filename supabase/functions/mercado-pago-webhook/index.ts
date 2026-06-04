@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
-import { crypto } from "https://deno.land/std@0.177.0/crypto/mod.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -43,12 +42,9 @@ serve(async (req) => {
     
     logId = logData?.id
 
-    // 1. Signature Validation
+    // 1. Signature Validation (Mocked for now as we don't have the secret)
     const webhookSecret = Deno.env.get('MERCADO_PAGO_WEBHOOK_SECRET')
-    // For simulation/testing purposes, we might allow a special bypass or use a default
     if (webhookSecret && signature) {
-      // Mercado Pago signature validation logic would go here
-      // For now, we log it but don't strictly block unless explicitly configured
       console.log('Validating signature:', signature)
     }
 
@@ -64,26 +60,26 @@ serve(async (req) => {
       
       if (existingLog) {
         console.log('Duplicate webhook detected:', requestId)
-        await supabase.from('webhook_logs').update({ status: 'success', error_message: 'Duplicate event' }).eq('id', logId)
+        if (logId) {
+          await supabase.from('webhook_logs').update({ status: 'success', error_message: 'Duplicate event' }).eq('id', logId)
+        }
         return new Response(JSON.stringify({ duplicate: true }), { status: 200, headers: corsHeaders })
       }
     }
 
-    const { action, data, simulation, simulated_status } = body
+    const { action, data, simulation, simulated_status, userId: providedUserId } = body
     
     if (action === 'payment.created' || action === 'payment.updated') {
       const paymentId = data.id
-      
-      let paymentData: any
+      let paymentDetails: any
       
       if (simulation) {
-        // Simulated payment data
-        paymentData = {
+        paymentDetails = {
           id: paymentId,
           status: simulated_status || 'approved',
           transaction_amount: 99.9,
           description: 'Plano PRO - Simulação',
-          external_reference: body.userId || (await supabase.auth.getUser(req.headers.get('Authorization')?.split(' ')[1] || '')).data.user?.id,
+          external_reference: providedUserId,
           metadata: { plan_id: 'pro_annual' }
         }
       } else {
@@ -91,40 +87,43 @@ serve(async (req) => {
         const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
           headers: { Authorization: `Bearer ${mpToken}` }
         })
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch payment details: ${response.statusText}`)
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch payment details: ${response.statusText}`)
+        }
+        paymentDetails = await response.json()
       }
 
-      const paymentData = await response.json()
-      const { status, external_reference: userId } = paymentData
+      const { status, external_reference: userId } = paymentDetails
       
-      await supabase
-        .from('transactions')
-        .upsert({
-          payment_id: paymentId.toString(),
-          user_id: userId,
-          status: status,
-          webhook_payload: paymentData,
-          amount: paymentData.transaction_amount,
-          description: paymentData.description,
-          plan_id: paymentData.metadata?.plan_id || 'pro'
-        }, { onConflict: 'payment_id' })
+      if (userId) {
+        await supabase
+          .from('transactions')
+          .upsert({
+            payment_id: paymentId.toString(),
+            user_id: userId,
+            status: status,
+            webhook_payload: paymentDetails,
+            amount: paymentDetails.transaction_amount,
+            description: paymentDetails.description,
+            plan_id: paymentDetails.metadata?.plan_id || 'pro'
+          }, { onConflict: 'payment_id' })
 
-      if (status === 'approved') {
-        await supabase
-          .from('profiles')
-          .update({ 
-            is_premium: true,
-            premium_status: 'active',
-            premium_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-          })
-          .eq('id', userId)
-      } else if (status === 'cancelled' || status === 'refunded') {
-        await supabase
-          .from('profiles')
-          .update({ is_premium: false, premium_status: status })
-          .eq('id', userId)
+        if (status === 'approved') {
+          await supabase
+            .from('profiles')
+            .update({ 
+              is_premium: true,
+              premium_status: 'active',
+              premium_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            })
+            .eq('id', userId)
+        } else if (status === 'cancelled' || status === 'refunded') {
+          await supabase
+            .from('profiles')
+            .update({ is_premium: false, premium_status: status })
+            .eq('id', userId)
+        }
       }
     }
 
