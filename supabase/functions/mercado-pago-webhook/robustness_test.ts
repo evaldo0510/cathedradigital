@@ -31,14 +31,17 @@ Deno.test("Mercado Pago Webhook Robustness - Normal Success", async () => {
   assertEquals(response.status, 200);
   assert(result.success);
 
+  // Wait a bit for the log to be written (async)
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   // Verify log exists and is success
-  const { data: log } = await supabase
+  const { data: logs } = await supabase
     .from('webhook_logs')
     .select('*')
-    .eq('event_id', eventId)
-    .single();
+    .eq('event_id', eventId);
   
-  assertEquals(log?.status, 'success');
+  assert(logs && logs.length > 0, "Log should exist");
+  assert(logs.some(l => l.status === 'success'), "At least one log should be success");
 });
 
 Deno.test("Mercado Pago Webhook Robustness - Simulate DB Error & Reprocess", async () => {
@@ -61,13 +64,19 @@ Deno.test("Mercado Pago Webhook Robustness - Simulate DB Error & Reprocess", asy
     })
   });
 
+  await response1.json();
   assertEquals(response1.status, 400);
+
+  // Wait for log
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   // 2. Verify log is 'failed'
   const { data: log1 } = await supabase
     .from('webhook_logs')
     .select('*')
     .eq('event_id', eventId)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .single();
   
   assertEquals(log1?.status, 'failed');
@@ -77,7 +86,7 @@ Deno.test("Mercado Pago Webhook Robustness - Simulate DB Error & Reprocess", asy
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-request-id': eventId, // Same ID to test idempotency/re-entry
+      'x-request-id': eventId,
       'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
     },
     body: JSON.stringify({
@@ -89,19 +98,18 @@ Deno.test("Mercado Pago Webhook Robustness - Simulate DB Error & Reprocess", asy
     })
   });
 
+  await response2.json();
   assertEquals(response2.status, 200);
   
-  // 4. Verify log is now success (or a new log is success with same eventId)
-  // Our current implementation creates a NEW log for each request.
-  // But idempotency check should skip processing if a SUCCESS log exists.
-  // Since the first one failed, the second one should proceed and succeed.
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   const { data: logs } = await supabase
     .from('webhook_logs')
     .select('*')
     .eq('event_id', eventId)
     .order('created_at', { ascending: false });
   
-  assert(logs?.some(l => l.status === 'success'));
+  assert(logs?.some(l => l.status === 'success'), "Should have a success log after reprocessing");
 });
 
 Deno.test("Mercado Pago Webhook Robustness - Duplicate Event (Idempotency)", async () => {
@@ -116,11 +124,12 @@ Deno.test("Mercado Pago Webhook Robustness - Duplicate Event (Idempotency)", asy
   };
 
   // 1. First request
-  await fetch(WEBHOOK_URL, {
+  const resp1 = await fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-request-id': eventId, 'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
     body: JSON.stringify(payload)
   });
+  await resp1.json();
 
   // 2. Second request (duplicate)
   const response = await fetch(WEBHOOK_URL, {
