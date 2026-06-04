@@ -2824,26 +2824,12 @@ export type Database = {
       get_pending_webhook_retries: {
         Args: never
         Returns: {
-          created_at: string | null
-          duration_ms: number | null
-          error_message: string | null
-          event_id: string | null
-          event_type: string | null
+          event_id: string
           id: string
-          last_retry_at: string | null
-          next_retry_at: string | null
-          payload: Json | null
-          processed_at: string | null
-          provider: string
-          retry_count: number | null
+          payload: Json
+          retry_count: number
           status: string
         }[]
-        SetofOptions: {
-          from: "*"
-          to: "webhook_logs"
-          isOneToOne: false
-          isSetofReturn: true
-        }
       }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
@@ -2978,12 +2964,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      track_webhook_alert:
-        | { Args: { p_message: string; p_type: string }; Returns: undefined }
-        | {
-            Args: { p_message: string; p_severity?: string; p_type: string }
-            Returns: undefined
-          }
+      track_webhook_alert: {
+        Args: { p_message: string; p_severity: string; p_type: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
