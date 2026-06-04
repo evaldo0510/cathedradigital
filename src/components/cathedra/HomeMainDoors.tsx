@@ -90,12 +90,13 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="flex flex-col items-center text-center gap-spacing-lg group cursor-pointer transition-all duration-1000 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/10 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl hover:bg-primary/[0.01]"
+          className="relative flex flex-col items-center text-center gap-spacing-lg group cursor-pointer transition-all duration-1000 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/10 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl hover:bg-primary/[0.01] hover:shadow-premium-sm"
         >
-          <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-4xl md:h-spacing-4xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary/60 transition-all duration-1000 ease-in-out border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.03]">
-            <door.icon className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl" strokeWidth={0.5} />
+          <div className="relative w-spacing-3xl h-spacing-3xl md:w-spacing-4xl md:h-spacing-4xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 ease-in-out border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.03] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <door.icon className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl relative z-10 group-hover:scale-110 transition-transform duration-1000" strokeWidth={0.5} />
           </div>
-          <div className="space-y-spacing-md">
+          <div className="space-y-spacing-md relative z-10">
             <h4 className="text-[11px] font-black uppercase tracking-[0.6em] text-primary/40 group-hover:text-primary transition-colors duration-1000">
               {door.label}
             </h4>
@@ -103,7 +104,8 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
               {door.description}
             </p>
           </div>
-          <div className="h-px w-spacing-2xl bg-primary/10 group-hover:w-spacing-3xl transition-all duration-1000" />
+          <div className="h-[0.5px] w-spacing-2xl bg-gradient-to-r from-transparent via-primary/20 to-transparent group-hover:w-spacing-4xl transition-all duration-1000" />
+
         </div>
       ))}
     </div>
