@@ -203,12 +203,14 @@ const NavigationErrorInspector: React.FC = () => {
     return userMatch && generalMatch;
   });
 
-  const downloadReport = (type: 'errors' | 'audit' | 'broken', formatExt: 'json' | 'csv' | 'pdf') => {
+  const downloadReport = (type: 'errors' | 'audit' | 'broken' | 'summary', formatExt: 'json' | 'csv' | 'pdf') => {
     let dataToExport: any[] = [];
     let fileName = '';
     const SCHEMA_VERSION = 'v2.1';
 
-    if (type === 'errors') {
+    if (type === 'summary') {
+      fileName = 'consolidated-audit-summary';
+    } else if (type === 'errors') {
       dataToExport = filteredErrors;
       fileName = 'ui-failures';
     } else if (type === 'audit') {
@@ -233,7 +235,41 @@ const NavigationErrorInspector: React.FC = () => {
       doc.text(`Exportado em: ${format(new Date(), 'dd/MM/yyyy HH:mm:ss')}`, 14, 30);
       doc.text(`Filtro de Data: ${dateRange.from || 'Sempre'} até ${dateRange.to || 'Hoje'}`, 14, 35);
       
-      if (type === 'broken') {
+      if (type === 'summary') {
+        const topEndpoints = Object.entries(
+          filteredErrors.reduce((acc: any, e) => {
+            acc[e.metadata?.route || '/'] = (acc[e.metadata?.route || '/'] || 0) + 1;
+            return acc;
+          }, {})
+        ).sort((a: any, b: any) => b[1] - a[1]).slice(0, 5);
+
+        const reasons = Object.entries(
+          Object.values(evidenceStatus).reduce((acc: any, s) => {
+            if (!s.ok) acc[s.reason || 'Desconhecido'] = (acc[s.reason || 'Desconhecido'] || 0) + 1;
+            return acc;
+          }, {})
+        );
+
+        doc.setFontSize(14);
+        doc.text("Resumo Consolidado", 14, 50);
+        doc.setFontSize(10);
+        doc.text(`Total de Ocorrências: ${metrics.total}`, 14, 60);
+        doc.text(`Links Quebrados: ${metrics.broken}`, 14, 65);
+        doc.text(`Taxa de Integridade: ${((metrics.ok / (metrics.total || 1)) * 100).toFixed(1)}%`, 14, 70);
+
+        autoTable(doc, {
+          startY: 80,
+          head: [['Top Endpoints Afetados', 'Ocorrências']],
+          body: topEndpoints,
+        });
+
+        autoTable(doc, {
+          startY: (doc as any).lastAutoTable.cursor.y + 10,
+          head: [['Motivo de Inacessibilidade', 'Total']],
+          body: reasons,
+        });
+
+      } else if (type === 'broken') {
         autoTable(doc, {
           startY: 45,
           head: [['Request ID', 'Rota', 'Status', 'Motivo Detalhado']],
