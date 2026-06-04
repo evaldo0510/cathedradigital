@@ -364,7 +364,7 @@ const Bible: React.FC = () => {
             </Button>
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} />
             {settings.immersiveMode && (
-              <Button variant="ghost" onClick={() => settings.updateSettings({ immersiveMode: false })}>
+              <Button variant="ghost" onClick={() => updateSettings({ immersiveMode: false })}>
                 <Icons.Minimize2 className="text-primary/40" />
               </Button>
             )}
