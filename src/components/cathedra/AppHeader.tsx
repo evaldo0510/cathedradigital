@@ -89,7 +89,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-spacing-lg h-spacing-lg md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
+                  className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
                   <Icons.Search className="opacity-60 group-hover:opacity-100 transition-opacity" />
