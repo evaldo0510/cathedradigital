@@ -484,8 +484,8 @@ const Bible: React.FC = () => {
 
       {viewMode === 'reading' && selectedBook && (
         <ContemplativeLayout
-          subtitle={selectedBook.name}
-          title={`Capítulo ${selectedChapter}`}
+          subtitle={selectedBook.abbr}
+          title={selectedBook.name}
           icon={Icons.Bible}
           className={cn(settings.immersiveMode && "max-w-prose")}
         >
