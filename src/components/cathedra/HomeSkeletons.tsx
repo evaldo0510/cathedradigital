@@ -1,12 +1,12 @@
 import { Icons } from "@/constants";
 
 export const SectionSkeleton = () => (
-  <div className="w-full py-spacing-2xl animate-in fade-in duration-500">
+  <div className="w-full py-spacing-2xl cinematic-fade-in">
     <div className="max-w-7xl mx-auto px-spacing-md space-y-spacing-xl">
-      <div className="h-spacing-xl w-spacing-4xl bg-muted/20 rounded-premium animate-pulse" />
+      <div className="h-[24px] w-spacing-4xl bg-muted/20 rounded-premium animate-pulse" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-spacing-4xl bg-muted/10 rounded-premium border border-primary/5 animate-pulse" />
+          <div key={i} className="h-[120px] bg-muted/10 rounded-premium border border-primary/5 animate-pulse" />
         ))}
       </div>
     </div>

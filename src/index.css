@@ -326,7 +326,7 @@
     }
 
     body.is-scrolling-down .bottom-nav-reading-auto-hide {
-      transform: translateY(120%);
+      transform: translateY(100%);
       opacity: 0;
       pointer-events: none;
     }
@@ -342,7 +342,7 @@
   }
 
   .btn-premium {
-    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-spacing-3xl font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300;
+    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-[44px] font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300;
     border-radius: 9999px;
   }
 
