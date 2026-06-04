@@ -217,12 +217,35 @@ const NavigationErrorInspector: React.FC = () => {
   });
 
   const downloadReport = (type: 'errors' | 'audit' | 'broken' | 'summary', formatExt: 'json' | 'csv' | 'pdf') => {
-    let dataToExport: any[] = [];
+    let dataToExport: any = [];
     let fileName = '';
     const SCHEMA_VERSION = 'v2.1';
 
     if (type === 'summary') {
       fileName = 'consolidated-audit-summary';
+      const topEndpoints = Object.entries(
+        filteredErrors.reduce((acc: any, e) => {
+          acc[e.metadata?.route || '/'] = (acc[e.metadata?.route || '/'] || 0) + 1;
+          return acc;
+        }, {})
+      ).sort((a: any, b: any) => b[1] - a[1]).slice(0, 5);
+
+      const reasons = Object.entries(
+        Object.values(evidenceStatus).reduce((acc: any, s) => {
+          if (!s.ok) acc[s.reason || 'Desconhecido'] = (acc[s.reason || 'Desconhecido'] || 0) + 1;
+          return acc;
+        }, {})
+      );
+
+      dataToExport = {
+        metrics: {
+          total: metrics.total,
+          broken: metrics.broken,
+          integrityRate: `${((metrics.ok / (metrics.total || 1)) * 100).toFixed(1)}%`
+        },
+        topEndpoints,
+        reasons
+      };
     } else if (type === 'errors') {
       dataToExport = filteredErrors;
       fileName = 'ui-failures';
