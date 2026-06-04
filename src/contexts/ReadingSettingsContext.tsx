@@ -54,6 +54,9 @@ interface ReadingSettings {
   logosSuggestions: 'always' | 'first_selection' | 'never';
   audioPlaybackRate: number;
   audioPositionMemory: Record<string, number>; // key: "content_type:content_id" -> position in seconds
+  audioContinuous: boolean; // Alternar entre contínuo e capítulo a capítulo
+  audioCaptionSize: 'small' | 'medium' | 'large';
+  showAudioTranscriptPanel: boolean;
   lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
@@ -115,6 +118,9 @@ const defaultSettings: ReadingSettings = {
   logosSuggestions: 'always',
   audioPlaybackRate: 1.0,
   audioPositionMemory: {},
+  audioContinuous: true,
+  audioCaptionSize: 'medium',
+  showAudioTranscriptPanel: false,
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
