@@ -123,7 +123,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Bible search error:', error);
-    return new Response(JSON.stringify({ error: error.message, results: [] }), {
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente.", results: [] }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
