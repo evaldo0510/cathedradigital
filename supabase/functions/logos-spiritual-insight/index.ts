@@ -178,7 +178,7 @@ serve(async (req) => {
     })
   } catch (error) {
     console.error("logos-spiritual-insight error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })

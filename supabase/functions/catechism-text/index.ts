@@ -72,6 +72,6 @@ serve(async (req: Request) => {
     }), { headers: corsHeaders });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: String(error) }), { status: 500, headers: corsHeaders });
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), { status: 500, headers: corsHeaders });
   }
 });

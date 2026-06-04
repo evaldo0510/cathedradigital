@@ -9,6 +9,8 @@ import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
+
 
 interface SidebarProps {
   isOpen: boolean;
@@ -31,6 +33,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   const { lang, t } = useLang();
   const [cacheCount, setCacheCount] = useState<number | null>(null);
   const { settings } = useReadingSettings();
+  const { isAdmin } = useIsAdmin();
+
 
   const sidebarRef = React.useRef<HTMLElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -108,7 +112,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   }, [isOpen, onClose]);
   
   const sections = [
-    ...(user?.role === 'admin' ? [{
+    ...(isAdmin ? [{
       label: t('admin'),
       items: [
         { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck /> },

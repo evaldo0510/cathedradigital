@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Icons } from '@/constants';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -49,7 +50,7 @@ const UpgradePage: React.FC = () => {
   const { user, profile, isPremium } = useAuth();
   const [isSimulating, setIsSimulating] = useState(false);
 
-  const isAdmin = profile?.role === 'admin';
+  const { isAdmin } = useIsAdmin();
 
   const simulatePayment = async () => {
     if (!user) return;

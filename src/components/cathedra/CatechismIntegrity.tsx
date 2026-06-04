@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -29,7 +30,7 @@ const CatechismIntegrity: React.FC = () => {
   const [endPara, setEndPara] = useState(2865);
   const [batchSize, setBatchSize] = useState(10);
 
-  const isAdmin = profile?.role === 'admin';
+  const { isAdmin } = useIsAdmin();
 
   const loadData = async () => {
     setLoading(true);

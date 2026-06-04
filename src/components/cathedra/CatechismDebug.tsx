@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -46,7 +47,7 @@ const CatechismDebug: React.FC = () => {
   const [integrityData, setIntegrityData] = useState<any[]>([]);
 
 
-  const isAdmin = profile?.role === 'admin';
+  const { isAdmin } = useIsAdmin();
 
   const loadData = async () => {
     setLoading(true);
