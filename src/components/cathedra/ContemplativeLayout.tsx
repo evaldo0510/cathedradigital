@@ -33,7 +33,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
       data-layout-root="true"
       className={cn(
         "min-h-[100dvh] will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
-        showPadding && "pt-[calc(var(--layout-padding-mobile)*0.5)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
+        showPadding && "pt-[10px] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
         containerClassName
       )}
     >
