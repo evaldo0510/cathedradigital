@@ -19,12 +19,11 @@ const TelemetryDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchLogs = async () => {
-      // Nota: Em um ambiente real, leríamos da tabela 'security_logs' ou similar filtrando por tipo
       const { data, error } = await supabase
-        .from('security_logs')
+        .from('app_metrics')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(100);
       
       if (!error && data) setLogs(data);
       setLoading(false);
@@ -32,6 +31,7 @@ const TelemetryDashboard: React.FC = () => {
 
     fetchLogs();
   }, []);
+
 
   const downloadTelemetry = (format: 'json' | 'csv') => {
     const data = format === 'json' 
