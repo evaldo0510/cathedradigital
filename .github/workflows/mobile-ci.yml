@@ -1,0 +1,30 @@
+name: Mobile CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  mobile-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run Mobile E2E Tests (Matrix)
+        run: |
+          # Simulando execução em diferentes viewports
+          # Em um ambiente real, aqui rodaríamos Playwright com uma matriz de dispositivos
+          bun test src/test/MobileNavigation.test.tsx
+        env:
+          TEST_VIEWPORTS: "320x568,375x667,414x896,768x1024"
+          CI: true
