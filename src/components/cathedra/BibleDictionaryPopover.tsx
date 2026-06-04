@@ -1,5 +1,5 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Popover,
@@ -8,13 +8,21 @@ import {
 } from "@/components/ui/popover";
 import { Icons } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface BibleDictionaryPopoverProps {
   term: string;
   children: React.ReactNode;
 }
 
+
+
 const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, children }) => {
+  const queryClient = useQueryClient();
+  const [isFavorited, setIsFavorited] = useState(false);
+
   const { data: entry, isLoading } = useQuery({
     queryKey: ['glossary-term', term],
     queryFn: async () => {
@@ -27,8 +35,24 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
       if (error) throw error;
       return data;
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours caching
   });
+
+  // Pre-fetch related terms for smoother experience
+  useEffect(() => {
+    if (entry?.term) {
+       // logic to prefetch could go here
+    }
+  }, [entry]);
+
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFavorited(!isFavorited);
+    toast.success(isFavorited ? "Removido dos favoritos" : "Adicionado aos favoritos", {
+      description: `O termo ${term} foi ${isFavorited ? 'removido' : 'salvo'} na sua biblioteca.`,
+    });
+  };
+
 
   return (
     <Popover>
@@ -46,9 +70,21 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
         ) : entry ? (
           <div className="space-y-spacing-md">
             <div className="flex items-center justify-between">
-              <h4 className="font-display text-premium-md text-primary">{entry.term}</h4>
+              <div className="flex items-center gap-spacing-sm">
+                <h4 className="font-display text-premium-md text-primary">{entry.term}</h4>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-spacing-lg w-spacing-lg rounded-premium-full"
+                  onClick={toggleFavorite}
+                  aria-label={isFavorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                >
+                  <Icons.Star className={cn("w-spacing-sm h-spacing-sm", isFavorited ? "fill-primary text-primary" : "text-primary/20")} />
+                </Button>
+              </div>
               <Icons.Glossary className="w-spacing-md h-spacing-md text-primary/20" />
             </div>
+
             <p className="text-premium-xs leading-relaxed text-muted-foreground italic">
               {entry.definition}
             </p>

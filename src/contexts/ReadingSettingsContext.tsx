@@ -52,6 +52,8 @@ interface ReadingSettings {
     relevanceByProgress: boolean;
   };
   logosSuggestions: 'always' | 'first_selection' | 'never';
+  audioPlaybackRate: number;
+  audioPositionMemory: Record<string, number>; // key: "content_type:content_id" -> position in seconds
   lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
@@ -111,6 +113,8 @@ const defaultSettings: ReadingSettings = {
     relevanceByProgress: true,
   },
   logosSuggestions: 'always',
+  audioPlaybackRate: 1.0,
+  audioPositionMemory: {},
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
