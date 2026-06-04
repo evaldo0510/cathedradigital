@@ -1882,6 +1882,30 @@ export type Database = {
         }
         Relationships: []
       }
+      telemetry_audit_logs: {
+        Row: {
+          action_type: string | null
+          id: string
+          inspected_at: string | null
+          inspector_id: string | null
+          request_id: string
+        }
+        Insert: {
+          action_type?: string | null
+          id?: string
+          inspected_at?: string | null
+          inspector_id?: string | null
+          request_id: string
+        }
+        Update: {
+          action_type?: string | null
+          id?: string
+          inspected_at?: string | null
+          inspector_id?: string | null
+          request_id?: string
+        }
+        Relationships: []
+      }
       theme_contents: {
         Row: {
           content_type: string

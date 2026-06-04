@@ -4,21 +4,32 @@ import { trackEvent } from './analytics';
  * Filtra dados sensíveis de objetos de metadados
  * Mascara emails, senhas e tokens antes do envio
  */
+/**
+ * Filtra dados sensíveis de objetos de metadados
+ * Mascara emails, senhas, tokens e agora PII em stack traces
+ */
 const maskSensitiveData = (data: Record<string, any>) => {
+  if (typeof data !== 'object' || data === null) return data;
   const masked = { ...data };
-  const sensitiveKeys = ['email', 'password', 'token', 'auth', 'secret', 'key'];
+  const sensitiveKeys = ['email', 'password', 'token', 'auth', 'secret', 'key', 'address', 'phone'];
   
   Object.keys(masked).forEach(key => {
     const lowerKey = key.toLowerCase();
     if (sensitiveKeys.some(sk => lowerKey.includes(sk))) {
       masked[key] = '***MASKED***';
-    } else if (typeof masked[key] === 'object' && masked[key] !== null) {
+    } else if (key === 'stack' || key === 'message') {
+      // Regex para remover padrões comuns de PII (emails e tokens) de strings de texto
+      masked[key] = masked[key]
+        .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL_REDACTED]')
+        .replace(/ey[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}/g, '[JWT_REDACTED]');
+    } else if (typeof masked[key] === 'object') {
       masked[key] = maskSensitiveData(masked[key]);
     }
   });
   
   return masked;
 };
+
 
 export const trackNavigationError = (error: Error, context?: Record<string, any>) => {
   const requestId = Math.random().toString(36).substring(7);

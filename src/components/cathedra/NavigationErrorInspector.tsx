@@ -15,28 +15,53 @@ const NavigationErrorInspector: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [selectedError, setSelectedError] = useState<any>(null);
+  const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchErrors = async () => {
-      // Buscando logs de segurança/telemetria filtrando por erros de navegação ou UI
-      const { data, error } = await supabase
+      let query = supabase
         .from('security_logs')
         .select('*')
         .or('event_type.eq.error,action.eq.type_error')
-        .order('created_at', { ascending: false })
-        .limit(50);
+        .order('created_at', { ascending: false });
+
+      if (dateRange.from) query = query.gte('created_at', dateRange.from);
+      if (dateRange.to) query = query.lte('created_at', dateRange.to);
+
+      const { data, error } = await query.limit(100);
       
       if (!error && data) setErrors(data);
       setLoading(false);
     };
 
     fetchErrors();
-  }, []);
+  }, [dateRange]);
+
+  const recordInspection = async (requestId: string) => {
+    await supabase.from('telemetry_audit_logs').insert({ request_id: requestId });
+  };
+
+  const downloadReport = (format: 'json' | 'csv') => {
+    const data = format === 'json' 
+      ? JSON.stringify(filteredErrors, null, 2)
+      : "ID,RequestID,Data,Rota,Mensagem,Screenshot\n" + filteredErrors.map(e => 
+          `${e.id},${e.metadata?.requestId || ''},${e.created_at},"${e.metadata?.route || ''}","${(e.metadata?.message || '').replace(/"/g, '""')}","${e.metadata?.screenshotUrl || ''}"`
+        ).join("\n");
+    
+    const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ui-errors-report-${new Date().toISOString()}.${format}`;
+    a.click();
+    toast.success(`Relatório ${format.toUpperCase()} exportado.`);
+  };
 
   const filteredErrors = errors.filter(err => 
     JSON.stringify(err).toLowerCase().includes(filter.toLowerCase())
   );
+
 
   return (
     <div className="max-w-7xl mx-auto p-spacing-lg space-y-spacing-xl pb-spacing-4xl">
@@ -51,8 +76,12 @@ const NavigationErrorInspector: React.FC = () => {
             </h1>
             <p className="text-muted-foreground text-premium-sm">Diagnóstico de TypeErrors e falhas de navegação mobile.</p>
           </div>
-          <div className="flex items-center gap-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <CathedraButton variant="outline" size="sm" onClick={() => downloadReport('csv')} className="rounded-premium-full">
+              <Icons.Download className="w-4 h-4 mr-2" /> Exportar
+            </CathedraButton>
              <Input 
+
               placeholder="Buscar por request_id, rota..." 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
@@ -72,9 +101,13 @@ const NavigationErrorInspector: React.FC = () => {
               {filteredErrors.map((err) => (
                 <div 
                   key={err.id} 
-                  onClick={() => setSelectedError(err)}
+                  onClick={() => {
+                    setSelectedError(err);
+                    recordInspection(err.metadata?.requestId || err.id);
+                  }}
                   className={`p-spacing-md cursor-pointer transition-colors hover:bg-primary/5 ${selectedError?.id === err.id ? 'bg-primary/10 border-l-4 border-l-primary' : ''}`}
                 >
+
                   <div className="flex justify-between items-start mb-1">
                     <Badge variant="destructive" className="text-[8px] uppercase">{err.metadata?.type || 'UI_ERROR'}</Badge>
                     <span className="text-[10px] font-mono opacity-40">{format(new Date(err.created_at), 'HH:mm:ss')}</span>
