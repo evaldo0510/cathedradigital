@@ -201,6 +201,10 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="regression" data-test="tab-regression" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Eye className="w-spacing-sm h-spacing-sm" /> Regressão
             </TabsTrigger>
+            <TabsTrigger value="governance" data-test="tab-governance" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+              <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Governança
+            </TabsTrigger>
+
             <TabsTrigger value="content" data-test="tab-content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
             </TabsTrigger>
