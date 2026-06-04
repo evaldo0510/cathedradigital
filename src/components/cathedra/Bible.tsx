@@ -10,32 +10,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
 import { CathedraCard } from './CathedraCard';
-import { TextSelectionToolbar } from './TextSelectionToolbar';
-import { NoteEditModal } from './NoteEditModal';
-import { ReadingProgress } from './ReadingProgress';
-import ChapterNotesList from './ChapterNotesList';
-import Relatio from './Relatio';
 import ReadingMark from './ReadingMark';
-import ShareButton from './ShareButton';
 import AudioButton from './AudioButton';
 import { BibleSkeleton } from './RouteSkeletons';
-import ReadingControlPanel from './ReadingControlPanel';
-import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
-
-
-const BIBLE_CATEGORIES: any = { 'Antigo Testamento': [], 'Novo Testamento': [] };
-
+import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
+import BibleDictionaryPopover from './BibleDictionaryPopover';
 
 const LogosAI = lazy(() => import('./LogosAI'));
-const CatechismPopover = lazy(() => import('./CatechismPopover'));
-
-// Mock data/utils that were likely defined earlier or imported
-const bibleCache = new Map();
-const cacheKey = (abbr: string, ch: number) => `${abbr}-${ch}`;
-const buildBibleAbsoluteUrl = ({ abbr, chapter, verse }: { abbr: string, chapter: number, verse?: number }) => `/bible?book=${abbr}&ch=${chapter}${verse ? `&v=${verse}` : ''}`;
-const cacheBibleChapter = (abbr: string, ch: number, data: any) => {}; 
-const markChapterRead = (abbr: string, ch: number, total: number) => {};
 
 const Bible: React.FC = () => {
   const { t, lang } = useLang();
@@ -46,32 +28,108 @@ const Bible: React.FC = () => {
   const { settings } = useReadingSettings();
   
   const [viewMode, setViewMode] = useState<'books' | 'chapters' | 'reading'>('books');
-  const [selectedBook, setSelectedBook] = useState<any>(null);
+  const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [bibleError, setBibleError] = useState<string | null>(null);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [testament, setTestament] = useState<'Antigo Testamento' | 'Novo Testamento'>('Antigo Testamento');
   
-  const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const [activeHighlight, setActiveHighlight] = useState<any>(null);
-  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [logosAIContext, setLogosAIContext] = useState('');
   
-  const [currentChapterNotes, setCurrentChapterNotes] = useState<any[]>([]);
-  const [completedBooks, setCompletedBooks] = useState<Set<string>>(new Set());
-  const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
-  const [lastReadMark, setLastReadMark] = useState<any>(null);
-  const [readingProgress, setReadingProgress] = useState(0);
-  const [activeVerseId, setActiveVerseId] = useState<string | null>(null);
-  const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
+  const [activeVerseNumber, setActiveVerseNumber] = useState<number | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Filtered categories
+  const observerTarget = useRef(null);
+
+  // Sync with URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const bookAbbr = params.get('book');
+    const ch = params.get('ch');
+
+    if (bookAbbr && ch) {
+      let foundBook: BibleBook | null = null;
+      for (const t of Object.values(BIBLE_DATA)) {
+        for (const cat of t) {
+          const b = cat.books.find(b => b.abbr === bookAbbr);
+          if (b) {
+            foundBook = b;
+            break;
+          }
+        }
+        if (foundBook) break;
+      }
+
+      if (foundBook) {
+        setSelectedBook(foundBook);
+        setSelectedChapter(parseInt(ch));
+        setViewMode('reading');
+        fetchVerses(foundBook.abbr, parseInt(ch));
+      }
+    } else {
+      setViewMode('books');
+    }
+  }, [location.search]);
+
+  const fetchVerses = async (abbr: string, chapter: number, append = false) => {
+    if (append) setIsLoadingNext(true);
+    else setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
+        body: { book: abbr, chapter }
+      });
+
+      if (error) throw error;
+
+      if (append) {
+        setVerses(prev => [...prev, ...data.verses.map((v: any) => ({ ...v, chapter }))]);
+      } else {
+        setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
+      }
+    } catch (error) {
+      console.error('Error fetching verses:', error);
+      toast.error('Erro ao carregar versículos');
+    } finally {
+      setIsLoading(false);
+      setIsLoadingNext(false);
+    }
+  };
+
+  const loadNextChapter = useCallback(() => {
+    if (!selectedBook || isLoadingNext) return;
+    if (selectedChapter < selectedBook.chapters) {
+      const nextChapter = selectedChapter + 1;
+      setSelectedChapter(nextChapter);
+      fetchVerses(selectedBook.abbr, nextChapter, true);
+    }
+  }, [selectedBook, selectedChapter, isLoadingNext]);
+
+  // Infinite Scroll Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && viewMode === 'reading' && !isLoadingNext) {
+          loadNextChapter();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [viewMode, isLoadingNext, loadNextChapter]);
+
   const filteredCategories = useMemo(() => {
-    return BIBLE_CATEGORIES[testament].map(cat => ({
+    return BIBLE_DATA[testament].map(cat => ({
       ...cat,
       books: cat.books.filter(b => 
         b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -80,7 +138,7 @@ const Bible: React.FC = () => {
     })).filter(cat => cat.books.length > 0);
   }, [testament, searchQuery]);
 
-  const selectBook = (book: any) => {
+  const selectBook = (book: BibleBook) => {
     setSelectedBook(book);
     setViewMode('chapters');
     window.scrollTo(0, 0);
@@ -90,44 +148,89 @@ const Bible: React.FC = () => {
     setSelectedChapter(ch);
     setViewMode('reading');
     window.scrollTo(0, 0);
-    navigate(`/bible?book=${selectedBook.abbr}&ch=${ch}`);
+    navigate(`/bible?book=${selectedBook?.abbr}&ch=${ch}`);
   };
 
   const goBack = () => {
     if (viewMode === 'reading') setViewMode('chapters');
     else if (viewMode === 'chapters') setViewMode('books');
     window.scrollTo(0, 0);
+    navigate('/bible');
   };
 
-  const navigateChapter = (dir: number) => {
-    const nextCh = selectedChapter + dir;
-    if (nextCh >= 1 && nextCh <= selectedBook.chapters) {
-      selectChapter(nextCh);
+  const toggleAudio = useCallback(() => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setActiveVerseNumber(null);
+      return;
     }
-  };
 
-  // Mocked functions for the sake of completeness
-  const deleteChapterNote = (id: string) => {};
-  const handleAddNoteOrHighlight = (text: string, color: string) => {};
-  const handleBookmarkCurrent = () => {};
-  const handleReturnToParagraph = () => {};
-  const handleNavigateToCIC = (p: number) => {};
-  const handleNavigateToDoc = (id: string) => {};
-  const saveLastRead = (data: any) => {};
-  const verseToCic: Record<number, number[]> = {};
+    const textToRead = verses.map(v => v.text).join(' ');
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    utterance.lang = lang === 'pt' ? 'pt-BR' : 'en-US';
+    
+    let currentVerseIndex = 0;
+    let charCount = 0;
+    const verseOffsets = verses.map(v => {
+      const start = charCount;
+      charCount += v.text.length + 1; // +1 for space
+      return { start, end: charCount, number: v.number };
+    });
+
+    utterance.onboundary = (event) => {
+      if (event.name === 'word') {
+        const charIndex = event.charIndex;
+        const currentVerse = verseOffsets.find(v => charIndex >= v.start && charIndex < v.end);
+        if (currentVerse) {
+          setActiveVerseNumber(currentVerse.number);
+        }
+      }
+    };
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setActiveVerseNumber(null);
+    };
+
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  }, [verses, isSpeaking, lang]);
+
+  useEffect(() => {
+    const handleToggleAudio = () => toggleAudio();
+    window.addEventListener('toggle-audio', handleToggleAudio);
+    return () => {
+      window.removeEventListener('toggle-audio', handleToggleAudio);
+      window.speechSynthesis.cancel();
+    };
+  }, [toggleAudio]);
+
+  // Dictionary terms to highlight (example list)
+  const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abrão', 'Abraão', 'Aliança', 'Gracia', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
+
+  const wrapWithDictionary = (text: string) => {
+    const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
+    return parts.map((part, i) => {
+      const isTerm = dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase());
+      if (isTerm) {
+        return <BibleDictionaryPopover key={i} term={part}>{part}</BibleDictionaryPopover>;
+      }
+      return part;
+    });
+  };
 
   return (
-    <div className="relative">
+    <div className={cn("relative", settings.immersiveMode && viewMode === 'reading' && "bg-background")}>
       <div className="reveal-header-trigger" />
+      
       {viewMode === 'books' && (
         <ContemplativeLayout
           subtitle="Verbum Domini"
           title="Bíblia Sagrada"
           icon={Icons.Bible}
         >
-          {/* SEOHead removed as it was missing */}
-
-
           <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
             <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
               <div className="relative group">
@@ -159,17 +262,24 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-sm">
-              {filteredCategories.flatMap(cat => cat.books).map(book => (
-                <CathedraCard key={book.abbr} variant="interactive" onClick={() => selectBook(book)}>
-                  <div className="p-spacing-md flex items-center justify-between">
-                    <div>
-                      <span className="text-[7px] font-black tracking-widest text-primary/20">{book.abbr}</span>
-                      <h3 className="text-premium-xs font-bold">{book.name}</h3>
-                    </div>
-                    <Icons.ChevronRight className="w-spacing-sm h-spacing-sm opacity-20" />
+            <div className="space-y-spacing-xl">
+              {filteredCategories.map(cat => (
+                <div key={cat.name} className="space-y-spacing-md">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">{cat.name}</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-sm">
+                    {cat.books.map(book => (
+                      <CathedraCard key={book.abbr} variant="interactive" onClick={() => selectBook(book)}>
+                        <div className="p-spacing-md flex items-center justify-between">
+                          <div>
+                            <span className="text-[7px] font-black tracking-widest text-primary/20">{book.abbr}</span>
+                            <h3 className="text-premium-xs font-bold">{book.name}</h3>
+                          </div>
+                          <Icons.ChevronRight className="w-spacing-sm h-spacing-sm opacity-20" />
+                        </div>
+                      </CathedraCard>
+                    ))}
                   </div>
-                </CathedraCard>
+                </div>
               ))}
             </div>
           </div>
@@ -202,44 +312,68 @@ const Bible: React.FC = () => {
           subtitle={selectedBook.name}
           title={`Capítulo ${selectedChapter}`}
           icon={Icons.Bible}
+          className={cn(settings.immersiveMode && "max-w-prose")}
         >
           <div className="pb-spacing-4xl">
-            <div className="flex justify-between items-center mb-spacing-xl border-b border-primary/5 pb-spacing-sm">
-              <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
-                ← Sumário
-              </Button>
-              <div className="flex gap-spacing-md">
-                <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)} className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Anterior</button>
-                <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
-                <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)} className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Próximo</button>
+            {!settings.immersiveMode && (
+              <div className="flex justify-between items-center mb-spacing-xl border-b border-primary/5 pb-spacing-sm">
+                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
+                  ← Sumário
+                </Button>
+                <div className="flex gap-spacing-md">
+                  <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {isLoading ? <BibleSkeleton /> : (
-              <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`}>
-                {verses.map(v => (
-                  <div key={v.number} id={`v${v.number}`} className="group relative py-spacing-sm hover:bg-primary/[0.01] transition-all">
+              <div className={cn(
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
+                settings.immersiveMode && "text-center"
+              )}>
+                {verses.map((v, i) => (
+                  <div 
+                    key={`${v.chapter}-${v.number}`} 
+                    id={`v${v.number}`} 
+                    className={cn(
+                      "group relative py-spacing-sm transition-all duration-700 rounded-premium px-spacing-md",
+                      activeVerseNumber === v.number && "bg-primary/[0.03] scale-[1.02] shadow-premium-sm",
+                      !settings.immersiveMode && "hover:bg-primary/[0.01]"
+                    )}
+                  >
+                    {v.number === 1 && <h3 className="text-premium-xl font-display mb-spacing-lg opacity-20">Capítulo {v.chapter}</h3>}
                     <span className="text-[0.7em] font-serif italic text-primary/20 mr-spacing-md">{v.number}</span>
-                    <span className="leading-relaxed">{v.text}</span>
+                    <span className="leading-relaxed">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
+                
+                {isLoadingNext && <div className="py-spacing-xl"><BibleSkeleton /></div>}
+                <div ref={observerTarget} className="h-20" />
               </div>
             )}
           </div>
           
           {/* Floating Controls */}
-          <div className="fixed bottom-spacing-4xl left-1/2 -translate-x-1/2 z-40 bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 shadow-premium flex gap-spacing-xs">
+          <div className={cn(
+            "fixed bottom-spacing-4xl left-1/2 -translate-x-1/2 z-40 bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 shadow-premium flex gap-spacing-xs transition-all duration-1000",
+            settings.immersiveMode && "opacity-20 hover:opacity-100"
+          )}>
             <AudioButton variant="ghost" />
             <Button variant="ghost" onClick={() => setShowLogosAI(!showLogosAI)}>
               <Icons.Sparkles className={showLogosAI ? 'text-primary' : 'text-primary/40'} />
             </Button>
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} />
+            {settings.immersiveMode && (
+              <Button variant="ghost" onClick={() => settings.updateSettings({ immersiveMode: false })}>
+                <Icons.Minimize2 className="text-primary/40" />
+              </Button>
+            )}
           </div>
 
           <Suspense fallback={null}>
             {showLogosAI && (
               <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md p-spacing-xl flex items-center justify-center">
-                 <div className="w-full bg-card rounded-premium-lg border border-primary/10 shadow-premium p-spacing-xl">
+                 <div className="w-full max-w-2xl bg-card rounded-premium-lg border border-primary/10 shadow-premium p-spacing-xl">
                     <div className="flex justify-between items-center mb-spacing-lg">
                       <h3 className="font-display text-premium-lg">Reflexão Logos</h3>
                       <Button variant="ghost" size="icon" onClick={() => setShowLogosAI(false)}><Icons.X /></Button>
