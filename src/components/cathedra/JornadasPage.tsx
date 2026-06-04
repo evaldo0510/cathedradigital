@@ -363,6 +363,16 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
                     aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
                   >
+                    {journey.cover_url && (
+                      <div className="absolute inset-0 opacity-10 grayscale group-hover:opacity-20 transition-opacity">
+                        <img 
+                          src={journey.cover_url} 
+                          alt="" 
+                          aria-hidden="true" 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                    )}
 
                     <div className="absolute top-spacing-0 right-0 p-spacing-md opacity-5 pointer-events-none">
                       <Icons.Flame className="w-spacing-3xl h-spacing-3xl text-primary" />
