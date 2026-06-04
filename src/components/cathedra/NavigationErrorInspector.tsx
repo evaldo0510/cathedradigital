@@ -27,6 +27,18 @@ const NavigationErrorInspector: React.FC = () => {
   const [auditFilterUser, setAuditFilterUser] = useState('');
   const navigate = useNavigate();
 
+  const handleImportLegacy = (rawData: any) => {
+    // Compatibilidade retroativa: se for array, migra para o formato v2.1
+    if (Array.isArray(rawData)) {
+      return {
+        version: 'v2.0-legacy',
+        exported_at: new Date().toISOString(),
+        data: rawData
+      };
+    }
+    return rawData;
+  };
+
   const fetchErrors = async () => {
     let query = supabase
       .from('security_logs')
@@ -40,6 +52,7 @@ const NavigationErrorInspector: React.FC = () => {
     const { data, error } = await query.limit(100);
     if (!error && data) setErrors(data);
   };
+
 
   const fetchAuditLogs = async () => {
     let query = supabase
