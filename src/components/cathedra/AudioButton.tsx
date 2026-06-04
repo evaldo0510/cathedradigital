@@ -3,6 +3,7 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import { Button } from '@/components/ui/button';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,9 +61,9 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
           <Button 
             variant={variant}
             size="icon"
-            className={className}
+            className={cn(className, "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2")}
             title="Velocidade e Opções"
-            aria-label="Opções de Áudio"
+            aria-label="Opções de Áudio e Velocidade"
           >
             <Icons.Settings2 className="w-spacing-sm h-spacing-sm" />
           </Button>
@@ -85,9 +86,9 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
       <Button 
         onClick={toggle}
         variant={variant}
-        className={className}
+        className={cn(className, "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2")}
         title={isSpeaking && !isPaused ? t('audio_pause') : t('audio_read')}
-        aria-label={isSpeaking && !isPaused ? "Pausar Áudio" : "Ouvir Bíblia"}
+        aria-label={isSpeaking && !isPaused ? "Pausar Áudio" : isSpeaking && isPaused ? "Retomar Áudio" : "Ouvir Bíblia"}
       >
         {isSpeaking && !isPaused ? (
           <Icons.Pause className="w-spacing-md h-spacing-md" />
@@ -104,8 +105,9 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
           onClick={stop}
           variant="ghost"
           size="icon"
-          className="text-primary/40 hover:text-primary transition-colors"
-          title="Parar"
+          className="text-primary/40 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+          title="Parar Reprodução"
+          aria-label="Parar Áudio"
         >
           <Icons.Square className="w-spacing-sm h-spacing-sm fill-current" />
         </Button>

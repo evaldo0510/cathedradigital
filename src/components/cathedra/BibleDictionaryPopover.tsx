@@ -32,10 +32,15 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
         .ilike('term', term)
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching glossary term:', error);
+        throw error;
+      }
       return data;
     },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours caching
+    gcTime: 1000 * 60 * 60 * 48, // 48 hours garbage collection
+    retry: 2,
   });
 
   // Pre-fetch related terms for smoother experience
@@ -57,7 +62,10 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="underline decoration-primary/20 decoration-dotted underline-offset-4 hover:decoration-primary transition-all cursor-help text-left">
+        <button 
+          className="underline decoration-primary/20 decoration-dotted underline-offset-4 hover:decoration-primary transition-all cursor-help text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-sm"
+          aria-haspopup="true"
+        >
           {children}
         </button>
       </PopoverTrigger>
