@@ -47,23 +47,43 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const isParagraphQuery = useMemo(() => {
+    const q = logosQuery.trim().toLowerCase();
+    // Match patterns like "cic 123", "p123", "paragrafo 123"
+    const cicMatch = q.match(/^(?:cic|p|par[áa]grafo)\s*(\d+)$/i);
+    // Match patterns like "jo 3,16", "gn 1,1", "1cor 13"
+    const bibleMatch = q.match(/^([1-3]?[a-z]+)\s*(\d+)(?:[,\s](\d+))?$/i);
+    return { cicMatch, bibleMatch };
+  }, [logosQuery]);
+
   const handleLogosSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    
-    if (logosQuery.trim()) {
-      const savedMessages = localStorage.getItem('cathedra_logos_messages');
-      const messages = savedMessages ? JSON.parse(savedMessages) : [];
-      const newMessage = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: logosQuery,
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
-      
-      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
+    const query = logosQuery.trim();
+    if (!query) return;
+
+    // Direct Jump Logic
+    if (isParagraphQuery.cicMatch) {
+      navigate(`/catechism?p=${isParagraphQuery.cicMatch[1]}`);
+      return;
     }
+    if (isParagraphQuery.bibleMatch) {
+      const [_, book, ch, v] = isParagraphQuery.bibleMatch;
+      navigate(`/bible?book=${book}&ch=${ch}${v ? `&v=${v}` : ''}`);
+      return;
+    }
+    
+    const savedMessages = localStorage.getItem('cathedra_logos_messages');
+    const messages = savedMessages ? JSON.parse(savedMessages) : [];
+    const newMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: query,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
+    navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(query)}`);
   };
+
 
   return (
     <motion.div 
