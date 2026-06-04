@@ -21,6 +21,8 @@ import AudioButton from './AudioButton';
 import { BibleSkeleton } from './RouteSkeletons';
 import ReadingControlPanel from './ReadingControlPanel';
 import { LogosContextualSuggestions } from './LogosContextualSuggestions';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+
 
 const BIBLE_CATEGORIES: any = { 'Antigo Testamento': [], 'Novo Testamento': [] };
 
