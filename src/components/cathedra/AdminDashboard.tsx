@@ -12,6 +12,8 @@ import { AdminHeader } from './admin/AdminHeader';
 import { AdminStatsCards } from './admin/AdminStatsCards';
 import { useAdminDashboardData, AdminUser } from '@/hooks/useAdminDashboardData';
 import { useQueryClient } from '@tanstack/react-query';
+import { CathedraCard } from './CathedraCard';
+import { Badge } from '@/components/ui/badge';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
@@ -28,6 +30,7 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
+
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
 interface UserProfile extends AdminUser {}
