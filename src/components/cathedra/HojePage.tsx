@@ -125,8 +125,14 @@ const HojePage: React.FC = () => {
       title="Mosteiro"
       subtitle={greeting + (profile?.name ? `, ${profile.name.split(' ')[0]}` : ', Anima Fidelis')}
       icon={Icons.Logo}
-      className="monastic-sanctuary"
+      className="monastic-sanctuary overflow-hidden"
     >
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/[0.02] rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/[0.01] rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
+
       <SEOHead 
         title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 

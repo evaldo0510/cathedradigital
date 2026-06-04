@@ -30,8 +30,9 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
-
+const PerfGovernanceDashboard = lazy(() => import('./PerfGovernanceDashboard'));
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
+
 
 interface UserProfile extends AdminUser {}
 
@@ -200,6 +201,10 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="regression" data-test="tab-regression" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Eye className="w-spacing-sm h-spacing-sm" /> Regressão
             </TabsTrigger>
+            <TabsTrigger value="governance" data-test="tab-governance" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+              <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Governança
+            </TabsTrigger>
+
             <TabsTrigger value="content" data-test="tab-content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
             </TabsTrigger>
@@ -319,6 +324,13 @@ const AdminDashboard: React.FC = () => {
             <VisualRegressionDashboard />
           </Suspense>
         </TabsContent>
+
+        <TabsContent value="governance">
+          <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+            <PerfGovernanceDashboard />
+          </Suspense>
+        </TabsContent>
+
 
         <TabsContent value="content">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>

@@ -12,11 +12,12 @@ export function runMobileA11yAudit() {
   const interactiveElements = document.querySelectorAll('button, a, [role="button"]');
   interactiveElements.forEach((el, idx) => {
     const rect = el.getBoundingClientRect();
-    if (rect.width < 44 || rect.height < 44) {
+    if (rect.width < 48 || rect.height < 48) {
       const label = el.getAttribute('aria-label') || el.textContent?.substring(0, 20) || `index ${idx}`;
       mobileIssues.push({
-        type: 'warning',
-        message: `[Touch Target] Elemento "${label}" é muito pequeno (${Math.round(rect.width)}x${Math.round(rect.height)}px). Recomendado min 44x44px.`,
+        type: 'error',
+        message: `[Touch Target] Elemento "${label}" viola o padrão premium de 48px (${Math.round(rect.width)}x${Math.round(rect.height)}px).`,
+
         selector: el.className
       });
     }
