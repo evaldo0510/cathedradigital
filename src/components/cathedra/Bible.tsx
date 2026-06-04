@@ -25,7 +25,7 @@ const Bible: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { settings } = useReadingSettings();
+  const { settings, updateSettings } = useReadingSettings();
   
   const [viewMode, setViewMode] = useState<'books' | 'chapters' | 'reading'>('books');
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
