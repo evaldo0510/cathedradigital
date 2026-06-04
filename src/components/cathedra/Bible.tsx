@@ -268,15 +268,23 @@ const Bible: React.FC = () => {
         if (currentVerse) {
           setActiveVerseNumber(currentVerse.number);
           
-          // Auto-scroll logic
-          if (settings.immersiveMode) {
-            const element = document.getElementById(`v${currentVerse.number}`);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+          // Auto-scroll logic: Highlight and center the current verse
+          const element = document.getElementById(`v${currentVerse.number}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
+          
+          // Persistence: Save last read and audio position
+          const memoryKey = `bible:${selectedBook?.abbr}:${selectedChapter}`;
+          const currentMemory = settings.audioPositionMemory || {};
+          
+          updateSettings({
+            audioPositionMemory: {
+              ...currentMemory,
+              [memoryKey]: currentVerse.number // Using verse number as position for reliability
+            }
+          });
 
-          // Persistence: Save last read
           if (user) {
             saveLastRead({
               content_type: 'bible',
