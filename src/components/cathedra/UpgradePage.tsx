@@ -260,17 +260,16 @@ const UpgradePage: React.FC = () => {
       const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
         body: log.payload,
         headers: {
-          'x-request-id': `repro_${log.event_id || Date.now()}`,
-          'x-reprocessed-from': log.id
+          'x-request-id': log.event_id,
+          'x-is-retry': 'true',
+          'x-retry-log-id': log.id
         }
       });
       if (error) throw error;
       
-      // Increment retry count in UI for feedback
-      await supabase
-        .from('webhook_logs')
-        .update({ retry_count: (log.retry_count || 0) + 1 })
-        .eq('id', log.id);
+      // No need to manual update here as the webhook function now handles it
+      
+      toast.success('Evento reprocessado com sucesso');
 
       toast.success('Evento reprocessado com sucesso');
       fetchLogs();
@@ -634,7 +633,14 @@ const UpgradePage: React.FC = () => {
                               <TableCell className="text-premium-xs text-muted-foreground">
                                 {new Date(log.created_at).toLocaleTimeString()}
                               </TableCell>
-                              <TableCell className="font-medium">{log.event_type}</TableCell>
+                              <TableCell className="font-medium">
+                                {log.event_type}
+                                {log.retry_count > 0 && (
+                                  <div className="text-[10px] text-primary font-bold flex items-center gap-1 mt-1">
+                                    <RefreshCcw className="w-2 h-2" /> Retentativa #{log.retry_count}
+                                  </div>
+                                )}
+                              </TableCell>
                               <TableCell>
                                 <Badge variant={log.status === 'success' ? 'default' : log.status === 'failed' ? 'destructive' : 'secondary'} className="rounded-full">
                                   {log.status === 'success' ? <CheckCircle2 className="w-3 h-3 mr-1" /> : log.status === 'failed' ? <AlertCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
