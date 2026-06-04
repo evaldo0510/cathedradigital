@@ -16,6 +16,9 @@ import { BibleSkeleton } from './RouteSkeletons';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
+import { useAuth } from '@/hooks/useAuth';
+
 
 const LogosAI = lazy(() => import('./LogosAI'));
 
@@ -42,9 +45,15 @@ const Bible: React.FC = () => {
   
   const [activeVerseNumber, setActiveVerseNumber] = useState<number | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(settings.audioPlaybackRate || 1.0);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const { saveLastRead } = useReadingMarks();
+  const { user } = useAuth();
 
   const observerTarget = useRef(null);
+  const versesContainerRef = useRef<HTMLDivElement>(null);
+
 
   // Sync with URL
   useEffect(() => {
@@ -158,24 +167,47 @@ const Bible: React.FC = () => {
     navigate('/bible');
   };
 
-  const toggleAudio = useCallback(() => {
-    if (isSpeaking) {
+  const toggleAudio = useCallback((action?: 'play' | 'pause' | 'stop' | 'forward' | 'backward' | 'rate', value?: number) => {
+    if (action === 'stop' || (isSpeaking && !action)) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
+      setIsPaused(false);
       setActiveVerseNumber(null);
+      return;
+    }
+
+    if (action === 'pause') {
+      window.speechSynthesis.pause();
+      setIsPaused(true);
+      return;
+    }
+
+    if (action === 'play' && isPaused) {
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+      return;
+    }
+
+    if (action === 'rate' && value) {
+      setPlaybackRate(value);
+      updateSettings({ audioPlaybackRate: value });
+      if (isSpeaking) {
+        // SpeechSynthesisUtterance rate is set at start. To change it, we need to restart from current position.
+        // For now, it will apply to the next play.
+      }
       return;
     }
 
     const textToRead = verses.map(v => v.text).join(' ');
     const utterance = new SpeechSynthesisUtterance(textToRead);
     utterance.lang = lang === 'pt' ? 'pt-BR' : 'en-US';
+    utterance.rate = playbackRate;
     
-    let currentVerseIndex = 0;
     let charCount = 0;
     const verseOffsets = verses.map(v => {
       const start = charCount;
       charCount += v.text.length + 1; // +1 for space
-      return { start, end: charCount, number: v.number };
+      return { start, end: charCount, number: v.number, chapter: v.chapter };
     });
 
     utterance.onboundary = (event) => {
@@ -184,28 +216,55 @@ const Bible: React.FC = () => {
         const currentVerse = verseOffsets.find(v => charIndex >= v.start && charIndex < v.end);
         if (currentVerse) {
           setActiveVerseNumber(currentVerse.number);
+          
+          // Auto-scroll logic
+          if (settings.immersiveMode) {
+            const element = document.getElementById(`v${currentVerse.number}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+
+          // Persistence: Save last read
+          if (user) {
+            saveLastRead({
+              content_type: 'bible',
+              content_id: selectedBook?.abbr,
+              chapter: currentVerse.chapter,
+              paragraph: currentVerse.number,
+              label: `${selectedBook?.name} ${currentVerse.chapter}:${currentVerse.number}`
+            });
+          }
         }
       }
     };
 
-    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setIsPaused(false);
+    };
     utterance.onend = () => {
       setIsSpeaking(false);
+      setIsPaused(false);
       setActiveVerseNumber(null);
     };
 
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [verses, isSpeaking, lang]);
+  }, [verses, isSpeaking, isPaused, lang, playbackRate, updateSettings, settings.immersiveMode, user, selectedBook, saveLastRead]);
 
   useEffect(() => {
-    const handleToggleAudio = () => toggleAudio();
+    const handleToggleAudio = (e: any) => {
+      const { action, value } = e.detail || {};
+      toggleAudio(action, value);
+    };
     window.addEventListener('toggle-audio', handleToggleAudio);
     return () => {
       window.removeEventListener('toggle-audio', handleToggleAudio);
       window.speechSynthesis.cancel();
     };
   }, [toggleAudio]);
+
 
   // Dictionary terms to highlight (example list)
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abrão', 'Abraão', 'Aliança', 'Gracia', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
