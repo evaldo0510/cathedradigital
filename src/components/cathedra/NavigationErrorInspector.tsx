@@ -435,7 +435,7 @@ const NavigationErrorInspector: React.FC = () => {
                       onClick={() => downloadReport('summary', 'pdf')} 
                       className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
                     >
-                      <Icons.PieChart className="w-4 h-4 mr-2" /> Resumo Auditoria
+                      <Icons.Activity className="w-4 h-4 mr-2" /> Resumo Auditoria
                     </CathedraButton>
                   )}
                 </div>
