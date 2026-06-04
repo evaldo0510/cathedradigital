@@ -379,7 +379,7 @@ const AppLayout: React.FC = () => {
             />
           )}
         
-        {!settings.immersiveMode && (
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
           <CathedralSidebar 
             isOpen={isSidebarOpen}
             user={authUserAdapter}
