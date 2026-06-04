@@ -40,11 +40,13 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
       // Swipe Left -> Next
       if (currentIndex !== -1 && currentIndex < routes.length - 1) {
         navigate(routes[currentIndex + 1]);
+        window.scrollTo({ top: 0, behavior: 'instant' });
       }
     } else if (info.offset.x > threshold || info.velocity.x > velocity) {
       // Swipe Right -> Previous
       if (currentIndex !== -1 && currentIndex > 0) {
         navigate(routes[currentIndex - 1]);
+        window.scrollTo({ top: 0, behavior: 'instant' });
       }
     }
   };

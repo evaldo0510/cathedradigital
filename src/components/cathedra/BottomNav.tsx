@@ -172,7 +172,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-spacing-xs left-spacing-xs right-spacing-xs z-[160] lg:hidden h-[var(--bottom-nav-height)] bg-background/5 rounded-premium-full shadow-premium-none border border-primary/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-spacing-xs overflow-hidden transition-all backdrop-blur-sm will-change-transform",
+        "fixed bottom-spacing-xs left-spacing-xs right-spacing-xs z-[160] lg:hidden h-[var(--bottom-nav-height)] bg-background/80 backdrop-blur-xl rounded-premium-full shadow-premium-md border border-primary/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-spacing-xs overflow-hidden transition-all will-change-transform",
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
@@ -195,7 +195,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               data-testid={item.isMenu ? "menu-trigger" : `nav-${item.icon.toLowerCase()}`}
               onClick={(e) => {
                 if (item.isMenu) onOpenSidebar();
-                else if (item.route) navigate(item.route);
+                else if (item.route) {
+                  navigate(item.route);
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }
+
               }}
             onRipple={triggerRipple}
           />

@@ -20,7 +20,7 @@
     --secondary-foreground: 220 20% 8%;
     
     --muted: 45 20% 97%;
-    --muted-foreground: 220 10% 50%; 
+    --muted-foreground: 220 15% 35%; /* Melhora de contraste para WCAG AA no mobile */ 
     
     --accent: 42 20% 95%;
     --accent-foreground: 220 20% 12%;
@@ -100,7 +100,7 @@
 
   .dark, [data-theme='dark'] {
     --background: 220 15% 9%;
-    --foreground: 45 10% 88%;
+    --foreground: 45 10% 95%; /* Maior brilho no dark para legibilidade */
     
     --card: 220 15% 10%;
     --card-foreground: 45 10% 88%;
@@ -209,7 +209,7 @@
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/80;
+    @apply font-ui font-normal text-foreground/90; /* Aumentado de 80% para 90% para legibilidade */
     font-size: clamp(var(--text-premium-sm), 1vw, var(--text-premium-base));
     line-height: 1.6;
     max-width: 65ch;
