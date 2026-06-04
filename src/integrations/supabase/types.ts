@@ -2485,6 +2485,8 @@ export type Database = {
           event_id: string | null
           event_type: string | null
           id: string
+          last_retry_at: string | null
+          next_retry_at: string | null
           payload: Json | null
           processed_at: string | null
           provider: string
@@ -2498,6 +2500,8 @@ export type Database = {
           event_id?: string | null
           event_type?: string | null
           id?: string
+          last_retry_at?: string | null
+          next_retry_at?: string | null
           payload?: Json | null
           processed_at?: string | null
           provider: string
@@ -2511,11 +2515,46 @@ export type Database = {
           event_id?: string | null
           event_type?: string | null
           id?: string
+          last_retry_at?: string | null
+          next_retry_at?: string | null
           payload?: Json | null
           processed_at?: string | null
           provider?: string
           retry_count?: number | null
           status?: string
+        }
+        Relationships: []
+      }
+      webhook_settings: {
+        Row: {
+          alert_threshold_invalid_sig: number | null
+          alert_threshold_timeout: number | null
+          alert_window_minutes: number | null
+          created_at: string | null
+          id: string
+          max_retries: number | null
+          retry_backoff_factor: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          alert_threshold_invalid_sig?: number | null
+          alert_threshold_timeout?: number | null
+          alert_window_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          max_retries?: number | null
+          retry_backoff_factor?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          alert_threshold_invalid_sig?: number | null
+          alert_threshold_timeout?: number | null
+          alert_window_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          max_retries?: number | null
+          retry_backoff_factor?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -2776,6 +2815,30 @@ export type Database = {
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
+      get_pending_webhook_retries: {
+        Args: never
+        Returns: {
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          event_id: string | null
+          event_type: string | null
+          id: string
+          last_retry_at: string | null
+          next_retry_at: string | null
+          payload: Json | null
+          processed_at: string | null
+          provider: string
+          retry_count: number | null
+          status: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "webhook_logs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
       log_access_denial: {
