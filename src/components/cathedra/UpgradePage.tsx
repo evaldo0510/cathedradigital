@@ -33,7 +33,40 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw, Activity } from "lucide-react";
+
+const WebhookAlerts = () => {
+  const [alerts, setAlerts] = useState<any[]>([]);
+  
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      const { data } = await supabase
+        .from('webhook_alerts')
+        .select('*')
+        .order('last_occurrence', { ascending: false })
+        .limit(5);
+      if (data) setAlerts(data);
+    };
+    fetchAlerts();
+  }, []);
+
+  if (alerts.length === 0) return <p className="text-sm text-muted-foreground italic">Sem alertas críticos no momento.</p>;
+
+  return (
+    <div className="space-y-3">
+      {alerts.map(alert => (
+        <div key={alert.id} className="p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-4 h-4 text-red-500 mt-1 shrink-0" />
+          <div>
+            <p className="text-xs font-bold text-red-700 uppercase">{alert.alert_type.replace('_', ' ')} ({alert.count}x)</p>
+            <p className="text-[11px] text-red-600 line-clamp-2">{alert.message}</p>
+            <p className="text-[10px] text-red-400 mt-1">{format(new Date(alert.last_occurrence), 'HH:mm - dd/MM')}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
 
@@ -351,8 +384,35 @@ const UpgradePage: React.FC = () => {
                 <TabsList className="bg-muted/50 rounded-premium-full p-1">
                   <TabsTrigger value="tests" className="rounded-premium-full font-bold">Simulações E2E</TabsTrigger>
                   <TabsTrigger value="logs" className="rounded-premium-full font-bold">Monitor de Webhooks</TabsTrigger>
+                  <TabsTrigger value="alerts" className="rounded-premium-full font-bold">Alertas e Relatórios</TabsTrigger>
                 </TabsList>
               </div>
+
+              <TabsContent value="alerts">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                    <h4 className="font-bold mb-4 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-red-500" />
+                      Alertas Recentes
+                    </h4>
+                    <WebhookAlerts />
+                  </div>
+                  <div className="bg-card border border-border/50 rounded-[2.5rem] p-6">
+                    <h4 className="font-bold mb-4 flex items-center gap-2">
+                      <Icons.FileText className="w-4 h-4 text-primary" />
+                      Relatórios e Exportação
+                    </h4>
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">Gere relatórios consolidados de falhas, reprocessamentos e transações.</p>
+                      <div className="flex flex-wrap gap-2">
+                        <Button onClick={exportCSV} className="rounded-premium-full">Exportar CSV</Button>
+                        <Button onClick={exportPDF} variant="outline" className="rounded-premium-full">Gerar Relatório PDF</Button>
+                        <Button onClick={generateMonthlyReport} variant="secondary" className="rounded-premium-full">Relatório Mensal PDF</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
 
               <TabsContent value="tests">
                 <div className="bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30 text-center">
