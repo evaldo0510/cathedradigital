@@ -1,8 +1,13 @@
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Icons } from '@/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
+import Papa from 'papaparse';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -63,6 +68,9 @@ const UpgradePage: React.FC = () => {
   const [isSimulating, setIsSimulating] = useState(false);
   const [webhookLogs, setWebhookLogs] = useState<any[]>([]);
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterDate, setFilterDate] = useState<string>('all');
+  const [isReprocessing, setIsReprocessing] = useState<string | null>(null);
 
   const { isAdmin } = useIsAdmin();
 
@@ -72,18 +80,92 @@ const UpgradePage: React.FC = () => {
     }
   }, [isAdmin]);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
+    if (!isAdmin) return;
     setIsLoadingLogs(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('webhook_logs')
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
+      .order('created_at', { ascending: false });
+    
+    if (filterStatus !== 'all') {
+      query = query.eq('status', filterStatus);
+    }
+
+    if (filterDate !== 'all') {
+      const now = new Date();
+      if (filterDate === 'today') {
+        const today = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+        query = query.gte('created_at', today);
+      } else if (filterDate === 'week') {
+        const lastWeek = new Date(now.setDate(now.getDate() - 7)).toISOString();
+        query = query.gte('created_at', lastWeek);
+      }
+    }
+
+    const { data, error } = await query.limit(50);
     
     if (!error && data) {
       setWebhookLogs(data);
     }
     setIsLoadingLogs(false);
+  }, [isAdmin, filterStatus, filterDate]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs]);
+
+  const exportCSV = () => {
+    const csv = Papa.unparse(webhookLogs);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `webhook_logs_${new Date().toISOString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Logs exportados para CSV');
+  };
+
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Relatório de Webhooks - Mercado Pago", 14, 15);
+    const tableData = webhookLogs.map(log => [
+      new Date(log.created_at).toLocaleString(),
+      log.event_type,
+      log.status,
+      log.duration_ms || '-',
+      log.error_message || '-'
+    ]);
+    (doc as any).autoTable({
+      head: [['Data', 'Evento', 'Status', 'Duração', 'Erro']],
+      body: tableData,
+      startY: 20
+    });
+    doc.save(`webhook_logs_${new Date().toISOString()}.pdf`);
+    toast.success('Logs exportados para PDF');
+  };
+
+  const reprocessWebhook = async (log: any) => {
+    setIsReprocessing(log.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
+        body: log.payload,
+        headers: {
+          'x-request-id': `repro_${log.event_id || Date.now()}`,
+          'x-reprocessed-from': log.id
+        }
+      });
+      if (error) throw error;
+      toast.success('Evento reprocessado com sucesso');
+      fetchLogs();
+    } catch (error: any) {
+      toast.error('Erro ao reprocessar: ' + error.message);
+    } finally {
+      setIsReprocessing(null);
+    }
   };
 
   const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
