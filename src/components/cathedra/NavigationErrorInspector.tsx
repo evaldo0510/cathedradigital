@@ -9,12 +9,21 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { 
   Tabs, 
   TabsContent, 
   TabsList, 
   TabsTrigger 
 } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const NavigationErrorInspector: React.FC = () => {
   const [errors, setErrors] = useState<any[]>([]);
@@ -25,22 +34,36 @@ const NavigationErrorInspector: React.FC = () => {
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const [activeTab, setActiveTab] = useState('errors');
   const [auditFilterUser, setAuditFilterUser] = useState('');
-  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string }>>({});
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string }>>({});
   const navigate = useNavigate();
 
   const checkEvidenceHealth = async (errorLogs: any[]) => {
-    const health: Record<string, { ok: boolean; reason?: string }> = {};
+    const health: Record<string, { ok: boolean; reason?: string; detail?: string }> = {};
     for (const err of errorLogs) {
       const url = err.metadata?.screenshotUrl;
       if (!url) {
-        health[err.id] = { ok: false, reason: 'Sem URL' };
+        health[err.id] = { ok: false, reason: 'Sem URL', detail: 'Nenhuma evidência visual anexada ao log.' };
         continue;
       }
       try {
         const resp = await fetch(url, { method: 'HEAD' });
-        health[err.id] = resp.ok ? { ok: true } : { ok: false, reason: `HTTP ${resp.status}` };
+        if (resp.ok) {
+          health[err.id] = { ok: true };
+        } else {
+          let detail = 'Desconhecido';
+          if (resp.status === 404) detail = 'Arquivo não encontrado no storage.';
+          else if (resp.status === 403) detail = 'Permissão negada ou Token expirado.';
+          else if (resp.status === 401) detail = 'Autenticação necessária.';
+          
+          health[err.id] = { 
+            ok: false, 
+            reason: `HTTP ${resp.status}`,
+            detail: detail
+          };
+        }
       } catch (e) {
-        health[err.id] = { ok: false, reason: 'Erro de Rede' };
+        health[err.id] = { ok: false, reason: 'Erro de Rede', detail: 'Falha na conexão com o servidor de assets.' };
       }
     }
     setEvidenceStatus(health);
@@ -185,6 +208,20 @@ const NavigationErrorInspector: React.FC = () => {
             <p className="text-muted-foreground text-premium-sm">Diagnóstico de TypeErrors e falhas de navegação mobile.</p>
           </div>
           <div className="flex items-center gap-spacing-sm">
+            {activeTab === 'errors' && (
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10">
+                  <SelectValue placeholder="Status Link" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos Status</SelectItem>
+                  <SelectItem value="broken">Quebrados</SelectItem>
+                  <SelectItem value="ok">Funcionais</SelectItem>
+                  <SelectItem value="http_404">HTTP 404</SelectItem>
+                  <SelectItem value="http_403">HTTP 403</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
             {activeTab === 'audit' && (
               <Input 
                 placeholder="Filtrar por Inspetor..." 
@@ -193,19 +230,19 @@ const NavigationErrorInspector: React.FC = () => {
                 className="max-w-[150px] rounded-premium-full"
               />
             )}
-            <div className="flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10">
+            <div className="flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9">
               <Input 
                 type="date"
                 value={dateRange.from}
                 onChange={(e) => setDateRange(prev => ({ ...prev, from: e.target.value }))}
-                className="h-8 border-none bg-transparent text-[10px] w-[110px]"
+                className="h-7 border-none bg-transparent text-[10px] w-[110px]"
               />
               <span className="text-[10px] opacity-30">até</span>
               <Input 
                 type="date"
                 value={dateRange.to}
                 onChange={(e) => setDateRange(prev => ({ ...prev, to: e.target.value }))}
-                className="h-8 border-none bg-transparent text-[10px] w-[110px]"
+                className="h-7 border-none bg-transparent text-[10px] w-[110px]"
               />
             </div>
             <div className="flex gap-2">
@@ -223,17 +260,25 @@ const NavigationErrorInspector: React.FC = () => {
                     variant="outline" 
                     size="sm" 
                     onClick={() => downloadReport('broken', 'csv')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
+                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
                   >
-                    <Icons.AlertTriangle className="w-4 h-4 mr-2" /> CSV Quebrados
+                    <Icons.AlertTriangle className="w-4 h-4 mr-2" /> CSV
                   </CathedraButton>
                   <CathedraButton 
                     variant="outline" 
                     size="sm" 
                     onClick={() => downloadReport('broken', 'json')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
+                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
                   >
-                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON Quebrados
+                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON
+                  </CathedraButton>
+                  <CathedraButton 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => downloadReport('broken', 'pdf')} 
+                    className="rounded-premium-full border-red-500/20 text-red-600 hover:bg-red-500/5 h-9"
+                  >
+                    <Icons.FileText className="w-4 h-4 mr-2" /> PDF Quebrados
                   </CathedraButton>
                 </div>
               )}
