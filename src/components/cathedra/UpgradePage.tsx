@@ -270,8 +270,6 @@ const UpgradePage: React.FC = () => {
       // No need to manual update here as the webhook function now handles it
       
       toast.success('Evento reprocessado com sucesso');
-
-      toast.success('Evento reprocessado com sucesso');
       fetchLogs();
     } catch (error: any) {
       toast.error('Erro ao reprocessar: ' + error.message);
