@@ -526,12 +526,6 @@ const UpgradePage: React.FC = () => {
                   </div>
                 </div>
               </TabsContent>
-                        <Button onClick={generateMonthlyReport} variant="secondary" className="rounded-premium-full">Relatório Mensal PDF</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
 
               <TabsContent value="tests">
                 <div className="bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30 text-center">
