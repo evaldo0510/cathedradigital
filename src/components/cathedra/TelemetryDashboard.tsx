@@ -109,9 +109,16 @@ const TelemetryDashboard: React.FC = () => {
                     {log.metadata?.route || '/'}
                   </td>
                   <td className="p-spacing-md">
-                    <Badge variant={log.event_type === 'error' ? 'destructive' : 'outline'} className="rounded-premium-full">
-                      {log.action || log.event_type}
-                    </Badge>
+                    <div className="flex flex-col gap-1">
+                      <Badge variant={log.metric_type === 'performance_event' ? 'outline' : 'secondary'} className="rounded-premium-full w-fit">
+                        {log.metric_type}
+                      </Badge>
+                      {log.metadata?.cls && (
+                        <span className="text-[9px] opacity-70">
+                          CLS: {log.metadata.cls} | INP: {log.metadata.inp}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-spacing-md text-right">
                     <CathedraButton size="sm" variant="ghost" onClick={() => console.log(log.metadata)}>
@@ -120,6 +127,7 @@ const TelemetryDashboard: React.FC = () => {
                   </td>
                 </tr>
               ))}
+
             </tbody>
           </table>
           {filteredLogs.length === 0 && !loading && (
