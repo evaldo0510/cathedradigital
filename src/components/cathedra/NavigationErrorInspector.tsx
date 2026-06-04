@@ -188,22 +188,39 @@ const NavigationErrorInspector: React.FC = () => {
                 className="h-8 border-none bg-transparent text-[10px] w-[110px]"
               />
             </div>
-            <CathedraButton 
-              variant="outline" 
-              size="sm" 
-              onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'json')} 
-              className="rounded-premium-full mr-2"
-            >
-              <Icons.Code className="w-4 h-4 mr-2" /> JSON
-            </CathedraButton>
-            <CathedraButton 
-              variant="outline" 
-              size="sm" 
-              onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
-              className="rounded-premium-full"
-            >
-              <Icons.Download className="w-4 h-4 mr-2" /> CSV
-            </CathedraButton>
+            <div className="flex gap-2">
+              <CathedraButton 
+                variant="outline" 
+                size="sm" 
+                onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
+                className="rounded-premium-full"
+              >
+                <Icons.Download className="w-4 h-4 mr-2" /> Exportar
+              </CathedraButton>
+              {activeTab === 'errors' && (
+                <CathedraButton 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    const broken = errors.filter(e => evidenceStatus[e.id] && !evidenceStatus[e.id].ok);
+                    const content = "RequestID,Rota,Status,Motivo\n" + broken.map(e => 
+                      `${e.metadata?.requestId || e.id},"${e.metadata?.route || ''}",Broken,"${evidenceStatus[e.id].reason}"`
+                    ).join("\n");
+                    const blob = new Blob([content], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `broken-links-${new Date().toISOString()}.csv`;
+                    a.click();
+                    toast.success("Relatório de links quebrados exportado.");
+                  }}
+                  className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
+                >
+                  <Icons.AlertTriangle className="w-4 h-4 mr-2" /> Links Quebrados
+                </CathedraButton>
+              )}
+            </div>
+
 
              <Input 
               placeholder="Buscar..." 
