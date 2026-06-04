@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { Icons } from '@/constants';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
+
 
 const TelemetryDashboard: React.FC = () => {
   const [logs, setLogs] = useState<any[]>([]);
@@ -31,9 +33,29 @@ const TelemetryDashboard: React.FC = () => {
     fetchLogs();
   }, []);
 
+  const downloadTelemetry = (format: 'json' | 'csv') => {
+    const data = format === 'json' 
+      ? JSON.stringify(filteredLogs, null, 2)
+      : "ID,Data,Rota,Tipo,Acao,Contexto\n" + filteredLogs.map(log => 
+          `${log.id},${log.created_at},"${log.metadata?.route || ''}",${log.event_type},"${log.action || ''}","${JSON.stringify(log.metadata || {}).replace(/"/g, '""')}"`
+        ).join("\n");
+    
+    const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `telemetry-mobile-${new Date().toISOString()}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`Telemetria exportada em ${format.toUpperCase()}`);
+  };
+
   const filteredLogs = logs.filter(log => 
     JSON.stringify(log).toLowerCase().includes(filter.toLowerCase())
   );
+
 
   return (
     <div className="max-w-6xl mx-auto p-spacing-lg space-y-spacing-xl">
@@ -46,7 +68,16 @@ const TelemetryDashboard: React.FC = () => {
             <Icons.Activity className="text-primary" /> Telemetria Mobile
           </h1>
           <div className="flex items-center gap-spacing-md">
+            <CathedraButton 
+              variant="outline" 
+              size="sm" 
+              onClick={() => downloadTelemetry('csv')}
+              className="rounded-premium-full h-spacing-xl"
+            >
+              <Icons.Download className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> CSV
+            </CathedraButton>
              <Input 
+
               placeholder="Buscar por ID, Rota..." 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}

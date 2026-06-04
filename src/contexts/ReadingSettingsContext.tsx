@@ -241,12 +241,20 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   const { user, profile, refreshProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<ReadingSettings>(() => {
-    const stored = localStorage.getItem('cathedra_reading_settings');
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+    const key = isMobile ? 'cathedra_reading_settings_mobile' : 'cathedra_reading_settings_desktop';
+    const stored = localStorage.getItem(key);
     const parsed = stored ? JSON.parse(stored) : defaultSettings;
     
-    // Ensure all keys from defaultSettings exist in stored settings
+    // Fallback para chave antiga se necessário
+    if (!stored) {
+      const legacy = localStorage.getItem('cathedra_reading_settings');
+      if (legacy) return { ...defaultSettings, ...JSON.parse(legacy) };
+    }
+    
     return { ...defaultSettings, ...parsed };
   });
+
 
   // Sync with profile if available
   useEffect(() => {
@@ -276,8 +284,13 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   }, [profile?.reading_settings]);
 
   useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+    const key = isMobile ? 'cathedra_reading_settings_mobile' : 'cathedra_reading_settings_desktop';
+    localStorage.setItem(key, JSON.stringify(settings));
+    // Keep legacy for compatibility
     localStorage.setItem('cathedra_reading_settings', JSON.stringify(settings));
   }, [settings]);
+
 
 
 
