@@ -154,7 +154,7 @@ const SecurityDashboard = () => {
             <Icons.Download className="w-spacing-sm h-spacing-sm" /> CSV
           </Button>
           <Button onClick={() => exportData('json')} variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs">
-            <Icons.FileJson className="w-spacing-sm h-spacing-sm" /> JSON
+            <Icons.FileText className="w-spacing-sm h-spacing-sm" /> JSON
           </Button>
           <Button onClick={fetchLogs} variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs">
             <Icons.RefreshCw className={`w-spacing-sm h-spacing-sm ${loading ? 'animate-spin' : ''}`} />
@@ -214,7 +214,6 @@ const SecurityDashboard = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-
               <TableHeader className="bg-muted/30">
                 <TableRow className="border-border/40">
                   <TableHead className="text-premium-xs font-black uppercase tracking-widest py-spacing-lg px-spacing-lg">Data/Hora</TableHead>
@@ -257,10 +256,7 @@ const SecurityDashboard = () => {
                           variant="ghost" 
                           size="sm" 
                           className="h-spacing-xl w-spacing-xl p-0 rounded-premium-full hover:bg-primary/5 text-primary"
-                          onClick={() => {
-                            console.log('Log details:', log.details);
-                            toast.info('Detalhes enviados para o console');
-                          }}
+                          onClick={() => setSelectedLog(log)}
                         >
                           <Icons.Info className="w-spacing-md h-spacing-md" />
                         </Button>
@@ -277,8 +273,98 @@ const SecurityDashboard = () => {
               </TableBody>
             </Table>
           </div>
+          
+          <div className="p-spacing-lg bg-muted/20 border-t border-border/40 flex items-center justify-between">
+            <p className="text-premium-xs text-muted-foreground">
+              Mostrando {filteredLogs.length} de {totalCount} registros
+            </p>
+            <div className="flex gap-spacing-xs">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={currentPage === 0} 
+                onClick={() => setCurrentPage(p => p - 1)}
+                className="rounded-premium-full"
+              >
+                Anterior
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={currentPage >= totalPages - 1} 
+                onClick={() => setCurrentPage(p => p + 1)}
+                className="rounded-premium-full"
+              >
+                Próximo
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
+
+      {/* Details Dialog */}
+      <Dialog open={!!selectedLog} onOpenChange={() => setSelectedLog(null)}>
+        <DialogContent className="max-w-spacing-4xl rounded-[2rem]">
+          <DialogHeader>
+            <DialogTitle className="text-premium-xl font-black uppercase tracking-tight flex items-center gap-spacing-xs">
+              <Icons.ShieldAlert className="text-primary" />
+              Detalhes do Evento
+            </DialogTitle>
+            <DialogDescription className="font-serif italic">
+              Investigação técnica do log ID: {selectedLog?.id}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg py-spacing-md">
+            <div className="space-y-spacing-md">
+              <div className="space-y-spacing-2xs">
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Informações de Contexto</h4>
+                <div className="bg-muted/30 p-spacing-md rounded-premium space-y-spacing-xs border border-border/20">
+                  <div className="flex justify-between text-premium-xs">
+                    <span className="font-bold">IP:</span>
+                    <span>{selectedLog?.ip_address || 'Não registrado'}</span>
+                  </div>
+                  <div className="flex justify-between text-premium-xs">
+                    <span className="font-bold">Usuário:</span>
+                    <span className="font-mono">{selectedLog?.user_id || 'Anônimo'}</span>
+                  </div>
+                  <div className="flex justify-between text-premium-xs">
+                    <span className="font-bold">Recurso:</span>
+                    <code className="bg-primary/5 text-primary px-1 rounded">{selectedLog?.resource}</code>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-spacing-2xs">
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Evento</h4>
+                <div className="bg-muted/30 p-spacing-md rounded-premium space-y-spacing-xs border border-border/20">
+                  <div className="flex justify-between text-premium-xs">
+                    <span className="font-bold">Tipo:</span>
+                    {getEventBadge(selectedLog?.event_type)}
+                  </div>
+                  <div className="flex justify-between text-premium-xs">
+                    <span className="font-bold">Ação:</span>
+                    <Badge variant="outline">{selectedLog?.action}</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-spacing-2xs">
+              <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Payload / Metadata</h4>
+              <pre className="bg-zinc-950 text-zinc-50 p-spacing-md rounded-premium text-[11px] font-mono overflow-auto max-h-[300px] border border-white/5">
+                {JSON.stringify(selectedLog?.details, null, 2)}
+              </pre>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setSelectedLog(null)} className="rounded-premium-full font-bold uppercase tracking-widest text-[10px]">
+              Fechar Detalhes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <footer className="text-center pt-spacing-xl opacity-40">
         <p className="text-[10px] font-black uppercase tracking-[0.3em]">
