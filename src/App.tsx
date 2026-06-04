@@ -390,8 +390,9 @@ const AppLayout: React.FC = () => {
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
           <AboveTheFoldTest />
           <SwipeNavigation>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
+
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
