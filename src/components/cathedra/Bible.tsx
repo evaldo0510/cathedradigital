@@ -461,11 +461,11 @@ const Bible: React.FC = () => {
             
             <div className="space-y-spacing-md">
               <div className="flex items-center justify-between px-spacing-md border-b border-primary/5 pb-spacing-sm">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Selecione o Capítulo</h4>
-                <span className="text-[9px] font-serif italic text-primary/20">{selectedBook.chapters} capítulos disponíveis</span>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Selectio</h4>
+                <span className="text-[8px] font-black uppercase tracking-widest text-primary/10">{selectedBook.chapters} CAPÍTULOS</span>
               </div>
               
-              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
                 {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
                   <button 
                     key={ch} 
@@ -473,7 +473,7 @@ const Bible: React.FC = () => {
                     className="aspect-square flex flex-col items-center justify-center bg-background hover:bg-primary/5 transition-all group"
                   >
                     <span className="text-premium-sm font-display group-hover:scale-110 transition-transform">{ch}</span>
-                    <span className="text-[6px] font-black uppercase tracking-tighter opacity-0 group-hover:opacity-20 transition-opacity mt-1">Cap.</span>
+                    <span className="text-[6px] font-black uppercase tracking-tighter opacity-0 group-hover:opacity-20 transition-opacity mt-1">CAP.</span>
                   </button>
                 ))}
               </div>
