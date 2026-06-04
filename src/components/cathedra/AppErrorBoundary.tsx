@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
 import * as Sentry from "@sentry/react";
+import { trackNavigationError } from '@/lib/telemetry';
+
 
 
 interface Props {
@@ -10,7 +12,9 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  errorId?: string;
 }
+
 
 class AppErrorBoundary extends Component<Props, State> {
   public state: State = {
@@ -22,7 +26,9 @@ class AppErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    const errorId = trackNavigationError(error, { componentStack: errorInfo.componentStack });
+    this.setState({ errorId });
+    
     Sentry.captureException(error, { 
       extra: { 
         componentStack: errorInfo.componentStack,
@@ -30,6 +36,7 @@ class AppErrorBoundary extends Component<Props, State> {
       } 
     });
   }
+
 
   public render() {
     if (this.state.hasError) {
@@ -49,7 +56,13 @@ class AppErrorBoundary extends Component<Props, State> {
               Pedimos desculpas, peregrino. Algo interrompeu esta seção da sua jornada espiritual. 
               Nossos guardiões técnicos já foram alertados.
             </p>
+            {this.state.errorId && (
+              <p className="text-[9px] font-mono opacity-20 uppercase tracking-widest mt-spacing-md">
+                Ref ID: {this.state.errorId}
+              </p>
+            )}
           </div>
+
 
           <div className="flex flex-col gap-spacing-sm w-full max-w-spacing-xs pt-spacing-md">
             <Button
