@@ -3,38 +3,50 @@ import * as Sentry from "@sentry/react";
 
 /**
  * A hook to monitor component render performance and re-render counts.
- * In development, it logs to console. In production, it can send breadcrumbs to Sentry
- * if a component renders excessively.
+ * Also measures CLS and transition stability.
  */
 export function useRenderPerf(componentName: string, threshold = 5) {
   const renderCount = useRef(0);
   const startTime = useRef(performance.now());
+  const clsValue = useRef(0);
 
   renderCount.current++;
 
   useEffect(() => {
-    const duration = performance.now() - startTime.current;
-    
-    if (import.meta.env.DEV) {
-      console.log(`[RenderPerf] ${componentName} rendered in ${duration.toFixed(2)}ms (count: ${renderCount.current})`);
-    }
-
-    if (renderCount.current > threshold) {
-      const message = `High re-render count detected for ${componentName}: ${renderCount.current}`;
-      
-      Sentry.addBreadcrumb({
-        category: 'performance',
-        message,
-        level: 'warning',
-        data: {
-          componentName,
-          renderCount: renderCount.current,
-          duration
+    // CLS Measurement (Simplified Web Vitals)
+    let cls = 0;
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as any[]) {
+        if (!entry.hadRecentInput) {
+          cls += entry.value;
         }
-      });
-    }
+      }
+      clsValue.current = cls;
+    });
 
-    // Reset start time for next potential render
+    observer.observe({ type: 'layout-shift', buffered: true });
+
+    return () => {
+      observer.disconnect();
+      const duration = performance.now() - startTime.current;
+      
+      if (import.meta.env.DEV) {
+        console.log(`[Perf] ${componentName}: ${duration.toFixed(2)}ms, CLS: ${clsValue.current.toFixed(4)}, Renders: ${renderCount.current}`);
+      }
+
+      if (clsValue.current > 0.1 || renderCount.current > threshold) {
+        Sentry.addBreadcrumb({
+          category: 'performance',
+          message: `${componentName} Metrics: CLS=${clsValue.current.toFixed(4)}, Renders=${renderCount.current}`,
+          level: 'warning',
+          data: { componentName, renderCount: renderCount.current, duration, cls: clsValue.current }
+        });
+      }
+    };
+  }, [componentName, threshold]);
+
+  useEffect(() => {
     startTime.current = performance.now();
   });
 }
+

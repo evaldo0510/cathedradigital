@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -15,7 +15,7 @@ import { useRovingTabindex } from './TabUtils';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 import ContemplativeLayout from './ContemplativeLayout';
-import { ListSkeleton } from './SacredSkeleton';
+import { ListSkeleton, SearchResultSkeleton, TagSkeleton } from './SacredSkeleton';
 
 
 type Saint = Tables<'saints'>;
@@ -31,6 +31,15 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   useAutoFocus();
   const [query, setQuery] = useState('');
   const viewportHeight = useVisualViewport();
+  
+  useEffect(() => {
+    if (query.length >= 2 && viewportHeight && viewportHeight < 600) {
+      const container = document.getElementById('search-results-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [query, viewportHeight]);
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
@@ -116,9 +125,12 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
         </div>
 
+
         <div 
+
           className="space-y-spacing-lg pb-spacing-4xl transition-all duration-300"
           style={{ minHeight: '50vh' }}
+          id="search-results-container"
         >
           <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
             <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
@@ -128,11 +140,17 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
 
         {anyPending && (
-          <div className="mt-spacing-xl space-y-spacing-md">
-            <ListSkeleton count={3} />
-            <div className="opacity-50">
-              <ListSkeleton count={2} />
-            </div>
+          <div className="mt-spacing-lg">
+            <Tabs defaultValue="santos" className="mt-spacing-lg">
+              <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-premium-full opacity-60">
+                <TabsTrigger value="santos" disabled className="text-premium-xs flex-1">Santos (...)</TabsTrigger>
+                <TabsTrigger value="glossario" disabled className="text-premium-xs flex-1">Glossário (...)</TabsTrigger>
+                <TabsTrigger value="comunidade" disabled className="text-premium-xs flex-1">Comunidade (...)</TabsTrigger>
+              </TabsList>
+              <div className="mt-spacing-md">
+                <SearchResultSkeleton count={3} />
+              </div>
+            </Tabs>
           </div>
         )}
 
@@ -175,7 +193,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 />
               ))}
               </AnimatePresence>
-              {saints.results?.length === 0 && <EmptyState text="Nenhum santo encontrado." />}
+              {saints.results?.length === 0 && !saints.isPending && <EmptyState text="Nenhum santo encontrado." />}
+              {saints.isPending && <SearchResultSkeleton count={3} />}
             </TabsContent>
 
             <TabsContent value="glossario" className="space-y-spacing-xs mt-spacing-md">
@@ -192,7 +211,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 />
               ))}
               </AnimatePresence>
-              {glossary.results?.length === 0 && <EmptyState text="Nenhum termo encontrado." />}
+              {glossary.results?.length === 0 && !glossary.isPending && <EmptyState text="Nenhum termo encontrado." />}
+              {glossary.isPending && <SearchResultSkeleton count={3} />}
             </TabsContent>
 
             <TabsContent value="comunidade" className="space-y-spacing-xs mt-spacing-md">
@@ -209,7 +229,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 />
               ))}
               </AnimatePresence>
-              {community.results?.length === 0 && <EmptyState text="Nenhuma discussão encontrada." />}
+              {community.results?.length === 0 && !community.isPending && <EmptyState text="Nenhuma discussão encontrada." />}
+              {community.isPending && <SearchResultSkeleton count={3} />}
             </TabsContent>
 
             <TabsContent value="temas" className="space-y-spacing-xs mt-spacing-md">
@@ -231,7 +252,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   </Button>
                 ))}
               </div>
-              {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}
+              {tags.results?.length === 0 && !tags.isPending && <EmptyState text="Nenhum tema encontrado." />}
+              {tags.isPending && <TagSkeleton count={5} />}
             </TabsContent>
 
             <TabsContent value="jornadas" className="space-y-spacing-xs mt-spacing-md">
@@ -248,7 +270,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 />
               ))}
               </AnimatePresence>
-              {journeys.results?.length === 0 && <EmptyState text="Nenhuma jornada encontrada." />}
+              {journeys.results?.length === 0 && !journeys.isPending && <EmptyState text="Nenhuma jornada encontrada." />}
+              {journeys.isPending && <SearchResultSkeleton count={3} />}
             </TabsContent>
           </Tabs>
         )}
