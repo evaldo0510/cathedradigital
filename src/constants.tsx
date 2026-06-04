@@ -212,7 +212,10 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
     )}>
       <img 
         src={cathedraLogo} 
-        alt="Cathedra" 
+        alt="Cathedra - Digital Sanctuarium" 
+        loading="lazy"
+        width="64"
+        height="64"
         className={cn(
           "w-full h-full object-contain transition-all duration-1000 group-hover:scale-105",
           variant === 'light' && "brightness-0 invert opacity-80",

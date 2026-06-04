@@ -262,6 +262,7 @@ const InstitutionalVideoSection = () => {
                   ref={videoRef}
                   src={videoAsset.url}
                   poster="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1200"
+                  aria-label="Vídeo de apresentação da Catedra Digital"
                   muted
                   loop
                   autoPlay

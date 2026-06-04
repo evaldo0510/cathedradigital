@@ -357,9 +357,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 </div>
 
                 <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Instagram size={14} /></a>
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Youtube size={14} /></a>
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Whatsapp size={14} /></a>
+                  <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
+                  <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
+                  <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Fale conosco no Whatsapp"><Icons.Whatsapp size={14} /></a>
                 </div>
               </div>
 

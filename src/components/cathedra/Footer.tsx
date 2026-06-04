@@ -277,12 +277,12 @@ const Footer: React.FC = React.memo(() => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full pl-spacing-md pr-spacing-2xl py-spacing-xs text-premium-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full pl-spacing-md pr-spacing-3xl py-spacing-sm text-premium-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="absolute right-spacing-2xs top-spacing-2xs bottom-spacing-2xs px-spacing-sm bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50"
+                  className="absolute right-spacing-xs top-spacing-xs bottom-spacing-xs px-spacing-md bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   {isSubmitting ? (
                     <div className="w-spacing-md h-spacing-md border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
