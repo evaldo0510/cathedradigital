@@ -1,8 +1,13 @@
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Icons } from '@/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
+import Papa from 'papaparse';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +26,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw } from "lucide-react";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
@@ -63,6 +75,9 @@ const UpgradePage: React.FC = () => {
   const [isSimulating, setIsSimulating] = useState(false);
   const [webhookLogs, setWebhookLogs] = useState<any[]>([]);
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterDate, setFilterDate] = useState<string>('all');
+  const [isReprocessing, setIsReprocessing] = useState<string | null>(null);
 
   const { isAdmin } = useIsAdmin();
 
@@ -72,18 +87,92 @@ const UpgradePage: React.FC = () => {
     }
   }, [isAdmin]);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
+    if (!isAdmin) return;
     setIsLoadingLogs(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('webhook_logs')
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
+      .order('created_at', { ascending: false });
+    
+    if (filterStatus !== 'all') {
+      query = query.eq('status', filterStatus);
+    }
+
+    if (filterDate !== 'all') {
+      const now = new Date();
+      if (filterDate === 'today') {
+        const today = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+        query = query.gte('created_at', today);
+      } else if (filterDate === 'week') {
+        const lastWeek = new Date(now.setDate(now.getDate() - 7)).toISOString();
+        query = query.gte('created_at', lastWeek);
+      }
+    }
+
+    const { data, error } = await query.limit(50);
     
     if (!error && data) {
       setWebhookLogs(data);
     }
     setIsLoadingLogs(false);
+  }, [isAdmin, filterStatus, filterDate]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs]);
+
+  const exportCSV = () => {
+    const csv = Papa.unparse(webhookLogs);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `webhook_logs_${new Date().toISOString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Logs exportados para CSV');
+  };
+
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Relatório de Webhooks - Mercado Pago", 14, 15);
+    const tableData = webhookLogs.map(log => [
+      new Date(log.created_at).toLocaleString(),
+      log.event_type,
+      log.status,
+      log.duration_ms || '-',
+      log.error_message || '-'
+    ]);
+    (doc as any).autoTable({
+      head: [['Data', 'Evento', 'Status', 'Duração', 'Erro']],
+      body: tableData,
+      startY: 20
+    });
+    doc.save(`webhook_logs_${new Date().toISOString()}.pdf`);
+    toast.success('Logs exportados para PDF');
+  };
+
+  const reprocessWebhook = async (log: any) => {
+    setIsReprocessing(log.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
+        body: log.payload,
+        headers: {
+          'x-request-id': `repro_${log.event_id || Date.now()}`,
+          'x-reprocessed-from': log.id
+        }
+      });
+      if (error) throw error;
+      toast.success('Evento reprocessado com sucesso');
+      fetchLogs();
+    } catch (error: any) {
+      toast.error('Erro ao reprocessar: ' + error.message);
+    } finally {
+      setIsReprocessing(null);
+    }
   };
 
   const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
@@ -309,14 +398,49 @@ const UpgradePage: React.FC = () => {
 
               <TabsContent value="logs">
                 <div className="bg-card border border-border/50 rounded-[2.5rem] overflow-hidden">
-                  <div className="p-spacing-md border-b border-border/50 flex justify-between items-center bg-muted/20">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-bold text-premium-sm uppercase tracking-wider">Últimos Eventos</span>
+                  <div className="p-spacing-md border-b border-border/50 bg-muted/20 space-y-spacing-md">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-spacing-md">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-bold text-premium-sm uppercase tracking-wider">Monitor de Webhooks</span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button variant="outline" size="sm" onClick={exportCSV} className="rounded-premium-full text-[10px] font-bold uppercase">
+                          <Icons.Download className="w-3 h-3 mr-1" /> CSV
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={exportPDF} className="rounded-premium-full text-[10px] font-bold uppercase">
+                          <Icons.FileText className="w-3 h-3 mr-1" /> PDF
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs} className="rounded-premium-full">
+                          <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
+                        </Button>
+                      </div>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs}>
-                      <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
-                    </Button>
+
+                    <div className="flex flex-wrap gap-2">
+                      <Select value={filterStatus} onValueChange={setFilterStatus}>
+                        <SelectTrigger className="w-[140px] h-8 text-[10px] uppercase font-bold rounded-premium-full bg-background">
+                          <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-premium">
+                          <SelectItem value="all">Todos Status</SelectItem>
+                          <SelectItem value="success">Sucesso</SelectItem>
+                          <SelectItem value="failed">Falha</SelectItem>
+                          <SelectItem value="pending">Pendente</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Select value={filterDate} onValueChange={setFilterDate}>
+                        <SelectTrigger className="w-[140px] h-8 text-[10px] uppercase font-bold rounded-premium-full bg-background">
+                          <SelectValue placeholder="Período" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-premium">
+                          <SelectItem value="all">Sempre</SelectItem>
+                          <SelectItem value="today">Hoje</SelectItem>
+                          <SelectItem value="week">Últimos 7 dias</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <ScrollArea className="h-[400px]">
                     <Table>
@@ -326,7 +450,8 @@ const UpgradePage: React.FC = () => {
                           <TableHead>Evento</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Duração</TableHead>
-                          <TableHead>Erro</TableHead>
+                          <TableHead>Erro / Idempotency</TableHead>
+                          <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -345,7 +470,21 @@ const UpgradePage: React.FC = () => {
                               </TableCell>
                               <TableCell className="text-muted-foreground text-xs">{log.duration_ms ? `${log.duration_ms}ms` : '-'}</TableCell>
                               <TableCell className="max-w-[200px] truncate text-red-500 text-xs italic">
-                                {log.error_message || '-'}
+                                {log.error_message || log.event_id || '-'}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {(log.status === 'failed' || log.status === 'pending') && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => reprocessWebhook(log)}
+                                    disabled={isReprocessing === log.id}
+                                    className="h-7 px-2 text-[10px] font-bold uppercase text-primary"
+                                  >
+                                    <RefreshCcw className={`w-3 h-3 mr-1 ${isReprocessing === log.id ? 'animate-spin' : ''}`} />
+                                    Reprocessar
+                                  </Button>
+                                )}
                               </TableCell>
                             </TableRow>
                           ))}

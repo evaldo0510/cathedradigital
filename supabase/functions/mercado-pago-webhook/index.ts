@@ -19,6 +19,10 @@ serve(async (req) => {
 
   let logId: string | null = null
   let body: any = {}
+  
+  // Robustness simulation headers
+  const simulateDbError = req.headers.get('x-simulate-db-error') === 'true'
+  const simulateTimeout = req.headers.get('x-simulate-timeout') === 'true'
 
   try {
     const signature = req.headers.get('x-signature') || req.headers.get('x-mp-signature')
@@ -69,6 +73,15 @@ serve(async (req) => {
 
     const { action, data, simulation, simulated_status, userId: providedUserId } = body
     
+    if (simulateDbError) {
+      throw new Error('Simulated Database Error')
+    }
+
+    if (simulateTimeout) {
+      await new Promise(resolve => setTimeout(resolve, 5000))
+      throw new Error('Simulated Timeout Error')
+    }
+
     if (action === 'payment.created' || action === 'payment.updated') {
       const paymentId = data.id
       let paymentDetails: any
