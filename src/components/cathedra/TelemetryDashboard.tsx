@@ -19,12 +19,11 @@ const TelemetryDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchLogs = async () => {
-      // Nota: Em um ambiente real, leríamos da tabela 'security_logs' ou similar filtrando por tipo
       const { data, error } = await supabase
-        .from('security_logs')
+        .from('app_metrics')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(100);
       
       if (!error && data) setLogs(data);
       setLoading(false);
@@ -33,24 +32,26 @@ const TelemetryDashboard: React.FC = () => {
     fetchLogs();
   }, []);
 
+
   const downloadTelemetry = (format: 'json' | 'csv') => {
     const data = format === 'json' 
       ? JSON.stringify(filteredLogs, null, 2)
-      : "ID,Data,Rota,Tipo,Acao,Contexto\n" + filteredLogs.map(log => 
-          `${log.id},${log.created_at},"${log.metadata?.route || ''}",${log.event_type},"${log.action || ''}","${JSON.stringify(log.metadata || {}).replace(/"/g, '""')}"`
+      : "ID,Data,Rota,Tipo,CLS,INP,TBT,Contexto\n" + filteredLogs.map(log => 
+          `${log.id},${log.created_at},"${log.metadata?.route || ''}",${log.event_type},${log.metadata?.cls || ''},${log.metadata?.inp || ''},${log.metadata?.tbt || ''},"${JSON.stringify(log.metadata || {}).replace(/"/g, '""')}"`
         ).join("\n");
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `telemetry-mobile-${new Date().toISOString()}.${format}`;
+    a.download = `telemetry-performance-${new Date().toISOString()}.${format}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success(`Telemetria exportada em ${format.toUpperCase()}`);
   };
+
 
   const filteredLogs = logs.filter(log => 
     JSON.stringify(log).toLowerCase().includes(filter.toLowerCase())
@@ -108,9 +109,16 @@ const TelemetryDashboard: React.FC = () => {
                     {log.metadata?.route || '/'}
                   </td>
                   <td className="p-spacing-md">
-                    <Badge variant={log.event_type === 'error' ? 'destructive' : 'outline'} className="rounded-premium-full">
-                      {log.action || log.event_type}
-                    </Badge>
+                    <div className="flex flex-col gap-1">
+                      <Badge variant={log.metric_type === 'performance_event' ? 'outline' : 'secondary'} className="rounded-premium-full w-fit">
+                        {log.metric_type}
+                      </Badge>
+                      {log.metadata?.cls && (
+                        <span className="text-[9px] opacity-70">
+                          CLS: {log.metadata.cls} | INP: {log.metadata.inp}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-spacing-md text-right">
                     <CathedraButton size="sm" variant="ghost" onClick={() => console.log(log.metadata)}>
@@ -119,6 +127,7 @@ const TelemetryDashboard: React.FC = () => {
                   </td>
                 </tr>
               ))}
+
             </tbody>
           </table>
           {filteredLogs.length === 0 && !loading && (

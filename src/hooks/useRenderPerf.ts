@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as Sentry from "@sentry/react";
 import { onCLS, onINP, onLCP, onFCP } from 'web-vitals';
 import { useLocation } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 /**
  * A hook to monitor component render performance and re-render counts.
@@ -23,16 +24,16 @@ export function useRenderPerf(componentName: string, threshold = 5) {
 
   useEffect(() => {
     // Track Web Vitals
-    const unsubCLS = onCLS((metric) => {
+    onCLS((metric) => {
       metrics.current.cls = metric.value;
     });
-    const unsubINP = onINP((metric) => {
+    onINP((metric) => {
       metrics.current.inp = metric.value;
     });
-    const unsubLCP = onLCP((metric) => {
+    onLCP((metric) => {
       metrics.current.lcp = metric.value;
     });
-    const unsubFCP = onFCP((metric) => {
+    onFCP((metric) => {
       metrics.current.fcp = metric.value;
     });
 
@@ -54,7 +55,6 @@ export function useRenderPerf(componentName: string, threshold = 5) {
     return () => {
       observer.disconnect();
 
-
       const duration = performance.now() - startTime.current;
       const route = location.pathname;
       
@@ -67,6 +67,7 @@ export function useRenderPerf(componentName: string, threshold = 5) {
         inp: `${metrics.current.inp.toFixed(2)}ms`,
         lcp: `${metrics.current.lcp.toFixed(2)}ms`,
         tbt: `${metrics.current.tbt.toFixed(2)}ms`,
+        timestamp: new Date().toISOString()
       };
 
       if (import.meta.env.DEV) {
@@ -74,6 +75,12 @@ export function useRenderPerf(componentName: string, threshold = 5) {
         console.table(report);
         console.groupEnd();
       }
+
+      // Record performance event in audit trail
+      supabase.from('app_metrics').insert([{
+        metric_type: 'performance_event',
+        metadata: report
+      }]).then(() => {}, (err) => console.error("Perf Logging Error", err));
 
       // Log to Sentry if metrics exceed thresholds
       if (metrics.current.cls > 0.1 || metrics.current.inp > 200 || renderCount.current > threshold) {
@@ -91,5 +98,3 @@ export function useRenderPerf(componentName: string, threshold = 5) {
     startTime.current = performance.now();
   });
 }
-
-
