@@ -5,7 +5,7 @@ import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Webhook, CreditCard, Activity } from 'lucide-react';
+import { Webhook, CreditCard, Activity, Zap, RefreshCcw, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -81,25 +81,51 @@ const PremiumAuditTrail: React.FC = () => {
             
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <p className="text-premium-sm font-bold text-foreground">
-                  {item.type === 'transaction' ? 'Atualização de Pagamento' : `Webhook: ${item.event_type}`}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-premium-sm font-bold text-foreground">
+                    {item.type === 'transaction' 
+                      ? (item.status === 'approved' ? 'Acesso PRO Ativado' : 'Tentativa de Pagamento') 
+                      : `Evento Webhook: ${item.event_type}`}
+                  </p>
+                  {item.type === 'transaction' && item.status === 'approved' && (
+                    <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
+                  )}
+                </div>
                 <span className="text-[10px] text-muted-foreground font-mono">
                   {format(item.date, "dd/MM/yy HH:mm", { locale: ptBR })}
                 </span>
               </div>
               
               <div className="flex items-center gap-2">
-                <Badge variant={item.status === 'approved' || item.status === 'success' ? 'default' : 'secondary'} className="text-[9px] px-1.5 py-0">
+                <Badge variant={item.status === 'approved' || item.status === 'success' ? 'default' : item.status === 'pending' ? 'outline' : 'destructive'} className="text-[9px] px-1.5 py-0">
                   {item.status.toUpperCase()}
                 </Badge>
-                {item.payment_id && (
-                  <span className="text-[10px] text-muted-foreground">ID: {item.payment_id}</span>
+                {(item.payment_id || item.event_id) && (
+                  <span className="text-[10px] text-muted-foreground font-mono flex items-center gap-1">
+                    <Icons.ShieldCheck className="w-2 h-2" />
+                    ID: {item.payment_id || item.event_id}
+                  </span>
                 )}
               </div>
 
+              {item.type === 'transaction' && item.amount && (
+                <p className="text-[10px] text-muted-foreground">
+                  Valor: R$ {item.amount} {item.description ? `· ${item.description}` : ''}
+                </p>
+              )}
+
               {item.error_message && (
-                <p className="text-[10px] text-red-500 italic mt-1">{item.error_message}</p>
+                <div className="flex items-center gap-1.5 mt-1 bg-red-500/5 p-1 rounded border border-red-500/10">
+                  <AlertCircle className="w-2.5 h-2.5 text-red-500" />
+                  <p className="text-[10px] text-red-500 italic">{item.error_message}</p>
+                </div>
+              )}
+              
+              {item.retry_count > 0 && (
+                <p className="text-[9px] text-primary font-bold flex items-center gap-1">
+                  <RefreshCcw className="w-2 h-2" />
+                  Retentativa #{item.retry_count}
+                </p>
               )}
             </div>
           </div>

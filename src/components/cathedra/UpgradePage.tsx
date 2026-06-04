@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Papa from 'papaparse';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { format } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
@@ -542,7 +542,7 @@ const UpgradePage: React.FC = () => {
                                     className="h-7 px-2 text-[10px] font-bold uppercase text-primary"
                                   >
                                     <RefreshCcw className={`w-3 h-3 mr-1 ${isReprocessing === log.id ? 'animate-spin' : ''}`} />
-                                    Reprocessar
+                                    Reprocessar {log.retry_count > 0 && `(#${log.retry_count})`}
                                   </Button>
                                 )}
                               </TableCell>
