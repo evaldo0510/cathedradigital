@@ -2458,6 +2458,7 @@ export type Database = {
           id: string
           last_occurrence: string | null
           message: string
+          severity: string | null
         }
         Insert: {
           alert_type: string
@@ -2466,6 +2467,7 @@ export type Database = {
           id?: string
           last_occurrence?: string | null
           message: string
+          severity?: string | null
         }
         Update: {
           alert_type?: string
@@ -2474,6 +2476,7 @@ export type Database = {
           id?: string
           last_occurrence?: string | null
           message?: string
+          severity?: string | null
         }
         Relationships: []
       }
@@ -2527,6 +2530,7 @@ export type Database = {
       }
       webhook_settings: {
         Row: {
+          alert_notification_email: string | null
           alert_threshold_invalid_sig: number | null
           alert_threshold_timeout: number | null
           alert_window_minutes: number | null
@@ -2537,6 +2541,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          alert_notification_email?: string | null
           alert_threshold_invalid_sig?: number | null
           alert_threshold_timeout?: number | null
           alert_window_minutes?: number | null
@@ -2547,6 +2552,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          alert_notification_email?: string | null
           alert_threshold_invalid_sig?: number | null
           alert_threshold_timeout?: number | null
           alert_window_minutes?: number | null
