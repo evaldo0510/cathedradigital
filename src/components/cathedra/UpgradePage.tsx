@@ -61,19 +61,55 @@ const UpgradePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, isPremium } = useAuth();
   const [isSimulating, setIsSimulating] = useState(false);
+  const [webhookLogs, setWebhookLogs] = useState<any[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
 
   const { isAdmin } = useIsAdmin();
 
-  const simulatePayment = async () => {
+  useEffect(() => {
+    if (isAdmin) {
+      fetchLogs();
+    }
+  }, [isAdmin]);
+
+  const fetchLogs = async () => {
+    setIsLoadingLogs(true);
+    const { data, error } = await supabase
+      .from('webhook_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (!error && data) {
+      setWebhookLogs(data);
+    }
+    setIsLoadingLogs(false);
+  };
+
+  const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
     if (!user) return;
     setIsSimulating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('mercadopago-simulate', {
-        body: { userId: user.id, planId: 'cathedra_pro_annual_test', status: 'approved' },
+      // We'll call the actual webhook with a simulated payload
+      const requestId = `sim_${Date.now()}`;
+      const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
+        body: { 
+          action: 'payment.updated', 
+          data: { id: 'sim_payment_123' },
+          simulation: true,
+          simulated_status: status
+        },
+        headers: {
+          'x-request-id': requestId,
+          'x-simulation': 'true'
+        }
       });
+      
       if (error) throw error;
-      toast.success('Simulação concluída! Seu acesso PRO foi liberado.');
-      setTimeout(() => window.location.reload(), 1500);
+      
+      toast.success(`Simulação de ${status} enviada para o webhook.`);
+      fetchLogs();
+      setTimeout(() => window.location.reload(), 2000);
     } catch (error: any) {
       toast.error('Erro na simulação: ' + error.message);
     } finally {
