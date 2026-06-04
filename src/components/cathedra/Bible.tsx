@@ -115,6 +115,17 @@ const Bible: React.FC = () => {
         setVerses(prev => [...prev, ...newVerses]);
       } else {
         setVerses(newVerses);
+        
+        // Auto-scroll to saved verse if loading a chapter
+        const memoryKey = `bible:${abbr}:${chapter}`;
+        const savedVerse = settings.audioPositionMemory[memoryKey];
+        if (savedVerse) {
+          setTimeout(() => {
+            const el = document.getElementById(`v${savedVerse}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 500);
+        }
+
         // Preload next chapter when loading a new chapter normally
         preloadNextChapter(abbr, chapter + 1);
       }
@@ -319,8 +330,19 @@ const Bible: React.FC = () => {
     };
 
     utteranceRef.current = utterance;
+    
+    // Jump to saved verse if it's in the current chapter
+    if (savedPos > 0 && savedPos <= verses.length) {
+      // In Web Speech API we can't jump to a boundary directly in the speak() call easily,
+      // but we can slice the text. However, for simplicity and boundary tracking reliability, 
+      // we'll just scroll to it and start. 
+      // A better way is to create a new utterance from the text slice.
+      const el = document.getElementById(`v${savedPos}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     window.speechSynthesis.speak(utterance);
-  }, [verses, isSpeaking, isPaused, lang, playbackRate, updateSettings, settings.immersiveMode, user, selectedBook, saveLastRead]);
+  }, [verses, isSpeaking, isPaused, lang, playbackRate, updateSettings, settings.audioPositionMemory, settings.audioContinuous, settings.immersiveMode, user, selectedBook, selectedChapter, saveLastRead]);
 
   useEffect(() => {
     const handleToggleAudio = (e: any) => {
