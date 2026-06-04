@@ -551,7 +551,7 @@ const Bible: React.FC = () => {
                         <div className="w-8 h-px bg-primary/10 mt-spacing-md" />
                       </div>
                     )}
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/[0.03] text-[9px] font-black text-primary/30 mr-spacing-md align-middle">{v.number}</span>
+                    <span className="text-[10px] font-black text-primary/10 mr-spacing-md align-middle">{v.number}</span>
                     <span className="leading-[1.8] align-middle">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
