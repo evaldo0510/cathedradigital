@@ -201,6 +201,7 @@ const SettingsSideEffects: React.FC = () => {
     toggleClass('total-silence', settings.totalSilence);
     toggleClass('full-screen-mode', settings.fullScreen);
     toggleClass('focus-mode', settings.focusMode);
+    toggleClass('immersive-mode', settings.immersiveMode);
     
   }, [settings]);
 
