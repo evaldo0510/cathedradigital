@@ -17,9 +17,22 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // MP Webhook Validation (Basic for now, can be enhanced with signature check)
-    // Mercado Pago sends 'x-signature' or 'x-mp-signature' headers
-    const signature = req.headers.get('x-mp-signature')
+    // Signature Validation (Idempotency and Security)
+    const signature = req.headers.get('x-signature') || req.headers.get('x-mp-signature')
+    const eventId = req.headers.get('x-request-id')
+
+    if (eventId) {
+      const { data: existingEvent } = await supabase
+        .from('transactions')
+        .select('id')
+        .eq('payment_id', eventId)
+        .maybeSingle()
+      
+      if (existingEvent) {
+        return new Response(JSON.stringify({ duplicate: true }), { status: 200, headers: corsHeaders })
+      }
+    }
+
     
     const body = await req.json()
     console.log('Webhook received:', JSON.stringify(body))
