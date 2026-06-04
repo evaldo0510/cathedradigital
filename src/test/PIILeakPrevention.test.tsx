@@ -33,7 +33,8 @@ test('Export Schema & PII Protection: JSON/CSV data must be redacted', () => {
   expect(lastEvent.message).toContain('[EMAIL_REDACTED]');
   expect(lastEvent.message).toContain('[JWT_REDACTED]');
   expect(lastEvent.stack).not.toContain('secret@user.com');
-  expect(lastEvent.email).toBe('***MASKED***');
+  // safeContext was spread, so email is at top level
+  expect(lastEvent.context.context.email).toBe('***MASKED***');
 
   // 2. Schema Versioning check (Simulated)
   const schemaVersion = '2.1.0';

@@ -17,7 +17,7 @@ const maskSensitiveData = (data: Record<string, any>) => {
       // Regex para remover padrões comuns de PII (emails e tokens) de strings de texto
       masked[key] = masked[key]
         .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL_REDACTED]')
-        .replace(/ey[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}/g, '[JWT_REDACTED]');
+        .replace(/eyJ[a-zA-Z0-9._%-]*\.[a-zA-Z0-9._%-]*\.[a-zA-Z0-9._%-]*/g, '[JWT_REDACTED]');
     } else if (typeof masked[key] === 'object') {
       masked[key] = maskSensitiveData(masked[key]);
     }
@@ -36,9 +36,7 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
   const viewport = `${window.innerWidth}x${window.innerHeight}`;
   const isMobile = window.innerWidth < 1024;
 
-  console.error(`[${errorType.toUpperCase()}] ID: ${requestId}, Route: ${route}`, error, safeContext);
-  
-  trackEvent('error', {
+  const properties = {
     type: errorType,
     requestId,
     route,
@@ -47,7 +45,11 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
     isMobile,
     viewport,
     ...safeContext
-  });
+  };
+
+  console.error(`[${errorType.toUpperCase()}] ID: ${requestId}, Route: ${route}`, error, properties);
+  
+  trackEvent('error', properties);
 
   return requestId;
 };
