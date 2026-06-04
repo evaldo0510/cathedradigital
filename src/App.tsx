@@ -379,19 +379,21 @@ const AppLayout: React.FC = () => {
             />
           )}
         
-        <CathedralSidebar 
-          isOpen={isSidebarOpen}
-          user={authUserAdapter}
-          onClose={handleCloseSidebar}
-          isDark={isDark}
-          onToggleDark={toggleDark}
-          isHighContrast={isHighContrast}
-          onToggleHighContrast={toggleHighContrast}
-          isSpeaking={isSpeaking}
-          onToggleSpeak={toggleSpeak}
-          onOpenA11y={handleOpenA11y}
-          onSignOut={signOut}
-        />
+        {!settings.immersiveMode && (
+          <CathedralSidebar 
+            isOpen={isSidebarOpen}
+            user={authUserAdapter}
+            onClose={handleCloseSidebar}
+            isDark={isDark}
+            onToggleDark={toggleDark}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={toggleHighContrast}
+            isSpeaking={isSpeaking}
+            onToggleSpeak={toggleSpeak}
+            onOpenA11y={handleOpenA11y}
+            onSignOut={signOut}
+          />
+        )}
         
         <GlobalLogosAI />
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
