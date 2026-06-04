@@ -33,18 +33,19 @@ const NavigationErrorInspector: React.FC = () => {
     for (const err of errorLogs) {
       const url = err.metadata?.screenshotUrl;
       if (!url) {
-        health[err.id] = { ok: false, reason: 'No URL' };
+        health[err.id] = { ok: false, reason: 'Sem URL' };
         continue;
       }
       try {
         const resp = await fetch(url, { method: 'HEAD' });
         health[err.id] = resp.ok ? { ok: true } : { ok: false, reason: `HTTP ${resp.status}` };
       } catch (e) {
-        health[err.id] = { ok: false, reason: 'Network Error' };
+        health[err.id] = { ok: false, reason: 'Erro de Rede' };
       }
     }
     setEvidenceStatus(health);
   };
+
 
   const handleImportLegacy = (rawData: any) => {
     if (Array.isArray(rawData)) {
