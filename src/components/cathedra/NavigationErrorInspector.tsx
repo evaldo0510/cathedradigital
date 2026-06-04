@@ -72,11 +72,16 @@ const NavigationErrorInspector: React.FC = () => {
   };
 
   const checkEvidenceHealth = async (errorLogs: any[]) => {
-    const health: Record<string, { ok: boolean; reason?: string; detail?: string }> = {};
+    const health: Record<string, { ok: boolean; reason?: string; detail?: string; code?: string }> = {};
     for (const err of errorLogs) {
       const url = err.metadata?.screenshotUrl;
       if (!url) {
-        health[err.id] = { ok: false, reason: 'Sem URL', detail: 'Nenhuma evidência visual anexada ao log.' };
+        health[err.id] = { 
+          ok: false, 
+          reason: 'Sem URL', 
+          detail: 'Nenhuma evidência visual anexada ao log.',
+          code: 'ERRO_NAO_ENCONTRADO'
+        };
         continue;
       }
       try {
@@ -85,18 +90,33 @@ const NavigationErrorInspector: React.FC = () => {
           health[err.id] = { ok: true };
         } else {
           let detail = 'Desconhecido';
-          if (resp.status === 404) detail = 'Arquivo não encontrado no storage.';
-          else if (resp.status === 403) detail = 'Permissão negada ou Token expirado.';
-          else if (resp.status === 401) detail = 'Autenticação necessária.';
+          let code = 'ERRO_DESCONHECIDO';
+          
+          if (resp.status === 404) {
+            detail = 'A evidência solicitada não existe no storage.';
+            code = 'ERRO_NAO_ENCONTRADO';
+          } else if (resp.status === 403) {
+            detail = 'Token expirado ou acesso negado.';
+            code = 'ERRO_PERMISSAO';
+          } else if (resp.status === 401) {
+            detail = 'Autenticação necessária para acessar esta evidência.';
+            code = 'ERRO_AUTENTICACAO';
+          }
           
           health[err.id] = { 
             ok: false, 
             reason: `HTTP ${resp.status}`,
-            detail: detail
+            detail: detail,
+            code: code
           };
         }
       } catch (e) {
-        health[err.id] = { ok: false, reason: 'Erro de Rede', detail: 'Falha na conexão com o servidor de assets.' };
+        health[err.id] = { 
+          ok: false, 
+          reason: 'Erro de Rede', 
+          detail: 'Falha na conexão com o servidor de assets.',
+          code: 'ERRO_REDE'
+        };
       }
     }
     setEvidenceStatus(health);
