@@ -503,15 +503,25 @@ const NavigationErrorInspector: React.FC = () => {
         </div>
       )}
 
-      {auditMode && (
-                    <CathedraButton 
-                      variant="primary" 
-                      size="sm" 
-                      onClick={() => downloadReport('summary', 'pdf')} 
-                      className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
-                    >
-                      <Icons.Activity className="w-4 h-4 mr-2" /> Resumo Auditoria
-                    </CathedraButton>
+                  {auditMode && (
+                    <div className="flex gap-2">
+                      <CathedraButton 
+                        variant="primary" 
+                        size="sm" 
+                        onClick={() => downloadReport('summary', 'pdf')} 
+                        className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
+                      >
+                        <Icons.Activity className="w-4 h-4 mr-2" /> PDF Resumo
+                      </CathedraButton>
+                      <CathedraButton 
+                        variant="primary" 
+                        size="sm" 
+                        onClick={() => downloadReport('summary', 'json')} 
+                        className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-secondary to-secondary/80"
+                      >
+                        <Icons.Download className="w-4 h-4 mr-2" /> JSON Resumo
+                      </CathedraButton>
+                    </div>
                   )}
                 </div>
               )}
