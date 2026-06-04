@@ -128,9 +128,21 @@ const NavigationErrorInspector: React.FC = () => {
     fetchAuditLogs();
   };
 
-  const filteredErrors = errors.filter(err => 
-    JSON.stringify(err).toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredErrors = errors.filter(err => {
+    const matchesSearch = JSON.stringify(err).toLowerCase().includes(filter.toLowerCase());
+    const statusInfo = evidenceStatus[err.id];
+    
+    if (statusFilter === 'all') return matchesSearch;
+    if (statusFilter === 'broken') return matchesSearch && statusInfo && !statusInfo.ok;
+    if (statusFilter === 'ok') return matchesSearch && statusInfo && statusInfo.ok;
+    
+    if (statusFilter.startsWith('http_')) {
+      const code = statusFilter.split('_')[1];
+      return matchesSearch && statusInfo?.reason?.includes(code);
+    }
+    
+    return matchesSearch;
+  });
 
   const filteredAuditLogs = auditLogs.filter(log => {
     const userMatch = !auditFilterUser || (log.profiles?.name || 'Admin').toLowerCase().includes(auditFilterUser.toLowerCase());
@@ -138,7 +150,7 @@ const NavigationErrorInspector: React.FC = () => {
     return userMatch && generalMatch;
   });
 
-  const downloadReport = (type: 'errors' | 'audit' | 'broken', formatExt: 'json' | 'csv') => {
+  const downloadReport = (type: 'errors' | 'audit' | 'broken', formatExt: 'json' | 'csv' | 'pdf') => {
     let dataToExport: any[] = [];
     let fileName = '';
     const SCHEMA_VERSION = 'v2.1';
@@ -154,11 +166,45 @@ const NavigationErrorInspector: React.FC = () => {
         requestId: e.metadata?.requestId || e.id,
         route: e.metadata?.route || '/',
         status: 'Broken',
-        reason: evidenceStatus[e.id].reason
+        reason: evidenceStatus[e.id].reason,
+        detail: evidenceStatus[e.id].detail || 'N/A'
       }));
       fileName = 'broken-links';
     }
     
+    if (formatExt === 'pdf') {
+      const doc = new jsPDF();
+      doc.setFontSize(18);
+      doc.text(`Cathedra - Relatório de Auditoria (${type})`, 14, 22);
+      doc.setFontSize(10);
+      doc.text(`Exportado em: ${format(new Date(), 'dd/MM/yyyy HH:mm:ss')}`, 14, 30);
+      doc.text(`Filtro de Data: ${dateRange.from || 'Sempre'} até ${dateRange.to || 'Hoje'}`, 14, 35);
+      
+      if (type === 'broken') {
+        autoTable(doc, {
+          startY: 45,
+          head: [['Request ID', 'Rota', 'Status', 'Motivo Detalhado']],
+          body: dataToExport.map(e => [e.requestId, e.route, e.status, e.detail]),
+        });
+      } else if (type === 'audit') {
+        autoTable(doc, {
+          startY: 45,
+          head: [['Inspetor', 'Request ID', 'Data/Hora', 'IP Mascarado']],
+          body: dataToExport.map(a => [a.profiles?.name || 'Admin', a.request_id, format(new Date(a.inspected_at), 'dd/MM/yy HH:mm'), a.masked_ip]),
+        });
+      } else {
+        autoTable(doc, {
+          startY: 45,
+          head: [['ID', 'Rota', 'Mensagem', 'Dispositivo']],
+          body: dataToExport.map(e => [e.metadata?.requestId || e.id.substring(0,8), e.metadata?.route, e.metadata?.message?.substring(0, 50), e.metadata?.isMobile ? 'Mobile' : 'Desktop']),
+        });
+      }
+      
+      doc.save(`cathedra-${fileName}-${new Date().getTime()}.pdf`);
+      toast.success("Relatório PDF gerado com sucesso.");
+      return;
+    }
+
     let content = '';
     if (formatExt === 'json') {
       content = JSON.stringify({
@@ -179,8 +225,8 @@ const NavigationErrorInspector: React.FC = () => {
         ).join("\n");
       } else {
         content = `FormatVersion,${SCHEMA_VERSION}\n` +
-          "RequestID,Rota,Status,Motivo\n" + dataToExport.map(e => 
-          `${e.requestId},"${e.route}",${e.status},"${e.reason}"`
+          "RequestID,Rota,Status,Motivo,Descricao\n" + dataToExport.map(e => 
+          `${e.requestId},"${e.route}",${e.status},"${e.reason}","${e.detail}"`
         ).join("\n");
       }
     }
@@ -249,10 +295,18 @@ const NavigationErrorInspector: React.FC = () => {
               <CathedraButton 
                 variant="outline" 
                 size="sm" 
+                onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'pdf')} 
+                className="rounded-premium-full mr-1"
+              >
+                <Icons.FileText className="w-4 h-4 mr-2" /> PDF
+              </CathedraButton>
+              <CathedraButton 
+                variant="outline" 
+                size="sm" 
                 onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
                 className="rounded-premium-full"
               >
-                <Icons.Download className="w-4 h-4 mr-2" /> Exportar
+                <Icons.Download className="w-4 h-4 mr-2" /> CSV
               </CathedraButton>
               {activeTab === 'errors' && (
                 <div className="flex gap-2">

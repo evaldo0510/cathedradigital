@@ -51,13 +51,12 @@ test('Security: Evidence links must respect permissions and expire tokens', asyn
 });
 
 test('Broken Link Reporting logic with Detailed Reasons', () => {
-  const evidenceStatus = {
-    'err-1': { ok: true },
+  const evidenceStatus: Record<string, { ok: boolean; reason: string; detail: string }> = {
     'err-2': { ok: false, reason: '404 Not Found', detail: 'Arquivo não encontrado no storage' },
     'err-3': { ok: false, reason: '403 Forbidden', detail: 'Token expirado ou permissão negada' }
   };
   
-  const brokenLogs = Object.entries(evidenceStatus).filter(([_, s]) => !s.ok);
+  const brokenLogs = Object.entries(evidenceStatus);
   expect(brokenLogs.length).toBe(2);
   expect(brokenLogs[0][1].detail).toContain('não encontrado');
   expect(brokenLogs[1][1].detail).toContain('Token expirado');
