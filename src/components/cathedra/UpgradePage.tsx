@@ -199,6 +199,13 @@ const UpgradePage: React.FC = () => {
         }
       });
       if (error) throw error;
+      
+      // Increment retry count in UI for feedback
+      await supabase
+        .from('webhook_logs')
+        .update({ retry_count: (log.retry_count || 0) + 1 })
+        .eq('id', log.id);
+
       toast.success('Evento reprocessado com sucesso');
       fetchLogs();
     } catch (error: any) {
@@ -206,6 +213,40 @@ const UpgradePage: React.FC = () => {
     } finally {
       setIsReprocessing(null);
     }
+  };
+
+  const generateMonthlyReport = () => {
+    const doc = new jsPDF();
+    const now = new Date();
+    const monthYear = format(now, 'MMMM yyyy', { locale: ptBR });
+    
+    doc.setFontSize(18);
+    doc.text(`Relatório Mensal Webhooks - ${monthYear}`, 14, 20);
+    
+    doc.setFontSize(12);
+    doc.text(`Total de Logs: ${webhookLogs.length}`, 14, 30);
+    doc.text(`Falhas: ${webhookLogs.filter(l => l.status === 'failed').length}`, 14, 37);
+    doc.text(`Sucessos: ${webhookLogs.filter(l => l.status === 'success').length}`, 14, 44);
+
+    const tableData = webhookLogs.map(log => [
+      format(new Date(log.created_at), 'dd/MM HH:mm'),
+      log.event_type,
+      log.status.toUpperCase(),
+      log.event_id || '-',
+      log.retry_count || 0,
+      log.error_message ? 'SIM' : 'NÃO'
+    ]);
+
+    (doc as any).autoTable({
+      head: [['Data', 'Tipo', 'Status', 'ID Transação', 'Retentativas', 'Erro']],
+      body: tableData,
+      startY: 50,
+      theme: 'striped',
+      headStyles: { fillStyle: '#8B5CF6' }
+    });
+
+    doc.save(`relatorio_mensal_${format(now, 'yyyy_MM')}.pdf`);
+    toast.success('Relatório mensal gerado com sucesso.');
   };
 
   const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
