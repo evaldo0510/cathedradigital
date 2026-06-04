@@ -148,8 +148,29 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="rounded-premium-full p-spacing-xs border-primary/5 shadow-premium-sm"
+          className="rounded-premium-full p-spacing-xs border-primary/5 shadow-premium-sm relative overflow-visible"
         >
+          {/* Quick Jump Preview */}
+          <AnimatePresence>
+            {(isParagraphQuery.cicMatch || isParagraphQuery.bibleMatch) && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute -top-16 left-1/2 -translate-x-1/2 bg-card border border-primary/10 rounded-premium px-4 py-2 shadow-premium z-50 whitespace-nowrap"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icons.Zap className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+                    Ir para {isParagraphQuery.cicMatch ? `CIC §${isParagraphQuery.cicMatch[1]}` : `${isParagraphQuery.bibleMatch?.[1]} ${isParagraphQuery.bibleMatch?.[2]}${isParagraphQuery.bibleMatch?.[3] ? `,${isParagraphQuery.bibleMatch[3]}` : ''}`}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
             <div className="relative group/input">
               <Input
@@ -170,6 +191,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             </div>
           </form>
         </CathedraCard>
+
       </section>
 
       {/* 4. RITUAL RÁPIDO - COMPACT ACCESS */}
