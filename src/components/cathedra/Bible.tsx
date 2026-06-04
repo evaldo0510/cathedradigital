@@ -34,8 +34,11 @@ const Bible: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
+  const [nextChapterVerses, setNextChapterVerses] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const [isLoadingPreload, setIsLoadingPreload] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [testament, setTestament] = useState<'Antigo Testamento' | 'Novo Testamento'>('Antigo Testamento');
   
@@ -47,6 +50,7 @@ const Bible: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(settings.audioPlaybackRate || 1.0);
+  const [showTranscript, setShowTranscript] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const { saveLastRead } = useReadingMarks();
   const { user } = useAuth();
@@ -88,25 +92,59 @@ const Bible: React.FC = () => {
   const fetchVerses = async (abbr: string, chapter: number, append = false) => {
     if (append) setIsLoadingNext(true);
     else setIsLoading(true);
+    setFetchError(null);
 
     try {
+      // Check if we have preloaded data
+      if (append && nextChapterVerses && nextChapterVerses.length > 0 && nextChapterVerses[0].chapter === chapter) {
+        setVerses(prev => [...prev, ...nextChapterVerses]);
+        setNextChapterVerses(null);
+        preloadNextChapter(abbr, chapter + 1);
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: abbr, chapter }
       });
 
       if (error) throw error;
 
+      const newVerses = data.verses.map((v: any) => ({ ...v, chapter }));
+      
       if (append) {
-        setVerses(prev => [...prev, ...data.verses.map((v: any) => ({ ...v, chapter }))]);
+        setVerses(prev => [...prev, ...newVerses]);
       } else {
-        setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
+        setVerses(newVerses);
+        // Preload next chapter when loading a new chapter normally
+        preloadNextChapter(abbr, chapter + 1);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching verses:', error);
-      toast.error('Erro ao carregar versículos');
+      const msg = error.message || 'Erro ao carregar versículos';
+      setFetchError(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
       setIsLoadingNext(false);
+    }
+  };
+
+  const preloadNextChapter = async (abbr: string, chapter: number) => {
+    if (!selectedBook || chapter > selectedBook.chapters || isLoadingPreload) return;
+    
+    setIsLoadingPreload(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
+        body: { book: abbr, chapter }
+      });
+
+      if (!error && data?.verses) {
+        setNextChapterVerses(data.verses.map((v: any) => ({ ...v, chapter })));
+      }
+    } catch (error) {
+      console.warn('Preload failed:', error);
+    } finally {
+      setIsLoadingPreload(false);
     }
   };
 
@@ -385,7 +423,24 @@ const Bible: React.FC = () => {
               </div>
             )}
 
-            {isLoading ? <BibleSkeleton /> : (
+            {fetchError && (
+              <div className="flex flex-col items-center justify-center py-spacing-2xl text-center space-y-spacing-md">
+                <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive/50" />
+                <div className="space-y-spacing-2xs">
+                  <p className="text-premium-sm font-bold">Falha ao carregar a Palavra</p>
+                  <p className="text-premium-xs text-muted-foreground italic">{fetchError}</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => fetchVerses(selectedBook.abbr, selectedChapter)}
+                  className="rounded-premium-full px-spacing-xl"
+                >
+                  Tentar Novamente
+                </Button>
+              </div>
+            )}
+
+            {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
                 `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
                 settings.immersiveMode && "text-center"
@@ -412,12 +467,81 @@ const Bible: React.FC = () => {
             )}
           </div>
           
+          {/* Audio Captions & Transcript Overlay */}
+          <AnimatePresence>
+            {(isSpeaking || isPaused) && activeVerseNumber && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="fixed bottom-[120px] left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-spacing-md pointer-events-none"
+              >
+                <div className="bg-background/40 backdrop-blur-3xl p-spacing-md rounded-premium-lg border border-primary/10 shadow-premium text-center pointer-events-auto">
+                  <p className="text-premium-sm font-serif italic text-primary leading-relaxed">
+                    {verses.find(v => v.number === activeVerseNumber)?.text}
+                  </p>
+                  <div className="mt-spacing-sm flex justify-center">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">
+                      {selectedBook.name} {selectedChapter}:{activeVerseNumber}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Transcript Panel */}
+          <AnimatePresence>
+            {showTranscript && (
+              <motion.div
+                initial={{ opacity: 0, x: '100%' }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: '100%' }}
+                className="fixed inset-y-0 right-0 z-[60] w-full sm:w-80 bg-background/95 backdrop-blur-3xl border-l border-primary/10 shadow-premium p-spacing-xl flex flex-col"
+              >
+                <div className="flex justify-between items-center mb-spacing-xl">
+                  <h3 className="font-display text-premium-lg">Transcrição</h3>
+                  <Button variant="ghost" size="icon" onClick={() => setShowTranscript(false)}>
+                    <Icons.X className="w-spacing-md h-spacing-md" />
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto space-y-spacing-md pr-spacing-sm">
+                  {verses.map(v => (
+                    <div 
+                      key={v.number} 
+                      className={cn(
+                        "p-spacing-sm rounded-premium transition-colors cursor-pointer",
+                        activeVerseNumber === v.number ? "bg-primary/5 border border-primary/10" : "hover:bg-primary/[0.02]"
+                      )}
+                      onClick={() => {
+                        const el = document.getElementById(`v${v.number}`);
+                        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }}
+                    >
+                      <span className="text-[9px] font-bold text-primary/30 mr-spacing-sm">{v.number}</span>
+                      <p className="text-premium-xs leading-relaxed">{v.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
           {/* Floating Controls */}
           <div className={cn(
             "fixed bottom-spacing-4xl left-1/2 -translate-x-1/2 z-40 bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 shadow-premium flex gap-spacing-xs transition-all duration-1000",
             settings.immersiveMode && "opacity-20 hover:opacity-100"
           )}>
             <AudioButton variant="ghost" />
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowTranscript(!showTranscript)}
+              className={showTranscript ? "bg-primary/10" : ""}
+              title="Ver Transcrição"
+              aria-label="Alternar painel de transcrição"
+            >
+              <Icons.FileText className={showTranscript ? 'text-primary' : 'text-primary/40'} />
+            </Button>
             <Button variant="ghost" onClick={() => setShowLogosAI(!showLogosAI)}>
               <Icons.Sparkles className={showLogosAI ? 'text-primary' : 'text-primary/40'} />
             </Button>
