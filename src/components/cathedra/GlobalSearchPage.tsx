@@ -261,7 +261,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     onKeyDown={(e) => handleTagsKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${t.slug}`))}
                     tabIndex={tagsActiveIndex === idx ? 0 : -1}
                     data-roving-item="true"
-                    className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
+                    className="inline-flex items-center gap-spacing-2xs px-spacing-md py-spacing-sm min-h-[48px] md:min-h-0 rounded-premium-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
                     aria-label={`Tema: ${t.label}`}
                   >
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}
