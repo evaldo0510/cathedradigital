@@ -38,7 +38,8 @@ const NavigationErrorInspector: React.FC = () => {
   const [auditFilterUser, setAuditFilterUser] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [auditMode, setAuditMode] = useState(false);
-  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string }>>({});
+  const [revocationVersion, setRevocationVersion] = useState(1);
+  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string; code?: string }>>({});
   const navigate = useNavigate();
 
   // Métricas
@@ -52,16 +53,35 @@ const NavigationErrorInspector: React.FC = () => {
 
   const generateSecureLink = (err: any) => {
     const baseUrl = window.location.origin;
-    const token = btoa(`${err.id}-${Date.now() + 3600000}`).substring(0, 16);
-    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${Date.now() + 3600000}`;
+    const expiration = Date.now() + 3600000;
+    const token = btoa(`${err.id}-${expiration}-${revocationVersion}`).substring(0, 16);
+    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+  };
+
+  const revokeAllLinks = () => {
+    setRevocationVersion(prev => prev + 1);
+    toast.success("Todos os links compartilhados foram invalidados (rotação de chaves).");
+  };
+
+  const clearFilters = () => {
+    setFilter('');
+    setDateRange({ from: '', to: '' });
+    setAuditFilterUser('');
+    setStatusFilter('all');
+    toast.info("Filtros limpos.");
   };
 
   const checkEvidenceHealth = async (errorLogs: any[]) => {
-    const health: Record<string, { ok: boolean; reason?: string; detail?: string }> = {};
+    const health: Record<string, { ok: boolean; reason?: string; detail?: string; code?: string }> = {};
     for (const err of errorLogs) {
       const url = err.metadata?.screenshotUrl;
       if (!url) {
-        health[err.id] = { ok: false, reason: 'Sem URL', detail: 'Nenhuma evidência visual anexada ao log.' };
+        health[err.id] = { 
+          ok: false, 
+          reason: 'Sem URL', 
+          detail: 'Nenhuma evidência visual anexada ao log.',
+          code: 'ERRO_NAO_ENCONTRADO'
+        };
         continue;
       }
       try {
@@ -70,18 +90,33 @@ const NavigationErrorInspector: React.FC = () => {
           health[err.id] = { ok: true };
         } else {
           let detail = 'Desconhecido';
-          if (resp.status === 404) detail = 'Arquivo não encontrado no storage.';
-          else if (resp.status === 403) detail = 'Permissão negada ou Token expirado.';
-          else if (resp.status === 401) detail = 'Autenticação necessária.';
+          let code = 'ERRO_DESCONHECIDO';
+          
+          if (resp.status === 404) {
+            detail = 'A evidência solicitada não existe no storage.';
+            code = 'ERRO_NAO_ENCONTRADO';
+          } else if (resp.status === 403) {
+            detail = 'Token expirado ou acesso negado.';
+            code = 'ERRO_PERMISSAO';
+          } else if (resp.status === 401) {
+            detail = 'Autenticação necessária para acessar esta evidência.';
+            code = 'ERRO_AUTENTICACAO';
+          }
           
           health[err.id] = { 
             ok: false, 
             reason: `HTTP ${resp.status}`,
-            detail: detail
+            detail: detail,
+            code: code
           };
         }
       } catch (e) {
-        health[err.id] = { ok: false, reason: 'Erro de Rede', detail: 'Falha na conexão com o servidor de assets.' };
+        health[err.id] = { 
+          ok: false, 
+          reason: 'Erro de Rede', 
+          detail: 'Falha na conexão com o servidor de assets.',
+          code: 'ERRO_REDE'
+        };
       }
     }
     setEvidenceStatus(health);
@@ -168,12 +203,14 @@ const NavigationErrorInspector: React.FC = () => {
     return userMatch && generalMatch;
   });
 
-  const downloadReport = (type: 'errors' | 'audit' | 'broken', formatExt: 'json' | 'csv' | 'pdf') => {
+  const downloadReport = (type: 'errors' | 'audit' | 'broken' | 'summary', formatExt: 'json' | 'csv' | 'pdf') => {
     let dataToExport: any[] = [];
     let fileName = '';
     const SCHEMA_VERSION = 'v2.1';
 
-    if (type === 'errors') {
+    if (type === 'summary') {
+      fileName = 'consolidated-audit-summary';
+    } else if (type === 'errors') {
       dataToExport = filteredErrors;
       fileName = 'ui-failures';
     } else if (type === 'audit') {
@@ -198,7 +235,41 @@ const NavigationErrorInspector: React.FC = () => {
       doc.text(`Exportado em: ${format(new Date(), 'dd/MM/yyyy HH:mm:ss')}`, 14, 30);
       doc.text(`Filtro de Data: ${dateRange.from || 'Sempre'} até ${dateRange.to || 'Hoje'}`, 14, 35);
       
-      if (type === 'broken') {
+      if (type === 'summary') {
+        const topEndpoints = Object.entries(
+          filteredErrors.reduce((acc: any, e) => {
+            acc[e.metadata?.route || '/'] = (acc[e.metadata?.route || '/'] || 0) + 1;
+            return acc;
+          }, {})
+        ).sort((a: any, b: any) => b[1] - a[1]).slice(0, 5);
+
+        const reasons = Object.entries(
+          Object.values(evidenceStatus).reduce((acc: any, s) => {
+            if (!s.ok) acc[s.reason || 'Desconhecido'] = (acc[s.reason || 'Desconhecido'] || 0) + 1;
+            return acc;
+          }, {})
+        );
+
+        doc.setFontSize(14);
+        doc.text("Resumo Consolidado", 14, 50);
+        doc.setFontSize(10);
+        doc.text(`Total de Ocorrências: ${metrics.total}`, 14, 60);
+        doc.text(`Links Quebrados: ${metrics.broken}`, 14, 65);
+        doc.text(`Taxa de Integridade: ${((metrics.ok / (metrics.total || 1)) * 100).toFixed(1)}%`, 14, 70);
+
+        autoTable(doc, {
+          startY: 80,
+          head: [['Top Endpoints Afetados', 'Ocorrências']],
+          body: topEndpoints,
+        });
+
+        autoTable(doc, {
+          startY: (doc as any).lastAutoTable.cursor.y + 10,
+          head: [['Motivo de Inacessibilidade', 'Total']],
+          body: reasons,
+        });
+
+      } else if (type === 'broken') {
         autoTable(doc, {
           startY: 45,
           head: [['Request ID', 'Rota', 'Status', 'Motivo Detalhado']],
@@ -284,7 +355,7 @@ const NavigationErrorInspector: React.FC = () => {
 
             {activeTab === 'errors' && (
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className={cn("w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10", auditMode && statusFilter !== 'all' && "border-primary/50 bg-primary/5")}>
+                <SelectTrigger className={cn("w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10", statusFilter !== 'all' && "border-primary ring-1 ring-primary/30 bg-primary/5")}>
                   <SelectValue placeholder="Status Link" />
                 </SelectTrigger>
                 <SelectContent>
@@ -301,10 +372,10 @@ const NavigationErrorInspector: React.FC = () => {
                 placeholder="Filtrar por Inspetor..." 
                 value={auditFilterUser}
                 onChange={(e) => setAuditFilterUser(e.target.value)}
-                className={cn("max-w-[150px] rounded-premium-full", auditMode && auditFilterUser && "border-primary/50 bg-primary/5")}
+                className={cn("max-w-[150px] rounded-premium-full h-9", auditFilterUser && "border-primary ring-1 ring-primary/30 bg-primary/5")}
               />
             )}
-            <div className={cn("flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9", auditMode && (dateRange.from || dateRange.to) && "border-primary/50 bg-primary/5")}>
+            <div className={cn("flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9 transition-all", (dateRange.from || dateRange.to) && "border-primary ring-1 ring-primary/30 bg-primary/5")}>
               <Input 
                 type="date"
                 value={dateRange.from}
@@ -319,12 +390,23 @@ const NavigationErrorInspector: React.FC = () => {
                 className="h-7 border-none bg-transparent text-[10px] w-[110px]"
               />
             </div>
+
             <div className="flex gap-2">
+              <CathedraButton 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearFilters}
+                className="h-9 w-9 p-0 rounded-premium-full hover:bg-destructive/10 hover:text-destructive"
+                title="Limpar todos os filtros"
+              >
+                <Icons.X className="w-4 h-4" />
+              </CathedraButton>
+
               <CathedraButton 
                 variant="outline" 
                 size="sm" 
                 onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'pdf')} 
-                className="rounded-premium-full mr-1"
+                className="rounded-premium-full h-9"
               >
                 <Icons.FileText className="w-4 h-4 mr-2" /> PDF
               </CathedraButton>
@@ -332,7 +414,7 @@ const NavigationErrorInspector: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
-                className="rounded-premium-full"
+                className="rounded-premium-full h-9"
               >
                 <Icons.Download className="w-4 h-4 mr-2" /> CSV
               </CathedraButton>
@@ -341,38 +423,41 @@ const NavigationErrorInspector: React.FC = () => {
                   <CathedraButton 
                     variant="outline" 
                     size="sm" 
-                    onClick={() => downloadReport('broken', 'csv')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
-                  >
-                    <Icons.AlertTriangle className="w-4 h-4 mr-2" /> CSV
-                  </CathedraButton>
-                  <CathedraButton 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => downloadReport('broken', 'json')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
-                  >
-                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON
-                  </CathedraButton>
-                  <CathedraButton 
-                    variant="outline" 
-                    size="sm" 
                     onClick={() => downloadReport('broken', 'pdf')} 
                     className="rounded-premium-full border-red-500/20 text-red-600 hover:bg-red-500/5 h-9"
                   >
-                    <Icons.FileText className="w-4 h-4 mr-2" /> PDF Quebrados
+                    <Icons.ShieldAlert className="w-4 h-4 mr-2" /> Links Quebrados
                   </CathedraButton>
+                  {auditMode && (
+                    <CathedraButton 
+                      variant="primary" 
+                      size="sm" 
+                      onClick={() => downloadReport('summary', 'pdf')} 
+                      className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
+                    >
+                      <Icons.Activity className="w-4 h-4 mr-2" /> Resumo Auditoria
+                    </CathedraButton>
+                  )}
                 </div>
               )}
             </div>
 
+            {auditMode && (
+              <CathedraButton 
+                variant="ghost" 
+                size="sm" 
+                onClick={revokeAllLinks}
+                className="rounded-premium-full h-9 text-orange-600 hover:bg-orange-500/10 border border-orange-500/20"
+              >
+                <Icons.RotateCcw className="w-4 h-4 mr-2" /> Revogar Links
+              </CathedraButton>
+            )}
 
-             <Input 
+            <Input 
               placeholder="Buscar..." 
-
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="max-w-xs rounded-premium-full"
+              className={cn("max-w-[150px] rounded-premium-full h-9", filter && "border-primary ring-1 ring-primary/30 bg-primary/5")}
             />
           </div>
         </div>

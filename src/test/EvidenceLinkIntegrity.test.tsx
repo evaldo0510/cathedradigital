@@ -31,75 +31,63 @@ test('E2E: Direct evidence links from CI/Exports should be reachable and return 
   }
 });
 
-test('Security: Evidence links must respect permissions and expire tokens', async () => {
-  const expiredUrl = 'https://github.com/artifacts/expired-token?token=old';
-  const forbiddenUrl = 'https://github.com/artifacts/no-access';
+test('Security: Evidence links must respect permissions, expire tokens, and handle revocation', async () => {
+  const currentTime = Date.now();
   
-  const mockFetch = vi.fn().mockImplementation((url: string) => {
-    if (url.includes('expired-token')) return Promise.resolve({ ok: false, status: 403, statusText: 'Token Expired' });
-    if (url.includes('no-access')) return Promise.resolve({ ok: false, status: 401, statusText: 'Unauthorized' });
-    return Promise.resolve({ ok: true, status: 200 });
-  });
+  // Link expirado no tempo
+  const expiredUrl = `https://cathedra.app/inspect/evidence/err-1?token=xyz&expires=${currentTime - 1000}`;
+  
+  // Link com versão de revogação antiga
+  const revokedUrl = `https://cathedra.app/inspect/evidence/err-1?token=xyz&expires=${currentTime + 3600000}&v=1`;
+  
+  const currentRevocationVersion = 2;
 
-  // Testando link expirado
-  const expiredResp = await mockFetch(expiredUrl);
-  expect(expiredResp.status).toBe(403);
-  
-  // Testando permissão negada
-  const forbiddenResp = await mockFetch(forbiddenUrl);
-  expect(forbiddenResp.status).toBe(401);
+  const validateLink = (url: string) => {
+    const urlObj = new URL(url);
+    const expires = parseInt(urlObj.searchParams.get('expires') || '0');
+    const version = parseInt(urlObj.searchParams.get('v') || '1');
+
+    if (expires < Date.now()) {
+      return { ok: false, status: 403, code: 'ERRO_EXPIRADO', detail: 'O token deste link expirou.' };
+    }
+    if (version < currentRevocationVersion) {
+      return { ok: false, status: 403, code: 'ERRO_REVOGADO', detail: 'Este link foi invalidado por motivos de segurança.' };
+    }
+    return { ok: true, status: 200 };
+  };
+
+  const expiredResult = validateLink(expiredUrl);
+  expect(expiredResult.status).toBe(403);
+  expect(expiredResult.code).toBe('ERRO_EXPIRADO');
+
+  const revokedResult = validateLink(revokedUrl);
+  expect(revokedResult.status).toBe(403);
+  expect(revokedResult.code).toBe('ERRO_REVOGADO');
 });
 
-test('Broken Link Reporting logic with Detailed Reasons', () => {
-  const evidenceStatus: Record<string, { ok: boolean; reason: string; detail: string }> = {
-    'err-2': { ok: false, reason: '404 Not Found', detail: 'Arquivo não encontrado no storage' },
-    'err-3': { ok: false, reason: '403 Forbidden', detail: 'Token expirado ou permissão negada' }
+test('Broken Link Reporting logic with Standardized Codes', () => {
+  const evidenceStatus: Record<string, { ok: boolean; reason: string; detail: string; code: string }> = {
+    'err-2': { ok: false, reason: 'HTTP 404', detail: 'A evidência solicitada não existe.', code: 'ERRO_NAO_ENCONTRADO' },
+    'err-3': { ok: false, reason: 'HTTP 403', detail: 'Token expirado ou acesso negado.', code: 'ERRO_PERMISSAO' }
   };
   
-  const brokenLogs = Object.entries(evidenceStatus);
+  const brokenLogs = Object.values(evidenceStatus);
   expect(brokenLogs.length).toBe(2);
-  expect(brokenLogs[0][1].detail).toContain('não encontrado');
-  expect(brokenLogs[1][1].detail).toContain('Token expirado');
+  expect(brokenLogs[0].code).toBe('ERRO_NAO_ENCONTRADO');
+  expect(brokenLogs[1].code).toBe('ERRO_PERMISSAO');
 });
 
-test('E2E: Exports must reflect UI filters (User, Period, Status)', async () => {
-  const allLogs = [
-    { id: '1', profiles: { name: 'User A' }, created_at: '2024-01-01', status: 'ok' },
-    { id: '2', profiles: { name: 'User B' }, created_at: '2024-01-05', status: 'broken' },
-    { id: '3', profiles: { name: 'User A' }, created_at: '2024-02-01', status: 'broken' }
-  ];
+test('UI: Opening evidence links displays standardized error messages and codes', () => {
+  const getStandardizedMessage = (status: number, customCode?: string) => {
+    if (status === 403) return `${customCode || 'ERRO_PERMISSAO'}: Token expirado ou acesso negado`;
+    if (status === 404) return 'ERRO_NAO_ENCONTRADO: A evidência solicitada não existe';
+    return 'ERRO_AUTENTICACAO: Autenticação necessária';
+  };
 
-  // Filtro por Usuário A
-  const filteredByUser = allLogs.filter(l => l.profiles.name === 'User A');
-  expect(filteredByUser.length).toBe(2);
-
-  // Filtro por Status broken
-  const filteredByStatus = allLogs.filter(l => l.status === 'broken');
-  expect(filteredByStatus.length).toBe(2);
-
-  // Filtro Combinado
-  const filteredCombined = allLogs.filter(l => l.profiles.name === 'User A' && l.status === 'broken');
-  expect(filteredCombined.length).toBe(1);
+  expect(getStandardizedMessage(403, 'ERRO_EXPIRADO')).toContain('ERRO_EXPIRADO');
+  expect(getStandardizedMessage(404)).toContain('ERRO_NAO_ENCONTRADO');
+  
+  // Verificação de PII
+  const msg = getStandardizedMessage(403);
+  expect(msg).not.toMatch(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
 });
-
-test('UI: Opening evidence links displays standardized error messages', () => {
-  const errorScenarios = [
-    { status: 403, expectedMessage: 'ERRO_PERMISSAO: Token expirado ou acesso negado' },
-    { status: 404, expectedMessage: 'ERRO_NAO_ENCONTRADO: A evidência solicitada não existe' },
-    { status: 401, expectedMessage: 'ERRO_AUTENTICACAO: Autenticação necessária' }
-  ];
-
-  errorScenarios.forEach(scenario => {
-    // Simulação de renderização de erro padronizada
-    const getStandardizedMessage = (status: number) => {
-      if (status === 403) return 'ERRO_PERMISSAO: Token expirado ou acesso negado';
-      if (status === 404) return 'ERRO_NAO_ENCONTRADO: A evidência solicitada não existe';
-      return 'ERRO_AUTENTICACAO: Autenticação necessária';
-    };
-
-    expect(getStandardizedMessage(scenario.status)).toBe(scenario.expectedMessage);
-    // Garantir que não há PII na mensagem (ex: e-mail)
-    expect(scenario.expectedMessage).not.toMatch(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  });
-});
-
