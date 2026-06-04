@@ -33,6 +33,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   const { lang, t } = useLang();
   const [cacheCount, setCacheCount] = useState<number | null>(null);
   const { settings } = useReadingSettings();
+  const { isAdmin } = useIsAdmin();
+
 
   const sidebarRef = React.useRef<HTMLElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
