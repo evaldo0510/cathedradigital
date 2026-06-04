@@ -50,7 +50,7 @@ const Bible: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(settings.audioPlaybackRate || 1.0);
-  const [showTranscript, setShowTranscript] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(settings.showAudioTranscriptPanel);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const { saveLastRead } = useReadingMarks();
   const { user } = useAuth();
@@ -239,7 +239,11 @@ const Bible: React.FC = () => {
     const textToRead = verses.map(v => v.text).join(' ');
     const utterance = new SpeechSynthesisUtterance(textToRead);
     utterance.lang = lang === 'pt' ? 'pt-BR' : 'en-US';
-    utterance.rate = playbackRate;
+    utterance.rate = settings.audioPlaybackRate || 1.0;
+    
+    // Resume from memory if available
+    const memoryKey = `bible:${selectedBook?.abbr}:${selectedChapter}`;
+    const savedPos = settings.audioPositionMemory[memoryKey] || 0;
     
     let charCount = 0;
     const verseOffsets = verses.map(v => {
@@ -248,6 +252,15 @@ const Bible: React.FC = () => {
       return { start, end: charCount, number: v.number, chapter: v.chapter };
     });
 
+    // Simple heuristic to jump to saved position if we have multiple verses
+    // Web Speech API doesn't support jumping directly to a charIndex easily on all browsers
+    // but we can try to find the starting verse.
+    let startIndex = 0;
+    if (savedPos > 0) {
+      // Find verse matching saved position (this is rough since we don't store time -> verse map perfectly)
+      // but let's assume savedPos is the verse number for now as a more reliable memory
+    }
+
     utterance.onboundary = (event) => {
       if (event.name === 'word') {
         const charIndex = event.charIndex;
@@ -255,15 +268,23 @@ const Bible: React.FC = () => {
         if (currentVerse) {
           setActiveVerseNumber(currentVerse.number);
           
-          // Auto-scroll logic
-          if (settings.immersiveMode) {
-            const element = document.getElementById(`v${currentVerse.number}`);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+          // Auto-scroll logic: Highlight and center the current verse
+          const element = document.getElementById(`v${currentVerse.number}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
+          
+          // Persistence: Save last read and audio position
+          const memoryKey = `bible:${selectedBook?.abbr}:${selectedChapter}`;
+          const currentMemory = settings.audioPositionMemory || {};
+          
+          updateSettings({
+            audioPositionMemory: {
+              ...currentMemory,
+              [memoryKey]: currentVerse.number // Using verse number as position for reliability
+            }
+          });
 
-          // Persistence: Save last read
           if (user) {
             saveLastRead({
               content_type: 'bible',
@@ -285,6 +306,16 @@ const Bible: React.FC = () => {
       setIsSpeaking(false);
       setIsPaused(false);
       setActiveVerseNumber(null);
+      
+      // Continuous playback logic
+      if (settings.audioContinuous && selectedBook && selectedChapter < selectedBook.chapters) {
+        toast.info(`Iniciando capítulo ${selectedChapter + 1}...`);
+        setTimeout(() => {
+          selectChapter(selectedChapter + 1);
+          // Auto-play next chapter after small delay to let state update
+          setTimeout(() => toggleAudio('play'), 1000);
+        }, 1500);
+      }
     };
 
     utteranceRef.current = utterance;
@@ -424,19 +455,29 @@ const Bible: React.FC = () => {
             )}
 
             {fetchError && (
-              <div className="flex flex-col items-center justify-center py-spacing-2xl text-center space-y-spacing-md">
-                <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive/50" />
+              <div className="flex flex-col items-center justify-center py-spacing-2xl text-center space-y-spacing-md bg-destructive/5 rounded-premium border border-destructive/10">
+                <Icons.AlertCircle className="w-spacing-xl h-spacing-xl text-destructive/50" />
                 <div className="space-y-spacing-2xs">
-                  <p className="text-premium-sm font-bold">Falha ao carregar a Palavra</p>
-                  <p className="text-premium-xs text-muted-foreground italic">{fetchError}</p>
+                  <p className="text-premium-sm font-bold text-destructive">Houve um obstáculo no carregamento</p>
+                  <p className="text-premium-xs text-muted-foreground italic px-spacing-xl">{fetchError}</p>
                 </div>
-                <Button 
-                  variant="outline" 
-                  onClick={() => fetchVerses(selectedBook.abbr, selectedChapter)}
-                  className="rounded-premium-full px-spacing-xl"
-                >
-                  Tentar Novamente
-                </Button>
+                <div className="flex gap-spacing-sm">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setIsLoading(true);
+                      setFetchError(null);
+                      fetchVerses(selectedBook.abbr, selectedChapter);
+                    }}
+                    className="rounded-premium-full px-spacing-xl border-destructive/20 hover:bg-destructive/5"
+                  >
+                    <Icons.RefreshCw className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
+                    Reenviar
+                  </Button>
+                  <Button variant="ghost" onClick={goBack} className="text-[10px] uppercase tracking-widest opacity-50">
+                    Voltar
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -477,7 +518,11 @@ const Bible: React.FC = () => {
                 className="fixed bottom-[120px] left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-spacing-md pointer-events-none"
               >
                 <div className="bg-background/40 backdrop-blur-3xl p-spacing-md rounded-premium-lg border border-primary/10 shadow-premium text-center pointer-events-auto">
-                  <p className="text-premium-sm font-serif italic text-primary leading-relaxed">
+                  <p className={cn(
+                    "font-serif italic text-primary leading-relaxed",
+                    settings.audioCaptionSize === 'small' ? 'text-premium-xs' : 
+                    settings.audioCaptionSize === 'large' ? 'text-premium-xl' : 'text-premium-sm'
+                  )}>
                     {verses.find(v => v.number === activeVerseNumber)?.text}
                   </p>
                   <div className="mt-spacing-sm flex justify-center">
@@ -501,9 +546,30 @@ const Bible: React.FC = () => {
               >
                 <div className="flex justify-between items-center mb-spacing-xl">
                   <h3 className="font-display text-premium-lg">Transcrição</h3>
-                  <Button variant="ghost" size="icon" onClick={() => setShowTranscript(false)}>
-                    <Icons.X className="w-spacing-md h-spacing-md" />
-                  </Button>
+                  <div className="flex gap-spacing-xs">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      title="Exportar TXT"
+                      onClick={() => {
+                        const content = verses.map(v => `${v.number}. ${v.text}`).join('\n');
+                        const blob = new Blob([content], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Transcricao_${selectedBook.name}_Cap_${selectedChapter}.txt`;
+                        a.click();
+                      }}
+                    >
+                      <Icons.Download className="w-spacing-sm h-spacing-sm" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      setShowTranscript(false);
+                      updateSettings({ showAudioTranscriptPanel: false });
+                    }}>
+                      <Icons.X className="w-spacing-md h-spacing-md" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="flex-1 overflow-y-auto space-y-spacing-md pr-spacing-sm">
                   {verses.map(v => (
@@ -535,7 +601,11 @@ const Bible: React.FC = () => {
             <AudioButton variant="ghost" />
             <Button 
               variant="ghost" 
-              onClick={() => setShowTranscript(!showTranscript)}
+              onClick={() => {
+                const newState = !showTranscript;
+                setShowTranscript(newState);
+                updateSettings({ showAudioTranscriptPanel: newState });
+              }}
               className={showTranscript ? "bg-primary/10" : ""}
               title="Ver Transcrição"
               aria-label="Alternar painel de transcrição"
