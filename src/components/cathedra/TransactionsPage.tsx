@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -55,7 +56,7 @@ const TransactionsPage: React.FC = () => {
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const auditObserver = useRef<IntersectionObserver | null>(null);
 
-  const isAdmin = profile?.role === 'admin';
+  const { isAdmin } = useIsAdmin();
 
   const fetchAvailablePlans = async () => {
     try {

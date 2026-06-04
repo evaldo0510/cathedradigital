@@ -1,3 +1,4 @@
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -40,7 +41,7 @@ const CatechismVerification: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'missing' | 'divergent'>('all');
   const [officialDataMap, setOfficialDataMap] = useState<Map<number, any>>(new Map());
 
-  const isAdmin = profile?.role === 'admin';
+  const { isAdmin } = useIsAdmin();
 
   const runVerification = async () => {
     setLoading(true);
