@@ -40,4 +40,13 @@ jobs:
             screenshots/
             logs/
 
+      - name: Notify CI Failure
+        if: failure()
+        run: |
+          # Exemplo de payload para Webhook (Slack/Discord)
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"🚨 *Mobile E2E Failure* \nJob: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} \nRef: ${GITHUB_REF}\"}" \
+          ${{ secrets.CI_NOTIFICATION_WEBHOOK }} || echo "Webhook não configurado"
+
+
 

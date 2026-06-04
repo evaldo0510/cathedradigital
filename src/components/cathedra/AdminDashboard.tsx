@@ -293,6 +293,19 @@ const AdminDashboard: React.FC = () => {
               <h3 className="font-bold">Telemetria Mobile</h3>
               <p className="text-premium-xs opacity-50 mt-spacing-xs">Logs de erros e sessões.</p>
             </CathedraCard>
+
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/ui-errors')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.ShieldAlert className="text-primary" />
+                <Badge variant="outline">Depuração</Badge>
+              </div>
+              <h3 className="font-bold">Inspetor de Falhas</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">Inspeciona erros de UI e TypeErrors.</p>
+            </CathedraCard>
+
           </div>
           
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
