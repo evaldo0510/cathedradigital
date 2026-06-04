@@ -5,6 +5,7 @@ import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Webhook, CreditCard, Activity } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -72,9 +73,9 @@ const PremiumAuditTrail: React.FC = () => {
               item.type === 'transaction' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
             }`}>
               {item.type === 'transaction' ? (
-                <Icons.CreditCard className="w-3 h-3" />
+                <CreditCard className="w-3 h-3" />
               ) : (
-                <Icons.Webhook className="w-3 h-3" />
+                <Webhook className="w-3 h-3" />
               )}
             </div>
             
