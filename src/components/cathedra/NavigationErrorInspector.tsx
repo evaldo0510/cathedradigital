@@ -38,7 +38,8 @@ const NavigationErrorInspector: React.FC = () => {
   const [auditFilterUser, setAuditFilterUser] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [auditMode, setAuditMode] = useState(false);
-  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string }>>({});
+  const [revocationVersion, setRevocationVersion] = useState(1);
+  const [evidenceStatus, setEvidenceStatus] = useState<Record<string, { ok: boolean; reason?: string; detail?: string; code?: string }>>({});
   const navigate = useNavigate();
 
   // Métricas
@@ -52,8 +53,22 @@ const NavigationErrorInspector: React.FC = () => {
 
   const generateSecureLink = (err: any) => {
     const baseUrl = window.location.origin;
-    const token = btoa(`${err.id}-${Date.now() + 3600000}`).substring(0, 16);
-    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${Date.now() + 3600000}`;
+    const expiration = Date.now() + 3600000;
+    const token = btoa(`${err.id}-${expiration}-${revocationVersion}`).substring(0, 16);
+    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+  };
+
+  const revokeAllLinks = () => {
+    setRevocationVersion(prev => prev + 1);
+    toast.success("Todos os links compartilhados foram invalidados (rotação de chaves).");
+  };
+
+  const clearFilters = () => {
+    setFilter('');
+    setDateRange({ from: '', to: '' });
+    setAuditFilterUser('');
+    setStatusFilter('all');
+    toast.info("Filtros limpos.");
   };
 
   const checkEvidenceHealth = async (errorLogs: any[]) => {
