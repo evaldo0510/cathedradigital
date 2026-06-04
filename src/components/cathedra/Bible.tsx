@@ -113,7 +113,8 @@ const Bible: React.FC = () => {
   const verseToCic: Record<number, number[]> = {};
 
   return (
-    <>
+    <div className="relative">
+      <div className="reveal-header-trigger" />
       {viewMode === 'books' && (
         <ContemplativeLayout
           subtitle="Verbum Domini"
@@ -252,7 +253,7 @@ const Bible: React.FC = () => {
           </Suspense>
         </ContemplativeLayout>
       )}
-    </>
+    </div>
   );
 };
 
