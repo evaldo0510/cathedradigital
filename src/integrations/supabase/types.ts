@@ -1558,6 +1558,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          resource: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          resource: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          resource?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       seo_audits: {
         Row: {
           created_at: string
@@ -2613,6 +2646,14 @@ export type Database = {
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
+      log_access_denial: {
+        Args: {
+          attempted_action: string
+          extra_details?: Json
+          resource_name: string
+        }
+        Returns: undefined
+      }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
