@@ -355,7 +355,7 @@ const NavigationErrorInspector: React.FC = () => {
 
             {activeTab === 'errors' && (
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className={cn("w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10", auditMode && statusFilter !== 'all' && "border-primary/50 bg-primary/5")}>
+                <SelectTrigger className={cn("w-[140px] h-9 rounded-premium-full bg-muted/20 border-border/10", statusFilter !== 'all' && "border-primary ring-1 ring-primary/30 bg-primary/5")}>
                   <SelectValue placeholder="Status Link" />
                 </SelectTrigger>
                 <SelectContent>
@@ -372,10 +372,10 @@ const NavigationErrorInspector: React.FC = () => {
                 placeholder="Filtrar por Inspetor..." 
                 value={auditFilterUser}
                 onChange={(e) => setAuditFilterUser(e.target.value)}
-                className={cn("max-w-[150px] rounded-premium-full", auditMode && auditFilterUser && "border-primary/50 bg-primary/5")}
+                className={cn("max-w-[150px] rounded-premium-full h-9", auditFilterUser && "border-primary ring-1 ring-primary/30 bg-primary/5")}
               />
             )}
-            <div className={cn("flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9", auditMode && (dateRange.from || dateRange.to) && "border-primary/50 bg-primary/5")}>
+            <div className={cn("flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10 h-9 transition-all", (dateRange.from || dateRange.to) && "border-primary ring-1 ring-primary/30 bg-primary/5")}>
               <Input 
                 type="date"
                 value={dateRange.from}
@@ -390,12 +390,23 @@ const NavigationErrorInspector: React.FC = () => {
                 className="h-7 border-none bg-transparent text-[10px] w-[110px]"
               />
             </div>
+
             <div className="flex gap-2">
+              <CathedraButton 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearFilters}
+                className="h-9 w-9 p-0 rounded-premium-full hover:bg-destructive/10 hover:text-destructive"
+                title="Limpar todos os filtros"
+              >
+                <Icons.X className="w-4 h-4" />
+              </CathedraButton>
+
               <CathedraButton 
                 variant="outline" 
                 size="sm" 
                 onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'pdf')} 
-                className="rounded-premium-full mr-1"
+                className="rounded-premium-full h-9"
               >
                 <Icons.FileText className="w-4 h-4 mr-2" /> PDF
               </CathedraButton>
@@ -403,7 +414,7 @@ const NavigationErrorInspector: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
-                className="rounded-premium-full"
+                className="rounded-premium-full h-9"
               >
                 <Icons.Download className="w-4 h-4 mr-2" /> CSV
               </CathedraButton>
@@ -412,38 +423,41 @@ const NavigationErrorInspector: React.FC = () => {
                   <CathedraButton 
                     variant="outline" 
                     size="sm" 
-                    onClick={() => downloadReport('broken', 'csv')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
-                  >
-                    <Icons.AlertTriangle className="w-4 h-4 mr-2" /> CSV
-                  </CathedraButton>
-                  <CathedraButton 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => downloadReport('broken', 'json')} 
-                    className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5 h-9"
-                  >
-                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON
-                  </CathedraButton>
-                  <CathedraButton 
-                    variant="outline" 
-                    size="sm" 
                     onClick={() => downloadReport('broken', 'pdf')} 
                     className="rounded-premium-full border-red-500/20 text-red-600 hover:bg-red-500/5 h-9"
                   >
-                    <Icons.FileText className="w-4 h-4 mr-2" /> PDF Quebrados
+                    <Icons.ShieldAlert className="w-4 h-4 mr-2" /> Links Quebrados
                   </CathedraButton>
+                  {auditMode && (
+                    <CathedraButton 
+                      variant="primary" 
+                      size="sm" 
+                      onClick={() => downloadReport('summary', 'pdf')} 
+                      className="rounded-premium-full h-9 shadow-premium bg-gradient-to-r from-primary to-primary/80"
+                    >
+                      <Icons.PieChart className="w-4 h-4 mr-2" /> Resumo Auditoria
+                    </CathedraButton>
+                  )}
                 </div>
               )}
             </div>
 
+            {auditMode && (
+              <CathedraButton 
+                variant="ghost" 
+                size="sm" 
+                onClick={revokeAllLinks}
+                className="rounded-premium-full h-9 text-orange-600 hover:bg-orange-500/10 border border-orange-500/20"
+              >
+                <Icons.RotateCcw className="w-4 h-4 mr-2" /> Revogar Links
+              </CathedraButton>
+            )}
 
-             <Input 
+            <Input 
               placeholder="Buscar..." 
-
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="max-w-xs rounded-premium-full"
+              className={cn("max-w-[150px] rounded-premium-full h-9", filter && "border-primary ring-1 ring-primary/30 bg-primary/5")}
             />
           </div>
         </div>
