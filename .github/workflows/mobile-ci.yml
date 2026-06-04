@@ -45,22 +45,28 @@ jobs:
         run: |
           PAYLOAD=$(cat <<EOF
           {
-            "text": "🚨 *Cathedra Mobile E2E Failure*",
+            "text": "🚨 *CATHEDRA CRITICAL: Mobile E2E Failure*",
             "attachments": [
               {
-                "color": "#FF0000",
+                "fallback": "Mobile navigation tests failed.",
+                "color": "#D42020",
+                "title": "Mobile Regression Detected",
+                "title_link": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
                 "fields": [
-                  { "title": "Job", "value": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}", "short": false },
-                  { "title": "Ref", "value": "${GITHUB_REF}", "short": true },
-                  { "title": "Environment", "value": "CI/CD Pipeline", "short": true }
+                  { "title": "Commit", "value": "${GITHUB_SHA:0:7}", "short": true },
+                  { "title": "Branch", "value": "${GITHUB_REF_NAME}", "short": true },
+                  { "title": "Pipeline ID", "value": "${GITHUB_RUN_ID}", "short": false },
+                  { "title": "Evidence Summary", "value": "Screenshots and Stack Traces attached to the Workflow Run.", "short": false }
                 ],
-                "footer": "AD MAIOREM DEI GLORIAM — Security & Stability Gate"
+                "footer": "AD MAIOREM DEI GLORIAM — Automated Stability Gate",
+                "ts": $(date +%s)
               }
             ]
           }
           EOF
           )
           curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.CI_NOTIFICATION_WEBHOOK }}
+
 
 
 

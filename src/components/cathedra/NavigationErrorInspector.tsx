@@ -39,24 +39,34 @@ const NavigationErrorInspector: React.FC = () => {
   }, [dateRange]);
 
   const recordInspection = async (requestId: string) => {
-    await supabase.from('telemetry_audit_logs').insert({ request_id: requestId });
+    // Registra a inspeção com auditoria básica
+    // Em produção, o IP seria capturado via Edge Function ou Headers
+    await supabase.from('telemetry_audit_logs').insert({ 
+      request_id: requestId,
+      masked_ip: '192.168.1.***' 
+    });
   };
+
 
   const downloadReport = (format: 'json' | 'csv') => {
     const data = format === 'json' 
       ? JSON.stringify(filteredErrors, null, 2)
-      : "ID,RequestID,Data,Rota,Mensagem,Screenshot\n" + filteredErrors.map(e => 
-          `${e.id},${e.metadata?.requestId || ''},${e.created_at},"${e.metadata?.route || ''}","${(e.metadata?.message || '').replace(/"/g, '""')}","${e.metadata?.screenshotUrl || ''}"`
+      : "ID,RequestID,Data,Rota,Mensagem,Viewport,Dispositivo,EvidenciaURL\n" + filteredErrors.map(e => 
+          `${e.id},${e.metadata?.requestId || ''},${e.created_at},"${e.metadata?.route || ''}","${(e.metadata?.message || '').replace(/"/g, '""')}",${e.metadata?.viewport || ''},${e.metadata?.isMobile ? 'Mobile' : 'Desktop'},"${e.metadata?.screenshotUrl || ''}"`
         ).join("\n");
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ui-errors-report-${new Date().toISOString()}.${format}`;
+    a.download = `cathedra-ui-failures-${new Date().toISOString()}.${format}`;
+    document.body.appendChild(a);
     a.click();
-    toast.success(`Relatório ${format.toUpperCase()} exportado.`);
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`Relatório ${format.toUpperCase()} exportado com sucesso.`);
   };
+
 
   const filteredErrors = errors.filter(err => 
     JSON.stringify(err).toLowerCase().includes(filter.toLowerCase())
