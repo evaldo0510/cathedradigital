@@ -19,6 +19,9 @@ export interface Profile {
   name: string;
   is_premium: boolean;
   role: 'user' | 'admin' | string | null;
+  premium_status?: string | null;
+  premium_expires_at?: string | null;
+  mercado_pago_subscription_id?: string | null;
   avatar_url: string | null;
   xp?: number;
   streak?: number;
@@ -330,7 +333,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile,
     loading,
     signOut,
-    isPremium: true, // Unlocked for everyone
+    isPremium: profile?.is_premium ?? false,
     userLevel,
     refreshProfile,
     authenticated: !!user,

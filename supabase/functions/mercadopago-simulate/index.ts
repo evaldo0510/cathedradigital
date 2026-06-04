@@ -1,130 +1,62 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+    const { userId, planId, status } = await req.json()
+    
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
 
-    if (!supabaseUrl || !serviceRoleKey) {
-      return json({ error: "Configuração do backend incompleta." }, 500);
-    }
+    const paymentId = `sim_${Math.random().toString(36).substr(2, 9)}`
 
-    // AUTH GUARD: only admins (verified via user_roles) may simulate payments.
-    const authHeader = req.headers.get("authorization") || "";
-    const token = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
-    if (!token) {
-      return json({ error: "Não autorizado." }, 401);
-    }
-
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-    const { data: userData, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userData?.user) {
-      return json({ error: "Sessão inválida." }, 401);
-    }
-
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
-
-    const { data: roleRow } = await adminClient
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userData.user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (!roleRow) {
-      return json({ error: "Acesso restrito a administradores." }, 403);
-    }
-
-    const body = await req.json();
-    const { userId, planId, status = "approved", amount = 19.9, isDonation = false } = body;
-
-    if (!userId || !planId) {
-      return json({ error: "userId e planId são obrigatórios." }, 400);
-    }
-
-    // Create a transaction record
-    const { data: transaction, error: transactionError } = await adminClient
-      .from("transactions")
-      .insert([
-        {
-          user_id: userId,
-          amount: amount,
-          description: `SIMULAÇÃO: ${planId === 'donation' ? 'Doação Voluntária' : 'Cathedra PRO'}`,
-          status: status,
-          plan_id: planId,
-          is_donation: planId === 'donation' || isDonation,
-          payment_id: `sim_${Math.random().toString(36).substr(2, 9)}`,
-          webhook_payload: { simulation: true, body },
-        },
-      ])
-      .select()
-      .single();
-
-    if (transactionError) {
-      console.error("Simulation transaction creation error:", transactionError);
-      return json({ error: "Falha ao criar transação de simulação." }, 500);
-    }
-
-    // Activate PRO access when status is approved
-    if (status === "approved") {
-      const { error: profileError } = await adminClient
-        .from("profiles")
-        .update({ is_premium: true })
-        .eq("id", userId);
-
-      if (profileError) {
-        console.error("Simulation profile update error:", profileError);
-      }
-
-      // Send success notification
-      await adminClient.from("notifications").insert({
+    // Create simulated transaction
+    const { error: txError } = await supabase
+      .from('transactions')
+      .insert({
         user_id: userId,
-        title: "Doação Recebida! (Simulação) ❤️",
-        message: `Obrigado! Sua contribuição simulada de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)} foi confirmada.`,
-        type: "payment",
-        link: "/transactions/my"
-      });
-    } else if (status === "rejected" || status === "cancelled") {
-      // Send failure notification
-      await adminClient.from("notifications").insert({
-        user_id: userId,
-        title: "Problema no Pagamento (Simulação) ⚠️",
-        message: "Não conseguimos confirmar sua doação simulada.",
-        type: "payment",
-        link: "/checkout"
-      });
-    }
+        payment_id: paymentId,
+        status: status,
+        plan_id: planId || 'pro',
+        amount: status === 'cancelled' ? 0 : 99.90,
+        description: `Simulated ${planId || 'pro'} Subscription - ${status}`,
+        webhook_payload: { simulated: true, status }
+      })
 
-    return json({
-      ok: true,
-      transactionId: transaction.id,
-      status: status,
-      premium: status === "approved",
-    });
+    if (txError) throw txError
+
+    // Update profile status
+    const isApproved = status === 'approved'
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ 
+        is_premium: isApproved,
+        premium_status: isApproved ? 'active' : status,
+        premium_expires_at: isApproved ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null
+      })
+      .eq('id', userId)
+
+    if (profileError) throw profileError
+
+    return new Response(JSON.stringify({ success: true, paymentId }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
   } catch (error) {
-    console.error("mercadopago-simulate error:", error);
-    return json(
-      { error: error instanceof Error ? error.message : "Erro inesperado na simulação." },
-      500,
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400,
+    })
   }
-});
+})

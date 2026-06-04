@@ -151,10 +151,49 @@ const UpgradePage: React.FC = () => {
             )}
           </Button>
           
-          <div className="flex items-center gap-spacing-lg text-premium-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
-            <span>Acesso Imediato</span>
-            <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-border" />
-            <span>Cancele quando quiser</span>
+          <div className="flex flex-col items-center gap-spacing-md">
+            <div className="flex items-center gap-spacing-lg text-premium-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
+              <span>Acesso Imediato</span>
+              <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-border" />
+              <span>Cancele quando quiser</span>
+            </div>
+            
+            {profile?.premium_status && profile.premium_status !== 'inactive' && (
+              <div className="p-spacing-md bg-primary/5 rounded-premium border border-primary/20 text-center">
+                <p className="text-premium-sm font-bold text-primary mb-1">
+                  Status Atual: {profile.premium_status.toUpperCase()}
+                </p>
+                {profile.premium_expires_at && (
+                  <p className="text-premium-xs text-muted-foreground">
+                    Expira em: {new Date(profile.premium_expires_at).toLocaleDateString('pt-BR')}
+                  </p>
+                )}
+                <Button 
+                  variant="link" 
+                  size="sm" 
+                  className="text-red-500 hover:text-red-700 font-bold"
+                  onClick={async () => {
+                    if (confirm('Deseja realmente cancelar sua assinatura?')) {
+                      toast.promise(
+                        supabase.functions.invoke('mercadopago-simulate', {
+                          body: { userId: user?.id, status: 'cancelled' }
+                        }),
+                        {
+                          loading: 'Processando cancelamento...',
+                          success: () => {
+                            setTimeout(() => window.location.reload(), 1500);
+                            return 'Assinatura cancelada com sucesso.';
+                          },
+                          error: 'Erro ao cancelar.'
+                        }
+                      );
+                    }
+                  }}
+                >
+                  Cancelar Assinatura
+                </Button>
+              </div>
+            )}
           </div>
         </motion.div>
 

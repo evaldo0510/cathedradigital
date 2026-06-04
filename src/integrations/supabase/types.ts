@@ -1130,11 +1130,14 @@ export type Database = {
           last_visit: string | null
           level: number | null
           max_streak: number | null
+          mercado_pago_subscription_id: string | null
           movimento_pastoral: string | null
           name: string
           notification_settings: Json | null
           paroquia: string | null
           preferred_reminder_time: string | null
+          premium_expires_at: string | null
+          premium_status: string | null
           program_duration: number | null
           reading_settings: Json | null
           ritual_reminder_time: string | null
@@ -1166,11 +1169,14 @@ export type Database = {
           last_visit?: string | null
           level?: number | null
           max_streak?: number | null
+          mercado_pago_subscription_id?: string | null
           movimento_pastoral?: string | null
           name?: string
           notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
+          premium_expires_at?: string | null
+          premium_status?: string | null
           program_duration?: number | null
           reading_settings?: Json | null
           ritual_reminder_time?: string | null
@@ -1202,11 +1208,14 @@ export type Database = {
           last_visit?: string | null
           level?: number | null
           max_streak?: number | null
+          mercado_pago_subscription_id?: string | null
           movimento_pastoral?: string | null
           name?: string
           notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
+          premium_expires_at?: string | null
+          premium_status?: string | null
           program_duration?: number | null
           reading_settings?: Json | null
           ritual_reminder_time?: string | null
@@ -1528,6 +1537,30 @@ export type Database = {
           updated_at?: string | null
           virtues?: string[] | null
           works?: Json | null
+        }
+        Relationships: []
+      }
+      secret_leaks: {
+        Row: {
+          details: Json | null
+          detected_at: string | null
+          id: string
+          severity: string | null
+          source: string | null
+        }
+        Insert: {
+          details?: Json | null
+          detected_at?: string | null
+          id?: string
+          severity?: string | null
+          source?: string | null
+        }
+        Update: {
+          details?: Json | null
+          detected_at?: string | null
+          id?: string
+          severity?: string | null
+          source?: string | null
         }
         Relationships: []
       }
