@@ -636,6 +636,9 @@ const UpgradePage: React.FC = () => {
                         <Button variant="outline" size="sm" onClick={exportPDF} className="rounded-premium-full text-[10px] font-bold uppercase">
                           <Icons.FileText className="w-3 h-3 mr-1" /> PDF
                         </Button>
+                        <Button variant="outline" size="sm" onClick={generateMonthlyReport} className="rounded-premium-full text-[10px] font-bold uppercase border-primary/20 text-primary">
+                          <Icons.FileText className="w-3 h-3 mr-1" /> Relatório Mensal
+                        </Button>
                         <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs} className="rounded-premium-full">
                           <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
                         </Button>
