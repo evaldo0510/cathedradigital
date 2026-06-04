@@ -325,6 +325,13 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        <TabsContent value="governance">
+          <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+            <PerfGovernanceDashboard />
+          </Suspense>
+        </TabsContent>
+
+
         <TabsContent value="content">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
             <AdminContentTab />
