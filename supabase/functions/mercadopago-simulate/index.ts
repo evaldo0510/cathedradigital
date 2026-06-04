@@ -28,9 +28,9 @@ serve(async (req) => {
         user_id: userId,
         payment_id: paymentId,
         status: status,
-        plan_id: planId,
-        amount: 99.90,
-        description: `Simulated ${planId} Subscription`,
+        plan_id: planId || 'pro',
+        amount: status === 'cancelled' ? 0 : 99.90,
+        description: `Simulated ${planId || 'pro'} Subscription - ${status}`,
         webhook_payload: { simulated: true, status }
       })
 
