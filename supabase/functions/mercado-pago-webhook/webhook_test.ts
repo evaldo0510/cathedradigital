@@ -1,5 +1,4 @@
 import { assertEquals } from "https://deno.land/std@0.168.0/testing/asserts.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -18,20 +17,36 @@ Deno.test("Mercado Pago Webhook - Invalid Signature", async () => {
     })
   });
   
-  // Even with invalid signature, currently we log and proceed unless strict mode is on
-  // But for this test, let's verify it returns a 200 or 400 based on logic
-  assertEquals(response.status, 400); // Should fail because MP API fetch will fail for dummy ID
+  await response.body?.cancel();
+  // Currently we log but don't 403 because we don't have the secret set yet.
+  // But since the payment ID is fake and not simulation, it will try to fetch from MP and fail with 400.
+  assertEquals(response.status, 400);
 });
 
 Deno.test("Mercado Pago Webhook - Idempotency", async () => {
   const requestId = `test_idempotency_${Date.now()}`;
   const payload = {
     action: 'payment.updated',
-    data: { id: '999999999' } // Non-existent payment
+    data: { id: 'sim_payment_999' },
+    simulation: true,
+    simulated_status: 'approved',
+    userId: '00000000-0000-0000-0000-000000000000'
   };
 
   // First call
-  await fetch(WEBHOOK_URL, {
+  const resp1 = await fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-request-id': requestId,
+    },
+    body: JSON.stringify(payload)
+  });
+  await resp1.body?.cancel();
+  assertEquals(resp1.status, 200);
+
+  // Second call with same request ID
+  const resp2 = await fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,17 +55,25 @@ Deno.test("Mercado Pago Webhook - Idempotency", async () => {
     body: JSON.stringify(payload)
   });
 
-  // Second call with same request ID
+  const result = await resp2.json();
+  assertEquals(resp2.status, 200);
+  assertEquals(result.duplicate, true);
+});
+
+Deno.test("Mercado Pago Webhook - Tampered Payload (Mock)", async () => {
+  // This is a placeholder for actual HMAC validation test once the secret is available
+  // For now we verify that it correctly handles missing crucial data
   const response = await fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-request-id': requestId,
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      action: 'payment.created'
+      // Missing data object
+    })
   });
-
-  const result = await response.json();
-  assertEquals(response.status, 200);
-  assertEquals(result.duplicate, true);
+  
+  await response.body?.cancel();
+  assertEquals(response.status, 400);
 });
