@@ -30,6 +30,7 @@ import {
 const NavigationErrorInspector: React.FC = () => {
   const [errors, setErrors] = useState<any[]>([]);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [shareTrail, setShareTrail] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [selectedError, setSelectedError] = useState<any>(null);
