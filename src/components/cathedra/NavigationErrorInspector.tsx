@@ -56,7 +56,22 @@ const NavigationErrorInspector: React.FC = () => {
     }
     return rawData;
   };
+  const fetchErrors = async () => {
+    let query = supabase
+      .from('security_logs')
+      .select('*')
+      .or('event_type.eq.error,action.eq.type_error')
+      .order('created_at', { ascending: false });
 
+    if (dateRange.from) query = query.gte('created_at', dateRange.from);
+    if (dateRange.to) query = query.lte('created_at', dateRange.to);
+
+    const { data, error } = await query.limit(100);
+    if (!error && data) {
+      setErrors(data);
+      checkEvidenceHealth(data);
+    }
+  };
 
 
   const fetchAuditLogs = async () => {
