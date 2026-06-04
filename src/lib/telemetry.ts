@@ -2,10 +2,6 @@ import { trackEvent } from './analytics';
 
 /**
  * Filtra dados sensíveis de objetos de metadados
- * Mascara emails, senhas e tokens antes do envio
- */
-/**
- * Filtra dados sensíveis de objetos de metadados
  * Mascara emails, senhas, tokens e agora PII em stack traces
  */
 const maskSensitiveData = (data: Record<string, any>) => {
@@ -17,7 +13,7 @@ const maskSensitiveData = (data: Record<string, any>) => {
     const lowerKey = key.toLowerCase();
     if (sensitiveKeys.some(sk => lowerKey.includes(sk))) {
       masked[key] = '***MASKED***';
-    } else if (key === 'stack' || key === 'message') {
+    } else if (typeof masked[key] === 'string' && (key === 'stack' || key === 'message' || key === 's' || key === 'm')) {
       // Regex para remover padrões comuns de PII (emails e tokens) de strings de texto
       masked[key] = masked[key]
         .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL_REDACTED]')
@@ -30,16 +26,15 @@ const maskSensitiveData = (data: Record<string, any>) => {
   return masked;
 };
 
-
 export const trackNavigationError = (error: Error, context?: Record<string, any>) => {
   const requestId = Math.random().toString(36).substring(7);
   const route = window.location.pathname;
-  
   const safeContext = context ? maskSensitiveData(context) : {};
   
-  // Tag específica para erros de navegação/UI para facilitar filtros no admin
   const isTypeError = error instanceof TypeError;
   const errorType = isTypeError ? 'type_error' : 'navigation_error';
+  const viewport = `${window.innerWidth}x${window.innerHeight}`;
+  const isMobile = window.innerWidth < 1024;
 
   console.error(`[${errorType.toUpperCase()}] ID: ${requestId}, Route: ${route}`, error, safeContext);
   
@@ -47,10 +42,10 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
     type: errorType,
     requestId,
     route,
-    message: error.message,
-    stack: error.stack,
-    isMobile: window.innerWidth < 1024,
-    viewport: `${window.innerWidth}x${window.innerHeight}`,
+    message: error.message ? maskSensitiveData({ m: error.message }).m : 'Unknown Error',
+    stack: error.stack ? maskSensitiveData({ s: error.stack }).s : null,
+    isMobile,
+    viewport,
     ...safeContext
   });
 
