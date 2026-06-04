@@ -128,7 +128,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   ) : (
                     <Button 
                       onClick={() => navigate(AppRoute.LOGIN)} 
-                      className="h-spacing-xl md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-premium-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
+                      className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-premium-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
                     >
                       {t('enter')}
                     </Button>
