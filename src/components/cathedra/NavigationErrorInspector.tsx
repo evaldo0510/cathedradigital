@@ -56,7 +56,19 @@ const NavigationErrorInspector: React.FC = () => {
     const baseUrl = window.location.origin;
     const expiration = Date.now() + 3600000;
     const token = btoa(`${err.id}-${expiration}-${revocationVersion}`).substring(0, 16);
-    return `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+    const link = `${baseUrl}/inspect/evidence/${err.id}?token=${token}&expires=${expiration}&v=${revocationVersion}`;
+    
+    // Registrar na trilha de auditoria local
+    setShareTrail(prev => [{
+      id: crypto.randomUUID(),
+      requestId: err.metadata?.requestId || err.id,
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(expiration).toISOString(),
+      filters: { user: auditFilterUser, status: statusFilter, date: dateRange },
+      link: link
+    }, ...prev]);
+
+    return link;
   };
 
   const revokeAllLinks = () => {
