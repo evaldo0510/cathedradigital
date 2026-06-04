@@ -377,60 +377,71 @@ const Bible: React.FC = () => {
       
       {viewMode === 'books' && (
         <ContemplativeLayout
-          subtitle="Verbum Domini"
+          subtitle="Sacra Scriptura"
           title="Bíblia Sagrada"
           icon={Icons.Bible}
+          maxW="max-w-spacing-4xl"
         >
           <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
-            <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
-              <div className="relative group">
-                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+            <div className="bg-background/80 backdrop-blur-md py-spacing-md -mx-spacing-md px-spacing-md mb-spacing-md border-b border-primary/5">
+              <div className="relative group max-w-md mx-auto">
+                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
                 <input
                   type="text"
-                  placeholder="Buscar livro ou abreviação..."
+                  placeholder="Pesquisar livros..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input-premium pl-spacing-3xl bg-background/50"
+                  className="search-input-premium pl-spacing-3xl bg-background/50 h-10 text-premium-xs"
                 />
               </div>
             </div>
 
-            <div className="flex justify-center mb-spacing-xl">
-              <div className="flex bg-primary/[0.02] p-spacing-2xs rounded-premium-full border border-primary/5">
-                {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-                  <Button
-                    key={t}
-                    variant="ghost"
-                    onClick={() => setTestament(t)}
-                    className={`px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.2em] transition-all ${
-                      testament === t ? 'bg-background text-primary shadow-premium' : 'text-muted-foreground/30'
-                    }`}
-                  >
-                    {t}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-spacing-xl">
-              {filteredCategories.map(cat => (
-                <div key={cat.name} className="space-y-spacing-md">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">{cat.name}</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-sm">
-                    {cat.books.map(book => (
-                      <CathedraCard key={book.abbr} variant="interactive" onClick={() => selectBook(book)}>
-                        <div className="p-spacing-md flex items-center justify-between">
-                          <div>
-                            <span className="text-[7px] font-black tracking-widest text-primary/20">{book.abbr}</span>
-                            <h3 className="text-premium-xs font-bold">{book.name}</h3>
-                          </div>
-                          <Icons.ChevronRight className="w-spacing-sm h-spacing-sm opacity-20" />
-                        </div>
-                      </CathedraCard>
+            <div className="flex flex-col md:flex-row gap-spacing-xl">
+              <div className="w-full md:w-1/3 shrink-0">
+                <div className="sticky top-24 space-y-spacing-md">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">Testamento</h4>
+                  <div className="flex flex-col bg-primary/[0.02] p-spacing-2xs rounded-premium border border-primary/5">
+                    {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
+                      <Button
+                        key={t}
+                        variant="ghost"
+                        onClick={() => setTestament(t)}
+                        className={`justify-start px-spacing-xl py-spacing-md h-auto rounded-premium text-[9px] font-black uppercase tracking-[0.2em] transition-all ${
+                          testament === t ? 'bg-background text-primary shadow-premium' : 'text-muted-foreground/30 hover:bg-primary/[0.02]'
+                        }`}
+                      >
+                        {t}
+                      </Button>
                     ))}
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="flex-1 space-y-spacing-2xl">
+                {filteredCategories.map(cat => (
+                  <div key={cat.name} className="space-y-spacing-lg">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs">{cat.name}</h4>
+                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                      {cat.books.map(book => (
+                        <button 
+                          key={book.abbr} 
+                          onClick={() => selectBook(book)}
+                          className="group flex items-center justify-between p-spacing-lg bg-background hover:bg-primary/[0.02] transition-colors text-left"
+                        >
+                          <div className="flex items-baseline gap-spacing-md">
+                            <span className="text-[8px] font-black tracking-widest text-primary/20 w-8">{book.abbr}</span>
+                            <h3 className="text-premium-sm font-bold group-hover:text-primary transition-colors">{book.name}</h3>
+                          </div>
+                          <div className="flex items-center gap-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[8px] font-serif italic text-primary/20">{book.chapters} capítulos</span>
+                            <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/20" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </ContemplativeLayout>
@@ -438,40 +449,55 @@ const Bible: React.FC = () => {
 
       {viewMode === 'chapters' && selectedBook && (
         <ContemplativeLayout
-          subtitle="Selectio Capitulorum"
+          subtitle="Sumário do Livro"
           title={selectedBook.name}
           icon={Icons.Bible}
+          maxW="max-w-prose"
         >
-          <div className="w-full space-y-spacing-3xl pb-spacing-4xl">
-             <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
-               ← Voltar aos Livros
-             </Button>
-             <div className="grid grid-cols-5 sm:grid-cols-10 gap-spacing-xs">
-               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-                 <CathedraCard key={ch} variant="interactive" onClick={() => selectChapter(ch)} className="aspect-square flex items-center justify-center">
-                   <span className="text-premium-sm font-display">{ch}</span>
-                 </CathedraCard>
-               ))}
-             </div>
+          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+            <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 mb-spacing-xl">
+              ← Todos os Livros
+            </Button>
+            
+            <div className="space-y-spacing-md">
+              <div className="flex items-center justify-between px-spacing-md border-b border-primary/5 pb-spacing-sm">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Selectio</h4>
+                <span className="text-[8px] font-black uppercase tracking-widest text-primary/10">{selectedBook.chapters} CAPÍTULOS</span>
+              </div>
+              
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                  <button 
+                    key={ch} 
+                    onClick={() => selectChapter(ch)} 
+                    className="aspect-square flex flex-col items-center justify-center bg-background hover:bg-primary/5 transition-all group"
+                  >
+                    <span className="text-premium-sm font-display group-hover:scale-110 transition-transform">{ch}</span>
+                    <span className="text-[6px] font-black uppercase tracking-tighter opacity-0 group-hover:opacity-20 transition-opacity mt-1">CAP.</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </ContemplativeLayout>
       )}
 
       {viewMode === 'reading' && selectedBook && (
         <ContemplativeLayout
-          subtitle={selectedBook.name}
-          title={`Capítulo ${selectedChapter}`}
+          subtitle={selectedBook.abbr}
+          title={selectedBook.name}
           icon={Icons.Bible}
           className={cn(settings.immersiveMode && "max-w-prose")}
         >
           <div className="pb-spacing-4xl">
             {!settings.immersiveMode && (
-              <div className="flex justify-between items-center mb-spacing-xl border-b border-primary/5 pb-spacing-sm">
-                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
+              <div className="flex justify-between items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md">
+                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100">
                   ← Sumário
                 </Button>
-                <div className="flex gap-spacing-md">
-                  <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+                <div className="flex flex-col items-end">
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/20">{selectedBook.name}</span>
+                  <span className="text-premium-sm font-serif italic text-primary/40">Capítulo {selectedChapter}</span>
                 </div>
               </div>
             )}
@@ -505,7 +531,7 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-px`,
                 settings.immersiveMode && "text-center"
               )}>
                 {verses.map((v, i) => (
@@ -513,14 +539,20 @@ const Bible: React.FC = () => {
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
                     className={cn(
-                      "group relative py-spacing-sm transition-all duration-700 rounded-premium px-spacing-md",
-                      activeVerseNumber === v.number && "bg-primary/[0.03] scale-[1.02] shadow-premium-sm",
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg",
+                      activeVerseNumber === v.number && "bg-primary/[0.03] shadow-[inset_4px_0_0_0_rgba(var(--primary),0.1)]",
                       !settings.immersiveMode && "hover:bg-primary/[0.01]"
                     )}
                   >
-                    {v.number === 1 && <h3 className="text-premium-xl font-display mb-spacing-lg opacity-20">Capítulo {v.chapter}</h3>}
-                    <span className="text-[0.7em] font-serif italic text-primary/20 mr-spacing-md">{v.number}</span>
-                    <span className="leading-relaxed">{wrapWithDictionary(v.text)}</span>
+                    {v.number === 1 && (
+                      <div className="flex flex-col items-center mb-spacing-3xl pt-spacing-xl">
+                        <div className="w-8 h-px bg-primary/10 mb-spacing-md" />
+                        <h3 className="text-premium-2xl font-display opacity-30 italic">Capítulo {v.chapter}</h3>
+                        <div className="w-8 h-px bg-primary/10 mt-spacing-md" />
+                      </div>
+                    )}
+                    <span className="text-[10px] font-black text-primary/10 mr-spacing-md align-middle">{v.number}</span>
+                    <span className="leading-[1.8] align-middle">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
                 
