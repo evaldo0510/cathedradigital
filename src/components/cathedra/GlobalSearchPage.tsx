@@ -30,6 +30,8 @@ import { useVisualViewport } from '@/hooks/useVisualViewport';
 
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
+  useRenderPerf('Logos Search', 20);
+
   useAutoFocus();
   const [query, setQuery] = useState('');
   const viewportHeight = useVisualViewport();
