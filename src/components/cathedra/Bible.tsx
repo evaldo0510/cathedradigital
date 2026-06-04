@@ -383,15 +383,15 @@ const Bible: React.FC = () => {
           maxW="max-w-spacing-4xl"
         >
           <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
-            <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
-              <div className="relative group">
-                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+            <div className="bg-background/80 backdrop-blur-md py-spacing-md -mx-spacing-md px-spacing-md mb-spacing-md border-b border-primary/5">
+              <div className="relative group max-w-md mx-auto">
+                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
                 <input
                   type="text"
-                  placeholder="Buscar livro ou abreviação..."
+                  placeholder="Pesquisar livros..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input-premium pl-spacing-3xl bg-background/50"
+                  className="search-input-premium pl-spacing-3xl bg-background/50 h-10 text-premium-xs"
                 />
               </div>
             </div>
