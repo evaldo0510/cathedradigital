@@ -26,8 +26,9 @@ const PerfGovernanceDashboard: React.FC = () => {
         .order('created_at', { ascending: true });
       
       if (!error && data) {
-        setMetrics(data.map(d => ({ ...d, ...d.metadata })));
+        setMetrics(data.map(d => ({ ...d, ...(d.metadata as object || {}) })));
       }
+
       setLoading(false);
     };
 
