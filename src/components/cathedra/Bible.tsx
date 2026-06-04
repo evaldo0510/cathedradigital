@@ -19,7 +19,6 @@ import BibleDictionaryPopover from './BibleDictionaryPopover';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAuth } from '@/hooks/useAuth';
 
-
 const LogosAI = lazy(() => import('./LogosAI'));
 
 const Bible: React.FC = () => {
@@ -30,7 +29,8 @@ const Bible: React.FC = () => {
   const location = useLocation();
   const { settings, updateSettings } = useReadingSettings();
   
-  const [viewMode, setViewMode] = useState<'books' | 'chapters' | 'reading'>('books');
+  const [viewMode, setViewMode] = useState<'home' | 'books' | 'chapters' | 'reading'>('home');
+
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
@@ -85,8 +85,9 @@ const Bible: React.FC = () => {
         fetchVerses(foundBook.abbr, parseInt(ch));
       }
     } else {
-      setViewMode('books');
+      setViewMode('home');
     }
+
   }, [location.search]);
 
   const fetchVerses = async (abbr: string, chapter: number, append = false) => {
@@ -212,9 +213,11 @@ const Bible: React.FC = () => {
   const goBack = () => {
     if (viewMode === 'reading') setViewMode('chapters');
     else if (viewMode === 'chapters') setViewMode('books');
+    else if (viewMode === 'books') setViewMode('home');
     window.scrollTo(0, 0);
-    navigate('/bible');
+    if (viewMode === 'home') navigate('/bible');
   };
+
 
   const toggleAudio = useCallback((action?: 'play' | 'pause' | 'stop' | 'forward' | 'backward' | 'rate', value?: number) => {
     if (action === 'stop' || (isSpeaking && !action)) {
@@ -375,27 +378,102 @@ const Bible: React.FC = () => {
     <div className={cn("relative", settings.immersiveMode && viewMode === 'reading' && "bg-background")}>
       <div className="reveal-header-trigger" />
       
-      {viewMode === 'books' && (
+      {viewMode === 'home' && (
         <ContemplativeLayout
-          subtitle="Sacra Scriptura"
-          title="Bíblia Sagrada"
-          icon={Icons.Bible}
+          subtitle="Sanctum Archivum"
+          title="Bíblia Digital Premium"
+          icon={Icons.Logo}
           maxW="max-w-spacing-4xl"
         >
-          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
-            <div className="bg-background/80 backdrop-blur-md py-spacing-md -mx-spacing-md px-spacing-md mb-spacing-md border-b border-primary/5">
-              <div className="relative group max-w-md mx-auto">
-                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-                <input
-                  type="text"
-                  placeholder="Pesquisar livros..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input-premium pl-spacing-3xl bg-background/50 h-10 text-premium-xs"
-                />
-              </div>
+          <div className="w-full space-y-spacing-3xl pb-spacing-4xl">
+            {/* Seção Superior - Busca e Continuar */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
+               <div className="space-y-spacing-md">
+                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Exploratio</h4>
+                 <div className="relative group">
+                    <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+                    <input
+                      type="text"
+                      placeholder="Busca contemplativa na Palavra..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="search-input-premium pl-spacing-3xl bg-primary/[0.01] h-12 text-premium-sm"
+                    />
+                 </div>
+               </div>
+               
+               <div className="space-y-spacing-md">
+                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Continuatio</h4>
+                 <div className="bg-primary/[0.02] p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-primary/[0.04] transition-all">
+                   <div className="flex items-center gap-spacing-md">
+                     <Icons.Clock className="w-spacing-md h-spacing-md text-primary/20 group-hover:text-primary transition-colors" />
+                     <div className="flex flex-col">
+                       <span className="text-premium-xs font-bold text-primary/80">João 1,1-18</span>
+                       <span className="text-[9px] text-primary/30 italic">Lido há 2 horas</span>
+                     </div>
+                   </div>
+                   <Button variant="ghost" size="icon" className="rounded-premium-full"><Icons.ArrowRight size={16} /></Button>
+                 </div>
+               </div>
             </div>
 
+            {/* Widgets Rápidos */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+              {[
+                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha' },
+                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365' },
+                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos' },
+                { label: 'Histórico', icon: Icons.History, info: 'Recentes' }
+              ].map((w) => (
+                <button key={w.label} className="p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all text-left group">
+                  <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
+                  <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
+                  <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Acesso aos Livros (Biblioteca) */}
+            <div className="pt-spacing-xl">
+              <div className="flex items-center justify-between mb-spacing-xl">
+                <h3 className="font-display text-premium-2xl">A Biblioteca</h3>
+                <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[9px] font-black uppercase tracking-widest opacity-40 hover:opacity-100">
+                  Ver todos os livros →
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
+                {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
+                  <div key={t} className="space-y-spacing-lg">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs italic">{t}</h4>
+                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                      {BIBLE_DATA[t].slice(0, 3).map(cat => (
+                        <div key={cat.name} className="p-spacing-md bg-background hover:bg-primary/[0.01] transition-all cursor-pointer group border-b border-primary/[0.02]" onClick={() => { setTestament(t); setViewMode('books'); }}>
+                          <h5 className="text-premium-xs font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</h5>
+                          <p className="text-[9px] text-primary/20 truncate">{cat.books.map(b => b.name).join(', ')}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ContemplativeLayout>
+      )}
+
+      {viewMode === 'books' && (
+        <ContemplativeLayout
+          subtitle="Sumário da Biblioteca"
+          title="Os Livros Sagrados"
+          icon={Icons.Bible}
+          maxW="max-w-spacing-4xl"
+          headerActions={
+            <div className="flex gap-spacing-md">
+              <Button variant="ghost" onClick={() => setViewMode('home')} className="text-[9px] font-black uppercase tracking-widest opacity-40">← Início</Button>
+            </div>
+          }
+        >
+          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
             <div className="flex flex-col md:flex-row gap-spacing-xl">
               <div className="w-full md:w-1/3 shrink-0">
                 <div className="sticky top-24 space-y-spacing-md">
@@ -444,6 +522,7 @@ const Bible: React.FC = () => {
               </div>
             </div>
           </div>
+
         </ContemplativeLayout>
       )}
 
@@ -465,18 +544,22 @@ const Bible: React.FC = () => {
                 <span className="text-[8px] font-black uppercase tracking-widest text-primary/10">{selectedBook.chapters} CAPÍTULOS</span>
               </div>
               
-              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+              <div className="flex flex-col gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
                 {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
                   <button 
                     key={ch} 
                     onClick={() => selectChapter(ch)} 
-                    className="aspect-square flex flex-col items-center justify-center bg-background hover:bg-primary/5 transition-all group"
+                    className="flex items-center justify-between p-spacing-lg bg-background hover:bg-primary/[0.01] transition-all group border-b border-primary/[0.02] last:border-none"
                   >
-                    <span className="text-premium-sm font-display group-hover:scale-110 transition-transform">{ch}</span>
-                    <span className="text-[6px] font-black uppercase tracking-tighter opacity-0 group-hover:opacity-20 transition-opacity mt-1">CAP.</span>
+                    <div className="flex items-center gap-spacing-lg">
+                      <span className="text-premium-sm font-display text-primary/20 w-8">{ch}</span>
+                      <h5 className="text-premium-sm font-serif group-hover:text-primary transition-colors">Capítulo {ch}</h5>
+                    </div>
+                    <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/10 group-hover:text-primary transition-all" />
                   </button>
                 ))}
               </div>
+
             </div>
           </div>
         </ContemplativeLayout>
@@ -531,7 +614,7 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-px`,
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
                 settings.immersiveMode && "text-center"
               )}>
                 {verses.map((v, i) => (
@@ -539,22 +622,23 @@ const Bible: React.FC = () => {
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
                     className={cn(
-                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg",
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg leading-relaxed",
                       activeVerseNumber === v.number && "bg-primary/[0.03] shadow-[inset_4px_0_0_0_rgba(var(--primary),0.1)]",
                       !settings.immersiveMode && "hover:bg-primary/[0.01]"
                     )}
                   >
                     {v.number === 1 && (
-                      <div className="flex flex-col items-center mb-spacing-3xl pt-spacing-xl">
-                        <div className="w-8 h-px bg-primary/10 mb-spacing-md" />
-                        <h3 className="text-premium-2xl font-display opacity-30 italic">Capítulo {v.chapter}</h3>
-                        <div className="w-8 h-px bg-primary/10 mt-spacing-md" />
+                      <div className="flex flex-col items-center mb-spacing-4xl pt-spacing-xl">
+                        <Icons.Logo className="w-spacing-xl h-spacing-xl opacity-10 mb-spacing-md" />
+                        <h3 className="text-premium-3xl font-display font-light text-primary/40 uppercase tracking-[0.2em]">Capítulo {v.chapter}</h3>
+                        <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent mt-spacing-xl" />
                       </div>
                     )}
-                    <span className="text-[10px] font-black text-primary/10 mr-spacing-md align-middle">{v.number}</span>
-                    <span className="leading-[1.8] align-middle">{wrapWithDictionary(v.text)}</span>
+                    <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none">{v.number}</span>
+                    <span className="align-baseline">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
+
                 
                 {isLoadingNext && <div className="py-spacing-xl"><BibleSkeleton /></div>}
                 <div ref={observerTarget} className="h-20" />
