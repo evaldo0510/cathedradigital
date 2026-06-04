@@ -363,8 +363,10 @@ const AppLayout: React.FC = () => {
 
 
         <ScrollToTop />
-        <AppHeader 
-          user={authUserAdapter} 
+        <AppErrorBoundary>
+          <AppHeader 
+            user={authUserAdapter} 
+
           isDark={isDark} 
           onToggleDark={toggleDark}
           lang={lang}
@@ -515,7 +517,9 @@ const AppLayout: React.FC = () => {
         </main>
 
         <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        </AppErrorBoundary>
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
+
         <Suspense fallback={null}>
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 
