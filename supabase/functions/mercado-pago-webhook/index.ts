@@ -69,15 +69,28 @@ serve(async (req) => {
       }
     }
 
-    const { action, data } = body
+    const { action, data, simulation, simulated_status } = body
     
     if (action === 'payment.created' || action === 'payment.updated') {
       const paymentId = data.id
       
-      const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
-      const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-        headers: { Authorization: `Bearer ${mpToken}` }
-      })
+      let paymentData: any
+      
+      if (simulation) {
+        // Simulated payment data
+        paymentData = {
+          id: paymentId,
+          status: simulated_status || 'approved',
+          transaction_amount: 99.9,
+          description: 'Plano PRO - Simulação',
+          external_reference: body.userId || (await supabase.auth.getUser(req.headers.get('Authorization')?.split(' ')[1] || '')).data.user?.id,
+          metadata: { plan_id: 'pro_annual' }
+        }
+      } else {
+        const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
+        const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+          headers: { Authorization: `Bearer ${mpToken}` }
+        })
       
       if (!response.ok) {
         throw new Error(`Failed to fetch payment details: ${response.statusText}`)
