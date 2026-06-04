@@ -490,12 +490,13 @@ const Bible: React.FC = () => {
         >
           <div className="pb-spacing-4xl">
             {!settings.immersiveMode && (
-              <div className="flex justify-between items-center mb-spacing-xl border-b border-primary/5 pb-spacing-sm">
-                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em]">
+              <div className="flex justify-between items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md">
+                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100">
                   ← Sumário
                 </Button>
-                <div className="flex gap-spacing-md">
-                  <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+                <div className="flex flex-col items-end">
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/20">{selectedBook.name}</span>
+                  <span className="text-premium-sm font-serif italic text-primary/40">Capítulo {selectedChapter}</span>
                 </div>
               </div>
             )}
