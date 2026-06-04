@@ -112,10 +112,28 @@ const WebhookAlerts = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="1">1% (Crítico)</SelectItem>
                   <SelectItem value="5">5%</SelectItem>
                   <SelectItem value="10">10%</SelectItem>
                   <SelectItem value="20">20%</SelectItem>
                   <SelectItem value="50">50%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Assinaturas Inválidas p/ Alerta (%)</label>
+              <Select 
+                value={(settings.alert_threshold_invalid_sig * 100).toString()} 
+                onValueChange={(val) => updateSettings('alert_threshold_invalid_sig', parseFloat(val) / 100)}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-lg">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Qualquer falha (0%)</SelectItem>
+                  <SelectItem value="1">1%</SelectItem>
+                  <SelectItem value="5">5%</SelectItem>
+                  <SelectItem value="10">10%</SelectItem>
                 </SelectContent>
               </Select>
             </div>
