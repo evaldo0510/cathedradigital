@@ -21,20 +21,23 @@ const maskSensitiveData = (data: Record<string, any>) => {
 };
 
 export const trackNavigationError = (error: Error, context?: Record<string, any>) => {
-  // Amostragem: capturar 100% de erros críticos, mas podemos filtrar aqui se necessário
   const requestId = Math.random().toString(36).substring(7);
   const route = window.location.pathname;
   
   const safeContext = context ? maskSensitiveData(context) : {};
   
-  console.error(`[Navigation Error] ID: ${requestId}, Route: ${route}`, error, safeContext);
+  // Tag específica para erros de navegação/UI para facilitar filtros no admin
+  const isTypeError = error instanceof TypeError;
+  const errorType = isTypeError ? 'type_error' : 'navigation_error';
+
+  console.error(`[${errorType.toUpperCase()}] ID: ${requestId}, Route: ${route}`, error, safeContext);
   
   trackEvent('error', {
-    type: 'navigation',
+    type: errorType,
     requestId,
     route,
     message: error.message,
-    stack: error.stack, // Stack trace é essencial para diagnóstico técnico
+    stack: error.stack,
     isMobile: window.innerWidth < 1024,
     viewport: `${window.innerWidth}x${window.innerHeight}`,
     ...safeContext

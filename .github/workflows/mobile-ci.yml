@@ -22,14 +22,14 @@ jobs:
 
       - name: Run Mobile E2E Tests (Matrix)
         run: |
-          # Em um ambiente real com Playwright:
-          # npx playwright test --project=mobile
-          bun test src/test/MobileNavigation.test.tsx
+          # Simulação de matriz de dispositivos
+          # No futuro: npx playwright test --project=iPhone-12 --project=Pixel-5
+          bun test src/test/MobileNavigation.test.tsx src/test/BottomNavRegression.test.tsx
         env:
           TEST_VIEWPORTS: "320x568,375x667,414x896,768x1024"
           CI: true
 
-      - name: Upload Test Reports & Screenshots
+      - name: Upload Test Reports & Screenshots on Failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -38,4 +38,6 @@ jobs:
             test-results/
             playwright-report/
             screenshots/
+            logs/
+
 
