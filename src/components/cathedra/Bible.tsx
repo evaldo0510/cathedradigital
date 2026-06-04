@@ -473,13 +473,56 @@ const Bible: React.FC = () => {
             </div>
           }
         >
+          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+            <div className="flex flex-col md:flex-row gap-spacing-xl">
+              <div className="w-full md:w-1/3 shrink-0">
+                <div className="sticky top-24 space-y-spacing-md">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md">Testamento</h4>
+                  <div className="flex flex-col bg-primary/[0.02] p-spacing-2xs rounded-premium border border-primary/5">
+                    {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
+                      <Button
+                        key={t}
+                        variant="ghost"
+                        onClick={() => setTestament(t)}
+                        className={`justify-start px-spacing-xl py-spacing-md h-auto rounded-premium text-[9px] font-black uppercase tracking-[0.2em] transition-all ${
+                          testament === t ? 'bg-background text-primary shadow-premium' : 'text-muted-foreground/30 hover:bg-primary/[0.02]'
+                        }`}
+                      >
+                        {t}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
+              <div className="flex-1 space-y-spacing-2xl">
+                {filteredCategories.map(cat => (
+                  <div key={cat.name} className="space-y-spacing-lg">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs">{cat.name}</h4>
+                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                      {cat.books.map(book => (
+                        <button 
+                          key={book.abbr} 
+                          onClick={() => selectBook(book)}
+                          className="group flex items-center justify-between p-spacing-lg bg-background hover:bg-primary/[0.02] transition-colors text-left"
+                        >
+                          <div className="flex items-baseline gap-spacing-md">
+                            <span className="text-[8px] font-black tracking-widest text-primary/20 w-8">{book.abbr}</span>
+                            <h3 className="text-premium-sm font-bold group-hover:text-primary transition-colors">{book.name}</h3>
+                          </div>
+                          <div className="flex items-center gap-spacing-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[8px] font-serif italic text-primary/20">{book.chapters} capítulos</span>
+                            <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/20" />
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
+
         </ContemplativeLayout>
       )}
 
@@ -571,7 +614,7 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-px`,
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
                 settings.immersiveMode && "text-center"
               )}>
                 {verses.map((v, i) => (
@@ -579,22 +622,23 @@ const Bible: React.FC = () => {
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
                     className={cn(
-                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg",
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg leading-relaxed",
                       activeVerseNumber === v.number && "bg-primary/[0.03] shadow-[inset_4px_0_0_0_rgba(var(--primary),0.1)]",
                       !settings.immersiveMode && "hover:bg-primary/[0.01]"
                     )}
                   >
                     {v.number === 1 && (
-                      <div className="flex flex-col items-center mb-spacing-3xl pt-spacing-xl">
-                        <div className="w-8 h-px bg-primary/10 mb-spacing-md" />
-                        <h3 className="text-premium-2xl font-display opacity-30 italic">Capítulo {v.chapter}</h3>
-                        <div className="w-8 h-px bg-primary/10 mt-spacing-md" />
+                      <div className="flex flex-col items-center mb-spacing-4xl pt-spacing-xl">
+                        <Icons.Logo className="w-spacing-xl h-spacing-xl opacity-10 mb-spacing-md" />
+                        <h3 className="text-premium-3xl font-display font-light text-primary/40 uppercase tracking-[0.2em]">Capítulo {v.chapter}</h3>
+                        <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent mt-spacing-xl" />
                       </div>
                     )}
-                    <span className="text-[10px] font-black text-primary/10 mr-spacing-md align-middle">{v.number}</span>
-                    <span className="leading-[1.8] align-middle">{wrapWithDictionary(v.text)}</span>
+                    <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none">{v.number}</span>
+                    <span className="align-baseline">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
+
                 
                 {isLoadingNext && <div className="py-spacing-xl"><BibleSkeleton /></div>}
                 <div ref={observerTarget} className="h-20" />
