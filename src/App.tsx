@@ -366,17 +366,18 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          <AppHeader 
-            user={authUserAdapter} 
-
-          isDark={isDark} 
-          onToggleDark={toggleDark}
-          lang={lang}
-          onChangeLang={setLang}
-          onSignOut={signOut}
-          onOpenSidebar={handleOpenSidebar}
-          isLanding={location.pathname === '/'}
-        />
+          {!settings.immersiveMode && (
+            <AppHeader 
+              user={authUserAdapter} 
+              isDark={isDark} 
+              onToggleDark={toggleDark}
+              lang={lang}
+              onChangeLang={setLang}
+              onSignOut={signOut}
+              onOpenSidebar={handleOpenSidebar}
+              isLanding={location.pathname === '/'}
+            />
+          )}
         
         <CathedralSidebar 
           isOpen={isSidebarOpen}
