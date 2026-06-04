@@ -25,7 +25,18 @@ vi.stubGlobal('speechSynthesis', {
   paused: false,
 });
 
-// Mock Supabase
+// Mock Supabase with proper chainable promises
+const mockSupabaseQuery = {
+  select: vi.fn().mockReturnThis(),
+  eq: vi.fn().mockReturnThis(),
+  insert: vi.fn().mockReturnThis(),
+  update: vi.fn().mockReturnThis(),
+  maybeSingle: vi.fn().mockReturnThis(),
+  ilike: vi.fn().mockReturnThis(),
+  then: vi.fn((cb) => Promise.resolve(cb({ data: null, error: null }))),
+  catch: vi.fn().mockReturnThis(),
+};
+
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     functions: {
@@ -35,13 +46,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
       onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
     },
-    from: vi.fn().mockReturnThis(),
-    select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    insert: vi.fn().mockReturnThis(),
-    update: vi.fn().mockReturnThis(),
-    maybeSingle: vi.fn().mockReturnThis(),
-    ilike: vi.fn().mockReturnThis(),
+    from: vi.fn().mockReturnValue(mockSupabaseQuery),
   },
 }));
 
