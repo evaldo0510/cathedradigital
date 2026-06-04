@@ -523,9 +523,9 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        {!settings.immersiveMode && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
         </AppErrorBoundary>
-        {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
+        {!settings.immersiveMode && location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 
