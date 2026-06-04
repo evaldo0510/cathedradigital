@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
+
 import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
@@ -245,6 +246,8 @@ const AppLayout: React.FC = () => {
   // Close sidebar on route change
   useEffect(() => {
     setIsSidebarOpen(false);
+    // Erro de navegação: Garantir reset de scroll entre rotas no mobile
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   const isDark = settings.theme === 'dark' || settings.theme === 'night';

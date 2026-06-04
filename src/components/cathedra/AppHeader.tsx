@@ -55,7 +55,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
-            onClick={() => navigate('/')}
+            onClick={() => {
+              navigate('/');
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
           >
             <Icons.Logo className="w-spacing-lg h-spacing-lg md:w-spacing-lg md:h-spacing-lg transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60" variant={isDark ? "light" : "dark"} aria-hidden="true" />
             <div className="flex flex-col items-start min-w-spacing-0">
@@ -143,7 +146,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     key={item.route} 
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate(item.route!)}
+                    onClick={() => {
+                      navigate(item.route!);
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
                     className={`px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
                       pathname === item.route ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
                     }`}
