@@ -16,6 +16,7 @@ import { BADGE_DEFINITIONS } from '@/lib/badges';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
 import ContemplativeLayout from './ContemplativeLayout';
+import PremiumAuditTrail from './PremiumAuditTrail';
 
 interface Badge {
   id: string;
@@ -367,6 +368,19 @@ const ProfilePage: React.FC = () => {
 
         </div>
       </CathedraCard>
+
+      {profile.is_premium && (
+        <CathedraCard className="p-spacing-xl space-y-spacing-lg">
+          <div className="flex items-center justify-between">
+            <h2 className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Trilha de Auditoria Premium</h2>
+            <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
+          </div>
+          <p className="text-[10px] text-muted-foreground mb-spacing-md">
+            Histórico técnico de ativação, renovação e webhooks de pagamento.
+          </p>
+          <PremiumAuditTrail />
+        </CathedraCard>
+      )}
 
       <CathedraCard className="p-spacing-xl space-y-spacing-xl">
         <div className="flex items-center justify-between">
