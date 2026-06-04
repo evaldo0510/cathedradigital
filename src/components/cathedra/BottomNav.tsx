@@ -166,8 +166,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   const items = NAV_ITEMS(t, lang).map(item => ({
     ...item,
-    icon: (Icons as any)[item.icon as string]
+    IconComponent: (Icons as any)[item.icon as string],
+    iconName: item.icon as string
   }));
+
 
   return (
     <nav 
@@ -188,11 +190,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
             <BottomNavItem 
               key={item.label + i}
               label={item.label}
-              icon={item.icon}
+              icon={item.IconComponent}
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
-              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.icon.toLowerCase()}`}
+              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.iconName.toLowerCase()}`}
+
               onClick={(e) => {
                 if (item.isMenu) onOpenSidebar();
                 else if (item.route) {
