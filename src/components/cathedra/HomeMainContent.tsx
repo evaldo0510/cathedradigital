@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
+import { motion, AnimatePresence } from 'framer-motion';
+
+
 
 import { Input } from '@/components/ui/input';
 
@@ -45,26 +48,52 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const isParagraphQuery = useMemo(() => {
+    const q = logosQuery.trim().toLowerCase();
+    // Match patterns like "cic 123", "p123", "paragrafo 123"
+    const cicMatch = q.match(/^(?:cic|p|par[áa]grafo)\s*(\d+)$/i);
+    // Match patterns like "jo 3,16", "gn 1,1", "1cor 13"
+    const bibleMatch = q.match(/^([1-3]?[a-z]+)\s*(\d+)(?:[,\s](\d+))?$/i);
+    return { cicMatch, bibleMatch };
+  }, [logosQuery]);
+
   const handleLogosSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    
-    if (logosQuery.trim()) {
-      const savedMessages = localStorage.getItem('cathedra_logos_messages');
-      const messages = savedMessages ? JSON.parse(savedMessages) : [];
-      const newMessage = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: logosQuery,
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
-      
-      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
+    const query = logosQuery.trim();
+    if (!query) return;
+
+    // Direct Jump Logic
+    if (isParagraphQuery.cicMatch) {
+      navigate(`/catechism?p=${isParagraphQuery.cicMatch[1]}`);
+      return;
     }
+    if (isParagraphQuery.bibleMatch) {
+      const [_, book, ch, v] = isParagraphQuery.bibleMatch;
+      navigate(`/bible?book=${book}&ch=${ch}${v ? `&v=${v}` : ''}`);
+      return;
+    }
+    
+    const savedMessages = localStorage.getItem('cathedra_logos_messages');
+    const messages = savedMessages ? JSON.parse(savedMessages) : [];
+    const newMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: query,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
+    navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(query)}`);
   };
 
+
   return (
-    <div className="w-full space-y-spacing-xl md:space-y-spacing-4xl outline-none flex flex-col items-center" tabIndex={-1}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className="w-full space-y-spacing-xl md:space-y-spacing-4xl outline-none flex flex-col items-center" 
+      tabIndex={-1}
+    >
       {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
       <section className="w-full">
         <SpiritualContinuity />
@@ -76,10 +105,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg md:gap-spacing-xl w-full mx-auto">
           <CathedraCard 
             variant="interactive"
-            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
+            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl will-change-transform"
             onClick={() => onNavigate(AppRoute.BIBLE)}
           >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-105">
               <Icons.Bible className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
             <div className="space-y-spacing-sm text-center">
@@ -90,10 +119,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
           <CathedraCard 
             variant="interactive"
-            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
+            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl will-change-transform"
             onClick={() => onNavigate(AppRoute.CATECHISM)}
           >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-105">
               <Icons.Catechism className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
             <div className="space-y-spacing-sm text-center">
@@ -120,8 +149,29 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="rounded-premium-full p-spacing-xs border-primary/5"
+          className="rounded-premium-full p-spacing-xs border-primary/5 shadow-premium-sm relative overflow-visible"
         >
+          {/* Quick Jump Preview */}
+          <AnimatePresence>
+            {(isParagraphQuery.cicMatch || isParagraphQuery.bibleMatch) && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute -top-16 left-1/2 -translate-x-1/2 bg-card border border-primary/10 rounded-premium px-4 py-2 shadow-premium z-50 whitespace-nowrap"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icons.Zap className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+                    Ir para {isParagraphQuery.cicMatch ? `CIC §${isParagraphQuery.cicMatch[1]}` : `${isParagraphQuery.bibleMatch?.[1]} ${isParagraphQuery.bibleMatch?.[2]}${isParagraphQuery.bibleMatch?.[3] ? `,${isParagraphQuery.bibleMatch[3]}` : ''}`}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
             <div className="relative group/input">
               <Input
@@ -129,19 +179,20 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Logos IA: Pergunte sobre a Fé..."
-                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-premium-full border-none bg-transparent transition-all duration-700 text-premium-sm md:text-premium-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-premium-none"
+                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-premium-full border-none bg-transparent transition-all duration-500 text-premium-sm md:text-premium-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-premium-none"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-700" />
+              <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-500" />
               <button 
                 type="submit"
-                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
+                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-300 flex items-center justify-center group/btn outline-none"
               >
                 <Icons.ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </form>
         </CathedraCard>
+
       </section>
 
       {/* 4. RITUAL RÁPIDO - COMPACT ACCESS */}
@@ -149,7 +200,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <CathedraCard
           variant="interactive"
           padding="none"
-          className="rounded-premium-full border-primary/[0.02]"
+          className="rounded-premium-full border-primary/[0.02] shadow-premium-none hover:shadow-premium-sm"
           onClick={() => onNavigate(AppRoute.HOJE)}
         >
           <div className="flex items-center gap-spacing-lg px-spacing-xl py-spacing-md group">
@@ -163,7 +214,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           </div>
         </CathedraCard>
       </section>
-    </div>
+    </motion.div>
+
   );
 });
 
