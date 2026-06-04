@@ -24,6 +24,7 @@ const NavigationErrorInspector: React.FC = () => {
   const [selectedError, setSelectedError] = useState<any>(null);
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const [activeTab, setActiveTab] = useState('errors');
+  const [auditFilterUser, setAuditFilterUser] = useState('');
   const navigate = useNavigate();
 
   const fetchErrors = async () => {
@@ -41,11 +42,15 @@ const NavigationErrorInspector: React.FC = () => {
   };
 
   const fetchAuditLogs = async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from('telemetry_audit_logs')
       .select('*, profiles(name)')
       .order('inspected_at', { ascending: false });
-    
+
+    if (dateRange.from) query = query.gte('inspected_at', dateRange.from);
+    if (dateRange.to) query = query.lte('inspected_at', dateRange.to);
+
+    const { data, error } = await query;
     if (!error && data) setAuditLogs(data);
   };
 
@@ -70,8 +75,14 @@ const NavigationErrorInspector: React.FC = () => {
     JSON.stringify(err).toLowerCase().includes(filter.toLowerCase())
   );
 
+  const filteredAuditLogs = auditLogs.filter(log => {
+    const userMatch = !auditFilterUser || (log.profiles?.name || 'Admin').toLowerCase().includes(auditFilterUser.toLowerCase());
+    const generalMatch = !filter || JSON.stringify(log).toLowerCase().includes(filter.toLowerCase());
+    return userMatch && generalMatch;
+  });
+
   const downloadReport = (type: 'errors' | 'audit', formatExt: 'json' | 'csv') => {
-    const dataToExport = type === 'errors' ? filteredErrors : auditLogs;
+    const dataToExport = type === 'errors' ? filteredErrors : filteredAuditLogs;
     const fileName = type === 'errors' ? 'ui-failures' : 'inspection-audit';
     
     let content = '';
@@ -88,6 +99,7 @@ const NavigationErrorInspector: React.FC = () => {
         ).join("\n");
       }
     }
+
     
     const blob = new Blob([content], { type: formatExt === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -112,16 +124,40 @@ const NavigationErrorInspector: React.FC = () => {
             <p className="text-muted-foreground text-premium-sm">Diagnóstico de TypeErrors e falhas de navegação mobile.</p>
           </div>
           <div className="flex items-center gap-spacing-sm">
+            {activeTab === 'audit' && (
+              <Input 
+                placeholder="Filtrar por Inspetor..." 
+                value={auditFilterUser}
+                onChange={(e) => setAuditFilterUser(e.target.value)}
+                className="max-w-[150px] rounded-premium-full"
+              />
+            )}
+            <div className="flex gap-1 items-center bg-muted/20 p-1 rounded-premium-full border border-border/10">
+              <Input 
+                type="date"
+                value={dateRange.from}
+                onChange={(e) => setDateRange(prev => ({ ...prev, from: e.target.value }))}
+                className="h-8 border-none bg-transparent text-[10px] w-[110px]"
+              />
+              <span className="text-[10px] opacity-30">até</span>
+              <Input 
+                type="date"
+                value={dateRange.to}
+                onChange={(e) => setDateRange(prev => ({ ...prev, to: e.target.value }))}
+                className="h-8 border-none bg-transparent text-[10px] w-[110px]"
+              />
+            </div>
             <CathedraButton 
               variant="outline" 
               size="sm" 
               onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
               className="rounded-premium-full"
             >
-              <Icons.Download className="w-4 h-4 mr-2" /> Exportar {activeTab === 'errors' ? 'Falhas' : 'Auditoria'}
+              <Icons.Download className="w-4 h-4 mr-2" /> Exportar
             </CathedraButton>
              <Input 
-              placeholder="Buscar por request_id, rota..." 
+              placeholder="Buscar..." 
+
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className="max-w-xs rounded-premium-full"
@@ -243,8 +279,9 @@ const NavigationErrorInspector: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/10">
-                  {auditLogs.map((log) => (
+                  {filteredAuditLogs.map((log) => (
                     <tr key={log.id} className="hover:bg-primary/[0.01] transition-colors">
+
                       <td className="p-spacing-md font-mono opacity-60">
                         {format(new Date(log.inspected_at), 'dd/MM/yy HH:mm:ss')}
                       </td>
