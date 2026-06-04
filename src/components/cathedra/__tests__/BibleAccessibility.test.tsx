@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Bible from '../Bible';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
@@ -25,32 +25,45 @@ vi.stubGlobal('speechSynthesis', {
   paused: false,
 });
 
-// Mock Supabase with proper chainable promises
-const mockSupabaseQuery = {
-  select: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  insert: vi.fn().mockReturnThis(),
-  update: vi.fn().mockReturnThis(),
-  maybeSingle: vi.fn().mockReturnThis(),
-  ilike: vi.fn().mockReturnThis(),
-  then: vi.fn((cb) => Promise.resolve(cb({ data: null, error: null }))),
-  catch: vi.fn().mockReturnThis(),
-};
+// Mock Supabase
+vi.mock('@/integrations/supabase/client', () => {
+  const mockQuery = {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockReturnThis(),
+    ilike: vi.fn().mockReturnThis(),
+    then: vi.fn((cb) => {
+      if (typeof cb === 'function') {
+        return Promise.resolve(cb({ data: null, error: null }));
+      }
+      return Promise.resolve({ data: null, error: null });
+    }),
+    catch: vi.fn().mockReturnThis(),
+  };
 
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
-    functions: {
-      invoke: vi.fn().mockResolvedValue({ data: { verses: [] }, error: null }),
+  return {
+    supabase: {
+      functions: {
+        invoke: vi.fn().mockResolvedValue({ data: { verses: [] }, error: null }),
+      },
+      auth: {
+        getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+        onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+      },
+      from: vi.fn().mockReturnValue(mockQuery),
     },
-    auth: {
-      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
-      onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+  };
+});
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
     },
-    from: vi.fn().mockReturnValue(mockSupabaseQuery),
   },
-}));
-
-const queryClient = new QueryClient();
+});
 
 const AllProviders = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
