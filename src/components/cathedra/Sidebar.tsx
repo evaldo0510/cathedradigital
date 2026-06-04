@@ -112,7 +112,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   }, [isOpen, onClose]);
   
   const sections = [
-    ...(user?.role === 'admin' ? [{
+    ...(isAdmin ? [{
       label: t('admin'),
       items: [
         { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck /> },
