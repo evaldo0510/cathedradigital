@@ -233,7 +233,7 @@ const NavigationErrorInspector: React.FC = () => {
                     onClick={() => downloadReport('broken', 'json')} 
                     className="rounded-premium-full border-orange-500/20 text-orange-600 hover:bg-orange-500/5"
                   >
-                    <Icons.FileJson className="w-4 h-4 mr-2" /> JSON Quebrados
+                    <Icons.FileText className="w-4 h-4 mr-2" /> JSON Quebrados
                   </CathedraButton>
                 </div>
               )}

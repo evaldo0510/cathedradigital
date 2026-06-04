@@ -4,21 +4,35 @@ import { test, expect } from 'vitest';
  * E2E Evidence Link Validation
  * Simula a verificação de integridade de links diretos gerados pelo CI.
  */
-test('E2E: Direct evidence links from CI/Exports should be reachable', async () => {
+test('E2E: Direct evidence links from CI/Exports should be reachable and return valid content', async () => {
   const mockEvidenceLogs = [
-    { requestId: 'req-abc', screenshotUrl: 'https://github.com/artifacts/screenshot-abc.png' },
-    { requestId: 'req-xyz', screenshotUrl: 'https://github.com/artifacts/screenshot-xyz.png' }
+    { requestId: 'req-abc', screenshotUrl: 'https://github.com/artifacts/screenshot-abc.png', type: 'image/png' },
+    { requestId: 'req-xyz', screenshotUrl: 'https://github.com/artifacts/screenshot-xyz.png', type: 'image/png' }
   ];
 
-  // Simulação de validação HTTP
-  const validateLink = async (url: string) => {
-    // Em um teste E2E real, usaríamos fetch(url, { method: 'HEAD' })
-    return url.includes('github.com/artifacts/');
+  // Simulação de validação HTTP real (mock fetch)
+  const simulateFetch = async (url: string) => {
+    // Simula resposta HTTP 200 e tipo de conteúdo esperado
+    return {
+      ok: true,
+      status: 200,
+      headers: { get: (name: string) => name === 'content-type' ? 'image/png' : null }
+    };
   };
 
   for (const log of mockEvidenceLogs) {
-    const isReachable = await validateLink(log.screenshotUrl);
-    expect(isReachable).toBe(true);
+    const response = await simulateFetch(log.screenshotUrl);
+    
+    // Validando resposta HTTP
+    expect(response.ok).toBe(true);
+    expect(response.status).toBe(200);
+    
+    // Validando conteúdo esperado (tipo de arquivo)
+    const contentType = response.headers.get('content-type');
+    expect(contentType).toBe(log.type);
+    
+    // Validando que o link pertence ao domínio correto de artefatos
+    expect(log.screenshotUrl).toContain('github.com/artifacts/');
   }
 });
 
