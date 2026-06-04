@@ -52,11 +52,8 @@ export function useRenderPerf(componentName: string, threshold = 5) {
     }
 
     return () => {
-      unsubCLS();
-      unsubINP();
-      unsubLCP();
-      unsubFCP();
       observer.disconnect();
+
 
       const duration = performance.now() - startTime.current;
       const route = location.pathname;
