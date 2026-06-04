@@ -87,10 +87,16 @@ const NavigationErrorInspector: React.FC = () => {
             <p className="text-muted-foreground text-premium-sm">Diagnóstico de TypeErrors e falhas de navegação mobile.</p>
           </div>
           <div className="flex items-center gap-spacing-sm">
-            <CathedraButton variant="outline" size="sm" onClick={() => downloadReport('csv')} className="rounded-premium-full">
-              <Icons.Download className="w-4 h-4 mr-2" /> Exportar
+            <CathedraButton 
+              variant="outline" 
+              size="sm" 
+              onClick={() => downloadReport(activeTab === 'errors' ? 'errors' : 'audit', 'csv')} 
+              className="rounded-premium-full"
+            >
+              <Icons.Download className="w-4 h-4 mr-2" /> Exportar {activeTab === 'errors' ? 'Falhas' : 'Auditoria'}
             </CathedraButton>
              <Input 
+
 
               placeholder="Buscar por request_id, rota..." 
               value={filter}
