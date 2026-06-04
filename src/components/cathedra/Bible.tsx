@@ -530,7 +530,7 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-px`,
                 settings.immersiveMode && "text-center"
               )}>
                 {verses.map((v, i) => (
@@ -538,14 +538,20 @@ const Bible: React.FC = () => {
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
                     className={cn(
-                      "group relative py-spacing-sm transition-all duration-700 rounded-premium px-spacing-md",
-                      activeVerseNumber === v.number && "bg-primary/[0.03] scale-[1.02] shadow-premium-sm",
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg",
+                      activeVerseNumber === v.number && "bg-primary/[0.03] shadow-[inset_4px_0_0_0_rgba(var(--primary),0.1)]",
                       !settings.immersiveMode && "hover:bg-primary/[0.01]"
                     )}
                   >
-                    {v.number === 1 && <h3 className="text-premium-xl font-display mb-spacing-lg opacity-20">Capítulo {v.chapter}</h3>}
-                    <span className="text-[0.7em] font-serif italic text-primary/20 mr-spacing-md">{v.number}</span>
-                    <span className="leading-relaxed">{wrapWithDictionary(v.text)}</span>
+                    {v.number === 1 && (
+                      <div className="flex flex-col items-center mb-spacing-3xl pt-spacing-xl">
+                        <div className="w-8 h-px bg-primary/10 mb-spacing-md" />
+                        <h3 className="text-premium-2xl font-display opacity-30 italic">Capítulo {v.chapter}</h3>
+                        <div className="w-8 h-px bg-primary/10 mt-spacing-md" />
+                      </div>
+                    )}
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/[0.03] text-[9px] font-black text-primary/30 mr-spacing-md align-middle">{v.number}</span>
+                    <span className="leading-[1.8] align-middle">{wrapWithDictionary(v.text)}</span>
                   </div>
                 ))}
                 
