@@ -16,6 +16,8 @@ import DevDataInspector from './DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import ContemplativeLayout from './ContemplativeLayout';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
