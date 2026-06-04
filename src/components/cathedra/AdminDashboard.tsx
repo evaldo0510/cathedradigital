@@ -30,8 +30,9 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
-
+const PerfGovernanceDashboard = lazy(() => import('./PerfGovernanceDashboard'));
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
+
 
 interface UserProfile extends AdminUser {}
 
