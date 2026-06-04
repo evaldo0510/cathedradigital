@@ -13,7 +13,25 @@ const A11yAuditPage: React.FC = () => {
   const [isAuditing, setIsAuditing] = useState(false);
   const navigate = useNavigate();
 
+  const downloadResults = (format: 'json' | 'csv') => {
+    const data = format === 'json' 
+      ? JSON.stringify(issues, null, 2)
+      : "Tipo,Mensagem,Seletor\n" + issues.map(i => `${i.type},"${i.message}","${i.selector || ''}"`).join("\n");
+    
+    const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `audit-a11y-${new Date().toISOString()}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`Relatório ${format.toUpperCase()} exportado com sucesso.`);
+  };
+
   const performAudit = () => {
+
     setIsAuditing(true);
     setTimeout(() => {
       const result = runMobileA11yAudit();
@@ -51,13 +69,25 @@ const A11yAuditPage: React.FC = () => {
             </h1>
             <p className="text-muted-foreground text-premium-sm">Verificação automática de WCAG AA e áreas de toque.</p>
           </div>
-          <CathedraButton 
-            onClick={performAudit} 
-            disabled={isAuditing}
-            className="rounded-premium-full"
-          >
-            {isAuditing ? "Auditando..." : "Nova Varredura"}
-          </CathedraButton>
+          <div className="flex gap-spacing-sm">
+            <CathedraButton 
+              variant="outline"
+              size="sm"
+              onClick={() => downloadResults('csv')}
+              disabled={issues.length === 0}
+              className="rounded-premium-full h-spacing-xl"
+            >
+              <Icons.Download className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> CSV
+            </CathedraButton>
+            <CathedraButton 
+              onClick={performAudit} 
+              disabled={isAuditing}
+              className="rounded-premium-full"
+            >
+              {isAuditing ? "Auditando..." : "Nova Varredura"}
+            </CathedraButton>
+          </div>
+
         </div>
       </div>
 

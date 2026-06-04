@@ -12,6 +12,8 @@ import { AdminHeader } from './admin/AdminHeader';
 import { AdminStatsCards } from './admin/AdminStatsCards';
 import { useAdminDashboardData, AdminUser } from '@/hooks/useAdminDashboardData';
 import { useQueryClient } from '@tanstack/react-query';
+import { CathedraCard } from './CathedraCard';
+import { Badge } from '@/components/ui/badge';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
@@ -28,6 +30,7 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
+
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
 interface UserProfile extends AdminUser {}
@@ -253,11 +256,50 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="design">
+        <TabsContent value="design" className="space-y-spacing-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md px-spacing-md sm:px-spacing-0">
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/a11y-audit')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.Activity className="text-primary" />
+                <Badge variant="outline">Acessibilidade</Badge>
+              </div>
+              <h3 className="font-bold">Auditoria A11y</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">WCAG AA Mobile Scan.</p>
+            </CathedraCard>
+
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/visual-audit')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.ShieldAlert className="text-primary" />
+                <Badge variant="outline">Design Tokens</Badge>
+              </div>
+              <h3 className="font-bold">Auditoria Visual</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">Conformidade do System.</p>
+            </CathedraCard>
+
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/telemetry')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.Activity className="text-primary" />
+                <Badge variant="outline">Telemetria</Badge>
+              </div>
+              <h3 className="font-bold">Telemetria Mobile</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">Logs de erros e sessões.</p>
+            </CathedraCard>
+          </div>
+          
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
             <DesignSystemGuide />
           </Suspense>
         </TabsContent>
+
 
         <TabsContent value="regression">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
