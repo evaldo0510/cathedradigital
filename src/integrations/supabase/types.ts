@@ -2978,10 +2978,12 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      track_webhook_alert: {
-        Args: { p_message: string; p_type: string }
-        Returns: undefined
-      }
+      track_webhook_alert:
+        | { Args: { p_message: string; p_type: string }; Returns: undefined }
+        | {
+            Args: { p_message: string; p_severity?: string; p_type: string }
+            Returns: undefined
+          }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
