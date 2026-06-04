@@ -3,6 +3,7 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import { Button } from '@/components/ui/button';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
