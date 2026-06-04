@@ -2450,6 +2450,45 @@ export type Database = {
           },
         ]
       }
+      webhook_logs: {
+        Row: {
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          event_id: string | null
+          event_type: string | null
+          id: string
+          payload: Json | null
+          processed_at: string | null
+          provider: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string | null
+          id?: string
+          payload?: Json | null
+          processed_at?: string | null
+          provider: string
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string | null
+          id?: string
+          payload?: Json | null
+          processed_at?: string | null
+          provider?: string
+          status?: string
+        }
+        Relationships: []
+      }
       weekly_goals_history: {
         Row: {
           achieved_count: number

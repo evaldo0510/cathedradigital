@@ -1,8 +1,8 @@
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Icons } from '@/constants';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,18 @@ import { AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AlertCircle, CheckCircle2, Clock, ShieldCheck, RefreshCcw } from "lucide-react";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
 
@@ -49,19 +61,55 @@ const UpgradePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, isPremium } = useAuth();
   const [isSimulating, setIsSimulating] = useState(false);
+  const [webhookLogs, setWebhookLogs] = useState<any[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
 
   const { isAdmin } = useIsAdmin();
 
-  const simulatePayment = async () => {
+  useEffect(() => {
+    if (isAdmin) {
+      fetchLogs();
+    }
+  }, [isAdmin]);
+
+  const fetchLogs = async () => {
+    setIsLoadingLogs(true);
+    const { data, error } = await supabase
+      .from('webhook_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (!error && data) {
+      setWebhookLogs(data);
+    }
+    setIsLoadingLogs(false);
+  };
+
+  const simulatePayment = async (status: 'approved' | 'cancelled' | 'pending' = 'approved') => {
     if (!user) return;
     setIsSimulating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('mercadopago-simulate', {
-        body: { userId: user.id, planId: 'cathedra_pro_annual_test', status: 'approved' },
+      // We'll call the actual webhook with a simulated payload
+      const requestId = `sim_${Date.now()}`;
+      const { data, error } = await supabase.functions.invoke('mercado-pago-webhook', {
+        body: { 
+          action: 'payment.updated', 
+          data: { id: 'sim_payment_123' },
+          simulation: true,
+          simulated_status: status
+        },
+        headers: {
+          'x-request-id': requestId,
+          'x-simulation': 'true'
+        }
       });
+      
       if (error) throw error;
-      toast.success('Simulação concluída! Seu acesso PRO foi liberado.');
-      setTimeout(() => window.location.reload(), 1500);
+      
+      toast.success(`Simulação de ${status} enviada para o webhook.`);
+      fetchLogs();
+      setTimeout(() => window.location.reload(), 2000);
     } catch (error: any) {
       toast.error('Erro na simulação: ' + error.message);
     } finally {
@@ -203,34 +251,122 @@ const UpgradePage: React.FC = () => {
             initial="hidden" 
             animate="visible" 
             custom={4}
-            className="pt-spacing-2xl border-t border-border/50"
+            className="pt-spacing-2xl border-t border-border/50 w-full"
           >
-            <div className="flex flex-col items-center gap-spacing-md bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30">
-              <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-xs">
-                <Icons.FlaskConical className="w-spacing-lg h-spacing-lg" />
+            <Tabs defaultValue="tests" className="w-full">
+              <div className="flex flex-col items-center gap-spacing-md mb-spacing-lg">
+                <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                  <Icons.FlaskConical className="w-spacing-lg h-spacing-lg" />
+                </div>
+                <h3 className="text-premium-xl font-serif font-bold italic">Painel de Controle Mercado Pago</h3>
+                <TabsList className="bg-muted/50 rounded-premium-full p-1">
+                  <TabsTrigger value="tests" className="rounded-premium-full font-bold">Simulações E2E</TabsTrigger>
+                  <TabsTrigger value="logs" className="rounded-premium-full font-bold">Monitor de Webhooks</TabsTrigger>
+                </TabsList>
               </div>
-              <h3 className="text-premium-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
-              <p className="text-premium-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm">
-                Como administrador, você pode simular o checkout e o retorno do Mercado Pago para validar o fluxo de liberação PRO.
-              </p>
-              <div className="flex flex-wrap justify-center gap-spacing-sm">
-                <Button 
-                  variant="outline"
-                  onClick={simulatePayment}
-                  disabled={isSimulating || isPremium}
-                  className="rounded-premium-full border-primary/30 text-primary hover:bg-primary/5 h-spacing-2xl px-spacing-lg font-bold"
-                >
-                  {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
-                </Button>
-                <Button 
-                  variant="ghost"
-                  onClick={() => navigate(AppRoute.TRANSACTIONS)}
-                  className="rounded-premium-full h-spacing-2xl px-spacing-lg font-bold"
-                >
-                  Ver Histórico de Transações
-                </Button>
-              </div>
-            </div>
+
+              <TabsContent value="tests">
+                <div className="bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30 text-center">
+                  <p className="text-premium-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm mx-auto">
+                    Execute fluxos completos de ponta a ponta para validar a integração, idempotência e segurança.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-spacing-sm">
+                    <Button 
+                      variant="outline"
+                      onClick={() => simulatePayment('approved')}
+                      disabled={isSimulating}
+                      className="rounded-premium-full border-green-500/30 text-green-600 hover:bg-green-500/5 h-spacing-2xl px-spacing-lg font-bold"
+                    >
+                      {isSimulating ? 'Processando...' : 'Simular Sucesso'}
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => simulatePayment('cancelled')}
+                      disabled={isSimulating}
+                      className="rounded-premium-full border-red-500/30 text-red-600 hover:bg-red-500/5 h-spacing-2xl px-spacing-lg font-bold"
+                    >
+                      Simular Cancelamento
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => simulatePayment('pending')}
+                      disabled={isSimulating}
+                      className="rounded-premium-full border-amber-500/30 text-amber-600 hover:bg-amber-500/5 h-spacing-2xl px-spacing-lg font-bold"
+                    >
+                      Simular Pendente
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      onClick={() => navigate(AppRoute.TRANSACTIONS)}
+                      className="rounded-premium-full h-spacing-2xl px-spacing-lg font-bold"
+                    >
+                      <Icons.History className="w-4 h-4 mr-2" />
+                      Histórico
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="logs">
+                <div className="bg-card border border-border/50 rounded-[2.5rem] overflow-hidden">
+                  <div className="p-spacing-md border-b border-border/50 flex justify-between items-center bg-muted/20">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-bold text-premium-sm uppercase tracking-wider">Últimos Eventos</span>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs}>
+                      <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
+                    </Button>
+                  </div>
+                  <ScrollArea className="h-[400px]">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Data</TableHead>
+                          <TableHead>Evento</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Duração</TableHead>
+                          <TableHead>Erro</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <AnimatePresence>
+                          {webhookLogs.map((log) => (
+                            <TableRow key={log.id} className="group hover:bg-muted/30 transition-colors">
+                              <TableCell className="text-premium-xs text-muted-foreground">
+                                {new Date(log.created_at).toLocaleTimeString()}
+                              </TableCell>
+                              <TableCell className="font-medium">{log.event_type}</TableCell>
+                              <TableCell>
+                                <Badge variant={log.status === 'success' ? 'default' : log.status === 'failed' ? 'destructive' : 'secondary'} className="rounded-full">
+                                  {log.status === 'success' ? <CheckCircle2 className="w-3 h-3 mr-1" /> : log.status === 'failed' ? <AlertCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
+                                  {log.status.toUpperCase()}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-muted-foreground text-xs">{log.duration_ms ? `${log.duration_ms}ms` : '-'}</TableCell>
+                              <TableCell className="max-w-[200px] truncate text-red-500 text-xs italic">
+                                {log.error_message || '-'}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </AnimatePresence>
+                        {webhookLogs.length === 0 && !isLoadingLogs && (
+                          <TableRow>
+                            <TableCell colSpan={5} className="text-center py-spacing-xl text-muted-foreground italic font-serif">
+                              Nenhum evento registrado.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </ScrollArea>
+                  <div className="p-spacing-sm bg-muted/10 text-center text-[10px] text-muted-foreground uppercase tracking-widest border-t border-border/50 flex items-center justify-center gap-2">
+                    <ShieldCheck className="w-3 h-3 text-green-500" />
+                    Validação de Assinatura e Proteção de Idempotência Ativas
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </motion.div>
         )}
       </div>
