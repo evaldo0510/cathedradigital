@@ -69,13 +69,25 @@ const A11yAuditPage: React.FC = () => {
             </h1>
             <p className="text-muted-foreground text-premium-sm">Verificação automática de WCAG AA e áreas de toque.</p>
           </div>
-          <CathedraButton 
-            onClick={performAudit} 
-            disabled={isAuditing}
-            className="rounded-premium-full"
-          >
-            {isAuditing ? "Auditando..." : "Nova Varredura"}
-          </CathedraButton>
+          <div className="flex gap-spacing-sm">
+            <CathedraButton 
+              variant="outline"
+              size="sm"
+              onClick={() => downloadResults('csv')}
+              disabled={issues.length === 0}
+              className="rounded-premium-full h-spacing-xl"
+            >
+              <Icons.Download className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> CSV
+            </CathedraButton>
+            <CathedraButton 
+              onClick={performAudit} 
+              disabled={isAuditing}
+              className="rounded-premium-full"
+            >
+              {isAuditing ? "Auditando..." : "Nova Varredura"}
+            </CathedraButton>
+          </div>
+
         </div>
       </div>
 
