@@ -96,29 +96,40 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
           <div className="space-y-spacing-xs max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
-              <Button key={i} onClick={() => goToVerse(r)}
-                className="w-full text-left p-spacing-md rounded-premium bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all group h-auto block">
-                <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                  <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-premium-xs text-muted-foreground">— {r.bookName}</span>
+              <div key={i} className="group relative">
+                <Button onClick={() => goToVerse(r)}
+                  className="w-full text-left p-spacing-md rounded-premium bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all h-auto block peer">
+                  <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
+                    <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
+                    <span className="text-premium-xs text-muted-foreground">— {r.bookName}</span>
+                  </div>
+                  <p className="text-premium-sm text-foreground/80 font-serif line-clamp-2">
+                    {(() => {
+                      const plain = (r.text || '').replace(/<[^>]+>/g, '');
+                      if (!query) return plain;
+                      const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                      const parts = plain.split(new RegExp(`(${safe})`, 'gi'));
+                      return parts.map((part, idx) =>
+                        idx % 2 === 1 ? (
+                          <mark key={idx} className="bg-primary/20 text-primary font-bold rounded px-spacing-3xs">{part}</mark>
+                        ) : (
+                          <span key={idx}>{part}</span>
+                        )
+                      );
+                    })()}
+                  </p>
+                </Button>
+                
+                {/* Visual Context Preview on Hover (Desktop) or focus */}
+                <div className="absolute left-full ml-4 top-0 w-64 p-spacing-md bg-card border border-border rounded-premium shadow-premium opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 hidden lg:block">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Contexto</p>
+                  <p className="text-premium-xs italic text-muted-foreground font-serif">
+                    Explorar este capítulo em {r.bookName} para meditar sobre a Palavra...
+                  </p>
                 </div>
-                <p className="text-premium-sm text-foreground/80 font-serif line-clamp-spacing-xs">
-                  {(() => {
-                    const plain = (r.text || '').replace(/<[^>]+>/g, '');
-                    if (!query) return plain;
-                    const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    const parts = plain.split(new RegExp(`(${safe})`, 'gi'));
-                    return parts.map((part, idx) =>
-                      idx % 2 === 1 ? (
-                        <mark key={idx} className="bg-primary/20 text-primary font-bold rounded px-spacing-3xs">{part}</mark>
-                      ) : (
-                        <span key={idx}>{part}</span>
-                      )
-                    );
-                  })()}
-                </p>
-              </Button>
+              </div>
             ))}
+
             {visibleCount < results.length && (
               <Button 
                 onClick={loadMore}
