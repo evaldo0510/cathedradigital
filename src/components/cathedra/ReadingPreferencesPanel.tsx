@@ -377,6 +377,67 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 </section>
 
                 <Separator className="opacity-50" />
+                
+                {/* Audio Experience Settings */}
+                <section className="space-y-spacing-md">
+                  <div className="flex items-center gap-spacing-xs mb-spacing-xs">
+                    <Icons.Volume2 className="w-spacing-md h-spacing-md text-primary/60" />
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Sonora</h3>
+                  </div>
+                  
+                  <div className="space-y-spacing-md">
+                    {/* Audio Continuous Toggle */}
+                    <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/5 border border-muted/20">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-premium-sm">Áudio Contínuo</span>
+                        <span className="text-[10px] text-muted-foreground">Reproduzir próximo capítulo automaticamente</span>
+                      </div>
+                      <Switch 
+                        checked={settings.audioContinuous} 
+                        onCheckedChange={(checked) => updateSettings({ audioContinuous: checked })}
+                      />
+                    </div>
+
+                    {/* Audio Caption Size */}
+                    <div className="space-y-spacing-sm">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-spacing-2xs">
+                        Tamanho da Legenda do Áudio
+                      </label>
+                      <div className="bg-muted/5 rounded-premium p-spacing-xs border border-muted/20">
+                        <ToggleGroup 
+                          type="single" 
+                          value={settings.audioCaptionSize} 
+                          onValueChange={(v) => v && updateSettings({ audioCaptionSize: v as any })}
+                          className="w-full"
+                        >
+                          <ToggleGroupItem value="small" className="flex-1 py-spacing-md rounded-premium">
+                            <span className="text-[10px] font-bold uppercase">Pequeno</span>
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="medium" className="flex-1 py-spacing-md rounded-premium">
+                            <span className="text-[10px] font-bold uppercase">Médio</span>
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="large" className="flex-1 py-spacing-md rounded-premium">
+                            <span className="text-[10px] font-bold uppercase">Grande</span>
+                          </ToggleGroupItem>
+                        </ToggleGroup>
+                      </div>
+                    </div>
+
+                    {/* Default Transcript Panel State */}
+                    <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/5 border border-muted/20">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-premium-sm">Painel de Transcrição</span>
+                        <span className="text-[10px] text-muted-foreground">Manter painel aberto por padrão</span>
+                      </div>
+                      <Switch 
+                        checked={settings.showAudioTranscriptPanel} 
+                        onCheckedChange={(checked) => updateSettings({ showAudioTranscriptPanel: checked })}
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                <Separator className="opacity-50" />
 
                 {/* Advanced Experience */}
                 <section className="space-y-spacing-md">
