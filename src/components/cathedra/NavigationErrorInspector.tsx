@@ -464,7 +464,46 @@ const NavigationErrorInspector: React.FC = () => {
                   >
                     <Icons.ShieldAlert className="w-4 h-4 mr-2" /> Links Quebrados
                   </CathedraButton>
-                  {auditMode && (
+      {/* Filter Chips */}
+      {(filter || dateRange.from || dateRange.to || auditFilterUser || statusFilter !== 'all') && (
+        <div className="flex flex-wrap gap-2 items-center px-1">
+          <span className="text-[10px] font-black uppercase opacity-40 mr-2">Filtros Ativos:</span>
+          {filter && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Busca: {filter}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setFilter('')} />
+            </Badge>
+          )}
+          {auditFilterUser && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Inspetor: {auditFilterUser}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setAuditFilterUser('')} />
+            </Badge>
+          )}
+          {statusFilter !== 'all' && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Status: {statusFilter.replace('http_', 'HTTP ')}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setStatusFilter('all')} />
+            </Badge>
+          )}
+          {(dateRange.from || dateRange.to) && (
+            <Badge variant="secondary" className="rounded-premium-full px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+              Período: {dateRange.from || '...'} - {dateRange.to || '...'}
+              <Icons.X className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors" onClick={() => setDateRange({ from: '', to: '' })} />
+            </Badge>
+          )}
+          <CathedraButton 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearFilters}
+            className="h-7 text-[10px] uppercase font-black opacity-60 hover:opacity-100"
+          >
+            Limpar Todos
+          </CathedraButton>
+        </div>
+      )}
+
+      {auditMode && (
                     <CathedraButton 
                       variant="primary" 
                       size="sm" 
