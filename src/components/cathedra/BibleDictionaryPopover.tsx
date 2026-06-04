@@ -10,11 +10,13 @@ import { Icons } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface BibleDictionaryPopoverProps {
   term: string;
   children: React.ReactNode;
 }
+
 
 
 const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, children }) => {
