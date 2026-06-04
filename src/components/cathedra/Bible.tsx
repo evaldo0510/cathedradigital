@@ -39,6 +39,8 @@ const markChapterRead = (abbr: string, ch: number, total: number) => {};
 
 const Bible: React.FC = () => {
   const { t, lang } = useLang();
+  useRenderPerf('Sacra Biblia', 15);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { settings } = useReadingSettings();
