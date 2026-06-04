@@ -14,6 +14,7 @@ interface ReadingSettings {
   visibleFocus: boolean;
   contemplativeMode: boolean;
   focusMode: boolean; // Oculta header e sidebar; reaparece com hover/toque
+  immersiveMode: boolean; // Oculta header e menus permanentemente durante a leitura
   autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
