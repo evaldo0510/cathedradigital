@@ -110,10 +110,21 @@ serve(async (req) => {
       
       if (userId) {
         // PRE-CHECK: Is user already PRO?
-        const { data: profile } = await supabase.from('profiles').select('is_premium').eq('id', userId).single()
+        const { data: profile } = await supabase.from('profiles').select('is_premium, premium_status').eq('id', userId).single()
         
-        if (profile?.is_premium && status === 'approved') {
-          console.log('User is already PRO, skipping activation but marking success')
+        if (status === 'approved' && profile?.is_premium && profile?.premium_status === 'active') {
+          console.log('User is already PRO and active, skipping activation but marking success')
+          if (logId) {
+            await supabase.from('webhook_logs').update({ 
+              status: 'success', 
+              error_message: 'User already PRO (idempotency)',
+              duration_ms: Date.now() - startTime 
+            }).eq('id', logId)
+          }
+          return new Response(JSON.stringify({ success: true, message: 'Already PRO' }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 200,
+          })
         } else {
           await supabase
             .from('transactions')
@@ -164,12 +175,21 @@ serve(async (req) => {
     
     // Categorize error for alerts
     let alertType = 'unknown_error'
-    if (error.message.includes('Timeout')) alertType = 'timeout'
-    if (error.message.includes('signature')) alertType = 'invalid_signature'
-    if (error.message.includes('database') || error.message.includes('Database Error')) alertType = 'db_error'
+    let severity = 'warning'
+    
+    if (error.message.includes('Timeout')) {
+      alertType = 'timeout'
+      severity = 'critical'
+    } else if (error.message.includes('signature')) {
+      alertType = 'invalid_signature'
+      severity = 'critical'
+    } else if (error.message.includes('database') || error.message.includes('Database Error')) {
+      alertType = 'db_error'
+      severity = 'critical'
+    }
 
     try {
-      await supabase.rpc('track_webhook_alert', { p_type: alertType, p_message: error.message })
+      await supabase.rpc('track_webhook_alert', { p_type: alertType, p_message: error.message, p_severity: severity })
     } catch (alertErr) {
       console.error('Failed to track alert:', alertErr)
     }
