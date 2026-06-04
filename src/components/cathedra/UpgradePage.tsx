@@ -391,14 +391,49 @@ const UpgradePage: React.FC = () => {
 
               <TabsContent value="logs">
                 <div className="bg-card border border-border/50 rounded-[2.5rem] overflow-hidden">
-                  <div className="p-spacing-md border-b border-border/50 flex justify-between items-center bg-muted/20">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-bold text-premium-sm uppercase tracking-wider">Últimos Eventos</span>
+                  <div className="p-spacing-md border-b border-border/50 bg-muted/20 space-y-spacing-md">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-spacing-md">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-bold text-premium-sm uppercase tracking-wider">Monitor de Webhooks</span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button variant="outline" size="sm" onClick={exportCSV} className="rounded-premium-full text-[10px] font-bold uppercase">
+                          <Icons.Download className="w-3 h-3 mr-1" /> CSV
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={exportPDF} className="rounded-premium-full text-[10px] font-bold uppercase">
+                          <Icons.FileText className="w-3 h-3 mr-1" /> PDF
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs} className="rounded-premium-full">
+                          <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
+                        </Button>
+                      </div>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={fetchLogs} disabled={isLoadingLogs}>
-                      <RefreshCcw className={`w-4 h-4 ${isLoadingLogs ? 'animate-spin' : ''}`} />
-                    </Button>
+
+                    <div className="flex flex-wrap gap-2">
+                      <Select value={filterStatus} onValueChange={setFilterStatus}>
+                        <SelectTrigger className="w-[140px] h-8 text-[10px] uppercase font-bold rounded-premium-full bg-background">
+                          <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-premium">
+                          <SelectItem value="all">Todos Status</SelectItem>
+                          <SelectItem value="success">Sucesso</SelectItem>
+                          <SelectItem value="failed">Falha</SelectItem>
+                          <SelectItem value="pending">Pendente</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Select value={filterDate} onValueChange={setFilterDate}>
+                        <SelectTrigger className="w-[140px] h-8 text-[10px] uppercase font-bold rounded-premium-full bg-background">
+                          <SelectValue placeholder="Período" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-premium">
+                          <SelectItem value="all">Sempre</SelectItem>
+                          <SelectItem value="today">Hoje</SelectItem>
+                          <SelectItem value="week">Últimos 7 dias</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <ScrollArea className="h-[400px]">
                     <Table>
@@ -408,7 +443,8 @@ const UpgradePage: React.FC = () => {
                           <TableHead>Evento</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Duração</TableHead>
-                          <TableHead>Erro</TableHead>
+                          <TableHead>Erro / Idempotency</TableHead>
+                          <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -427,7 +463,21 @@ const UpgradePage: React.FC = () => {
                               </TableCell>
                               <TableCell className="text-muted-foreground text-xs">{log.duration_ms ? `${log.duration_ms}ms` : '-'}</TableCell>
                               <TableCell className="max-w-[200px] truncate text-red-500 text-xs italic">
-                                {log.error_message || '-'}
+                                {log.error_message || log.event_id || '-'}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {(log.status === 'failed' || log.status === 'pending') && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => reprocessWebhook(log)}
+                                    disabled={isReprocessing === log.id}
+                                    className="h-7 px-2 text-[10px] font-bold uppercase text-primary"
+                                  >
+                                    <RefreshCcw className={`w-3 h-3 mr-1 ${isReprocessing === log.id ? 'animate-spin' : ''}`} />
+                                    Reprocessar
+                                  </Button>
+                                )}
                               </TableCell>
                             </TableRow>
                           ))}
