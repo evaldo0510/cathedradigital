@@ -713,43 +713,77 @@ const NavigationErrorInspector: React.FC = () => {
           </CathedraCard>
         </TabsContent>
 
-        <TabsContent value="audit" className="animate-in fade-in duration-500">
-          <CathedraCard className="p-0 overflow-hidden">
-            <ScrollArea className="h-[70vh]">
-              <table className="w-full text-left text-premium-xs">
-                <thead className="bg-muted/30 border-b border-border/50 sticky top-0 z-10">
-                  <tr>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Data/Hora</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Inspetor</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Request ID</th>
-                    <th className="p-spacing-md font-black uppercase tracking-widest opacity-50 text-right">IP Mascarado</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/10">
-                  {filteredAuditLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-primary/[0.01] transition-colors">
-
-                      <td className="p-spacing-md font-mono opacity-60">
-                        {format(new Date(log.inspected_at), 'dd/MM/yy HH:mm:ss')}
-                      </td>
-                      <td className="p-spacing-md font-bold text-primary/80">
-                        {log.profiles?.name || 'Admin'}
-                      </td>
-                      <td className="p-spacing-md font-mono text-primary/60">
-                        {log.request_id}
-                      </td>
-                      <td className="p-spacing-md text-right font-mono opacity-40">
-                        {log.masked_ip}
-                      </td>
+        <TabsContent value="audit" className="animate-in fade-in duration-500 space-y-spacing-lg">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-spacing-lg">
+            <CathedraCard className="xl:col-span-2 p-0 overflow-hidden">
+              <div className="p-spacing-md bg-muted/20 border-b border-border/10 flex justify-between items-center">
+                <span className="font-bold text-premium-xs uppercase tracking-widest">Acessos dos Inspetores</span>
+              </div>
+              <ScrollArea className="h-[60vh]">
+                <table className="w-full text-left text-premium-xs">
+                  <thead className="bg-muted/30 border-b border-border/50 sticky top-0 z-10">
+                    <tr>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Data/Hora</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Inspetor</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50">Request ID</th>
+                      <th className="p-spacing-md font-black uppercase tracking-widest opacity-50 text-right">IP Mascarado</th>
                     </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/10">
+                    {filteredAuditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-primary/[0.01] transition-colors">
+                        <td className="p-spacing-md font-mono opacity-60">
+                          {format(new Date(log.inspected_at), 'dd/MM/yy HH:mm:ss')}
+                        </td>
+                        <td className="p-spacing-md font-bold text-primary/80">
+                          {log.profiles?.name || 'Admin'}
+                        </td>
+                        <td className="p-spacing-md font-mono text-primary/60">
+                          {log.request_id}
+                        </td>
+                        <td className="p-spacing-md text-right font-mono opacity-40">
+                          {log.masked_ip}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {auditLogs.length === 0 && !loading && (
+                  <div className="p-spacing-4xl text-center opacity-40 italic">Nenhum registro de auditoria.</div>
+                )}
+              </ScrollArea>
+            </CathedraCard>
+
+            <CathedraCard className="p-0 overflow-hidden flex flex-col">
+              <div className="p-spacing-md bg-muted/20 border-b border-border/10 flex justify-between items-center">
+                <span className="font-bold text-premium-xs uppercase tracking-widest">Trilha de Links Compartilhados</span>
+              </div>
+              <ScrollArea className="h-[60vh]">
+                <div className="p-spacing-md space-y-spacing-md">
+                  {shareTrail.map((item) => (
+                    <div key={item.id} className="p-spacing-sm bg-muted/20 rounded-premium-lg border border-border/10 text-[10px] space-y-1">
+                      <div className="flex justify-between font-bold">
+                        <span className="text-primary">{item.requestId}</span>
+                        <span className={cn(new Date(item.expiresAt) < new Date() ? "text-destructive" : "text-green-600")}>
+                          {new Date(item.expiresAt) < new Date() ? "Expirado" : "Ativo"}
+                        </span>
+                      </div>
+                      <div className="opacity-60 flex justify-between">
+                        <span>Criado: {format(new Date(item.createdAt), 'dd/MM HH:mm')}</span>
+                        <span>Expira: {format(new Date(item.expiresAt), 'dd/MM HH:mm')}</span>
+                      </div>
+                      <div className="pt-1 border-t border-border/5 text-[9px] opacity-40">
+                        Filtros: {Object.entries(item.filters).filter(([_,v]) => v && v !== 'all').map(([k,v]) => `${k}:${JSON.stringify(v)}`).join(', ') || 'Nenhum'}
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-              {auditLogs.length === 0 && !loading && (
-                <div className="p-spacing-4xl text-center opacity-40 italic">Nenhum registro de auditoria.</div>
-              )}
-            </ScrollArea>
-          </CathedraCard>
+                  {shareTrail.length === 0 && (
+                    <div className="p-spacing-xl text-center opacity-30 italic text-[10px]">Nenhum link gerado nesta sessão.</div>
+                  )}
+                </div>
+              </ScrollArea>
+            </CathedraCard>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
