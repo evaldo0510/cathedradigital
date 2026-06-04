@@ -9,6 +9,8 @@ import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
+
 
 interface SidebarProps {
   isOpen: boolean;
