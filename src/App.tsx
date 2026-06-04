@@ -366,31 +366,34 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          <AppHeader 
-            user={authUserAdapter} 
-
-          isDark={isDark} 
-          onToggleDark={toggleDark}
-          lang={lang}
-          onChangeLang={setLang}
-          onSignOut={signOut}
-          onOpenSidebar={handleOpenSidebar}
-          isLanding={location.pathname === '/'}
-        />
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
+            <AppHeader 
+              user={authUserAdapter} 
+              isDark={isDark} 
+              onToggleDark={toggleDark}
+              lang={lang}
+              onChangeLang={setLang}
+              onSignOut={signOut}
+              onOpenSidebar={handleOpenSidebar}
+              isLanding={location.pathname === '/'}
+            />
+          )}
         
-        <CathedralSidebar 
-          isOpen={isSidebarOpen}
-          user={authUserAdapter}
-          onClose={handleCloseSidebar}
-          isDark={isDark}
-          onToggleDark={toggleDark}
-          isHighContrast={isHighContrast}
-          onToggleHighContrast={toggleHighContrast}
-          isSpeaking={isSpeaking}
-          onToggleSpeak={toggleSpeak}
-          onOpenA11y={handleOpenA11y}
-          onSignOut={signOut}
-        />
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
+          <CathedralSidebar 
+            isOpen={isSidebarOpen}
+            user={authUserAdapter}
+            onClose={handleCloseSidebar}
+            isDark={isDark}
+            onToggleDark={toggleDark}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={toggleHighContrast}
+            isSpeaking={isSpeaking}
+            onToggleSpeak={toggleSpeak}
+            onOpenA11y={handleOpenA11y}
+            onSignOut={signOut}
+          />
+        )}
         
         <GlobalLogosAI />
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
@@ -520,9 +523,9 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
         </AppErrorBoundary>
-        {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 

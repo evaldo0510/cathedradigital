@@ -14,6 +14,7 @@ interface ReadingSettings {
   visibleFocus: boolean;
   contemplativeMode: boolean;
   focusMode: boolean; // Oculta header e sidebar; reaparece com hover/toque
+  immersiveMode: boolean; // Oculta header e menus permanentemente durante a leitura
   autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
@@ -73,6 +74,7 @@ const defaultSettings: ReadingSettings = {
   contemplativeMode: false,
   autoHideUI: false,
   focusMode: false,
+  immersiveMode: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
   sideMargins: 'standard',
@@ -199,6 +201,7 @@ const SettingsSideEffects: React.FC = () => {
     toggleClass('total-silence', settings.totalSilence);
     toggleClass('full-screen-mode', settings.fullScreen);
     toggleClass('focus-mode', settings.focusMode);
+    toggleClass('immersive-mode', settings.immersiveMode);
     
   }, [settings]);
 

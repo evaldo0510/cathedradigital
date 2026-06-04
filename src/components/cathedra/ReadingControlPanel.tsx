@@ -157,7 +157,20 @@ const ReadingControlPanel: React.FC = memo(() => {
               className="w-spacing-md h-spacing-md rounded-premium-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
             />
           </div>
-        </div>
+          </div>
+          
+          <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-spacing-3xs">
+              <p className="text-premium-xs font-bold">Modo Imersivo</p>
+              <p className="text-[10px] text-muted-foreground italic leading-none">Oculta tudo exceto a Palavra</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.immersiveMode}
+              onChange={(e) => updateSettings({ immersiveMode: e.target.checked })}
+              className="w-spacing-md h-spacing-md rounded-premium-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+            />
+          </div>
       </div>
 
       {/* Largura da Coluna */}
