@@ -31,6 +31,15 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   useAutoFocus();
   const [query, setQuery] = useState('');
   const viewportHeight = useVisualViewport();
+  
+  useEffect(() => {
+    if (query.length >= 2 && viewportHeight && viewportHeight < 600) {
+      const container = document.getElementById('search-results-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [query, viewportHeight]);
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
@@ -116,15 +125,6 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
         </div>
 
-        {/* Auto-scroll on focus and keyboard open */}
-        {useEffect(() => {
-          if (query.length >= 2 && viewportHeight && viewportHeight < 600) {
-            const container = document.getElementById('search-results-container');
-            if (container) {
-              container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }
-        }, [query, viewportHeight])}
 
         <div 
 
