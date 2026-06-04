@@ -1,14 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-
-
-/**
- * Standardized skeleton styles:
- * - Layout: matching the domain layout (page header, grid, list)
- * - Height: consistent with actual components
- * - Animations: standard pulse or shimmer
- */
+import { Card } from '@/components/ui/card';
 
 export const PageHeaderSkeleton: React.FC = () => (
   <div className="text-center space-y-spacing-md pt-spacing-xl mb-spacing-xl animate-pulse">
@@ -34,6 +25,38 @@ export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
   </div>
 );
 
+/**
+ * Skeleton específico para itens de busca (Santos, Glossário, etc.)
+ * Mantém o mesmo layout do SearchResultCard para evitar jump de layout.
+ */
+export const SearchResultSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
+  <div className="space-y-spacing-xs animate-pulse">
+    {Array.from({ length: count }).map((_, i) => (
+      <div 
+        key={i} 
+        className="p-spacing-sm flex items-center gap-spacing-sm bg-card/50 border border-border/10 rounded-premium h-[76px]"
+      >
+        <div className="flex-shrink-0 w-spacing-xl h-spacing-xl rounded-premium bg-muted/40" />
+        <div className="flex-1 space-y-spacing-xs">
+          <div className="h-spacing-sm w-1/3 bg-muted/40 rounded" />
+          <div className="h-spacing-xs w-2/3 bg-muted/20 rounded" />
+        </div>
+        <div className="w-spacing-xl h-spacing-md bg-muted/10 rounded-premium" />
+      </div>
+    ))}
+  </div>
+);
+
+/**
+ * Skeleton para chips de temas
+ */
+export const TagSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
+  <div className="flex flex-wrap gap-spacing-xs animate-pulse">
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="h-[32px] w-[80px] rounded-premium-full bg-muted/30" />
+    ))}
+  </div>
+);
 
 export const SaintCardSkeleton: React.FC = () => (
   <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden animate-pulse h-spacing-4xl">
@@ -131,4 +154,3 @@ export const ReadingSkeleton = () => (
     </div>
   </div>
 );
-

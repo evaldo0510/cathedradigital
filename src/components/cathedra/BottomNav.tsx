@@ -86,7 +86,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     data-testid={dataTestId}
     className={cn(
       "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
+      "min-w-[48px] min-h-[48px]", // Garante área mínima de toque de 48x48px (padrão a11y)
       isActive 
+
         ? 'text-primary' 
         : 'text-muted-foreground/40 hover:text-primary/60'
     )}
@@ -175,6 +177,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     <nav 
       className={cn(
         "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/80 backdrop-blur-xl border-t border-primary/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
+        "min-h-[64px]", // Garante altura mínima para alvos de toque
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
