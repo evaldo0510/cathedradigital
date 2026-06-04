@@ -77,7 +77,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-spacing-lg h-spacing-lg md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
+                  className="w-[44px] h-[44px] md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
                   <Icons.ChevronLeft className="opacity-50 group-hover:opacity-100 transition-opacity" />
