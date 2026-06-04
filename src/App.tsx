@@ -366,7 +366,7 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          {!settings.immersiveMode && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
