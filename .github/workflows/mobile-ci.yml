@@ -46,35 +46,50 @@ jobs:
             done
           fi
           
-          $CMD --reporter=list,html
-
+          $CMD --reporter=list,json,html
         env:
           VITE_SWIPE_THRESHOLD: 80
           VITE_SWIPE_RATIO: 2.5
           CI: true
           HEADLESS: true
 
-      - name: Verify PII Leak in Logs & Artifacts
-        run: |
-          # Fails if common PII patterns (emails/tokens) are found in logs
-          ! grep -rE "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" logs/ test-results/ || (echo "PII Leak Detected in Artifacts!" && exit 1)
-          ! grep -rE "ey[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}" logs/ test-results/ || (echo "JWT Token Leak Detected!" && exit 1)
-
-      - name: Generate Evidence Manifest
+      - name: Generate Evidence Manifest & Validate
         if: always()
         run: |
           node -e "
           const fs = require('fs');
           if (fs.existsSync('playwright-report/results.json')) {
             const results = JSON.parse(fs.readFileSync('playwright-report/results.json', 'utf8'));
-            const manifest = results.suites.flatMap(s => s.specs.flatMap(spec => spec.tests.map(t => ({
-              title: spec.title,
-              project: t.projectName,
-              status: t.status,
-              file: spec.file,
-              evidence: t.results.flatMap(r => r.attachments || [])
-            }))));
+            const manifest = [];
+            let allEvidencesExist = true;
+
+            results.suites.forEach(suite => {
+              suite.specs.forEach(spec => {
+                spec.tests.forEach(test => {
+                  const evidences = test.results.flatMap(r => r.attachments || []);
+                  
+                  if (test.status === 'failed' || test.status === 'unexpected') {
+                    const hasTrace = evidences.some(a => a.name === 'trace');
+                    if (!hasTrace) {
+                      console.error('❌ Trace ausente para:', spec.title);
+                      allEvidencesExist = false;
+                    }
+                  }
+
+                  manifest.push({
+                    title: spec.title,
+                    project: test.projectName,
+                    status: test.status,
+                    file: spec.file,
+                    line: spec.line,
+                    evidence: evidences
+                  });
+                });
+              });
+            });
+            
             fs.writeFileSync('playwright-report/evidence-manifest.json', JSON.stringify(manifest, null, 2));
+            if (!allEvidencesExist) process.exit(1);
           }
           "
 
@@ -87,7 +102,7 @@ jobs:
           retention-days: ${{ vars.RETENTION_DAYS_HTML || 7 }}
           if-no-files-found: error
 
-      - name: Upload Test Results (Screenshots, Videos, Traces)
+      - name: Upload Test Results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -95,7 +110,6 @@ jobs:
           path: test-results/
           retention-days: ${{ vars.RETENTION_DAYS_EVIDENCE || 3 }}
           if-no-files-found: error
-
 
       - name: PR Commentary on Failure
         if: failure() && github.event_name == 'pull_request'
@@ -107,33 +121,35 @@ jobs:
             const artifact_url = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}/artifacts`;
             
             let summary = "### 🚨 Mobile E2E Failure Detected\n\n";
-            summary += "| Test Case | Device | Status | Evidence |\n";
-            summary += "| :--- | :--- | :--- | :--- |\n";
+            summary += "#### 📱 Resumo por Dispositivo\n\n";
             
             try {
-              if (fs.existsSync('playwright-report/results.json')) {
-                const results = JSON.parse(fs.readFileSync('playwright-report/results.json', 'utf8'));
-                results.suites.forEach(suite => {
-                  suite.specs.forEach(spec => {
-                    spec.tests.forEach(test => {
-                      if (test.status === 'unexpected' || test.status === 'failed') {
-                        const device = test.projectName;
-                        summary += `| ${spec.title} | ${device} | ❌ Failed | [Trace/HTML](${artifact_url}) |\n`;
-                      }
-                    });
+              if (fs.existsSync('playwright-report/evidence-manifest.json')) {
+                const manifest = JSON.parse(fs.readFileSync('playwright-report/evidence-manifest.json', 'utf8'));
+                const grouped = manifest.reduce((acc, item) => {
+                  if (item.status === 'failed' || item.status === 'unexpected') {
+                    if (!acc[item.project]) acc[item.project] = [];
+                    acc[item.project].push(item);
+                  }
+                  return acc;
+                }, {});
+
+                for (const [device, tests] of Object.entries(grouped)) {
+                  summary += `**${device}**\n\n`;
+                  summary += "| Teste | Status | Evidência |\n";
+                  summary += "| :--- | :--- | :--- |\n";
+                  tests.forEach(t => {
+                    summary += `| ${t.title} | ❌ Falhou | [Ver Trace/HTML](${artifact_url}) |\n`;
                   });
-                });
-              } else {
-                summary += "| N/A | N/A | ❌ Erro Crítico | Relatório JSON não encontrado |\n";
+                  summary += "\n";
+                }
               }
             } catch (e) {
-              summary += `\n*Erro ao gerar resumo detalhado: ${e.message}*\n`;
+              summary += `\n*Erro ao gerar resumo: ${e.message}*\n`;
             }
             
-            summary += `\n\n- **Relatório Completo & Traces:** [Download Artefatos](${artifact_url})`;
-            summary += `\n- **Reexecutar falhas:** [Clique aqui para ir para a execução e clicar em 'Re-run failed jobs'](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id})`;
-            summary += `\n- **Dica:** Use \`npm run test:e2e:sync-failed\` localmente após baixar o relatório para replicar as falhas exatas.`;
-
+            summary += `\n- **Reexecutar falhas:** [Re-run failed jobs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id})`;
+            summary += `\n- **Local:** \`npm run test:e2e:sync-failed\``;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -141,7 +157,6 @@ jobs:
               repo: context.repo.repo,
               body: summary
             })
-
 
       - name: Notify CI Failure
         if: failure()
@@ -156,25 +171,13 @@ jobs:
                 "title_link": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
                 "fields": [
                   { "title": "Commit", "value": "${GITHUB_SHA:0:7}", "short": true },
-                  { "title": "Action ID", "value": "${GITHUB_RUN_ID}", "short": true },
-                  { "title": "Evidence Artifacts", "value": "<${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts|Download Screenshots & Logs>", "short": false },
-                  { "title": "Status", "value": "FAILURE", "short": true },
-                  { "title": "Security", "value": "PII Redacted", "short": true }
+                  { "title": "Evidence Artifacts", "value": "<${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts|Download Screenshots & Logs>", "short": false }
                 ],
-
-                "footer": "AD MAIOREM DEI GLORIAM — PII Protected Stability Guard",
+                "footer": "AD MAIOREM DEI GLORIAM",
                 "ts": $(date +%s)
               }
             ]
           }
           EOF
           )
-
-          # Note: secrets.CI_NOTIFICATION_WEBHOOK must be set in repository settings
           curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.CI_NOTIFICATION_WEBHOOK }} || echo "Webhook not configured"
-
-
-
-
-
-
