@@ -22,6 +22,8 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
