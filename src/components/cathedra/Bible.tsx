@@ -310,8 +310,11 @@ const Bible: React.FC = () => {
   };
 
   const wrapWithDictionary = (text: string) => {
-    // Priority: Cross references, then Dictionary
-    const refKey = selectedBook && `${selectedBook.abbr}-${selectedChapter}`;
+    // Cross-references logic
+    const refKeyPrefix = selectedBook ? `${selectedBook.abbr}-${selectedChapter}-` : '';
+    
+    // We'll search for cross-references by verse if it matches the text
+    // For simplicity, we'll check if the verse index has a reference
     
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
@@ -321,6 +324,7 @@ const Bible: React.FC = () => {
       return part;
     });
   };
+
 
 
   const filteredBooks = useMemo(() => {
