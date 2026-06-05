@@ -20,6 +20,8 @@ import BibleSearch from './BibleSearch';
 import BibleFullNotesList from './BibleFullNotesList';
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
+import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
+
 
 
 // Helper for Daily Reading
@@ -121,7 +123,10 @@ const Bible: React.FC = () => {
   }, []);
 
 
+  const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
+
   const markDailyAsCompleted = () => {
+
     const today = new Date().toISOString().split('T')[0];
     localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
     setIsDailyCompleted(true);
@@ -301,6 +306,23 @@ const Bible: React.FC = () => {
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
+  // Knowledge Connection System Mock Data
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string }[]> = {
+    'Jo-6-35': [
+      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324' },
+      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16' },
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede' }
+    ],
+    'Gn-1-1': [
+      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279' },
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio' }
+    ],
+    'Mt-5-3': [
+      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716' },
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs' }
+    ]
+  };
+
   // Mock data for cross references
   const CROSS_REFERENCES: Record<string, string[]> = {
     'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
@@ -310,12 +332,7 @@ const Bible: React.FC = () => {
   };
 
   const wrapWithDictionary = (text: string) => {
-    // Cross-references logic
-    const refKeyPrefix = selectedBook ? `${selectedBook.abbr}-${selectedChapter}-` : '';
-    
-    // We'll search for cross-references by verse if it matches the text
-    // For simplicity, we'll check if the verse index has a reference
-    
+    // Knowledge connection logic handled in verse render
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
       if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
@@ -327,7 +344,24 @@ const Bible: React.FC = () => {
 
 
 
+
+
+
+  const auditData = useMemo(() => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    const booksWithContent = allBooks.filter(b => b.chapters > 0);
+    const emptyBooks = allBooks.filter(b => b.chapters === 0);
+    
+    return {
+      totalBooks: allBooks.length,
+      coveredBooks: booksWithContent.length,
+      emptyBooks: emptyBooks.map(b => b.name),
+      totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+    };
+  }, []);
+
   const filteredBooks = useMemo(() => {
+
     if (!searchQuery) return BIBLE_DATA;
     const result: any = {};
     Object.entries(BIBLE_DATA).forEach(([testament, categories]) => {
@@ -374,12 +408,22 @@ const Bible: React.FC = () => {
                 <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
-              <button 
-                onClick={() => setViewMode('notes')}
-                className="p-2 text-secondary/60 active:scale-95 transition-transform"
-              >
-                <Icons.List className="w-6 h-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setShowKnowledgePanel(true)}
+                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  title="Auditoria de Conhecimento"
+                >
+                  <Icons.Activity className="w-6 h-6" />
+                </button>
+                <button 
+                  onClick={() => setViewMode('notes')}
+                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                >
+                  <Icons.List className="w-6 h-6" />
+                </button>
+              </div>
+
             </header>
 
             {/* Above the Fold Actions */}
@@ -644,9 +688,30 @@ const Bible: React.FC = () => {
                               </button>
                             </p>
 
+                            {/* Knowledge Connection Bubbles */}
+                            {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-80">
+                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
+                                  <motion.button
+                                    key={idx}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toast.info(`Navegando para ${conn.label}`);
+                                    }}
+                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all"
+                                  >
+                                    <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
+                                    <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
+                                  </motion.button>
+                                ))}
+                              </div>
+                            )}
+
 
                             {/* Cross References */}
-                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && !KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
                               <div className="flex flex-wrap gap-2 pt-2">
                                 {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].map(ref => {
                                   const [b, c, vNum] = ref.split('-');
@@ -666,6 +731,7 @@ const Bible: React.FC = () => {
                               </div>
                             )}
                           </div>
+
 
                         </div>
 
@@ -737,7 +803,16 @@ const Bible: React.FC = () => {
         )}
       </AnimatePresence>
 
+      {showKnowledgePanel && (
+        <BibleKnowledgeAudit 
+          onClose={() => setShowKnowledgePanel(false)} 
+          auditData={auditData}
+        />
+      )}
+
+
       <NoteEditModal 
+
         isOpen={isNoteModalOpen}
         onClose={() => setIsNoteModalOpen(false)}
         onSave={handleSaveNote}
