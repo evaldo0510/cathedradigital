@@ -460,6 +460,149 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </motion.div>
           )}
 
+          {activeTab === 'history' && (
+            <motion.div 
+              key="history"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Histórico de Execuções</h2>
+              <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+                {auditRuns.map(run => (
+                  <div key={run.id} className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Icons.Calendar className="w-4 h-4 text-primary/20" />
+                        <span className="font-serif font-bold text-primary/80">
+                          {new Date(run.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <span className={cn(
+                        "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                        run.status === 'completed' ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"
+                      )}>
+                        {run.status}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Livros</p>
+                        <p className="text-xs font-bold text-primary/60">{run.covered_books}/{run.total_books}</p>
+                      </div>
+                      <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Capítulos</p>
+                        <p className="text-xs font-bold text-primary/60">{run.covered_chapters}/{run.total_chapters}</p>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedRun(run)}
+                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline text-right"
+                      >
+                        Ver Detalhes
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {selectedRun && (
+                <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
+                  <motion.div 
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-[#FAF9F6] rounded-3xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
+                  >
+                    <header className="p-6 border-b border-primary/5 flex items-center justify-between bg-white">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest">Detalhes da Execução</h3>
+                      <button onClick={() => setSelectedRun(null)}><Icons.X className="w-5 h-5" /></button>
+                    </header>
+                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                      <div className="space-y-2">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest text-primary/40">Queries de Busca Utilizadas</h4>
+                        <div className="bg-primary/5 p-4 rounded-xl font-mono text-[9px] whitespace-pre-wrap max-h-40 overflow-y-auto">
+                          {selectedRun.search_queries?.length > 0 
+                            ? selectedRun.search_queries.join('\n')
+                            : 'Nenhuma query registrada.'
+                          }
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest text-primary/40">Logs Passo a Passo</h4>
+                        <div className="bg-primary/5 p-4 rounded-xl font-mono text-[9px] space-y-2 max-h-60 overflow-y-auto">
+                          {selectedRun.logs?.map((log: any, i: number) => (
+                            <div key={i} className="flex gap-2">
+                              <span className="opacity-40">[{log.timestamp}]</span>
+                              <span>{log.message}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {activeTab === 'notifications' && (
+            <motion.div 
+              key="notifications"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8 max-w-lg mx-auto"
+            >
+              <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
+                <header className="space-y-2">
+                  <h3 className="font-serif font-bold text-lg text-primary/80">Configurar Alertas</h3>
+                  <p className="text-premium-xs text-primary/40">Seja notificado fora do app sobre novas lacunas de alta prioridade.</p>
+                </header>
+
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <select 
+                      value={newNotification.type}
+                      onChange={(e) => setNewNotification(prev => ({...prev, type: e.target.value as any}))}
+                      className="bg-primary/5 border-none rounded-xl px-4 text-[10px] font-black uppercase tracking-widest"
+                    >
+                      <option value="webhook">Webhook</option>
+                      <option value="email">E-mail</option>
+                    </select>
+                    <input 
+                      type="text"
+                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'seu@email.com'}
+                      value={newNotification.target}
+                      onChange={(e) => setNewNotification(prev => ({...prev, target: e.target.value}))}
+                      className="flex-1 bg-primary/5 border-none rounded-xl px-4 py-3 text-xs"
+                    />
+                    <button 
+                      onClick={addNotification}
+                      disabled={isSavingNotification}
+                      className="p-3 bg-secondary text-white rounded-xl active:scale-95"
+                    >
+                      <Icons.Plus className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {notificationSettings.map(n => (
+                      <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
+                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                        </div>
+                        <button onClick={() => deleteNotification(n.id)} className="text-red-400 hover:text-red-600">
+                          <Icons.Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'logs' && (
             <motion.div 
               key="logs"
