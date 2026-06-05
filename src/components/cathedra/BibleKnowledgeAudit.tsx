@@ -568,10 +568,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     >
                       <option value="webhook">Webhook</option>
                       <option value="email">E-mail</option>
+                      <option value="slack">Slack</option>
+                      <option value="discord">Discord</option>
+                      <option value="sms">SMS</option>
                     </select>
                     <input 
                       type="text"
-                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'seu@email.com'}
+                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'Destino...'}
                       value={newNotification.target}
                       onChange={(e) => setNewNotification(prev => ({...prev, target: e.target.value}))}
                       className="flex-1 bg-primary/5 border-none rounded-xl px-4 py-3 text-xs"
@@ -589,8 +592,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     {notificationSettings.map(n => (
                       <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          {n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
-                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                          {n.channel === 'slack' ? <Icons.MessageCircle className="w-4 h-4 text-purple-500" /> 
+                           : n.channel === 'discord' ? <Icons.MessageSquare className="w-4 h-4 text-indigo-500" />
+                           : n.channel === 'sms' ? <Icons.Smartphone className="w-4 h-4 text-amber-500" />
+                           : n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> 
+                           : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
+                          <div className="flex flex-col">
+                             <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                             <span className="text-[9px] uppercase tracking-widest text-primary/30">{n.channel || n.type} • {n.priority}</span>
+                          </div>
                         </div>
                         <button onClick={() => deleteNotification(n.id)} className="text-red-400 hover:text-red-600">
                           <Icons.Trash2 className="w-4 h-4" />
