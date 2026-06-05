@@ -18,8 +18,10 @@ interface KnowledgeGraphProps {
 }
 
 
-export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initialNodeId }) => {
+export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initialNodeId, onNavigateToContent }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(initialNodeId || 'Jo-6-35');
+  const [filter, setFilter] = useState<'all' | 'bible' | 'catechism' | 'document' | 'theme'>('all');
+
 
   // Mock Graph Data
   const nodes: Record<string, KnowledgeNode> = {
