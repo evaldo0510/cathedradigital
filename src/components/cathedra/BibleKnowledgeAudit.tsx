@@ -169,7 +169,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error && data) {
       setNotificationSettings(prev => [data[0], ...prev]);
-      setNewNotification({ type: 'webhook', target: '' });
+      setNewNotification({ type: 'webhook', target: '', priority: 'high' });
       toast.success('Notificação configurada com sucesso');
     } else {
       toast.error('Erro ao salvar notificação');
