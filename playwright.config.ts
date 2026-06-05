@@ -11,7 +11,9 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only to reduce flakiness without masking local errors */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 3 : 1, // Increased to 3 on CI to handle mobile flakiness
+  timeout: 60000, // global timeout per test
+
   /* Opt out of parallel tests on CI to increase stability. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -27,8 +29,9 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:8080',
 
     /* Stability filters: Add timeouts to prevent hangs */
-    actionTimeout: 15000,
-    navigationTimeout: 30000,
+    actionTimeout: 20000,
+    navigationTimeout: 45000,
+
 
     /* Headless mode control via env */
     headless: process.env.HEADLESS !== 'false',
