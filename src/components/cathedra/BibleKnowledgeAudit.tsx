@@ -150,6 +150,31 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </section>
 
+          {/* Identified Gaps Index (Phase 3) */}
+          <section className="space-y-4">
+            <header className="flex items-center gap-3">
+              <Icons.List className="w-4 h-4 text-primary/40" />
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Índice de Lacunas</h2>
+            </header>
+            <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+              {auditData.emptyBooks.map(book => (
+                <div key={book} className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors">
+                  <div className="space-y-1">
+                    <span className="font-serif font-bold text-primary/80">{book}</span>
+                    <p className="text-[9px] font-medium text-stone-400 uppercase tracking-tighter">Faltam referências do CIC e Magistério</p>
+                  </div>
+                  <button 
+                    onClick={() => toast.info(`Iniciando mapeamento para ${book}`)}
+                    className="p-2 rounded-lg bg-secondary/5 text-secondary opacity-0 group-hover:opacity-100 transition-all active:scale-95"
+                    title="Mapear Manualmente"
+                  >
+                    <Icons.Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* Connection Log */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
@@ -177,3 +202,4 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     </div>
   );
 };
+
