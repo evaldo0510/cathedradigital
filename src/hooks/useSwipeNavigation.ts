@@ -17,7 +17,7 @@ export function useSwipeNavigation({
   onSwipeLeft,
   onSwipeRight,
   onTap,
-  threshold = 60,
+  threshold = 100, // Increased from 60 to 100 for more deliberate action
   enabled = true,
 }: SwipeOptions) {
   const startX = useRef(0);
@@ -56,7 +56,8 @@ export function useSwipeNavigation({
       }
 
       // Swipe horizontal (predominante sobre vertical)
-      if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      // Increased ratio from 1.5 to 2.5 to be more strict
+      if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 2.5) {
         if (dx < 0) onSwipeLeft?.();
         else onSwipeRight?.();
       }

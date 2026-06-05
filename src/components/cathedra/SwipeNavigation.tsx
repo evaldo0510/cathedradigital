@@ -34,12 +34,13 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     if (window.innerWidth >= 1024) return;
 
     // Check if the interaction was actually a deliberate swipe and not a stray touch
-    // This helps prevent accidental navigation
-    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) * 2;
+    // Increased ratio and threshold to prevent accidental navigation to CIC
+    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) * 3;
     if (!isHorizontalSwipe) return;
 
-    const threshold = 80; // px
-    const velocity = 0.3;
+    const threshold = 120; // Increased from 80 to 120px to be more deliberate
+    const velocity = 0.5; // Increased from 0.3 to 0.5
+
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
