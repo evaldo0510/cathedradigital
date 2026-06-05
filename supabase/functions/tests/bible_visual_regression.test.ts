@@ -1,36 +1,57 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Bible Reader Visual Regressions', () => {
+test.describe('Bible Reader Visual Regressions & Accessibility', () => {
   const themes = ['paper', 'sepia', 'dark', 'night'];
-  const fontSizes = ['small', 'medium', 'large', 'extra-large'];
-  const lineSpacings = ['tight', 'normal', 'wide'];
+  const viewports = [
+    { width: 375, height: 812, name: 'mobile' },
+    { width: 1024, height: 768, name: 'tablet' },
+    { width: 1920, height: 1080, name: 'desktop' }
+  ];
+  const contrasts = ['normal', 'soft', 'high'];
 
-  for (const theme of themes) {
-    test(`render correctly with theme: ${theme}`, async ({ page }) => {
-      // Mocking local storage or settings context would be ideal
-      // For a quick check, we navigate and inject classes if needed or use UI
-      await page.goto('/bible?book=Gn&ch=1');
-      
-      // Select theme via UI or direct state if possible, here we check if theme class is applied
-      await page.evaluate((t) => {
-        const root = document.querySelector('[data-layout-root="true"]');
-        if (root) {
-          root.className = root.className.replace(/reading-theme-\w+/, `reading-theme-${t}`);
-        }
-      }, theme);
+  for (const viewport of viewports) {
+    test.describe(`Viewport: ${viewport.name}`, () => {
+      test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
-      // Take snapshot of a verse block
-      const verse = page.locator('#v1');
-      await expect(verse).toBeVisible();
-      // await expect(verse).toMatchSnapshot(`bible-verse-${theme}.png`);
+      for (const theme of themes) {
+        test(`Theme: ${theme}`, async ({ page }) => {
+          await page.goto('/bible?book=Jo&ch=1');
+          await page.waitForSelector('.reader-text');
+          
+          // Inject settings into localStorage
+          await page.evaluate(({ t }) => {
+            localStorage.setItem('cathedra_reading_settings_desktop', JSON.stringify({
+              theme: t,
+              fontSize: 'medium',
+              lineSpacing: 'normal',
+              contrast: 'normal',
+              showStudyMarginalia: true
+            }));
+            window.location.reload();
+          }, { t: theme });
+
+          await page.waitForSelector('.reader-text');
+          await expect(page).toHaveScreenshot(`bible-${viewport.name}-${theme}.png`, {
+            fullPage: false,
+            mask: [page.locator('.logos-ai-widget')]
+          });
+        });
+      }
+
+      test(`Accessibility: High Contrast`, async ({ page }) => {
+        await page.goto('/bible?book=Jo&ch=1');
+        await page.evaluate(() => {
+          localStorage.setItem('cathedra_reading_settings_desktop', JSON.stringify({
+            theme: 'paper',
+            contrast: 'high',
+            showStudyMarginalia: true
+          }));
+          window.location.reload();
+        });
+        await page.waitForSelector('[data-contrast="high"]');
+        await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+        await expect(page.locator('.reader-text')).toHaveCSS('color', 'rgb(0, 0, 0)');
+      });
     });
   }
-
-  test('responsive typography check', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 667 }); // Mobile
-    await page.goto('/bible?book=Gn&ch=1');
-    const verse = page.locator('#v1');
-    const fontSize = await verse.evaluate((el) => window.getComputedStyle(el).fontSize);
-    expect(parseFloat(fontSize)).toBeGreaterThan(12);
-  });
 });

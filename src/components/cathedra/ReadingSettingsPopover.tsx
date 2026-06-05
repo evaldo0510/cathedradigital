@@ -107,6 +107,31 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
             </div>
           </div>
 
+          {/* Contraste e Acessibilidade */}
+          <div className="space-y-spacing-md">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
+            <div className="flex gap-spacing-sm">
+              {[
+                { id: 'normal', label: 'Normal', icon: Icons.Circle },
+                { id: 'soft', label: 'Suave', icon: Icons.Droplets },
+                { id: 'high', label: 'Alto Contraste', icon: Icons.Contrast },
+              ].map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => updateSettings({ contrast: c.id as any })}
+                  className={cn(
+                    "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
+                    settings.contrast === c.id ? "bg-primary/5 border-primary/20 shadow-inner" : "border-primary/5 hover:bg-primary/[0.02]"
+                  )}
+                  title={c.label}
+                >
+                  <c.icon className={cn("w-spacing-md h-spacing-md", settings.contrast === c.id ? "text-primary" : "text-primary/20")} />
+                  <span className="text-[8px] font-bold uppercase tracking-tighter opacity-60">{c.id}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Espaçamento */}
           <div className="space-y-spacing-md">
             <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
@@ -126,6 +151,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               ))}
             </div>
           </div>
+
           
           <div className="pt-spacing-sm">
             <button 
