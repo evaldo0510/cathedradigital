@@ -42,12 +42,22 @@ const Bible: React.FC = () => {
   const { settings } = useReadingSettings();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes'>('home');
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // New States for Annotations and Progress
+  const [lastRead, setLastRead] = useState<any>(null);
+  const [dailyReading, setDailyReading] = useState(getDailyReading());
+  const [isDailyCompleted, setIsDailyCompleted] = useState(false);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
+  
+  const { notes, addNote, deleteNote } = useNotes('bible');
+
 
   // Sync with URL
   useEffect(() => {
