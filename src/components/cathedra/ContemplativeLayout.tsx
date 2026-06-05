@@ -34,10 +34,11 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
       className={cn(
         "min-h-[100dvh] will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden transition-colors duration-1000", 
         `reading-theme-${settings.theme}`,
-        settings.theme === 'paper' && "bg-[#FEFDFB]",
-        settings.theme === 'sepia' && "bg-[#E8E2D2]",
-        settings.theme === 'dark' && "bg-[#1A1C1E]",
+        settings.theme === 'paper' && "bg-[#FDF8F3]",
+        settings.theme === 'sepia' && "bg-[#F3E9D2]",
+        settings.theme === 'dark' && "bg-[#2C2C2C]",
         settings.theme === 'night' && "bg-[#0D0E10]",
+
         showPadding && "pt-spacing-xl md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-spacing-md md:px-[var(--layout-padding)]",
         containerClassName
       )}
