@@ -143,7 +143,80 @@ const Bible: React.FC = () => {
     toast.success('Reflexão guardada');
   };
 
+  const toggleHighlight = (verseNumber: number, color: string = 'yellow') => {
+    if (!selectedBook) return;
+    const key = `${selectedBook.abbr}-${selectedChapter}-${verseNumber}`;
+    const newHighlights = { ...highlights };
+    
+    if (newHighlights[key] === color) {
+      delete newHighlights[key];
+    } else {
+      newHighlights[key] = color;
+    }
+    
+    setHighlights(newHighlights);
+    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(newHighlights));
+  };
+
+  const handleExportData = () => {
+    const data = {
+      notes,
+      highlights,
+      lastRead,
+      dailyStatus: {} as any
+    };
+    
+    // Get all daily reading keys from localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('cathedra_bible_daily_')) {
+        data.dailyStatus[key] = localStorage.getItem(key);
+      }
+    }
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cathedra-bible-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Dados exportados com sucesso');
+  };
+
+  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string);
+        if (data.highlights) {
+          setHighlights(data.highlights);
+          localStorage.setItem('cathedra_bible_highlights', JSON.stringify(data.highlights));
+        }
+        if (data.lastRead) {
+          setLastRead(data.lastRead);
+          localStorage.setItem('cathedra_bible_last_read', JSON.stringify(data.lastRead));
+        }
+        if (data.dailyStatus) {
+          Object.entries(data.dailyStatus).forEach(([key, value]) => {
+            localStorage.setItem(key, value as string);
+          });
+        }
+        toast.success('Dados importados com sucesso');
+      } catch (err) {
+        toast.error('Erro ao importar arquivo');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const fetchVerses = async (abbr: string, chapter: number) => {
+
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
