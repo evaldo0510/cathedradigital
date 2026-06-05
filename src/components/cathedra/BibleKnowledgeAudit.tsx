@@ -335,7 +335,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
+            { id: 'history', label: 'Histórico', icon: Icons.History },
             { id: 'logs', label: 'Execução', icon: Icons.Activity },
+            { id: 'notifications', label: 'Alertas', icon: Icons.Bell },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
