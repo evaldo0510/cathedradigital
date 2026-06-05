@@ -8,9 +8,13 @@ on:
   workflow_dispatch:
     inputs:
       device_matrix:
-        description: 'Comma separated projects to run'
+        description: 'Projetos Playwright (ex: mobile-chrome,mobile-safari)'
         default: 'mobile-chrome,mobile-safari'
         required: true
+      only_failed:
+        description: 'Reexecutar apenas falhas da última run?'
+        type: boolean
+        default: false
 
 jobs:
   mobile-e2e:
