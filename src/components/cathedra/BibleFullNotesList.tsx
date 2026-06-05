@@ -1,13 +1,17 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { BIBLE_DATA } from '@/data/bible-books';
+import { NoteEditModal } from './NoteEditModal';
 
 interface BibleFullNotesListProps {
   onSelectReference: (bookAbbrev: string, chapter: number, verse: number) => void;
   onClose: () => void;
+  onEditNote?: (noteId: string, text: string, color: string) => void;
+  onDeleteNote?: (noteId: string) => void;
 }
+
 
 const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ onSelectReference, onClose }) => {
   const { notes, deleteNote, loading } = useNotes('bible');
