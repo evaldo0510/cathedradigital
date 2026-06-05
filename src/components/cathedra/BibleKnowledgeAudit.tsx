@@ -688,32 +688,68 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <AnimatePresence mode="wait">
           {activeTab === 'i18n-audit' && (
             <motion.div key="i18n-audit" className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inventário de Internacionalização & Logs Legados</h3>
-                <div className="flex gap-2">
-                  <span className={cn(
-                    "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
-                    i18nFailures.filter(f => f.status === 'pending').length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                  )}>
-                    {i18nFailures.filter(f => f.status === 'pending').length} Pendentes
-                  </span>
-                  <span className="text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest bg-primary/5 text-primary/40">
-                    {i18nFailures.filter(f => f.status === 'mapped').length} Mapeados
-                  </span>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inventário de Internacionalização & Logs Legados</h3>
+                  <div className="flex gap-2">
+                    <span className={cn(
+                      "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
+                      i18nFailures.filter(f => f.status === 'pending').length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                    )}>
+                      {i18nFailures.filter(f => f.status === 'pending').length} Pendentes
+                    </span>
+                    <span className="text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest bg-primary/5 text-primary/40">
+                      {i18nFailures.filter(f => f.status === 'mapped').length} Mapeados
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div className="md:col-span-2 relative">
+                    <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/20" />
+                    <input 
+                      type="text"
+                      placeholder="Buscar termos ou sugestões..."
+                      value={i18nSearch}
+                      onChange={(e) => { setI18nSearch(e.target.value); setI18nPage(1); }}
+                      className="w-full pl-9 pr-4 py-2 bg-white border border-primary/5 rounded-xl text-[10px] focus:outline-none focus:ring-1 focus:ring-secondary/20 transition-all"
+                    />
+                  </div>
+                  <select 
+                    value={i18nStatusFilter}
+                    onChange={(e) => { setI18nStatusFilter(e.target.value as any); setI18nPage(1); }}
+                    className="px-3 py-2 bg-white border border-primary/5 rounded-xl text-[10px] text-primary/60 focus:outline-none transition-all"
+                  >
+                    <option value="all">Todos os Status</option>
+                    <option value="pending">Pendentes</option>
+                    <option value="mapped">Mapeados</option>
+                  </select>
+                  <select 
+                    value={i18nCategoryFilter}
+                    onChange={(e) => { setI18nCategoryFilter(e.target.value); setI18nPage(1); }}
+                    className="px-3 py-2 bg-white border border-primary/5 rounded-xl text-[10px] text-primary/60 focus:outline-none transition-all"
+                  >
+                    {i18nCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat === 'all' ? 'Todas as Categorias' : cat}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden divide-y shadow-sm">
-                {i18nFailures.length > 0 ? i18nFailures.map((failure, idx) => (
+                {paginatedI18nLogs.length > 0 ? paginatedI18nLogs.map((failure, idx) => (
                   <div key={idx} className={cn(
                     "p-6 space-y-3 transition-colors text-left",
                     failure.status === 'pending' ? "bg-rose-50/30" : "hover:bg-primary/[0.01]"
                   )}>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono bg-white text-primary/60 px-2 py-1 rounded-lg border border-primary/5">{failure.term}</span>
-                        <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
-                        <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono bg-white text-primary/60 px-2 py-1 rounded-lg border border-primary/5">{failure.term}</span>
+                          <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
+                          <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
+                        </div>
+                        <span className="text-[8px] text-primary/20 font-mono">Atualizado em: {new Date(failure.updated_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{failure.context}</span>
@@ -731,10 +767,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 )) : (
                   <div className="p-12 text-center space-y-2">
                     <Icons.CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto opacity-20" />
-                    <p className="text-[10px] text-primary/30 uppercase font-black tracking-widest">Interface 100% Localizada</p>
+                    <p className="text-[10px] text-primary/30 uppercase font-black tracking-widest">Nenhum log correspondente</p>
                   </div>
                 )}
               </div>
+
+              {totalI18nPages > 1 && (
+                <div className="flex items-center justify-center gap-4">
+                  <button 
+                    disabled={i18nPage === 1}
+                    onClick={() => setI18nPage(p => Math.max(1, p - 1))}
+                    className="p-2 text-primary/40 disabled:opacity-20 hover:text-secondary transition-colors"
+                  >
+                    <Icons.ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Página {i18nPage} de {totalI18nPages}</span>
+                  <button 
+                    disabled={i18nPage === totalI18nPages}
+                    onClick={() => setI18nPage(p => Math.min(totalI18nPages, p + 1))}
+                    className="p-2 text-primary/40 disabled:opacity-20 hover:text-secondary transition-colors"
+                  >
+                    <Icons.ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
 
               <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
                 <p className="text-[10px] text-primary/40 leading-relaxed italic">
