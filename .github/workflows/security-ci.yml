@@ -12,20 +12,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install
+
       - name: Supabase Security Linter
         run: |
-          # This simulates a blocker. In a real environment, we'd use the CLI: 
-          # npx supabase db lint --threshold high
           echo "Running Supabase Security Linter..."
-          # For this environment, we rely on the linter tool results.
-          # If high severity issues are detected, exit 1.
-          # Mocking a check here.
-
-      - name: Run RLS Automated Tests
+          # In a real environment: npx supabase db lint --threshold high
+          
+      - name: Run RLS Security Integration Tests
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          # deno test -A supabase/functions/tests/security_automated_test.ts
-          echo "Automated tests passed."
+          bunx playwright test tests/e2e/bible-audit-security.spec.ts
+
+      - name: Log Scan Results and Notify
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "failure" ]; then
+            echo "::error::CI Deployment Blocked: Security issues found. High severity RLS failure detected."
+            # Logic to post comment on PR or trigger webhook notification could go here
+            # curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" ...
+          fi
