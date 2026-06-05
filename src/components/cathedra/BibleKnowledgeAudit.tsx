@@ -376,17 +376,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 <p className="text-premium-xs font-serif italic text-primary/60">
                   Integridade garantida por varreduras inteligentes e conexões teológicas.
                 </p>
-                <button 
-                  onClick={startIntegrityScan}
-                  disabled={isScanning}
-                  className={cn(
-                    "px-6 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-secondary/20 flex items-center gap-2 mx-auto",
-                    isScanning && "opacity-50"
+                <div className="flex flex-col gap-3 mx-auto max-w-xs">
+                  <button 
+                    onClick={() => startIntegrityScan(false)}
+                    disabled={isScanning}
+                    className={cn(
+                      "px-6 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-secondary/20 flex items-center justify-center gap-2",
+                      isScanning && "opacity-50"
+                    )}
+                  >
+                    <Icons.RefreshCw className={cn("w-3 h-3", isScanning && "animate-spin")} />
+                    {isScanning ? 'Sincronizando...' : 'Iniciar Varredura Completa'}
+                  </button>
+                  
+                  {Object.values(scanResults).some(r => r === 'empty') && (
+                    <button 
+                      onClick={() => startIntegrityScan(true)}
+                      disabled={isScanning}
+                      className="px-6 py-2 border border-secondary text-secondary text-[10px] font-black uppercase tracking-widest rounded-full flex items-center justify-center gap-2 hover:bg-secondary/5 transition-colors"
+                    >
+                      <Icons.AlertCircle className="w-3 h-3" />
+                      Retentar Falhas
+                    </button>
                   )}
-                >
-                  <Icons.RefreshCw className={cn("w-3 h-3", isScanning && "animate-spin")} />
-                  {isScanning ? 'Sincronizando...' : 'Iniciar Varredura'}
-                </button>
+                </div>
               </section>
 
               {/* Identified Gaps Index */}
