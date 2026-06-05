@@ -58,6 +58,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
   const [actionLogs, setActionLogs] = React.useState<any[]>([]);
+  const [actionLogFilters, setActionLogFilters] = React.useState({
+    search: '',
+    actionType: 'all',
+    runId: '',
+    startDate: '',
+    endDate: ''
+  });
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
 
@@ -128,16 +135,37 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
   const fetchActionLogs = async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from('bible_audit_action_logs')
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
+      .order('created_at', { ascending: false });
+
+    if (actionLogFilters.search) {
+      query = query.or(`action.ilike.%${actionLogFilters.search}%,entity_type.ilike.%${actionLogFilters.search}%`);
+    }
+    if (actionLogFilters.actionType !== 'all') {
+      query = query.eq('action', actionLogFilters.actionType);
+    }
+    if (actionLogFilters.runId) {
+      query = query.eq('metadata->>run_id', actionLogFilters.runId);
+    }
+    if (actionLogFilters.startDate) {
+      query = query.gte('created_at', actionLogFilters.startDate);
+    }
+    if (actionLogFilters.endDate) {
+      query = query.lte('created_at', actionLogFilters.endDate);
+    }
+
+    const { data, error } = await query.limit(50);
     
     if (!error && data) {
       setActionLogs(data);
     }
   };
+
+  React.useEffect(() => {
+    if (activeTab === 'audit-logs') fetchActionLogs();
+  }, [actionLogFilters, activeTab]);
 
   const fetchWebhookDeliveries = async () => {
     const { data, error } = await supabase
