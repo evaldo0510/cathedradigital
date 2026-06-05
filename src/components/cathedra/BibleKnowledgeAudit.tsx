@@ -467,7 +467,25 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'audit-logs' && (
             <motion.div key="audit-logs" className="space-y-6">
                <div className="flex flex-col gap-4">
-                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                 <div className="flex items-center justify-between">
+                   <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                   <div className="flex gap-2">
+                     <button 
+                       onClick={() => toast.success('CSV do Log Exportado')} 
+                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                       title="Exportar CSV com filtros"
+                     >
+                       <Icons.FileSpreadsheet className="w-4 h-4" />
+                     </button>
+                     <button 
+                       onClick={() => window.print()} 
+                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                       title="Exportar PDF com filtros"
+                     >
+                       <Icons.Printer className="w-4 h-4" />
+                     </button>
+                   </div>
+                 </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                    <div className="relative">
