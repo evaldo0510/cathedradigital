@@ -29,13 +29,14 @@ interface BibleKnowledgeAuditProps {
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule' | 'history' | 'notifications'>(
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule' | 'history' | 'notifications' | 'webhooks'>(
     (searchParams.get('tab') as any) || 'overview'
   );
   const [isScanning, setIsScanning] = React.useState(false);
   const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
   const [executionLogs, setExecutionLogs] = React.useState<AuditLog[]>([]);
   const [auditRuns, setAuditRuns] = React.useState<any[]>([]);
+  const [comparison, setComparison] = React.useState<{run1: any, run2: any} | null>(null);
   const [selectedRun, setSelectedRun] = React.useState<any>(null);
   const [isExporting, setIsExporting] = React.useState(false);
   const [csvFilters, setCsvFilters] = React.useState({
@@ -47,15 +48,75 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [isScheduling, setIsScheduling] = React.useState(false);
   const [notificationSettings, setNotificationSettings] = React.useState<any[]>([]);
-  const [newNotification, setNewNotification] = React.useState({ type: 'webhook' as 'webhook' | 'email', target: '' });
+  const [newNotification, setNewNotification] = React.useState({ type: 'webhook' as 'webhook' | 'email' | 'slack' | 'discord' | 'sms', target: '', priority: 'high' });
   const [isSavingNotification, setIsSavingNotification] = React.useState(false);
+  const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
+  const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'logs', 'schedule', 'history', 'notifications'].includes(tab)) {
+    if (tab && ['overview', 'dashboard', 'logs', 'schedule', 'history', 'notifications', 'webhooks'].includes(tab)) {
       setActiveTab(tab as any);
     }
   }, [searchParams]);
+
+  const testWebhook = async (notificationId: string) => {
+    setIsTestingWebhook(true);
+    const payload = { 
+      event: 'audit_test', 
+      timestamp: new Date().toISOString(),
+      summary: 'Payload de teste para auditoria bíblica',
+      stats: stats
+    };
+
+    try {
+      const notification = notificationSettings.find(n => n.id === notificationId);
+      if (!notification || notification.type !== 'webhook') {
+        toast.error('Notificação inválida para teste de webhook');
+        return;
+      }
+
+      // Simulate webhook call - in real app this would go through a secure proxy or edge function
+      const response = await fetch(notification.target, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(e => ({ ok: false, status: 0, text: () => Promise.resolve(e.message) }));
+
+      const result = {
+        id: Math.random().toString(36).substr(2, 9),
+        notification_id: notificationId,
+        payload,
+        response_status: response.status,
+        response_body: await response.text(),
+        delivered_at: new Date().toISOString()
+      };
+
+      await supabase.from('bible_audit_webhook_logs').insert([result]);
+      setWebhookTestResults(prev => [result, ...prev]);
+      toast.success(response.ok ? 'Webhook entregue com sucesso' : `Falha na entrega: ${response.status}`);
+    } catch (e: any) {
+      toast.error(`Erro: ${e.message}`);
+    } finally {
+      setIsTestingWebhook(false);
+    }
+  };
+
+  const fetchWebhookLogs = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_webhook_logs')
+      .select('*, bible_audit_notifications(target)')
+      .order('delivered_at', { ascending: false })
+      .limit(20);
+    
+    if (!error && data) {
+      setWebhookTestResults(data);
+    }
+  };
+
+  React.useEffect(() => {
+    if (activeTab === 'webhooks') fetchWebhookLogs();
+  }, [activeTab]);
 
   const generateShareLink = () => {
     const params = new URLSearchParams();
@@ -108,7 +169,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error && data) {
       setNotificationSettings(prev => [data[0], ...prev]);
-      setNewNotification({ type: 'webhook', target: '' });
+      setNewNotification({ type: 'webhook', target: '', priority: 'high' });
       toast.success('Notificação configurada com sucesso');
     } else {
       toast.error('Erro ao salvar notificação');
@@ -320,6 +381,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <Icons.Share2 className="w-5 h-5" />
           </button>
           <button 
+            onClick={() => window.print()}
+            className="p-2 text-primary/40 active:text-secondary"
+            title="Exportar PDF"
+          >
+            <Icons.Printer className="w-5 h-5" />
+          </button>
+          <button 
             onClick={() => setShowExportModal(true)}
             className="p-2 text-primary/40 active:text-secondary"
             title="Exportar Relatório CSV"
@@ -337,7 +405,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
             { id: 'history', label: 'Histórico', icon: Icons.History },
             { id: 'logs', label: 'Execução', icon: Icons.Activity },
-            { id: 'notifications', label: 'Alertas', icon: Icons.Bell },
+            { id: 'notifications', label: 'Canais', icon: Icons.Bell },
+            { id: 'webhooks', label: 'Testar Webhooks', icon: Icons.Code },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
@@ -506,6 +575,60 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 ))}
               </div>
 
+              {auditRuns.length >= 2 && (
+                <div className="bg-secondary/5 border border-secondary/10 p-6 rounded-3xl space-y-4">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-secondary">Comparar Execuções</h3>
+                  <div className="flex gap-4">
+                    <select 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                      onChange={(e) => {
+                        const run = auditRuns.find(r => r.id === e.target.value);
+                        setComparison(prev => ({ run1: run, run2: prev?.run2 }));
+                      }}
+                    >
+                      <option value="">Selecionar Run 1</option>
+                      {auditRuns.map(r => <option key={r.id} value={r.id}>{new Date(r.created_at).toLocaleDateString()}</option>)}
+                    </select>
+                    <select 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                      onChange={(e) => {
+                        const run = auditRuns.find(r => r.id === e.target.value);
+                        setComparison(prev => ({ run1: prev?.run1, run2: run }));
+                      }}
+                    >
+                      <option value="">Selecionar Run 2</option>
+                      {auditRuns.map(r => <option key={r.id} value={r.id}>{new Date(r.created_at).toLocaleDateString()}</option>)}
+                    </select>
+                  </div>
+                  {comparison?.run1 && comparison?.run2 && (
+                    <div className="p-4 bg-white rounded-2xl border border-primary/5 space-y-4">
+                      <div className="grid grid-cols-2 gap-8 divide-x divide-primary/5">
+                        <div>
+                          <p className="text-[8px] font-black uppercase tracking-widest text-primary/30 mb-2">Run 1: {comparison.run1.covered_chapters} Caps</p>
+                          <div className="space-y-1">
+                             {comparison.run1.empty_books?.filter((b: string) => !comparison.run2.empty_books?.includes(b)).map((b: string) => (
+                               <div key={b} className="flex items-center gap-2 text-[10px] text-emerald-600 font-bold">
+                                 <Icons.Check className="w-3 h-3" /> {b} Resolvido
+                               </div>
+                             ))}
+                          </div>
+                        </div>
+                        <div className="pl-8">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-primary/30 mb-2">Run 2: {comparison.run2.covered_chapters} Caps</p>
+                          <div className="space-y-1">
+                             {comparison.run2.empty_books?.filter((b: string) => !comparison.run1.empty_books?.includes(b)).map((b: string) => (
+                               <div key={b} className="flex items-center gap-2 text-[10px] text-red-600 font-bold">
+                                 <Icons.AlertCircle className="w-3 h-3" /> {b} Nova Lacuna
+                               </div>
+                             ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {selectedRun && (
                 <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
                   <motion.div 
@@ -545,6 +668,81 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </motion.div>
           )}
 
+          {activeTab === 'webhooks' && (
+            <motion.div 
+              key="webhooks"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8"
+            >
+              <header className="space-y-2">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Depuração de Webhooks</h3>
+                <p className="text-premium-xs text-primary/60">Teste a entrega de payloads e valide as respostas dos seus endpoints.</p>
+              </header>
+
+              <div className="space-y-4">
+                {notificationSettings.filter(n => n.type === 'webhook').length === 0 ? (
+                  <div className="p-8 text-center bg-primary/5 rounded-3xl border border-dashed border-primary/10">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary/30">Nenhum webhook configurado em "Canais"</p>
+                  </div>
+                ) : (
+                  notificationSettings.filter(n => n.type === 'webhook').map(n => (
+                    <div key={n.id} className="bg-white border border-primary/5 p-4 rounded-2xl flex items-center justify-between group">
+                      <div className="flex items-center gap-3">
+                        <Icons.Link className="w-4 h-4 text-blue-500" />
+                        <span className="text-xs font-bold text-primary/60 truncate max-w-[300px]">{n.target}</span>
+                      </div>
+                      <button 
+                        onClick={() => testWebhook(n.id)}
+                        disabled={isTestingWebhook}
+                        className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-widest rounded-lg active:scale-95 transition-all flex items-center gap-2"
+                      >
+                        {isTestingWebhook ? <Icons.Loader2 className="w-3 h-3 animate-spin" /> : <Icons.Play className="w-3 h-3" />}
+                        Testar Agora
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {webhookTestResults.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-[8px] font-black uppercase tracking-widest text-primary/30">Logs de Entrega Recentes</h4>
+                  <div className="space-y-3">
+                    {webhookTestResults.map((log, i) => (
+                      <div key={i} className="bg-primary/[0.02] border border-primary/5 p-4 rounded-2xl space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className={cn(
+                            "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                            log.response_status >= 200 && log.response_status < 300 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+                          )}>
+                            Status: {log.response_status || 'Falha'}
+                          </span>
+                          <span className="text-[8px] font-medium text-primary/30">{new Date(log.delivered_at).toLocaleTimeString()}</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                             <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Payload Enviado</p>
+                             <pre className="text-[8px] bg-white p-2 rounded-lg border border-primary/5 overflow-x-auto">
+                               {JSON.stringify(log.payload, null, 2)}
+                             </pre>
+                          </div>
+                          <div className="space-y-1">
+                             <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Resposta do Servidor</p>
+                             <pre className="text-[8px] bg-white p-2 rounded-lg border border-primary/5 overflow-x-auto whitespace-pre-wrap">
+                               {log.response_body || 'Sem corpo de resposta'}
+                             </pre>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
           {activeTab === 'notifications' && (
             <motion.div 
               key="notifications"
@@ -568,10 +766,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     >
                       <option value="webhook">Webhook</option>
                       <option value="email">E-mail</option>
+                      <option value="slack">Slack</option>
+                      <option value="discord">Discord</option>
+                      <option value="sms">SMS</option>
                     </select>
                     <input 
                       type="text"
-                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'seu@email.com'}
+                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'Destino...'}
                       value={newNotification.target}
                       onChange={(e) => setNewNotification(prev => ({...prev, target: e.target.value}))}
                       className="flex-1 bg-primary/5 border-none rounded-xl px-4 py-3 text-xs"
@@ -589,14 +790,44 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     {notificationSettings.map(n => (
                       <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          {n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
-                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                          {n.channel === 'slack' ? <Icons.MessageCircle className="w-4 h-4 text-purple-500" /> 
+                           : n.channel === 'discord' ? <Icons.MessageSquare className="w-4 h-4 text-indigo-500" />
+                           : n.channel === 'sms' ? <Icons.Smartphone className="w-4 h-4 text-amber-500" />
+                           : n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> 
+                           : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
+                          <div className="flex flex-col">
+                             <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                             <span className="text-[9px] uppercase tracking-widest text-primary/30">{n.channel || n.type} • {n.priority}</span>
+                          </div>
                         </div>
                         <button onClick={() => deleteNotification(n.id)} className="text-red-400 hover:text-red-600">
                           <Icons.Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <div className="bg-primary/5 p-6 rounded-2xl space-y-4">
+                  <header className="flex items-center gap-2">
+                    <Icons.UserPlus className="w-4 h-4 text-primary/40" />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Colaboradores</h3>
+                  </header>
+                  <p className="text-premium-xs text-primary/40">Gerencie permissões para visualização e execução de auditorias.</p>
+                  <div className="flex gap-2">
+                    <input 
+                      type="email" 
+                      placeholder="email@colaborador.com" 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                    />
+                    <select className="bg-white border border-primary/5 rounded-xl px-3 text-[10px] font-black uppercase tracking-widest">
+                      <option>Visualizador</option>
+                      <option>Editor</option>
+                      <option>Admin</option>
+                    </select>
+                    <button className="p-2 bg-primary text-white rounded-xl">
+                      <Icons.Plus className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>

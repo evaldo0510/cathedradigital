@@ -168,28 +168,37 @@ export type Database = {
       }
       bible_audit_notifications: {
         Row: {
+          channel: string | null
           created_at: string | null
           id: string
           is_active: boolean | null
+          priority: string | null
           priority_threshold: string | null
+          rules: Json | null
           target: string
           type: string
           updated_at: string | null
         }
         Insert: {
+          channel?: string | null
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          priority?: string | null
           priority_threshold?: string | null
+          rules?: Json | null
           target: string
           type: string
           updated_at?: string | null
         }
         Update: {
+          channel?: string | null
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          priority?: string | null
           priority_threshold?: string | null
+          rules?: Json | null
           target?: string
           type?: string
           updated_at?: string | null
@@ -290,6 +299,41 @@ export type Database = {
             columns: ["last_run_id"]
             isOneToOne: false
             referencedRelation: "bible_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_audit_webhook_logs: {
+        Row: {
+          delivered_at: string | null
+          id: string
+          notification_id: string | null
+          payload: Json | null
+          response_body: string | null
+          response_status: number | null
+        }
+        Insert: {
+          delivered_at?: string | null
+          id?: string
+          notification_id?: string | null
+          payload?: Json | null
+          response_body?: string | null
+          response_status?: number | null
+        }
+        Update: {
+          delivered_at?: string | null
+          id?: string
+          notification_id?: string | null
+          payload?: Json | null
+          response_body?: string | null
+          response_status?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_audit_webhook_logs_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_notifications"
             referencedColumns: ["id"]
           },
         ]
