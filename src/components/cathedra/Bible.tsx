@@ -85,7 +85,69 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Local Persistence Logic
+  useEffect(() => {
+    const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
+    if (savedLastRead) setLastRead(JSON.parse(savedLastRead));
+
+    const today = new Date().toISOString().split('T')[0];
+    const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
+    if (dailyStatus === 'completed') setIsDailyCompleted(true);
+  }, []);
+
+  const saveReadingProgress = useCallback((book: BibleBook, chapter: number) => {
+    const progress = { bookName: book.name, bookAbbr: book.abbr, chapter };
+    setLastRead(progress);
+    localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
+  }, []);
+
+  const markDailyAsCompleted = () => {
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
+    setIsDailyCompleted(true);
+    toast.success('Leitura do dia concluída!');
+  };
+
+  const handleOpenAnnotation = (verse: { number: number; text: string }) => {
+    setActiveVerse(verse);
+    setIsNoteModalOpen(true);
+  };
+
+  const handleSaveNote = async (text: string, color: string) => {
+    if (!activeVerse || !selectedBook) return;
+    
+    await addNote('bible', text, color, {
+      book_abbr: selectedBook.abbr,
+      chapter: selectedChapter,
+      verse: activeVerse.number
+    });
+    
+    setIsNoteModalOpen(false);
+    toast.success('Reflexão guardada');
+  };
+
   const fetchVerses = async (abbr: string, chapter: number) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
+        body: { book: abbr, chapter }
+      });
+      if (error) throw error;
+      setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
+      
+      // Save progress automatically
+      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+      const book = allBooks.find(b => b.abbr === abbr);
+      if (book) saveReadingProgress(book, chapter);
+      
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    } catch (error: any) {
+      toast.error('Erro ao carregar texto sagrado');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
