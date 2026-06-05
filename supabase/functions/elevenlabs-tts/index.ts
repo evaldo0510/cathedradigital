@@ -85,6 +85,6 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("TTS function error:", error);
-    return json({ error: error instanceof Error ? error.message : "Erro inesperado" }, 500);
+    return json({ error: "Erro interno. Tente novamente." }, 500);
   }
 });
