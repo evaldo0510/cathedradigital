@@ -56,7 +56,11 @@ const Bible: React.FC = () => {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   
-  const { notes, addNote, deleteNote } = useNotes('bible');
+  const [highlights, setHighlights] = useState<Record<string, string>>({});
+  
+  const { notes, addNote, deleteNote, updateNote } = useNotes('bible');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
 
 
   // Sync with URL
