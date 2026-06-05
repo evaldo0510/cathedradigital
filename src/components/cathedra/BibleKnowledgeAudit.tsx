@@ -521,7 +521,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         
         <div className="pt-6 border-t border-primary/5 space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/20">A11y Check & Dark Mode</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/20">Validação Acessibilidade & Modo Dark</h4>
             <div className="flex gap-1">
               <span className="text-[8px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded font-black">WCAG AA</span>
               <button 
