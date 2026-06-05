@@ -108,7 +108,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   }, [searchParams]);
 
   const stats = React.useMemo(() => ({
-    totalBooks: auditData.totalBooks,
+    totalBooks: auditData.totalBooks, // Livros do Cânone
     coveredBooks: auditData.coveredBooks,
     totalChapters: auditData.totalChapters,
     coveredChapters: Math.floor(auditData.totalChapters * 0.62),
