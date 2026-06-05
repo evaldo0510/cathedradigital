@@ -693,7 +693,8 @@ const Bible: React.FC = () => {
                
                <div className="space-y-spacing-md">
                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Continuatio</h4>
-                 <div className="bg-primary/[0.02] p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-primary/[0.04] transition-all">
+                 <div className="bg-white/40 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-white/60 transition-all shadow-premium-sm">
+
                    <div className="flex items-center gap-spacing-md">
                      <Icons.Clock className="w-spacing-md h-spacing-md text-primary/20 group-hover:text-primary transition-colors" />
                      <div className="flex flex-col">
@@ -706,45 +707,63 @@ const Bible: React.FC = () => {
                </div>
             </div>
 
-            {/* Widgets Rápidos */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+            {/* Widgets Rápidos - Elegantes e Discretos */}
+            <div className="flex flex-wrap md:flex-nowrap gap-spacing-md">
               {[
-                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha' },
-                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365' },
-                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos' },
-                { label: 'Histórico', icon: Icons.History, info: 'Recentes' }
+                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha', action: () => {} },
+                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365', progress: 35 },
+                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos', action: () => setViewMode('favorites') },
+                { label: 'Histórico', icon: Icons.History, info: 'Recentes', action: () => {} }
               ].map((w) => (
                 <button 
                   key={w.label} 
-                  onClick={() => {
-                    if (w.label === 'Favoritos') setViewMode('favorites');
-                  }}
-                  className="p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all text-left group"
+                  onClick={w.action}
+                  className="flex-1 min-w-[140px] p-spacing-lg bg-white/40 backdrop-blur-xl hover:bg-white/60 rounded-premium border border-primary/5 transition-all text-left group shadow-premium-sm"
                 >
+
                   <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
                   <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
                   <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
+                  {w.progress !== undefined && (
+                    <div className="mt-2 w-full h-1 bg-primary/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary/20" style={{ width: `${w.progress}%` }} />
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
 
-            {/* Acesso aos Livros (Biblioteca) */}
+            {/* A Biblioteca de Livros - Visual Hierárquico */}
             <div className="pt-spacing-xl">
               <div className="flex items-center justify-between mb-spacing-xl">
-                <h3 className="font-display text-premium-2xl">A Biblioteca</h3>
+                <h3 className="font-display text-premium-3xl">A Biblioteca</h3>
                 <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[9px] font-black uppercase tracking-widest opacity-40 hover:opacity-100">
                   Ver todos os livros →
                 </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl">
                 {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
                   <div key={t} className="space-y-spacing-lg">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs italic">{t}</h4>
-                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 border-b border-primary/5 pb-spacing-xs">{t}</h4>
+                    <div className="grid grid-cols-1 gap-spacing-sm">
                       {BIBLE_DATA[t].slice(0, 3).map(cat => (
-                        <div key={cat.name} className="p-spacing-md bg-background hover:bg-primary/[0.01] transition-all cursor-pointer group border-b border-primary/[0.02]" onClick={() => { setTestament(t); setViewMode('books'); }}>
-                          <h5 className="text-premium-xs font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</h5>
-                          <p className="text-[9px] text-primary/20 truncate">{cat.books.map(b => b.name).join(', ')}</p>
+                        <div key={cat.name} className="space-y-spacing-xs">
+                          <span className="text-[9px] font-serif italic text-primary/30">{cat.name}</span>
+                          <div className="flex flex-wrap gap-spacing-xs">
+                            {cat.books.slice(0, 5).map(b => (
+                              <button 
+                                key={b.abbr}
+                                onClick={() => selectBook(b)}
+                                className="px-spacing-md py-spacing-xs rounded-full border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.04] transition-all text-premium-xs font-medium text-primary/60"
+                              >
+                                {b.name}
+                              </button>
+                            ))}
+                            {cat.books.length > 5 && (
+                              <span className="text-[10px] text-primary/10 self-center">...</span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -755,6 +774,7 @@ const Bible: React.FC = () => {
           </div>
         </ContemplativeLayout>
       )}
+
 
       {viewMode === 'books' && (
         <ContemplativeLayout
@@ -894,18 +914,19 @@ const Bible: React.FC = () => {
 
           <div className="pb-spacing-4xl">
             {viewMode === 'reading' && !settings.immersiveMode && (
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md gap-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-3xl border-b border-primary/5 pb-spacing-lg gap-4">
                 <div className="flex items-center gap-4">
                   <Button 
                     variant="ghost" 
                     onClick={goBack} 
-                    className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 p-0"
+                    className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 hover:opacity-100 p-0 transition-all hover:-translate-x-1"
                     aria-label="Voltar para o sumário de capítulos"
                   >
                     ← Sumário
                   </Button>
+                  
                   {settings.showStudyMarginalia && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 border-l border-primary/5 pl-4">
                       <div className="relative group">
                         <Button 
                           variant="ghost" 
@@ -989,11 +1010,12 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                "reader-text space-y-spacing-md pb-spacing-4xl mx-auto transition-all relative",
+                "reader-text space-y-spacing-md pb-spacing-4xl mx-auto transition-all relative pt-spacing-2xl",
                 `font-size-${settings.fontSize} font-family-${settings.fontFamily} line-spacing-${settings.lineSpacing}`,
                 settings.immersiveMode && "text-center max-w-2xl",
                 settings.showStudyMarginalia && "lg:pr-64"
               )}>
+
 
                 {verses.map((v, i) => (
                   <div 
@@ -1016,6 +1038,11 @@ const Bible: React.FC = () => {
                         <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-spacing-lg" aria-level={2}>
                           {selectedBook.name} <span className="text-primary/20 ml-2">{v.chapter}</span>
                         </h3>
+                        {selectedBook.description && v.chapter === 1 && (
+                          <p className="max-w-prose text-center text-premium-sm font-serif italic text-primary/40 mb-spacing-xl leading-relaxed">
+                            {selectedBook.description}
+                          </p>
+                        )}
                         <div className="flex items-center gap-spacing-md">
                           <div className="w-12 h-px bg-gradient-to-r from-transparent to-primary/10" />
                           <Icons.Wheat className="w-3 h-3 text-primary/10" />
@@ -1023,6 +1050,8 @@ const Bible: React.FC = () => {
                         </div>
                       </div>
                     )}
+
+
 
                     <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none" aria-hidden="true">{v.number}</span>
                     <span className="align-baseline" id={`v-text-${v.number}`}>{wrapWithDictionary(v.text)}</span>
