@@ -908,9 +908,59 @@ const Bible: React.FC = () => {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {isFeedbackOpen && (
+          <div className="fixed inset-0 z-[210] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFeedbackOpen(false)}
+              className="absolute inset-0 bg-background/40 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 space-y-6"
+            >
+              <div className="text-center space-y-2">
+                <Icons.HelpCircle className="w-10 h-10 text-secondary mx-auto mb-4" />
+                <h3 className="text-lg font-display font-bold text-primary uppercase tracking-widest">Suporte Sagrado</h3>
+                <p className="text-sm font-serif italic text-primary/60">
+                  Relate problemas de exibição ou sugira conexões teológicas.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">O que está acontecendo?</span>
+                  <textarea 
+                    placeholder="Ex: O capítulo 3 de Gênesis não está carregando..."
+                    className="w-full bg-primary/[0.02] border border-primary/5 rounded-2xl p-4 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-secondary/20"
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => {
+                  toast.success('Feedback enviado com sucesso. Nossa equipe analisará o ocorrido.');
+                  setIsFeedbackOpen(false);
+                }}
+                className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg"
+              >
+                Enviar Relatório
+              </Button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
+
 
 
 export default Bible;
