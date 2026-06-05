@@ -100,6 +100,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
+  const [i18nSearch, setI18nSearch] = React.useState('');
+  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
+  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
+  const [i18nPage, setI18nPage] = React.useState(1);
+  const itemsPerPage = 5;
+
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
     eventType: 'all'
@@ -374,12 +380,18 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
 
   const fetchI18nReport = async () => {
-    // Mapeamento de logs legados simulado
+    // Mapeamento de logs legados simulado com dados expandidos para teste de paginação
     const legacyLogsMapping = [
-      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending' },
-      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped' },
-      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending' },
-      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped' }
+      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-01T10:00:00Z' },
+      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped', updated_at: '2024-05-02T11:30:00Z' },
+      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending', updated_at: '2024-05-03T09:15:00Z' },
+      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped', updated_at: '2024-05-04T14:20:00Z' },
+      { term: 'Session expired', expected: 'Sessão expirada', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-05T08:00:00Z' },
+      { term: 'Access denied', expected: 'Acesso negado', context: 'Permissions', status: 'pending', updated_at: '2024-05-06T12:00:00Z' },
+      { term: 'Resource not found', expected: 'Recurso não encontrado', context: 'API', status: 'mapped', updated_at: '2024-05-07T16:45:00Z' },
+      { term: 'Internal server error', expected: 'Erro interno do servidor', context: 'API', status: 'pending', updated_at: '2024-05-08T10:30:00Z' },
+      { term: 'Method not allowed', expected: 'Método não permitido', context: 'API', status: 'mapped', updated_at: '2024-05-09T11:00:00Z' },
+      { term: 'Too many requests', expected: 'Muitas requisições', context: 'Rate Limit', status: 'pending', updated_at: '2024-05-10T13:15:00Z' }
     ];
 
     setI18nFailures(legacyLogsMapping);
@@ -496,6 +508,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       toast.error('Erro ao reverter política');
     }
   };
+
+  const filteredI18nLogs = React.useMemo(() => {
+    return i18nFailures
+      .filter(log => {
+        const matchesSearch = log.term.toLowerCase().includes(i18nSearch.toLowerCase()) || 
+                             log.expected.toLowerCase().includes(i18nSearch.toLowerCase());
+        const matchesStatus = i18nStatusFilter === 'all' || log.status === i18nStatusFilter;
+        const matchesCategory = i18nCategoryFilter === 'all' || log.context === i18nCategoryFilter;
+        return matchesSearch && matchesStatus && matchesCategory;
+      })
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+  }, [i18nFailures, i18nSearch, i18nStatusFilter, i18nCategoryFilter]);
+
+  const paginatedI18nLogs = React.useMemo(() => {
+    const start = (i18nPage - 1) * itemsPerPage;
+    return filteredI18nLogs.slice(start, start + itemsPerPage);
+  }, [filteredI18nLogs, i18nPage, itemsPerPage]);
+
+  const totalI18nPages = Math.ceil(filteredI18nLogs.length / itemsPerPage);
+
+  const i18nCategories = React.useMemo(() => {
+    const cats = new Set(i18nFailures.map(f => f.context));
+    return ['all', ...Array.from(cats)];
+  }, [i18nFailures]);
 
   const coveragePercent = Math.round((stats.coveredChapters / stats.totalChapters) * 100);
 
@@ -652,32 +688,68 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <AnimatePresence mode="wait">
           {activeTab === 'i18n-audit' && (
             <motion.div key="i18n-audit" className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inventário de Internacionalização & Logs Legados</h3>
-                <div className="flex gap-2">
-                  <span className={cn(
-                    "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
-                    i18nFailures.filter(f => f.status === 'pending').length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                  )}>
-                    {i18nFailures.filter(f => f.status === 'pending').length} Pendentes
-                  </span>
-                  <span className="text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest bg-primary/5 text-primary/40">
-                    {i18nFailures.filter(f => f.status === 'mapped').length} Mapeados
-                  </span>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inventário de Internacionalização & Logs Legados</h3>
+                  <div className="flex gap-2">
+                    <span className={cn(
+                      "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
+                      i18nFailures.filter(f => f.status === 'pending').length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                    )}>
+                      {i18nFailures.filter(f => f.status === 'pending').length} Pendentes
+                    </span>
+                    <span className="text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest bg-primary/5 text-primary/40">
+                      {i18nFailures.filter(f => f.status === 'mapped').length} Mapeados
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div className="md:col-span-2 relative">
+                    <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/20" />
+                    <input 
+                      type="text"
+                      placeholder="Buscar termos ou sugestões..."
+                      value={i18nSearch}
+                      onChange={(e) => { setI18nSearch(e.target.value); setI18nPage(1); }}
+                      className="w-full pl-9 pr-4 py-2 bg-white border border-primary/5 rounded-xl text-[10px] focus:outline-none focus:ring-1 focus:ring-secondary/20 transition-all"
+                    />
+                  </div>
+                  <select 
+                    value={i18nStatusFilter}
+                    onChange={(e) => { setI18nStatusFilter(e.target.value as any); setI18nPage(1); }}
+                    className="px-3 py-2 bg-white border border-primary/5 rounded-xl text-[10px] text-primary/60 focus:outline-none transition-all"
+                  >
+                    <option value="all">Todos os Status</option>
+                    <option value="pending">Pendentes</option>
+                    <option value="mapped">Mapeados</option>
+                  </select>
+                  <select 
+                    value={i18nCategoryFilter}
+                    onChange={(e) => { setI18nCategoryFilter(e.target.value); setI18nPage(1); }}
+                    className="px-3 py-2 bg-white border border-primary/5 rounded-xl text-[10px] text-primary/60 focus:outline-none transition-all"
+                  >
+                    {i18nCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat === 'all' ? 'Todas as Categorias' : cat}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden divide-y shadow-sm">
-                {i18nFailures.length > 0 ? i18nFailures.map((failure, idx) => (
+                {paginatedI18nLogs.length > 0 ? paginatedI18nLogs.map((failure, idx) => (
                   <div key={idx} className={cn(
                     "p-6 space-y-3 transition-colors text-left",
                     failure.status === 'pending' ? "bg-rose-50/30" : "hover:bg-primary/[0.01]"
                   )}>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono bg-white text-primary/60 px-2 py-1 rounded-lg border border-primary/5">{failure.term}</span>
-                        <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
-                        <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono bg-white text-primary/60 px-2 py-1 rounded-lg border border-primary/5">{failure.term}</span>
+                          <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
+                          <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
+                        </div>
+                        <span className="text-[8px] text-primary/20 font-mono">Atualizado em: {new Date(failure.updated_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{failure.context}</span>
@@ -695,10 +767,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 )) : (
                   <div className="p-12 text-center space-y-2">
                     <Icons.CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto opacity-20" />
-                    <p className="text-[10px] text-primary/30 uppercase font-black tracking-widest">Interface 100% Localizada</p>
+                    <p className="text-[10px] text-primary/30 uppercase font-black tracking-widest">Nenhum log correspondente</p>
                   </div>
                 )}
               </div>
+
+              {totalI18nPages > 1 && (
+                <div className="flex items-center justify-center gap-4">
+                  <button 
+                    disabled={i18nPage === 1}
+                    onClick={() => setI18nPage(p => Math.max(1, p - 1))}
+                    className="p-2 text-primary/40 disabled:opacity-20 hover:text-secondary transition-colors"
+                  >
+                    <Icons.ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Página {i18nPage} de {totalI18nPages}</span>
+                  <button 
+                    disabled={i18nPage === totalI18nPages}
+                    onClick={() => setI18nPage(p => Math.min(totalI18nPages, p + 1))}
+                    className="p-2 text-primary/40 disabled:opacity-20 hover:text-secondary transition-colors"
+                  >
+                    <Icons.ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
 
               <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
                 <p className="text-[10px] text-primary/40 leading-relaxed italic">
