@@ -108,21 +108,23 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   }, [searchParams]);
 
   const stats = React.useMemo(() => ({
-    totalBooks: auditData.totalBooks,
-    coveredBooks: auditData.coveredBooks,
-    totalChapters: auditData.totalChapters,
-    coveredChapters: Math.floor(auditData.totalChapters * 0.62),
-    totalVerses: 31102,
-    coveredVerses: 18500,
+    totalBooks: auditData.totalBooks, // Livros do Cânone
+    coveredBooks: auditData.coveredBooks, // Cobertura do Cânone
+    totalChapters: auditData.totalChapters, // Capítulos Totais
+    coveredChapters: Math.floor(auditData.totalChapters * 0.62), // Capítulos Verificados
+    totalVerses: 31102, // Versículos Totais
+    coveredVerses: 18500, // Versículos Verificados
+
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
   }), [auditData]);
+
 
   const testWebhook = async (notificationId: string, idempotencyKey?: string) => {
     setIsTestingWebhook(true);
     const payload = { 
       event: 'audit_test', 
       timestamp: new Date().toISOString(),
-      summary: 'Payload de teste para auditoria bíblica',
+      summary: 'Conteúdo de teste para verificação de integridade bíblica',
       stats: stats
     };
 
@@ -149,9 +151,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         verification_details = {
           expected_hmac: expectedHmac,
           received_hmac: 'hmac_sha256_placeholder',
-          canonical_payload: JSON.stringify(payload),
-          status: 'verified'
+          canonical_payload: JSON.stringify(payload), // Conteúdo Padronizado
+          status: 'verificado'
         };
+
       }
 
       const startTime = Date.now();
@@ -195,6 +198,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (actionLogFilters.actionType !== 'all') {
       query = query.eq('action', actionLogFilters.actionType);
     }
+
     if (actionLogFilters.runId) {
       query = query.eq('metadata->>run_id', actionLogFilters.runId);
     }
@@ -250,7 +254,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     // Simulate scan results from linter/tests
     const startTime = new Date().toISOString();
     const mockIssues = [
-      { level: 'warn', message: 'Function Search Path Mutable', category: 'SECURITY' }
+      { level: 'warn', message: 'Caminho de Busca de Função Mutável (Function Search Path Mutable)', category: 'SEGURANÇA' }
     ];
     
     const { data: scanData, error: scanError } = await supabase
@@ -520,7 +524,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         
         <div className="pt-6 border-t border-primary/5 space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/20">A11y Check & Dark Mode</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/20">Validação Acessibilidade & Modo Dark</h4>
             <div className="flex gap-1">
               <span className="text-[8px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded font-black">WCAG AA</span>
               <button 
@@ -583,7 +587,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
             <Icons.X className="w-6 h-6" />
           </button>
-          <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
+          <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Verificação de Integridade das Escrituras</h1>
           <div className="flex items-center gap-2">
             <button onClick={() => toast.success('Link copiado')} className="p-2 text-primary/40"><Icons.Share2 className="w-5 h-5" /></button>
             <button onClick={() => window.print()} className="p-2 text-primary/40"><Icons.Printer className="w-5 h-5" /></button>
@@ -597,12 +601,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
-            { id: 'history', label: 'Histórico', icon: Icons.History },
+            { id: 'history', label: 'Histórico do Cânone', icon: Icons.History },
             { id: 'audit-logs', label: 'Ações', icon: Icons.List },
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
             { id: 'security', label: 'Segurança', icon: Icons.Shield },
-            { id: 'a11y', label: 'Acessibilidade', icon: Icons.Eye },
+            { id: 'a11y', label: 'Acessibilidade (A11y)', icon: Icons.Eye },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
@@ -620,12 +624,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         </div>
       </div>
 
+
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
           {activeTab === 'a11y' && (
             <motion.div key="a11y" className="space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Configuração de Limiares Acessibilidade</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Limiares de Acessibilidade das Escrituras</h3>
                 <span className="text-[8px] bg-secondary/10 text-secondary px-2 py-1 rounded-full font-black">Configuração Dinâmica</span>
               </div>
 
@@ -663,7 +668,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
 
                 <div className="p-6 bg-white border border-primary/5 rounded-3xl space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Breakpoint</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Dispositivo</h4>
                   <div className="space-y-3">
                     {['iPhone SE', 'iPhone 14', 'iPad mini', 'Pixel 7'].map(device => (
                       <div key={device} className="flex items-center justify-between text-[10px]">
@@ -1003,10 +1008,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               </div>
 
               <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Alerta</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Transmissão</h3>
                 <div className="flex gap-2">
                    <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest outline-none">
-                     <option value="webhook">Webhook</option>
+                     <option value="webhook">Transmissão Webhook</option>
                      <option value="slack">Slack</option>
                      <option value="discord">Discord</option>
                    </select>
@@ -1017,7 +1022,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
                 
                 <div className="space-y-4">
-                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais Configurados</h3>
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais de Transmissão Ativos</h3>
                   {notificationSettings.map(n => (
                     <div key={n.id} className="p-4 bg-primary/[0.02] rounded-2xl border border-primary/5 space-y-4">
                       <div className="flex items-center justify-between">
@@ -1038,23 +1043,23 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       {/* Retry Policy Editor */}
                       <div className="p-3 bg-white border border-primary/5 rounded-xl space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Retry Policy</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Política de Retentativa (Retry)</span>
                           <Icons.Settings className="w-3 h-3 text-primary/20" />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-1">
-                            <label className="text-[8px] font-bold uppercase text-primary/30">Strategy</label>
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Estratégia</label>
                             <select 
                               value={n.retry_config?.backoff || 'linear'} 
                               onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, backoff: e.target.value } })}
                               className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
                             >
                               <option value="linear">Linear</option>
-                              <option value="exponential">Exponential</option>
+                              <option value="exponential">Exponencial</option>
                             </select>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[8px] font-bold uppercase text-primary/30">Max Attempts</label>
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Máx. Tentativas</label>
                             <input 
                               type="number" 
                               value={n.retry_config?.max_retries || 3} 
@@ -1064,7 +1069,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           </div>
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[8px] font-bold uppercase text-primary/30">Retry Window (seconds)</label>
+                          <label className="text-[8px] font-bold uppercase text-primary/30">Janela de Retentativa (segundos)</label>
                           <input 
                             type="number" 
                             value={n.retry_config?.retry_window || 3600} 
@@ -1072,6 +1077,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                             className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
                           />
                         </div>
+
                       </div>
                     </div>
                   ))}
@@ -1086,22 +1092,23 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
           <motion.div key="security" className="space-y-8">
             <div className="flex items-center justify-between">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade e Segurança</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Controle de Conformidade e Segurança</h3>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => setShowScanCompareModal(true)}
                     className="px-4 py-2 bg-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/10 transition-all"
                   >
-                    Compare Runs
+                    Comparar Verificações
                   </button>
                   <button 
                     onClick={runSecurityScan}
                     disabled={isScanning}
                     className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
                   >
-                    {isScanning ? 'Scanning...' : 'Run Security Scan'}
+                    {isScanning ? 'Verificando...' : 'Iniciar Varredura'}
                   </button>
+
                 </div>
 
               </div>
@@ -1110,8 +1117,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Últimas Execuções</h4>
-                  <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{securityScans.length} Runs</span>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Varreduras Recentes</h4>
+                  <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{securityScans.length} Sessões</span>
+
                 </div>
                 <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
                   {securityScans.map(scan => (
@@ -1145,7 +1153,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               {selectedScan && (
                 <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Detalhes do Scan</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Dados da Sessão</h4>
+
                     <button 
                       onClick={() => {
                         const { generateSecurityScanPDF } = require('@/utils/securityReport');
@@ -1162,7 +1171,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       <span className="text-secondary font-black">{selectedScan.compliance_score}%</span>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Issues Encontradas</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Inconformidades Detectadas</span>
                       <div className="space-y-1">
                         {selectedScan.issues_found?.map((issue: any, idx: number) => (
                           <div key={idx} className="flex gap-2 p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[10px]">
@@ -1188,7 +1197,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 {securityLogs.length > 0 ? securityLogs.map(log => (
                   <div key={log.id} className="p-4 flex flex-col gap-2 hover:bg-primary/[0.01]">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-primary/80">{log.action === 'POLICY_CHANGE' ? 'Mudança de Política RLS' : log.action}</span>
+                      <span className="text-xs font-bold text-primary/80">{log.action === 'POLICY_CHANGE' ? 'Alteração de Política RLS' : log.action}</span>
                       <span className="text-[9px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -1201,8 +1210,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           }}
                           className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded flex items-center gap-1 hover:bg-secondary/10 transition-colors"
                         >
-                          <Icons.Link className="w-2 h-2" />
-                          Vínculo Scan
+                           <Icons.Link className="w-2 h-2" />
+                          Vínculo à Varredura
+
                         </button>
                       )}
                     </div>
@@ -1212,13 +1222,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     {log.before_state && log.after_state && (
                       <div className="grid grid-cols-2 gap-4 mt-2">
                         <div className="space-y-1">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Antes</span>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Configuração de Referência</span>
                           <pre className="p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[9px] font-mono text-primary/40 overflow-x-auto max-h-24">
                             {JSON.stringify(log.before_state, null, 2)}
                           </pre>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Depois</span>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Configuração de Comparação</span>
                           <pre className="p-2 bg-secondary/[0.02] rounded-xl border border-secondary/5 text-[9px] font-mono text-secondary/40 overflow-x-auto max-h-24">
                             {JSON.stringify(log.after_state, null, 2)}
                           </pre>
@@ -1242,7 +1252,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       {showExportModal && (
         <div className="fixed inset-0 z-[120] bg-black/20 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4">
-             <h3 className="text-[10px] font-black uppercase tracking-widest">Opções de Exportação</h3>
+             <h3 className="text-[10px] font-black uppercase tracking-widest">Opções de Exportação de Dados</h3>
              <button onClick={() => toast.success('CSV Gerado')} className="w-full py-3 bg-secondary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">Exportar para CSV</button>
              <button onClick={() => setShowExportModal(false)} className="w-full py-3 bg-primary/5 text-primary/40 rounded-2xl text-[10px] font-black uppercase tracking-widest">Fechar</button>
           </div>
@@ -1252,7 +1262,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-2xl rounded-3xl p-8 space-y-6 max-h-[80vh] overflow-y-auto">
              <div className="flex items-center justify-between">
-               <h3 className="text-sm font-black uppercase tracking-widest">Comparar Versões da Política</h3>
+               <h3 className="text-sm font-black uppercase tracking-widest">Comparação de Versões (Política de Alerta)</h3>
                <button onClick={() => { setShowVersionModal(null); setVersionComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
              </div>
              
@@ -1281,21 +1291,22 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
              {versionComparison?.v1 && versionComparison?.v2 && (
                <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-6 space-y-6">
-                 <div className="flex items-center justify-between">
-                   <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Side-by-Side Comparison</h4>
-                   <div className="flex gap-2">
-                     <button 
-                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
-                       className="px-4 py-2 bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-secondary/20 transition-colors"
-                     >
-                       Reverter para v{versionComparison.v1.version}
-                     </button>
-                     <button 
-                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v2)}
-                       className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
-                     >
-                       Reverter para v{versionComparison.v2.version}
-                     </button>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visualização de Diferenças (Diff)</h4>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
+                        className="px-4 py-2 bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-secondary/20 transition-colors"
+                      >
+                        Reverter para v{versionComparison.v1.version}
+                      </button>
+                      <button 
+                        onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v2)}
+                        className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
+                      >
+                        Reverter para v{versionComparison.v2.version}
+                      </button>
+
                    </div>
                  </div>
 
@@ -1352,13 +1363,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-4xl rounded-3xl p-8 space-y-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-black uppercase tracking-widest">Comparar Execuções de Scan</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest">Comparar Varreduras de Integridade</h3>
               <button onClick={() => { setShowScanCompareModal(false); setScanComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Anterior</label>
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Varredura de Referência</label>
                  <select 
                    className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
                    onChange={e => setScanComparison(prev => ({...prev, s1: securityScans.find(s => s.id === e.target.value)}))}
@@ -1368,7 +1379,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                  </select>
                </div>
                <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Atual</label>
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Varredura Alvo</label>
                  <select 
                    className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
                    onChange={e => setScanComparison(prev => ({...prev, s2: securityScans.find(s => s.id === e.target.value)}))}
