@@ -806,8 +806,10 @@ const Bible: React.FC = () => {
       {showKnowledgePanel && (
         <BibleKnowledgeAudit 
           onClose={() => setShowKnowledgePanel(false)} 
+          auditData={auditData}
         />
       )}
+
 
       <NoteEditModal 
 
