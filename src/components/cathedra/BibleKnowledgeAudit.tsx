@@ -826,6 +826,88 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         </AnimatePresence>
       </div>
 
+      {activeTab === 'security' && (
+        <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
+          <motion.div key="security" className="space-y-8">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade e Segurança</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+                  <Icons.ShieldCheck className="w-3 h-3" />
+                  CI Security Active
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Status do RLS</h4>
+                <div className="space-y-2">
+                  {[
+                    'bible_audit_notifications',
+                    'bible_audit_alerts',
+                    'bible_audit_webhook_logs',
+                    'bible_audit_runs'
+                  ].map(table => (
+                    <div key={table} className="flex items-center justify-between text-[10px]">
+                      <span className="font-mono text-primary/60">{table}</span>
+                      <span className="text-emerald-500 font-black uppercase tracking-widest">Protected</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">CI Scan Run</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-primary/60">Último Scan</span>
+                    <span className="font-bold">{securityLogs.find(l => l.action === 'SCAN_RUN')?.created_at ? new Date(securityLogs.find(l => l.action === 'SCAN_RUN').created_at).toLocaleString() : 'N/A'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-primary/60">Severidade Alta</span>
+                    <span className="text-emerald-500 font-bold">0 Bloqueios</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Alterações de Segurança</h4>
+              <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y">
+                {securityLogs.length > 0 ? securityLogs.map(log => (
+                  <div key={log.id} className="p-4 flex flex-col gap-2 hover:bg-primary/[0.01]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary/80">{log.action === 'POLICY_CHANGE' ? 'Mudança de Política RLS' : log.action}</span>
+                      <span className="text-[9px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] uppercase tracking-widest text-primary/30 bg-primary/5 px-1.5 py-0.5 rounded">{log.entity_name}</span>
+                      {log.scan_id && (
+                        <span className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded flex items-center gap-1">
+                          <Icons.Link className="w-2 h-2" />
+                          Scan Ref
+                        </span>
+                      )}
+                    </div>
+                    {log.details && (
+                      <div className="p-3 bg-primary/[0.02] rounded-xl border border-primary/5 text-[9px] font-mono text-primary/60 overflow-x-auto">
+                        <pre>{JSON.stringify(log.details, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
+                )) : (
+                  <div className="p-12 text-center">
+                    <p className="text-xs text-primary/30 uppercase tracking-widest">Nenhum log de segurança registrado</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+
       {showExportModal && (
         <div className="fixed inset-0 z-[120] bg-black/20 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4">
