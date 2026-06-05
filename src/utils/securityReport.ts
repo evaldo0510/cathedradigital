@@ -1,4 +1,9 @@
+/**
+ * Localização de relatórios institucionais
+ * Cabeçalhos e rodapés devem seguir estritamente o GLOSSARIO.md
+ */
 import { jsPDF } from 'jspdf';
+
 import 'jspdf-autotable';
 
 export const generateSecurityScanPDF = (scan: any, securityLogs: any[]) => {
