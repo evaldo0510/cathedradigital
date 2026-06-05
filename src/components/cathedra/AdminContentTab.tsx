@@ -1,13 +1,16 @@
 import { Icons } from '@/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BIBLE_DATA } from '@/data/bible-books';
+
+const CatechismDebug = lazy(() => import('./CatechismDebug'));
+const BibleKnowledgeAudit = lazy(() => import('./BibleKnowledgeAudit').then(m => ({ default: m.BibleKnowledgeAudit })));
 
 interface Post {
   id: string;
@@ -22,13 +25,24 @@ interface Post {
   };
 }
 
-const CatechismDebug = React.lazy(() => import('./CatechismDebug'));
-
 const AdminContentTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('pending');
+
+  const auditData = React.useMemo(() => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    // Em produção estes dados viriam de uma consulta real de cobertura
+    return {
+      totalBooks: allBooks.length,
+      coveredBooks: allBooks.length - 8,
+      emptyBooks: ['Tobias', 'Judite', 'Ester', '1 Macabeus', '2 Macabeus', 'Sabedoria', 'Eclesiástico', 'Baruc'],
+      totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+      themesCount: 42,
+      theologicalThemes: []
+    };
+  }, []);
 
   useEffect(() => {
     fetchPosts();
@@ -148,9 +162,19 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="rejected">Rejeitados</TabsTrigger>
           <TabsTrigger value="all">Todos</TabsTrigger>
           <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
+          <TabsTrigger value="bible-audit">Auditoria Bíblica</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-spacing-md">
+        <TabsContent value="bible-audit" className="relative h-[800px] overflow-hidden rounded-premium border border-primary/5">
+          <Suspense fallback={<Card className="h-full animate-pulse" />}>
+             <BibleKnowledgeAudit 
+               onClose={() => setActiveTab('pending')} 
+               auditData={auditData} 
+             />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value={activeTab === 'bible-audit' ? 'none' : activeTab} className="space-y-spacing-md">
           {filteredPosts.length === 0 ? (
             <Card className="border-dashed border-2 py-spacing-2xl text-center">
               <Icons.MessageSquare className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto mb-spacing-md opacity-20" />
