@@ -1358,7 +1358,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-4xl rounded-3xl p-8 space-y-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-black uppercase tracking-widest">Comparar Execuções de Scan</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest">Comparar Varreduras de Integridade</h3>
               <button onClick={() => { setShowScanCompareModal(false); setScanComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
             </div>
 
