@@ -890,8 +890,14 @@ const Bible: React.FC = () => {
         <BibleKnowledgeAudit 
           onClose={() => setShowKnowledgePanel(false)} 
           auditData={auditData}
+          onThemeClick={(theme) => {
+            setActiveThemeFilter(theme);
+            setViewMode('search');
+            setShowKnowledgePanel(false);
+          }}
         />
       )}
+
 
 
       <NoteEditModal 
