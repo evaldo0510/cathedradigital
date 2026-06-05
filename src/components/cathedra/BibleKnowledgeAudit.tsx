@@ -225,7 +225,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="flex gap-6 overflow-x-auto no-scrollbar py-3">
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
-            { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart2 },
+            { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
             { id: 'logs', label: 'Execução', icon: Icons.Activity },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
