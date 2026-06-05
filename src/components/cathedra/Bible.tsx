@@ -236,14 +236,24 @@ const Bible: React.FC = () => {
         setTimeout(() => {
           const element = document.getElementById(`verse-${verse}`);
           if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            element.classList.add('bg-secondary/10');
-            setTimeout(() => element.classList.remove('bg-secondary/10'), 3000);
+            // Calculate offset for sticky header
+            const headerHeight = 56; // 14 * 4
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - headerHeight - 20;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+
+            element.classList.add('bg-secondary/20', 'scale-[1.02]');
+            setTimeout(() => element.classList.remove('bg-secondary/20', 'scale-[1.02]'), 3000);
           }
-        }, 500);
+        }, 300);
       } else {
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
+
 
     } catch (error: any) {
       toast.error('Erro ao carregar texto sagrado');
