@@ -711,6 +711,19 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
           {activeTab === 'notifications' && (
             <motion.div key="notifications" className="space-y-8 max-w-lg mx-auto">
+              <div className="flex gap-4 border-b border-primary/5 pb-2">
+                <button className="text-[10px] font-black uppercase tracking-widest text-secondary border-b-2 border-secondary pb-1">Configurações</button>
+                <button 
+                  onClick={() => {
+                    setActionLogFilters(p => ({ ...p, actionType: 'Update Notification Policy' }));
+                    setActiveTab('audit-logs');
+                  }}
+                  className="text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary transition-colors pb-1"
+                >
+                  Log de Mudanças
+                </button>
+              </div>
+
               <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Alerta</h3>
                 <div className="flex gap-2">
