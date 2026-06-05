@@ -27,12 +27,12 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
         <div className="flex-1 overflow-y-auto no-scrollbar py-2" role="listbox" aria-label="Lista de Livros">
           {['Antigo Testamento', 'Novo Testamento'].map((testament) => (
             <div key={testament} className="mb-4">
-              <div className="px-6 py-2">
-                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60">{testament}</span>
+              <div className="px-6 py-2 sticky top-0 bg-white/10 backdrop-blur-md z-10">
+                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/70">{testament}</span>
               </div>
               {BIBLE_DATA[testament as keyof typeof BIBLE_DATA].map((category) => (
                 <div key={category.name} className="space-y-0.5">
-                   <div className="px-8 py-2 text-[9px] font-bold uppercase tracking-widest text-primary/20">{category.name}</div>
+                   <div className="px-8 py-2 text-[9px] font-black uppercase tracking-[0.15em] text-primary/25">{category.name}</div>
                    {category.books.map((book) => (
                      <button
                        key={book.abbr}
@@ -46,21 +46,21 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                          }
                        }}
                        className={cn(
-                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative focus-visible:outline-none focus-visible:bg-white/80 focus-visible:ring-2 focus-visible:ring-secondary/50",
+                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative outline-none",
                          activeBook?.abbr === book.abbr 
-                           ? "bg-white/80 text-primary shadow-sm" 
-                           : "text-primary/50 hover:bg-white/40 hover:text-primary"
+                           ? "bg-white/90 text-primary shadow-sm ring-1 ring-primary/5" 
+                           : "text-primary/50 hover:bg-white/40 hover:text-primary focus-visible:bg-white/40 focus-visible:text-primary"
                        )}
                      >
                        <span className={cn(
                          "text-[13px] font-serif tracking-wide transition-all duration-500",
-                         activeBook?.abbr === book.abbr ? "font-bold translate-x-1" : "font-normal"
+                         activeBook?.abbr === book.abbr ? "font-bold translate-x-1" : "font-normal group-hover:translate-x-0.5"
                        )}>
                          {book.name}
                        </span>
-                       <span className="text-[9px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity text-secondary/60">{book.abbr}</span>
+                       <span className="text-[9px] font-black tracking-widest opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity text-secondary/60">{book.abbr}</span>
                        {activeBook?.abbr === book.abbr && (
-                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-secondary rounded-r-full" />
+                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-secondary rounded-r-full shadow-[0_0_8px_rgba(var(--secondary),0.4)]" />
                        )}
                      </button>
                    ))}
@@ -100,10 +100,10 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                         onSelectBook(activeBook);
                       }
                     }}
-                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:bg-white transition-all duration-500 group"
+                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/40 focus-visible:bg-white transition-all duration-500 group outline-none"
                   >
-                    <span className="font-display text-3xl text-primary/20 group-hover:text-secondary transition-colors mb-0.5">{num}</span>
-                    <span className="text-[7px] font-black uppercase tracking-[0.2em] text-primary/10 group-hover:text-primary/40">CAP</span>
+                    <span className="font-display text-3xl text-primary/20 group-hover:text-secondary group-focus-visible:text-secondary transition-colors mb-0.5">{num}</span>
+                    <span className="text-[7px] font-black uppercase tracking-[0.2em] text-primary/10 group-hover:text-primary/40 group-focus-visible:text-primary/40">CAP</span>
                   </button>
                 ))}
               </div>
