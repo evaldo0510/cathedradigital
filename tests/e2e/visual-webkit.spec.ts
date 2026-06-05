@@ -79,8 +79,9 @@ test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
             bg = window.getComputedStyle(curr).backgroundColor;
             curr = curr.parentElement;
           }
-          return { color: s.color, backgroundColor: bg };
+          return { color: s.color, backgroundColor: bg, fontSize: s.fontSize };
         });
+
 
         const rgbText = styles.color.match(/\d+/g)?.map(Number) || [255, 255, 255];
         const rgbBg = styles.backgroundColor.match(/\d+/g)?.map(Number) || [26, 26, 26];
@@ -90,10 +91,11 @@ test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
         const ratio = getContrastRatio(lumText, lumBg);
 
         // Determinar critérios WCAG baseados no tamanho da fonte
-        const fontSizePx = parseFloat(styles.color); // Na verdade pegamos do elemento, corrigindo lógica
-        const isLargeText = false; // Mock simplificado para o teste p.first()
+        const fontSizePx = parseFloat(styles.fontSize); 
+        const isLargeText = fontSizePx >= 24; 
         const threshold = isLargeText ? 3.0 : 4.5;
         const criterion = isLargeText ? "WCAG 2.1 1.4.3 (Level AA - Large Text)" : "WCAG 2.1 1.4.3 (Level AA - Normal Text)";
+
 
         if (ratio < threshold) {
           const path = `tests/visual/failures/${device.name.replace(/\s+/g, '-')}-dark-fail.png`;
