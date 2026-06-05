@@ -197,6 +197,45 @@ const Bible: React.FC = () => {
     }
   };
 
+  const exportNotes = (format: 'csv' | 'json') => {
+    if (!verseNotes.length) {
+      toast.error('Nenhuma nota para exportar');
+      return;
+    }
+
+    let content = '';
+    let mimeType = '';
+    let fileName = `margens-estudo-${selectedBook?.abbr || 'geral'}`;
+
+    if (format === 'csv') {
+      const headers = ['Livro', 'Capítulo', 'Versículo', 'Nota', 'Data'];
+      const rows = verseNotes.map(n => [
+        n.book_abbr,
+        n.chapter,
+        n.verse,
+        `"${n.note_text.replace(/"/g, '""')}"`,
+        new Date(n.created_at).toLocaleDateString()
+      ]);
+      content = [headers, ...rows].map(e => e.join(',')).join('\n');
+      mimeType = 'text/csv';
+      fileName += '.csv';
+    } else {
+      content = JSON.stringify(verseNotes, null, 2);
+      mimeType = 'application/json';
+      fileName += '.json';
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Notas exportadas com sucesso');
+  };
+
+
 
   const filteredVerseNotes = useMemo(() => {
     if (!noteSearchQuery) return verseNotes;
@@ -220,7 +259,6 @@ const Bible: React.FC = () => {
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
-      // Don't trigger if typing in an input/textarea unless it's a specific "escape" or modifier combo
       const isTyping = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement;
       
       if (isTyping && e.key !== 'Escape') return;
@@ -236,7 +274,6 @@ const Bible: React.FC = () => {
 
       // Next Verse (ArrowDown / J)
       if (!isTyping && (e.key === 'ArrowDown' || e.key.toLowerCase() === 'j')) {
-        const currentVerseEl = document.querySelector('.bg-primary\\[0\\.04\\]');
         const nextVerse = activeVerseNumber ? activeVerseNumber + 1 : 1;
         if (nextVerse <= verses.length) jumpToVerse(nextVerse);
       }
@@ -245,6 +282,11 @@ const Bible: React.FC = () => {
       if (!isTyping && (e.key === 'ArrowUp' || e.key.toLowerCase() === 'k')) {
         const prevVerse = activeVerseNumber ? activeVerseNumber - 1 : 1;
         if (prevVerse >= 1) jumpToVerse(prevVerse);
+      }
+
+      // Focus Note (Alt + N)
+      if (e.altKey && e.key.toLowerCase() === 'n' && activeVerseNumber) {
+        setEditingNote({ verse: activeVerseNumber, text: verseNotes.find(n => n.verse === activeVerseNumber)?.note_text || '' });
       }
 
       // Toggle Study Marginalia (Alt + M)
@@ -261,7 +303,8 @@ const Bible: React.FC = () => {
 
     window.addEventListener('keydown', handleKeydown);
     return () => window.removeEventListener('keydown', handleKeydown);
-  }, [settings.theme, activeVerseNumber, verses.length, settings.showStudyMarginalia, viewMode, updateSettings]);
+  }, [settings.theme, activeVerseNumber, verses.length, settings.showStudyMarginalia, viewMode, updateSettings, verseNotes]);
+
 
   const jumpToFavorite = (fav: any) => {
 
@@ -834,34 +877,54 @@ const Bible: React.FC = () => {
             {viewMode === 'reading' && !settings.immersiveMode && (
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md gap-4">
                 <div className="flex items-center gap-4">
-                  <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 p-0">
+                  <Button 
+                    variant="ghost" 
+                    onClick={goBack} 
+                    className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 p-0"
+                    aria-label="Voltar para o sumário de capítulos"
+                  >
                     ← Sumário
                   </Button>
                   {settings.showStudyMarginalia && (
-                    <div className="relative group">
+                    <div className="flex items-center gap-2">
+                      <div className="relative group">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setNoteSearchVisible(!noteSearchVisible)}
+                          className={cn("h-7 px-2 rounded-full", noteSearchVisible && "bg-primary/10")}
+                          aria-label={noteSearchVisible ? "Fechar busca de notas" : "Abrir busca de notas"}
+                          aria-expanded={noteSearchVisible}
+                        >
+                          <Icons.Search className="w-3 h-3 text-primary/40" />
+                        </Button>
+                        {noteSearchVisible && (
+                          <motion.div 
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 180, opacity: 1 }}
+                            className="absolute left-full ml-2 top-0 z-[60]"
+                          >
+                            <input 
+                              autoFocus
+                              placeholder="Buscar notas..."
+                              value={noteSearchQuery}
+                              onChange={(e) => setNoteSearchQuery(e.target.value)}
+                              className="h-7 w-full bg-primary/[0.03] border border-primary/10 rounded-full px-3 text-[10px] font-serif italic focus:ring-1 focus:ring-primary/20 outline-none"
+                              aria-label="Digitar termo para buscar em suas notas"
+                            />
+                          </motion.div>
+                        )}
+                      </div>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        onClick={() => setNoteSearchVisible(!noteSearchVisible)}
-                        className={cn("h-7 px-2 rounded-full", noteSearchVisible && "bg-primary/10")}
+                        onClick={() => exportNotes('csv')} 
+                        className="h-7 px-2 rounded-full opacity-40 hover:opacity-100"
+                        title="Exportar notas (CSV)"
+                        aria-label="Exportar Margens de Estudo como CSV"
                       >
-                        <Icons.Search className="w-3 h-3 text-primary/40" />
+                        <Icons.Download className="w-3 h-3" />
                       </Button>
-                      {noteSearchVisible && (
-                        <motion.div 
-                          initial={{ width: 0, opacity: 0 }}
-                          animate={{ width: 180, opacity: 1 }}
-                          className="absolute left-full ml-2 top-0"
-                        >
-                          <input 
-                            autoFocus
-                            placeholder="Buscar notas..."
-                            value={noteSearchQuery}
-                            onChange={(e) => setNoteSearchQuery(e.target.value)}
-                            className="h-7 w-full bg-primary/[0.03] border border-primary/10 rounded-full px-3 text-[10px] font-serif italic focus:ring-1 focus:ring-primary/20 outline-none"
-                          />
-                        </motion.div>
-                      )}
                     </div>
                   )}
                 </div>
@@ -871,6 +934,7 @@ const Bible: React.FC = () => {
                 </div>
               </div>
             )}
+
 
 
             {fetchError && (
@@ -912,56 +976,65 @@ const Bible: React.FC = () => {
                   <div 
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
+                    role="article"
+                    aria-label={`Versículo ${v.number}`}
+                    tabIndex={0}
+                    onFocus={() => setActiveVerseNumber(v.number)}
                     className={cn(
-                      "group relative py-spacing-md transition-all duration-700 px-spacing-xl rounded-premium border border-transparent",
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-xl rounded-premium border border-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/20",
                       activeVerseNumber === v.number ? "bg-primary/[0.04] border-primary/10 shadow-premium-sm" : "hover:bg-primary/[0.01]",
                       settings.immersiveMode ? "mx-auto text-center" : "text-left"
                     )}
                   >
                     {v.number === 1 && (
-                      <div className="flex flex-col items-center mb-spacing-4xl pt-spacing-xl">
+                      <div className="flex flex-col items-center mb-spacing-4xl pt-spacing-xl" role="presentation">
                         <Icons.Logo className="w-spacing-xl h-spacing-xl opacity-10 mb-spacing-md" />
-                        <h3 className="text-premium-3xl font-display font-light text-primary/40 uppercase tracking-[0.2em]">Capítulo {v.chapter}</h3>
+                        <h3 className="text-premium-3xl font-display font-light text-primary/40 uppercase tracking-[0.2em]" aria-level={2}>Capítulo {v.chapter}</h3>
                         <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent mt-spacing-xl" />
                       </div>
                     )}
-                    <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none">{v.number}</span>
-                    <span className="align-baseline">{wrapWithDictionary(v.text)}</span>
+                    <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none" aria-hidden="true">{v.number}</span>
+                    <span className="align-baseline" id={`v-text-${v.number}`}>{wrapWithDictionary(v.text)}</span>
                     
                     {!settings.immersiveMode && (
-                      <button 
-                        onClick={() => toggleFavorite(v)}
-                        className={cn(
-                          "absolute right-spacing-md top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-spacing-xs rounded-full hover:bg-primary/10",
-                          favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) 
-                            ? "opacity-100 text-primary" 
-                            : "text-primary/20"
-                        )}
-                      >
-                        <Icons.Heart 
+                      <div className="absolute right-spacing-md top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => toggleFavorite(v)}
+                          aria-label={favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                           className={cn(
-                            "w-spacing-sm h-spacing-sm",
-                            favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) && "fill-current"
-                          )} 
-                        />
-                      </button>
-                    )}
-
-                    {!settings.immersiveMode && (
-                      <button 
-                        onClick={() => setEditingNote({ verse: v.number, text: verseNotes.find(n => n.verse === v.number)?.note_text || '' })}
-                        className={cn(
-                          "absolute right-spacing-3xl top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-spacing-xs rounded-full hover:bg-primary/10",
-                          verseNotes.some(n => n.verse === v.number) ? "opacity-100 text-primary" : "text-primary/20"
-                        )}
-                      >
-                        <Icons.Edit3 className="w-spacing-sm h-spacing-sm" />
-                      </button>
+                            "p-spacing-xs rounded-full hover:bg-primary/10",
+                            favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) 
+                              ? "text-primary" 
+                              : "text-primary/20"
+                          )}
+                        >
+                          <Icons.Heart 
+                            className={cn(
+                              "w-spacing-sm h-spacing-sm",
+                              favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) && "fill-current"
+                            )} 
+                          />
+                        </button>
+                        <button 
+                          onClick={() => setEditingNote({ verse: v.number, text: verseNotes.find(n => n.verse === v.number)?.note_text || '' })}
+                          aria-label={verseNotes.some(n => n.verse === v.number) ? "Editar nota de estudo" : "Adicionar nota de estudo"}
+                          className={cn(
+                            "p-spacing-xs rounded-full hover:bg-primary/10",
+                            verseNotes.some(n => n.verse === v.number) ? "text-primary" : "text-primary/20"
+                          )}
+                        >
+                          <Icons.Edit3 className="w-spacing-sm h-spacing-sm" />
+                        </button>
+                      </div>
                     )}
 
                     {settings.showStudyMarginalia && filteredVerseNotes.find(n => n.verse === v.number) && (
-                      <div className="hidden lg:block absolute left-full ml-spacing-xl top-0 w-56 p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5 text-[10px] italic text-primary/60 leading-relaxed shadow-premium-sm animate-in fade-in slide-in-from-left-2">
-                        <div className="flex items-center gap-1 mb-1 opacity-40">
+                      <div 
+                        className="hidden lg:block absolute left-full ml-spacing-xl top-0 w-56 p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5 text-[10px] italic text-primary/60 leading-relaxed shadow-premium-sm animate-in fade-in slide-in-from-left-2"
+                        role="complementary"
+                        aria-label={`Sua nota para o versículo ${v.number}`}
+                      >
+                        <div className="flex items-center gap-1 mb-1 opacity-40" aria-hidden="true">
                           <Icons.MessageSquare size={8} />
                           <span className="font-black uppercase tracking-tighter">Marginalia</span>
                         </div>
@@ -974,15 +1047,23 @@ const Bible: React.FC = () => {
                     )}
 
 
+
                     {editingNote?.verse === v.number && (
                       <div className="mt-spacing-md p-spacing-md bg-primary/[0.03] rounded-premium border border-primary/10 animate-in fade-in zoom-in-95">
                         <textarea
                           autoFocus
                           value={editingNote.text}
                           onChange={(e) => setEditingNote({ ...editingNote, text: e.target.value })}
+                          onKeyDown={(e) => {
+                            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                              saveNote(v.number, editingNote.text);
+                            }
+                          }}
                           placeholder="Escreva sua meditação..."
+                          aria-label={`Campo de edição de nota para o versículo ${v.number}. Pressione Ctrl+Enter para salvar.`}
                           className="w-full bg-transparent border-none focus:ring-0 text-premium-xs font-serif italic text-primary/80 resize-none min-h-[80px]"
                         />
+
                         <div className="flex justify-end gap-spacing-sm mt-spacing-sm">
                           <Button variant="ghost" size="sm" onClick={() => setEditingNote(null)} className="text-[9px] uppercase tracking-tighter">Cancelar</Button>
                           <Button size="sm" onClick={() => saveNote(v.number, editingNote.text)} className="h-7 px-4 rounded-full text-[9px] uppercase tracking-tighter">Salvar</Button>
