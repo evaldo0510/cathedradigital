@@ -456,7 +456,7 @@ const Bible: React.FC = () => {
                 <button 
                   onClick={() => setIsConnectionEditorOpen(true)}
                   className="p-2 text-secondary/40 active:scale-95 transition-transform"
-                  title="Editor de Conexões"
+                  title="Editor Bíblia ↔ CIC"
                 >
                   <Icons.Edit3 className="w-5 h-5" />
                 </button>
@@ -470,7 +470,7 @@ const Bible: React.FC = () => {
                 <button 
                   onClick={() => setShowKnowledgePanel(true)}
                   className="p-2 text-secondary/60 active:scale-95 transition-transform"
-                  title="Auditoria de Conhecimento"
+                  title="Auditoria Estratégica"
                 >
                   <Icons.Activity className="w-6 h-6" />
                 </button>
@@ -481,6 +481,7 @@ const Bible: React.FC = () => {
                   <Icons.List className="w-6 h-6" />
                 </button>
               </div>
+
 
 
 
