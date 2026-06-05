@@ -327,7 +327,7 @@
 
   /* Unified Search Input Utility */
   .search-input-premium {
-    @apply w-full pl-spacing-2xl pr-spacing-lg py-spacing-md rounded-premium-full border border-primary/[0.03] bg-transparent focus:bg-primary/[0.01] focus:ring-1 focus:ring-primary/5 transition-all font-serif italic text-premium-lg placeholder:text-primary/10;
+    @apply w-full pl-spacing-2xl pr-spacing-lg py-spacing-md rounded-premium-full border border-primary/[0.08] bg-white/40 backdrop-blur-xl focus:bg-white/80 focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-premium-lg placeholder:text-primary/20 shadow-premium-sm;
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
