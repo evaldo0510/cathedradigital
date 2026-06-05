@@ -33,21 +33,42 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
 
     setIsLoading(true);
     try {
-      // Mock logic for "Theological Themes"
-      const theologicalThemes = ['eucaristia', 'criação', 'trindade', 'pecado', 'graça', 'maria', 'justificação'];
-      const queryLower = query.toLowerCase();
+      // Mock logic for "Theological Themes" with Relevance Score
+      const theologicalThemes: Record<string, { reason: string, score: number }> = {
+        'eucaristia': { reason: 'Centralidade no discurso do Pão da Vida', score: 98 },
+        'criação': { reason: 'Fundamento ontológico nas Escrituras', score: 95 },
+        'trindade': { reason: 'Revelação progressiva da natureza divina', score: 92 },
+        'graça': { reason: 'Doutrina da salvação paulina', score: 88 }
+      };
       
-      if (theologicalThemes.some(theme => queryLower.includes(theme))) {
-        toast.success(`Filtrando por tema teológico: ${query}`);
-        // In a real scenario, this would call a specialized Edge Function
+      const queryLower = query.toLowerCase();
+      let matchedTheme = null;
+      
+      Object.keys(theologicalThemes).forEach(theme => {
+        if (queryLower.includes(theme)) matchedTheme = { name: theme, ...theologicalThemes[theme] };
+      });
+
+      if (matchedTheme) {
+        toast.success(`Tema Detectado: ${matchedTheme.name} (Score: ${matchedTheme.score})`);
       }
 
       const { data, error } = await supabase.functions.invoke('bible-search', {
         body: { query }
       });
       if (error) throw error;
-      setResults(data.results || []);
-      if (data.results?.length === 0) {
+      
+      // Sort results by mock relevance if theme matches
+      let sortedResults = data.results || [];
+      if (matchedTheme) {
+        sortedResults = sortedResults.map((r: any) => ({
+          ...r,
+          relevance: matchedTheme.reason,
+          score: Math.floor(Math.random() * 20) + 70 // Simulated score for variety
+        })).sort((a: any, b: any) => b.score - a.score);
+      }
+      
+      setResults(sortedResults);
+      if (sortedResults.length === 0) {
         toast.info('Nenhum resultado encontrado');
       }
     } catch (error: any) {
@@ -56,6 +77,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
       setIsLoading(false);
     }
   };
+
 
 
   return (
