@@ -45,27 +45,40 @@ export const isRouteActive = (itemRoute: string, currentPath: string): boolean =
  * Checks if a click/touch event is legitimate to prevent ghost clicks or accidental navigation.
  * Particularly useful for mobile to ensure navigation only happens on deliberate user action.
  */
+let lastNavTime = 0;
+const NAV_THROTTLE = 500; // ms
+
 export const isLegitimateClick = (event: any): boolean => {
+  // Throttle navigation to prevent double-tap issues
+  const now = Date.now();
+  if (now - lastNavTime < NAV_THROTTLE) {
+    return false;
+  }
+
   // Always allow keyboard events (Enter, Space) which often have detail === 0
-  if (event instanceof KeyboardEvent || (event.type === 'keydown' || event.type === 'keyup')) {
+  const isKeyboard = event instanceof KeyboardEvent || 
+                    (event.type === 'keydown' || event.type === 'keyup') ||
+                    (event.nativeEvent && (event.nativeEvent instanceof KeyboardEvent));
+  
+  if (isKeyboard) {
+    lastNavTime = now;
     return true;
   }
 
   // Handle standard mouse/pointer/touch events
   if (event.type !== 'click' && event.type !== 'touchstart' && event.type !== 'touchend') {
-    return true; // Let other event types pass or handle specifically if needed
+    return true;
   }
 
   // detail === 0 in a click event often means it's not a real pointer click (except for keyboard which we handled)
-  // However, some mobile browsers might trigger click with detail 0 after touchend
   if (event.type === 'click' && event.detail === 0) {
     // If it's a pointer event, check if it was triggered by a real pointer
     if (event.pointerType === 'mouse' || event.pointerType === 'touch' || event.pointerType === 'pen') {
+       lastNavTime = now;
        return true;
     }
-    // If it's not a keyboard event and detail is 0, it might be a ghost click
-    // But we should be careful not to block valid programmatic clicks if they are intended.
-    // For now, let's stick to the user's suggestion but with a safety for keyboard.
+    // If it's not a keyboard event and detail is 0, it's likely a ghost click or programmatic click we want to block
+    return false;
   }
 
   // If it's a touchstart/touchend, ensure it's a single touch
@@ -73,6 +86,8 @@ export const isLegitimateClick = (event: any): boolean => {
     return false;
   }
 
+  lastNavTime = now;
   return true;
 };
+
 
