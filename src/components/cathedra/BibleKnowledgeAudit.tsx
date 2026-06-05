@@ -627,7 +627,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'a11y' && (
             <motion.div key="a11y" className="space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Configuração de Limiares Acessibilidade</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Limiares de Acessibilidade das Escrituras</h3>
                 <span className="text-[8px] bg-secondary/10 text-secondary px-2 py-1 rounded-full font-black">Configuração Dinâmica</span>
               </div>
 
