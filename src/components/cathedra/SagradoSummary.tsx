@@ -46,8 +46,9 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                          }
                        }}
                        className={cn(
-                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative outline-none",
+                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative outline-none focus-visible:ring-inset",
                          activeBook?.abbr === book.abbr 
+
                            ? "bg-white/90 text-primary shadow-sm ring-1 ring-primary/5" 
                            : "text-primary/50 hover:bg-white/40 hover:text-primary focus-visible:bg-white/40 focus-visible:text-primary"
                        )}
@@ -100,7 +101,7 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                         onSelectBook(activeBook);
                       }
                     }}
-                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/40 focus-visible:bg-white transition-all duration-500 group outline-none"
+                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:bg-white transition-all duration-500 group outline-none"
                   >
                     <span className="font-display text-3xl text-primary/20 group-hover:text-secondary group-focus-visible:text-secondary transition-colors mb-0.5">{num}</span>
                     <span className="text-[7px] font-black uppercase tracking-[0.2em] text-primary/10 group-hover:text-primary/40 group-focus-visible:text-primary/40">CAP</span>
