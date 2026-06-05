@@ -744,8 +744,8 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                "reader-text space-y-spacing-xl pb-spacing-4xl mx-auto",
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily}`,
+                "reader-text space-y-spacing-md pb-spacing-4xl mx-auto transition-all",
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily} line-spacing-${settings.lineSpacing}`,
                 settings.immersiveMode && "text-center max-w-2xl"
               )}>
                 {verses.map((v, i) => (
