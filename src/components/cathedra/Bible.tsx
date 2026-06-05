@@ -657,7 +657,26 @@ const Bible: React.FC = () => {
                   </header>
 
                   <div className="space-y-8">
-                    {verses.map(v => {
+                    {verses.length === 0 && !isLoading ? (
+                      <div className="py-20 text-center space-y-6 bg-primary/[0.02] rounded-3xl border border-primary/5 p-8">
+                        <Icons.AlertCircle className="w-12 h-12 text-secondary/40 mx-auto" />
+                        <div className="space-y-2">
+                          <h4 className="text-[11px] font-black uppercase tracking-widest text-primary/60">Texto não disponível</h4>
+                          <p className="text-sm font-serif italic text-primary/40">
+                            Não conseguimos carregar este capítulo. Verifique sua conexão ou relate o problema.
+                          </p>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setIsFeedbackOpen(true)}
+                          className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest border-primary/10"
+                        >
+                          Relatar Problema
+                        </Button>
+                      </div>
+                    ) : (
+                      verses.map(v => {
+
                       const hasNote = notes.some(n => 
                         n.book_abbr === selectedBook.abbr && 
                         n.chapter === selectedChapter && 
