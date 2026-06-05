@@ -5,6 +5,12 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      device_matrix:
+        description: 'Comma separated projects to run'
+        default: 'mobile-chrome,mobile-safari'
+        required: true
 
 jobs:
   mobile-e2e:
@@ -21,7 +27,15 @@ jobs:
         run: bun install
 
       - name: Run Playwright E2E Tests (Mobile Matrix)
-        run: npx playwright test tests/e2e/swipe-precision.spec.ts --project=mobile-chrome --project=mobile-safari --reporter=list,html
+        run: |
+          PROJECTS="${{ github.event.inputs.device_matrix || 'mobile-chrome,mobile-safari' }}"
+          IFS=',' read -ra ADDR <<< "$PROJECTS"
+          CMD="npx playwright test tests/e2e/swipe-precision.spec.ts"
+          for i in "${ADDR[@]}"; do
+            CMD="$CMD --project=$i"
+          done
+          $CMD --reporter=list,html
+
         env:
           VITE_SWIPE_THRESHOLD: 80
           VITE_SWIPE_RATIO: 2.5
