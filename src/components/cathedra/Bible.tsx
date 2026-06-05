@@ -148,7 +148,7 @@ const Bible: React.FC = () => {
       // Save progress automatically
       const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
       const book = allBooks.find(b => b.abbr === abbr);
-      if (book) saveReadingProgress(book, chapter);
+      if (book) saveReadingProgress(book.abbr, chapter);
       
       // Scroll to verse if specified
       const verse = searchParams.get('v');
