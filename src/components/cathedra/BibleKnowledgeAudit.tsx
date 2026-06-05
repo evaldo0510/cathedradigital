@@ -365,7 +365,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (!error && data) {
       setA11yConfig(data);
       toast.success('Configuração de acessibilidade salva');
-      logAction('Update A11y Config', 'a11y_config', 'default', { updates });
+      logAction('Atualizar Configuração de Acessibilidade', 'a11y_config', 'default', { updates });
     } else {
       toast.error('Erro ao salvar configuração');
     }
@@ -503,7 +503,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const startIntegrityScan = async (retryFailedOnly = false) => {
     setIsScanning(true);
-    logAction(retryFailedOnly ? 'Retry Failed Audit' : 'Run Audit Now', 'audit_run');
+    logAction(retryFailedOnly ? 'Retentar Auditoria Falha' : 'Executar Verificação de Integridade', 'audit_run');
     
     // Scan logic (simulated for brevity)
     setTimeout(() => {
@@ -586,8 +586,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               const report = {
                 timestamp: new Date().toISOString(),
                 viewport: document.getElementById('audit-content-wrapper')?.style.maxWidth || '100%',
-                accessibility: 'WCAG AA Compliant',
-                typography: 'Responsive Fluid Steps active'
+                accessibility: 'Conformidade WCAG AA',
+                typography: 'Escalamento Fluido Ativo'
               };
               const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
               const url = URL.createObjectURL(blob);
@@ -788,10 +788,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
                 <div className="flex flex-col gap-3 max-w-xs mx-auto">
                   <button onClick={() => startIntegrityScan(false)} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest">
-                    {isScanning ? 'Varrendo...' : 'Run Audit Now'}
+                    {isScanning ? 'Verificando...' : 'Executar Auditoria'}
                   </button>
                   <button onClick={() => startIntegrityScan(true)} className="w-full py-3 border border-secondary text-secondary rounded-full text-[10px] font-black uppercase tracking-widest">
-                    Retry Failed Steps
+                    Retentar Etapas Falhas
                   </button>
                 </div>
               </section>
