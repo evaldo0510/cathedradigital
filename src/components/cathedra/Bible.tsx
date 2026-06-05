@@ -346,6 +346,7 @@ const Bible: React.FC = () => {
 
 
 
+
   const filteredBooks = useMemo(() => {
     if (!searchQuery) return BIBLE_DATA;
     const result: any = {};
