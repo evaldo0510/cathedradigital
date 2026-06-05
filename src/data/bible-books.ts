@@ -3,7 +3,9 @@ export interface BibleBook {
   abbr: string;
   chapters: number;
   description?: string; // Descrição literária ou teológica do livro
+  chapterTitles?: Record<number, string>; // Títulos curtos para os capítulos
 }
+
 
 export interface BibleCategory {
   name: string;
@@ -96,7 +98,36 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Mateus', abbr: 'Mt', chapters: 28, description: 'O Evangelho do Reino e o Cumprimento das Promessas.' },
         { name: 'Marcos', abbr: 'Mc', chapters: 16, description: 'O Caminho do Filho de Deus e o Segredo Messiânico.' },
         { name: 'Lucas', abbr: 'Lc', chapters: 24, description: 'O Evangelho da Misericórdia e a Salvação Universal.' },
-        { name: 'João', abbr: 'Jo', chapters: 21, description: 'A Palavra Encarnada e o Testemunho do Discípulo Amado.' }
+        { 
+          name: 'João', 
+          abbr: 'Jo', 
+          chapters: 21, 
+          description: 'A Palavra Encarnada e o Testemunho do Discípulo Amado.',
+          chapterTitles: {
+            1: "O Verbo se fez carne",
+            2: "As bodas de Caná",
+            3: "Jesus e Nicodemos",
+            4: "Jesus e a Samaritana",
+            5: "A cura do filho do oficial",
+            6: "O pão da vida",
+            7: "A festa dos Tabernáculos",
+            8: "A mulher adúltera",
+            9: "O bom pastor",
+            10: "A ressurreição de Lázaro",
+            11: "A unção em Betânia",
+            12: "A entrada triunfal em Jerusalém",
+            13: "O lava-pés",
+            14: "O caminho, a verdade e a vida",
+            15: "A videira verdadeira",
+            16: "A promessa do Paráclito",
+            17: "A oração sacerdotal",
+            18: "A prisão e o julgamento",
+            19: "A paixão e morte",
+            20: "A ressurreição",
+            21: "A aparição na Galileia"
+          }
+        }
+
       ]
     },
 
