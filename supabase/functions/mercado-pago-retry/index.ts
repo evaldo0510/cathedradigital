@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+import { logSecurityEvent } from '../_shared/security-logs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -21,6 +22,14 @@ serve(async (req) => {
     (serviceRoleKey && bearer === serviceRoleKey) ||
     (cronSecret && providedCronSecret === cronSecret)
   if (!authorized) {
+    await logSecurityEvent(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      'unauthorized_retry',
+      'Retry attempt without valid credentials',
+      'critical',
+      { headers: Object.fromEntries(req.headers.entries()) }
+    )
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 401,
