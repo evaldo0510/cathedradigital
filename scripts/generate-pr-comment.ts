@@ -47,7 +47,9 @@ if (existsSync(TOKEN_REPORT)) {
     if (auditData.totalIssues > 0) {
        console.log(`Found ${auditData.totalIssues} issues. See full report for details.`);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Error parsing token report:', e);
+  }
 }
 
 // 4. Ergonomics Alert (Regression threshold: 15%)
@@ -59,7 +61,7 @@ if (existsSync(METRICS_REPORT) && existsSync(BASELINE_METRICS)) {
     const current = JSON.parse(readFileSync(METRICS_REPORT, 'utf8'));
     const baseline = JSON.parse(readFileSync(BASELINE_METRICS, 'utf8'));
     const THRESHOLD = 15;
-    let alerts = [];
+    const alerts: string[] = [];
 
     current.metrics.forEach((m: any) => {
       const b = baseline.metrics.find((bm: any) => bm.route === m.route && bm.viewport === m.viewport);
@@ -75,7 +77,9 @@ if (existsSync(METRICS_REPORT) && existsSync(BASELINE_METRICS)) {
       console.log('\n#### 🚨 Ergonomics Regressions Detected');
       alerts.forEach(a => console.log(`- ${a}`));
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Error parsing metrics reports:', e);
+  }
 }
 
 console.log('\n---');
