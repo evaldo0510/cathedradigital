@@ -222,22 +222,33 @@ const Bible: React.FC = () => {
             className="px-6 pt-10 pb-32 max-w-lg mx-auto"
           >
             {/* Minimal Header */}
-            <header className="mb-10 flex flex-col items-center">
-              <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
-              <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
+            <header className="mb-10 flex items-center justify-between">
+              <div className="w-10" /> {/* Spacer */}
+              <div className="flex flex-col items-center">
+                <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
+                <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
+              </div>
+              <button 
+                onClick={() => setViewMode('notes')}
+                className="p-2 text-secondary/60 active:scale-95 transition-transform"
+              >
+                <Icons.List className="w-6 h-6" />
+              </button>
             </header>
 
             {/* Above the Fold Actions */}
             <div className="space-y-4 mb-12">
               <button 
-                onClick={() => navigate('/bible?book=Jo&ch=6')}
+                onClick={() => lastRead ? navigate(`/bible?book=${lastRead.bookAbbr}&ch=${lastRead.chapter}`) : navigate('/bible?book=Jo&ch=1')}
                 className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-4">
-                  <Icons.Bookmark className="w-5 h-5 text-secondary/60" />
+                  <Icons.Bookmark className={cn("w-5 h-5", lastRead ? "text-secondary" : "text-secondary/60")} />
                   <div className="text-left">
                     <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Continuar leitura</span>
-                    <span className="font-serif font-bold text-base">João 6</span>
+                    <span className="font-serif font-bold text-base">
+                      {lastRead ? `${lastRead.bookName} ${lastRead.chapter}` : 'João 1'}
+                    </span>
                   </div>
                 </div>
                 <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
@@ -247,24 +258,46 @@ const Bible: React.FC = () => {
                 <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30" />
                 <input 
                   type="text" 
-                  placeholder="Buscar livro..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-14 pl-12 pr-4 bg-white border border-primary/5 rounded-xl text-sm shadow-sm focus:ring-1 focus:ring-secondary/20 transition-all outline-none"
+                  placeholder="Buscar nas Escrituras..."
+                  readOnly
+                  onClick={() => setViewMode('search')}
+                  className="w-full h-14 pl-12 pr-4 bg-white border border-primary/5 rounded-xl text-sm shadow-sm focus:ring-1 focus:ring-secondary/20 transition-all outline-none cursor-pointer"
                 />
               </div>
 
-              <button className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all">
-                <div className="flex items-center gap-4">
-                  <Icons.Sun className="w-5 h-5 text-secondary/60" />
-                  <div className="text-left">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Leitura do dia</span>
-                    <span className="font-serif font-bold text-base">Mateus 5,1-12</span>
+              <div className="relative group">
+                <button 
+                  onClick={() => navigate(`/bible?book=${dailyReading.book.abbr}&ch=${dailyReading.chapter}`)}
+                  className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <Icons.Sun className={cn("w-5 h-5", isDailyCompleted ? "text-green-500" : "text-secondary/60")} />
+                    <div className="text-left">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Leitura do dia</span>
+                      <span className="font-serif font-bold text-base">{dailyReading.book.name} {dailyReading.chapter}</span>
+                    </div>
                   </div>
-                </div>
-                <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
-              </button>
+                  {isDailyCompleted ? (
+                    <Icons.CheckCircle className="w-5 h-5 text-green-500/50" />
+                  ) : (
+                    <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
+                  )}
+                </button>
+                
+                {!isDailyCompleted && (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markDailyAsCompleted();
+                    }}
+                    className="absolute -top-2 -right-2 bg-secondary text-white text-[8px] font-black uppercase px-2 py-1 rounded-full shadow-lg"
+                  >
+                    Concluir
+                  </button>
+                )}
+              </div>
             </div>
+
 
             {/* Vertical Book List */}
             <div className="space-y-12">
