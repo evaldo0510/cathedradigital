@@ -52,6 +52,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [isSavingNotification, setIsSavingNotification] = React.useState(false);
   const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
+  const [actionLogs, setActionLogs] = React.useState<any[]>([]);
+  const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
+  const [isResending, setIsResending] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
@@ -154,9 +157,66 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }
   };
 
+  const fetchActionLogs = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_action_logs')
+      .select('*, user:auth.users(email)')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    
+    if (!error && data) {
+      setActionLogs(data);
+    }
+  };
+
+  const fetchWebhookDeliveries = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_webhook_deliveries')
+      .select('*, notification:bible_audit_notifications(target, type)')
+      .order('delivered_at', { ascending: false })
+      .limit(50);
+    
+    if (!error && data) {
+      setWebhookDeliveries(data);
+    }
+  };
+
+  const logAction = async (action: string, entityType?: string, entityId?: string, metadata: any = {}) => {
+    await supabase.rpc('log_bible_audit_action', {
+      p_action: action,
+      p_entity_type: entityType,
+      p_entity_id: entityId,
+      p_metadata: metadata
+    });
+    fetchActionLogs();
+  };
+
+  const resendNotification = async (deliveryId: string) => {
+    setIsResending(deliveryId);
+    try {
+      const delivery = webhookDeliveries.find(d => d.id === deliveryId);
+      if (!delivery) return;
+      
+      // Real implementation would call an Edge Function to re-send with proper signature/headers
+      toast.info('Reenviando notificação...');
+      await testWebhook(delivery.notification_id);
+      
+      await logAction('Resend Notification', 'webhook_delivery', deliveryId, { 
+        notification_id: delivery.notification_id 
+      });
+    } finally {
+      setIsResending(null);
+    }
+  };
+
   React.useEffect(() => {
     if (activeTab === 'history') fetchAuditRuns();
     if (activeTab === 'notifications') fetchNotifications();
+    if (activeTab === 'audit-logs') fetchActionLogs();
+    if (activeTab === 'webhooks') {
+      fetchWebhookLogs();
+      fetchWebhookDeliveries();
+    }
   }, [activeTab]);
 
   const addNotification = async () => {
