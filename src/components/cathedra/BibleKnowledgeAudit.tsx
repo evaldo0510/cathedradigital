@@ -1225,7 +1225,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           </pre>
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Depois</span>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Configuração Atualizada</span>
                           <pre className="p-2 bg-secondary/[0.02] rounded-xl border border-secondary/5 text-[9px] font-mono text-secondary/40 overflow-x-auto max-h-24">
                             {JSON.stringify(log.after_state, null, 2)}
                           </pre>
