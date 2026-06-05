@@ -104,6 +104,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
   const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
   const [i18nPage, setI18nPage] = React.useState(1);
+  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>('recent');
   const itemsPerPage = 10;
 
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
@@ -379,22 +380,28 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
 
+  const [i18nLoading, setI18nLoading] = React.useState(false);
   const fetchI18nReport = async () => {
+    setI18nLoading(true);
+    // Simulação de carregamento para efeito de skeleton
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
     // Mapeamento de logs legados simulado com dados expandidos para teste de paginação
     const legacyLogsMapping = [
-      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-01T10:00:00Z' },
-      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped', updated_at: '2024-05-02T11:30:00Z' },
-      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending', updated_at: '2024-05-03T09:15:00Z' },
-      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped', updated_at: '2024-05-04T14:20:00Z' },
-      { term: 'Session expired', expected: 'Sessão expirada', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-05T08:00:00Z' },
-      { term: 'Access denied', expected: 'Acesso negado', context: 'Permissions', status: 'pending', updated_at: '2024-05-06T12:00:00Z' },
-      { term: 'Resource not found', expected: 'Recurso não encontrado', context: 'API', status: 'mapped', updated_at: '2024-05-07T16:45:00Z' },
-      { term: 'Internal server error', expected: 'Erro interno do servidor', context: 'API', status: 'pending', updated_at: '2024-05-08T10:30:00Z' },
-      { term: 'Method not allowed', expected: 'Método não permitido', context: 'API', status: 'mapped', updated_at: '2024-05-09T11:00:00Z' },
-      { term: 'Too many requests', expected: 'Muitas requisições', context: 'Rate Limit', status: 'pending', updated_at: '2024-05-10T13:15:00Z' }
+      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-01T10:00:00Z', endpoint: 'N/A' },
+      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped', updated_at: '2024-05-02T11:30:00Z', endpoint: 'N/A' },
+      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending', updated_at: '2024-05-03T09:15:00Z', endpoint: 'N/A' },
+      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped', updated_at: '2024-05-04T14:20:00Z', endpoint: 'N/A' },
+      { term: 'Session expired', expected: 'Sessão expirada', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-05T08:00:00Z', endpoint: 'N/A' },
+      { term: 'Access denied', expected: 'Acesso negado', context: 'Permissions', status: 'pending', updated_at: '2024-05-06T12:00:00Z', endpoint: 'N/A' },
+      { term: 'Resource not found', expected: 'Recurso não encontrado', context: 'API', status: 'mapped', updated_at: '2024-05-07T16:45:00Z', endpoint: 'N/A' },
+      { term: 'Internal server error', expected: 'Erro interno do servidor', context: 'API', status: 'pending', updated_at: '2024-05-08T10:30:00Z', endpoint: 'N/A' },
+      { term: 'Method not allowed', expected: 'Método não permitido', context: 'API', status: 'mapped', updated_at: '2024-05-09T11:00:00Z', endpoint: 'N/A' },
+      { term: 'Too many requests', expected: 'Muitas requisições', context: 'Rate Limit', status: 'pending', updated_at: '2024-05-10T13:15:00Z', endpoint: 'N/A' }
     ];
 
     setI18nFailures(legacyLogsMapping);
+    setI18nLoading(false);
   };
 
   React.useEffect(() => {
@@ -1336,43 +1343,87 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Outras Pendências de Interface</h4>
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="relative flex-1 sm:flex-none">
                         <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-primary/20" />
                         <input 
+                          aria-label="Buscar termo i18n"
                           value={i18nSearch}
                           onChange={e => { setI18nSearch(e.target.value); setI18nPage(1); }}
                           placeholder="Buscar termo..."
-                          className="bg-primary/5 rounded-full pl-8 pr-4 py-1.5 text-[10px] outline-none border border-transparent focus:border-secondary/20 w-40 transition-all"
+                          className="bg-primary/5 rounded-full pl-8 pr-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all w-full sm:w-40"
                         />
                       </div>
                       <select 
+                        aria-label="Filtrar por Status"
                         value={i18nStatusFilter}
                         onChange={e => { setI18nStatusFilter(e.target.value as any); setI18nPage(1); }}
-                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20"
+                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all cursor-pointer flex-1 sm:flex-none"
                       >
-                        <option value="all">Todos</option>
-                        <option value="pending">Pendente</option>
-                        <option value="mapped">Mapeado</option>
+                        <option value="all">Todos os Status</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="mapped">Mapeados</option>
+                      </select>
+                      <select 
+                        aria-label="Ordenação"
+                        value={i18nSortOrder}
+                        onChange={e => { setI18nSortOrder(e.target.value as any); setI18nPage(1); }}
+                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all cursor-pointer flex-1 sm:flex-none"
+                      >
+                        <option value="recent">Mais Recentes</option>
+                        <option value="oldest">Mais Antigos</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden">
                     <div className="divide-y">
-                      {(() => {
+                      {i18nLoading ? (
+                        <div className="divide-y animate-pulse">
+                          {[1, 2, 3].map(i => (
+                            <div key={i} className="p-4 flex items-center justify-between">
+                              <div className="space-y-2">
+                                <div className="h-3 w-32 bg-primary/5 rounded" />
+                                <div className="h-2 w-16 bg-primary/5 rounded" />
+                              </div>
+                              <div className="h-3 w-24 bg-primary/5 rounded" />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (() => {
                         const filtered = i18nFailures
                           .filter(f => f.endpoint === 'N/A')
                           .filter(f => i18nStatusFilter === 'all' || f.status === i18nStatusFilter)
-                          .filter(f => !i18nSearch || f.term.toLowerCase().includes(i18nSearch.toLowerCase()) || f.expected.toLowerCase().includes(i18nSearch.toLowerCase()));
+                          .filter(f => !i18nSearch || f.term.toLowerCase().includes(i18nSearch.toLowerCase()) || f.expected.toLowerCase().includes(i18nSearch.toLowerCase()))
+                          .sort((a, b) => {
+                            const dateA = new Date(a.updated_at).getTime();
+                            const dateB = new Date(b.updated_at).getTime();
+                            return i18nSortOrder === 'recent' ? dateB - dateA : dateA - dateB;
+                          });
                         
                         const totalPages = Math.ceil(filtered.length / itemsPerPage);
                         const paginated = filtered.slice((i18nPage - 1) * itemsPerPage, i18nPage * itemsPerPage);
 
                         if (paginated.length === 0) {
-                          return <div className="p-8 text-center text-[10px] text-primary/20 uppercase tracking-widest">Nenhum registro encontrado</div>;
+                            return (
+                              <div className="p-12 flex flex-col items-center justify-center text-center space-y-4">
+                                <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center">
+                                  <Icons.Search className="w-6 h-6 text-primary/20" />
+                                </div>
+                                <div className="space-y-1">
+                                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/40">Nenhum registro encontrado</p>
+                                  <p className="text-[9px] text-primary/20 max-w-[200px] mx-auto uppercase tracking-tighter">Tente ajustar seus filtros ou termo de busca para localizar logs específicos.</p>
+                                </div>
+                                <button 
+                                  onClick={() => { setI18nSearch(''); setI18nStatusFilter('all'); }}
+                                  className="text-[9px] font-black uppercase tracking-widest text-secondary hover:underline"
+                                >
+                                  Limpar filtros
+                                </button>
+                              </div>
+                            );
                         }
 
                         return (
@@ -1397,21 +1448,28 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                               </div>
                             ))}
                             {totalPages > 1 && (
-                              <div className="p-4 flex items-center justify-center gap-2 border-t border-primary/5">
+                               <div className="p-4 flex items-center justify-center gap-4 border-t border-primary/5">
                                 <button 
-                                  onClick={() => setI18nPage(p => Math.max(1, p - 1))}
+                                  aria-label="Página Anterior"
+                                  onClick={() => { setI18nPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                                   disabled={i18nPage === 1}
-                                  className="p-1.5 hover:bg-primary/5 rounded-lg disabled:opacity-30"
+                                  className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
                                   <Icons.ChevronLeft className="w-4 h-4" />
                                 </button>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-primary/40">
-                                  Página {i18nPage} de {totalPages}
-                                </span>
+                                <div className="flex flex-col items-center">
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-primary/40 leading-none">
+                                    Página
+                                  </span>
+                                  <span className="text-xs font-bold text-primary/80">
+                                    {i18nPage} <span className="text-primary/20 mx-1">/</span> {totalPages}
+                                  </span>
+                                </div>
                                 <button 
-                                  onClick={() => setI18nPage(p => Math.min(totalPages, p + 1))}
+                                  aria-label="Próxima Página"
+                                  onClick={() => { setI18nPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                                   disabled={i18nPage === totalPages}
-                                  className="p-1.5 hover:bg-primary/5 rounded-lg disabled:opacity-30"
+                                  className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
                                   <Icons.ChevronRight className="w-4 h-4" />
                                 </button>
