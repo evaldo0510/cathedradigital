@@ -197,6 +197,45 @@ const Bible: React.FC = () => {
     }
   };
 
+  const exportNotes = (format: 'csv' | 'json') => {
+    if (!verseNotes.length) {
+      toast.error('Nenhuma nota para exportar');
+      return;
+    }
+
+    let content = '';
+    let mimeType = '';
+    let fileName = `margens-estudo-${selectedBook?.abbr || 'geral'}`;
+
+    if (format === 'csv') {
+      const headers = ['Livro', 'Capítulo', 'Versículo', 'Nota', 'Data'];
+      const rows = verseNotes.map(n => [
+        n.book_abbr,
+        n.chapter,
+        n.verse,
+        `"${n.note_text.replace(/"/g, '""')}"`,
+        new Date(n.created_at).toLocaleDateString()
+      ]);
+      content = [headers, ...rows].map(e => e.join(',')).join('\n');
+      mimeType = 'text/csv';
+      fileName += '.csv';
+    } else {
+      content = JSON.stringify(verseNotes, null, 2);
+      mimeType = 'application/json';
+      fileName += '.json';
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Notas exportadas com sucesso');
+  };
+
+
 
   const filteredVerseNotes = useMemo(() => {
     if (!noteSearchQuery) return verseNotes;
@@ -220,7 +259,6 @@ const Bible: React.FC = () => {
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
-      // Don't trigger if typing in an input/textarea unless it's a specific "escape" or modifier combo
       const isTyping = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement;
       
       if (isTyping && e.key !== 'Escape') return;
@@ -236,7 +274,6 @@ const Bible: React.FC = () => {
 
       // Next Verse (ArrowDown / J)
       if (!isTyping && (e.key === 'ArrowDown' || e.key.toLowerCase() === 'j')) {
-        const currentVerseEl = document.querySelector('.bg-primary\\[0\\.04\\]');
         const nextVerse = activeVerseNumber ? activeVerseNumber + 1 : 1;
         if (nextVerse <= verses.length) jumpToVerse(nextVerse);
       }
@@ -245,6 +282,11 @@ const Bible: React.FC = () => {
       if (!isTyping && (e.key === 'ArrowUp' || e.key.toLowerCase() === 'k')) {
         const prevVerse = activeVerseNumber ? activeVerseNumber - 1 : 1;
         if (prevVerse >= 1) jumpToVerse(prevVerse);
+      }
+
+      // Focus Note (Alt + N)
+      if (e.altKey && e.key.toLowerCase() === 'n' && activeVerseNumber) {
+        setEditingNote({ verse: activeVerseNumber, text: verseNotes.find(n => n.verse === activeVerseNumber)?.note_text || '' });
       }
 
       // Toggle Study Marginalia (Alt + M)
@@ -261,7 +303,8 @@ const Bible: React.FC = () => {
 
     window.addEventListener('keydown', handleKeydown);
     return () => window.removeEventListener('keydown', handleKeydown);
-  }, [settings.theme, activeVerseNumber, verses.length, settings.showStudyMarginalia, viewMode, updateSettings]);
+  }, [settings.theme, activeVerseNumber, verses.length, settings.showStudyMarginalia, viewMode, updateSettings, verseNotes]);
+
 
   const jumpToFavorite = (fav: any) => {
 
@@ -980,9 +1023,16 @@ const Bible: React.FC = () => {
                           autoFocus
                           value={editingNote.text}
                           onChange={(e) => setEditingNote({ ...editingNote, text: e.target.value })}
+                          onKeyDown={(e) => {
+                            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                              saveNote(v.number, editingNote.text);
+                            }
+                          }}
                           placeholder="Escreva sua meditação..."
+                          aria-label={`Campo de edição de nota para o versículo ${v.number}. Pressione Ctrl+Enter para salvar.`}
                           className="w-full bg-transparent border-none focus:ring-0 text-premium-xs font-serif italic text-primary/80 resize-none min-h-[80px]"
                         />
+
                         <div className="flex justify-end gap-spacing-sm mt-spacing-sm">
                           <Button variant="ghost" size="sm" onClick={() => setEditingNote(null)} className="text-[9px] uppercase tracking-tighter">Cancelar</Button>
                           <Button size="sm" onClick={() => saveNote(v.number, editingNote.text)} className="h-7 px-4 rounded-full text-[9px] uppercase tracking-tighter">Salvar</Button>
