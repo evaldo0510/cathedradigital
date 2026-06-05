@@ -40,7 +40,8 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
       const mockEvent = { preventDefault: () => {} } as React.FormEvent;
       handleSearch(mockEvent);
     }
-  }, [initialTheme]);
+  }, []);
+
 
   const handleSearch = async (e: React.FormEvent) => {
 
