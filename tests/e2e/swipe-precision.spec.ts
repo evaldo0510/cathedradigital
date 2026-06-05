@@ -32,11 +32,11 @@ test.describe('Swipe Navigation Precision', () => {
     await expect(hojeItem).toHaveAttribute('aria-current', 'page');
   });
 
-  test('swipe inferior ao limiar (70px) NÃO deve mudar a rota', async ({ page }) => {
-    // Swipe left de 70px (300 -> 230)
+  test('swipe inferior ao limiar (75px) NÃO deve mudar a rota', async ({ page }) => {
+    // Swipe left de 75px (300 -> 225)
     await performSwipe(page, { 
       startX: 300, 
-      endX: 230, 
+      endX: 225, 
       steps: 10, 
       duration: 50 
     });
@@ -47,11 +47,11 @@ test.describe('Swipe Navigation Precision', () => {
     await expect(hojeItem).toHaveAttribute('aria-current', 'page');
   });
 
-  test('swipe superior ao limiar (90px) DEVE mudar a rota', async ({ page }) => {
-    // Swipe left de 90px (300 -> 210)
+  test('swipe superior ao limiar (85px) DEVE mudar a rota', async ({ page }) => {
+    // Swipe left de 85px (300 -> 215)
     await performSwipe(page, { 
       startX: 300, 
-      endX: 210, 
+      endX: 215, 
       steps: 20, 
       duration: 150 
     });
