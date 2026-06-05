@@ -91,12 +91,21 @@ const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({
                           "{note.note_text}"
                         </p>
                       </button>
-                      <button 
-                        onClick={() => deleteNote(note.id)}
-                        className="absolute top-2 right-2 p-2 text-destructive/20 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-                      >
-                        <Icons.X className="w-4 h-4" />
-                      </button>
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => setEditingNote(note)}
+                          className="p-2 text-primary/20 hover:text-secondary transition-colors"
+                        >
+                          <Icons.Edit className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => onDeleteNote?.(note.id)}
+                          className="p-2 text-destructive/20 hover:text-destructive transition-colors"
+                        >
+                          <Icons.X className="w-4 h-4" />
+                        </button>
+                      </div>
+
                     </div>
                   ))}
                 </div>
