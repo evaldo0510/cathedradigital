@@ -25,13 +25,24 @@ interface Post {
   };
 }
 
-const CatechismDebug = React.lazy(() => import('./CatechismDebug'));
-
 const AdminContentTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('pending');
+
+  const auditData = React.useMemo(() => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    // Em produção estes dados viriam de uma consulta real de cobertura
+    return {
+      totalBooks: allBooks.length,
+      coveredBooks: allBooks.length - 8,
+      emptyBooks: ['Tobias', 'Judite', 'Ester', '1 Macabeus', '2 Macabeus', 'Sabedoria', 'Eclesiástico', 'Baruc'],
+      totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+      themesCount: 42,
+      theologicalThemes: []
+    };
+  }, []);
 
   useEffect(() => {
     fetchPosts();
