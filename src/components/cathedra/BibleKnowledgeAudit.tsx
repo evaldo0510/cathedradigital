@@ -897,7 +897,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                      className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
                    >
                      <option value="all">Todas as Ações</option>
-                     <option value="Run Audit Now">Execução de Auditoria</option>
+                     <option value="Executar Auditoria Agora">Execução de Auditoria</option>
                      <option value="Resend Notification">Reenvio de Notificação</option>
                       <option value="Add Notification Channel">Novo Canal</option>
                       <option value="Update Notification Policy">Mudança de Política</option>
