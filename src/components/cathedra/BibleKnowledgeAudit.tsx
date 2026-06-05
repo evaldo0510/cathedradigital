@@ -99,6 +99,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
+  const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
+    endpoint: 'all',
+    eventType: 'all'
+  });
 
 
 
