@@ -670,9 +670,30 @@ const Bible: React.FC = () => {
                               </button>
                             </p>
 
+                            {/* Knowledge Connection Bubbles */}
+                            {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-80">
+                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
+                                  <motion.button
+                                    key={idx}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toast.info(`Navegando para ${conn.label}`);
+                                    }}
+                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all"
+                                  >
+                                    <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
+                                    <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
+                                  </motion.button>
+                                ))}
+                              </div>
+                            )}
+
 
                             {/* Cross References */}
-                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && !KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
                               <div className="flex flex-wrap gap-2 pt-2">
                                 {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].map(ref => {
                                   const [b, c, vNum] = ref.split('-');
@@ -692,6 +713,7 @@ const Bible: React.FC = () => {
                               </div>
                             )}
                           </div>
+
 
                         </div>
 
