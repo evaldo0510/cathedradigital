@@ -60,8 +60,11 @@ const Bible: React.FC = () => {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [verseNotes, setVerseNotes] = useState<any[]>([]);
   const [editingNote, setEditingNote] = useState<{ verse: number, text: string } | null>(null);
+  const [noteSearchQuery, setNoteSearchQuery] = useState('');
+  const [noteSearchVisible, setNoteSearchVisible] = useState(false);
   const [favoriteSearchQuery, setFavoriteSearchQuery] = useState('');
   const [isFavoritesLoading, setIsFavoritesLoading] = useState(false);
+
 
 
   const observerTarget = useRef(null);
@@ -195,7 +198,73 @@ const Bible: React.FC = () => {
   };
 
 
+  const filteredVerseNotes = useMemo(() => {
+    if (!noteSearchQuery) return verseNotes;
+    const query = noteSearchQuery.toLowerCase();
+    return verseNotes.filter(n => 
+      n.note_text.toLowerCase().includes(query) || 
+      n.verse.toString().includes(query)
+    );
+  }, [verseNotes, noteSearchQuery]);
+
+  const jumpToVerse = (verseNumber: number) => {
+    const el = document.getElementById(`v${verseNumber}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Visual feedback
+      el.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-primary', 'ring-offset-2'), 2000);
+    }
+  };
+
+  // Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      // Don't trigger if typing in an input/textarea unless it's a specific "escape" or modifier combo
+      const isTyping = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement;
+      
+      if (isTyping && e.key !== 'Escape') return;
+
+      // Theme toggle (Alt + T)
+      if (e.altKey && e.key.toLowerCase() === 't') {
+        const themes: any[] = ['paper', 'sepia', 'dark', 'night'];
+        const currentIndex = themes.indexOf(settings.theme);
+        const nextTheme = themes[(currentIndex + 1) % themes.length];
+        updateSettings({ theme: nextTheme });
+        toast.info(`Tema: ${nextTheme}`);
+      }
+
+      // Next Verse (ArrowDown / J)
+      if (!isTyping && (e.key === 'ArrowDown' || e.key.toLowerCase() === 'j')) {
+        const currentVerseEl = document.querySelector('.bg-primary\\[0\\.04\\]');
+        const nextVerse = activeVerseNumber ? activeVerseNumber + 1 : 1;
+        if (nextVerse <= verses.length) jumpToVerse(nextVerse);
+      }
+
+      // Prev Verse (ArrowUp / K)
+      if (!isTyping && (e.key === 'ArrowUp' || e.key.toLowerCase() === 'k')) {
+        const prevVerse = activeVerseNumber ? activeVerseNumber - 1 : 1;
+        if (prevVerse >= 1) jumpToVerse(prevVerse);
+      }
+
+      // Toggle Study Marginalia (Alt + M)
+      if (e.altKey && e.key.toLowerCase() === 'm') {
+        updateSettings({ showStudyMarginalia: !settings.showStudyMarginalia });
+      }
+      
+      // Toggle Note Search (Ctrl/Cmd + F inside reading)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f' && viewMode === 'reading') {
+        e.preventDefault();
+        setNoteSearchVisible(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [settings.theme, activeVerseNumber, verses.length, settings.showStudyMarginalia, viewMode, updateSettings]);
+
   const jumpToFavorite = (fav: any) => {
+
     let foundBook: BibleBook | null = null;
     for (const t of Object.values(BIBLE_DATA)) {
       for (const cat of t) {
@@ -762,17 +831,47 @@ const Bible: React.FC = () => {
         >
 
           <div className="pb-spacing-4xl">
-            {!settings.immersiveMode && (
-              <div className="flex justify-between items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md">
-                <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100">
-                  ← Sumário
-                </Button>
+            {viewMode === 'reading' && !settings.immersiveMode && (
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md gap-4">
+                <div className="flex items-center gap-4">
+                  <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 p-0">
+                    ← Sumário
+                  </Button>
+                  {settings.showStudyMarginalia && (
+                    <div className="relative group">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setNoteSearchVisible(!noteSearchVisible)}
+                        className={cn("h-7 px-2 rounded-full", noteSearchVisible && "bg-primary/10")}
+                      >
+                        <Icons.Search className="w-3 h-3 text-primary/40" />
+                      </Button>
+                      {noteSearchVisible && (
+                        <motion.div 
+                          initial={{ width: 0, opacity: 0 }}
+                          animate={{ width: 180, opacity: 1 }}
+                          className="absolute left-full ml-2 top-0"
+                        >
+                          <input 
+                            autoFocus
+                            placeholder="Buscar notas..."
+                            value={noteSearchQuery}
+                            onChange={(e) => setNoteSearchQuery(e.target.value)}
+                            className="h-7 w-full bg-primary/[0.03] border border-primary/10 rounded-full px-3 text-[10px] font-serif italic focus:ring-1 focus:ring-primary/20 outline-none"
+                          />
+                        </motion.div>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/20">{selectedBook.name}</span>
                   <span className="text-premium-sm font-serif italic text-primary/40">Capítulo {selectedChapter}</span>
                 </div>
               </div>
             )}
+
 
             {fetchError && (
               <div className="flex flex-col items-center justify-center py-spacing-2xl text-center space-y-spacing-md bg-destructive/5 rounded-premium border border-destructive/10">
@@ -860,15 +959,20 @@ const Bible: React.FC = () => {
                       </button>
                     )}
 
-                    {settings.showStudyMarginalia && verseNotes.find(n => n.verse === v.number) && (
+                    {settings.showStudyMarginalia && filteredVerseNotes.find(n => n.verse === v.number) && (
                       <div className="hidden lg:block absolute left-full ml-spacing-xl top-0 w-56 p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5 text-[10px] italic text-primary/60 leading-relaxed shadow-premium-sm animate-in fade-in slide-in-from-left-2">
                         <div className="flex items-center gap-1 mb-1 opacity-40">
                           <Icons.MessageSquare size={8} />
                           <span className="font-black uppercase tracking-tighter">Marginalia</span>
                         </div>
-                        {verseNotes.find(n => n.verse === v.number)?.note_text}
+                        {filteredVerseNotes.find(n => n.verse === v.number)?.note_text}
                       </div>
                     )}
+
+                    {settings.showStudyMarginalia && !filteredVerseNotes.find(n => n.verse === v.number) && noteSearchQuery && (
+                      <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] z-[5] pointer-events-none" />
+                    )}
+
 
                     {editingNote?.verse === v.number && (
                       <div className="mt-spacing-md p-spacing-md bg-primary/[0.03] rounded-premium border border-primary/10 animate-in fade-in zoom-in-95">

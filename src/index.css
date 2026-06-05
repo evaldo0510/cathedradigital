@@ -144,21 +144,28 @@
     color: #b0b0b0 !important;
   }
 
-  .high-contrast {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --primary: 0 0% 0%;
-    --border: 0 0% 0% / 0.3;
-    --radius: 0;
-    --radius-premium: 0;
+  .high-contrast, [data-contrast='high'] {
+    --background: 0 0% 100% !important;
+    --foreground: 0 0% 0% !important;
+    --primary: 0 0% 0% !important;
+    --border: 0 0% 0% / 0.8 !important;
+    --radius: 0 !important;
+    --radius-premium: 0 !important;
+    --shadow-premium: none !important;
   }
 
-  .dark.high-contrast {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --border: 0 0% 100% / 0.4;
+  .high-contrast.reading-theme-paper, [data-contrast='high'].reading-theme-paper { background-color: #ffffff !important; color: #000000 !important; }
+  .high-contrast.reading-theme-sepia, [data-contrast='high'].reading-theme-sepia { background-color: #ffffff !important; color: #000000 !important; }
+  .high-contrast.reading-theme-dark, [data-contrast='high'].reading-theme-dark { background-color: #000000 !important; color: #ffffff !important; }
+  .high-contrast.reading-theme-night, [data-contrast='high'].reading-theme-night { background-color: #000000 !important; color: #ffffff !important; }
+
+  .dark.high-contrast, .dark[data-contrast='high'] {
+    --background: 0 0% 0% !important;
+    --foreground: 0 0% 100% !important;
+    --primary: 0 0% 100% !important;
+    --border: 0 0% 100% / 0.8 !important;
   }
+
 
 
   /* Typography System */

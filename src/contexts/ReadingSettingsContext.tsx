@@ -184,9 +184,11 @@ const SettingsSideEffects: React.FC = () => {
 
     // Apply Contrast
     root.classList.remove('contrast-soft', 'contrast-high');
+    root.setAttribute('data-contrast', settings.contrast);
     if (settings.contrast !== 'normal') {
       root.classList.add(`contrast-${settings.contrast}`);
     }
+
 
     // Apply Font Size to Root for UI scalability
     root.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-extra-large');
