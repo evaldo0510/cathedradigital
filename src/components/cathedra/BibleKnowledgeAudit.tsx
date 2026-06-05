@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { BibleAuditDashboard } from './BibleAuditDashboard';
+import { Badge } from '@/components/ui/badge';
 
 interface AuditLog {
   timestamp: string;
@@ -373,15 +374,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
 
   const fetchI18nReport = async () => {
-    // Tenta ler o relatório real se disponível
-    try {
-      // Como não podemos ler arquivos locais diretamente do navegador facilmente sem um endpoint,
-      // simulamos a ausência de falhas se o processo de CI passou.
-      // Em um cenário real, isso viria de uma API ou do Supabase.
-      setI18nFailures([]);
-    } catch (e) {
-      setI18nFailures([]);
-    }
+    // Mapeamento de logs legados simulado
+    const legacyLogsMapping = [
+      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending' },
+      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped' },
+      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending' },
+      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped' }
+    ];
+
+    setI18nFailures(legacyLogsMapping);
   };
 
   React.useEffect(() => {
@@ -652,27 +653,44 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'i18n-audit' && (
             <motion.div key="i18n-audit" className="space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Checklist de Internacionalização (Pre-Release)</h3>
-                <span className={cn(
-                  "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
-                  i18nFailures.length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                )}>
-                  {i18nFailures.length} Pendências
-                </span>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inventário de Internacionalização & Logs Legados</h3>
+                <div className="flex gap-2">
+                  <span className={cn(
+                    "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
+                    i18nFailures.filter(f => f.status === 'pending').length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                  )}>
+                    {i18nFailures.filter(f => f.status === 'pending').length} Pendentes
+                  </span>
+                  <span className="text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest bg-primary/5 text-primary/40">
+                    {i18nFailures.filter(f => f.status === 'mapped').length} Mapeados
+                  </span>
+                </div>
               </div>
 
               <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden divide-y shadow-sm">
                 {i18nFailures.length > 0 ? i18nFailures.map((failure, idx) => (
-                  <div key={idx} className="p-6 space-y-3 hover:bg-primary/[0.01] transition-colors text-left">
+                  <div key={idx} className={cn(
+                    "p-6 space-y-3 transition-colors text-left",
+                    failure.status === 'pending' ? "bg-rose-50/30" : "hover:bg-primary/[0.01]"
+                  )}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono bg-rose-50 text-rose-600 px-2 py-1 rounded-lg border border-rose-100/50">{failure.term}</span>
+                        <span className="text-[10px] font-mono bg-white text-primary/60 px-2 py-1 rounded-lg border border-primary/5">{failure.term}</span>
                         <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
                         <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
                       </div>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{failure.context}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{failure.context}</span>
+                        {failure.status === 'pending' && (
+                          <Badge variant="destructive" className="text-[7px] h-4 uppercase font-black px-1.5">Pendente</Badge>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-[10px] text-primary/40 italic">Ação sugerida: Substituir termo em inglês pela terminologia institucional solene.</p>
+                    <p className="text-[10px] text-primary/40 italic">
+                      {failure.status === 'pending' 
+                        ? "Ação necessária: Localizar log legado no código-fonte e aplicar tradução institucional."
+                        : "Log mapeado e traduzido conforme o glossário institucional."}
+                    </p>
                   </div>
                 )) : (
                   <div className="p-12 text-center space-y-2">
