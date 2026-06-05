@@ -852,8 +852,10 @@ const Bible: React.FC = () => {
               navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
               setViewMode('reading');
             }} 
+            initialTheme={activeThemeFilter}
           />
         )}
+
 
         {viewMode === 'notes' && (
           <BibleFullNotesList 
