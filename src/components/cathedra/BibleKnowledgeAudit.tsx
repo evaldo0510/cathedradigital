@@ -2,21 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
-
-
-interface BibleKnowledgeAuditProps {
-  onClose: () => void;
-  auditData: {
-    totalBooks: number;
-    coveredBooks: number;
-    emptyBooks: string[];
-    totalChapters: number;
-    themesCount?: number;
-    theologicalThemes?: { id: string, label: string, connections: number, tags: string[] }[];
-  };
-}
-
-
+import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BibleKnowledgeAuditProps {
   onClose: () => void;
@@ -32,18 +19,42 @@ interface BibleKnowledgeAuditProps {
 }
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
+  const [isScanning, setIsScanning] = React.useState(false);
+  const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
 
-  // Simulated audit data using real auditData from parent
-  const stats = {
+  const stats = React.useMemo(() => ({
     totalBooks: auditData.totalBooks,
     coveredBooks: auditData.coveredBooks,
     totalChapters: auditData.totalChapters,
     coveredChapters: Math.floor(auditData.totalChapters * 0.62),
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
-  };
+  }), [auditData]);
   
   const coveragePercent = Math.round((stats.coveredChapters / stats.totalChapters) * 100);
 
+  const startIntegrityScan = async () => {
+    setIsScanning(true);
+    const results: Record<string, 'ok' | 'empty' | 'pending'> = { ...scanResults };
+    
+    // Scan critical books
+    for (const book of auditData.emptyBooks) {
+      results[book] = 'pending';
+      setScanResults({...results});
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('bible-text', {
+          body: { abbrev: book, chapter: 1 }
+        });
+        
+        results[book] = (!error && data?.verses?.length > 0) ? 'ok' : 'empty';
+      } catch {
+        results[book] = 'empty';
+      }
+      setScanResults({...results});
+    }
+    setIsScanning(false);
+    toast.success('Varredura de integridade concluída');
+  };
 
   return (
     <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col">
@@ -54,32 +65,35 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Gestão de Cobertura</h1>
         <div className="flex items-center gap-2">
           <button 
+            onClick={startIntegrityScan}
+            disabled={isScanning}
+            className={cn("p-2 text-primary/40 active:text-secondary", isScanning && "animate-spin")}
+            title="Iniciar Varredura de Integridade"
+          >
+            <Icons.RefreshCw className="w-5 h-5" />
+          </button>
+          <button 
             onClick={() => {
               const headers = "Livro,Capitulo,Versiculo,Status,Conexoes\n";
-              const rows = auditData.emptyBooks.map(b => `${b},Todas,Todas,Lacuna,0`).join("\n") +
-                "\nJoão,6,35,Validado,3" +
-                "\nGênesis,1,1,Validado,2";
+              const rows = auditData.emptyBooks.map(b => `${b},Todas,Todas,${scanResults[b] === 'ok' ? 'Validado' : 'Lacuna'},0`).join("\n");
               const csv = headers + rows;
               const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
               const url = URL.createObjectURL(blob);
               const link = document.createElement('a');
               link.href = url;
-              link.setAttribute('download', `cobertura-cathedra-${new Date().toISOString().split('T')[0]}.csv`);
+              link.setAttribute('download', `relatorio-integridade-${new Date().toISOString().split('T')[0]}.csv`);
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
               URL.revokeObjectURL(url);
-              toast.success('Relatório CSV gerado com sucesso');
+              toast.success('Relatório CSV gerado');
             }}
             className="p-2 text-primary/40 active:text-secondary"
             title="Exportar Relatório CSV"
           >
             <Icons.FileText className="w-5 h-5" />
           </button>
-
-          <div className="w-10" />
         </div>
-
       </header>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 max-w-lg mx-auto w-full">
@@ -115,25 +129,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               </div>
             </div>
             
-            {/* Evolution Chart */}
-            <div className="w-full h-32 flex items-end gap-1 px-4 pt-8">
-              {[45, 48, 52, 51, 58, 60, 62].map((val, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                  <div 
-                    className="w-full bg-secondary/20 rounded-t-lg transition-all duration-1000 group-hover:bg-secondary/40 relative"
-                    style={{ height: `${val}%` }}
-                  >
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      v1.{i} - {val}%
-                    </div>
-                  </div>
-                  <span className="text-[7px] font-black text-primary/20 uppercase tracking-tighter">0{i+1}/06</span>
-                </div>
-              ))}
-            </div>
-            
             <p className="text-premium-xs font-serif italic text-primary/60">
-
               A Bíblia está sendo conectada ao Catecismo, Magistério e Tradição.
             </p>
           </section>
@@ -154,7 +150,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </div>
 
-
           {/* Critical Gaps */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
@@ -171,7 +166,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </section>
 
-          {/* Theological Themes Index (Phase 3) */}
+          {/* Theological Themes Index */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
               <Icons.Tag className="w-4 h-4 text-secondary" />
@@ -184,7 +179,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                   onClick={() => onThemeClick?.(theme.label)}
                   className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors cursor-pointer"
                 >
-
                   <div className="space-y-1">
                     <span className="font-serif font-bold text-primary/80">{theme.label}</span>
                     <div className="flex gap-1">
@@ -202,8 +196,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </section>
 
-          {/* Identified Gaps Index (Phase 3) */}
-
+          {/* Identified Gaps Index */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
               <Icons.List className="w-4 h-4 text-primary/40" />
@@ -274,4 +267,3 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     </div>
   );
 };
-
