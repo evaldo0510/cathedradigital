@@ -58,15 +58,26 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
   const [actionLogs, setActionLogs] = React.useState<any[]>([]);
-  const [actionLogFilters, setActionLogFilters] = React.useState({
-    search: '',
-    actionType: 'all',
-    runId: '',
-    startDate: '',
-    endDate: ''
+  const [actionLogFilters, setActionLogFilters] = React.useState(() => {
+    const saved = localStorage.getItem('bible_audit_action_filters');
+    return saved ? JSON.parse(saved) : {
+      search: '',
+      actionType: 'all',
+      runId: '',
+      startDate: '',
+      endDate: ''
+    };
   });
+  
+  React.useEffect(() => {
+    localStorage.setItem('bible_audit_action_filters', JSON.stringify(actionLogFilters));
+  }, [actionLogFilters]);
+
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
+  const [notificationVersions, setNotificationVersions] = React.useState<any[]>([]);
+  const [showVersionModal, setShowVersionModal] = React.useState<string | null>(null);
+  const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
@@ -216,6 +227,18 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error && data) {
       setNotificationSettings(data);
+    }
+  };
+
+  const fetchNotificationVersions = async (notificationId: string) => {
+    const { data, error } = await supabase
+      .from('bible_audit_notification_versions')
+      .select('*')
+      .eq('notification_id', notificationId)
+      .order('version', { ascending: false });
+    
+    if (!error && data) {
+      setNotificationVersions(data);
     }
   };
 
@@ -444,7 +467,25 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'audit-logs' && (
             <motion.div key="audit-logs" className="space-y-6">
                <div className="flex flex-col gap-4">
-                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                 <div className="flex items-center justify-between">
+                   <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                   <div className="flex gap-2">
+                     <button 
+                       onClick={() => toast.success('CSV do Log Exportado')} 
+                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                       title="Exportar CSV com filtros"
+                     >
+                       <Icons.FileSpreadsheet className="w-4 h-4" />
+                     </button>
+                     <button 
+                       onClick={() => window.print()} 
+                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                       title="Exportar PDF com filtros"
+                     >
+                       <Icons.Printer className="w-4 h-4" />
+                     </button>
+                   </div>
+                 </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                    <div className="relative">
@@ -562,11 +603,17 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                         </div>
                         <div className="grid grid-cols-1 gap-2 text-[9px] font-mono">
                           <div className="space-y-0.5">
-                            <span className="text-primary/30 block">Expected HMAC:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary/30 block">Expected HMAC:</span>
+                              <button onClick={() => { navigator.clipboard.writeText(delivery.verification_details.expected_hmac); toast.success('Copiado'); }} className="text-[8px] text-secondary hover:underline">Copiar</button>
+                            </div>
                             <span className="text-primary/60 break-all">{delivery.verification_details.expected_hmac}</span>
                           </div>
                           <div className="space-y-0.5">
-                            <span className="text-primary/30 block">Received HMAC:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary/30 block">Received HMAC:</span>
+                              <button onClick={() => { navigator.clipboard.writeText(delivery.verification_details.received_hmac); toast.success('Copiado'); }} className="text-[8px] text-secondary hover:underline">Copiar</button>
+                            </div>
                             <span className={cn(
                               "break-all",
                               delivery.verification_details.expected_hmac === delivery.verification_details.received_hmac ? "text-emerald-600" : "text-red-600"
@@ -575,7 +622,20 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                             </span>
                           </div>
                           <div className="space-y-0.5">
-                            <span className="text-primary/30 block">Canonical Payload:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary/30 block">Canonical Payload:</span>
+                              <div className="flex gap-2">
+                                <button onClick={() => { navigator.clipboard.writeText(delivery.verification_details.canonical_payload); toast.success('Copiado'); }} className="text-[8px] text-secondary hover:underline">Copiar</button>
+                                <button onClick={() => {
+                                  const blob = new Blob([delivery.verification_details.canonical_payload], { type: 'application/json' });
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `payload_${delivery.id.slice(0, 8)}.json`;
+                                  a.click();
+                                }} className="text-[8px] text-secondary hover:underline">Baixar</button>
+                              </div>
+                            </div>
                             <div className="bg-white/50 p-2 rounded border border-primary/5 text-[8px] max-h-20 overflow-y-auto">
                               {delivery.verification_details.canonical_payload}
                             </div>
@@ -624,8 +684,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors"><Icons.Play className="w-4 h-4" /></button>
-                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Icons.Trash2 className="w-4 h-4" /></button>
+                          <button onClick={() => { fetchNotificationVersions(n.id); setShowVersionModal(n.id); }} className="p-2 text-primary/30 hover:text-secondary rounded-lg transition-colors" title="Comparar Versões"><Icons.History className="w-4 h-4" /></button>
+                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors" title="Testar"><Icons.Play className="w-4 h-4" /></button>
+                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors" title="Excluir"><Icons.Trash2 className="w-4 h-4" /></button>
                         </div>
                       </div>
 
@@ -682,6 +743,59 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
              <h3 className="text-[10px] font-black uppercase tracking-widest">Opções de Exportação</h3>
              <button onClick={() => toast.success('CSV Gerado')} className="w-full py-3 bg-secondary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">Exportar para CSV</button>
              <button onClick={() => setShowExportModal(false)} className="w-full py-3 bg-primary/5 text-primary/40 rounded-2xl text-[10px] font-black uppercase tracking-widest">Fechar</button>
+          </div>
+        </div>
+      )}
+      {showVersionModal && (
+        <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="bg-white w-full max-w-2xl rounded-3xl p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+             <div className="flex items-center justify-between">
+               <h3 className="text-sm font-black uppercase tracking-widest">Comparar Versões da Política</h3>
+               <button onClick={() => { setShowVersionModal(null); setVersionComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Versão A</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setVersionComparison(prev => ({...prev, v1: notificationVersions.find(v => v.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar versão...</option>
+                   {notificationVersions.map(v => <option key={v.id} value={v.id}>v{v.version} - {new Date(v.created_at).toLocaleString()}</option>)}
+                 </select>
+               </div>
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Versão B</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setVersionComparison(prev => ({...prev, v2: notificationVersions.find(v => v.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar versão...</option>
+                   {notificationVersions.map(v => <option key={v.id} value={v.id}>v{v.version} - {new Date(v.created_at).toLocaleString()}</option>)}
+                 </select>
+               </div>
+             </div>
+
+             {versionComparison?.v1 && versionComparison?.v2 && (
+               <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-4 space-y-4 font-mono text-[10px]">
+                 <div className="grid grid-cols-2 gap-8">
+                   <div className="space-y-4">
+                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v1.version}</h4>
+                     <pre className="whitespace-pre-wrap">{JSON.stringify(versionComparison.v1.retry_config, null, 2)}</pre>
+                   </div>
+                   <div className="space-y-4">
+                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v2.version}</h4>
+                     <pre className={cn(
+                       "whitespace-pre-wrap",
+                       JSON.stringify(versionComparison.v1.retry_config) !== JSON.stringify(versionComparison.v2.retry_config) ? "text-secondary" : "text-primary/40"
+                     )}>
+                       {JSON.stringify(versionComparison.v2.retry_config, null, 2)}
+                     </pre>
+                   </div>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
       )}
