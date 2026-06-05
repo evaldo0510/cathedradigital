@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+import { logSecurityEvent } from '../_shared/security-logs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,6 +18,14 @@ serve(async (req) => {
     // 1. Require auth - derive user from JWT, never trust body userId
     const authHeader = req.headers.get('Authorization')
     if (!authHeader?.startsWith('Bearer ')) {
+      await logSecurityEvent(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        'unauthorized_access',
+        'Attempt to access mercadopago-simulate without Bearer token',
+        'critical',
+        { headers: Object.fromEntries(req.headers.entries()) }
+      )
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 401,
@@ -56,6 +65,14 @@ serve(async (req) => {
       .maybeSingle()
 
     if (!isAdmin && !roleRow) {
+      await logSecurityEvent(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        'forbidden_access',
+        `Non-admin user ${userId} attempted to use simulation endpoint`,
+        'critical',
+        { userId }
+      )
       return new Response(JSON.stringify({ error: 'Forbidden' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 403,

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+import { logSecurityEvent } from '../_shared/security-logs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -56,6 +57,14 @@ serve(async (req) => {
     const webhookSecret = Deno.env.get('MERCADO_PAGO_WEBHOOK_SECRET')
     if (webhookSecret) {
       if (!signature) {
+        await logSecurityEvent(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+          'invalid_webhook',
+          'Webhook received without signature',
+          'critical',
+          { body, requestId }
+        )
         return new Response(JSON.stringify({ error: 'Missing signature' }), { status: 401, headers: corsHeaders })
       }
       // Mercado Pago signature format: "ts=...,v1=<hex hmac>"
@@ -82,6 +91,14 @@ serve(async (req) => {
         .map((b) => b.toString(16).padStart(2, '0'))
         .join('')
       if (!v1 || computed !== v1) {
+        await logSecurityEvent(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+          'invalid_signature',
+          'Webhook received with invalid signature',
+          'critical',
+          { body, requestId, signature }
+        )
         return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401, headers: corsHeaders })
       }
     }

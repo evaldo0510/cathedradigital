@@ -2871,6 +2871,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_security_event: {
+        Args: {
+          p_description: string
+          p_event_type: string
+          p_metadata?: Json
+          p_severity?: string
+        }
+        Returns: undefined
+      }
       mask_ip: { Args: { ip: string }; Returns: string }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
