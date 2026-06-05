@@ -70,6 +70,7 @@ test.describe('Governança de i18n e Consistência Institucional', () => {
       console.table(failures);
     }
 
+
     expect(failures, `Detectadas ${failures.length} inconsistências de tradução. Verifique o relatório json.`).toHaveLength(0);
   });
 
