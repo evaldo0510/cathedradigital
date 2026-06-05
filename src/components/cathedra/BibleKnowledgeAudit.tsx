@@ -117,6 +117,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
   }), [auditData]);
 
+
   const testWebhook = async (notificationId: string, idempotencyKey?: string) => {
     setIsTestingWebhook(true);
     const payload = { 
