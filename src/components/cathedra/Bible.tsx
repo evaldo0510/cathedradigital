@@ -766,6 +766,25 @@ const Bible: React.FC = () => {
                     )}
                     <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none">{v.number}</span>
                     <span className="align-baseline">{wrapWithDictionary(v.text)}</span>
+                    
+                    {!settings.immersiveMode && (
+                      <button 
+                        onClick={() => toggleFavorite(v)}
+                        className={cn(
+                          "absolute right-spacing-md top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-spacing-xs rounded-full hover:bg-primary/10",
+                          favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) 
+                            ? "opacity-100 text-primary" 
+                            : "text-primary/20"
+                        )}
+                      >
+                        <Icons.Heart 
+                          className={cn(
+                            "w-spacing-sm h-spacing-sm",
+                            favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) && "fill-current"
+                          )} 
+                        />
+                      </button>
+                    )}
                   </div>
                 ))}
 
