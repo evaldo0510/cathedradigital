@@ -301,6 +301,23 @@ const Bible: React.FC = () => {
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
+  // Knowledge Connection System Mock Data
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string }[]> = {
+    'Jo-6-35': [
+      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324' },
+      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16' },
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede' }
+    ],
+    'Gn-1-1': [
+      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279' },
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio' }
+    ],
+    'Mt-5-3': [
+      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716' },
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs' }
+    ]
+  };
+
   // Mock data for cross references
   const CROSS_REFERENCES: Record<string, string[]> = {
     'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
@@ -310,12 +327,7 @@ const Bible: React.FC = () => {
   };
 
   const wrapWithDictionary = (text: string) => {
-    // Cross-references logic
-    const refKeyPrefix = selectedBook ? `${selectedBook.abbr}-${selectedChapter}-` : '';
-    
-    // We'll search for cross-references by verse if it matches the text
-    // For simplicity, we'll check if the verse index has a reference
-    
+    // Knowledge connection logic handled in verse render
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
       if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
@@ -324,6 +336,7 @@ const Bible: React.FC = () => {
       return part;
     });
   };
+
 
 
 
