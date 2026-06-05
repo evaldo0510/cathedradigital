@@ -394,8 +394,10 @@ const Bible: React.FC = () => {
       emptyBooks: uncoveredBooks,
       totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
       themesCount: themes.length,
+      theologicalThemes: THEOLOGICAL_THEMES,
     };
   }, [KNOWLEDGE_CONNECTIONS]);
+
 
 
 
