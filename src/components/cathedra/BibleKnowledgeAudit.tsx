@@ -1099,14 +1099,16 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     onClick={() => setShowScanCompareModal(true)}
                     className="px-4 py-2 bg-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/10 transition-all"
                   >
-                    Comparar Verificações
+                    Comparar Registros
+
                   </button>
                   <button 
                     onClick={runSecurityScan}
                     disabled={isScanning}
                     className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
                   >
-                    {isScanning ? 'Verificando...' : 'Iniciar Varredura'}
+                    {isScanning ? 'Verificando...' : 'Executar Verificação'}
+
                   </button>
 
                 </div>
@@ -1143,8 +1145,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                         "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg",
                         scan.status === 'passed' ? "text-emerald-600 bg-emerald-50" : "text-amber-600 bg-amber-50"
                       )}>
-                        {scan.status}
+                        {scan.status === 'passed' ? 'APROVADO' : 'AVISO'}
                       </div>
+
                     </button>
                   ))}
                 </div>
@@ -1171,7 +1174,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       <span className="text-secondary font-black">{selectedScan.compliance_score}%</span>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Inconformidades Detectadas</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Inconformidades Detectadas (Issues)</span>
                       <div className="space-y-1">
                         {selectedScan.issues_found?.map((issue: any, idx: number) => (
                           <div key={idx} className="flex gap-2 p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[10px]">
