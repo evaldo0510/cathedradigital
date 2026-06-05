@@ -115,8 +115,9 @@
 
   /* Reading Themes - Consolidated with Core */
   .reading-theme-paper { 
-    --background: 45 40% 99%; 
+    --background: 45 40% 98%; 
     --foreground: 220 25% 10%;
+    --primary: 220 20% 12%;
     background-color: #FDF8F3 !important;
     color: #1a1a1a !important;
   }
