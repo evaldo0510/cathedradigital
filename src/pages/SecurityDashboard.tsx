@@ -45,10 +45,10 @@ const SecurityDashboard = () => {
     setLoading(true);
     try {
       let query = supabase
-        .from('security_logs' as any)
+        .from('security_audit_logs' as any)
         .select(`
           *,
-          profiles:user_id (name)
+          profiles:metadata->>'userId'
         `, { count: 'exact' })
         .order('created_at', { ascending: false })
         .range(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE - 1);
@@ -76,14 +76,14 @@ const SecurityDashboard = () => {
   const filteredLogs = useMemo(() => {
     return logs.filter(log => {
       const matchesUser = !userFilter || 
-        log.profiles?.name?.toLowerCase().includes(userFilter.toLowerCase()) ||
-        log.user_id?.toLowerCase().includes(userFilter.toLowerCase());
+        log.metadata?.userId?.toLowerCase().includes(userFilter.toLowerCase()) ||
+        log.description?.toLowerCase().includes(userFilter.toLowerCase());
       
       const matchesResource = !resourceFilter || 
-        log.resource?.toLowerCase().includes(resourceFilter.toLowerCase());
+        log.event_type?.toLowerCase().includes(resourceFilter.toLowerCase());
 
       const matchesAction = !actionFilter ||
-        log.action?.toLowerCase().includes(actionFilter.toLowerCase());
+        log.severity?.toLowerCase().includes(actionFilter.toLowerCase());
       
       const logDate = new Date(log.created_at).getTime();
       const matchesStart = !startDate || logDate >= new Date(startDate).getTime();
@@ -106,14 +106,13 @@ const SecurityDashboard = () => {
       content = JSON.stringify(filteredLogs, null, 2);
       fileName += '.json';
     } else {
-      const headers = ['Data', 'Evento', 'Usuário', 'Recurso', 'Ação', 'IP'];
+      const headers = ['Data', 'Evento', 'Severidade', 'Descrição', 'Metadata'];
       const rows = filteredLogs.map(log => [
         new Date(log.created_at).toLocaleString(),
         log.event_type,
-        log.profiles?.name || log.user_id || 'Anônimo',
-        log.resource,
-        log.action,
-        log.ip_address || ''
+        log.severity,
+        log.description,
+        JSON.stringify(log.metadata)
       ]);
       content = [headers, ...rows].map(e => e.join(',')).join('\n');
       fileName += '.csv';
@@ -129,11 +128,11 @@ const SecurityDashboard = () => {
     toast.success(`Logs exportados como ${format.toUpperCase()}`);
   };
 
-  const getEventBadge = (type: string) => {
-    switch (type) {
-      case 'ACCESS_DENIED': return <Badge variant="destructive" className="font-bold uppercase tracking-tighter">Acesso Negado</Badge>;
-      case 'SENSITIVE_OP': return <Badge variant="outline" className="border-amber-500 text-amber-600 font-bold uppercase tracking-tighter">Op. Sensível</Badge>;
-      default: return <Badge variant="secondary">{type}</Badge>;
+  const getSeverityBadge = (severity: string) => {
+    switch (severity) {
+      case 'critical': return <Badge variant="destructive" className="font-bold uppercase tracking-tighter">Crítico</Badge>;
+      case 'warning': return <Badge variant="outline" className="border-amber-500 text-amber-600 font-bold uppercase tracking-tighter">Aviso</Badge>;
+      default: return <Badge variant="secondary">{severity}</Badge>;
     }
   };
 
@@ -180,13 +179,27 @@ const SecurityDashboard = () => {
               />
             </div>
             <div className="space-y-spacing-xs">
-              <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Recurso</label>
+              <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Tipo de Evento</label>
               <Input 
-                placeholder="Tabela ou objeto" 
+                placeholder="Ex: invalid_signature" 
                 value={resourceFilter}
                 onChange={(e) => setResourceFilter(e.target.value)}
                 className="rounded-premium"
               />
+            </div>
+            <div className="space-y-spacing-xs">
+              <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Severidade</label>
+              <Select value={actionFilter} onValueChange={setActionFilter}>
+                <SelectTrigger className="rounded-premium">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="critical">Crítico</SelectItem>
+                  <SelectItem value="warning">Aviso</SelectItem>
+                  <SelectItem value="info">Info</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-spacing-xs">
               <label className="text-[10px] font-black uppercase tracking-widest opacity-60">Data Início</label>
@@ -218,9 +231,8 @@ const SecurityDashboard = () => {
                 <TableRow className="border-border/40">
                   <TableHead className="text-premium-xs font-black uppercase tracking-widest py-spacing-lg px-spacing-lg">Data/Hora</TableHead>
                   <TableHead className="text-premium-xs font-black uppercase tracking-widest">Evento</TableHead>
-                  <TableHead className="text-premium-xs font-black uppercase tracking-widest">Usuário</TableHead>
-                  <TableHead className="text-premium-xs font-black uppercase tracking-widest">Recurso</TableHead>
-                  <TableHead className="text-premium-xs font-black uppercase tracking-widest">Ação</TableHead>
+                  <TableHead className="text-premium-xs font-black uppercase tracking-widest">Severidade</TableHead>
+                  <TableHead className="text-premium-xs font-black uppercase tracking-widest">Descrição</TableHead>
                   <TableHead className="text-premium-xs font-black uppercase tracking-widest text-right px-spacing-lg">Detalhes</TableHead>
                 </TableRow>
               </TableHeader>
@@ -239,17 +251,12 @@ const SecurityDashboard = () => {
                       <TableCell className="px-spacing-lg py-spacing-md font-mono text-[10px]">
                         {new Date(log.created_at).toLocaleString('pt-BR')}
                       </TableCell>
-                      <TableCell>{getEventBadge(log.event_type)}</TableCell>
-                      <TableCell className="font-medium text-premium-sm">
-                        {log.profiles?.name || log.user_id || 'Anônimo'}
-                      </TableCell>
                       <TableCell>
-                        <code className="bg-muted px-spacing-2xs rounded text-[11px] font-mono text-primary/80">
-                          {log.resource}
-                        </code>
+                        <Badge variant="outline" className="text-[10px] font-bold uppercase">{log.event_type}</Badge>
                       </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="text-[10px] font-bold uppercase">{log.action}</Badge>
+                      <TableCell>{getSeverityBadge(log.severity)}</TableCell>
+                      <TableCell className="font-medium text-premium-sm max-w-[300px] truncate">
+                        {log.description}
                       </TableCell>
                       <TableCell className="text-right px-spacing-lg">
                         <Button 
@@ -321,31 +328,24 @@ const SecurityDashboard = () => {
                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Informações de Contexto</h4>
                 <div className="bg-muted/30 p-spacing-md rounded-premium space-y-spacing-xs border border-border/20">
                   <div className="flex justify-between text-premium-xs">
-                    <span className="font-bold">IP:</span>
-                    <span>{selectedLog?.ip_address || 'Não registrado'}</span>
+                    <span className="font-bold">Evento:</span>
+                    <span>{selectedLog?.event_type}</span>
                   </div>
                   <div className="flex justify-between text-premium-xs">
-                    <span className="font-bold">Usuário:</span>
-                    <span className="font-mono">{selectedLog?.user_id || 'Anônimo'}</span>
+                    <span className="font-bold">Usuário (Metadata):</span>
+                    <span className="font-mono">{selectedLog?.metadata?.userId || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-premium-xs">
-                    <span className="font-bold">Recurso:</span>
-                    <code className="bg-primary/5 text-primary px-1 rounded">{selectedLog?.resource}</code>
+                    <span className="font-bold">Severidade:</span>
+                    {getSeverityBadge(selectedLog?.severity)}
                   </div>
                 </div>
               </div>
 
               <div className="space-y-spacing-2xs">
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Evento</h4>
-                <div className="bg-muted/30 p-spacing-md rounded-premium space-y-spacing-xs border border-border/20">
-                  <div className="flex justify-between text-premium-xs">
-                    <span className="font-bold">Tipo:</span>
-                    {getEventBadge(selectedLog?.event_type)}
-                  </div>
-                  <div className="flex justify-between text-premium-xs">
-                    <span className="font-bold">Ação:</span>
-                    <Badge variant="outline">{selectedLog?.action}</Badge>
-                  </div>
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Descrição</h4>
+                <div className="bg-muted/30 p-spacing-md rounded-premium text-premium-sm border border-border/20 italic font-serif">
+                  {selectedLog?.description}
                 </div>
               </div>
             </div>
@@ -353,7 +353,7 @@ const SecurityDashboard = () => {
             <div className="space-y-spacing-2xs">
               <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Payload / Metadata</h4>
               <pre className="bg-zinc-950 text-zinc-50 p-spacing-md rounded-premium text-[11px] font-mono overflow-auto max-h-[300px] border border-white/5">
-                {JSON.stringify(selectedLog?.details, null, 2)}
+                {JSON.stringify(selectedLog?.metadata, null, 2)}
               </pre>
             </div>
           </div>
