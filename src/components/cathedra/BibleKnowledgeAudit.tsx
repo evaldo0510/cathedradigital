@@ -279,8 +279,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       const delivery = webhookDeliveries.find(d => d.id === deliveryId);
       if (!delivery) return;
       toast.info('Reenviando notificação...');
-      await testWebhook(delivery.notification_id);
-      await logAction('Resend Notification', 'webhook_delivery', deliveryId);
+      
+      // Use the same idempotency key if it exists, or generate a new one specifically for this resend attempt
+      // but usually for resend we might want a new one if it's a "retry" of a failed attempt, 
+      // or the same one if we are unsure if it reached. 
+      // The user asked to "Prevent duplicate notifications by adding an idempotency key"
+      const idempotencyKey = delivery.idempotency_key || crypto.randomUUID();
+      
+      await testWebhook(delivery.notification_id, idempotencyKey);
+      await logAction('Resend Notification', 'webhook_delivery', deliveryId, { idempotency_key: idempotencyKey });
     } finally {
       setIsResending(null);
     }
