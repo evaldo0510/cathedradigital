@@ -55,7 +55,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'logs', 'schedule', 'history', 'notifications', 'webhooks'].includes(tab)) {
+    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks'].includes(tab)) {
       setActiveTab(tab as any);
     }
   }, [searchParams]);
@@ -404,7 +404,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
             { id: 'history', label: 'Histórico', icon: Icons.History },
-            { id: 'audit-logs', label: 'Log de Ações', icon: Icons.ListOrdered },
+            { id: 'audit-logs', label: 'Log de Ações', icon: Icons.List },
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Testar Webhooks', icon: Icons.Code },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
