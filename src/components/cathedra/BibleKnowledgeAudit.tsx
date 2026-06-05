@@ -151,9 +151,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         verification_details = {
           expected_hmac: expectedHmac,
           received_hmac: 'hmac_sha256_placeholder',
-          canonical_payload: JSON.stringify(payload),
-          status: 'verified'
+          canonical_payload: JSON.stringify(payload), // Conteúdo Padronizado
+          status: 'verificado'
         };
+
       }
 
       const startTime = Date.now();
