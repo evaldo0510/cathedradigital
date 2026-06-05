@@ -300,8 +300,19 @@ const Bible: React.FC = () => {
   };
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
+  
+  // Mock data for cross references
+  const CROSS_REFERENCES: Record<string, string[]> = {
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3'],
+    'Mt-5-3': ['Lc-6-20'],
+  };
 
   const wrapWithDictionary = (text: string) => {
+    // Priority: Cross references, then Dictionary
+    const refKey = selectedBook && `${selectedBook.abbr}-${selectedChapter}`;
+    
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
       if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
@@ -310,6 +321,7 @@ const Bible: React.FC = () => {
       return part;
     });
   };
+
 
   const filteredBooks = useMemo(() => {
     if (!searchQuery) return BIBLE_DATA;
