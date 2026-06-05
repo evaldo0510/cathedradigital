@@ -509,6 +509,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }
   };
 
+  const filteredI18nLogs = React.useMemo(() => {
+    return i18nFailures
+      .filter(log => {
+        const matchesSearch = log.term.toLowerCase().includes(i18nSearch.toLowerCase()) || 
+                             log.expected.toLowerCase().includes(i18nSearch.toLowerCase());
+        const matchesStatus = i18nStatusFilter === 'all' || log.status === i18nStatusFilter;
+        const matchesCategory = i18nCategoryFilter === 'all' || log.context === i18nCategoryFilter;
+        return matchesSearch && matchesStatus && matchesCategory;
+      })
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+  }, [i18nFailures, i18nSearch, i18nStatusFilter, i18nCategoryFilter]);
+
+  const paginatedI18nLogs = React.useMemo(() => {
+    const start = (i18nPage - 1) * itemsPerPage;
+    return filteredI18nLogs.slice(start, start + itemsPerPage);
+  }, [filteredI18nLogs, i18nPage, itemsPerPage]);
+
+  const totalI18nPages = Math.ceil(filteredI18nLogs.length / itemsPerPage);
+
+  const i18nCategories = React.useMemo(() => {
+    const cats = new Set(i18nFailures.map(f => f.context));
+    return ['all', ...Array.from(cats)];
+  }, [i18nFailures]);
+
   const coveragePercent = Math.round((stats.coveredChapters / stats.totalChapters) * 100);
 
   const startIntegrityScan = async (retryFailedOnly = false) => {
