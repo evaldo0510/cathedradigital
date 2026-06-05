@@ -790,10 +790,10 @@ const Bible: React.FC = () => {
                         </div>
 
                       );
-                    })}
+                    })
+                  )}
+                </div>
 
-
-                  </div>
 
                   {/* Vertical Navigation Buttons */}
                   <footer className="pt-20 space-y-4">
