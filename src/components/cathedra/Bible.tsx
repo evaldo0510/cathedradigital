@@ -573,7 +573,13 @@ const Bible: React.FC = () => {
           title={selectedBook.name}
           icon={Icons.Bible}
           className={cn(settings.immersiveMode && "max-w-prose")}
+          headerActions={
+            <div className="flex items-center gap-spacing-sm">
+              <ReadingSettingsPopover />
+            </div>
+          }
         >
+
           <div className="pb-spacing-4xl">
             {!settings.immersiveMode && (
               <div className="flex justify-between items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md">
