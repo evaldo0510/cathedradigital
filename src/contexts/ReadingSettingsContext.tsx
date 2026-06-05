@@ -57,6 +57,7 @@ interface ReadingSettings {
   audioContinuous: boolean; // Alternar entre contínuo e capítulo a capítulo
   audioCaptionSize: 'small' | 'medium' | 'large';
   showAudioTranscriptPanel: boolean;
+  showStudyMarginalia: boolean;
   lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
@@ -121,6 +122,7 @@ const defaultSettings: ReadingSettings = {
   audioContinuous: true,
   audioCaptionSize: 'medium',
   showAudioTranscriptPanel: false,
+  showStudyMarginalia: false,
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
