@@ -205,6 +205,56 @@ export type Database = {
           },
         ]
       }
+      bible_audit_notification_versions: {
+        Row: {
+          channel: string | null
+          created_at: string | null
+          created_by: string | null
+          headers: Json | null
+          id: string
+          notification_id: string | null
+          priority: string | null
+          retry_config: Json | null
+          rules: Json | null
+          target: string | null
+          version: number
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          headers?: Json | null
+          id?: string
+          notification_id?: string | null
+          priority?: string | null
+          retry_config?: Json | null
+          rules?: Json | null
+          target?: string | null
+          version: number
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          headers?: Json | null
+          id?: string
+          notification_id?: string | null
+          priority?: string | null
+          retry_config?: Json | null
+          rules?: Json | null
+          target?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_audit_notification_versions_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_audit_notifications: {
         Row: {
           channel: string | null
@@ -212,6 +262,7 @@ export type Database = {
           headers: Json | null
           id: string
           is_active: boolean | null
+          is_latest: boolean | null
           priority: string | null
           priority_threshold: string | null
           retry_config: Json | null
@@ -220,6 +271,7 @@ export type Database = {
           target: string
           type: string
           updated_at: string | null
+          version: number | null
         }
         Insert: {
           channel?: string | null
@@ -227,6 +279,7 @@ export type Database = {
           headers?: Json | null
           id?: string
           is_active?: boolean | null
+          is_latest?: boolean | null
           priority?: string | null
           priority_threshold?: string | null
           retry_config?: Json | null
@@ -235,6 +288,7 @@ export type Database = {
           target: string
           type: string
           updated_at?: string | null
+          version?: number | null
         }
         Update: {
           channel?: string | null
@@ -242,6 +296,7 @@ export type Database = {
           headers?: Json | null
           id?: string
           is_active?: boolean | null
+          is_latest?: boolean | null
           priority?: string | null
           priority_threshold?: string | null
           retry_config?: Json | null
@@ -250,6 +305,7 @@ export type Database = {
           target?: string
           type?: string
           updated_at?: string | null
+          version?: number | null
         }
         Relationships: []
       }
@@ -359,10 +415,12 @@ export type Database = {
           duration_ms: number | null
           error_message: string | null
           id: string
+          idempotency_key: string | null
           notification_id: string | null
           request_payload: Json | null
           response_payload: string | null
           status_code: number | null
+          verification_details: Json | null
         }
         Insert: {
           alert_id?: string | null
@@ -371,10 +429,12 @@ export type Database = {
           duration_ms?: number | null
           error_message?: string | null
           id?: string
+          idempotency_key?: string | null
           notification_id?: string | null
           request_payload?: Json | null
           response_payload?: string | null
           status_code?: number | null
+          verification_details?: Json | null
         }
         Update: {
           alert_id?: string | null
@@ -383,10 +443,12 @@ export type Database = {
           duration_ms?: number | null
           error_message?: string | null
           id?: string
+          idempotency_key?: string | null
           notification_id?: string | null
           request_payload?: Json | null
           response_payload?: string | null
           status_code?: number | null
+          verification_details?: Json | null
         }
         Relationships: [
           {
