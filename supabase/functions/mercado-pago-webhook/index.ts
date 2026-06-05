@@ -115,24 +115,14 @@ serve(async (req) => {
     if (action === 'payment.created' || action === 'payment.updated') {
       const paymentId = data.id
       let paymentDetails: any
-      
-      if (simulation) {
-        paymentDetails = {
-          id: paymentId,
-          status: simulated_status || 'approved',
-          transaction_amount: 99.9,
-          description: 'Plano PRO - Simulação',
-          external_reference: providedUserId,
-          metadata: { plan_id: 'pro_annual' }
-        }
-      } else {
-        const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
-        const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-          headers: { Authorization: `Bearer ${mpToken}` }
-        })
-        if (!response.ok) throw new Error(`Failed to fetch payment details: ${response.statusText}`)
-        paymentDetails = await response.json()
-      }
+
+      // Always fetch real payment details from Mercado Pago - no simulation shortcut
+      const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
+      const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        headers: { Authorization: `Bearer ${mpToken}` }
+      })
+      if (!response.ok) throw new Error(`Failed to fetch payment details: ${response.statusText}`)
+      paymentDetails = await response.json()
 
       const { status, external_reference: userId } = paymentDetails
       
