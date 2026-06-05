@@ -661,6 +661,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     </select>
                   </div>
                   {comparison?.run1 && comparison?.run2 && (
+                    <>
                     <div className="flex justify-end gap-2 mb-4">
                       <button 
                         onClick={() => {
