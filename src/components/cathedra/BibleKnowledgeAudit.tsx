@@ -346,6 +346,32 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }
   };
 
+  const revertNotificationPolicy = async (notificationId: string, versionObj: any) => {
+    const { error } = await supabase
+      .from('bible_audit_notifications')
+      .update({
+        retry_config: versionObj.retry_config,
+        target: versionObj.target,
+        rules: versionObj.rules,
+        priority: versionObj.priority,
+        headers: versionObj.headers
+      })
+      .eq('id', notificationId);
+
+    if (!error) {
+      toast.success('Política revertida com sucesso');
+      logAction('Revert Notification Policy', 'notification', notificationId, { 
+        reverted_to_version: versionObj.version,
+        reverted_from_version: notificationSettings.find(n => n.id === notificationId)?.version
+      });
+      fetchNotifications();
+      fetchNotificationVersions(notificationId);
+      setShowVersionModal(null);
+    } else {
+      toast.error('Erro ao reverter política');
+    }
+  };
+
   const coveragePercent = Math.round((stats.coveredChapters / stats.totalChapters) * 100);
 
   const startIntegrityScan = async (retryFailedOnly = false) => {
@@ -484,22 +510,33 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                <div className="flex flex-col gap-4">
                  <div className="flex items-center justify-between">
                    <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
-                   <div className="flex gap-2">
-                     <button 
-                       onClick={() => toast.success('CSV do Log Exportado')} 
-                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
-                       title="Exportar CSV com filtros"
-                     >
-                       <Icons.FileSpreadsheet className="w-4 h-4" />
-                     </button>
-                     <button 
-                       onClick={() => window.print()} 
-                       className="p-2 text-primary/30 hover:text-secondary transition-colors"
-                       title="Exportar PDF com filtros"
-                     >
-                       <Icons.Printer className="w-4 h-4" />
-                     </button>
-                   </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => {
+                          const url = new URL(window.location.href);
+                          navigator.clipboard.writeText(url.toString());
+                          toast.success('Link com filtros copiado!');
+                        }} 
+                        className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                        title="Compartilhar Link com Filtros"
+                      >
+                        <Icons.Share2 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => toast.success('CSV do Log Exportado')} 
+                        className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                        title="Exportar CSV com filtros"
+                      >
+                        <Icons.FileSpreadsheet className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => window.print()} 
+                        className="p-2 text-primary/30 hover:text-secondary transition-colors"
+                        title="Exportar PDF com filtros"
+                      >
+                        <Icons.Printer className="w-4 h-4" />
+                      </button>
+                    </div>
                  </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -521,8 +558,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                      <option value="all">Todas as Ações</option>
                      <option value="Run Audit Now">Execução de Auditoria</option>
                      <option value="Resend Notification">Reenvio de Notificação</option>
-                     <option value="Add Notification Channel">Novo Canal</option>
-                   </select>
+                      <option value="Add Notification Channel">Novo Canal</option>
+                      <option value="Update Notification Policy">Mudança de Política</option>
+                      <option value="Revert Notification Policy">Reversão de Política</option>
+                    </select>
                    <input 
                      type="text" 
                      placeholder="Run ID..." 
@@ -793,20 +832,66 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
              </div>
 
              {versionComparison?.v1 && versionComparison?.v2 && (
-               <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-4 space-y-4 font-mono text-[10px]">
-                 <div className="grid grid-cols-2 gap-8">
-                   <div className="space-y-4">
-                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v1.version}</h4>
-                     <pre className="whitespace-pre-wrap">{JSON.stringify(versionComparison.v1.retry_config, null, 2)}</pre>
+               <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-6 space-y-6">
+                 <div className="flex items-center justify-between">
+                   <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Side-by-Side Comparison</h4>
+                   <div className="flex gap-2">
+                     <button 
+                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
+                       className="px-4 py-2 bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-secondary/20 transition-colors"
+                     >
+                       Reverter para v{versionComparison.v1.version}
+                     </button>
+                     <button 
+                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v2)}
+                       className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
+                     >
+                       Reverter para v{versionComparison.v2.version}
+                     </button>
                    </div>
-                   <div className="space-y-4">
-                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v2.version}</h4>
-                     <pre className={cn(
-                       "whitespace-pre-wrap",
-                       JSON.stringify(versionComparison.v1.retry_config) !== JSON.stringify(versionComparison.v2.retry_config) ? "text-secondary" : "text-primary/40"
-                     )}>
-                       {JSON.stringify(versionComparison.v2.retry_config, null, 2)}
-                     </pre>
+                 </div>
+
+                 <div className="space-y-4">
+                   {[
+                     { label: 'Backoff Strategy', get: (v: any) => v.retry_config?.backoff || 'linear' },
+                     { label: 'Max Attempts', get: (v: any) => v.retry_config?.max_retries || 3 },
+                     { label: 'Retry Window (s)', get: (v: any) => v.retry_config?.retry_window || 3600 },
+                     { label: 'Target Endpoint', get: (v: any) => v.target },
+                     { label: 'Priority Level', get: (v: any) => v.priority || 'high' }
+                   ].map(field => {
+                     const val1 = field.get(versionComparison.v1);
+                     const val2 = field.get(versionComparison.v2);
+                     const isChanged = JSON.stringify(val1) !== JSON.stringify(val2);
+
+                     return (
+                       <div key={field.label} className="grid grid-cols-2 gap-8 py-4 border-b border-primary/5 last:border-0">
+                         <div className="space-y-1">
+                           <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{field.label}</span>
+                           <div className="text-[11px] font-mono text-primary/60">{String(val1)}</div>
+                         </div>
+                         <div className="space-y-1">
+                           <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{field.label}</span>
+                           <div className={cn(
+                             "text-[11px] font-mono",
+                             isChanged ? "text-secondary font-bold" : "text-primary/40"
+                           )}>
+                             {String(val2)}
+                             {isChanged && <span className="ml-2 text-[8px] bg-secondary/10 px-1 rounded">ALTERADO</span>}
+                           </div>
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+
+                 <div className="grid grid-cols-2 gap-8 pt-4">
+                   <div className="space-y-2">
+                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v1.version})</span>
+                     <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v1, null, 2)}</pre>
+                   </div>
+                   <div className="space-y-2">
+                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v2.version})</span>
+                     <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v2, null, 2)}</pre>
                    </div>
                  </div>
                </div>
