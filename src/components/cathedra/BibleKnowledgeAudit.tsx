@@ -603,7 +603,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                         </div>
                         <div className="grid grid-cols-1 gap-2 text-[9px] font-mono">
                           <div className="space-y-0.5">
-                            <span className="text-primary/30 block">Expected HMAC:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary/30 block">Expected HMAC:</span>
+                              <button onClick={() => { navigator.clipboard.writeText(delivery.verification_details.expected_hmac); toast.success('Copiado'); }} className="text-[8px] text-secondary hover:underline">Copiar</button>
+                            </div>
                             <span className="text-primary/60 break-all">{delivery.verification_details.expected_hmac}</span>
                           </div>
                           <div className="space-y-0.5">
