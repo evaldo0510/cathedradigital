@@ -33,6 +33,15 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
 
     setIsLoading(true);
     try {
+      // Mock logic for "Theological Themes"
+      const theologicalThemes = ['eucaristia', 'criação', 'trindade', 'pecado', 'graça', 'maria', 'justificação'];
+      const queryLower = query.toLowerCase();
+      
+      if (theologicalThemes.some(theme => queryLower.includes(theme))) {
+        toast.success(`Filtrando por tema teológico: ${query}`);
+        // In a real scenario, this would call a specialized Edge Function
+      }
+
       const { data, error } = await supabase.functions.invoke('bible-search', {
         body: { query }
       });
@@ -47,6 +56,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
