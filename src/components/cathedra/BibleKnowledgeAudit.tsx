@@ -595,11 +595,21 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                        <div className="flex items-center gap-2">
                          <span className="text-[9px] uppercase tracking-widest text-primary/30 bg-primary/5 px-1.5 py-0.5 rounded">{log.entity_type}</span>
                          <span className="text-[9px] font-mono text-primary/20">{log.entity_id?.slice(0, 8)}</span>
-                         {log.metadata?.run_id && (
-                           <span className="text-[9px] font-medium text-secondary/60">Run: {log.metadata.run_id.slice(0, 6)}</span>
-                         )}
-                       </div>
-                     </div>
+                          {log.metadata?.run_id && (
+                            <span className="text-[9px] font-medium text-secondary/60">Run: {log.metadata.run_id.slice(0, 6)}</span>
+                          )}
+                          {(log.action === 'Update Notification Policy' || log.action === 'Revert Notification Policy') && log.metadata?.updates && (
+                            <span className="text-[9px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                              Alt: {Object.keys(log.metadata.updates).join(', ')}
+                            </span>
+                          )}
+                          {log.action === 'Revert Notification Policy' && log.metadata?.reverted_to_version && (
+                            <span className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded">
+                              Revertido para v{log.metadata.reverted_to_version}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                      <span className="text-[10px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
                    </div>
                  )) : (
