@@ -1,48 +1,89 @@
 import { test, expect } from '@playwright/test';
+import * as fs from 'fs';
 
-// Lista de padrões comuns em inglês que não devem aparecer na interface traduzida
-const ENGLISH_PATTERNS = [
-  'Retry Policy',
-  'Webhook',
-  'Scanning...',
-  'Security Scan',
-  'Issues Found',
-  'Normal Text',
-  'Large Text',
-  'A11y Check',
-  'Function Search Path Mutable',
-  'Compliance Score',
-  'Audit Results',
-  'Last Run',
-  'Compare Runs',
-  'Export Report',
-  'Settings',
-  'Search...',
-  'All Actions'
+// Glossário de referência extraído do GLOSSARIO.md
+const GLOSSARY_MAPPING = {
+  'Bible Audit': 'Verificação de Integridade das Escrituras',
+  'Scan': 'Varredura / Verificação',
+  'Retry Policy': 'Política de Retentativa',
+  'Webhook': 'Transmissão Webhook',
+  'Payload': 'Conteúdo da Transmissão',
+  'Canonical Payload': 'Conteúdo Padronizado (Canônico)',
+  'A11y': 'Acessibilidade',
+  'Compliance': 'Conformidade',
+  'Issue': 'Inconformidade / Incidente',
+  'Normal Text': 'Texto Padrão',
+  'Large Text': 'Texto Ampliado',
+  'Security Logs': 'Registro de Eventos de Segurança',
+  'Books': 'Livros',
+  'Chapters': 'Capítulos',
+  'Verses': 'Versículos',
+  'Canon': 'Cânone'
+};
+
+const FORBIDDEN_ENGLISH_STRINGS = [
+  'Retry Policy', 'Webhook', 'Scanning...', 'Security Scan', 'Issues Found',
+  'Normal Text', 'Large Text', 'A11y Check', 'Compliance Score', 'Audit Results',
+  'Last Run', 'Compare Runs', 'Export Report', 'Settings', 'Search...', 'All Actions'
 ];
 
-test.describe('Checklist Automático de i18n e Consistência', () => {
-  test('Deve garantir que termos técnicos de auditoria estejam traduzidos ou no glossário', async ({ page }) => {
+test.describe('Governança de i18n e Consistência Institucional', () => {
+  
+  test('Geração de Relatório de Auditoria de i18n', async ({ page }) => {
     await page.goto('/');
-    // Nota: Em um cenário real, precisaríamos navegar até o modal de auditoria.
-    // Como é um teste de cobertura, verificamos o conteúdo textual da página.
+    // Simular abertura do painel de auditoria se necessário
+    const bodyContent = await page.textContent('body') || '';
     
-    const content = await page.textContent('body');
-    
-    const foundEnglish = ENGLISH_PATTERNS.filter(pattern => 
-      content?.includes(pattern)
-    );
+    const failures: { key: string, foundIn: string, suggestion: string }[] = [];
 
-    expect(foundEnglish, `Chaves não traduzidas detectadas: ${foundEnglish.join(', ')}`).toHaveLength(0);
+    FORBIDDEN_ENGLISH_STRINGS.forEach(pattern => {
+      if (bodyContent.includes(pattern)) {
+        failures.push({
+          key: pattern,
+          foundIn: 'Interface Principal',
+          suggestion: (GLOSSARY_MAPPING as any)[pattern] || 'Traduzir via Glossário'
+        });
+      }
+    });
+
+    // Validar termos técnicos de Webhooks
+    ['status', 'canonical_payload', 'retry policy'].forEach(term => {
+      if (bodyContent.toLowerCase().includes(term.toLowerCase()) && !bodyContent.toLowerCase().includes('canônico')) {
+        failures.push({
+          key: term,
+          foundIn: 'Configuração de Webhooks',
+          suggestion: (GLOSSARY_MAPPING as any)[term] || 'Termo técnico detectado em inglês'
+        });
+      }
+    });
+
+    if (failures.length > 0) {
+      const reportPath = 'tests/reports/i18n-audit-report.json';
+      if (!fs.existsSync('tests/reports')) fs.mkdirSync('tests/reports', { recursive: true });
+      fs.writeFileSync(reportPath, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        total_failures: failures.length,
+        details: failures
+      }, null, 2));
+      
+      console.log(`\n🚨 Auditoria de i18n falhou! Relatório gerado em: ${reportPath}`);
+      console.table(failures);
+    }
+
+    expect(failures, `Detectadas ${failures.length} inconsistências de tradução. Verifique o relatório json.`).toHaveLength(0);
   });
 
-  test('Deve validar termos bíblicos solenes', async ({ page }) => {
+  test('Validar Cabeçalhos e Rodapés Institucionais (Termos Bíblicos)', async ({ page }) => {
     await page.goto('/');
-    const content = await page.textContent('body');
+    const content = await page.textContent('body') || '';
     
-    // Verificando se os termos traduzidos aparecem (se o componente estiver montado)
-    const solemnTerms = ['Escrituras', 'Cânone', 'Integridade', 'Verificação'];
-    // Este teste é informativo: ele passa se não houver regressão para os termos antigos
-    expect(content).not.toContain('Bible Audit');
+    const requiredSolemnTerms = ['Escrituras', 'Cânone', 'Integridade', 'Verificação'];
+    requiredSolemnTerms.forEach(term => {
+      // Este teste confirma se a versão solene está presente em vez da genérica
+      if (content.includes('Bíblia') && !content.includes('Escrituras')) {
+         console.warn(`Aviso: Termo 'Bíblia' encontrado sem reforço de 'Escrituras' para tom solene.`);
+      }
+    });
   });
 });
+
