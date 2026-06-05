@@ -91,7 +91,26 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Cobertura</span>
               </div>
             </div>
+            
+            {/* Evolution Chart */}
+            <div className="w-full h-32 flex items-end gap-1 px-4 pt-8">
+              {[45, 48, 52, 51, 58, 60, 62].map((val, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
+                  <div 
+                    className="w-full bg-secondary/20 rounded-t-lg transition-all duration-1000 group-hover:bg-secondary/40 relative"
+                    style={{ height: `${val}%` }}
+                  >
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      v1.{i} - {val}%
+                    </div>
+                  </div>
+                  <span className="text-[7px] font-black text-primary/20 uppercase tracking-tighter">0{i+1}/06</span>
+                </div>
+              ))}
+            </div>
+            
             <p className="text-premium-xs font-serif italic text-primary/60">
+
               A Bíblia está sendo conectada ao Catecismo, Magistério e Tradição.
             </p>
           </section>
