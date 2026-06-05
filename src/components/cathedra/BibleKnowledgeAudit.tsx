@@ -1167,7 +1167,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       <span className="text-secondary font-black">{selectedScan.compliance_score}%</span>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Issues Encontradas</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Inconformidades Detectadas</span>
                       <div className="space-y-1">
                         {selectedScan.issues_found?.map((issue: any, idx: number) => (
                           <div key={idx} className="flex gap-2 p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[10px]">
