@@ -854,8 +854,53 @@ const Bible: React.FC = () => {
       />
 
 
+      <AnimatePresence>
+        {expandedConnection && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setExpandedConnection(null)}
+              className="absolute inset-0 bg-background/40 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 md:p-10 space-y-6"
+            >
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">{expandedConnection.label}</h3>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Documentum Sacrum</span>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setExpandedConnection(null)} className="rounded-full opacity-40 hover:opacity-100">
+                  <Icons.X className="w-6 h-6" />
+                </Button>
+              </div>
+              
+              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8">
+                <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
+                  {expandedConnection.summary}
+                  {" "}Este texto representa o ensino oficial da Igreja sobre o tema. O Catecismo e o Magistério fornecem a lente interpretativa para as Sagradas Escrituras, garantindo a fidelidade à Tradição Apostólica.
+                </p>
+              </div>
+              
+              <Button 
+                onClick={() => setExpandedConnection(null)}
+                className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
+              >
+                Concluir Consulta
+              </Button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
+
 
 export default Bible;
