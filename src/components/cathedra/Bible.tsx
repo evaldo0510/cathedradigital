@@ -57,8 +57,124 @@ const Bible: React.FC = () => {
   const { saveLastRead } = useReadingMarks();
   const { user } = useAuth();
 
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const [favoriteSearchQuery, setFavoriteSearchQuery] = useState('');
+  const [isFavoritesLoading, setIsFavoritesLoading] = useState(false);
+
   const observerTarget = useRef(null);
   const versesContainerRef = useRef<HTMLDivElement>(null);
+
+  const fetchFavorites = async () => {
+    if (!user) return;
+    setIsFavoritesLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('bible_favorites')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setFavorites(data || []);
+    } catch (error: any) {
+      console.error('Error fetching favorites:', error);
+    } finally {
+      setIsFavoritesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && viewMode === 'favorites') {
+      fetchFavorites();
+    }
+  }, [user, viewMode]);
+
+  const toggleFavorite = async (verse: any) => {
+    if (!user) {
+      toast.error('Faça login para favoritar versículos');
+      return;
+    }
+
+    const isFav = favorites.some(f => 
+      f.book_abbr === selectedBook?.abbr && 
+      f.chapter === selectedChapter && 
+      f.verse_number === verse.number
+    );
+
+    try {
+      if (isFav) {
+        const { error } = await supabase
+          .from('bible_favorites')
+          .delete()
+          .match({ 
+            user_id: user.id, 
+            book_abbr: selectedBook?.abbr, 
+            chapter: selectedChapter, 
+            verse_number: verse.number 
+          });
+        if (error) throw error;
+        setFavorites(prev => prev.filter(f => 
+          !(f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === verse.number)
+        ));
+        toast.success('Removido dos favoritos');
+      } else {
+        const { error } = await supabase
+          .from('bible_favorites')
+          .insert({
+            user_id: user.id,
+            book_abbr: selectedBook?.abbr,
+            chapter: selectedChapter,
+            verse_number: verse.number,
+            content: verse.text
+          });
+        if (error) throw error;
+        fetchFavorites();
+        toast.success('Adicionado aos favoritos');
+      }
+    } catch (error: any) {
+      console.error('Error toggling favorite:', error);
+      toast.error('Erro ao processar favorito');
+    }
+  };
+
+  const jumpToFavorite = (fav: any) => {
+    let foundBook: BibleBook | null = null;
+    for (const t of Object.values(BIBLE_DATA)) {
+      for (const cat of t) {
+        const b = cat.books.find(b => b.abbr === fav.book_abbr);
+        if (b) {
+          foundBook = b;
+          break;
+        }
+      }
+      if (foundBook) break;
+    }
+
+    if (foundBook) {
+      setSelectedBook(foundBook);
+      setSelectedChapter(fav.chapter);
+      setViewMode('reading');
+      navigate(`/bible?book=${fav.book_abbr}&ch=${fav.chapter}`);
+      
+      // We need to wait for verses to load, handled by the memory scroll logic in fetchVerses 
+      // or we can manually trigger a scroll if already loaded.
+      // The Bible.tsx already has a scroll to settings.audioPositionMemory logic.
+      // Let's update the settings to ensure it scrolls.
+      const memoryKey = `bible:${fav.book_abbr}:${fav.chapter}`;
+      updateSettings({
+        audioPositionMemory: {
+          ...settings.audioPositionMemory,
+          [memoryKey]: fav.verse_number
+        }
+      });
+    }
+  };
+
+  const filteredFavorites = useMemo(() => {
+    return favorites.filter(f => 
+      f.content.toLowerCase().includes(favoriteSearchQuery.toLowerCase()) ||
+      f.book_abbr.toLowerCase().includes(favoriteSearchQuery.toLowerCase())
+    );
+  }, [favorites, favoriteSearchQuery]);
 
 
   // Sync with URL
