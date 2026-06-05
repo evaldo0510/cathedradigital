@@ -198,6 +198,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (actionLogFilters.actionType !== 'all') {
       query = query.eq('action', actionLogFilters.actionType);
     }
+
     if (actionLogFilters.runId) {
       query = query.eq('metadata->>run_id', actionLogFilters.runId);
     }
@@ -253,7 +254,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     // Simulate scan results from linter/tests
     const startTime = new Date().toISOString();
     const mockIssues = [
-      { level: 'warn', message: 'Function Search Path Mutable', category: 'SECURITY' }
+      { level: 'warn', message: 'Caminho de Busca de Função Mutável (Function Search Path Mutable)', category: 'SEGURANÇA' }
     ];
     
     const { data: scanData, error: scanError } = await supabase
