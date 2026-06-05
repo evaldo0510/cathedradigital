@@ -1040,7 +1040,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       {/* Retry Policy Editor */}
                       <div className="p-3 bg-white border border-primary/5 rounded-xl space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Política de Retentativa</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Política de Retentativa (Retry)</span>
                           <Icons.Settings className="w-3 h-3 text-primary/20" />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
