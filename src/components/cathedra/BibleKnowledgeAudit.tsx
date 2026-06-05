@@ -96,6 +96,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
+  const [a11yConfig, setA11yConfig] = React.useState<any>(null);
+
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
@@ -333,6 +335,31 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (!error && data) setSecurityLogs(data);
   };
 
+  const fetchA11yConfig = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_a11y_config')
+      .select('*')
+      .eq('id', 'default')
+      .single();
+    if (!error && data) setA11yConfig(data);
+  };
+
+  const saveA11yConfig = async (updates: any) => {
+    const { data, error } = await supabase
+      .from('bible_audit_a11y_config')
+      .upsert({ id: 'default', ...a11yConfig, ...updates, updated_at: new Date().toISOString() })
+      .select()
+      .single();
+    if (!error && data) {
+      setA11yConfig(data);
+      toast.success('Configuração de acessibilidade salva');
+      logAction('Update A11y Config', 'a11y_config', 'default', { updates });
+    } else {
+      toast.error('Erro ao salvar configuração');
+    }
+  };
+
+
   React.useEffect(() => {
     if (activeTab === 'history') fetchAuditRuns();
     if (activeTab === 'notifications') fetchNotifications();
@@ -340,7 +367,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (activeTab === 'webhooks') fetchWebhookDeliveries();
     if (activeTab === 'security') fetchSecurityScans();
     if (activeTab === 'security') fetchSecurityLogs();
+    if (activeTab === 'a11y') fetchA11yConfig();
     if (activeTab === 'a11y') fetchSecurityScans(); // Reutilizar para contexto de auditoria
+
 
 
   }, [activeTab]);
@@ -607,14 +636,26 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-primary/60">Texto Normal</span>
                       <div className="flex items-center gap-2">
-                        <input type="number" defaultValue="4.5" step="0.1" className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" />
+                        <input 
+                          type="number" 
+                          value={a11yConfig?.threshold_normal || 4.5} 
+                          onChange={(e) => saveA11yConfig({ threshold_normal: parseFloat(e.target.value) })}
+                          step="0.1" 
+                          className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" 
+                        />
                         <span className="text-[10px] text-primary/20">:1</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-primary/60">Texto Grande (Large)</span>
                       <div className="flex items-center gap-2">
-                        <input type="number" defaultValue="3.0" step="0.1" className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" />
+                        <input 
+                          type="number" 
+                          value={a11yConfig?.threshold_large || 3.0} 
+                          onChange={(e) => saveA11yConfig({ threshold_large: parseFloat(e.target.value) })}
+                          step="0.1" 
+                          className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" 
+                        />
                         <span className="text-[10px] text-primary/20">:1</span>
                       </div>
                     </div>
@@ -624,18 +665,29 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 <div className="p-6 bg-white border border-primary/5 rounded-3xl space-y-4">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Breakpoint</h4>
                   <div className="space-y-3">
-                    {['iPhone SE', 'iPhone 14', 'iPad mini'].map(device => (
+                    {['iPhone SE', 'iPhone 14', 'iPad mini', 'Pixel 7'].map(device => (
                       <div key={device} className="flex items-center justify-between text-[10px]">
                         <span className="font-bold text-primary/40">{device}</span>
                         <div className="flex items-center gap-1">
                           <span className="text-[8px] text-primary/20 uppercase font-black">Offset</span>
-                          <input type="number" defaultValue="0.0" step="0.1" className="w-12 bg-primary/5 border-none rounded-md px-1 py-0.5 text-center font-mono" />
+                          <input 
+                            type="number" 
+                            value={a11yConfig?.device_overrides?.[device]?.offset || 0.0} 
+                            onChange={(e) => {
+                              const overrides = { ...(a11yConfig?.device_overrides || {}) };
+                              overrides[device] = { ...(overrides[device] || {}), offset: parseFloat(e.target.value) };
+                              saveA11yConfig({ device_overrides: overrides });
+                            }}
+                            step="0.1" 
+                            className="w-12 bg-primary/5 border-none rounded-md px-1 py-0.5 text-center font-mono" 
+                          />
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
+
               
               <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
                 <p className="text-[10px] text-primary/40 italic">As alterações nestes limiares serão refletidas automaticamente nos próximos Security Scans e validações em tempo real do painel Visual Preview.</p>
