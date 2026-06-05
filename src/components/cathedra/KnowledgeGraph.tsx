@@ -14,7 +14,9 @@ export interface KnowledgeNode {
 interface KnowledgeGraphProps {
   onClose: () => void;
   initialNodeId?: string;
+  onNavigateToContent?: (bookAbbr: string, chapter: number, verse: number) => void;
 }
+
 
 export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initialNodeId }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(initialNodeId || 'Jo-6-35');
