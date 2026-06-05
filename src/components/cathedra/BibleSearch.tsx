@@ -1,10 +1,11 @@
-import { Button } from '@/components/ui/button';
-import React, { useState, useCallback, useMemo } from 'react';
-import { Icons } from '../../constants';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface SearchResult {
+  bookId: number;
   bookAbbrev: string;
   bookName: string;
   chapter: number;
@@ -12,136 +13,88 @@ interface SearchResult {
   text: string;
 }
 
-const RESULTS_PER_PAGE = 10;
+interface BibleSearchProps {
+  onSelectResult: (bookAbbrev: string, chapter: number, verse: number) => void;
+  onClose: () => void;
+}
 
-const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(RESULTS_PER_PAGE);
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isBibleRoute = useMemo(() => pathname.startsWith('/bible'), [pathname]);
-
-  const doSearch = useCallback(async () => {
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (query.trim().length < 2) return;
-    setLoading(true);
-    setSearched(true);
-    setVisibleCount(RESULTS_PER_PAGE);
+
+    setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-search', {
-        body: { query: query.trim() },
+        body: { query }
       });
       if (error) throw error;
-      setResults(data?.results || []);
-    } catch {
-      setResults([]);
+      setResults(data.results || []);
+      if (data.results?.length === 0) {
+        toast.info('Nenhum resultado encontrado');
+      }
+    } catch (error: any) {
+      toast.error('Erro na busca sagrada');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, [query]);
-
-  const loadMore = () => setVisibleCount(prev => prev + RESULTS_PER_PAGE);
-
-  const goToVerse = (r: SearchResult) => {
-    if (isBibleRoute) {
-      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`, { replace: true });
-    } else {
-      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`);
-    }
-    onClose();
   };
 
   return (
-    <div className="space-y-spacing-md">
-      <div className="flex items-center gap-spacing-xs">
-        <div className="relative flex-1">
-          <label htmlFor="bible-search-input" className="sr-only">Buscar nos versículos</label>
-          <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within:text-primary/30 transition-all duration-700" />
-          <input
-            id="bible-search-input"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && doSearch()}
-            placeholder="Buscar na Palavra..."
-            className="w-full pl-spacing-2xl pr-spacing-md h-spacing-2xl rounded-premium-full border border-primary/[0.03] bg-transparent text-foreground text-premium-sm font-serif italic placeholder:text-muted-foreground/20 focus:outline-none focus:bg-primary/[0.01] transition-all duration-700"
+    <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
+      <header className="px-6 h-16 flex items-center gap-4 border-b border-primary/5">
+        <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
+          <Icons.X className="w-6 h-6" />
+        </button>
+        <form onSubmit={handleSearch} className="flex-1">
+          <input 
             autoFocus
+            type="text" 
+            placeholder="Buscar nas Escrituras..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full h-10 bg-transparent text-lg font-serif outline-none placeholder:text-primary/20"
           />
-        </div>
-        <Button onClick={doSearch} disabled={loading || query.trim().length < 2}
-          className="px-spacing-lg py-spacing-sm rounded-premium-full bg-primary text-primary-foreground text-premium-sm font-bold disabled:opacity-40 hover:bg-primary/90 transition-all">
-          {loading ? '...' : 'Buscar'}
-        </Button>
-        <Button onClick={onClose} variant="ghost" className="p-spacing-sm rounded-premium-full bg-primary/[0.03] border border-primary/10 hover:bg-primary/5 transition-all" aria-label="Fechar busca">
-          <Icons.ArrowDown className="w-spacing-md h-spacing-md rotate-90 text-primary/60" />
-        </Button>
-      </div>
+        </form>
+        {isLoading && <Icons.Loader className="w-4 h-4 text-secondary animate-spin" />}
+      </header>
 
-      {loading && (
-        <div className="space-y-spacing-xs py-spacing-md">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-spacing-3xl bg-muted rounded-premium animate-pulse" />
-          ))}
-        </div>
-      )}
-
-      {!loading && searched && results.length === 0 && (
-        <p className="text-center text-muted-foreground text-premium-sm py-spacing-xl italic">Nenhum versículo encontrado para "{query}".</p>
-      )}
-
-      {!loading && results.length > 0 && (
-        <div className="space-y-spacing-2xs">
-          <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
-          <div className="space-y-spacing-xs max-h-[60vh] overflow-y-auto">
-            {results.slice(0, visibleCount).map((r, i) => (
-              <div key={i} className="group relative">
-                <Button onClick={() => goToVerse(r)}
-                  className="w-full text-left p-spacing-md rounded-premium bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all h-auto block peer">
-                  <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                    <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                    <span className="text-premium-xs text-muted-foreground">— {r.bookName}</span>
+      <div className="flex-1 overflow-y-auto px-6 py-6 pb-20">
+        <AnimatePresence mode="popLayout">
+          {results.length > 0 ? (
+            <div className="space-y-8">
+              {results.map((result, idx) => (
+                <motion.button
+                  key={`${result.bookAbbrev}-${result.chapter}-${result.verse}-${idx}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={() => onSelectResult(result.bookAbbrev, result.chapter, result.verse)}
+                  className="w-full text-left space-y-2 group"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
+                      {result.bookName} {result.chapter}:{result.verse}
+                    </span>
+                    <div className="flex-1 h-px bg-primary/5" />
                   </div>
-                  <p className="text-premium-sm text-foreground/80 font-serif line-clamp-2">
-                    {(() => {
-                      const plain = (r.text || '').replace(/<[^>]+>/g, '');
-                      if (!query) return plain;
-                      const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                      const parts = plain.split(new RegExp(`(${safe})`, 'gi'));
-                      return parts.map((part, idx) =>
-                        idx % 2 === 1 ? (
-                          <mark key={idx} className="bg-primary/20 text-primary font-bold rounded px-spacing-3xs">{part}</mark>
-                        ) : (
-                          <span key={idx}>{part}</span>
-                        )
-                      );
-                    })()}
+                  <p className="font-serif text-[17px] leading-relaxed text-primary/70 group-active:text-primary transition-colors line-clamp-3">
+                    {result.text}
                   </p>
-                </Button>
-                
-                {/* Visual Context Preview on Hover (Desktop) or focus */}
-                <div className="absolute left-full ml-4 top-0 w-64 p-spacing-md bg-card border border-border rounded-premium shadow-premium opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 hidden lg:block">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Contexto</p>
-                  <p className="text-premium-xs italic text-muted-foreground font-serif">
-                    Explorar este capítulo em {r.bookName} para meditar sobre a Palavra...
-                  </p>
-                </div>
-              </div>
-            ))}
-
-            {visibleCount < results.length && (
-              <Button 
-                onClick={loadMore}
-                variant="ghost" 
-                className="w-full text-premium-xs font-bold uppercase tracking-widest text-primary/40 hover:text-primary py-spacing-lg"
-              >
-                Carregar mais resultados
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
+                </motion.button>
+              ))}
+            </div>
+          ) : !isLoading && query.length >= 2 && (
+            <div className="h-full flex flex-col items-center justify-center opacity-20 text-center space-y-4">
+              <Icons.Search className="w-12 h-12" />
+              <p className="text-sm font-black uppercase tracking-widest italic">Pressione enter para buscar</p>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
