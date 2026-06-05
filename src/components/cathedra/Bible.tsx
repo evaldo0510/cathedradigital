@@ -347,7 +347,21 @@ const Bible: React.FC = () => {
 
 
 
+  const auditData = useMemo(() => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    const booksWithContent = allBooks.filter(b => b.chapters > 0);
+    const emptyBooks = allBooks.filter(b => b.chapters === 0);
+    
+    return {
+      totalBooks: allBooks.length,
+      coveredBooks: booksWithContent.length,
+      emptyBooks: emptyBooks.map(b => b.name),
+      totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+    };
+  }, []);
+
   const filteredBooks = useMemo(() => {
+
     if (!searchQuery) return BIBLE_DATA;
     const result: any = {};
     Object.entries(BIBLE_DATA).forEach(([testament, categories]) => {
