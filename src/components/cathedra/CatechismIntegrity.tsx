@@ -97,8 +97,26 @@ const CatechismIntegrity: React.FC = () => {
       }
     } catch (err) {
       toast.error('Erro de conexão com o servidor');
+  const clearCache = async () => {
+    if (!confirm('Deseja realmente limpar TODO o cache do catecismo? Esta ação é irreversível e exigirá nova geração por IA.')) return;
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('catechism_cache')
+        .delete()
+        .neq('id', 'placeholder'); // Deleta tudo
+        
+      if (!error) {
+        toast.success('Cache do catecismo limpo com sucesso');
+        loadData();
+      } else {
+        toast.error('Erro ao limpar cache');
+      }
+    } catch (err) {
+      toast.error('Erro de conexão');
     } finally {
-      setIsReprocessing(false);
+      setLoading(false);
     }
   };
 
@@ -224,6 +242,16 @@ const CatechismIntegrity: React.FC = () => {
             title="Recarregar dados"
           >
             <Icons.RotateCcw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
+          </Button>
+
+          <Button 
+            onClick={clearCache}
+            disabled={loading}
+            variant="destructive"
+            className="p-spacing-xs rounded-premium-full bg-destructive/10 border border-destructive/20 hover:bg-destructive text-destructive hover:text-white transition-all disabled:opacity-50 ml-spacing-xs"
+            title="Limpar todo o cache"
+          >
+            <Icons.Trash2 className="w-spacing-md h-spacing-md" />
           </Button>
         </div>
       </div>
