@@ -17,7 +17,7 @@ export function useSwipeNavigation({
   onSwipeLeft,
   onSwipeRight,
   onTap,
-  threshold = 100, // Increased from 60 to 100 for more deliberate action
+  threshold = 80, // Calibrado conforme requisito de segurança (>80px)
   enabled = true,
 }: SwipeOptions) {
   const startX = useRef(0);
