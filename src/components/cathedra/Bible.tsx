@@ -1035,6 +1035,11 @@ const Bible: React.FC = () => {
                         <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-spacing-lg" aria-level={2}>
                           {selectedBook.name} <span className="text-primary/20 ml-2">{v.chapter}</span>
                         </h3>
+                        {selectedBook.description && v.chapter === 1 && (
+                          <p className="max-w-prose text-center text-premium-sm font-serif italic text-primary/40 mb-spacing-xl leading-relaxed">
+                            {selectedBook.description}
+                          </p>
+                        )}
                         <div className="flex items-center gap-spacing-md">
                           <div className="w-12 h-px bg-gradient-to-r from-transparent to-primary/10" />
                           <Icons.Wheat className="w-3 h-3 text-primary/10" />
@@ -1042,6 +1047,7 @@ const Bible: React.FC = () => {
                         </div>
                       </div>
                     )}
+
 
 
                     <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none" aria-hidden="true">{v.number}</span>
