@@ -51,7 +51,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
           <Icons.X className="w-6 h-6" />
         </button>
-        <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria de Conhecimento</h1>
+        <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Gestão de Cobertura</h1>
         <div className="flex items-center gap-2">
           <button 
             onClick={() => {
