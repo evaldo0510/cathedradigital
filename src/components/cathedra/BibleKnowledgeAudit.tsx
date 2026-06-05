@@ -381,6 +381,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <Icons.Share2 className="w-5 h-5" />
           </button>
           <button 
+            onClick={() => window.print()}
+            className="p-2 text-primary/40 active:text-secondary"
+            title="Exportar PDF"
+          >
+            <Icons.Printer className="w-5 h-5" />
+          </button>
+          <button 
             onClick={() => setShowExportModal(true)}
             className="p-2 text-primary/40 active:text-secondary"
             title="Exportar Relatório CSV"
