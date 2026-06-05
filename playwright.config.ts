@@ -30,6 +30,9 @@ export default defineConfig({
     actionTimeout: 15000,
     navigationTimeout: 30000,
 
+    /* Headless mode control via env */
+    headless: process.env.HEADLESS !== 'false',
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',

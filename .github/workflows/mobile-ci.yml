@@ -20,14 +20,13 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run Mobile E2E Tests (Matrix)
-        run: |
-          # Simulação de matriz de dispositivos
-          # No futuro: npx playwright test --project=iPhone-12 --project=Pixel-5
-          bun test src/test/MobileNavigation.test.tsx src/test/BottomNavRegression.test.tsx
+      - name: Run Playwright E2E Tests (Mobile Matrix)
+        run: npx playwright test tests/e2e/swipe-precision.spec.ts --project=mobile-chrome --project=mobile-safari --reporter=list,html
         env:
-          TEST_VIEWPORTS: "320x568,375x667,414x896,768x1024"
+          VITE_SWIPE_THRESHOLD: 80
+          VITE_SWIPE_RATIO: 2.5
           CI: true
+          HEADLESS: true
 
       - name: Verify PII Leak in Logs & Artifacts
         run: |

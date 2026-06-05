@@ -5,9 +5,14 @@ interface SwipeOptions {
   onSwipeLeft?: () => void;   // próximo
   onSwipeRight?: () => void;  // anterior
   onTap?: () => void;         // tap rápido para revelar UI
-  threshold?: number;         // px mínimos
+  threshold?: number;         // px mínimos (opcional, sobrescreve env)
+  ratio?: number;            // razão diagonal (opcional, sobrescreve env)
   enabled?: boolean;
 }
+
+// Configurações via variáveis de ambiente com fallbacks seguros
+const SWIPE_THRESHOLD = Number(import.meta.env.VITE_SWIPE_THRESHOLD) || 80;
+const SWIPE_RATIO = Number(import.meta.env.VITE_SWIPE_RATIO) || 2.5;
 
 /**
  * Hook de navegação por gestos no mobile.
@@ -18,7 +23,8 @@ export function useSwipeNavigation({
   onSwipeLeft,
   onSwipeRight,
   onTap,
-  threshold = 80, // Calibrado conforme requisito de segurança (>80px)
+  threshold = SWIPE_THRESHOLD,
+  ratio = SWIPE_RATIO,
   enabled = true,
 }: SwipeOptions) {
   const startX = useRef(0);
@@ -58,7 +64,7 @@ export function useSwipeNavigation({
 
       // Swipe horizontal (predominante sobre vertical)
       // Increased ratio from 1.5 to 2.5 to be more strict
-      if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 2.5) {
+      if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * ratio) {
         telemetry.log('Valid Swipe Triggered', 'info', { dx, dy, threshold });
         if (dx < 0) onSwipeLeft?.();
         else onSwipeRight?.();
