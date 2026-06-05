@@ -965,8 +965,9 @@ const Bible: React.FC = () => {
                   variant="outline"
                   className="flex-1 h-14 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10"
                 >
-                  <Icons.Orbit className="w-4 h-4 mr-2" /> Explorar Conexões
+                  <Icons.Orbit className="w-4 h-4 mr-2" /> Explorar Grafo
                 </Button>
+
                 <Button 
                   onClick={() => setExpandedConnection(null)}
                   className="flex-1 h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
