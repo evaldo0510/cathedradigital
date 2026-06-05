@@ -953,21 +953,6 @@ const Bible: React.FC = () => {
                           </motion.div>
                         )}
                       </div>
-
-                            animate={{ width: 180, opacity: 1 }}
-                            className="absolute left-full ml-2 top-0 z-[60]"
-                          >
-                            <input 
-                              autoFocus
-                              placeholder="Buscar notas..."
-                              value={noteSearchQuery}
-                              onChange={(e) => setNoteSearchQuery(e.target.value)}
-                              className="h-7 w-full bg-primary/[0.03] border border-primary/10 rounded-full px-3 text-[10px] font-serif italic focus:ring-1 focus:ring-primary/20 outline-none"
-                              aria-label="Digitar termo para buscar em suas notas"
-                            />
-                          </motion.div>
-                        )}
-                      </div>
                       <Button 
                         variant="ghost" 
                         size="sm" 
