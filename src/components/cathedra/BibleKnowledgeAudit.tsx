@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -27,19 +28,105 @@ interface BibleKnowledgeAuditProps {
 }
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule'>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule' | 'history' | 'notifications'>(
+    (searchParams.get('tab') as any) || 'overview'
+  );
   const [isScanning, setIsScanning] = React.useState(false);
   const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
   const [executionLogs, setExecutionLogs] = React.useState<AuditLog[]>([]);
+  const [auditRuns, setAuditRuns] = React.useState<any[]>([]);
+  const [selectedRun, setSelectedRun] = React.useState<any>(null);
   const [isExporting, setIsExporting] = React.useState(false);
   const [csvFilters, setCsvFilters] = React.useState({
-    books: true,
-    status: true,
-    themes: true,
-    connections: true
+    books: searchParams.get('f_books') !== 'false',
+    status: searchParams.get('f_status') !== 'false',
+    themes: searchParams.get('f_themes') !== 'false',
+    connections: searchParams.get('f_connections') !== 'false'
   });
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [isScheduling, setIsScheduling] = React.useState(false);
+  const [notificationSettings, setNotificationSettings] = React.useState<any[]>([]);
+  const [newNotification, setNewNotification] = React.useState({ type: 'webhook' as 'webhook' | 'email', target: '' });
+  const [isSavingNotification, setIsSavingNotification] = React.useState(false);
+
+  React.useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['overview', 'dashboard', 'logs', 'schedule', 'history', 'notifications'].includes(tab)) {
+      setActiveTab(tab as any);
+    }
+  }, [searchParams]);
+
+  const generateShareLink = () => {
+    const params = new URLSearchParams();
+    params.set('tab', activeTab);
+    params.set('f_books', csvFilters.books.toString());
+    params.set('f_status', csvFilters.status.toString());
+    params.set('f_themes', csvFilters.themes.toString());
+    params.set('f_connections', csvFilters.connections.toString());
+    
+    const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Link de relatório copiado para a área de transferência');
+  };
+
+  const fetchAuditRuns = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_runs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    
+    if (!error && data) {
+      setAuditRuns(data);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_notifications')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) {
+      setNotificationSettings(data);
+    }
+  };
+
+  React.useEffect(() => {
+    if (activeTab === 'history') fetchAuditRuns();
+    if (activeTab === 'notifications') fetchNotifications();
+  }, [activeTab]);
+
+  const addNotification = async () => {
+    if (!newNotification.target) return;
+    setIsSavingNotification(true);
+    const { data, error } = await supabase
+      .from('bible_audit_notifications')
+      .insert([newNotification])
+      .select();
+    
+    if (!error && data) {
+      setNotificationSettings(prev => [data[0], ...prev]);
+      setNewNotification({ type: 'webhook', target: '' });
+      toast.success('Notificação configurada com sucesso');
+    } else {
+      toast.error('Erro ao salvar notificação');
+    }
+    setIsSavingNotification(false);
+  };
+
+  const deleteNotification = async (id: string) => {
+    const { error } = await supabase
+      .from('bible_audit_notifications')
+      .delete()
+      .eq('id', id);
+    
+    if (!error) {
+      setNotificationSettings(prev => prev.filter(n => n.id !== id));
+      toast.success('Notificação removida');
+    }
+  };
 
   const stats = React.useMemo(() => ({
     totalBooks: auditData.totalBooks,
@@ -62,10 +149,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }, ...prev].slice(0, 100));
   };
 
-  const startIntegrityScan = async () => {
+  const startIntegrityScan = async (retryFailedOnly = false) => {
     setIsScanning(true);
-    addLog('info', 'Iniciando varredura completa do cânon católico...');
+    const booksToScan = retryFailedOnly 
+      ? auditData.emptyBooks.filter(b => scanResults[b] !== 'ok')
+      : auditData.emptyBooks;
+
+    addLog('info', retryFailedOnly ? `Retentando ${booksToScan.length} livros falhos...` : 'Iniciando varredura completa do cânon católico...');
     const results: Record<string, 'ok' | 'empty' | 'pending'> = { ...scanResults };
+    const searchQueries: string[] = [];
     
     // Save run to DB
     const { data: run, error: runError } = await supabase
@@ -77,7 +169,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         total_chapters: stats.totalChapters,
         covered_chapters: stats.coveredChapters,
         empty_books: auditData.emptyBooks,
-        logs: []
+        logs: [],
+        config: { retryFailedOnly, filters: csvFilters },
+        search_queries: []
       }])
       .select()
       .single();
@@ -85,10 +179,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (runError) addLog('error', 'Falha ao registrar início da auditoria no banco de dados', runError.message);
 
     // Scan critical books
-    for (const book of auditData.emptyBooks) {
+    for (const book of booksToScan) {
       results[book] = 'pending';
       setScanResults({...results});
-      addLog('info', `Validando conteúdo para: ${book}`);
+      const query = `bible-text: { abbrev: ${book}, chapter: 1 }`;
+      searchQueries.push(query);
+      addLog('info', `Validando conteúdo para: ${book}`, `Query: ${query}`);
       
       try {
         const { data, error } = await supabase.functions.invoke('bible-text', {
@@ -105,7 +201,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               run_id: run.id,
               severity: 'high',
               message: `Lacuna de conteúdo em ${book}`,
-              details: { book, error: error?.message || 'Empty response' }
+              details: { book, error: error?.message || 'Empty response', query }
             }]);
           }
         } else {
@@ -116,6 +212,11 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         addLog('error', `Erro na busca de ${book}`, e.message);
       }
       setScanResults({...results});
+
+      // Update run with queries in real-time if possible, or at end
+      if (run && searchQueries.length % 5 === 0) {
+        await supabase.from('bible_audit_runs').update({ search_queries: searchQueries }).eq('id', run.id);
+      }
     }
 
     if (run) {
@@ -124,7 +225,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         .update({ 
           status: 'completed', 
           completed_at: new Date().toISOString(),
-          logs: executionLogs as any
+          logs: executionLogs as any,
+          search_queries: searchQueries
         })
         .eq('id', run.id);
     }
@@ -211,6 +313,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
         <div className="flex items-center gap-2">
           <button 
+            onClick={generateShareLink}
+            className="p-2 text-primary/40 active:text-secondary"
+            title="Copiar Link de Relatório"
+          >
+            <Icons.Share2 className="w-5 h-5" />
+          </button>
+          <button 
             onClick={() => setShowExportModal(true)}
             className="p-2 text-primary/40 active:text-secondary"
             title="Exportar Relatório CSV"
@@ -226,7 +335,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
+            { id: 'history', label: 'Histórico', icon: Icons.History },
             { id: 'logs', label: 'Execução', icon: Icons.Activity },
+            { id: 'notifications', label: 'Alertas', icon: Icons.Bell },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
@@ -274,17 +385,30 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 <p className="text-premium-xs font-serif italic text-primary/60">
                   Integridade garantida por varreduras inteligentes e conexões teológicas.
                 </p>
-                <button 
-                  onClick={startIntegrityScan}
-                  disabled={isScanning}
-                  className={cn(
-                    "px-6 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-secondary/20 flex items-center gap-2 mx-auto",
-                    isScanning && "opacity-50"
+                <div className="flex flex-col gap-3 mx-auto max-w-xs">
+                  <button 
+                    onClick={() => startIntegrityScan(false)}
+                    disabled={isScanning}
+                    className={cn(
+                      "px-6 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-secondary/20 flex items-center justify-center gap-2",
+                      isScanning && "opacity-50"
+                    )}
+                  >
+                    <Icons.RefreshCw className={cn("w-3 h-3", isScanning && "animate-spin")} />
+                    {isScanning ? 'Sincronizando...' : 'Iniciar Varredura Completa'}
+                  </button>
+                  
+                  {Object.values(scanResults).some(r => r === 'empty') && (
+                    <button 
+                      onClick={() => startIntegrityScan(true)}
+                      disabled={isScanning}
+                      className="px-6 py-2 border border-secondary text-secondary text-[10px] font-black uppercase tracking-widest rounded-full flex items-center justify-center gap-2 hover:bg-secondary/5 transition-colors"
+                    >
+                      <Icons.AlertCircle className="w-3 h-3" />
+                      Retentar Falhas
+                    </button>
                   )}
-                >
-                  <Icons.RefreshCw className={cn("w-3 h-3", isScanning && "animate-spin")} />
-                  {isScanning ? 'Sincronizando...' : 'Iniciar Varredura'}
-                </button>
+                </div>
               </section>
 
               {/* Identified Gaps Index */}
@@ -333,6 +457,149 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               exit={{ opacity: 0, x: -20 }}
             >
               <BibleAuditDashboard data={dashboardData} />
+            </motion.div>
+          )}
+
+          {activeTab === 'history' && (
+            <motion.div 
+              key="history"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Histórico de Execuções</h2>
+              <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+                {auditRuns.map(run => (
+                  <div key={run.id} className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Icons.Calendar className="w-4 h-4 text-primary/20" />
+                        <span className="font-serif font-bold text-primary/80">
+                          {new Date(run.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <span className={cn(
+                        "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                        run.status === 'completed' ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"
+                      )}>
+                        {run.status}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Livros</p>
+                        <p className="text-xs font-bold text-primary/60">{run.covered_books}/{run.total_books}</p>
+                      </div>
+                      <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-primary/20">Capítulos</p>
+                        <p className="text-xs font-bold text-primary/60">{run.covered_chapters}/{run.total_chapters}</p>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedRun(run)}
+                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline text-right"
+                      >
+                        Ver Detalhes
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {selectedRun && (
+                <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
+                  <motion.div 
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-[#FAF9F6] rounded-3xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
+                  >
+                    <header className="p-6 border-b border-primary/5 flex items-center justify-between bg-white">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest">Detalhes da Execução</h3>
+                      <button onClick={() => setSelectedRun(null)}><Icons.X className="w-5 h-5" /></button>
+                    </header>
+                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                      <div className="space-y-2">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest text-primary/40">Queries de Busca Utilizadas</h4>
+                        <div className="bg-primary/5 p-4 rounded-xl font-mono text-[9px] whitespace-pre-wrap max-h-40 overflow-y-auto">
+                          {selectedRun.search_queries?.length > 0 
+                            ? selectedRun.search_queries.join('\n')
+                            : 'Nenhuma query registrada.'
+                          }
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-[9px] font-black uppercase tracking-widest text-primary/40">Logs Passo a Passo</h4>
+                        <div className="bg-primary/5 p-4 rounded-xl font-mono text-[9px] space-y-2 max-h-60 overflow-y-auto">
+                          {selectedRun.logs?.map((log: any, i: number) => (
+                            <div key={i} className="flex gap-2">
+                              <span className="opacity-40">[{log.timestamp}]</span>
+                              <span>{log.message}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {activeTab === 'notifications' && (
+            <motion.div 
+              key="notifications"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8 max-w-lg mx-auto"
+            >
+              <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
+                <header className="space-y-2">
+                  <h3 className="font-serif font-bold text-lg text-primary/80">Configurar Alertas</h3>
+                  <p className="text-premium-xs text-primary/40">Seja notificado fora do app sobre novas lacunas de alta prioridade.</p>
+                </header>
+
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <select 
+                      value={newNotification.type}
+                      onChange={(e) => setNewNotification(prev => ({...prev, type: e.target.value as any}))}
+                      className="bg-primary/5 border-none rounded-xl px-4 text-[10px] font-black uppercase tracking-widest"
+                    >
+                      <option value="webhook">Webhook</option>
+                      <option value="email">E-mail</option>
+                    </select>
+                    <input 
+                      type="text"
+                      placeholder={newNotification.type === 'webhook' ? 'https://api.exemplo.com/webhook' : 'seu@email.com'}
+                      value={newNotification.target}
+                      onChange={(e) => setNewNotification(prev => ({...prev, target: e.target.value}))}
+                      className="flex-1 bg-primary/5 border-none rounded-xl px-4 py-3 text-xs"
+                    />
+                    <button 
+                      onClick={addNotification}
+                      disabled={isSavingNotification}
+                      className="p-3 bg-secondary text-white rounded-xl active:scale-95"
+                    >
+                      <Icons.Plus className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {notificationSettings.map(n => (
+                      <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {n.type === 'webhook' ? <Icons.Link className="w-4 h-4 text-blue-500" /> : <Icons.Mail className="w-4 h-4 text-emerald-500" />}
+                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                        </div>
+                        <button onClick={() => deleteNotification(n.id)} className="text-red-400 hover:text-red-600">
+                          <Icons.Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
 

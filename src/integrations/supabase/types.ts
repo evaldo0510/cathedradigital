@@ -166,9 +166,40 @@ export type Database = {
           },
         ]
       }
+      bible_audit_notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          priority_threshold: string | null
+          target: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority_threshold?: string | null
+          target: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority_threshold?: string | null
+          target?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bible_audit_runs: {
         Row: {
           completed_at: string | null
+          config: Json | null
           covered_books: number | null
           covered_chapters: number | null
           covered_verses: number | null
@@ -177,6 +208,7 @@ export type Database = {
           empty_books: Json | null
           id: string
           logs: Json | null
+          search_queries: Json | null
           started_at: string | null
           status: string
           total_books: number | null
@@ -185,6 +217,7 @@ export type Database = {
         }
         Insert: {
           completed_at?: string | null
+          config?: Json | null
           covered_books?: number | null
           covered_chapters?: number | null
           covered_verses?: number | null
@@ -193,6 +226,7 @@ export type Database = {
           empty_books?: Json | null
           id?: string
           logs?: Json | null
+          search_queries?: Json | null
           started_at?: string | null
           status?: string
           total_books?: number | null
@@ -201,6 +235,7 @@ export type Database = {
         }
         Update: {
           completed_at?: string | null
+          config?: Json | null
           covered_books?: number | null
           covered_chapters?: number | null
           covered_verses?: number | null
@@ -209,6 +244,7 @@ export type Database = {
           empty_books?: Json | null
           id?: string
           logs?: Json | null
+          search_queries?: Json | null
           started_at?: string | null
           status?: string
           total_books?: number | null
