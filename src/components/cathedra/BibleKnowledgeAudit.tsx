@@ -149,10 +149,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }, ...prev].slice(0, 100));
   };
 
-  const startIntegrityScan = async () => {
+  const startIntegrityScan = async (retryFailedOnly = false) => {
     setIsScanning(true);
-    addLog('info', 'Iniciando varredura completa do cânon católico...');
+    const booksToScan = retryFailedOnly 
+      ? auditData.emptyBooks.filter(b => scanResults[b] !== 'ok')
+      : auditData.emptyBooks;
+
+    addLog('info', retryFailedOnly ? `Retentando ${booksToScan.length} livros falhos...` : 'Iniciando varredura completa do cânon católico...');
     const results: Record<string, 'ok' | 'empty' | 'pending'> = { ...scanResults };
+    const searchQueries: string[] = [];
     
     // Save run to DB
     const { data: run, error: runError } = await supabase
@@ -164,7 +169,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         total_chapters: stats.totalChapters,
         covered_chapters: stats.coveredChapters,
         empty_books: auditData.emptyBooks,
-        logs: []
+        logs: [],
+        config: { retryFailedOnly, filters: csvFilters },
+        search_queries: []
       }])
       .select()
       .single();
@@ -172,10 +179,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (runError) addLog('error', 'Falha ao registrar início da auditoria no banco de dados', runError.message);
 
     // Scan critical books
-    for (const book of auditData.emptyBooks) {
+    for (const book of booksToScan) {
       results[book] = 'pending';
       setScanResults({...results});
-      addLog('info', `Validando conteúdo para: ${book}`);
+      const query = `bible-text: { abbrev: ${book}, chapter: 1 }`;
+      searchQueries.push(query);
+      addLog('info', `Validando conteúdo para: ${book}`, `Query: ${query}`);
       
       try {
         const { data, error } = await supabase.functions.invoke('bible-text', {
@@ -192,7 +201,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               run_id: run.id,
               severity: 'high',
               message: `Lacuna de conteúdo em ${book}`,
-              details: { book, error: error?.message || 'Empty response' }
+              details: { book, error: error?.message || 'Empty response', query }
             }]);
           }
         } else {
@@ -203,6 +212,11 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         addLog('error', `Erro na busca de ${book}`, e.message);
       }
       setScanResults({...results});
+
+      // Update run with queries in real-time if possible, or at end
+      if (run && searchQueries.length % 5 === 0) {
+        await supabase.from('bible_audit_runs').update({ search_queries: searchQueries }).eq('id', run.id);
+      }
     }
 
     if (run) {
@@ -211,7 +225,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         .update({ 
           status: 'completed', 
           completed_at: new Date().toISOString(),
-          logs: executionLogs as any
+          logs: executionLogs as any,
+          search_queries: searchQueries
         })
         .eq('id', run.id);
     }
