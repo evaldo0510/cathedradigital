@@ -1207,8 +1207,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           }}
                           className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded flex items-center gap-1 hover:bg-secondary/10 transition-colors"
                         >
-                          <Icons.Link className="w-2 h-2" />
-                          Vínculo Scan
+                           <Icons.Link className="w-2 h-2" />
+                          Vínculo à Varredura
+
                         </button>
                       )}
                     </div>
