@@ -665,8 +665,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors"><Icons.Play className="w-4 h-4" /></button>
-                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Icons.Trash2 className="w-4 h-4" /></button>
+                          <button onClick={() => { fetchNotificationVersions(n.id); setShowVersionModal(n.id); }} className="p-2 text-primary/30 hover:text-secondary rounded-lg transition-colors" title="Comparar Versões"><Icons.History className="w-4 h-4" /></button>
+                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors" title="Testar"><Icons.Play className="w-4 h-4" /></button>
+                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors" title="Excluir"><Icons.Trash2 className="w-4 h-4" /></button>
                         </div>
                       </div>
 
