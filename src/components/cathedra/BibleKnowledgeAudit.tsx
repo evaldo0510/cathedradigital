@@ -257,7 +257,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const runSecurityScan = async () => {
     setIsScanning(true);
-    toast.info('Iniciando Security Scan...');
+    toast.info('Iniciando Varredura de Segurança...');
     
     // Simulate scan results from linter/tests
     const startTime = new Date().toISOString();
@@ -277,7 +277,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       .select();
 
     if (!scanError && scanData) {
-      toast.success('Security Scan concluído');
+      toast.success('Varredura de Segurança concluída');
       fetchSecurityScans();
       
       // If critical issues, log and notify
@@ -467,7 +467,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       const idempotencyKey = delivery.idempotency_key || crypto.randomUUID();
       
       await testWebhook(delivery.notification_id, idempotencyKey);
-      await logAction('Resend Notification', 'webhook_delivery', deliveryId, { idempotency_key: idempotencyKey });
+      await logAction('Reenviar Notificação', 'webhook_delivery', deliveryId, { idempotency_key: idempotencyKey });
     } finally {
       setIsResending(null);
     }
@@ -487,7 +487,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
     if (!error) {
       toast.success('Política revertida com sucesso');
-      logAction('Revert Notification Policy', 'notification', notificationId, { 
+      logAction('Reverter Política de Notificação', 'notification', notificationId, { 
         reverted_to_version: versionObj.version,
         reverted_from_version: notificationSettings.find(n => n.id === notificationId)?.version
       });
