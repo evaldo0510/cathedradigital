@@ -834,7 +834,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </motion.div>
           )}
 
-          {activeTab === 'logs' && (
+          {activeTab === 'audit-logs' && (
             <motion.div 
               key="logs"
               initial={{ opacity: 0, x: 20 }}
