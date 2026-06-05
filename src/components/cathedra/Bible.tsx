@@ -432,7 +432,13 @@ const Bible: React.FC = () => {
                       );
                       
                       return (
-                        <div key={v.number} id={`verse-${v.number}`} className="flex gap-4 group relative transition-colors duration-1000">
+                        <div 
+                          key={v.number} 
+                          id={`verse-${v.number}`} 
+                          onClick={() => saveReadingProgress(selectedBook.abbr, selectedChapter, v.number)}
+                          className="flex gap-4 group relative transition-colors duration-1000 cursor-pointer active:bg-primary/[0.02]"
+                        >
+
                           <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {hasNote && (
