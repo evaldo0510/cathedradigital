@@ -125,14 +125,47 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_audit_action_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bible_audit_alerts: {
         Row: {
           created_at: string | null
           details: Json | null
           id: string
           is_resolved: boolean | null
+          last_attempt_at: string | null
           message: string
+          notification_status: string | null
           resolved_at: string | null
+          retry_count: number | null
           run_id: string | null
           severity: string
         }
@@ -141,8 +174,11 @@ export type Database = {
           details?: Json | null
           id?: string
           is_resolved?: boolean | null
+          last_attempt_at?: string | null
           message: string
+          notification_status?: string | null
           resolved_at?: string | null
+          retry_count?: number | null
           run_id?: string | null
           severity: string
         }
@@ -151,8 +187,11 @@ export type Database = {
           details?: Json | null
           id?: string
           is_resolved?: boolean | null
+          last_attempt_at?: string | null
           message?: string
+          notification_status?: string | null
           resolved_at?: string | null
+          retry_count?: number | null
           run_id?: string | null
           severity?: string
         }
@@ -170,11 +209,14 @@ export type Database = {
         Row: {
           channel: string | null
           created_at: string | null
+          headers: Json | null
           id: string
           is_active: boolean | null
           priority: string | null
           priority_threshold: string | null
+          retry_config: Json | null
           rules: Json | null
+          secret_key: string | null
           target: string
           type: string
           updated_at: string | null
@@ -182,11 +224,14 @@ export type Database = {
         Insert: {
           channel?: string | null
           created_at?: string | null
+          headers?: Json | null
           id?: string
           is_active?: boolean | null
           priority?: string | null
           priority_threshold?: string | null
+          retry_config?: Json | null
           rules?: Json | null
+          secret_key?: string | null
           target: string
           type: string
           updated_at?: string | null
@@ -194,11 +239,14 @@ export type Database = {
         Update: {
           channel?: string | null
           created_at?: string | null
+          headers?: Json | null
           id?: string
           is_active?: boolean | null
           priority?: string | null
           priority_threshold?: string | null
+          retry_config?: Json | null
           rules?: Json | null
+          secret_key?: string | null
           target?: string
           type?: string
           updated_at?: string | null
@@ -299,6 +347,60 @@ export type Database = {
             columns: ["last_run_id"]
             isOneToOne: false
             referencedRelation: "bible_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_audit_webhook_deliveries: {
+        Row: {
+          alert_id: string | null
+          attempt_number: number | null
+          delivered_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          notification_id: string | null
+          request_payload: Json | null
+          response_payload: string | null
+          status_code: number | null
+        }
+        Insert: {
+          alert_id?: string | null
+          attempt_number?: number | null
+          delivered_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          notification_id?: string | null
+          request_payload?: Json | null
+          response_payload?: string | null
+          status_code?: number | null
+        }
+        Update: {
+          alert_id?: string | null
+          attempt_number?: number | null
+          delivered_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          notification_id?: string | null
+          request_payload?: Json | null
+          response_payload?: string | null
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_audit_webhook_deliveries_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bible_audit_webhook_deliveries_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_notifications"
             referencedColumns: ["id"]
           },
         ]
@@ -3083,6 +3185,15 @@ export type Database = {
           resource_name: string
         }
         Returns: undefined
+      }
+      log_bible_audit_action: {
+        Args: {
+          p_action: string
+          p_entity_id?: string
+          p_entity_type?: string
+          p_metadata?: Json
+        }
+        Returns: string
       }
       log_security_event: {
         Args: {
