@@ -1039,23 +1039,23 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       {/* Retry Policy Editor */}
                       <div className="p-3 bg-white border border-primary/5 rounded-xl space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Retry Policy</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Política de Retentativa</span>
                           <Icons.Settings className="w-3 h-3 text-primary/20" />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-1">
-                            <label className="text-[8px] font-bold uppercase text-primary/30">Strategy</label>
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Estratégia</label>
                             <select 
                               value={n.retry_config?.backoff || 'linear'} 
                               onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, backoff: e.target.value } })}
                               className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
                             >
                               <option value="linear">Linear</option>
-                              <option value="exponential">Exponential</option>
+                              <option value="exponential">Exponencial</option>
                             </select>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[8px] font-bold uppercase text-primary/30">Max Attempts</label>
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Máx. Tentativas</label>
                             <input 
                               type="number" 
                               value={n.retry_config?.max_retries || 3} 
@@ -1065,7 +1065,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           </div>
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[8px] font-bold uppercase text-primary/30">Retry Window (seconds)</label>
+                          <label className="text-[8px] font-bold uppercase text-primary/30">Janela de Retentativa (segundos)</label>
                           <input 
                             type="number" 
                             value={n.retry_config?.retry_window || 3600} 
@@ -1073,6 +1073,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                             className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
                           />
                         </div>
+
                       </div>
                     </div>
                   ))}
