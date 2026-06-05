@@ -39,8 +39,14 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                        onClick={() => setActiveBook(book)}
                        aria-selected={activeBook?.abbr === book.abbr}
                        role="option"
+                       onKeyDown={(e) => {
+                         if (e.key === 'Enter' || e.key === ' ') {
+                           e.preventDefault();
+                           setActiveBook(book);
+                         }
+                       }}
                        className={cn(
-                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative",
+                         "w-full flex items-center justify-between px-8 py-3.5 transition-all duration-500 group relative focus-visible:outline-none focus-visible:bg-white/80 focus-visible:ring-2 focus-visible:ring-secondary/50",
                          activeBook?.abbr === book.abbr 
                            ? "bg-white/80 text-primary shadow-sm" 
                            : "text-primary/50 hover:bg-white/40 hover:text-primary"
@@ -88,7 +94,13 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                     key={num}
                     onClick={() => onSelectBook(activeBook)}
                     aria-label={`Capítulo ${num}`}
-                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 transition-all duration-500 group"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onSelectBook(activeBook);
+                      }
+                    }}
+                    className="aspect-square flex flex-col items-center justify-center rounded-2xl border border-primary/5 bg-white/60 hover:bg-white hover:border-secondary/40 hover:shadow-premium-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:bg-white transition-all duration-500 group"
                   >
                     <span className="font-display text-3xl text-primary/20 group-hover:text-secondary transition-colors mb-0.5">{num}</span>
                     <span className="text-[7px] font-black uppercase tracking-[0.2em] text-primary/10 group-hover:text-primary/40">CAP</span>

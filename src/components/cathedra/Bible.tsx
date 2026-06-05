@@ -222,13 +222,15 @@ const Bible: React.FC = () => {
                           <div className="flex items-center gap-6"><div className="w-16 h-px bg-primary/5" /><Icons.Wheat className="w-4 h-4 text-secondary/20" /><div className="w-16 h-px bg-primary/5" /></div>
                         </div>
                       )}
-                      <p className="leading-[1.9] text-[20px] font-serif text-primary/90 tracking-tight text-justify indent-8 sm:indent-0">{wrapWithDictionary(v.text)}</p>
+                      <p className="leading-[1.9] text-[20px] font-serif text-primary/90 tracking-tight text-justify indent-8 sm:indent-0" role="text">
+                        {wrapWithDictionary(v.text)}
+                      </p>
                       
-                      <div className="mt-5 flex justify-start gap-5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-secondary flex items-center gap-2 transition-colors">
+                      <div className="mt-5 flex justify-start gap-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0">
+                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-secondary focus-visible:text-secondary focus-visible:outline-none flex items-center gap-2 transition-colors" aria-label={`Favoritar versículo ${v.number}`}>
                            <Icons.Heart className="w-3.5 h-3.5" /> Favoritar
                          </button>
-                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-primary flex items-center gap-2 transition-colors" onClick={() => setEditingNote({ verse: v.number, text: '' })}>
+                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-primary focus-visible:text-primary focus-visible:outline-none flex items-center gap-2 transition-colors" onClick={() => setEditingNote({ verse: v.number, text: '' })} aria-label={`Anotar no versículo ${v.number}`}>
                            <Icons.Edit3 className="w-3.5 h-3.5" /> Anotar
                          </button>
                       </div>
