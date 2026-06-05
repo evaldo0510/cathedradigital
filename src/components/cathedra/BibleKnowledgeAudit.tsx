@@ -1343,26 +1343,37 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Outras Pendências de Interface</h4>
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="relative flex-1 sm:flex-none">
                         <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-primary/20" />
                         <input 
+                          aria-label="Buscar termo i18n"
                           value={i18nSearch}
                           onChange={e => { setI18nSearch(e.target.value); setI18nPage(1); }}
                           placeholder="Buscar termo..."
-                          className="bg-primary/5 rounded-full pl-8 pr-4 py-1.5 text-[10px] outline-none border border-transparent focus:border-secondary/20 w-40 transition-all"
+                          className="bg-primary/5 rounded-full pl-8 pr-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all w-full sm:w-40"
                         />
                       </div>
                       <select 
+                        aria-label="Filtrar por Status"
                         value={i18nStatusFilter}
                         onChange={e => { setI18nStatusFilter(e.target.value as any); setI18nPage(1); }}
-                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20"
+                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all cursor-pointer flex-1 sm:flex-none"
                       >
-                        <option value="all">Todos</option>
-                        <option value="pending">Pendente</option>
-                        <option value="mapped">Mapeado</option>
+                        <option value="all">Todos os Status</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="mapped">Mapeados</option>
+                      </select>
+                      <select 
+                        aria-label="Ordenação"
+                        value={i18nSortOrder}
+                        onChange={e => { setI18nSortOrder(e.target.value as any); setI18nPage(1); }}
+                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20 focus:ring-2 focus:ring-secondary/20 transition-all cursor-pointer flex-1 sm:flex-none"
+                      >
+                        <option value="recent">Mais Recentes</option>
+                        <option value="oldest">Mais Antigos</option>
                       </select>
                     </div>
                   </div>
