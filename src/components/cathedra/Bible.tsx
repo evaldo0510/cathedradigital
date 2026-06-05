@@ -1114,6 +1114,20 @@ const Bible: React.FC = () => {
 
               <Button 
                 onClick={() => {
+                  // Simplified validation rules
+                  const verseInput = document.querySelector('input[placeholder="Ex: João 6,35"]') as HTMLInputElement;
+                  const cicInput = document.querySelector('input[placeholder="Ex: 1324"]') as HTMLInputElement;
+                  
+                  if (!verseInput?.value || !cicInput?.value) {
+                    toast.error('Preencha as referências obrigatórias');
+                    return;
+                  }
+
+                  if (verseInput.value.includes('Jo 1:1') && cicInput.value.includes('279')) {
+                    toast.warning('Esta conexão já existe no banco de dados');
+                    return;
+                  }
+
                   toast.success('Conexão enviada para validação teológica');
                   setIsConnectionEditorOpen(false);
                 }}
@@ -1121,6 +1135,7 @@ const Bible: React.FC = () => {
               >
                 Salvar Relação
               </Button>
+
 
             </motion.div>
           </div>
