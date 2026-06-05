@@ -1111,12 +1111,12 @@ const Bible: React.FC = () => {
                     <span className="align-baseline" id={`v-text-${v.number}`}>{wrapWithDictionary(v.text)}</span>
                     
                     <div className="flex flex-col items-center gap-spacing-md mt-spacing-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-4 py-1 rounded-full border border-primary/5 shadow-premium-sm">
+                      <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-6 py-2 rounded-full border border-primary/5 shadow-premium-sm">
                         <button 
                           onClick={() => toggleFavorite(v)}
                           aria-label={favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                           className={cn(
-                            "p-1 rounded-full hover:bg-primary/5 transition-colors",
+                            "p-2 rounded-full hover:bg-primary/5 transition-colors",
                             favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) 
                               ? "text-secondary" 
                               : "text-primary/20"
@@ -1124,7 +1124,7 @@ const Bible: React.FC = () => {
                         >
                           <Icons.Heart 
                             className={cn(
-                              "w-3.5 h-3.5",
+                              "w-4 h-4",
                               favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) && "fill-current"
                             )} 
                           />
@@ -1133,21 +1133,22 @@ const Bible: React.FC = () => {
                           onClick={() => setEditingNote({ verse: v.number, text: verseNotes.find(n => n.verse === v.number)?.note_text || '' })}
                           aria-label={verseNotes.some(n => n.verse === v.number) ? "Editar nota de estudo" : "Adicionar nota de estudo"}
                           className={cn(
-                            "p-1 rounded-full hover:bg-primary/5 transition-colors",
+                            "p-2 rounded-full hover:bg-primary/5 transition-colors",
                             verseNotes.some(n => n.verse === v.number) ? "text-primary" : "text-primary/20"
                           )}
                         >
-                          <Icons.Edit3 className="w-3.5 h-3.5" />
+                          <Icons.Edit3 className="w-4 h-4" />
                         </button>
                         <button 
                           aria-label="Compartilhar versículo"
-                          className="p-1 rounded-full hover:bg-primary/5 transition-colors text-primary/20"
+                          className="p-2 rounded-full hover:bg-primary/5 transition-colors text-primary/20"
                         >
-                          <Icons.Share2 className="w-3.5 h-3.5" />
+                          <Icons.Share2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <Button variant="ghost" className="text-[8px] uppercase tracking-widest text-primary/10 hover:text-primary/30 h-auto p-0">Ver contexto</Button>
+                      <Button variant="ghost" className="text-[10px] uppercase font-black tracking-[0.2em] text-primary/10 hover:text-primary/30 h-auto p-0 transition-colors">Ver contexto</Button>
                     </div>
+
 
 
                     {settings.showStudyMarginalia && filteredVerseNotes.find(n => n.verse === v.number) && (
