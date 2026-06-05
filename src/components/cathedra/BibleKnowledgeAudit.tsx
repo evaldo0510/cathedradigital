@@ -36,6 +36,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
   const [executionLogs, setExecutionLogs] = React.useState<AuditLog[]>([]);
   const [auditRuns, setAuditRuns] = React.useState<any[]>([]);
+  const [comparison, setComparison] = React.useState<{run1: any, run2: any} | null>(null);
   const [selectedRun, setSelectedRun] = React.useState<any>(null);
   const [isExporting, setIsExporting] = React.useState(false);
   const [csvFilters, setCsvFilters] = React.useState({
@@ -505,6 +506,60 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                   </div>
                 ))}
               </div>
+
+              {auditRuns.length >= 2 && (
+                <div className="bg-secondary/5 border border-secondary/10 p-6 rounded-3xl space-y-4">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-secondary">Comparar Execuções</h3>
+                  <div className="flex gap-4">
+                    <select 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                      onChange={(e) => {
+                        const run = auditRuns.find(r => r.id === e.target.value);
+                        setComparison(prev => ({ run1: run, run2: prev?.run2 }));
+                      }}
+                    >
+                      <option value="">Selecionar Run 1</option>
+                      {auditRuns.map(r => <option key={r.id} value={r.id}>{new Date(r.created_at).toLocaleDateString()}</option>)}
+                    </select>
+                    <select 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                      onChange={(e) => {
+                        const run = auditRuns.find(r => r.id === e.target.value);
+                        setComparison(prev => ({ run1: prev?.run1, run2: run }));
+                      }}
+                    >
+                      <option value="">Selecionar Run 2</option>
+                      {auditRuns.map(r => <option key={r.id} value={r.id}>{new Date(r.created_at).toLocaleDateString()}</option>)}
+                    </select>
+                  </div>
+                  {comparison?.run1 && comparison?.run2 && (
+                    <div className="p-4 bg-white rounded-2xl border border-primary/5 space-y-4">
+                      <div className="grid grid-cols-2 gap-8 divide-x divide-primary/5">
+                        <div>
+                          <p className="text-[8px] font-black uppercase tracking-widest text-primary/30 mb-2">Run 1: {comparison.run1.covered_chapters} Caps</p>
+                          <div className="space-y-1">
+                             {comparison.run1.empty_books?.filter((b: string) => !comparison.run2.empty_books?.includes(b)).map((b: string) => (
+                               <div key={b} className="flex items-center gap-2 text-[10px] text-emerald-600 font-bold">
+                                 <Icons.Check className="w-3 h-3" /> {b} Resolvido
+                               </div>
+                             ))}
+                          </div>
+                        </div>
+                        <div className="pl-8">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-primary/30 mb-2">Run 2: {comparison.run2.covered_chapters} Caps</p>
+                          <div className="space-y-1">
+                             {comparison.run2.empty_books?.filter((b: string) => !comparison.run1.empty_books?.includes(b)).map((b: string) => (
+                               <div key={b} className="flex items-center gap-2 text-[10px] text-red-600 font-bold">
+                                 <Icons.AlertCircle className="w-3 h-3" /> {b} Nova Lacuna
+                               </div>
+                             ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {selectedRun && (
                 <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
