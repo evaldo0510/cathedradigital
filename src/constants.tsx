@@ -272,6 +272,7 @@ const IconsInternal = {
   ArrowUpDown: createIcon(ArrowUpDown),
   ArrowUpRight: createIcon(ArrowUpRight),
   Award: createIcon(Award),
+  BarChart: createIcon(BarChart),
   Bell: createIcon(Bell),
   Bird: createIcon(Bird),
   Book: createIcon(Book),
