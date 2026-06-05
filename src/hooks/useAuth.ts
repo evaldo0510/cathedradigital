@@ -83,12 +83,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ]);
 
     if (profileResult.error) {
-      console.error('Error fetching profile:', profileResult.error);
+      console.error('Erro ao buscar perfil:', profileResult.error);
       return null;
     }
 
     if (premiumResult.error) {
-      console.error('Error checking premium access:', premiumResult.error);
+      console.error('Erro ao verificar acesso premium:', premiumResult.error);
     }
 
     if (!profileResult.data) {
@@ -133,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Check badges after streak update
       await checkAndAwardBadges(currentUser, currentProfile, newStreak);
     } catch (err) {
-      console.error('Streak update error:', err);
+      console.error('Erro ao atualizar ofensiva (streak):', err);
     }
   }, []);
 
@@ -177,7 +177,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (err) {
-      console.error('Badge check error:', err);
+      console.error('Erro ao verificar medalhas:', err);
     }
   }, []);
 
@@ -211,7 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       if (requestId !== authRequestId.current) return;
-      console.error('Session sync error:', error);
+      console.error('Erro na sincronização de sessão:', error);
       setProfile(null);
     } finally {
       if (requestId === authRequestId.current) {
@@ -226,7 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Safety timeout: never stay in loading state for more than 8 seconds
     const safetyTimeout = setTimeout(() => {
       if (active && loading) {
-        console.warn('Auth loading timed out. Forcing loading state to false.');
+        console.warn('Tempo limite de carregamento de autenticação atingido. Forçando estado de carregamento como falso.');
         setLoading(false);
       }
     }, 8000);
@@ -243,11 +243,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (error) {
           if (error.name === 'AbortError' && retryCount < 3) {
-            console.warn('Session init aborted (lock stolen), retrying...');
+            console.warn('Inicialização de sessão abortada (bloqueio roubado), tentando novamente...');
             setTimeout(() => initSession(retryCount + 1), 500);
             return;
           }
-          console.error('Error getting session:', error);
+          console.error('Erro ao obter sessão:', error);
         }
 
         await syncAuthState(session?.user ?? null);
@@ -255,13 +255,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         
         if (error?.name === 'AbortError' && retryCount < 3) {
-          console.warn('Session init aborted (lock stolen), retrying...');
+          console.warn('Inicialização de sessão abortada (bloqueio roubado), tentando novamente...');
           setTimeout(() => initSession(retryCount + 1), 500);
           return;
         }
 
         if (error?.name !== 'AbortError') {
-          console.error('Session init error:', error);
+          console.error('Erro de inicialização de sessão:', error);
         }
         
         setUser(null);
