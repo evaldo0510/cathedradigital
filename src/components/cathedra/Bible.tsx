@@ -263,7 +263,7 @@ const Bible: React.FC = () => {
             {/* Above the Fold Actions */}
             <div className="space-y-4 mb-12">
               <button 
-                onClick={() => lastRead ? navigate(`/bible?book=${lastRead.bookAbbr}&ch=${lastRead.chapter}`) : navigate('/bible?book=Jo&ch=1')}
+                onClick={() => lastRead ? navigate(`/bible?book=${lastRead.bookAbbr}&ch=${lastRead.chapter}${lastRead.verse ? `&v=${lastRead.verse}` : ''}`) : navigate('/bible?book=Jo&ch=1')}
                 className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-4">
