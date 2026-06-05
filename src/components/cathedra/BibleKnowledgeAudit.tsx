@@ -1288,7 +1288,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
              {versionComparison?.v1 && versionComparison?.v2 && (
                <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-6 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Comparação Lado a Lado</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visualização de Diferenças (Diff)</h4>
                     <div className="flex gap-2">
                       <button 
                         onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
