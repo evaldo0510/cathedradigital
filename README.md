@@ -1,23 +1,41 @@
-# Cathedra Digital
+# Mobile E2E Suite - CI & Local Sync
 
-[![Pipeline de Governança](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
-[![Design System Compliance](https://img.shields.io/badge/Compliance-85%25-emerald?labelColor=1a1a1a&logo=checkmarx&logoColor=b58b3a)](compliance-report.md)
-[![Trend](https://img.shields.io/badge/Trend-Stable-blue)](compliance-report.md)
+## CI Pipeline (GitHub Actions)
 
-## Project info
+O workflow `mobile-ci.yml` gerencia execuções em matriz mobile e gera manifestos de evidências detalhados.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/governance.yml)
+### Variáveis de Ambiente (CI)
+Você pode configurar os seguintes `vars` ou `secrets` no GitHub:
+- `RETENTION_DAYS_HTML`: Dias para manter o relatório HTML (Default: 7)
+- `RETENTION_DAYS_SCREENSHOTS`: Dias para screenshots (Default: 3)
+- `RETENTION_DAYS_VIDEOS`: Dias para vídeos (Default: 3)
+- `RETENTION_DAYS_TRACES`: Dias para traces (Default: 3)
+- `VITE_SWIPE_THRESHOLD`: Sensibilidade de swipe (Default: 80)
+- `VITE_SWIPE_RATIO`: Proporção de swipe (Default: 2.5)
 
-### Mobile E2E Tests
-Tests use Playwright to validate swipe precision on mobile devices.
+## Sincronização Local de Falhas
 
-#### Environment Variables (CI/Local)
-- `VITE_SWIPE_THRESHOLD`: Minimum pixels for a swipe (default: 80).
-- `VITE_SWIPE_RATIO`: X/Y ratio to distinguish horizontal from diagonal (default: 2.5).
-- `RETENTION_DAYS_HTML`: Retention for HTML reports in CI (default: 7).
-- `RETENTION_DAYS_EVIDENCE`: Retention for traces/videos in CI (default: 3).
+### 1. Sincronizar Artefatos
+Baixa e valida os artefatos do CI para replicar erros localmente.
+```bash
+# Baixar via Run ID (requer GitHub CLI)
+npm run test:e2e:sync-artifacts -- --run-id=12345
 
-#### Commands
-- `npm run test:e2e:headless`: Run mobile suite locally.
-- `npm run test:e2e:sync-artifacts`: Sync failed CI tests locally (requires downloading `playwright-report` artifact).
+# Filtrar por dispositivo
+npm run test:e2e:sync-artifacts -- --device=mobile-chrome
+
+# Filtrar por nome do teste
+npm run test:e2e:sync-artifacts -- --test="precision"
+```
+
+### 2. Validação Pós-Sync
+O comando de sincronização valida automaticamente se todos os arquivos (HTML, Trace, Screenshots e Vídeos) listados no manifesto existem na pasta `playwright-report`. Caso falte algo, ele reportará o erro antes de sugerir o comando de execução.
+
+### 3. Réplica Exata
+Após o sync, o script gera um comando `npx playwright test` formatado com as specs e projetos específicos que falharam, garantindo que você rode apenas o necessário com as mesmas variáveis de ambiente do CI.
+
+## Scripts Úteis
+
+- `npm run test:e2e:headless`: Roda a suite mobile completa localmente em modo headless.
+- `npm run test:e2e:ci-replica-failed`: Roda apenas os testes que falharam na última execução local.
+- `npm run test:e2e:sync-artifacts`: Sincroniza e valida o manifesto gerado pelo CI.
