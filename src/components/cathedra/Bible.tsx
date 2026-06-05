@@ -42,6 +42,8 @@ const getDailyReading = () => {
 
 
 const Bible: React.FC = () => {
+  const [isConnectionEditorOpen, setIsConnectionEditorOpen] = useState(false);
+
   useRenderPerf('Sacra Biblia Mobile-First', 15);
 
   const navigate = useNavigate();
