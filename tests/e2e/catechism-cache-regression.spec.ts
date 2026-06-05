@@ -34,4 +34,50 @@ test.describe('Catechism Cache Regression', () => {
     // Since everything was cleared, items should now appear as 'not_cached'
     await expect(page.locator('text=not_cached').first()).toBeVisible();
   });
+
+  test('Successive invalidations update integrity screen at each step', async ({ page }) => {
+    await page.goto('/catechism/integrity');
+    
+    // First clear
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByTitle('Limpar todo o cache').click();
+    await expect(page.locator('text=Cache do catecismo limpo com sucesso')).toBeVisible();
+    
+    // Reprocess one item
+    await page.locator('button[title="Reprocessar agora"]').first().click();
+    await expect(page.locator('text=reprocessado com sucesso')).toBeVisible();
+    
+    // Second clear
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByTitle('Limpar todo o cache').click();
+    await expect(page.locator('text=Cache do catecismo limpo com sucesso')).toBeVisible();
+    
+    // Verify it's back to cleared state
+    await expect(page.locator('text=not_cached').first()).toBeVisible();
+  });
+
+  test('Error during invalidation displays institutional i18n message', async ({ page }) => {
+    // We can simulate an error by intercepting the supabase request
+    // This depends on how the clearCache is implemented (it uses .from().delete())
+    await page.route('**/rest/v1/catechism_cache*', route => {
+      if (route.request().method() === 'DELETE') {
+        route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({ message: 'Internal Server Error' })
+        });
+      } else {
+        route.continue();
+      }
+    });
+
+    await page.goto('/catechism/integrity');
+    
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByTitle('Limpar todo o cache').click();
+    
+    // The component uses toast.error('Erro ao limpar cache')
+    // Let's verify this message is shown in Portuguese
+    await expect(page.locator('text=Erro ao limpar cache')).toBeVisible();
+  });
 });
