@@ -1079,10 +1079,11 @@ const Bible: React.FC = () => {
                     tabIndex={0}
                     onFocus={() => setActiveVerseNumber(v.number)}
                     className={cn(
-                      "group relative py-spacing-xl transition-all duration-700 px-spacing-xl rounded-premium border border-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/20",
-                      activeVerseNumber === v.number ? "bg-white/40 shadow-premium-sm" : "hover:bg-white/20",
-                      "text-center max-w-2xl mx-auto"
+                      "group relative py-spacing-2xl transition-all duration-700 px-spacing-xl rounded-premium border border-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/20",
+                      activeVerseNumber === v.number ? "bg-white/60 shadow-premium-md" : "hover:bg-white/30",
+                      "text-center max-w-3xl mx-auto"
                     )}
+
 
                   >
                     {v.number === 1 && (
