@@ -242,15 +242,14 @@
   /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/10 w-full mx-auto;
-    font-size: clamp(1.125rem, 1.6vw, 1.35rem);
-    line-height: 2;
-
-    letter-spacing: 0.02em;
-    font-weight: 300;
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 2.2;
+    letter-spacing: 0.01em;
     font-variant-numeric: oldstyle-nums;
     word-break: break-word;
     overflow-wrap: break-word;
   }
+
 
   .line-spacing-tight .reader-text { line-height: 1.5; }
   .line-spacing-normal .reader-text { line-height: 1.8; }
