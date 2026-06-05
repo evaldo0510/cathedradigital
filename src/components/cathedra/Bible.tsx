@@ -42,7 +42,7 @@ const Bible: React.FC = () => {
   const { settings } = useReadingSettings();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes' | 'monthly_recap'>('home');
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
