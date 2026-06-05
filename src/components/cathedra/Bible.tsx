@@ -536,10 +536,15 @@ const Bible: React.FC = () => {
                         <div 
                           key={v.number} 
                           id={`verse-${v.number}`} 
-                          onClick={() => saveReadingProgress(selectedBook.abbr, selectedChapter, v.number)}
-                          className="flex gap-4 group relative transition-colors duration-1000 cursor-pointer active:bg-primary/[0.02]"
+                          onClick={() => {
+                            saveReadingProgress(selectedBook.abbr, selectedChapter, v.number);
+                            toggleHighlight(v.number);
+                          }}
+                          className={cn(
+                            "flex gap-4 group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-2 -mx-2 rounded-lg",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40"
+                          )}
                         >
-
                           <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {hasNote && (
@@ -551,13 +556,17 @@ const Bible: React.FC = () => {
                             {wrapWithDictionary(v.text)}
                             
                             <button 
-                              onClick={() => handleOpenAnnotation(v)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenAnnotation(v);
+                              }}
                               className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
                             >
                               <Icons.PenLine className="w-3.5 h-3.5" />
                             </button>
                           </p>
                         </div>
+
                       );
                     })}
 
