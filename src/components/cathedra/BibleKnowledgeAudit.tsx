@@ -1219,17 +1219,22 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                         </button>
                       )}
                       {/* MODO AUDITORIA DE TERMOS (INTERNAL QA) */}
-                      {log.summary?.match(/[a-zA-Z]/) && !log.summary?.includes('Verificação') && !log.summary?.includes('Alteração') && (
+                      {(log.summary?.match(/[a-zA-Z]/) && !log.summary?.includes('Verificação') && !log.summary?.includes('Alteração')) || 
+                       (log.summary?.includes('Canon') || log.summary?.includes('Bible')) ? (
                         <div className="group relative">
-                          <Icons.AlertCircle className="w-3 h-3 text-amber-500 cursor-help" />
-                          <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-48 p-2 bg-white shadow-xl border border-primary/5 rounded-lg z-50 text-[8px] leading-relaxed">
-                            <p className="font-bold text-amber-600 mb-1">Inconsistência de Glossário:</p>
-                            <p className="text-primary/40 mb-1">Termo detectado: "{log.summary.split(' ')[0]}..."</p>
-                            <p className="text-emerald-600 font-bold italic">Sugestão: "Verificação de Integridade..."</p>
+                          <Icons.AlertCircle className="w-3 h-3 text-rose-500 cursor-help" />
+                          <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-56 p-3 bg-white shadow-2xl border border-rose-100 rounded-xl z-50 text-[9px] leading-relaxed">
+                            <p className="font-black text-rose-600 mb-1 uppercase tracking-widest">Inconsistência Institucional</p>
+                            <p className="text-primary/60 mb-2">Termo fora do padrão: "{log.summary}"</p>
+                            <div className="pt-2 border-t border-rose-50 border-dashed">
+                              <p className="text-emerald-600 font-bold">Sugestão do Glossário:</p>
+                              <p className="italic text-emerald-700">"Verificação de Integridade das Escrituras"</p>
+                            </div>
                           </div>
                         </div>
-                      )}
+                      ) : null}
                     </div>
+
 
                     {log.summary && (
                       <p className="text-[10px] text-primary/60">{log.summary}</p>
