@@ -372,9 +372,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     // Simula leitura do arquivo json gerado pelos testes E2E
     const mockReport = [
       { term: 'Retry Policy', context: 'Configuração Webhook', expected: 'Política de Retentativa' },
+      { term: 'Event Type', context: 'Transmissão Webhook', expected: 'Tipo de Evento' },
+      { term: 'Error Message', context: 'Logs de Transmissão', expected: 'Mensagem de Erro' },
       { term: 'Scanning...', context: 'Painel de Segurança', expected: 'Verificando...' },
       { term: 'A11y Check', context: 'Painel de QA', expected: 'Validação de Acessibilidade' }
     ];
+
     setI18nFailures(mockReport);
   };
 
