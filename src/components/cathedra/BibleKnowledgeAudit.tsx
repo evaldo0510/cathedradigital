@@ -1004,7 +1004,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               </div>
 
               <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Alerta</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Transmissão</h3>
                 <div className="flex gap-2">
                    <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest outline-none">
                      <option value="webhook">Webhook</option>
