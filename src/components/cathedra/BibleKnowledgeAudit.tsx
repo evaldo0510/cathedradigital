@@ -154,7 +154,34 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </section>
 
+          {/* Theological Themes Index (Phase 3) */}
+          <section className="space-y-4">
+            <header className="flex items-center gap-3">
+              <Icons.Tags className="w-4 h-4 text-secondary" />
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Temas Teológicos</h2>
+            </header>
+            <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+              {auditData.theologicalThemes?.map(theme => (
+                <div key={theme.id} className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors">
+                  <div className="space-y-1">
+                    <span className="font-serif font-bold text-primary/80">{theme.label}</span>
+                    <div className="flex gap-1">
+                      {theme.tags.map(tag => (
+                        <span key={tag} className="text-[7px] font-black uppercase text-primary/30 border border-primary/5 px-1 rounded-sm">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-bold text-secondary">{theme.connections} conexões</span>
+                    <Icons.ChevronRight className="w-3 h-3 text-primary/10" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* Identified Gaps Index (Phase 3) */}
+
           <section className="space-y-4">
             <header className="flex items-center gap-3">
               <Icons.List className="w-4 h-4 text-primary/40" />
