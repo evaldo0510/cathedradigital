@@ -380,12 +380,18 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
 
   const fetchI18nReport = async () => {
-    // Mapeamento de logs legados simulado
+    // Mapeamento de logs legados simulado com dados expandidos para teste de paginação
     const legacyLogsMapping = [
-      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending' },
-      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped' },
-      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending' },
-      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped' }
+      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-01T10:00:00Z' },
+      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped', updated_at: '2024-05-02T11:30:00Z' },
+      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending', updated_at: '2024-05-03T09:15:00Z' },
+      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped', updated_at: '2024-05-04T14:20:00Z' },
+      { term: 'Session expired', expected: 'Sessão expirada', context: 'Auth Hook', status: 'pending', updated_at: '2024-05-05T08:00:00Z' },
+      { term: 'Access denied', expected: 'Acesso negado', context: 'Permissions', status: 'pending', updated_at: '2024-05-06T12:00:00Z' },
+      { term: 'Resource not found', expected: 'Recurso não encontrado', context: 'API', status: 'mapped', updated_at: '2024-05-07T16:45:00Z' },
+      { term: 'Internal server error', expected: 'Erro interno do servidor', context: 'API', status: 'pending', updated_at: '2024-05-08T10:30:00Z' },
+      { term: 'Method not allowed', expected: 'Método não permitido', context: 'API', status: 'mapped', updated_at: '2024-05-09T11:00:00Z' },
+      { term: 'Too many requests', expected: 'Muitas requisições', context: 'Rate Limit', status: 'pending', updated_at: '2024-05-10T13:15:00Z' }
     ];
 
     setI18nFailures(legacyLogsMapping);
