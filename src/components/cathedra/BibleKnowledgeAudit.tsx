@@ -123,7 +123,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     const payload = { 
       event: 'audit_test', 
       timestamp: new Date().toISOString(),
-      summary: 'Payload de teste para auditoria bíblica',
+      summary: 'Conteúdo de teste para verificação de integridade bíblica',
       stats: stats
     };
 
