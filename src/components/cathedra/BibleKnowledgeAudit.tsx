@@ -1113,8 +1113,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Últimas Execuções</h4>
-                  <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{securityScans.length} Runs</span>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Últimas Verificações</h4>
+                  <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{securityScans.length} Registros</span>
+
                 </div>
                 <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
                   {securityScans.map(scan => (
