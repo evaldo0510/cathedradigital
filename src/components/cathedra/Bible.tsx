@@ -954,6 +954,13 @@ const Bible: React.FC = () => {
           <KnowledgeGraph 
             onClose={() => setIsGraphOpen(false)}
             initialNodeId={expandedConnection?.id}
+            onNavigateToContent={(book, chapter, verse) => {
+              navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
+              setViewMode('reading');
+              setIsGraphOpen(false);
+              setExpandedConnection(null);
+            }}
+
           />
         )}
       </AnimatePresence>
