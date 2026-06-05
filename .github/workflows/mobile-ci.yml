@@ -33,11 +33,19 @@ jobs:
       - name: Run Playwright E2E Tests (Mobile Matrix)
         run: |
           PROJECTS="${{ github.event.inputs.device_matrix || 'mobile-chrome,mobile-safari' }}"
-          IFS=',' read -ra ADDR <<< "$PROJECTS"
+          ONLY_FAILED="${{ github.event.inputs.only_failed || 'false' }}"
+          
           CMD="npx playwright test tests/e2e/swipe-precision.spec.ts"
-          for i in "${ADDR[@]}"; do
-            CMD="$CMD --project=$i"
-          done
+          
+          if [ "$ONLY_FAILED" = "true" ]; then
+            CMD="$CMD --last-failed"
+          else
+            IFS=',' read -ra ADDR <<< "$PROJECTS"
+            for i in "${ADDR[@]}"; do
+              CMD="$CMD --project=$i"
+            done
+          fi
+          
           $CMD --reporter=list,html
 
         env:
