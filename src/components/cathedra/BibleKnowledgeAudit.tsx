@@ -1095,15 +1095,16 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     onClick={() => setShowScanCompareModal(true)}
                     className="px-4 py-2 bg-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/10 transition-all"
                   >
-                    Compare Runs
+                    Comparar Verificações
                   </button>
                   <button 
                     onClick={runSecurityScan}
                     disabled={isScanning}
                     className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
                   >
-                    {isScanning ? 'Scanning...' : 'Run Security Scan'}
+                    {isScanning ? 'Verificando...' : 'Iniciar Varredura'}
                   </button>
+
                 </div>
 
               </div>
