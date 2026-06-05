@@ -1,4 +1,13 @@
-# Mobile E2E Suite - CI & Local Sync
+# Mobile E2E Suite & Quality Audit
+
+## 🛡️ Varredura Completa e Profunda (Audit)
+Este projeto passou por uma varredura completa e profunda, cobrindo:
+- **Revisão de Código**: Linting e type-checking rigorosos.
+- **Desempenho**: Auditorias de Core Web Vitals (Lighthouse).
+- **Segurança**: Varredura de dependências e linter de banco de dados Supabase.
+- **Acessibilidade**: Testes automatizados via Axe-core e validação de navegação por teclado.
+- **Documentação**: README e manifestos de artefatos atualizados.
+
 
 ## CI Pipeline (GitHub Actions)
 
