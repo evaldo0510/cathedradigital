@@ -1120,10 +1120,3 @@ const Bible: React.FC = () => {
 };
 
 export default Bible;
-
-
-
-
-
-
-export default Bible;
