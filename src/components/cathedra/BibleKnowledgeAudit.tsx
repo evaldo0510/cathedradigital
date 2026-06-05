@@ -213,12 +213,22 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               {auditData.emptyBooks.map(book => (
                 <div key={book} className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors">
                   <div className="space-y-1">
-                    <span className="font-serif font-bold text-primary/80">{book}</span>
-                    <p className="text-[9px] font-medium text-stone-400 uppercase tracking-tighter">Faltam referências do CIC e Magistério</p>
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif font-bold text-primary/80">{book}</span>
+                      {scanResults[book] === 'ok' && <Icons.CheckCircle2 className="w-3 h-3 text-emerald-500" />}
+                      {scanResults[book] === 'empty' && <Icons.XCircle className="w-3 h-3 text-red-500" />}
+                      {scanResults[book] === 'pending' && <Icons.Loader2 className="w-3 h-3 text-secondary animate-spin" />}
+                    </div>
+                    <p className="text-[9px] font-medium text-stone-400 uppercase tracking-tighter">
+                      {scanResults[book] === 'ok' ? 'Conteúdo disponível' : 'Faltam referências do CIC e Magistério'}
+                    </p>
                   </div>
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
                     <button 
-                      onClick={() => toast.success(`${book} marcado como validado`)}
+                      onClick={() => {
+                        setScanResults(prev => ({...prev, [book]: 'ok'}));
+                        toast.success(`${book} marcado como validado`);
+                      }}
                       className="p-2 rounded-lg bg-green-50 text-green-600 active:scale-95"
                       title="Marcar como Validado"
                     >
@@ -232,7 +242,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       <Icons.Plus className="w-4 h-4" />
                     </button>
                   </div>
-
                 </div>
               ))}
             </div>
