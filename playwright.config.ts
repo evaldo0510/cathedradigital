@@ -37,9 +37,9 @@ export default defineConfig({
     headless: process.env.HEADLESS !== 'false',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on',
-    screenshot: 'on',
-    video: 'on',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     ignoreHTTPSErrors: true,
   },
   /* Configure threshold for visual regression */
