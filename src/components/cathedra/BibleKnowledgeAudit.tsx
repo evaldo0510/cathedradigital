@@ -622,7 +622,20 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                             </span>
                           </div>
                           <div className="space-y-0.5">
-                            <span className="text-primary/30 block">Canonical Payload:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary/30 block">Canonical Payload:</span>
+                              <div className="flex gap-2">
+                                <button onClick={() => { navigator.clipboard.writeText(delivery.verification_details.canonical_payload); toast.success('Copiado'); }} className="text-[8px] text-secondary hover:underline">Copiar</button>
+                                <button onClick={() => {
+                                  const blob = new Blob([delivery.verification_details.canonical_payload], { type: 'application/json' });
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `payload_${delivery.id.slice(0, 8)}.json`;
+                                  a.click();
+                                }} className="text-[8px] text-secondary hover:underline">Baixar</button>
+                              </div>
+                            </div>
                             <div className="bg-white/50 p-2 rounded border border-primary/5 text-[8px] max-h-20 overflow-y-auto">
                               {delivery.verification_details.canonical_payload}
                             </div>
