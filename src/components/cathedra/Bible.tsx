@@ -912,18 +912,19 @@ const Bible: React.FC = () => {
 
           <div className="pb-spacing-4xl">
             {viewMode === 'reading' && !settings.immersiveMode && (
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md gap-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-spacing-3xl border-b border-primary/5 pb-spacing-lg gap-4">
                 <div className="flex items-center gap-4">
                   <Button 
                     variant="ghost" 
                     onClick={goBack} 
-                    className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 hover:opacity-100 p-0"
+                    className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 hover:opacity-100 p-0 transition-all hover:-translate-x-1"
                     aria-label="Voltar para o sumário de capítulos"
                   >
                     ← Sumário
                   </Button>
+                  
                   {settings.showStudyMarginalia && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 border-l border-primary/5 pl-4">
                       <div className="relative group">
                         <Button 
                           variant="ghost" 
@@ -938,6 +939,21 @@ const Bible: React.FC = () => {
                         {noteSearchVisible && (
                           <motion.div 
                             initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 180, opacity: 1 }}
+                            className="absolute left-full ml-2 top-0 z-[60]"
+                          >
+                            <input 
+                              autoFocus
+                              placeholder="Buscar notas..."
+                              value={noteSearchQuery}
+                              onChange={(e) => setNoteSearchQuery(e.target.value)}
+                              className="h-7 w-full bg-primary/[0.03] border border-primary/10 rounded-full px-3 text-[10px] font-serif italic focus:ring-1 focus:ring-primary/20 outline-none"
+                              aria-label="Digitar termo para buscar em suas notas"
+                            />
+                          </motion.div>
+                        )}
+                      </div>
+
                             animate={{ width: 180, opacity: 1 }}
                             className="absolute left-full ml-2 top-0 z-[60]"
                           >
