@@ -583,7 +583,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
             <Icons.X className="w-6 h-6" />
           </button>
-          <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
+          <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Verificação de Integridade das Escrituras</h1>
           <div className="flex items-center gap-2">
             <button onClick={() => toast.success('Link copiado')} className="p-2 text-primary/40"><Icons.Share2 className="w-5 h-5" /></button>
             <button onClick={() => window.print()} className="p-2 text-primary/40"><Icons.Printer className="w-5 h-5" /></button>
@@ -597,7 +597,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
-            { id: 'history', label: 'Histórico', icon: Icons.History },
+            { id: 'history', label: 'Histórico de Cânone', icon: Icons.History },
             { id: 'audit-logs', label: 'Ações', icon: Icons.List },
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
@@ -619,6 +619,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           ))}
         </div>
       </div>
+
 
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
