@@ -16,10 +16,10 @@ class NavigationTelemetry {
     // Escuta eventos customizados de navegação bloqueada
     if (typeof window !== 'undefined') {
       window.addEventListener('nav-blocked', (e: any) => {
-        this.log('Navigation Blocked', 'warn', e.detail);
+        this.log('Navegação Bloqueada', 'warn', e.detail);
       });
       window.addEventListener('swipe-detected', (e: any) => {
-        this.log('Swipe Detected', 'info', e.detail);
+        this.log('Gesto de Swipe Detectado', 'info', e.detail);
       });
     }
   }
