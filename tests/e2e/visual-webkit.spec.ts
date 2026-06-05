@@ -1,17 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// --- CONFIGURAÇÃO DE LIMIARES WCAG ---
-const CONTRAST_CONFIG = {
-  thresholds: {
-    normal: 4.5,
-    large: 3.0,
-  },
-  // Possibilidade de estender/ajustar por breakpoint se necessário
-  overrides: {
-    'iPhone SE': { normal: 4.6 }, // Exemplo: Rigor extra em telas muito pequenas
-  }
+// --- CONFIGURAÇÃO DINÂMICA VIA DB ---
+let CONTRAST_CONFIG = {
+  thresholds: { normal: 4.5, large: 3.0 },
+  overrides: {} as any
 };
 
 const devices = [
@@ -20,7 +15,6 @@ const devices = [
   { name: 'iPad mini (Webkit)', use: 'iPad mini', width: 768, height: 1024 }
 ];
 
-// Helper to calculate relative luminance
 const getLuminance = (r: number, g: number, b: number) => {
   const [rs, gs, bs] = [r, g, b].map(c => {
     c = c / 255;
@@ -29,7 +23,6 @@ const getLuminance = (r: number, g: number, b: number) => {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 };
 
-// Helper to calculate contrast ratio
 const getContrastRatio = (lum1: number, lum2: number) => {
   const brightest = Math.max(lum1, lum2);
   const darkest = Math.min(lum1, lum2);
@@ -37,6 +30,21 @@ const getContrastRatio = (lum1: number, lum2: number) => {
 };
 
 test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
+  
+  test.beforeAll(async () => {
+    const supabaseUrl = process.env.SUPABASE_URL!;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+    
+    const { data } = await supabase.from('bible_audit_a11y_config').select('*').eq('id', 'default').single();
+    if (data) {
+      CONTRAST_CONFIG = {
+        thresholds: { normal: data.threshold_normal, large: data.threshold_large },
+        overrides: data.device_overrides || {}
+      };
+    }
+  });
+
   for (const device of devices) {
     test(`Visual snapshot and WCAG check for ${device.name} - Light & Dark`, async ({ page }, testInfo) => {
       await page.setViewportSize({ width: device.width, height: device.height });
@@ -53,7 +61,7 @@ test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
         const targets = page.locator('p, h1, h2, h3, button');
         const count = await targets.count();
 
-        for (let i = 0; i < Math.min(count, 5); i++) { // Limitando para performance do teste
+        for (let i = 0; i < Math.min(count, 5); i++) {
           const target = targets.nth(i);
           const styles = await target.evaluate((el) => {
             const s = window.getComputedStyle(el);
@@ -84,36 +92,33 @@ test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
           const isBold = parseInt(styles.fontWeight) >= 700 || styles.fontWeight === 'bold';
           const isLargeText = fontSizePx >= 24 || (fontSizePx >= 18.66 && isBold);
           
-          const deviceOverrides = (CONTRAST_CONFIG.overrides as any)[device.name] || {};
-          const threshold = isLargeText 
-            ? (deviceOverrides.large || CONTRAST_CONFIG.thresholds.large)
-            : (deviceOverrides.normal || CONTRAST_CONFIG.thresholds.normal);
+          // Buscar override pelo nome do dispositivo (ex.: "iPhone 14 (Webkit)") ou nome simplificado
+          const deviceKey = device.name.replace(' (Webkit)', '');
+          const deviceOverride = CONTRAST_CONFIG.overrides[deviceKey] || {};
+          const offset = deviceOverride.offset || 0;
           
-          const criterion = isLargeText ? " WCAG 2.1 1.4.3 (Level AA - Large Text)" : "WCAG 2.1 1.4.3 (Level AA - Normal Text)";
+          const baseThreshold = isLargeText ? CONTRAST_CONFIG.thresholds.large : CONTRAST_CONFIG.thresholds.normal;
+          const threshold = baseThreshold + offset;
+          
+          const criterion = isLargeText ? "WCAG 2.1 1.4.3 (Level AA - Large Text)" : "WCAG 2.1 1.4.3 (Level AA - Normal Text)";
 
           if (ratio < threshold) {
             const fileName = `${device.name.replace(/\s+/g, '-')}-${mode}-fail-${i}.png`;
             const filePath = path.join('tests/visual/failures', fileName);
             
-            // Garantir diretório
             if (!fs.existsSync('tests/visual/failures')) fs.mkdirSync('tests/visual/failures', { recursive: true });
             
             await target.screenshot({ path: filePath });
-            
-            // Adicionar ao relatório do Playwright como anexo clicável
-            await testInfo.attach(`Evidence: ${styles.tagName} - ${mode}`, {
-              path: filePath,
-              contentType: 'image/png',
-            });
+            await testInfo.attach(`Evidence: ${styles.tagName} - ${mode}`, { path: filePath, contentType: 'image/png' });
 
             const fileUrl = `file://${path.resolve(filePath)}`;
 
             expect(ratio, 
               `🚨 FALHA DE CONFORMIDADE: ${criterion}\n` +
               `Elemento: <${styles.tagName}> "${styles.text}" (${device.name} ${mode})\n` +
-              `Razão: Proporção ${ratio.toFixed(2)}:1 < Limiar ${threshold}:1\n` +
+              `Razão: Proporção ${ratio.toFixed(2)}:1 < Limiar ${threshold.toFixed(2)}:1 (Base: ${baseThreshold} + Offset: ${offset})\n` +
               `Cores: Texto ${styles.color} | Fundo ${styles.backgroundColor}\n` +
-              `🔗 LINK PARA EVIDÊNCIA: ${fileUrl}\n`
+              `🔗 LINK: ${fileUrl}\n`
             ).toBeGreaterThanOrEqual(threshold);
           }
         }
