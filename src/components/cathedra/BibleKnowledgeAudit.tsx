@@ -571,6 +571,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
             { id: 'security', label: 'Segurança', icon: Icons.Shield },
+            { id: 'a11y', label: 'Acessibilidade', icon: Icons.Eye },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
@@ -590,7 +591,58 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
+          {activeTab === 'a11y' && (
+            <motion.div key="a11y" className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Configuração de Limiares Acessibilidade</h3>
+                <span className="text-[8px] bg-secondary/10 text-secondary px-2 py-1 rounded-full font-black">Configuração Dinâmica</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-6 bg-white border border-primary/5 rounded-3xl space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Limiares WCAG AA</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary/60">Texto Normal</span>
+                      <div className="flex items-center gap-2">
+                        <input type="number" defaultValue="4.5" step="0.1" className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" />
+                        <span className="text-[10px] text-primary/20">:1</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary/60">Texto Grande (Large)</span>
+                      <div className="flex items-center gap-2">
+                        <input type="number" defaultValue="3.0" step="0.1" className="w-16 bg-primary/5 border-none rounded-lg px-2 py-1 text-xs font-mono text-center" />
+                        <span className="text-[10px] text-primary/20">:1</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-white border border-primary/5 rounded-3xl space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Breakpoint</h4>
+                  <div className="space-y-3">
+                    {['iPhone SE', 'iPhone 14', 'iPad mini'].map(device => (
+                      <div key={device} className="flex items-center justify-between text-[10px]">
+                        <span className="font-bold text-primary/40">{device}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[8px] text-primary/20 uppercase font-black">Offset</span>
+                          <input type="number" defaultValue="0.0" step="0.1" className="w-12 bg-primary/5 border-none rounded-md px-1 py-0.5 text-center font-mono" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
+                <p className="text-[10px] text-primary/40 italic">As alterações nestes limiares serão refletidas automaticamente nos próximos Security Scans e validações em tempo real do painel Visual Preview.</p>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'overview' && (
+
             <motion.div key="overview" className="space-y-12 max-w-lg mx-auto">
                <section className="text-center space-y-4">
                 <div className="relative inline-flex items-center justify-center">
