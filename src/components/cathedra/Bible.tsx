@@ -35,7 +35,6 @@ const Bible: React.FC = () => {
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
   
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [activeVerseNumber, setActiveVerseNumber] = useState<number | null>(null);
@@ -45,8 +44,6 @@ const Bible: React.FC = () => {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [verseNotes, setVerseNotes] = useState<any[]>([]);
   const [editingNote, setEditingNote] = useState<{ verse: number, text: string } | null>(null);
-  const [noteSearchQuery, setNoteSearchQuery] = useState('');
-  const [noteSearchVisible, setNoteSearchVisible] = useState(false);
 
   const fetchVerseNotes = async () => {
     if (!user || !selectedBook) return;
@@ -150,9 +147,9 @@ const Bible: React.FC = () => {
           icon={Icons.BookOpen}
           maxW="max-w-7xl"
         >
-          <div className="w-full space-y-12 pb-16">
+          <div className="w-full space-y-12 pb-16 animate-in fade-in duration-1000">
             <div className="text-center max-w-lg mx-auto">
-              <p className="text-premium-base font-serif italic text-primary/60 italic leading-relaxed">
+              <p className="text-premium-base font-serif italic text-primary/60 leading-relaxed">
                 "Lâmpada para os meus pés é a tua palavra, e luz para o meu caminho."
               </p>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary/20 mt-2 block">Salmo 119,105</span>
@@ -160,10 +157,10 @@ const Bible: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {[
-                { title: 'Continuar leitura', val: 'João 6,35', desc: 'Evangelho segundo São João', icon: Icons.Bookmark },
-                { title: 'Leitura do dia', val: 'Mateus 5,1-12', desc: 'Sermão da Montanha', icon: Icons.Sun },
-                { title: 'Plano de leitura', val: 'Plano em 365 dias', progress: 35, icon: Icons.Activity },
-                { title: 'Favoritos', val: '12 versículos', desc: 'Sua seleção sagrada', icon: Icons.Heart }
+                { title: 'Continuar leitura', val: 'João 6,35', desc: 'Evangelho segundo São João', icon: Icons.Bookmark, btn: 'Continuar lendo' },
+                { title: 'Leitura do dia', val: 'Mateus 5,1-12', desc: 'Sermão da Montanha', icon: Icons.Sun, btn: 'Ler agora' },
+                { title: 'Plano de leitura', val: 'Plano em 365 dias', progress: 35, icon: Icons.Activity, btn: 'Ver plano' },
+                { title: 'Favoritos', val: '12 versículos', desc: 'Sua seleção sagrada', icon: Icons.Heart, btn: 'Ver favoritos' }
               ].map((w, i) => (
                 <div key={i} className="bg-white/60 backdrop-blur-xl p-6 rounded-premium border border-primary/5 flex flex-col justify-between shadow-premium-sm min-h-[160px]">
                   <div className="space-y-1">
@@ -171,14 +168,14 @@ const Bible: React.FC = () => {
                     <h4 className="text-premium-xl font-bold text-primary/80">{w.val}</h4>
                     {w.desc && <p className="text-[10px] text-primary/40 italic">{w.desc}</p>}
                     {w.progress && (
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-2 space-y-1.5">
                         <div className="flex justify-between text-[8px] font-bold text-primary/30 uppercase"><span>Dia 127</span><span>{w.progress}%</span></div>
                         <div className="w-full h-1 bg-primary/5 rounded-full overflow-hidden"><div className="h-full bg-secondary/40" style={{ width: `${w.progress}%` }} /></div>
                       </div>
                     )}
                   </div>
                   <div className="flex justify-end mt-4">
-                    <Button variant="outline" size="sm" className="rounded-full bg-secondary/10 border-secondary/20 text-secondary text-[10px] uppercase font-bold tracking-widest h-8 px-4">Ação</Button>
+                    <Button variant={i < 2 ? "outline" : "ghost"} size="sm" className={cn("rounded-full h-8 px-4 text-[10px] uppercase font-bold tracking-widest", i < 2 ? "bg-secondary/10 border-secondary/20 text-secondary" : "text-primary/40")}>{w.btn}</Button>
                   </div>
                 </div>
               ))}
@@ -192,8 +189,8 @@ const Bible: React.FC = () => {
                     <div className="space-y-1">
                       {BIBLE_DATA[t as keyof typeof BIBLE_DATA].map(cat => (
                         <button key={cat.name} className="w-full flex items-center gap-4 p-4 hover:bg-white/40 rounded-premium transition-all text-left group">
-                          <Icons.BookText className="w-4 h-4 text-primary/20 group-hover:text-secondary" />
-                          <span className="text-premium-sm font-bold text-primary/60 group-hover:text-primary">{cat.name}</span>
+                          <Icons.BookText className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
+                          <span className="text-premium-sm font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</span>
                         </button>
                       ))}
                     </div>
@@ -204,6 +201,11 @@ const Bible: React.FC = () => {
               <div className="lg:col-span-8 bg-white/50 backdrop-blur-3xl rounded-premium-xl border border-primary/5 p-8 shadow-premium">
                 {activeSummaryBook && (
                   <>
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-[9px] font-black tracking-widest text-primary/20 uppercase">Bíblia</span>
+                      <Icons.ChevronRight className="w-2.5 h-2.5 text-primary/10" />
+                      <span className="text-[9px] font-black tracking-widest text-primary/40 uppercase">Evangelho segundo São {activeSummaryBook.name}</span>
+                    </div>
                     <div className="border-b border-primary/5 pb-6 mb-8">
                       <h3 className="font-display text-premium-4xl italic text-primary/90">{activeSummaryBook.name}</h3>
                       <span className="text-[10px] font-black tracking-widest text-primary/20 uppercase">{activeSummaryBook.chapters} Capítulos</span>
@@ -211,11 +213,13 @@ const Bible: React.FC = () => {
                     <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map(num => (
                         <button key={num} onClick={() => selectBook(activeSummaryBook)} className="flex items-center justify-between p-6 bg-white/40 hover:bg-white/80 transition-all group">
-                          <div className="flex items-center gap-8">
-                            <span className="font-display text-premium-2xl text-primary/20 group-hover:text-secondary w-12 text-center">{num}</span>
-                            <span className="text-premium-lg font-serif italic text-primary/70 group-hover:text-primary">Título do Capítulo</span>
+                          <div className="flex items-center gap-12">
+                            <span className="font-display text-premium-2xl text-primary/20 group-hover:text-secondary w-12 text-center transition-all">{num}</span>
+                            <span className="text-premium-lg font-serif italic text-primary/70 group-hover:text-primary transition-colors">
+                              {activeSummaryBook.chapterTitles?.[num] || `Capítulo ${num}`}
+                            </span>
                           </div>
-                          <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:text-primary" />
+                          <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:text-primary transition-all group-hover:translate-x-1" />
                         </button>
                       ))}
                     </div>
@@ -234,19 +238,39 @@ const Bible: React.FC = () => {
           icon={Icons.BookOpen}
           className={cn(settings.immersiveMode ? "max-w-prose" : "max-w-5xl")}
         >
-          <div className="pb-16 pt-8 max-w-3xl mx-auto text-center font-reader reader-text">
-            {isLoading ? <BibleSkeleton /> : (
-              verses.map(v => (
-                <div key={v.number} className="mb-8 p-8 rounded-premium hover:bg-white/30 transition-all">
-                   <p className="leading-loose">{wrapWithDictionary(v.text)}</p>
-                   <div className="mt-8 flex justify-center gap-6 opacity-0 hover:opacity-100 transition-opacity">
-                     <Icons.Heart className="w-5 h-5 text-primary/20 cursor-pointer hover:text-secondary" />
-                     <Icons.Edit3 className="w-5 h-5 text-primary/20 cursor-pointer hover:text-primary" />
-                     <Icons.Share2 className="w-5 h-5 text-primary/20 cursor-pointer hover:text-primary" />
-                   </div>
-                </div>
-              ))
-            )}
+          <div className="pb-16 animate-in fade-in duration-1000">
+            <div className="flex justify-between items-center mb-12 border-b border-primary/5 pb-4">
+              <Button variant="ghost" onClick={goBack} className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 hover:text-primary p-0 transition-all">← {selectedBook.name} {selectedChapter}</Button>
+              <div className="flex items-center gap-3">
+                <div className="h-px w-12 bg-primary/10" />
+                <span className="text-premium-sm font-serif italic text-primary/60">{selectedBook.chapterTitles?.[selectedChapter] || `Capitulum ${selectedChapter}`}</span>
+              </div>
+            </div>
+
+            <div className="reader-text text-center max-w-3xl mx-auto pt-8">
+              {isLoading ? <BibleSkeleton /> : (
+                verses.map(v => (
+                  <div key={v.number} className="mb-12 group relative">
+                    {v.number === 1 && (
+                      <div className="flex flex-col items-center mb-16 pt-8 border-t border-primary/5">
+                        <Icons.Logo className="w-12 h-12 opacity-20 mb-8" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-2 italic">Incipit Liber</span>
+                        <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-8">{selectedBook.name} {v.chapter}</h3>
+                        <div className="flex items-center gap-4"><div className="w-12 h-px bg-primary/10" /><Icons.Wheat className="w-3 h-3 text-primary/10" /><div className="w-12 h-px bg-primary/10" /></div>
+                      </div>
+                    )}
+                    <p className="leading-[2.2] text-xl font-reader">{wrapWithDictionary(v.text)}</p>
+                    <div className="mt-8 flex justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                       <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-6 py-2 rounded-full border border-primary/5 shadow-premium-sm">
+                         <Icons.Heart className="w-4 h-4 text-primary/20 hover:text-secondary transition-colors cursor-pointer" />
+                         <Icons.Edit3 className="w-4 h-4 text-primary/20 hover:text-primary transition-colors cursor-pointer" onClick={() => setEditingNote({ verse: v.number, text: '' })} />
+                         <Icons.Share2 className="w-4 h-4 text-primary/20 hover:text-primary transition-colors cursor-pointer" />
+                       </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </ContemplativeLayout>
       )}
