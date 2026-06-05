@@ -225,11 +225,17 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
 
   const fetchWebhookDeliveries = async () => {
-...
+    const { data, error } = await supabase
+      .from('bible_audit_webhook_deliveries')
+      .select('*, notification:bible_audit_notifications(target, type)')
+      .order('delivered_at', { ascending: false })
+      .limit(50);
+    
     if (!error && data) {
       setWebhookDeliveries(data);
     }
   };
+
 
   const runSecurityScan = async () => {
     setIsScanning(true);
