@@ -58,8 +58,11 @@ const Bible: React.FC = () => {
   const { user } = useAuth();
 
   const [favorites, setFavorites] = useState<any[]>([]);
+  const [verseNotes, setVerseNotes] = useState<any[]>([]);
+  const [editingNote, setEditingNote] = useState<{ verse: number, text: string } | null>(null);
   const [favoriteSearchQuery, setFavoriteSearchQuery] = useState('');
   const [isFavoritesLoading, setIsFavoritesLoading] = useState(false);
+
 
   const observerTarget = useRef(null);
   const versesContainerRef = useRef<HTMLDivElement>(null);
@@ -82,11 +85,33 @@ const Bible: React.FC = () => {
     }
   };
 
+  const fetchVerseNotes = async () => {
+    if (!user || !selectedBook) return;
+    try {
+      const { data, error } = await supabase
+        .from('user_notes')
+        .select('*')
+        .match({ 
+          user_id: user.id, 
+          book_abbr: selectedBook.abbr, 
+          chapter: selectedChapter 
+        });
+      if (error) throw error;
+      setVerseNotes(data || []);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  };
+
   useEffect(() => {
     if (user && viewMode === 'favorites') {
       fetchFavorites();
     }
-  }, [user, viewMode]);
+    if (user && viewMode === 'reading' && selectedBook) {
+      fetchVerseNotes();
+    }
+  }, [user, viewMode, selectedBook, selectedChapter]);
+
 
   const toggleFavorite = async (verse: any) => {
     if (!user) {
@@ -135,6 +160,40 @@ const Bible: React.FC = () => {
       toast.error('Erro ao processar favorito');
     }
   };
+
+  const saveNote = async (verseNumber: number, text: string) => {
+    if (!user || !selectedBook) return;
+    try {
+      const existing = verseNotes.find(n => n.verse === verseNumber);
+      if (existing) {
+        const { error } = await supabase
+          .from('user_notes')
+          .update({ note_text: text, updated_at: new Date().toISOString() })
+          .eq('id', existing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('user_notes')
+          .insert({
+            user_id: user.id,
+            book_abbr: selectedBook.abbr,
+            chapter: selectedChapter,
+            verse: verseNumber,
+            note_text: text,
+            content_type: 'bible',
+            content_id: selectedBook.abbr
+          });
+        if (error) throw error;
+      }
+      fetchVerseNotes();
+      setEditingNote(null);
+      toast.success('Nota salva');
+    } catch (error) {
+      console.error('Error saving note:', error);
+      toast.error('Erro ao salvar nota');
+    }
+  };
+
 
   const jumpToFavorite = (fav: any) => {
     let foundBook: BibleBook | null = null;
@@ -744,10 +803,12 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                "reader-text space-y-spacing-md pb-spacing-4xl mx-auto transition-all",
+                "reader-text space-y-spacing-md pb-spacing-4xl mx-auto transition-all relative",
                 `font-size-${settings.fontSize} font-family-${settings.fontFamily} line-spacing-${settings.lineSpacing}`,
-                settings.immersiveMode && "text-center max-w-2xl"
+                settings.immersiveMode && "text-center max-w-2xl",
+                settings.showStudyMarginalia && "lg:pr-64"
               )}>
+
                 {verses.map((v, i) => (
                   <div 
                     key={`${v.chapter}-${v.number}`} 
@@ -786,8 +847,47 @@ const Bible: React.FC = () => {
                         />
                       </button>
                     )}
+
+                    {!settings.immersiveMode && (
+                      <button 
+                        onClick={() => setEditingNote({ verse: v.number, text: verseNotes.find(n => n.verse === v.number)?.note_text || '' })}
+                        className={cn(
+                          "absolute right-spacing-3xl top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-spacing-xs rounded-full hover:bg-primary/10",
+                          verseNotes.some(n => n.verse === v.number) ? "opacity-100 text-primary" : "text-primary/20"
+                        )}
+                      >
+                        <Icons.Edit3 className="w-spacing-sm h-spacing-sm" />
+                      </button>
+                    )}
+
+                    {settings.showStudyMarginalia && verseNotes.find(n => n.verse === v.number) && (
+                      <div className="hidden lg:block absolute left-full ml-spacing-xl top-0 w-56 p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5 text-[10px] italic text-primary/60 leading-relaxed shadow-premium-sm animate-in fade-in slide-in-from-left-2">
+                        <div className="flex items-center gap-1 mb-1 opacity-40">
+                          <Icons.MessageSquare size={8} />
+                          <span className="font-black uppercase tracking-tighter">Marginalia</span>
+                        </div>
+                        {verseNotes.find(n => n.verse === v.number)?.note_text}
+                      </div>
+                    )}
+
+                    {editingNote?.verse === v.number && (
+                      <div className="mt-spacing-md p-spacing-md bg-primary/[0.03] rounded-premium border border-primary/10 animate-in fade-in zoom-in-95">
+                        <textarea
+                          autoFocus
+                          value={editingNote.text}
+                          onChange={(e) => setEditingNote({ ...editingNote, text: e.target.value })}
+                          placeholder="Escreva sua meditação..."
+                          className="w-full bg-transparent border-none focus:ring-0 text-premium-xs font-serif italic text-primary/80 resize-none min-h-[80px]"
+                        />
+                        <div className="flex justify-end gap-spacing-sm mt-spacing-sm">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingNote(null)} className="text-[9px] uppercase tracking-tighter">Cancelar</Button>
+                          <Button size="sm" onClick={() => saveNote(v.number, editingNote.text)} className="h-7 px-4 rounded-full text-[9px] uppercase tracking-tighter">Salvar</Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
+
 
                 
                 {isLoadingNext && <div className="py-spacing-xl"><BibleSkeleton /></div>}
