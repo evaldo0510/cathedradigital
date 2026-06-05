@@ -62,8 +62,9 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
 
   return (
     <motion.div
-      className="w-full min-h-screen will-change-transform swipe-navigation"
+      className="w-full min-h-screen will-change-transform swipe-navigation pointer-events-auto"
       drag="x"
+
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.2}
       onDragEnd={handleDragEnd}
