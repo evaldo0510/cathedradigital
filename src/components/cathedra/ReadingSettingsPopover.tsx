@@ -139,6 +139,28 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               <Icons.Shuffle className="w-spacing-sm h-spacing-sm text-primary/20 group-hover:text-primary transition-colors" />
             </button>
           </div>
+
+          <Separator className="bg-primary/5" />
+
+          <div className="pt-spacing-xs">
+            <div className="flex items-center justify-between p-spacing-sm">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/40">Recursos</span>
+                <span className="text-premium-xs font-serif italic text-primary/70">Margens de Estudo</span>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => updateSettings({ showStudyMarginalia: !settings.showStudyMarginalia })}
+                className={cn(
+                  "h-7 px-3 rounded-full text-[9px] uppercase tracking-tighter border border-primary/5 transition-all",
+                  settings.showStudyMarginalia ? "bg-primary/10 text-primary border-primary/20" : "text-primary/40"
+                )}
+              >
+                {settings.showStudyMarginalia ? 'Ativo' : 'Inativo'}
+              </Button>
+            </div>
+          </div>
         </div>
       </PopoverContent>
     </Popover>
