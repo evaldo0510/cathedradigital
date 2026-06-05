@@ -23,6 +23,19 @@ export async function logSecurityEvent(
     if (error) {
       console.error('Failed to log security event to database:', error)
     }
+
+    // Trigger critical alert if needed
+    if (severity === 'critical') {
+      try {
+        await supabase.rpc('track_webhook_alert', { 
+          p_type: eventType, 
+          p_message: description, 
+          p_severity: 'critical' 
+        })
+      } catch (alertErr) {
+        console.error('Failed to trigger security alert:', alertErr)
+      }
+    }
   } catch (err) {
     console.error('Critical failure logging security event:', err)
   }
