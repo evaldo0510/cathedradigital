@@ -149,6 +149,36 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_favorites: {
+        Row: {
+          book_abbr: string
+          chapter: number
+          content: string
+          created_at: string
+          id: string
+          user_id: string
+          verse_number: number
+        }
+        Insert: {
+          book_abbr: string
+          chapter: number
+          content: string
+          created_at?: string
+          id?: string
+          user_id: string
+          verse_number: number
+        }
+        Update: {
+          book_abbr?: string
+          chapter?: number
+          content?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+          verse_number?: number
+        }
+        Relationships: []
+      }
       catechism_cache: {
         Row: {
           aplicacao_pratica: string | null
