@@ -200,15 +200,21 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               data-testid={item.isMenu ? "menu-trigger" : `nav-${item.iconName.toLowerCase()}`}
 
               onClick={(e) => {
-                if (item.isMenu) onOpenSidebar();
-                else if (item.route) {
+                // Previne cliques fantasmas ou duplos no mobile
+                if (e.defaultPrevented) return;
+                
+                if (item.isMenu) {
+                  onOpenSidebar();
+                } else if (item.route) {
+                  // Verificação extra para evitar navegação em loop ou indesejada
+                  if (location.pathname === item.route) return;
+                  
                   navigate(item.route);
                   window.scrollTo({ top: 0, behavior: 'instant' });
                 }
-
               }}
-            onRipple={triggerRipple}
-          />
+              onRipple={triggerRipple}
+            />
         );
       })}
       </div>
