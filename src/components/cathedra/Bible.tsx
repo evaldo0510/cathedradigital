@@ -552,13 +552,18 @@ const Bible: React.FC = () => {
                           id={`verse-${v.number}`} 
                           onClick={() => {
                             saveReadingProgress(selectedBook.abbr, selectedChapter, v.number);
-                            toggleHighlight(v.number);
+                            setActiveVerse(v);
+                            setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
                             "flex gap-4 group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-2 -mx-2 rounded-lg",
-                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40"
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'red' && "bg-red-200/40"
                           )}
                         >
+
                           <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {hasNote && (
