@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { telemetry } from '@/utils/navigation-telemetry';
 
 interface SwipeOptions {
   onSwipeLeft?: () => void;   // próximo
@@ -58,8 +59,14 @@ export function useSwipeNavigation({
       // Swipe horizontal (predominante sobre vertical)
       // Increased ratio from 1.5 to 2.5 to be more strict
       if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 2.5) {
+        telemetry.log('Valid Swipe Triggered', 'info', { dx, dy, threshold });
         if (dx < 0) onSwipeLeft?.();
         else onSwipeRight?.();
+      } else if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+        telemetry.log('Swipe Below Threshold or Ratio', 'warn', { dx, dy, threshold });
+        window.dispatchEvent(new CustomEvent('nav-blocked', { 
+          detail: { reason: 'threshold_not_met', dx, dy, threshold } 
+        }));
       }
     };
 
