@@ -59,19 +59,34 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
   const [actionLogs, setActionLogs] = React.useState<any[]>([]);
   const [actionLogFilters, setActionLogFilters] = React.useState(() => {
-    const saved = localStorage.getItem('bible_audit_action_filters');
-    return saved ? JSON.parse(saved) : {
-      search: '',
-      actionType: 'all',
-      runId: '',
-      startDate: '',
-      endDate: ''
+    const searchParamFilters = {
+      search: searchParams.get('a_search') || '',
+      actionType: searchParams.get('a_type') || 'all',
+      runId: searchParams.get('a_run') || '',
+      startDate: searchParams.get('a_start') || '',
+      endDate: searchParams.get('a_end') || ''
     };
+    
+    if (Object.values(searchParamFilters).some(v => v !== '' && v !== 'all')) {
+      return searchParamFilters;
+    }
+
+    const saved = localStorage.getItem('bible_audit_action_filters');
+    return saved ? JSON.parse(saved) : searchParamFilters;
   });
   
   React.useEffect(() => {
     localStorage.setItem('bible_audit_action_filters', JSON.stringify(actionLogFilters));
-  }, [actionLogFilters]);
+    if (activeTab === 'audit-logs') {
+      const newParams = new URLSearchParams(searchParams);
+      if (actionLogFilters.search) newParams.set('a_search', actionLogFilters.search); else newParams.delete('a_search');
+      if (actionLogFilters.actionType !== 'all') newParams.set('a_type', actionLogFilters.actionType); else newParams.delete('a_type');
+      if (actionLogFilters.runId) newParams.set('a_run', actionLogFilters.runId); else newParams.delete('a_run');
+      if (actionLogFilters.startDate) newParams.set('a_start', actionLogFilters.startDate); else newParams.delete('a_start');
+      if (actionLogFilters.endDate) newParams.set('a_end', actionLogFilters.endDate); else newParams.delete('a_end');
+      setSearchParams(newParams);
+    }
+  }, [actionLogFilters, activeTab]);
 
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
