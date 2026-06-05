@@ -598,7 +598,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {[
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
-            { id: 'history', label: 'Histórico de Cânone', icon: Icons.History },
+            { id: 'history', label: 'Histórico do Cânone', icon: Icons.History },
             { id: 'audit-logs', label: 'Ações', icon: Icons.List },
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
