@@ -365,7 +365,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (!error && data) {
       setA11yConfig(data);
       toast.success('Configuração de acessibilidade salva');
-      logAction('Update A11y Config', 'a11y_config', 'default', { updates });
+      logAction('Atualizar Configuração de Acessibilidade', 'a11y_config', 'default', { updates });
     } else {
       toast.error('Erro ao salvar configuração');
     }
@@ -417,7 +417,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         priority: 'high',
         retry_config: { max_retries: 3, backoff: 'exponential' }
       });
-      logAction('Add Notification Channel', 'notification', data[0].id, { type: data[0].type });
+      logAction('Adicionar Canal de Notificação', 'notification', data[0].id, { type: data[0].type });
       toast.success('Notificação configurada com sucesso');
     } else {
       toast.error('Erro ao salvar notificação');
@@ -433,7 +433,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error) {
       setNotificationSettings(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
-      logAction('Update Notification Policy', 'notification', id, { updates });
+      logAction('Atualizar Política de Notificação', 'notification', id, { updates });
       toast.success('Política atualizada');
     } else {
       toast.error('Erro ao atualizar política');
@@ -448,7 +448,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error) {
       setNotificationSettings(prev => prev.filter(n => n.id !== id));
-      logAction('Delete Notification Channel', 'notification', id);
+      logAction('Remover Canal de Notificação', 'notification', id);
       toast.success('Notificação removida');
     }
   };
@@ -503,7 +503,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const startIntegrityScan = async (retryFailedOnly = false) => {
     setIsScanning(true);
-    logAction(retryFailedOnly ? 'Retry Failed Audit' : 'Run Audit Now', 'audit_run');
+    logAction(retryFailedOnly ? 'Retentar Auditoria Falha' : 'Executar Verificação de Integridade', 'audit_run');
     
     // Scan logic (simulated for brevity)
     setTimeout(() => {
@@ -517,10 +517,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col md:flex-row">
       {/* Mobile Device Preview Sidebar (Desktop Only) */}
       <div className="hidden lg:flex w-72 border-r border-primary/5 bg-white/50 backdrop-blur-sm flex-col p-6 space-y-6 overflow-y-auto">
-        <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visual Preview & QA</h3>
+        <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visualização de Visualização & QA</h3>
         
         <div className="space-y-4">
-          <label className="text-[9px] font-bold text-primary/20 uppercase">Presets de Breakpoints</label>
+          <label className="text-[9px] font-bold text-primary/20 uppercase">Pré-definições de Breakpoints</label>
           <div className="grid grid-cols-2 gap-2">
             {[
               { id: 'se', label: 'iPhone SE', w: '320px', icon: Icons.Smartphone },
@@ -586,8 +586,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               const report = {
                 timestamp: new Date().toISOString(),
                 viewport: document.getElementById('audit-content-wrapper')?.style.maxWidth || '100%',
-                accessibility: 'WCAG AA Compliant',
-                typography: 'Responsive Fluid Steps active'
+                accessibility: 'Conformidade WCAG AA',
+                typography: 'Escalamento Fluido Ativo'
               };
               const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
               const url = URL.createObjectURL(blob);
@@ -788,10 +788,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
                 <div className="flex flex-col gap-3 max-w-xs mx-auto">
                   <button onClick={() => startIntegrityScan(false)} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest">
-                    {isScanning ? 'Varrendo...' : 'Run Audit Now'}
+                    {isScanning ? 'Verificando...' : 'Executar Auditoria'}
                   </button>
                   <button onClick={() => startIntegrityScan(true)} className="w-full py-3 border border-secondary text-secondary rounded-full text-[10px] font-black uppercase tracking-widest">
-                    Retry Failed Steps
+                    Retentar Etapas Falhas
                   </button>
                 </div>
               </section>
@@ -897,7 +897,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                      className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
                    >
                      <option value="all">Todas as Ações</option>
-                     <option value="Run Audit Now">Execução de Auditoria</option>
+                     <option value="Executar Auditoria Agora">Execução de Auditoria</option>
                      <option value="Resend Notification">Reenvio de Notificação</option>
                       <option value="Add Notification Channel">Novo Canal</option>
                       <option value="Update Notification Policy">Mudança de Política</option>
