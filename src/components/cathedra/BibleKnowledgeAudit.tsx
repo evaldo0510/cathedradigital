@@ -118,16 +118,21 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           </section>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm">
-              <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 block mb-1">Livros</span>
-              <span className="font-serif font-bold text-lg">{stats.coveredBooks} / {stats.totalBooks}</span>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="p-3 bg-white border border-primary/5 rounded-2xl shadow-sm">
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary/20 block mb-1">Livros</span>
+              <span className="font-serif font-bold text-base">{stats.coveredBooks} / {stats.totalBooks}</span>
             </div>
-            <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm">
-              <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 block mb-1">Capítulos</span>
-              <span className="font-serif font-bold text-lg">{stats.coveredChapters} / {stats.totalChapters}</span>
+            <div className="p-3 bg-white border border-primary/5 rounded-2xl shadow-sm">
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary/20 block mb-1">Capítulos</span>
+              <span className="font-serif font-bold text-base">{stats.coveredChapters} / {stats.totalChapters}</span>
+            </div>
+            <div className="p-3 bg-white border border-primary/5 rounded-2xl shadow-sm">
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary/20 block mb-1">Temas</span>
+              <span className="font-serif font-bold text-base">{auditData.themesCount || 0}</span>
             </div>
           </div>
+
 
           {/* Critical Gaps */}
           <section className="space-y-4">
