@@ -598,23 +598,75 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'notifications' && (
             <motion.div key="notifications" className="space-y-8 max-w-lg mx-auto">
               <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Alerta</h3>
                 <div className="flex gap-2">
-                   <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest">
+                   <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest outline-none">
                      <option value="webhook">Webhook</option>
                      <option value="slack">Slack</option>
                      <option value="discord">Discord</option>
                    </select>
-                   <input value={newNotification.target} onChange={e => setNewNotification(p => ({...p, target: e.target.value}))} placeholder="URL..." className="flex-1 bg-primary/5 rounded-xl px-4 py-3 text-xs" />
-                   <button onClick={addNotification} className="p-3 bg-secondary text-white rounded-xl"><Icons.Plus className="w-5 h-5" /></button>
+                   <input value={newNotification.target} onChange={e => setNewNotification(p => ({...p, target: e.target.value}))} placeholder="URL ou Endpoint..." className="flex-1 bg-primary/5 rounded-xl px-4 py-3 text-xs outline-none" />
+                   <button onClick={addNotification} disabled={isSavingNotification} className="p-3 bg-secondary text-white rounded-xl active:scale-95 transition-transform">
+                     {isSavingNotification ? <Icons.Loader2 className="w-5 h-5 animate-spin" /> : <Icons.Plus className="w-5 h-5" />}
+                   </button>
                 </div>
-                <div className="space-y-2">
+                
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais Configurados</h3>
                   {notificationSettings.map(n => (
-                    <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
-                        <span className="text-[9px] uppercase tracking-widest text-primary/30">HMAC Key: {n.secret_key?.slice(0, 8)}...</span>
+                    <div key={n.id} className="p-4 bg-primary/[0.02] rounded-2xl border border-primary/5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                          <span className="text-[9px] uppercase tracking-widest text-primary/30 flex items-center gap-2">
+                            {n.type} • v{n.version || 1}
+                            {n.secret_key && <span> • HMAC: {n.secret_key.slice(0, 4)}***</span>}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors"><Icons.Play className="w-4 h-4" /></button>
+                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Icons.Trash2 className="w-4 h-4" /></button>
+                        </div>
                       </div>
-                      <button onClick={() => deleteNotification(n.id)} className="text-red-400"><Icons.Trash2 className="w-4 h-4" /></button>
+
+                      {/* Retry Policy Editor */}
+                      <div className="p-3 bg-white border border-primary/5 rounded-xl space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Retry Policy</span>
+                          <Icons.Settings className="w-3 h-3 text-primary/20" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Strategy</label>
+                            <select 
+                              value={n.retry_config?.backoff || 'linear'} 
+                              onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, backoff: e.target.value } })}
+                              className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                            >
+                              <option value="linear">Linear</option>
+                              <option value="exponential">Exponential</option>
+                            </select>
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Max Attempts</label>
+                            <input 
+                              type="number" 
+                              value={n.retry_config?.max_retries || 3} 
+                              onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, max_retries: parseInt(e.target.value) } })}
+                              className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[8px] font-bold uppercase text-primary/30">Retry Window (seconds)</label>
+                          <input 
+                            type="number" 
+                            value={n.retry_config?.retry_window || 3600} 
+                            onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, retry_window: parseInt(e.target.value) } })}
+                            className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
