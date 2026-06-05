@@ -121,7 +121,10 @@ const Bible: React.FC = () => {
   }, []);
 
 
+  const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
+
   const markDailyAsCompleted = () => {
+
     const today = new Date().toISOString().split('T')[0];
     localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
     setIsDailyCompleted(true);
