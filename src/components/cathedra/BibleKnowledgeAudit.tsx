@@ -9,8 +9,10 @@ interface BibleKnowledgeAuditProps {
     coveredBooks: number;
     emptyBooks: string[];
     totalChapters: number;
+    themesCount?: number;
   };
 }
+
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
   // Simulated audit data using real auditData from parent
