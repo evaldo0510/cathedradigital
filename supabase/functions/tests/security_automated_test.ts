@@ -1,8 +1,8 @@
 import { assertEquals } from "https://deno.land/std@0.177.0/testing/asserts.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
-const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://gpwrpmoniglarqwfyryp.supabase.co";
+const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "placeholder_key";
 
 Deno.test("Security: mercadopago-simulate should reject non-admin users", async () => {
   const supabase = createClient(SUPABASE_URL, ANON_KEY);
