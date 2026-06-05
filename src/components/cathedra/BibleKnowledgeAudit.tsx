@@ -506,23 +506,74 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Histórico de Entregas</h3>
               <div className="space-y-4">
                 {webhookDeliveries.map(delivery => (
-                  <div key={delivery.id} className="p-4 bg-white border border-primary/5 rounded-2xl space-y-3">
+                  <div key={delivery.id} className="p-4 bg-white border border-primary/5 rounded-2xl space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className={cn(
-                        "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
-                        delivery.response_status === 200 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
-                      )}>
-                        Status: {delivery.response_status} • {delivery.duration_ms}ms
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                          delivery.response_status === 200 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+                        )}>
+                          Status: {delivery.response_status} • {delivery.duration_ms}ms
+                        </span>
+                        {delivery.idempotency_key && (
+                          <span className="text-[8px] text-primary/20 font-mono">ID: {delivery.idempotency_key.slice(0, 8)}...</span>
+                        )}
+                      </div>
                       <button 
                         onClick={() => resendNotification(delivery.id)}
                         disabled={isResending === delivery.id}
-                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline"
+                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline flex items-center gap-1"
                       >
+                        <Icons.RefreshCw className={cn("w-3 h-3", isResending === delivery.id && "animate-spin")} />
                         {isResending === delivery.id ? 'Reenviando...' : 'Reenviar'}
                       </button>
                     </div>
-                    <p className="text-[10px] font-bold text-primary/60 truncate">{delivery.notification?.target}</p>
+                    
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-bold text-primary/60 truncate">{delivery.notification?.target}</p>
+                      <p className="text-[8px] uppercase tracking-[0.2em] text-primary/20">{delivery.notification?.type}</p>
+                    </div>
+
+                    {delivery.verification_details && (
+                      <div className="p-3 bg-primary/[0.02] rounded-xl border border-primary/5 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/40">Webhook Verification</span>
+                          <span className={cn(
+                            "text-[8px] font-bold uppercase",
+                            delivery.verification_details.status === 'verified' ? "text-emerald-500" : "text-red-500"
+                          )}>
+                            {delivery.verification_details.status}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2 text-[9px] font-mono">
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Expected HMAC:</span>
+                            <span className="text-primary/60 break-all">{delivery.verification_details.expected_hmac}</span>
+                          </div>
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Received HMAC:</span>
+                            <span className={cn(
+                              "break-all",
+                              delivery.verification_details.expected_hmac === delivery.verification_details.received_hmac ? "text-emerald-600" : "text-red-600"
+                            )}>
+                              {delivery.verification_details.received_hmac}
+                            </span>
+                          </div>
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Canonical Payload:</span>
+                            <div className="bg-white/50 p-2 rounded border border-primary/5 text-[8px] max-h-20 overflow-y-auto">
+                              {delivery.verification_details.canonical_payload}
+                            </div>
+                          </div>
+                          {delivery.verification_details.status !== 'verified' && (
+                            <div className="space-y-0.5 text-red-500">
+                              <span className="font-bold">Failure Reason:</span>
+                              <p>{delivery.verification_details.failure_reason || 'Signature mismatch'}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
