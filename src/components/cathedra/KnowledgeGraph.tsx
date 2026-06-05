@@ -35,7 +35,13 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
   };
 
   const currentNode = selectedNode ? nodes[selectedNode] : null;
-  const connectedNodes = currentNode ? currentNode.connections.map(id => nodes[id]).filter(Boolean) : [];
+  const connectedNodes = currentNode 
+    ? currentNode.connections
+        .map(id => nodes[id])
+        .filter(Boolean)
+        .filter(node => filter === 'all' || node.type === filter)
+    : [];
+
 
   return (
     <div className="fixed inset-0 z-[250] bg-[#0A0B0D] text-stone-300 flex flex-col">
