@@ -125,10 +125,13 @@ const Bible: React.FC = () => {
     toast.success('Leitura do dia concluída!');
   };
 
+  const [isHighlightMenuOpen, setIsHighlightMenuOpen] = useState(false);
+
   const handleOpenAnnotation = (verse: { number: number; text: string }) => {
     setActiveVerse(verse);
     setIsNoteModalOpen(true);
   };
+
 
   const handleSaveNote = async (text: string, color: string) => {
     if (!activeVerse || !selectedBook) return;
