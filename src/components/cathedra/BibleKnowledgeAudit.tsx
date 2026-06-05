@@ -1218,7 +1218,19 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
                         </button>
                       )}
+                      {/* MODO AUDITORIA DE TERMOS (INTERNAL QA) */}
+                      {log.summary?.match(/[a-zA-Z]/) && !log.summary?.includes('Verificação') && !log.summary?.includes('Alteração') && (
+                        <div className="group relative">
+                          <Icons.AlertCircle className="w-3 h-3 text-amber-500 cursor-help" />
+                          <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-48 p-2 bg-white shadow-xl border border-primary/5 rounded-lg z-50 text-[8px] leading-relaxed">
+                            <p className="font-bold text-amber-600 mb-1">Inconsistência de Glossário:</p>
+                            <p className="text-primary/40 mb-1">Termo detectado: "{log.summary.split(' ')[0]}..."</p>
+                            <p className="text-emerald-600 font-bold italic">Sugestão: "Verificação de Integridade..."</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
+
                     {log.summary && (
                       <p className="text-[10px] text-primary/60">{log.summary}</p>
                     )}
