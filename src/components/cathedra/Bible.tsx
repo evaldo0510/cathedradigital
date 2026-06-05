@@ -539,7 +539,11 @@ const Bible: React.FC = () => {
             className="min-h-screen"
           >
             {/* Sticky Reading Header */}
-            <header className="sticky top-0 z-50 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-primary/5 px-4 h-14 flex items-center justify-between">
+            <header className={cn(
+              "sticky top-0 z-50 backdrop-blur-md border-b border-primary/5 px-4 h-14 flex items-center justify-between transition-colors duration-1000",
+              settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
+            )}>
+
               <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} className="p-2 text-primary/40 active:text-secondary">
                 <Icons.ChevronLeft className="w-6 h-6" />
               </button>
