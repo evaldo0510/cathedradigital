@@ -697,7 +697,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                       </button>
                     </div>
                   )}
-                  {comparison?.run1 && comparison?.run2 && (
                     <div className="p-4 bg-white rounded-2xl border border-primary/5 space-y-4">
                       <div className="grid grid-cols-2 gap-8 divide-x divide-primary/5">
                         <div>
