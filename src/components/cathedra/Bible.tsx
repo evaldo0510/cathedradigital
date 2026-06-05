@@ -939,6 +939,83 @@ const Bible: React.FC = () => {
           </Suspense>
         </ContemplativeLayout>
       )}
+
+      {viewMode === 'favorites' && (
+        <ContemplativeLayout
+          subtitle="Versículos Guardados"
+          title="Meus Favoritos"
+          icon={Icons.Heart}
+          maxW="max-w-spacing-4xl"
+          headerActions={
+            <div className="flex gap-spacing-md">
+              <Button variant="ghost" onClick={() => setViewMode('home')} className="text-[9px] font-black uppercase tracking-widest opacity-40">← Início</Button>
+            </div>
+          }
+        >
+          <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+            <div className="space-y-spacing-md">
+              <div className="relative group max-w-md">
+                <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+                <input
+                  type="text"
+                  placeholder="Buscar nos favoritos..."
+                  value={favoriteSearchQuery}
+                  onChange={(e) => setFavoriteSearchQuery(e.target.value)}
+                  className="search-input-premium pl-spacing-3xl bg-primary/[0.01] h-12 text-premium-sm"
+                />
+              </div>
+
+              {isFavoritesLoading ? (
+                <div className="py-spacing-4xl flex flex-col items-center justify-center opacity-20">
+                  <Icons.Loader2 className="w-spacing-xl h-spacing-xl animate-spin mb-spacing-md" />
+                  <span className="text-premium-xs uppercase tracking-widest">Carregando...</span>
+                </div>
+              ) : filteredFavorites.length > 0 ? (
+                <div className="grid grid-cols-1 gap-spacing-md">
+                  {filteredFavorites.map((fav) => (
+                    <div 
+                      key={fav.id} 
+                      className="group p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all cursor-pointer"
+                      onClick={() => jumpToFavorite(fav)}
+                    >
+                      <div className="flex justify-between items-start mb-spacing-md">
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">
+                          {fav.book_abbr} {fav.chapter}:{fav.verse_number}
+                        </span>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite({ number: fav.verse_number, text: fav.content });
+                          }}
+                        >
+                          <Icons.X className="w-3 h-3 text-destructive/50" />
+                        </Button>
+                      </div>
+                      <p className="text-premium-sm font-serif italic text-primary/70 line-clamp-3 group-hover:line-clamp-none transition-all duration-500">
+                        "{fav.content}"
+                      </p>
+                      <div className="mt-spacing-md flex items-center gap-spacing-xs opacity-0 group-hover:opacity-40 transition-opacity">
+                        <span className="text-[8px] font-black uppercase tracking-widest">Retornar ao ponto exato</span>
+                        <Icons.ArrowRight className="w-spacing-xs h-spacing-xs" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-spacing-4xl text-center">
+                  <Icons.Heart className="w-spacing-xl h-spacing-xl text-primary/10 mx-auto mb-spacing-md" />
+                  <p className="text-premium-sm text-primary/30 italic">
+                    {favoriteSearchQuery ? "Nenhum favorito encontrado para esta busca." : "Você ainda não guardou nenhum versículo."}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </ContemplativeLayout>
+      )}
     </div>
   );
 };
