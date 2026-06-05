@@ -244,7 +244,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("mercadopago-webhook error:", error);
     return json(
-      { error: error instanceof Error ? error.message : "Erro inesperado no webhook." },
+      { error: "Erro interno. Tente novamente." },
       500,
     );
   }

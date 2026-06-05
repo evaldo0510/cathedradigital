@@ -11,9 +11,25 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  // Auth: require service-role bearer or x-cron-secret. Internal worker only.
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  const cronSecret = Deno.env.get('CRON_SECRET') ?? ''
+  const authHeader = req.headers.get('Authorization') ?? ''
+  const providedCronSecret = req.headers.get('x-cron-secret') ?? ''
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+  const authorized =
+    (serviceRoleKey && bearer === serviceRoleKey) ||
+    (cronSecret && providedCronSecret === cronSecret)
+  if (!authorized) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 401,
+    })
+  }
+
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    serviceRoleKey
   )
 
   try {
@@ -66,7 +82,7 @@ serve(async (req) => {
     })
   } catch (error) {
     console.error('Retry worker error:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'Erro interno. Tente novamente.' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
     })

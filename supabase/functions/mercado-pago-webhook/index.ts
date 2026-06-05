@@ -52,10 +52,38 @@ serve(async (req) => {
       logId = logData?.id
     }
 
-    // 1. Signature Validation (Mocked)
+    // 1. Signature Validation (HMAC-SHA256)
     const webhookSecret = Deno.env.get('MERCADO_PAGO_WEBHOOK_SECRET')
-    if (webhookSecret && signature) {
-      // Logic for validation would go here
+    if (webhookSecret) {
+      if (!signature) {
+        return new Response(JSON.stringify({ error: 'Missing signature' }), { status: 401, headers: corsHeaders })
+      }
+      // Mercado Pago signature format: "ts=...,v1=<hex hmac>"
+      const parts = Object.fromEntries(
+        signature.split(',').map((kv) => {
+          const [k, v] = kv.trim().split('=')
+          return [k, v]
+        })
+      ) as Record<string, string>
+      const ts = parts['ts']
+      const v1 = parts['v1']
+      const dataId = body?.data?.id ?? ''
+      const manifest = `id:${dataId};request-id:${requestId ?? ''};ts:${ts ?? ''};`
+      const enc = new TextEncoder()
+      const key = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(webhookSecret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      )
+      const sigBuf = await crypto.subtle.sign('HMAC', key, enc.encode(manifest))
+      const computed = Array.from(new Uint8Array(sigBuf))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')
+      if (!v1 || computed !== v1) {
+        return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401, headers: corsHeaders })
+      }
     }
 
     // 2. Idempotency Check
@@ -76,8 +104,8 @@ serve(async (req) => {
       }
     }
 
-    const { action, data, simulation, simulated_status, userId: providedUserId } = body
-    
+    const { action, data } = body
+
     if (simulateDbError) throw new Error('Simulated Database Error')
     if (simulateTimeout) {
       await new Promise(resolve => setTimeout(resolve, 2000))
@@ -87,24 +115,14 @@ serve(async (req) => {
     if (action === 'payment.created' || action === 'payment.updated') {
       const paymentId = data.id
       let paymentDetails: any
-      
-      if (simulation) {
-        paymentDetails = {
-          id: paymentId,
-          status: simulated_status || 'approved',
-          transaction_amount: 99.9,
-          description: 'Plano PRO - Simulação',
-          external_reference: providedUserId,
-          metadata: { plan_id: 'pro_annual' }
-        }
-      } else {
-        const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
-        const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-          headers: { Authorization: `Bearer ${mpToken}` }
-        })
-        if (!response.ok) throw new Error(`Failed to fetch payment details: ${response.statusText}`)
-        paymentDetails = await response.json()
-      }
+
+      // Always fetch real payment details from Mercado Pago - no simulation shortcut
+      const mpToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
+      const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        headers: { Authorization: `Bearer ${mpToken}` }
+      })
+      if (!response.ok) throw new Error(`Failed to fetch payment details: ${response.statusText}`)
+      paymentDetails = await response.json()
 
       const { status, external_reference: userId } = paymentDetails
       
@@ -228,7 +246,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'Erro interno. Tente novamente.' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 400,
     })
