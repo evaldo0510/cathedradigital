@@ -3,6 +3,8 @@ import {
   Activity,
   AlertCircle,
   AlertTriangle,
+  AlignCenter,
+  AlignJustify,
   AlignLeft,
   Anchor,
   ArrowDown,
@@ -134,6 +136,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
+  Shuffle,
   Skull,
   Smartphone,
   Sparkle,
@@ -178,6 +181,7 @@ import {
   Zap,
   ZapOff
 } from 'lucide-react';
+
 
 import { cn } from './lib/utils';
 import { AppRoute } from './types';
