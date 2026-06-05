@@ -715,15 +715,9 @@ const Bible: React.FC = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      toast(conn.label, {
-                                        description: conn.summary,
-                                        duration: 5000,
-                                        action: {
-                                          label: 'Abrir',
-                                          onClick: () => console.log('Abrir detalhe')
-                                        }
-                                      });
+                                      setExpandedConnection(conn);
                                     }}
+
                                     className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all mb-1"
                                   >
                                     <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
