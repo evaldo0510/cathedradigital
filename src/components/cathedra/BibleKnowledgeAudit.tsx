@@ -427,18 +427,76 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           )}
 
           {activeTab === 'audit-logs' && (
-            <motion.div key="audit-logs" className="space-y-4">
-               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+            <motion.div key="audit-logs" className="space-y-6">
+               <div className="flex flex-col gap-4">
+                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                   <div className="relative">
+                     <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/30" />
+                     <input 
+                       type="text" 
+                       placeholder="Buscar por ação ou entidade..." 
+                       value={actionLogFilters.search}
+                       onChange={e => setActionLogFilters(p => ({...p, search: e.target.value}))}
+                       className="w-full bg-white border border-primary/5 rounded-xl pl-10 pr-4 py-2 text-[11px]"
+                     />
+                   </div>
+                   <select 
+                     value={actionLogFilters.actionType}
+                     onChange={e => setActionLogFilters(p => ({...p, actionType: e.target.value}))}
+                     className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                   >
+                     <option value="all">Todas as Ações</option>
+                     <option value="Run Audit Now">Execução de Auditoria</option>
+                     <option value="Resend Notification">Reenvio de Notificação</option>
+                     <option value="Add Notification Channel">Novo Canal</option>
+                   </select>
+                   <input 
+                     type="text" 
+                     placeholder="Run ID..." 
+                     value={actionLogFilters.runId}
+                     onChange={e => setActionLogFilters(p => ({...p, runId: e.target.value}))}
+                     className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                   />
+                   <div className="flex gap-2 lg:col-span-2">
+                     <input 
+                       type="date" 
+                       value={actionLogFilters.startDate}
+                       onChange={e => setActionLogFilters(p => ({...p, startDate: e.target.value}))}
+                       className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                     />
+                     <span className="self-center text-primary/20">até</span>
+                     <input 
+                       type="date" 
+                       value={actionLogFilters.endDate}
+                       onChange={e => setActionLogFilters(p => ({...p, endDate: e.target.value}))}
+                       className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                     />
+                   </div>
+                 </div>
+               </div>
+
                <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y">
-                 {actionLogs.map(log => (
-                   <div key={log.id} className="p-4 flex items-center justify-between">
-                     <div className="flex flex-col">
+                 {actionLogs.length > 0 ? actionLogs.map(log => (
+                   <div key={log.id} className="p-4 flex items-center justify-between hover:bg-primary/[0.01] transition-colors">
+                     <div className="flex flex-col gap-1">
                        <span className="text-xs font-bold text-primary/80">{log.action}</span>
-                       <span className="text-[9px] uppercase tracking-widest text-primary/30">{log.entity_type} {log.entity_id}</span>
+                       <div className="flex items-center gap-2">
+                         <span className="text-[9px] uppercase tracking-widest text-primary/30 bg-primary/5 px-1.5 py-0.5 rounded">{log.entity_type}</span>
+                         <span className="text-[9px] font-mono text-primary/20">{log.entity_id?.slice(0, 8)}</span>
+                         {log.metadata?.run_id && (
+                           <span className="text-[9px] font-medium text-secondary/60">Run: {log.metadata.run_id.slice(0, 6)}</span>
+                         )}
+                       </div>
                      </div>
                      <span className="text-[10px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
                    </div>
-                 ))}
+                 )) : (
+                   <div className="p-12 text-center">
+                     <p className="text-xs text-primary/30 uppercase tracking-widest">Nenhum log encontrado com os filtros selecionados</p>
+                   </div>
+                 )}
                </div>
             </motion.div>
           )}
