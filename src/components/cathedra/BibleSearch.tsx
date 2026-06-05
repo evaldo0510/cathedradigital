@@ -13,7 +13,10 @@ interface SearchResult {
   chapter: number;
   verse: number;
   text: string;
+  score?: number;
+  relevance?: string;
 }
+
 
 interface BibleSearchProps {
   onSelectResult: (bookAbbrev: string, chapter: number, verse: number) => void;
