@@ -46,7 +46,7 @@ export const isRouteActive = (itemRoute: string, currentPath: string): boolean =
  * Particularly useful for mobile to ensure navigation only happens on deliberate user action.
  */
 let lastNavTime = 0;
-const NAV_THROTTLE = 500; // ms
+const NAV_THROTTLE = 400; // ms
 
 export const isLegitimateClick = (event: any): boolean => {
   // Throttle navigation to prevent double-tap issues
@@ -58,36 +58,34 @@ export const isLegitimateClick = (event: any): boolean => {
   // Always allow keyboard events (Enter, Space) which often have detail === 0
   const isKeyboard = event instanceof KeyboardEvent || 
                     (event.type === 'keydown' || event.type === 'keyup') ||
-                    (event.nativeEvent && (event.nativeEvent instanceof KeyboardEvent));
+                    (event.nativeEvent && (event.nativeEvent instanceof KeyboardEvent)) ||
+                    (event.key === 'Enter' || event.key === ' ');
   
   if (isKeyboard) {
     lastNavTime = now;
     return true;
   }
 
-  // Handle standard mouse/pointer/touch events
-  if (event.type !== 'click' && event.type !== 'touchstart' && event.type !== 'touchend') {
-    return true;
-  }
-
-  // detail === 0 in a click event often means it's not a real pointer click (except for keyboard which we handled)
-  if (event.type === 'click' && event.detail === 0) {
-    // If it's a pointer event, check if it was triggered by a real pointer
-    if (event.pointerType === 'mouse' || event.pointerType === 'touch' || event.pointerType === 'pen') {
-       lastNavTime = now;
-       return true;
-    }
-    // If it's not a keyboard event and detail is 0, it's likely a ghost click or programmatic click we want to block
+  // If it's a touch event, ensure it's a single touch
+  if (event.touches && event.touches.length > 1) {
     return false;
   }
 
-  // If it's a touchstart/touchend, ensure it's a single touch
-  if ((event.type === 'touchstart' || event.type === 'touchend') && event.touches && event.touches.length > 1) {
+  // Protection against ghost clicks (synthetic clicks triggered by mobile browsers)
+  if (event.type === 'click' && event.detail === 0) {
+    const nativeEvent = event.nativeEvent || event;
+    // If it's a pointer event, check if it was triggered by a real pointer
+    if (nativeEvent.pointerType === 'mouse' || nativeEvent.pointerType === 'touch' || nativeEvent.pointerType === 'pen') {
+       lastNavTime = now;
+       return true;
+    }
+    // If no pointer info and not keyboard, it's likely a ghost click or accidental touch
     return false;
   }
 
   lastNavTime = now;
   return true;
 };
+
 
 
