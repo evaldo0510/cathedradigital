@@ -240,8 +240,9 @@
   /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/10 w-full mx-auto;
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
-    line-height: 1.8;
+    font-size: clamp(1.125rem, 1.6vw, 1.35rem);
+    line-height: 2;
+
     letter-spacing: 0.02em;
     font-weight: 300;
     font-variant-numeric: oldstyle-nums;
