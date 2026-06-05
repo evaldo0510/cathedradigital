@@ -21,6 +21,8 @@ import BibleFullNotesList from './BibleFullNotesList';
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
+import { KnowledgeGraph } from './KnowledgeGraph';
+
 
 
 
@@ -60,8 +62,10 @@ const Bible: React.FC = () => {
   const [isDailyCompleted, setIsDailyCompleted] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
-  const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string } | null>(null);
+  const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string } | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isGraphOpen, setIsGraphOpen] = useState(false);
+
 
 
   
@@ -334,7 +338,6 @@ const Bible: React.FC = () => {
   };
 
 
-  // Mock data for cross references
   const CROSS_REFERENCES: Record<string, string[]> = {
     'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
     'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
@@ -343,7 +346,6 @@ const Bible: React.FC = () => {
   };
 
   const wrapWithDictionary = (text: string) => {
-    // Knowledge connection logic handled in verse render
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
       if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
@@ -353,15 +355,8 @@ const Bible: React.FC = () => {
     });
   };
 
-
-
-
-
-
   const auditData = useMemo(() => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-    
-    // Identified books with connections mapping
     const connectedBooks = new Set();
     const uncoveredBooks: string[] = [];
     
@@ -375,14 +370,24 @@ const Bible: React.FC = () => {
         uncoveredBooks.push(b.name);
       }
     });
+
+    const themes = Array.from(new Set(
+      Object.values(KNOWLEDGE_CONNECTIONS)
+        .flat()
+        .filter(c => c.type === 'theology')
+        .map(c => c.label)
+    ));
     
     return {
       totalBooks: allBooks.length,
       coveredBooks: connectedBooks.size,
       emptyBooks: uncoveredBooks,
       totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+      themesCount: themes.length,
     };
   }, [KNOWLEDGE_CONNECTIONS]);
+
+
 
 
   const filteredBooks = useMemo(() => {
@@ -922,16 +927,37 @@ const Bible: React.FC = () => {
                 </p>
               </div>
               
-              <Button 
-                onClick={() => setExpandedConnection(null)}
-                className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
-              >
-                Concluir Consulta
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    setIsGraphOpen(true);
+                  }}
+                  variant="outline"
+                  className="flex-1 h-14 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10"
+                >
+                  <Icons.Orbit className="w-4 h-4 mr-2" /> Explorar Conexões
+                </Button>
+                <Button 
+                  onClick={() => setExpandedConnection(null)}
+                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
+                >
+                  Concluir Consulta
+                </Button>
+              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {isGraphOpen && (
+          <KnowledgeGraph 
+            onClose={() => setIsGraphOpen(false)}
+            initialNodeId={expandedConnection?.id}
+          />
+        )}
+      </AnimatePresence>
+
 
       <AnimatePresence>
         {isFeedbackOpen && (

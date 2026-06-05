@@ -36,12 +36,12 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
 
     setIsLoading(true);
     try {
-      // Mock logic for "Theological Themes" with Relevance Score
+      // Mock logic for "Theological Themes" with Relevance Score and Reason (Phase 3)
       const theologicalThemes: Record<string, { reason: string, score: number }> = {
-        'eucaristia': { reason: 'Centralidade no discurso do Pão da Vida', score: 98 },
-        'criação': { reason: 'Fundamento ontológico nas Escrituras', score: 95 },
+        'eucaristia': { reason: 'Centralidade no discurso do Pão da Vida (Jo 6)', score: 98 },
+        'criação': { reason: 'Fundamento ontológico nas Escrituras (Gn 1)', score: 95 },
         'trindade': { reason: 'Revelação progressiva da natureza divina', score: 92 },
-        'graça': { reason: 'Doutrina da salvação paulina', score: 88 }
+        'graça': { reason: 'Doutrina da salvação paulina (Rm 5)', score: 88 }
       };
       
       const queryLower = query.toLowerCase();
@@ -66,8 +66,8 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
         sortedResults = sortedResults.map((r: any) => ({
           ...r,
           relevance: matchedTheme.reason,
-          score: Math.floor(Math.random() * 20) + 70 // Simulated score for variety
-        })).sort((a: any, b: any) => b.score - a.score);
+          score: Math.floor(Math.random() * 20) + 70 // Simulated score variation
+        })).sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
       }
       
       setResults(sortedResults);
@@ -80,6 +80,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
       setIsLoading(false);
     }
   };
+
 
 
 
