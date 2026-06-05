@@ -47,9 +47,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
       </header>
 
       <div className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-6">
-        {/* Simple Visual Graph Representation */}
         <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
-          {/* Connection Lines (Visual Mock) */}
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full">
               <line x1="50%" y1="50%" x2="20%" y2="20%" stroke="currentColor" strokeWidth="1" />
@@ -58,7 +56,6 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
             </svg>
           </div>
 
-          {/* Central Node */}
           <AnimatePresence mode="wait">
             {currentNode && (
               <motion.div
@@ -73,7 +70,6 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
             )}
           </AnimatePresence>
 
-          {/* Connected Satellite Nodes */}
           {connectedNodes.map((node, i) => {
             const angle = (i / connectedNodes.length) * Math.PI * 2;
             const x = Math.cos(angle) * 120;
@@ -83,7 +79,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
               <motion.button
                 key={node.id}
                 initial={{ x: 0, y: 0, opacity: 0 }}
-                animate={{ x, y: opacity: 1 }}
+                animate={{ x, y, opacity: 1 }}
                 onClick={() => setSelectedNode(node.id)}
                 className="absolute p-3 rounded-full bg-white/5 border border-white/10 hover:bg-secondary/20 hover:border-secondary/40 transition-colors group"
               >
@@ -102,7 +98,6 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
           })}
         </div>
 
-        {/* Node Summary Card */}
         <AnimatePresence>
           {currentNode && (
             <motion.div
