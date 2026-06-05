@@ -18,6 +18,7 @@
     "test:local:unit": "CI=true vitest run",
     "test:local:e2e": "CI=true VITE_SWIPE_THRESHOLD=80 VITE_SWIPE_RATIO=2.5 npx playwright test tests/e2e/swipe-precision.spec.ts --project=mobile-chrome --project=mobile-safari",
     "test:e2e:headless": "HEADLESS=true CI=true VITE_SWIPE_THRESHOLD=80 VITE_SWIPE_RATIO=2.5 npx playwright test tests/e2e/swipe-precision.spec.ts --project=mobile-chrome --project=mobile-safari --reporter=list,html",
+    "test:e2e:last-failed": "npx playwright test --last-failed",
     "test:local:axe": "CI=true npx playwright test tests/e2e/accessibility.spec.ts",
     "test:ci": "vitest run --coverage --reporter=default --passWithNoTests",
     "test:watch": "vitest",
