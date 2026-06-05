@@ -22,7 +22,7 @@
     "test:e2e:last-failed": "HEADLESS=true CI=true VITE_SWIPE_THRESHOLD=80 VITE_SWIPE_RATIO=2.5 npx playwright test --last-failed",
     "test:e2e:ci-replica-failed": "npm run test:e2e:last-failed",
     "test:e2e:sync-artifacts": "node scripts/sync-artifacts.js",
-    "---doc:e2e---": "Ajuste parâmetros via VITE_SWIPE_THRESHOLD (80) e VITE_SWIPE_RATIO (2.5). CI vars: RETENTION_DAYS_HTML (7), RETENTION_DAYS_EVIDENCE (3).",
+    "---doc:e2e---": "Ajuste via VITE_SWIPE_THRESHOLD (80) e VITE_SWIPE_RATIO (2.5). CI vars: RETENTION_DAYS_HTML (7), RETENTION_DAYS_SCREENSHOTS (3), RETENTION_DAYS_VIDEOS (3), RETENTION_DAYS_TRACES (3). Sync flags: --device, --test, --run-id.",
     "test:local:axe": "CI=true npx playwright test tests/e2e/accessibility.spec.ts",
     "test:ci": "vitest run --coverage --reporter=default --passWithNoTests",
     "test:watch": "vitest",
