@@ -82,7 +82,7 @@ serve(async (req) => {
     })
   } catch (error) {
     console.error('Retry worker error:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'Erro interno. Tente novamente.' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
     })
