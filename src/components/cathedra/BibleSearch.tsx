@@ -123,8 +123,19 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
                       {result.bookName} {result.chapter}:{result.verse}
                     </span>
                     <div className="flex-1 h-px bg-primary/5" />
+                    {result.score && (
+                      <span className="text-[8px] font-black text-secondary px-1.5 py-0.5 bg-secondary/5 rounded-md border border-secondary/10">
+                        {result.score}%
+                      </span>
+                    )}
                   </div>
+                  {result.relevance && (
+                    <p className="text-[10px] font-medium italic text-secondary/70">
+                      Motivo: {result.relevance}
+                    </p>
+                  )}
                   <p className="font-serif text-[17px] leading-relaxed text-primary/70 group-active:text-primary transition-colors line-clamp-3">
+
                     {result.text}
                   </p>
                 </motion.button>
