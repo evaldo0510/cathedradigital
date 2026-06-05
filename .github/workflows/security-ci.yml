@@ -18,24 +18,43 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Supabase Security Linter
-        run: |
-          echo "Running Supabase Security Linter..."
-          # In a real environment: npx supabase db lint --threshold high
-          
       - name: Run RLS Security Integration Tests
+        id: security_tests
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          bunx playwright test tests/e2e/bible-audit-security.spec.ts
+          bunx playwright test tests/e2e/bible-audit-security.spec.ts --reporter=json > test-results.json
 
-      - name: Log Scan Results and Notify
-        if: always()
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('test-results.json', 'utf8'));
+            const failures = results.suites[0].suites.flatMap(s => s.tests).filter(t => t.results[0].status === 'failed');
+            
+            let body = '## 🚨 Security CI Blocked\n\nHigh severity security issues found in RLS policies. Deployment is restricted.\n\n';
+            body += '### 🔍 Falhas Detectadas:\n';
+            failures.forEach(f => {
+              body += `- **${f.title}**: ${f.results[0].error.message.split('\n')[0]}\n`;
+            });
+            
+            body += '\n---\n';
+            body += '[Ver Relatório Completo](' + process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID + ') | ';
+            body += '[Ver Diff de Conformidade](' + process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/pull/' + context.issue.number + '/files)';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Notify on failure
+        if: failure()
         run: |
-          if [ "${{ job.status }}" == "failure" ]; then
-            echo "::error::CI Deployment Blocked: Security issues found. High severity RLS failure detected."
-            # Logic to post comment on PR or trigger webhook notification could go here
-            # curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" ...
-          fi
+          echo "::error::CI Deployment Blocked: Security issues found. High severity RLS failure detected."

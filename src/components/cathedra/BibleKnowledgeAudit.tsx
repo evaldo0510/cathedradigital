@@ -223,6 +223,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [securityScans, setSecurityScans] = React.useState<any[]>([]);
   const [selectedScan, setSelectedScan] = React.useState<any>(null);
   const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
+  const [showScanCompareModal, setShowScanCompareModal] = React.useState(false);
+
 
   const fetchWebhookDeliveries = async () => {
     const { data, error } = await supabase
@@ -886,13 +888,22 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <div className="flex items-center justify-between">
               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade e Segurança</h3>
               <div className="flex items-center gap-2">
-                <button 
-                  onClick={runSecurityScan}
-                  disabled={isScanning}
-                  className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
-                >
-                  {isScanning ? 'Scanning...' : 'Run Security Scan'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => setShowScanCompareModal(true)}
+                    className="px-4 py-2 bg-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/10 transition-all"
+                  >
+                    Compare Runs
+                  </button>
+                  <button 
+                    onClick={runSecurityScan}
+                    disabled={isScanning}
+                    className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
+                  >
+                    {isScanning ? 'Scanning...' : 'Run Security Scan'}
+                  </button>
+                </div>
+
               </div>
             </div>
 
@@ -1121,21 +1132,129 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                    })}
                  </div>
 
-                 <div className="grid grid-cols-2 gap-8 pt-4">
-                   <div className="space-y-2">
-                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v1.version})</span>
-                     <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v1, null, 2)}</pre>
-                   </div>
-                   <div className="space-y-2">
-                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v2.version})</span>
-                     <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v2, null, 2)}</pre>
-                   </div>
-                 </div>
+                  <div className="grid grid-cols-2 gap-8 pt-4">
+                    <div className="space-y-2">
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v1.version})</span>
+                      <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v1, null, 2)}</pre>
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Full Config (v{versionComparison.v2.version})</span>
+                      <pre className="p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-mono overflow-auto max-h-40">{JSON.stringify(versionComparison.v2, null, 2)}</pre>
+                    </div>
+                  </div>
+                </div>
+              )}
+           </div>
+        </div>
+      )}
+
+      {showScanCompareModal && (
+        <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="bg-white w-full max-w-4xl rounded-3xl p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black uppercase tracking-widest">Comparar Execuções de Scan</h3>
+              <button onClick={() => { setShowScanCompareModal(false); setScanComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Anterior</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setScanComparison(prev => ({...prev, s1: securityScans.find(s => s.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar scan...</option>
+                   {securityScans.map(s => <option key={s.id} value={s.id}>{new Date(s.started_at).toLocaleString()} ({s.status})</option>)}
+                 </select>
                </div>
-             )}
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Atual</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setScanComparison(prev => ({...prev, s2: securityScans.find(s => s.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar scan...</option>
+                   {securityScans.map(s => <option key={s.id} value={s.id}>{new Date(s.started_at).toLocaleString()} ({s.status})</option>)}
+                 </select>
+               </div>
+            </div>
+
+            {scanComparison?.s1 && scanComparison?.s2 && (
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="p-6 bg-primary/[0.02] border border-primary/5 rounded-2xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade</h4>
+                      <div className="flex items-center gap-4">
+                        <div className="text-center">
+                          <div className="text-[8px] text-primary/20 font-black uppercase">Scan A</div>
+                          <div className="text-sm font-black">{scanComparison.s1.compliance_score}%</div>
+                        </div>
+                        <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
+                        <div className="text-center">
+                          <div className="text-[8px] text-primary/20 font-black uppercase">Scan B</div>
+                          <div className={cn(
+                            "text-sm font-black",
+                            scanComparison.s2.compliance_score > scanComparison.s1.compliance_score ? "text-emerald-500" : 
+                            scanComparison.s2.compliance_score < scanComparison.s1.compliance_score ? "text-rose-500" : ""
+                          )}>
+                            {scanComparison.s2.compliance_score}%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-primary/[0.02] border border-primary/5 rounded-2xl space-y-4">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Evolução de Issues</h4>
+                    <div className="flex items-center justify-around">
+                      <div className="text-center">
+                        <div className="text-[24px] font-black text-rose-500">
+                          {scanComparison.s2.issues_found?.filter((i2: any) => !scanComparison.s1.issues_found?.some((i1: any) => i1.message === i2.message)).length || 0}
+                        </div>
+                        <div className="text-[8px] text-primary/40 font-black uppercase tracking-widest">Novas</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[24px] font-black text-amber-500">
+                          {scanComparison.s2.issues_found?.filter((i2: any) => scanComparison.s1.issues_found?.some((i1: any) => i1.message === i2.message)).length || 0}
+                        </div>
+                        <div className="text-[8px] text-primary/40 font-black uppercase tracking-widest">Remanescentes</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[24px] font-black text-emerald-500">
+                          {scanComparison.s1.issues_found?.filter((i1: any) => !scanComparison.s2.issues_found?.some((i2: any) => i2.message === i1.message)).length || 0}
+                        </div>
+                        <div className="text-[8px] text-primary/40 font-black uppercase tracking-widest">Resolvidas</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Alterações de Política entre Scans</h4>
+                  <div className="bg-white border border-primary/5 rounded-2xl divide-y overflow-hidden">
+                    {securityLogs
+                      .filter(l => new Date(l.created_at) >= new Date(scanComparison.s1.started_at) && new Date(l.created_at) <= new Date(scanComparison.s2.started_at))
+                      .map(log => (
+                        <div key={log.id} className="p-4 space-y-2">
+                           <div className="flex items-center justify-between text-[10px]">
+                             <span className="font-bold">{log.action}</span>
+                             <span className="text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
+                           </div>
+                           <p className="text-[11px] text-primary/60">{log.summary}</p>
+                        </div>
+                      ))}
+                    {securityLogs.filter(l => new Date(l.created_at) >= new Date(scanComparison.s1.started_at) && new Date(l.created_at) <= new Date(scanComparison.s2.started_at)).length === 0 && (
+                      <div className="p-8 text-center text-[10px] text-primary/20 uppercase tracking-widest">Nenhuma alteração de política detectada neste intervalo</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
+
     </div>
   );
 };
