@@ -157,7 +157,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {/* Theological Themes Index (Phase 3) */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
-              <Icons.Tags className="w-4 h-4 text-secondary" />
+              <Icons.Tag className="w-4 h-4 text-secondary" />
               <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Temas Teológicos</h2>
             </header>
             <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
