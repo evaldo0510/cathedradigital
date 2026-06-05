@@ -8,21 +8,29 @@ const devices = [
 
 test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
   for (const device of devices) {
-    test(`Visual snapshot for ${device.name} - Light Mode`, async ({ page }) => {
+    test(`Visual snapshot and WCAG check for ${device.name} - Light Mode`, async ({ page }) => {
       await page.goto('/');
       await page.waitForTimeout(1000);
       
       const bodyText = page.locator('p').first();
       const fontSize = await bodyText.evaluate((el) => window.getComputedStyle(el).fontSize);
-      expect(parseInt(fontSize)).toBeGreaterThanOrEqual(14);
+      expect(parseInt(fontSize), `Legibilidade: Fonte muito pequena (${fontSize}) no componente <p> para ${device.name}`).toBeGreaterThanOrEqual(14);
 
       const color = await bodyText.evaluate((el) => window.getComputedStyle(el).color);
-      expect(color).not.toContain('255, 255, 255');
+      const rgb = color.match(/\d+/g)?.map(Number) || [255, 255, 255];
+      const brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
+      
+      // Para texto escuro em fundo claro (Light Mode), brilho deve ser baixo
+      expect(brightness, 
+        `FALHA WCAG AA (Contrast): Componente <p> reprovado no ${device.name} (Light Mode). \n` +
+        `Cor encontrada: ${color} (Brightness: ${brightness.toFixed(2)}). \n` +
+        `Valor máximo exigido para contraste em fundo claro: < 128 (Escuro)`
+      ).toBeLessThan(128);
       
       await page.screenshot({ path: `tests/visual/webkit-${device.name.replace(/\s+/g, '-')}-light.png` });
     });
 
-    test(`Visual snapshot for ${device.name} - Dark Mode`, async ({ page }) => {
+    test(`Visual snapshot and WCAG check for ${device.name} - Dark Mode`, async ({ page }) => {
       await page.goto('/');
       await page.evaluate(() => document.documentElement.classList.add('dark'));
       await page.waitForTimeout(1000);
@@ -30,14 +38,19 @@ test.describe('WebKit Mobile Layout & Color Regression (Light & Dark)', () => {
       const bodyText = page.locator('p').first();
       const color = await bodyText.evaluate((el) => window.getComputedStyle(el).color);
       
-      // Validação de contraste para modo dark (espera-se texto claro/branco)
-      // rgb(191, 191, 191) ou similar para WCAG AA em fundos escuros
-      const rgb = color.match(/\d+/g)?.map(Number) || [0,0,0];
+      const rgb = color.match(/\d+/g)?.map(Number) || [0, 0, 0];
       const brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
-      expect(brightness, `Contraste insuficiente no modo Dark (WebKit) para ${device.name}: ${color}`).toBeGreaterThan(128);
+      
+      // Para texto claro em fundo escuro (Dark Mode), brilho deve ser alto (WCAG AA)
+      expect(brightness, 
+        `FALHA WCAG AA (Contrast): Componente <p> reprovado no ${device.name} (Dark Mode). \n` +
+        `Cor encontrada: ${color} (Brightness: ${brightness.toFixed(2)}). \n` +
+        `Valor mínimo exigido (WCAG AA) para legibilidade em fundo escuro: > 128 (Claro)`
+      ).toBeGreaterThan(128);
       
       await page.screenshot({ path: `tests/visual/webkit-${device.name.replace(/\s+/g, '-')}-dark.png` });
     });
   }
 });
+
 
