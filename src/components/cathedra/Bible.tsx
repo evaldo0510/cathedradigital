@@ -16,8 +16,10 @@ import { BibleSkeleton } from './RouteSkeletons';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
+import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAuth } from '@/hooks/useAuth';
+
 
 const LogosAI = lazy(() => import('./LogosAI'));
 
@@ -571,7 +573,13 @@ const Bible: React.FC = () => {
           title={selectedBook.name}
           icon={Icons.Bible}
           className={cn(settings.immersiveMode && "max-w-prose")}
+          headerActions={
+            <div className="flex items-center gap-spacing-sm">
+              <ReadingSettingsPopover />
+            </div>
+          }
         >
+
           <div className="pb-spacing-4xl">
             {!settings.immersiveMode && (
               <div className="flex justify-between items-center mb-spacing-2xl border-b border-primary/5 pb-spacing-md">
@@ -733,7 +741,7 @@ const Bible: React.FC = () => {
           
           {/* Floating Controls */}
           <div className={cn(
-            "fixed bottom-spacing-4xl left-1/2 -translate-x-1/2 z-40 bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 shadow-premium flex gap-spacing-xs transition-all duration-1000",
+            "fixed bottom-spacing-4xl left-1/2 -translate-x-1/2 z-40 bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 shadow-premium flex gap-spacing-xs transition-all duration-1000 items-center",
             settings.immersiveMode && "opacity-20 hover:opacity-100"
           )}>
             <AudioButton variant="ghost" />
@@ -744,22 +752,30 @@ const Bible: React.FC = () => {
                 setShowTranscript(newState);
                 updateSettings({ showAudioTranscriptPanel: newState });
               }}
-              className={showTranscript ? "bg-primary/10" : ""}
+              className={cn("rounded-premium-full", showTranscript ? "bg-primary/10" : "")}
               title="Ver Transcrição"
               aria-label="Alternar painel de transcrição"
             >
               <Icons.FileText className={showTranscript ? 'text-primary' : 'text-primary/40'} />
             </Button>
-            <Button variant="ghost" onClick={() => setShowLogosAI(!showLogosAI)}>
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              className="rounded-premium-full"
+            >
               <Icons.Sparkles className={showLogosAI ? 'text-primary' : 'text-primary/40'} />
             </Button>
+            
+            <ReadingSettingsPopover />
+
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} />
             {settings.immersiveMode && (
-              <Button variant="ghost" onClick={() => updateSettings({ immersiveMode: false })}>
+              <Button variant="ghost" onClick={() => updateSettings({ immersiveMode: false })} className="rounded-premium-full">
                 <Icons.Minimize2 className="text-primary/40" />
               </Button>
             )}
           </div>
+
 
           <Suspense fallback={null}>
             {showLogosAI && (

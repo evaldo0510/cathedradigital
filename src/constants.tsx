@@ -3,6 +3,8 @@ import {
   Activity,
   AlertCircle,
   AlertTriangle,
+  AlignCenter,
+  AlignJustify,
   AlignLeft,
   Anchor,
   ArrowDown,
@@ -134,6 +136,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
+  Shuffle,
   Skull,
   Smartphone,
   Sparkle,
@@ -178,6 +181,7 @@ import {
   Zap,
   ZapOff
 } from 'lucide-react';
+
 
 import { cn } from './lib/utils';
 import { AppRoute } from './types';
@@ -256,6 +260,8 @@ const IconsInternal = {
   Activity: createIcon(Activity),
   AlertCircle: createIcon(AlertCircle),
   AlertTriangle: createIcon(AlertTriangle),
+  AlignCenter: createIcon(AlignCenter),
+  AlignJustify: createIcon(AlignJustify),
   AlignLeft: createIcon(AlignLeft),
   Anchor: createIcon(Anchor),
   ArrowDown: createIcon(ArrowDown),
@@ -387,6 +393,7 @@ const IconsInternal = {
   ShieldAlert: createIcon(ShieldAlert),
   ShieldCheck: createIcon(ShieldCheck),
   ShieldQuestion: createIcon(ShieldQuestion),
+  Shuffle: createIcon(Shuffle),
   Skull: createIcon(Skull),
   Smartphone: createIcon(Smartphone),
   Sparkle: createIcon(Sparkle),
@@ -431,6 +438,7 @@ const IconsInternal = {
   Zap: createIcon(Zap),
   ZapOff: createIcon(ZapOff)
 };
+
 
 export const Icons = {
   ...IconsInternal,
