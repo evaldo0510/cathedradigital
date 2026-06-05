@@ -608,12 +608,29 @@ const Bible: React.FC = () => {
                           <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {hasNote && (
-                              <div className="w-1.5 h-1.5 rounded-full bg-secondary/40 shadow-sm" title="Possui anotação" />
+                              <div className="flex flex-col items-center gap-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-secondary/60 shadow-sm" title="Possui anotação" />
+                                <span className="text-[7px] font-black uppercase tracking-tighter text-secondary/40 leading-none">Meditado</span>
+                              </div>
                             )}
                           </div>
+
                           
                           <div className="flex-1 space-y-4">
-                            <p className="leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
+                            <p 
+                              className={cn(
+                                "leading-[1.85] font-serif text-primary/85 tracking-tight relative",
+                                settings.fontSize === 'small' && "text-[16px]",
+                                settings.fontSize === 'medium' && "text-[19px]",
+                                settings.fontSize === 'large' && "text-[22px]",
+                                settings.fontSize === 'extra-large' && "text-[26px]",
+                                settings.lineSpacing === 'tight' && "leading-[1.6]",
+                                settings.lineSpacing === 'normal' && "leading-[1.85]",
+                                settings.lineSpacing === 'wide' && "leading-[2.1]",
+                                settings.contrast === 'soft' && "opacity-70",
+                                settings.contrast === 'high' && "text-primary font-bold"
+                              )}
+                            >
                               {wrapWithDictionary(v.text)}
                               
                               <button 
@@ -626,6 +643,7 @@ const Bible: React.FC = () => {
                                 <Icons.PenLine className="w-3.5 h-3.5" />
                               </button>
                             </p>
+
 
                             {/* Cross References */}
                             {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
