@@ -517,10 +517,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col md:flex-row">
       {/* Mobile Device Preview Sidebar (Desktop Only) */}
       <div className="hidden lg:flex w-72 border-r border-primary/5 bg-white/50 backdrop-blur-sm flex-col p-6 space-y-6 overflow-y-auto">
-        <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visual Preview & QA</h3>
+        <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visualização de Visualização & QA</h3>
         
         <div className="space-y-4">
-          <label className="text-[9px] font-bold text-primary/20 uppercase">Presets de Breakpoints</label>
+          <label className="text-[9px] font-bold text-primary/20 uppercase">Pré-definições de Breakpoints</label>
           <div className="grid grid-cols-2 gap-2">
             {[
               { id: 'se', label: 'iPhone SE', w: '320px', icon: Icons.Smartphone },
