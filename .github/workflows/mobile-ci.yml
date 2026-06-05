@@ -16,6 +16,15 @@ on:
         type: boolean
         default: false
 
+env:
+  # Retenção padrão (dias)
+  RETENTION_HTML: ${{ vars.RETENTION_DAYS_HTML || 7 }}
+  RETENTION_SCREENSHOTS: ${{ vars.RETENTION_DAYS_SCREENSHOTS || 3 }}
+  RETENTION_VIDEOS: ${{ vars.RETENTION_DAYS_VIDEOS || 3 }}
+  RETENTION_TRACES: ${{ vars.RETENTION_DAYS_TRACES || 3 }}
+  # Limites de tamanho (MB aproximado via upload-artifact logic ou apenas documentação)
+  # Nota: upload-artifact não tem um 'max-size' nativo por arquivo, mas podemos documentar.
+
 jobs:
   mobile-e2e:
     runs-on: ubuntu-latest
@@ -53,11 +62,12 @@ jobs:
           CI: true
           HEADLESS: true
 
-      - name: Generate Evidence Manifest & Validate Schema
+      - name: Generate Evidence Manifest & Validate
         if: always()
         run: |
           node -e "
           const fs = require('fs');
+          const path = require('path');
           if (fs.existsSync('playwright-report/results.json')) {
             const results = JSON.parse(fs.readFileSync('playwright-report/results.json', 'utf8'));
             const manifest = [];
@@ -66,11 +76,29 @@ jobs:
             results.suites.forEach(suite => {
               suite.specs.forEach(spec => {
                 spec.tests.forEach(test => {
-                  if (!test.projectName) validationErrors.push('Missing projectName for ' + spec.title);
+                  const result = test.results[0] || {};
+                  const attachments = result.attachments || [];
                   
-                  const evidences = test.results.flatMap(r => r.attachments || []);
-                  if ((test.status === 'failed' || test.status === 'unexpected') && !evidences.some(a => a.name === 'trace')) {
-                    validationErrors.push('Missing trace for failed test: ' + spec.title);
+                  // Mapeia todas as evidências
+                  const evidenceMap = {
+                    trace: attachments.find(a => a.name === 'trace')?.path,
+                    screenshot: attachments.find(a => a.name === 'screenshot')?.path,
+                    video: attachments.find(a => a.name === 'video')?.path
+                  };
+
+                  if (test.status === 'failed' || test.status === 'unexpected') {
+                    if (!test.projectName) validationErrors.push('Missing projectName for ' + spec.title);
+                    if (!evidenceMap.trace) validationErrors.push('Missing trace for failed test: ' + spec.title);
+                    
+                    // Verifica se os arquivos físicos existem na pasta de relatório
+                    Object.entries(evidenceMap).forEach(([type, relPath]) => {
+                      if (relPath) {
+                        const fullPath = path.join('playwright-report', relPath);
+                        if (!fs.existsSync(fullPath)) {
+                          validationErrors.push('Evidence file missing: ' + type + ' at ' + fullPath);
+                        }
+                      }
+                    });
                   }
 
                   manifest.push({
@@ -79,7 +107,7 @@ jobs:
                     status: test.status,
                     file: spec.file,
                     line: spec.line,
-                    evidence: evidences
+                    evidences: evidenceMap
                   });
                 });
               });
@@ -91,6 +119,7 @@ jobs:
             }
             
             fs.writeFileSync('playwright-report/evidence-manifest.json', JSON.stringify(manifest, null, 2));
+            console.log('✅ Manifest generated and validated with ' + manifest.length + ' entries.');
           }
           "
 
@@ -100,11 +129,11 @@ jobs:
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
-          retention-days: ${{ vars.RETENTION_DAYS_HTML || 7 }}
+          retention-days: ${{ env.RETENTION_HTML }}
           if-no-files-found: error
 
-      - name: PR Commentary on Failure
-        if: failure() && github.event_name == 'pull_request'
+      - name: PR Commentary
+        if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
@@ -112,36 +141,45 @@ jobs:
             const run_id = context.runId;
             const artifact_url = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}/artifacts`;
             
-            let summary = "### 🚨 Mobile E2E Failure Detected\n\n";
+            let summary = "### 📊 Mobile E2E Test Summary\n\n";
             
             try {
               if (fs.existsSync('playwright-report/evidence-manifest.json')) {
                 const manifest = JSON.parse(fs.readFileSync('playwright-report/evidence-manifest.json', 'utf8'));
                 const failed = manifest.filter(t => t.status === 'failed' || t.status === 'unexpected');
+                const passed = manifest.filter(t => t.status === 'passed');
                 
-                summary += `**Resumo:** ${failed.length} falhas detectadas.\n\n`;
+                summary += `**Resumo Geral:** ✅ ${passed.length} passados | ❌ ${failed.length} falhas\n\n`;
                 
-                const grouped = failed.reduce((acc, item) => {
-                  if (!acc[item.project]) acc[item.project] = [];
-                  acc[item.project].push(item);
-                  return acc;
-                }, {});
+                if (failed.length > 0) {
+                  const grouped = failed.reduce((acc, item) => {
+                    if (!acc[item.project]) acc[item.project] = [];
+                    acc[item.project].push(item);
+                    return acc;
+                  }, {});
 
-                for (const [device, tests] of Object.entries(grouped)) {
-                  summary += `<details open><summary><b>📱 ${device} (${tests.length} falhas)</b></summary>\n\n`;
-                  summary += "| Teste | Evidence |\n";
-                  summary += "| :--- | :--- |\n";
-                  tests.forEach(t => {
-                    summary += `| ${t.title} | [Trace/HTML](${artifact_url}) |\n`;
-                  });
-                  summary += "\n</details>\n";
+                  for (const [device, tests] of Object.entries(grouped)) {
+                    summary += `<details open><summary><b>📱 ${device} (${tests.length} falhas)</b></summary>\n\n`;
+                    summary += "| Teste | Status | Evidências (Download Artefato) |\n";
+                    summary += "| :--- | :--- | :--- |\n";
+                    tests.forEach(t => {
+                      const evList = [];
+                      if (t.evidences.trace) evList.push("Trace");
+                      if (t.evidences.screenshot) evList.push("Screenshot");
+                      if (t.evidences.video) evList.push("Video");
+                      summary += `| ${t.title} | ❌ Failed | ${evList.join(', ') || 'Nenhuma'} |\n`;
+                    });
+                    summary += "\n</details>\n";
+                  }
+                } else {
+                  summary += "🎉 Todos os testes mobile passaram!\n";
                 }
               }
             } catch (e) {
-              summary += `\n*Erro ao gerar resumo detalhado.*\n`;
+              summary += `\n*Erro ao gerar resumo detalhado: ${e.message}*\n`;
             }
             
-            summary += `\n- **Ações:** [Re-run failed jobs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}) | [Download Artefatos](${artifact_url})`;
+            summary += `\n---\n**Ações:** [Ver Workflow](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}) | [Download Artefatos](${artifact_url})`;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -149,3 +187,4 @@ jobs:
               repo: context.repo.repo,
               body: summary
             })
+
