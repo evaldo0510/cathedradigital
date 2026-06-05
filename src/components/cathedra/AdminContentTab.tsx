@@ -1,13 +1,16 @@
 import { Icons } from '@/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BIBLE_DATA } from '@/data/bible-books';
+
+const CatechismDebug = lazy(() => import('./CatechismDebug'));
+const BibleKnowledgeAudit = lazy(() => import('./BibleKnowledgeAudit').then(m => ({ default: m.BibleKnowledgeAudit })));
 
 interface Post {
   id: string;
