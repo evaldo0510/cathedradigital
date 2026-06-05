@@ -800,6 +800,29 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     ))}
                   </div>
                 </div>
+
+                <div className="bg-primary/5 p-6 rounded-2xl space-y-4">
+                  <header className="flex items-center gap-2">
+                    <Icons.UserPlus className="w-4 h-4 text-primary/40" />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Colaboradores</h3>
+                  </header>
+                  <p className="text-premium-xs text-primary/40">Gerencie permissões para visualização e execução de auditorias.</p>
+                  <div className="flex gap-2">
+                    <input 
+                      type="email" 
+                      placeholder="email@colaborador.com" 
+                      className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-xs"
+                    />
+                    <select className="bg-white border border-primary/5 rounded-xl px-3 text-[10px] font-black uppercase tracking-widest">
+                      <option>Visualizador</option>
+                      <option>Editor</option>
+                      <option>Admin</option>
+                    </select>
+                    <button className="p-2 bg-primary text-white rounded-xl">
+                      <Icons.Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
