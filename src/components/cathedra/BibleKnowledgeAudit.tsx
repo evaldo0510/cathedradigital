@@ -367,7 +367,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (activeTab === 'webhooks') fetchWebhookDeliveries();
     if (activeTab === 'security') fetchSecurityScans();
     if (activeTab === 'security') fetchSecurityLogs();
+    if (activeTab === 'a11y') fetchA11yConfig();
     if (activeTab === 'a11y') fetchSecurityScans(); // Reutilizar para contexto de auditoria
+
 
 
   }, [activeTab]);
