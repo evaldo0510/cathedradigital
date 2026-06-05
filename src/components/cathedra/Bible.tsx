@@ -140,7 +140,21 @@ const Bible: React.FC = () => {
       const book = allBooks.find(b => b.abbr === abbr);
       if (book) saveReadingProgress(book, chapter);
       
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      // Scroll to verse if specified
+      const verse = searchParams.get('v');
+      if (verse) {
+        setTimeout(() => {
+          const element = document.getElementById(`verse-${verse}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('bg-secondary/10');
+            setTimeout(() => element.classList.remove('bg-secondary/10'), 3000);
+          }
+        }, 500);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+
     } catch (error: any) {
       toast.error('Erro ao carregar texto sagrado');
     } finally {
