@@ -125,6 +125,139 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_audit_alerts: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          is_resolved: boolean | null
+          message: string
+          resolved_at: string | null
+          run_id: string | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          is_resolved?: boolean | null
+          message: string
+          resolved_at?: string | null
+          run_id?: string | null
+          severity: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          is_resolved?: boolean | null
+          message?: string
+          resolved_at?: string | null
+          run_id?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_audit_alerts_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_audit_runs: {
+        Row: {
+          completed_at: string | null
+          covered_books: number | null
+          covered_chapters: number | null
+          covered_verses: number | null
+          created_at: string | null
+          created_by: string | null
+          empty_books: Json | null
+          id: string
+          logs: Json | null
+          started_at: string | null
+          status: string
+          total_books: number | null
+          total_chapters: number | null
+          total_verses: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          covered_books?: number | null
+          covered_chapters?: number | null
+          covered_verses?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          empty_books?: Json | null
+          id?: string
+          logs?: Json | null
+          started_at?: string | null
+          status?: string
+          total_books?: number | null
+          total_chapters?: number | null
+          total_verses?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          covered_books?: number | null
+          covered_chapters?: number | null
+          covered_verses?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          empty_books?: Json | null
+          id?: string
+          logs?: Json | null
+          started_at?: string | null
+          status?: string
+          total_books?: number | null
+          total_chapters?: number | null
+          total_verses?: number | null
+        }
+        Relationships: []
+      }
+      bible_audit_schedules: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          frequency: string
+          id: string
+          is_active: boolean | null
+          last_run_id: string | null
+          name: string
+          next_run: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          frequency: string
+          id?: string
+          is_active?: boolean | null
+          last_run_id?: string | null
+          name: string
+          next_run?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          last_run_id?: string | null
+          name?: string
+          next_run?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_audit_schedules_last_run_id_fkey"
+            columns: ["last_run_id"]
+            isOneToOne: false
+            referencedRelation: "bible_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
