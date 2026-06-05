@@ -14,10 +14,14 @@ export interface KnowledgeNode {
 interface KnowledgeGraphProps {
   onClose: () => void;
   initialNodeId?: string;
+  onNavigateToContent?: (bookAbbr: string, chapter: number, verse: number) => void;
 }
 
-export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initialNodeId }) => {
+
+export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initialNodeId, onNavigateToContent }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(initialNodeId || 'Jo-6-35');
+  const [filter, setFilter] = useState<'all' | 'bible' | 'catechism' | 'document' | 'theme'>('all');
+
 
   // Mock Graph Data
   const nodes: Record<string, KnowledgeNode> = {
@@ -31,7 +35,13 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
   };
 
   const currentNode = selectedNode ? nodes[selectedNode] : null;
-  const connectedNodes = currentNode ? currentNode.connections.map(id => nodes[id]).filter(Boolean) : [];
+  const connectedNodes = currentNode 
+    ? currentNode.connections
+        .map(id => nodes[id])
+        .filter(Boolean)
+        .filter(node => filter === 'all' || node.type === filter)
+    : [];
+
 
   return (
     <div className="fixed inset-0 z-[250] bg-[#0A0B0D] text-stone-300 flex flex-col">
@@ -46,7 +56,29 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
         <div className="w-10" />
       </header>
 
+      <div className="px-6 py-4 flex gap-2 border-b border-white/5 bg-white/5 overflow-x-auto no-scrollbar">
+        {(['all', 'bible', 'catechism', 'document', 'theme'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={cn(
+              "whitespace-nowrap px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+              filter === f 
+                ? "bg-secondary text-black shadow-sm" 
+                : "bg-white/5 text-stone-500"
+            )}
+          >
+            {f === 'all' && 'Tudo'}
+            {f === 'bible' && 'Bíblia'}
+            {f === 'catechism' && 'CIC'}
+            {f === 'document' && 'Magistério'}
+            {f === 'theme' && 'Temas'}
+          </button>
+        ))}
+      </div>
+
       <div className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-6">
+
         <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full">
@@ -112,12 +144,21 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
                 </p>
               </div>
               <div className="flex gap-2">
-                <button className="flex-1 h-10 rounded-xl bg-secondary text-black text-[9px] font-black uppercase tracking-widest">
+                <button 
+                  onClick={() => {
+                    if (onNavigateToContent && currentNode.type === 'bible') {
+                      const [b, c, v] = currentNode.id.split('-');
+                      onNavigateToContent(b, parseInt(c), parseInt(v));
+                    }
+                  }}
+                  className="flex-1 h-10 rounded-xl bg-secondary text-black text-[9px] font-black uppercase tracking-widest"
+                >
                   Ver Texto Completo
                 </button>
                 <button className="flex-1 h-10 rounded-xl bg-white/10 text-white text-[9px] font-black uppercase tracking-widest">
                   Ir para Origem
                 </button>
+
               </div>
             </motion.div>
           )}

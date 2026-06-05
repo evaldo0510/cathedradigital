@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
+import { toast } from 'sonner';
+
 
 interface BibleKnowledgeAuditProps {
   onClose: () => void;
@@ -10,11 +12,27 @@ interface BibleKnowledgeAuditProps {
     emptyBooks: string[];
     totalChapters: number;
     themesCount?: number;
+    theologicalThemes?: { id: string, label: string, connections: number, tags: string[] }[];
   };
 }
 
 
-export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
+
+interface BibleKnowledgeAuditProps {
+  onClose: () => void;
+  auditData: {
+    totalBooks: number;
+    coveredBooks: number;
+    emptyBooks: string[];
+    totalChapters: number;
+    themesCount?: number;
+    theologicalThemes?: { id: string, label: string, connections: number, tags: string[] }[];
+  };
+  onThemeClick?: (theme: string) => void;
+}
+
+export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
+
   // Simulated audit data using real auditData from parent
   const stats = {
     totalBooks: auditData.totalBooks,
@@ -33,7 +51,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
           <Icons.X className="w-6 h-6" />
         </button>
-        <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria de Conhecimento</h1>
+        <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Gestão de Cobertura</h1>
         <div className="flex items-center gap-2">
           <button 
             onClick={() => {
@@ -150,6 +168,73 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </div>
           </section>
 
+          {/* Theological Themes Index (Phase 3) */}
+          <section className="space-y-4">
+            <header className="flex items-center gap-3">
+              <Icons.Tag className="w-4 h-4 text-secondary" />
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Temas Teológicos</h2>
+            </header>
+            <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+              {auditData.theologicalThemes?.map(theme => (
+                <div 
+                  key={theme.id} 
+                  onClick={() => onThemeClick?.(theme.label)}
+                  className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors cursor-pointer"
+                >
+
+                  <div className="space-y-1">
+                    <span className="font-serif font-bold text-primary/80">{theme.label}</span>
+                    <div className="flex gap-1">
+                      {theme.tags.map(tag => (
+                        <span key={tag} className="text-[7px] font-black uppercase text-primary/30 border border-primary/5 px-1 rounded-sm">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-bold text-secondary">{theme.connections} conexões</span>
+                    <Icons.ChevronRight className="w-3 h-3 text-primary/10" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Identified Gaps Index (Phase 3) */}
+
+          <section className="space-y-4">
+            <header className="flex items-center gap-3">
+              <Icons.List className="w-4 h-4 text-primary/40" />
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-primary/60">Índice de Lacunas</h2>
+            </header>
+            <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
+              {auditData.emptyBooks.map(book => (
+                <div key={book} className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors">
+                  <div className="space-y-1">
+                    <span className="font-serif font-bold text-primary/80">{book}</span>
+                    <p className="text-[9px] font-medium text-stone-400 uppercase tracking-tighter">Faltam referências do CIC e Magistério</p>
+                  </div>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                    <button 
+                      onClick={() => toast.success(`${book} marcado como validado`)}
+                      className="p-2 rounded-lg bg-green-50 text-green-600 active:scale-95"
+                      title="Marcar como Validado"
+                    >
+                      <Icons.Check className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => toast.info(`Iniciando mapeamento para ${book}`)}
+                      className="p-2 rounded-lg bg-secondary/5 text-secondary active:scale-95"
+                      title="Mapear Manualmente"
+                    >
+                      <Icons.Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* Connection Log */}
           <section className="space-y-4">
             <header className="flex items-center gap-3">
@@ -177,3 +262,4 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     </div>
   );
 };
+

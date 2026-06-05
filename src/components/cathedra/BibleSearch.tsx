@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
+
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -21,16 +23,29 @@ interface SearchResult {
 interface BibleSearchProps {
   onSelectResult: (bookAbbrev: string, chapter: number, verse: number) => void;
   onClose: () => void;
+  initialTheme?: string | null;
 }
 
-const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) => {
-  const [query, setQuery] = useState('');
+
+const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, initialTheme }) => {
+  const [query, setQuery] = useState(initialTheme || '');
+
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 
+  useEffect(() => {
+    if (initialTheme) {
+      const mockEvent = { preventDefault: () => {} } as React.FormEvent;
+      handleSearch(mockEvent);
+    }
+  }, []);
+
+
   const handleSearch = async (e: React.FormEvent) => {
+
+
     e.preventDefault();
     if (query.trim().length < 2) return;
 
