@@ -100,6 +100,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
+  const [i18nSearch, setI18nSearch] = React.useState('');
+  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
+  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
+  const [i18nPage, setI18nPage] = React.useState(1);
+  const itemsPerPage = 5;
+
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
     eventType: 'all'
