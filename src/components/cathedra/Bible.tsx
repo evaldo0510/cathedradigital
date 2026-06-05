@@ -1064,7 +1064,7 @@ const Bible: React.FC = () => {
               className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 space-y-6"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-display font-bold text-primary uppercase">Editor de Conexões</h3>
+                <h3 className="text-lg font-display font-bold text-primary uppercase">Editor Bíblia ↔ CIC</h3>
                 <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} className="rounded-full opacity-40">
                   <Icons.X className="w-6 h-6" />
                 </Button>
@@ -1073,14 +1073,15 @@ const Bible: React.FC = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Referência Bíblica</span>
-                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: Jo 6,35" />
+                    <span className="text-[9px] font-black uppercase text-primary/30">Versículo</span>
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: João 6,35" />
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Referência CIC</span>
-                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: §1324" />
+                    <span className="text-[9px] font-black uppercase text-primary/30">Parágrafo CIC</span>
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: 1324" />
                   </div>
                 </div>
+
                 <div className="space-y-1">
                   <span className="text-[9px] font-black uppercase text-primary/30">Nota de Relacionamento</span>
                   <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
