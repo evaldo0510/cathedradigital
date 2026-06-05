@@ -334,7 +334,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (activeTab === 'notifications') fetchNotifications();
     if (activeTab === 'audit-logs') fetchActionLogs();
     if (activeTab === 'webhooks') fetchWebhookDeliveries();
+    if (activeTab === 'security') fetchSecurityScans();
     if (activeTab === 'security') fetchSecurityLogs();
+
   }, [activeTab]);
 
   const addNotification = async () => {
