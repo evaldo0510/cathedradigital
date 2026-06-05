@@ -16,8 +16,10 @@ import { BibleSkeleton } from './RouteSkeletons';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
+import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAuth } from '@/hooks/useAuth';
+
 
 const LogosAI = lazy(() => import('./LogosAI'));
 
