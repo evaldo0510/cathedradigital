@@ -74,9 +74,16 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) =>
                   key={`${result.bookAbbrev}-${result.chapter}-${result.verse}-${idx}`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  onClick={() => onSelectResult(result.bookAbbrev, result.chapter, result.verse)}
-                  className="w-full text-left space-y-2 group"
+                  onClick={() => {
+                    setSelectedIndex(idx);
+                    onSelectResult(result.bookAbbrev, result.chapter, result.verse);
+                  }}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl border transition-all space-y-2 group",
+                    selectedIndex === idx ? "bg-white border-secondary shadow-sm ring-1 ring-secondary/20" : "bg-transparent border-primary/5 hover:border-primary/10"
+                  )}
                 >
+
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
                       {result.bookName} {result.chapter}:{result.verse}
