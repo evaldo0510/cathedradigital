@@ -307,21 +307,22 @@ const Bible: React.FC = () => {
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
   // Knowledge Connection System Mock Data
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string }[]> = {
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string, summary: string }[]> = {
     'Jo-6-35': [
-      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324' },
-      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16' },
-      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede' }
+      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
+      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' }
     ],
     'Gn-1-1': [
-      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279' },
-      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio' }
+      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' }
     ],
     'Mt-5-3': [
-      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716' },
-      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs' }
+      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716', summary: 'As Bem-aventuranças estão no centro da pregação de Jesus.' },
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' }
     ]
   };
+
 
   // Mock data for cross references
   const CROSS_REFERENCES: Record<string, string[]> = {
