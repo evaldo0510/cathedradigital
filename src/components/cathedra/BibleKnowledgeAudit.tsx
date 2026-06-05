@@ -373,15 +373,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
 
   const fetchI18nReport = async () => {
-    // Tenta ler o relatório real se disponível
-    try {
-      // Como não podemos ler arquivos locais diretamente do navegador facilmente sem um endpoint,
-      // simulamos a ausência de falhas se o processo de CI passou.
-      // Em um cenário real, isso viria de uma API ou do Supabase.
-      setI18nFailures([]);
-    } catch (e) {
-      setI18nFailures([]);
-    }
+    // Mapeamento de logs legados simulado
+    const legacyLogsMapping = [
+      { term: 'Invalid credentials', expected: 'Credenciais inválidas', context: 'Auth Hook', status: 'pending' },
+      { term: 'User not found', expected: 'Usuário não encontrado', context: 'Auth Hook', status: 'mapped' },
+      { term: 'Network error', expected: 'Erro de rede', context: 'Telemetry', status: 'pending' },
+      { term: 'Database connection failed', expected: 'Falha na conexão com o banco', context: 'Supabase Sync', status: 'mapped' }
+    ];
+
+    setI18nFailures(legacyLogsMapping);
   };
 
   React.useEffect(() => {
