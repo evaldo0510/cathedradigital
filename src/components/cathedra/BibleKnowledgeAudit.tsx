@@ -260,6 +260,21 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     setIsSavingNotification(false);
   };
 
+  const updateNotification = async (id: string, updates: any) => {
+    const { error } = await supabase
+      .from('bible_audit_notifications')
+      .update(updates)
+      .eq('id', id);
+    
+    if (!error) {
+      setNotificationSettings(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
+      logAction('Update Notification Policy', 'notification', id, { updates });
+      toast.success('Política atualizada');
+    } else {
+      toast.error('Erro ao atualizar política');
+    }
+  };
+
   const deleteNotification = async (id: string) => {
     const { error } = await supabase
       .from('bible_audit_notifications')
