@@ -390,12 +390,22 @@ const Bible: React.FC = () => {
                 <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
-              <button 
-                onClick={() => setViewMode('notes')}
-                className="p-2 text-secondary/60 active:scale-95 transition-transform"
-              >
-                <Icons.List className="w-6 h-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setShowKnowledgePanel(true)}
+                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  title="Auditoria de Conhecimento"
+                >
+                  <Icons.Activity className="w-6 h-6" />
+                </button>
+                <button 
+                  onClick={() => setViewMode('notes')}
+                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                >
+                  <Icons.List className="w-6 h-6" />
+                </button>
+              </div>
+
             </header>
 
             {/* Above the Fold Actions */}
