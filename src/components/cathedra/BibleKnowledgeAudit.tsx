@@ -96,6 +96,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
+  const [a11yConfig, setA11yConfig] = React.useState<any>(null);
+
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
