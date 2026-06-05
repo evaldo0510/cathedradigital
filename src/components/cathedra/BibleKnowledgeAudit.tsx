@@ -1193,7 +1193,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 {securityLogs.length > 0 ? securityLogs.map(log => (
                   <div key={log.id} className="p-4 flex flex-col gap-2 hover:bg-primary/[0.01]">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-primary/80">{log.action === 'POLICY_CHANGE' ? 'Mudança de Política RLS' : log.action}</span>
+                      <span className="text-xs font-bold text-primary/80">{log.action === 'POLICY_CHANGE' ? 'Alteração de Política RLS' : log.action}</span>
                       <span className="text-[9px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
