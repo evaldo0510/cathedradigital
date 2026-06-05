@@ -1115,10 +1115,12 @@ const Bible: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
-
     </div>
   );
 };
+
+export default Bible;
+
 
 
 
