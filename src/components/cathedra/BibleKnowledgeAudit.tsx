@@ -29,7 +29,7 @@ interface BibleKnowledgeAuditProps {
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule' | 'history' | 'notifications' | 'webhooks'>(
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks'>(
     (searchParams.get('tab') as any) || 'overview'
   );
   const [isScanning, setIsScanning] = React.useState(false);
@@ -404,7 +404,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'overview', label: 'Visão Geral', icon: Icons.Layout },
             { id: 'dashboard', label: 'Métricas', icon: Icons.BarChart },
             { id: 'history', label: 'Histórico', icon: Icons.History },
-            { id: 'logs', label: 'Execução', icon: Icons.Activity },
+            { id: 'audit-logs', label: 'Log de Ações', icon: Icons.ListOrdered },
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Testar Webhooks', icon: Icons.Code },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
