@@ -340,7 +340,12 @@ const Bible: React.FC = () => {
   }, [searchQuery]);
 
   return (
-    <div className={cn("relative min-h-screen bg-[#FAF9F6] text-primary/90", settings.immersiveMode && "bg-[#FAF9F6]")}>
+    <div className={cn(
+      "relative min-h-screen transition-colors duration-1000 text-primary/90", 
+      settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]",
+      settings.immersiveMode && (settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]")
+    )}>
+
       <Helmet>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
       </Helmet>
