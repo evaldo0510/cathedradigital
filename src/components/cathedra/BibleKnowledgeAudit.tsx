@@ -335,6 +335,31 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (!error && data) setSecurityLogs(data);
   };
 
+  const fetchA11yConfig = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_a11y_config')
+      .select('*')
+      .eq('id', 'default')
+      .single();
+    if (!error && data) setA11yConfig(data);
+  };
+
+  const saveA11yConfig = async (updates: any) => {
+    const { data, error } = await supabase
+      .from('bible_audit_a11y_config')
+      .upsert({ id: 'default', ...a11yConfig, ...updates, updated_at: new Date().toISOString() })
+      .select()
+      .single();
+    if (!error && data) {
+      setA11yConfig(data);
+      toast.success('Configuração de acessibilidade salva');
+      logAction('Update A11y Config', 'a11y_config', 'default', { updates });
+    } else {
+      toast.error('Erro ao salvar configuração');
+    }
+  };
+
+
   React.useEffect(() => {
     if (activeTab === 'history') fetchAuditRuns();
     if (activeTab === 'notifications') fetchNotifications();
