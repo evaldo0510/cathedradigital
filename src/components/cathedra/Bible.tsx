@@ -519,12 +519,20 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className="w-full h-16 flex items-center justify-between active:bg-primary/[0.02] transition-all px-2 group"
                 >
-                  <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
+                  <div className="flex flex-col text-left">
+                    <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
+                    {notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch) && (
+                      <span className="text-[8px] font-black uppercase tracking-widest text-secondary mt-1 flex items-center gap-1">
+                        <Icons.PenLine className="w-2.5 h-2.5" /> Meditado
+                      </span>
+                    )}
+                  </div>
                   {selectedBook.chapterTitles?.[ch] && (
                     <span className="text-[11px] font-serif italic text-primary/30 max-w-[150px] truncate text-right">{selectedBook.chapterTitles[ch]}</span>
                   )}
                   <Icons.ChevronRight className="w-4 h-4 text-primary/10 ml-4" />
                 </button>
+
               ))}
             </div>
           </motion.div>
