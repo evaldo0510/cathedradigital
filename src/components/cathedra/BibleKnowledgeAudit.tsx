@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { BibleAuditDashboard } from './BibleAuditDashboard';
+import { Badge } from '@/components/ui/badge';
 
 interface AuditLog {
   timestamp: string;
