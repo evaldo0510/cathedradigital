@@ -13,20 +13,17 @@ interface BibleKnowledgeAuditProps {
 }
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
-
-  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-  
-  // Simulated audit data
+  // Simulated audit data using real auditData from parent
   const stats = {
-    totalBooks: allBooks.length,
-    coveredBooks: Math.floor(allBooks.length * 0.85),
-    totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
-    coveredChapters: 0, // Calculated below
-    uncoveredReferences: ['Obadias', '3 João', 'Judas'],
+    totalBooks: auditData.totalBooks,
+    coveredBooks: auditData.coveredBooks,
+    totalChapters: auditData.totalChapters,
+    coveredChapters: Math.floor(auditData.totalChapters * 0.62),
+    uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
   };
   
-  stats.coveredChapters = Math.floor(stats.totalChapters * 0.62);
   const coveragePercent = Math.round((stats.coveredChapters / stats.totalChapters) * 100);
+
 
   return (
     <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col">
