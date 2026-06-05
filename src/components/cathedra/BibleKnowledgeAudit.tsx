@@ -28,19 +28,105 @@ interface BibleKnowledgeAuditProps {
 }
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule'>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'logs' | 'schedule' | 'history' | 'notifications'>(
+    (searchParams.get('tab') as any) || 'overview'
+  );
   const [isScanning, setIsScanning] = React.useState(false);
   const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
   const [executionLogs, setExecutionLogs] = React.useState<AuditLog[]>([]);
+  const [auditRuns, setAuditRuns] = React.useState<any[]>([]);
+  const [selectedRun, setSelectedRun] = React.useState<any>(null);
   const [isExporting, setIsExporting] = React.useState(false);
   const [csvFilters, setCsvFilters] = React.useState({
-    books: true,
-    status: true,
-    themes: true,
-    connections: true
+    books: searchParams.get('f_books') !== 'false',
+    status: searchParams.get('f_status') !== 'false',
+    themes: searchParams.get('f_themes') !== 'false',
+    connections: searchParams.get('f_connections') !== 'false'
   });
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [isScheduling, setIsScheduling] = React.useState(false);
+  const [notificationSettings, setNotificationSettings] = React.useState<any[]>([]);
+  const [newNotification, setNewNotification] = React.useState({ type: 'webhook' as 'webhook' | 'email', target: '' });
+  const [isSavingNotification, setIsSavingNotification] = React.useState(false);
+
+  React.useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['overview', 'dashboard', 'logs', 'schedule', 'history', 'notifications'].includes(tab)) {
+      setActiveTab(tab as any);
+    }
+  }, [searchParams]);
+
+  const generateShareLink = () => {
+    const params = new URLSearchParams();
+    params.set('tab', activeTab);
+    params.set('f_books', csvFilters.books.toString());
+    params.set('f_status', csvFilters.status.toString());
+    params.set('f_themes', csvFilters.themes.toString());
+    params.set('f_connections', csvFilters.connections.toString());
+    
+    const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Link de relatório copiado para a área de transferência');
+  };
+
+  const fetchAuditRuns = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_runs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    
+    if (!error && data) {
+      setAuditRuns(data);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_notifications')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) {
+      setNotificationSettings(data);
+    }
+  };
+
+  React.useEffect(() => {
+    if (activeTab === 'history') fetchAuditRuns();
+    if (activeTab === 'notifications') fetchNotifications();
+  }, [activeTab]);
+
+  const addNotification = async () => {
+    if (!newNotification.target) return;
+    setIsSavingNotification(true);
+    const { data, error } = await supabase
+      .from('bible_audit_notifications')
+      .insert([newNotification])
+      .select();
+    
+    if (!error && data) {
+      setNotificationSettings(prev => [data[0], ...prev]);
+      setNewNotification({ type: 'webhook', target: '' });
+      toast.success('Notificação configurada com sucesso');
+    } else {
+      toast.error('Erro ao salvar notificação');
+    }
+    setIsSavingNotification(false);
+  };
+
+  const deleteNotification = async (id: string) => {
+    const { error } = await supabase
+      .from('bible_audit_notifications')
+      .delete()
+      .eq('id', id);
+    
+    if (!error) {
+      setNotificationSettings(prev => prev.filter(n => n.id !== id));
+      toast.success('Notificação removida');
+    }
+  };
 
   const stats = React.useMemo(() => ({
     totalBooks: auditData.totalBooks,
