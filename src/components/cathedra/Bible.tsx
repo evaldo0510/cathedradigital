@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
+import SagradoSummary from './SagradoSummary';
 import { BibleSkeleton } from './RouteSkeletons';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
@@ -181,52 +182,11 @@ const Bible: React.FC = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-4 space-y-8">
-                {['Antigo Testamento', 'Novo Testamento'].map(t => (
-                  <div key={t} className="space-y-4">
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/40 pl-4">{t}</h4>
-                    <div className="space-y-1">
-                      {BIBLE_DATA[t as keyof typeof BIBLE_DATA].map(cat => (
-                        <button key={cat.name} className="w-full flex items-center gap-4 p-4 hover:bg-white/40 rounded-premium transition-all text-left group">
-                          <Icons.BookText className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
-                          <span className="text-premium-sm font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="lg:col-span-8 bg-white/50 backdrop-blur-3xl rounded-premium-xl border border-primary/5 p-8 shadow-premium">
-                {activeSummaryBook && (
-                  <>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[9px] font-black tracking-widest text-primary/20 uppercase">Bíblia</span>
-                      <Icons.ChevronRight className="w-2.5 h-2.5 text-primary/10" />
-                      <span className="text-[9px] font-black tracking-widest text-primary/40 uppercase">Evangelho segundo São {activeSummaryBook.name}</span>
-                    </div>
-                    <div className="border-b border-primary/5 pb-6 mb-8">
-                      <h3 className="font-display text-premium-4xl italic text-primary/90">{activeSummaryBook.name}</h3>
-                      <span className="text-[10px] font-black tracking-widest text-primary/20 uppercase">{activeSummaryBook.chapters} Capítulos</span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden">
-                      {Array.from({ length: 10 }, (_, i) => i + 1).map(num => (
-                        <button key={num} onClick={() => selectBook(activeSummaryBook)} className="flex items-center justify-between p-6 bg-white/40 hover:bg-white/80 transition-all group">
-                          <div className="flex items-center gap-12">
-                            <span className="font-display text-premium-2xl text-primary/20 group-hover:text-secondary w-12 text-center transition-all">{num}</span>
-                            <span className="text-premium-lg font-serif italic text-primary/70 group-hover:text-primary transition-colors">
-                              {activeSummaryBook.chapterTitles?.[num] || `Capítulo ${num}`}
-                            </span>
-                          </div>
-                          <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:text-primary transition-all group-hover:translate-x-1" />
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+            <SagradoSummary 
+              activeBook={activeSummaryBook} 
+              setActiveBook={setActiveSummaryBook} 
+              onSelectBook={selectBook} 
+            />
           </div>
         </ContemplativeLayout>
       )}
@@ -247,25 +207,30 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-            <div className="reader-text text-center max-w-3xl mx-auto pt-8">
+            <div className="reader-text text-left max-w-2xl mx-auto pt-8">
               {isLoading ? <BibleSkeleton /> : (
                 verses.map(v => (
-                  <div key={v.number} className="mb-12 group relative">
-                    {v.number === 1 && (
-                      <div className="flex flex-col items-center mb-16 pt-8 border-t border-primary/5">
-                        <Icons.Logo className="w-12 h-12 opacity-20 mb-8" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-2 italic">Incipit Liber</span>
-                        <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-8">{selectedBook.name} {v.chapter}</h3>
-                        <div className="flex items-center gap-4"><div className="w-12 h-px bg-primary/10" /><Icons.Wheat className="w-3 h-3 text-primary/10" /><div className="w-12 h-px bg-primary/10" /></div>
+                  <div key={v.number} className="mb-8 group relative flex gap-6">
+                    <span className="text-xs font-serif text-primary/20 mt-2 select-none w-6 shrink-0 text-right">{v.number}</span>
+                    <div className="flex-1">
+                      {v.number === 1 && (
+                        <div className="flex flex-col items-center mb-16 pt-8 border-t border-primary/5 text-center">
+                          <Icons.Logo className="w-12 h-12 opacity-20 mb-8" />
+                          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-2 italic">Incipit Liber</span>
+                          <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-8">{selectedBook.name} {v.chapter}</h3>
+                          <div className="flex items-center gap-4"><div className="w-12 h-px bg-primary/10" /><Icons.Wheat className="w-3 h-3 text-primary/10" /><div className="w-12 h-px bg-primary/10" /></div>
+                        </div>
+                      )}
+                      <p className="leading-[1.8] text-xl font-serif text-primary/90">{wrapWithDictionary(v.text)}</p>
+                      
+                      <div className="mt-4 flex justify-start gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                         <button className="text-[10px] font-bold uppercase tracking-widest text-primary/30 hover:text-secondary flex items-center gap-2">
+                           <Icons.Heart className="w-3 h-3" /> Favoritar
+                         </button>
+                         <button className="text-[10px] font-bold uppercase tracking-widest text-primary/30 hover:text-primary flex items-center gap-2" onClick={() => setEditingNote({ verse: v.number, text: '' })}>
+                           <Icons.Edit3 className="w-3 h-3" /> Anotar
+                         </button>
                       </div>
-                    )}
-                    <p className="leading-[2.2] text-xl font-reader">{wrapWithDictionary(v.text)}</p>
-                    <div className="mt-8 flex justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-6 py-2 rounded-full border border-primary/5 shadow-premium-sm">
-                         <Icons.Heart className="w-4 h-4 text-primary/20 hover:text-secondary transition-colors cursor-pointer" />
-                         <Icons.Edit3 className="w-4 h-4 text-primary/20 hover:text-primary transition-colors cursor-pointer" onClick={() => setEditingNote({ verse: v.number, text: '' })} />
-                         <Icons.Share2 className="w-4 h-4 text-primary/20 hover:text-primary transition-colors cursor-pointer" />
-                       </div>
                     </div>
                   </div>
                 ))
