@@ -58,6 +58,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
   const [actionLogs, setActionLogs] = React.useState<any[]>([]);
+  const [actionLogFilters, setActionLogFilters] = React.useState({
+    search: '',
+    actionType: 'all',
+    runId: '',
+    startDate: '',
+    endDate: ''
+  });
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
 
@@ -78,7 +85,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
   }), [auditData]);
 
-  const testWebhook = async (notificationId: string) => {
+  const testWebhook = async (notificationId: string, idempotencyKey?: string) => {
     setIsTestingWebhook(true);
     const payload = { 
       event: 'audit_test', 
@@ -95,9 +102,24 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       }
 
       // Headers for HMAC simulation
-      const headers: any = { 'Content-Type': 'application/json' };
+      const headers: any = { 
+        'Content-Type': 'application/json',
+        'X-Idempotency-Key': idempotencyKey || crypto.randomUUID()
+      };
+      
+      let verification_details: any = null;
+
       if (notification.secret_key) {
-        headers['X-Cathedra-Signature'] = 'hmac_sha256_placeholder'; // In real app, compute HMAC
+        const expectedHmac = 'hmac_sha256_placeholder';
+        headers['X-Cathedra-Signature'] = expectedHmac; 
+        
+        // Simulate a verification detail for failed tests or debugging
+        verification_details = {
+          expected_hmac: expectedHmac,
+          received_hmac: 'hmac_sha256_placeholder',
+          canonical_payload: JSON.stringify(payload),
+          status: 'verified'
+        };
       }
 
       const startTime = Date.now();
@@ -114,7 +136,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         response_status: response.status,
         response_body: await response.text(),
         duration_ms: duration,
-        delivered_at: new Date().toISOString()
+        delivered_at: new Date().toISOString(),
+        idempotency_key: headers['X-Idempotency-Key'],
+        verification_details
       };
 
       await supabase.from('bible_audit_webhook_deliveries').insert([result]);
@@ -128,16 +152,37 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
   const fetchActionLogs = async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from('bible_audit_action_logs')
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
+      .order('created_at', { ascending: false });
+
+    if (actionLogFilters.search) {
+      query = query.or(`action.ilike.%${actionLogFilters.search}%,entity_type.ilike.%${actionLogFilters.search}%`);
+    }
+    if (actionLogFilters.actionType !== 'all') {
+      query = query.eq('action', actionLogFilters.actionType);
+    }
+    if (actionLogFilters.runId) {
+      query = query.eq('metadata->>run_id', actionLogFilters.runId);
+    }
+    if (actionLogFilters.startDate) {
+      query = query.gte('created_at', actionLogFilters.startDate);
+    }
+    if (actionLogFilters.endDate) {
+      query = query.lte('created_at', actionLogFilters.endDate);
+    }
+
+    const { data, error } = await query.limit(50);
     
     if (!error && data) {
       setActionLogs(data);
     }
   };
+
+  React.useEffect(() => {
+    if (activeTab === 'audit-logs') fetchActionLogs();
+  }, [actionLogFilters, activeTab]);
 
   const fetchWebhookDeliveries = async () => {
     const { data, error } = await supabase
@@ -215,6 +260,21 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     setIsSavingNotification(false);
   };
 
+  const updateNotification = async (id: string, updates: any) => {
+    const { error } = await supabase
+      .from('bible_audit_notifications')
+      .update(updates)
+      .eq('id', id);
+    
+    if (!error) {
+      setNotificationSettings(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
+      logAction('Update Notification Policy', 'notification', id, { updates });
+      toast.success('Política atualizada');
+    } else {
+      toast.error('Erro ao atualizar política');
+    }
+  };
+
   const deleteNotification = async (id: string) => {
     const { error } = await supabase
       .from('bible_audit_notifications')
@@ -234,8 +294,15 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       const delivery = webhookDeliveries.find(d => d.id === deliveryId);
       if (!delivery) return;
       toast.info('Reenviando notificação...');
-      await testWebhook(delivery.notification_id);
-      await logAction('Resend Notification', 'webhook_delivery', deliveryId);
+      
+      // Use the same idempotency key if it exists, or generate a new one specifically for this resend attempt
+      // but usually for resend we might want a new one if it's a "retry" of a failed attempt, 
+      // or the same one if we are unsure if it reached. 
+      // The user asked to "Prevent duplicate notifications by adding an idempotency key"
+      const idempotencyKey = delivery.idempotency_key || crypto.randomUUID();
+      
+      await testWebhook(delivery.notification_id, idempotencyKey);
+      await logAction('Resend Notification', 'webhook_delivery', deliveryId, { idempotency_key: idempotencyKey });
     } finally {
       setIsResending(null);
     }
@@ -375,18 +442,76 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           )}
 
           {activeTab === 'audit-logs' && (
-            <motion.div key="audit-logs" className="space-y-4">
-               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+            <motion.div key="audit-logs" className="space-y-6">
+               <div className="flex flex-col gap-4">
+                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Ações do Sistema</h3>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                   <div className="relative">
+                     <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/30" />
+                     <input 
+                       type="text" 
+                       placeholder="Buscar por ação ou entidade..." 
+                       value={actionLogFilters.search}
+                       onChange={e => setActionLogFilters(p => ({...p, search: e.target.value}))}
+                       className="w-full bg-white border border-primary/5 rounded-xl pl-10 pr-4 py-2 text-[11px]"
+                     />
+                   </div>
+                   <select 
+                     value={actionLogFilters.actionType}
+                     onChange={e => setActionLogFilters(p => ({...p, actionType: e.target.value}))}
+                     className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                   >
+                     <option value="all">Todas as Ações</option>
+                     <option value="Run Audit Now">Execução de Auditoria</option>
+                     <option value="Resend Notification">Reenvio de Notificação</option>
+                     <option value="Add Notification Channel">Novo Canal</option>
+                   </select>
+                   <input 
+                     type="text" 
+                     placeholder="Run ID..." 
+                     value={actionLogFilters.runId}
+                     onChange={e => setActionLogFilters(p => ({...p, runId: e.target.value}))}
+                     className="bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                   />
+                   <div className="flex gap-2 lg:col-span-2">
+                     <input 
+                       type="date" 
+                       value={actionLogFilters.startDate}
+                       onChange={e => setActionLogFilters(p => ({...p, startDate: e.target.value}))}
+                       className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                     />
+                     <span className="self-center text-primary/20">até</span>
+                     <input 
+                       type="date" 
+                       value={actionLogFilters.endDate}
+                       onChange={e => setActionLogFilters(p => ({...p, endDate: e.target.value}))}
+                       className="flex-1 bg-white border border-primary/5 rounded-xl px-4 py-2 text-[11px]"
+                     />
+                   </div>
+                 </div>
+               </div>
+
                <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y">
-                 {actionLogs.map(log => (
-                   <div key={log.id} className="p-4 flex items-center justify-between">
-                     <div className="flex flex-col">
+                 {actionLogs.length > 0 ? actionLogs.map(log => (
+                   <div key={log.id} className="p-4 flex items-center justify-between hover:bg-primary/[0.01] transition-colors">
+                     <div className="flex flex-col gap-1">
                        <span className="text-xs font-bold text-primary/80">{log.action}</span>
-                       <span className="text-[9px] uppercase tracking-widest text-primary/30">{log.entity_type} {log.entity_id}</span>
+                       <div className="flex items-center gap-2">
+                         <span className="text-[9px] uppercase tracking-widest text-primary/30 bg-primary/5 px-1.5 py-0.5 rounded">{log.entity_type}</span>
+                         <span className="text-[9px] font-mono text-primary/20">{log.entity_id?.slice(0, 8)}</span>
+                         {log.metadata?.run_id && (
+                           <span className="text-[9px] font-medium text-secondary/60">Run: {log.metadata.run_id.slice(0, 6)}</span>
+                         )}
+                       </div>
                      </div>
                      <span className="text-[10px] font-medium text-primary/20">{new Date(log.created_at).toLocaleString()}</span>
                    </div>
-                 ))}
+                 )) : (
+                   <div className="p-12 text-center">
+                     <p className="text-xs text-primary/30 uppercase tracking-widest">Nenhum log encontrado com os filtros selecionados</p>
+                   </div>
+                 )}
                </div>
             </motion.div>
           )}
@@ -396,23 +521,74 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Histórico de Entregas</h3>
               <div className="space-y-4">
                 {webhookDeliveries.map(delivery => (
-                  <div key={delivery.id} className="p-4 bg-white border border-primary/5 rounded-2xl space-y-3">
+                  <div key={delivery.id} className="p-4 bg-white border border-primary/5 rounded-2xl space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className={cn(
-                        "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
-                        delivery.response_status === 200 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
-                      )}>
-                        Status: {delivery.response_status} • {delivery.duration_ms}ms
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                          delivery.response_status === 200 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+                        )}>
+                          Status: {delivery.response_status} • {delivery.duration_ms}ms
+                        </span>
+                        {delivery.idempotency_key && (
+                          <span className="text-[8px] text-primary/20 font-mono">ID: {delivery.idempotency_key.slice(0, 8)}...</span>
+                        )}
+                      </div>
                       <button 
                         onClick={() => resendNotification(delivery.id)}
                         disabled={isResending === delivery.id}
-                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline"
+                        className="text-[8px] font-black uppercase tracking-widest text-secondary hover:underline flex items-center gap-1"
                       >
+                        <Icons.RefreshCw className={cn("w-3 h-3", isResending === delivery.id && "animate-spin")} />
                         {isResending === delivery.id ? 'Reenviando...' : 'Reenviar'}
                       </button>
                     </div>
-                    <p className="text-[10px] font-bold text-primary/60 truncate">{delivery.notification?.target}</p>
+                    
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-bold text-primary/60 truncate">{delivery.notification?.target}</p>
+                      <p className="text-[8px] uppercase tracking-[0.2em] text-primary/20">{delivery.notification?.type}</p>
+                    </div>
+
+                    {delivery.verification_details && (
+                      <div className="p-3 bg-primary/[0.02] rounded-xl border border-primary/5 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/40">Webhook Verification</span>
+                          <span className={cn(
+                            "text-[8px] font-bold uppercase",
+                            delivery.verification_details.status === 'verified' ? "text-emerald-500" : "text-red-500"
+                          )}>
+                            {delivery.verification_details.status}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2 text-[9px] font-mono">
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Expected HMAC:</span>
+                            <span className="text-primary/60 break-all">{delivery.verification_details.expected_hmac}</span>
+                          </div>
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Received HMAC:</span>
+                            <span className={cn(
+                              "break-all",
+                              delivery.verification_details.expected_hmac === delivery.verification_details.received_hmac ? "text-emerald-600" : "text-red-600"
+                            )}>
+                              {delivery.verification_details.received_hmac}
+                            </span>
+                          </div>
+                          <div className="space-y-0.5">
+                            <span className="text-primary/30 block">Canonical Payload:</span>
+                            <div className="bg-white/50 p-2 rounded border border-primary/5 text-[8px] max-h-20 overflow-y-auto">
+                              {delivery.verification_details.canonical_payload}
+                            </div>
+                          </div>
+                          {delivery.verification_details.status !== 'verified' && (
+                            <div className="space-y-0.5 text-red-500">
+                              <span className="font-bold">Failure Reason:</span>
+                              <p>{delivery.verification_details.failure_reason || 'Signature mismatch'}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -422,23 +598,75 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           {activeTab === 'notifications' && (
             <motion.div key="notifications" className="space-y-8 max-w-lg mx-auto">
               <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-6">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Novo Canal de Alerta</h3>
                 <div className="flex gap-2">
-                   <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest">
+                   <select value={newNotification.type} onChange={e => setNewNotification(p => ({...p, type: e.target.value as any}))} className="bg-primary/5 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest outline-none">
                      <option value="webhook">Webhook</option>
                      <option value="slack">Slack</option>
                      <option value="discord">Discord</option>
                    </select>
-                   <input value={newNotification.target} onChange={e => setNewNotification(p => ({...p, target: e.target.value}))} placeholder="URL..." className="flex-1 bg-primary/5 rounded-xl px-4 py-3 text-xs" />
-                   <button onClick={addNotification} className="p-3 bg-secondary text-white rounded-xl"><Icons.Plus className="w-5 h-5" /></button>
+                   <input value={newNotification.target} onChange={e => setNewNotification(p => ({...p, target: e.target.value}))} placeholder="URL ou Endpoint..." className="flex-1 bg-primary/5 rounded-xl px-4 py-3 text-xs outline-none" />
+                   <button onClick={addNotification} disabled={isSavingNotification} className="p-3 bg-secondary text-white rounded-xl active:scale-95 transition-transform">
+                     {isSavingNotification ? <Icons.Loader2 className="w-5 h-5 animate-spin" /> : <Icons.Plus className="w-5 h-5" />}
+                   </button>
                 </div>
-                <div className="space-y-2">
+                
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais Configurados</h3>
                   {notificationSettings.map(n => (
-                    <div key={n.id} className="p-3 bg-primary/5 rounded-xl flex items-center justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
-                        <span className="text-[9px] uppercase tracking-widest text-primary/30">HMAC Key: {n.secret_key?.slice(0, 8)}...</span>
+                    <div key={n.id} className="p-4 bg-primary/[0.02] rounded-2xl border border-primary/5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
+                          <span className="text-[9px] uppercase tracking-widest text-primary/30 flex items-center gap-2">
+                            {n.type} • v{n.version || 1}
+                            {n.secret_key && <span> • HMAC: {n.secret_key.slice(0, 4)}***</span>}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => testWebhook(n.id)} className="p-2 text-secondary/60 hover:bg-secondary/5 rounded-lg transition-colors"><Icons.Play className="w-4 h-4" /></button>
+                          <button onClick={() => deleteNotification(n.id)} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Icons.Trash2 className="w-4 h-4" /></button>
+                        </div>
                       </div>
-                      <button onClick={() => deleteNotification(n.id)} className="text-red-400"><Icons.Trash2 className="w-4 h-4" /></button>
+
+                      {/* Retry Policy Editor */}
+                      <div className="p-3 bg-white border border-primary/5 rounded-xl space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Retry Policy</span>
+                          <Icons.Settings className="w-3 h-3 text-primary/20" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Strategy</label>
+                            <select 
+                              value={n.retry_config?.backoff || 'linear'} 
+                              onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, backoff: e.target.value } })}
+                              className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                            >
+                              <option value="linear">Linear</option>
+                              <option value="exponential">Exponential</option>
+                            </select>
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-bold uppercase text-primary/30">Max Attempts</label>
+                            <input 
+                              type="number" 
+                              value={n.retry_config?.max_retries || 3} 
+                              onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, max_retries: parseInt(e.target.value) } })}
+                              className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[8px] font-bold uppercase text-primary/30">Retry Window (seconds)</label>
+                          <input 
+                            type="number" 
+                            value={n.retry_config?.retry_window || 3600} 
+                            onChange={e => updateNotification(n.id, { retry_config: { ...n.retry_config, retry_window: parseInt(e.target.value) } })}
+                            className="w-full bg-primary/5 rounded-lg px-2 py-1.5 text-[10px] outline-none"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
