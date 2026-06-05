@@ -12,8 +12,10 @@ interface BibleKnowledgeAuditProps {
     emptyBooks: string[];
     totalChapters: number;
     themesCount?: number;
+    theologicalThemes?: { id: string, label: string, connections: number, tags: string[] }[];
   };
 }
+
 
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
