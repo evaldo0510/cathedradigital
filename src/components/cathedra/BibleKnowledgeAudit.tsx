@@ -417,7 +417,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         priority: 'high',
         retry_config: { max_retries: 3, backoff: 'exponential' }
       });
-      logAction('Add Notification Channel', 'notification', data[0].id, { type: data[0].type });
+      logAction('Adicionar Canal de Notificação', 'notification', data[0].id, { type: data[0].type });
       toast.success('Notificação configurada com sucesso');
     } else {
       toast.error('Erro ao salvar notificação');
@@ -433,7 +433,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error) {
       setNotificationSettings(prev => prev.map(n => n.id === id ? { ...n, ...updates } : n));
-      logAction('Update Notification Policy', 'notification', id, { updates });
+      logAction('Atualizar Política de Notificação', 'notification', id, { updates });
       toast.success('Política atualizada');
     } else {
       toast.error('Erro ao atualizar política');
@@ -448,7 +448,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     
     if (!error) {
       setNotificationSettings(prev => prev.filter(n => n.id !== id));
-      logAction('Delete Notification Channel', 'notification', id);
+      logAction('Remover Canal de Notificação', 'notification', id);
       toast.success('Notificação removida');
     }
   };
