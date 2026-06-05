@@ -1291,7 +1291,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           </div>
         </div>
       )}
-
+      </div>
     </div>
   );
 };
+
