@@ -108,7 +108,28 @@ const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({
 
                     </div>
                   ))}
-                </div>
+      <NoteEditModal 
+        isOpen={!!editingNote}
+        onClose={() => setEditingNote(null)}
+        onSave={(text, color) => {
+          if (editingNote && onEditNote) {
+            onEditNote(editingNote.id, text, color);
+            setEditingNote(null);
+          }
+        }}
+        initialText={editingNote?.note_text}
+        initialColor={editingNote?.highlight_color}
+        title="Editar Reflexão"
+        isEditing={true}
+        onDelete={() => {
+          if (editingNote && onDeleteNote) {
+            onDeleteNote(editingNote.id);
+            setEditingNote(null);
+          }
+        }}
+      />
+    </div>
+
               </section>
             ))}
           </div>
