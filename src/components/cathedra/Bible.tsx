@@ -705,7 +705,7 @@ const Bible: React.FC = () => {
 
                             {/* Knowledge Connection Bubbles */}
                             {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
-                              <div className="flex flex-wrap gap-2 pt-1 opacity-80">
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-80 max-h-12 overflow-hidden">
                                 {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
                                   <motion.button
                                     key={idx}
@@ -713,9 +713,16 @@ const Bible: React.FC = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      toast.info(`Navegando para ${conn.label}`);
+                                      toast(conn.label, {
+                                        description: conn.summary,
+                                        duration: 5000,
+                                        action: {
+                                          label: 'Abrir',
+                                          onClick: () => console.log('Abrir detalhe')
+                                        }
+                                      });
                                     }}
-                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all"
+                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all mb-1"
                                   >
                                     <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
                                     <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
@@ -723,6 +730,7 @@ const Bible: React.FC = () => {
                                 ))}
                               </div>
                             )}
+
 
 
                             {/* Cross References */}
