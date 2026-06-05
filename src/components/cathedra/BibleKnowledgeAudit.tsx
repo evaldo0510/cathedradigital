@@ -58,13 +58,21 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [webhookTestResults, setWebhookTestResults] = React.useState<any[]>([]);
   const [isTestingWebhook, setIsTestingWebhook] = React.useState(false);
   const [actionLogs, setActionLogs] = React.useState<any[]>([]);
-  const [actionLogFilters, setActionLogFilters] = React.useState({
-    search: '',
-    actionType: 'all',
-    runId: '',
-    startDate: '',
-    endDate: ''
+  const [actionLogFilters, setActionLogFilters] = React.useState(() => {
+    const saved = localStorage.getItem('bible_audit_action_filters');
+    return saved ? JSON.parse(saved) : {
+      search: '',
+      actionType: 'all',
+      runId: '',
+      startDate: '',
+      endDate: ''
+    };
   });
+  
+  React.useEffect(() => {
+    localStorage.setItem('bible_audit_action_filters', JSON.stringify(actionLogFilters));
+  }, [actionLogFilters]);
+
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
 
