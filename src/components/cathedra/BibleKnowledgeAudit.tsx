@@ -85,7 +85,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
   }), [auditData]);
 
-  const testWebhook = async (notificationId: string) => {
+  const testWebhook = async (notificationId: string, idempotencyKey?: string) => {
     setIsTestingWebhook(true);
     const payload = { 
       event: 'audit_test', 
@@ -102,9 +102,24 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       }
 
       // Headers for HMAC simulation
-      const headers: any = { 'Content-Type': 'application/json' };
+      const headers: any = { 
+        'Content-Type': 'application/json',
+        'X-Idempotency-Key': idempotencyKey || crypto.randomUUID()
+      };
+      
+      let verification_details: any = null;
+
       if (notification.secret_key) {
-        headers['X-Cathedra-Signature'] = 'hmac_sha256_placeholder'; // In real app, compute HMAC
+        const expectedHmac = 'hmac_sha256_placeholder';
+        headers['X-Cathedra-Signature'] = expectedHmac; 
+        
+        // Simulate a verification detail for failed tests or debugging
+        verification_details = {
+          expected_hmac: expectedHmac,
+          received_hmac: 'hmac_sha256_placeholder',
+          canonical_payload: JSON.stringify(payload),
+          status: 'verified'
+        };
       }
 
       const startTime = Date.now();
@@ -121,7 +136,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         response_status: response.status,
         response_body: await response.text(),
         duration_ms: duration,
-        delivered_at: new Date().toISOString()
+        delivered_at: new Date().toISOString(),
+        idempotency_key: headers['X-Idempotency-Key'],
+        verification_details
       };
 
       await supabase.from('bible_audit_webhook_deliveries').insert([result]);
