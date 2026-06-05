@@ -29,7 +29,7 @@ interface BibleKnowledgeAuditProps {
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks'>(
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks' | 'security'>(
     (searchParams.get('tab') as any) || 'overview'
   );
   const [isScanning, setIsScanning] = React.useState(false);
@@ -94,9 +94,11 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [showVersionModal, setShowVersionModal] = React.useState<string | null>(null);
   const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
+  const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
+
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks'].includes(tab)) {
+    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security'].includes(tab)) {
       setActiveTab(tab as any);
     }
   }, [searchParams]);
@@ -267,11 +269,20 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     fetchActionLogs();
   };
 
+  const fetchSecurityLogs = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_security_logs')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data) setSecurityLogs(data);
+  };
+
   React.useEffect(() => {
     if (activeTab === 'history') fetchAuditRuns();
     if (activeTab === 'notifications') fetchNotifications();
     if (activeTab === 'audit-logs') fetchActionLogs();
     if (activeTab === 'webhooks') fetchWebhookDeliveries();
+    if (activeTab === 'security') fetchSecurityLogs();
   }, [activeTab]);
 
   const addNotification = async () => {
