@@ -18,6 +18,9 @@ import { useNotes } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import BibleFullNotesList from './BibleFullNotesList';
+import { MonthlyRecap } from './MonthlyRecap';
+import { HighlightMenu } from './HighlightMenu';
+
 
 // Helper for Daily Reading
 const getDailyReading = () => {
