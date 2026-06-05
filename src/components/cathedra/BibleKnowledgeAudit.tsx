@@ -603,7 +603,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'notifications', label: 'Canais', icon: Icons.Bell },
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
             { id: 'security', label: 'Segurança', icon: Icons.Shield },
-            { id: 'a11y', label: 'Acessibilidade', icon: Icons.Eye },
+            { id: 'a11y', label: 'Acessibilidade (A11y)', icon: Icons.Eye },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
           ].map(tab => (
             <button
