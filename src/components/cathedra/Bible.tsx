@@ -706,45 +706,62 @@ const Bible: React.FC = () => {
                </div>
             </div>
 
-            {/* Widgets Rápidos */}
+            {/* Widgets Rápidos - Elegantes e Discretos */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-spacing-md">
               {[
-                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha' },
-                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365' },
-                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos' },
-                { label: 'Histórico', icon: Icons.History, info: 'Recentes' }
+                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha', action: () => {} },
+                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365', progress: 35 },
+                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos', action: () => setViewMode('favorites') },
+                { label: 'Histórico', icon: Icons.History, info: 'Recentes', action: () => {} }
               ].map((w) => (
                 <button 
                   key={w.label} 
-                  onClick={() => {
-                    if (w.label === 'Favoritos') setViewMode('favorites');
-                  }}
-                  className="p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all text-left group"
+                  onClick={w.action}
+                  className="p-spacing-lg bg-primary/[0.01] hover:bg-primary/[0.03] rounded-premium border border-primary/5 transition-all text-left group"
                 >
                   <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
                   <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
                   <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
+                  {w.progress !== undefined && (
+                    <div className="mt-2 w-full h-1 bg-primary/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary/20" style={{ width: `${w.progress}%` }} />
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
 
-            {/* Acesso aos Livros (Biblioteca) */}
+            {/* A Biblioteca de Livros - Visual Hierárquico */}
             <div className="pt-spacing-xl">
               <div className="flex items-center justify-between mb-spacing-xl">
-                <h3 className="font-display text-premium-2xl">A Biblioteca</h3>
+                <h3 className="font-display text-premium-3xl">A Biblioteca</h3>
                 <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[9px] font-black uppercase tracking-widest opacity-40 hover:opacity-100">
                   Ver todos os livros →
                 </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl">
                 {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
                   <div key={t} className="space-y-spacing-lg">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 px-spacing-md border-b border-primary/5 pb-spacing-xs italic">{t}</h4>
-                    <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden border border-primary/5">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 border-b border-primary/5 pb-spacing-xs">{t}</h4>
+                    <div className="grid grid-cols-1 gap-spacing-sm">
                       {BIBLE_DATA[t].slice(0, 3).map(cat => (
-                        <div key={cat.name} className="p-spacing-md bg-background hover:bg-primary/[0.01] transition-all cursor-pointer group border-b border-primary/[0.02]" onClick={() => { setTestament(t); setViewMode('books'); }}>
-                          <h5 className="text-premium-xs font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</h5>
-                          <p className="text-[9px] text-primary/20 truncate">{cat.books.map(b => b.name).join(', ')}</p>
+                        <div key={cat.name} className="space-y-spacing-xs">
+                          <span className="text-[9px] font-serif italic text-primary/30">{cat.name}</span>
+                          <div className="flex flex-wrap gap-spacing-xs">
+                            {cat.books.slice(0, 5).map(b => (
+                              <button 
+                                key={b.abbr}
+                                onClick={() => selectBook(b)}
+                                className="px-spacing-md py-spacing-xs rounded-full border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.04] transition-all text-premium-xs font-medium text-primary/60"
+                              >
+                                {b.name}
+                              </button>
+                            ))}
+                            {cat.books.length > 5 && (
+                              <span className="text-[10px] text-primary/10 self-center">...</span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -755,6 +772,7 @@ const Bible: React.FC = () => {
           </div>
         </ContemplativeLayout>
       )}
+
 
       {viewMode === 'books' && (
         <ContemplativeLayout
