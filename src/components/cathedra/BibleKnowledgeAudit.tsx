@@ -727,6 +727,59 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           </div>
         </div>
       )}
+      {showVersionModal && (
+        <div className="fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="bg-white w-full max-w-2xl rounded-3xl p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+             <div className="flex items-center justify-between">
+               <h3 className="text-sm font-black uppercase tracking-widest">Comparar Versões da Política</h3>
+               <button onClick={() => { setShowVersionModal(null); setVersionComparison(null); }} className="text-primary/20 hover:text-primary"><Icons.X className="w-5 h-5" /></button>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Versão A</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setVersionComparison(prev => ({...prev, v1: notificationVersions.find(v => v.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar versão...</option>
+                   {notificationVersions.map(v => <option key={v.id} value={v.id}>v{v.version} - {new Date(v.created_at).toLocaleString()}</option>)}
+                 </select>
+               </div>
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Versão B</label>
+                 <select 
+                   className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
+                   onChange={e => setVersionComparison(prev => ({...prev, v2: notificationVersions.find(v => v.id === e.target.value)}))}
+                 >
+                   <option value="">Selecionar versão...</option>
+                   {notificationVersions.map(v => <option key={v.id} value={v.id}>v{v.version} - {new Date(v.created_at).toLocaleString()}</option>)}
+                 </select>
+               </div>
+             </div>
+
+             {versionComparison?.v1 && versionComparison?.v2 && (
+               <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-4 space-y-4 font-mono text-[10px]">
+                 <div className="grid grid-cols-2 gap-8">
+                   <div className="space-y-4">
+                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v1.version}</h4>
+                     <pre className="whitespace-pre-wrap">{JSON.stringify(versionComparison.v1.retry_config, null, 2)}</pre>
+                   </div>
+                   <div className="space-y-4">
+                     <h4 className="font-bold border-b border-primary/5 pb-1">v{versionComparison.v2.version}</h4>
+                     <pre className={cn(
+                       "whitespace-pre-wrap",
+                       JSON.stringify(versionComparison.v1.retry_config) !== JSON.stringify(versionComparison.v2.retry_config) ? "text-secondary" : "text-primary/40"
+                     )}>
+                       {JSON.stringify(versionComparison.v2.retry_config, null, 2)}
+                     </pre>
+                   </div>
+                 </div>
+               </div>
+             )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
