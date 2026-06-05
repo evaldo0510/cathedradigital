@@ -317,7 +317,7 @@ const Bible: React.FC = () => {
                     >
                       Capítulo Anterior
                     </Button>
-                  </footer statistics>
+                  </footer>
                 </article>
               )}
             </motion.div>
