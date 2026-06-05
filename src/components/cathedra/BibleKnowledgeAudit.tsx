@@ -313,6 +313,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
         <div className="flex items-center gap-2">
           <button 
+            onClick={generateShareLink}
+            className="p-2 text-primary/40 active:text-secondary"
+            title="Copiar Link de Relatório"
+          >
+            <Icons.Share2 className="w-5 h-5" />
+          </button>
+          <button 
             onClick={() => setShowExportModal(true)}
             className="p-2 text-primary/40 active:text-secondary"
             title="Exportar Relatório CSV"
