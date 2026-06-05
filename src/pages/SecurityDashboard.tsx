@@ -106,7 +106,7 @@ const SecurityDashboard = () => {
       content = JSON.stringify(filteredLogs, null, 2);
       fileName += '.json';
     } else {
-      const headers = ['Data', 'Evento', 'Severidade', 'Descrição', 'Metadata'];
+      const headers = ['Data', 'Evento', 'Severidade', 'Descrição', 'Metadados'];
       const rows = filteredLogs.map(log => [
         new Date(log.created_at).toLocaleString(),
         log.event_type,
@@ -351,7 +351,7 @@ const SecurityDashboard = () => {
             </div>
 
             <div className="space-y-spacing-2xs">
-              <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Payload / Metadata</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Conteúdo (Payload) / Metadados</h4>
               <pre className="bg-zinc-950 text-zinc-50 p-spacing-md rounded-premium text-[11px] font-mono overflow-auto max-h-[300px] border border-white/5">
                 {JSON.stringify(selectedLog?.metadata, null, 2)}
               </pre>
