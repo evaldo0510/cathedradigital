@@ -148,20 +148,6 @@ const Bible: React.FC = () => {
     }
   };
 
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: abbr, chapter }
-      });
-      if (error) throw error;
-      setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    } catch (error: any) {
-      toast.error('Erro ao carregar texto sagrado');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const selectBook = (book: BibleBook) => {
     setSelectedBook(book);
