@@ -97,7 +97,10 @@ const Bible: React.FC = () => {
     const today = new Date().toISOString().split('T')[0];
     const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
     if (dailyStatus === 'completed') setIsDailyCompleted(true);
+    const savedHighlights = localStorage.getItem('cathedra_bible_highlights');
+    if (savedHighlights) setHighlights(JSON.parse(savedHighlights));
   }, []);
+
 
   const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
