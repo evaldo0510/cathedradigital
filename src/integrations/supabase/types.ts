@@ -410,30 +410,75 @@ export type Database = {
       bible_audit_security_logs: {
         Row: {
           action: string
+          after_state: Json | null
+          before_state: Json | null
           created_at: string | null
           created_by: string | null
           details: Json
           entity_name: string
           id: string
           scan_id: string | null
+          severity: string | null
+          summary: string | null
         }
         Insert: {
           action: string
+          after_state?: Json | null
+          before_state?: Json | null
           created_at?: string | null
           created_by?: string | null
           details: Json
           entity_name: string
           id?: string
           scan_id?: string | null
+          severity?: string | null
+          summary?: string | null
         }
         Update: {
           action?: string
+          after_state?: Json | null
+          before_state?: Json | null
           created_at?: string | null
           created_by?: string | null
           details?: Json
           entity_name?: string
           id?: string
           scan_id?: string | null
+          severity?: string | null
+          summary?: string | null
+        }
+        Relationships: []
+      }
+      bible_audit_security_scans: {
+        Row: {
+          completed_at: string | null
+          compliance_score: number | null
+          id: string
+          issues_found: Json | null
+          metadata: Json | null
+          started_at: string | null
+          status: string
+          triggered_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          compliance_score?: number | null
+          id?: string
+          issues_found?: Json | null
+          metadata?: Json | null
+          started_at?: string | null
+          status: string
+          triggered_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          compliance_score?: number | null
+          id?: string
+          issues_found?: Json | null
+          metadata?: Json | null
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
         }
         Relationships: []
       }
@@ -3257,6 +3302,10 @@ export type Database = {
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
+      generate_security_diff_summary: {
+        Args: { after_val: Json; before_val: Json }
+        Returns: string
+      }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       get_pending_webhook_retries: {
         Args: never
