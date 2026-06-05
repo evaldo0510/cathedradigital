@@ -100,6 +100,30 @@ const Bible: React.FC = () => {
     navigate(`/bible?book=${selectedBook!.abbr}&ch=${ch}`);
   };
 
+  const nextChapter = useCallback(() => {
+    if (!selectedBook) return;
+    const maxChapters = selectedBook.chapters || 1;
+    if (selectedChapter < maxChapters) {
+      selectChapter(selectedChapter + 1);
+    }
+  }, [selectedBook, selectedChapter]);
+
+  const prevChapter = useCallback(() => {
+    if (!selectedBook) return;
+    if (selectedChapter > 1) {
+      selectChapter(selectedChapter - 1);
+    }
+  }, [selectedBook, selectedChapter]);
+
+  const handleDragEnd = (event: any, info: any) => {
+    const threshold = 100;
+    if (info.offset.x < -threshold) {
+      nextChapter();
+    } else if (info.offset.x > threshold) {
+      prevChapter();
+    }
+  };
+
   const goBack = (event?: React.MouseEvent | React.KeyboardEvent) => {
     if (event && !isLegitimateClick(event)) return;
 
@@ -205,7 +229,41 @@ const Bible: React.FC = () => {
           icon={Icons.BookOpen}
           className={cn(settings.immersiveMode ? "max-w-prose" : "max-w-5xl")}
         >
-          <div className="pb-16 animate-in fade-in duration-1000">
+          <motion.div 
+            className="pb-16 animate-in fade-in duration-1000 relative"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.1}
+            onDragEnd={handleDragEnd}
+          >
+            {/* Setas discretas nas bordas */}
+            <AnimatePresence>
+              {selectedChapter > 1 && (
+                <motion.button
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  onClick={prevChapter}
+                  className="fixed left-8 top-1/2 -translate-y-1/2 z-50 p-4 text-primary/10 hover:text-primary/30 transition-colors hidden lg:block"
+                  aria-label="Capítulo anterior"
+                >
+                  <Icons.ChevronLeft className="w-8 h-8" />
+                </motion.button>
+              )}
+              {selectedChapter < (selectedBook.chapters || 1) && (
+                <motion.button
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  onClick={nextChapter}
+                  className="fixed right-8 top-1/2 -translate-y-1/2 z-50 p-4 text-primary/10 hover:text-primary/30 transition-colors hidden lg:block"
+                  aria-label="Próximo capítulo"
+                >
+                  <Icons.ChevronRight className="w-8 h-8" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+
             <div className="flex justify-between items-center mb-16 border-b border-primary/5 pb-6">
               <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary/60 hover:text-primary p-0 transition-all duration-500 hover:-translate-x-2">← {selectedBook.name} {selectedChapter}</Button>
               <div className="flex items-center gap-6">
@@ -215,38 +273,47 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-            <div className="reader-text text-left max-w-2xl mx-auto pt-8">
-              {isLoading ? <BibleSkeleton /> : (
-                verses.map(v => (
-                  <div key={v.number} className="mb-10 group relative flex gap-8">
-                    <span className="text-[11px] font-serif font-bold text-secondary/30 mt-1.5 select-none w-8 shrink-0 text-right tabular-nums">{v.number}</span>
-                    <div className="flex-1">
-                      {v.number === 1 && (
-                        <div className="flex flex-col items-center mb-20 pt-10 border-t border-primary/5 text-center">
-                          <Icons.Logo className="w-16 h-16 opacity-10 mb-10" />
-                          <span className="text-[9px] font-black uppercase tracking-[0.6em] text-secondary/30 mb-3 italic">Incipit Liber</span>
-                          <h3 className="text-5xl font-display font-light text-primary/70 uppercase tracking-[0.4em] italic mb-10">{selectedBook.name} {v.chapter}</h3>
-                          <div className="flex items-center gap-6"><div className="w-16 h-px bg-primary/5" /><Icons.Wheat className="w-4 h-4 text-secondary/20" /><div className="w-16 h-px bg-primary/5" /></div>
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={`${selectedBook.abbr}-${selectedChapter}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="reader-text text-left max-w-2xl mx-auto pt-8"
+              >
+                {isLoading ? <BibleSkeleton /> : (
+                  verses.map(v => (
+                    <div key={v.number} className="mb-10 group relative flex gap-8">
+                      <span className="text-[11px] font-serif font-bold text-secondary/30 mt-1.5 select-none w-8 shrink-0 text-right tabular-nums">{v.number}</span>
+                      <div className="flex-1">
+                        {v.number === 1 && (
+                          <div className="flex flex-col items-center mb-20 pt-10 border-t border-primary/5 text-center">
+                            <Icons.Logo className="w-16 h-16 opacity-10 mb-10" />
+                            <span className="text-[9px] font-black uppercase tracking-[0.6em] text-secondary/30 mb-3 italic">Incipit Liber</span>
+                            <h3 className="text-5xl font-display font-light text-primary/70 uppercase tracking-[0.4em] italic mb-10">{selectedBook.name} {v.chapter}</h3>
+                            <div className="flex items-center gap-6"><div className="w-16 h-px bg-primary/5" /><Icons.Wheat className="w-4 h-4 text-secondary/20" /><div className="w-16 h-px bg-primary/5" /></div>
+                          </div>
+                        )}
+                        <p className="leading-[1.9] text-[20px] font-serif text-primary/90 tracking-tight text-justify indent-8 sm:indent-0" role="text">
+                          {wrapWithDictionary(v.text)}
+                        </p>
+                        
+                        <div className="mt-5 flex justify-start gap-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0">
+                           <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-secondary focus-visible:text-secondary focus-visible:outline-none flex items-center gap-2 transition-colors" aria-label={`Favoritar versículo ${v.number}`}>
+                             <Icons.Heart className="w-3.5 h-3.5" /> Favoritar
+                           </button>
+                           <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-primary focus-visible:text-primary focus-visible:outline-none flex items-center gap-2 transition-colors" onClick={() => setEditingNote({ verse: v.number, text: '' })} aria-label={`Anotar no versículo ${v.number}`}>
+                             <Icons.Edit3 className="w-3.5 h-3.5" /> Anotar
+                           </button>
                         </div>
-                      )}
-                      <p className="leading-[1.9] text-[20px] font-serif text-primary/90 tracking-tight text-justify indent-8 sm:indent-0" role="text">
-                        {wrapWithDictionary(v.text)}
-                      </p>
-                      
-                      <div className="mt-5 flex justify-start gap-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0">
-                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-secondary focus-visible:text-secondary focus-visible:outline-none flex items-center gap-2 transition-colors" aria-label={`Favoritar versículo ${v.number}`}>
-                           <Icons.Heart className="w-3.5 h-3.5" /> Favoritar
-                         </button>
-                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-primary focus-visible:text-primary focus-visible:outline-none flex items-center gap-2 transition-colors" onClick={() => setEditingNote({ verse: v.number, text: '' })} aria-label={`Anotar no versículo ${v.number}`}>
-                           <Icons.Edit3 className="w-3.5 h-3.5" /> Anotar
-                         </button>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+                  ))
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
         </ContemplativeLayout>
       )}
     </div>
