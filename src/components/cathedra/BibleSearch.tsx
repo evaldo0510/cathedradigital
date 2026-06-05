@@ -35,7 +35,14 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 
+  useEffect(() => {
+    if (initialTheme) {
+      handleSearch(new Event('submit') as any);
+    }
+  }, [initialTheme]);
+
   const handleSearch = async (e: React.FormEvent) => {
+
     e.preventDefault();
     if (query.trim().length < 2) return;
 
