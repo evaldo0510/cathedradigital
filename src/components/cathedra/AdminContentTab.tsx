@@ -162,9 +162,19 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="rejected">Rejeitados</TabsTrigger>
           <TabsTrigger value="all">Todos</TabsTrigger>
           <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
+          <TabsTrigger value="bible-audit">Auditoria Bíblica</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-spacing-md">
+        <TabsContent value="bible-audit" className="relative h-[800px] overflow-hidden rounded-premium border border-primary/5">
+          <Suspense fallback={<Card className="h-full animate-pulse" />}>
+             <BibleKnowledgeAudit 
+               onClose={() => setActiveTab('pending')} 
+               auditData={auditData} 
+             />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value={activeTab === 'bible-audit' ? 'none' : activeTab} className="space-y-spacing-md">
           {filteredPosts.length === 0 ? (
             <Card className="border-dashed border-2 py-spacing-2xl text-center">
               <Icons.MessageSquare className="w-spacing-2xl h-spacing-2xl text-muted-foreground mx-auto mb-spacing-md opacity-20" />
