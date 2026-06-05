@@ -18,7 +18,21 @@ interface BibleKnowledgeAuditProps {
 
 
 
-export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
+interface BibleKnowledgeAuditProps {
+  onClose: () => void;
+  auditData: {
+    totalBooks: number;
+    coveredBooks: number;
+    emptyBooks: string[];
+    totalChapters: number;
+    themesCount?: number;
+    theologicalThemes?: { id: string, label: string, connections: number, tags: string[] }[];
+  };
+  onThemeClick?: (theme: string) => void;
+}
+
+export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
+
   // Simulated audit data using real auditData from parent
   const stats = {
     totalBooks: auditData.totalBooks,
