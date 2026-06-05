@@ -21,7 +21,9 @@ interface SearchResult {
 interface BibleSearchProps {
   onSelectResult: (bookAbbrev: string, chapter: number, verse: number) => void;
   onClose: () => void;
+  initialTheme?: string | null;
 }
+
 
 const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) => {
   const [query, setQuery] = useState('');
