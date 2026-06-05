@@ -171,10 +171,11 @@
 
 
   /* Typography System */
-  .font-display { font-family: 'Cinzel', serif; }
-  .font-serif { font-family: 'Playfair Display', serif; }
-  .font-reader { font-family: 'Merriweather', serif; }
+  .font-display { font-family: 'Cinzel', serif; font-weight: 400; }
+  .font-serif { font-family: 'Playfair Display', serif; font-weight: 400; }
+  .font-reader { font-family: 'Lora', serif; font-weight: 400; }
   .font-ui { font-family: 'Inter', sans-serif; }
+
 
   * {
     @apply border-border;
@@ -206,12 +207,13 @@
   }
 
   h1, .h1 {
-    @apply font-display font-light uppercase tracking-premium-widest text-primary;
-    font-size: clamp(var(--text-premium-2xl), 8vw, var(--text-premium-5xl));
+    @apply font-display font-normal uppercase tracking-premium-widest text-primary;
+    font-size: clamp(var(--text-premium-3xl), 10vw, var(--text-premium-5xl));
     line-height: 1.05;
     filter: blur(0.1px);
     text-shadow: 0 0 1px hsla(var(--primary) / 0.1);
   }
+
 
   h2, .h2 {
     @apply font-display font-light uppercase tracking-premium-wide text-primary/80;
