@@ -104,8 +104,8 @@ serve(async (req) => {
       }
     }
 
-    const { action, data, simulation, simulated_status, userId: providedUserId } = body
-    
+    const { action, data } = body
+
     if (simulateDbError) throw new Error('Simulated Database Error')
     if (simulateTimeout) {
       await new Promise(resolve => setTimeout(resolve, 2000))
