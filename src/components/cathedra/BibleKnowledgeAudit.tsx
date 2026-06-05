@@ -734,6 +734,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
               )}
             </motion.div>
+          )}
 
           {activeTab === 'notifications' && (
             <motion.div 
