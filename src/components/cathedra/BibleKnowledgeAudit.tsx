@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
