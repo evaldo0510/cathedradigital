@@ -1,16 +1,27 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { BIBLE_DATA } from '@/data/bible-books';
+import { NoteEditModal } from './NoteEditModal';
 
 interface BibleFullNotesListProps {
   onSelectReference: (bookAbbrev: string, chapter: number, verse: number) => void;
   onClose: () => void;
+  onEditNote?: (noteId: string, text: string, color: string) => void;
+  onDeleteNote?: (noteId: string) => void;
 }
 
-const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ onSelectReference, onClose }) => {
-  const { notes, deleteNote, loading } = useNotes('bible');
+
+const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ 
+  onSelectReference, 
+  onClose,
+  onEditNote,
+  onDeleteNote 
+}) => {
+  const { notes, loading } = useNotes('bible');
+  const [editingNote, setEditingNote] = useState<UserNote | null>(null);
+
 
   // Group notes by book and chapter
   const groupedNotes = notes.reduce((acc: any, note) => {
@@ -80,15 +91,45 @@ const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ onSelectReferen
                           "{note.note_text}"
                         </p>
                       </button>
-                      <button 
-                        onClick={() => deleteNote(note.id)}
-                        className="absolute top-2 right-2 p-2 text-destructive/20 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-                      >
-                        <Icons.X className="w-4 h-4" />
-                      </button>
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => setEditingNote(note)}
+                          className="p-2 text-primary/20 hover:text-secondary transition-colors"
+                        >
+                          <Icons.Edit className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => onDeleteNote?.(note.id)}
+                          className="p-2 text-destructive/20 hover:text-destructive transition-colors"
+                        >
+                          <Icons.X className="w-4 h-4" />
+                        </button>
+                      </div>
+
                     </div>
                   ))}
-                </div>
+      <NoteEditModal 
+        isOpen={!!editingNote}
+        onClose={() => setEditingNote(null)}
+        onSave={(text, color) => {
+          if (editingNote && onEditNote) {
+            onEditNote(editingNote.id, text, color);
+            setEditingNote(null);
+          }
+        }}
+        initialText={editingNote?.note_text}
+        initialColor={editingNote?.highlight_color}
+        title="Editar Reflexão"
+        isEditing={true}
+        onDelete={() => {
+          if (editingNote && onDeleteNote) {
+            onDeleteNote(editingNote.id);
+            setEditingNote(null);
+          }
+        }}
+      />
+    </div>
+
               </section>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -42,7 +42,7 @@ const Bible: React.FC = () => {
   const { settings } = useReadingSettings();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes' | 'monthly_recap'>('home');
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
@@ -56,7 +56,11 @@ const Bible: React.FC = () => {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   
-  const { notes, addNote, deleteNote } = useNotes('bible');
+  const [highlights, setHighlights] = useState<Record<string, string>>({});
+  
+  const { notes, addNote, deleteNote, updateNote } = useNotes('bible');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
 
 
   // Sync with URL
@@ -93,7 +97,10 @@ const Bible: React.FC = () => {
     const today = new Date().toISOString().split('T')[0];
     const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
     if (dailyStatus === 'completed') setIsDailyCompleted(true);
+    const savedHighlights = localStorage.getItem('cathedra_bible_highlights');
+    if (savedHighlights) setHighlights(JSON.parse(savedHighlights));
   }, []);
+
 
   const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
@@ -136,7 +143,80 @@ const Bible: React.FC = () => {
     toast.success('Reflexão guardada');
   };
 
+  const toggleHighlight = (verseNumber: number, color: string = 'yellow') => {
+    if (!selectedBook) return;
+    const key = `${selectedBook.abbr}-${selectedChapter}-${verseNumber}`;
+    const newHighlights = { ...highlights };
+    
+    if (newHighlights[key] === color) {
+      delete newHighlights[key];
+    } else {
+      newHighlights[key] = color;
+    }
+    
+    setHighlights(newHighlights);
+    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(newHighlights));
+  };
+
+  const handleExportData = () => {
+    const data = {
+      notes,
+      highlights,
+      lastRead,
+      dailyStatus: {} as any
+    };
+    
+    // Get all daily reading keys from localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('cathedra_bible_daily_')) {
+        data.dailyStatus[key] = localStorage.getItem(key);
+      }
+    }
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cathedra-bible-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Dados exportados com sucesso');
+  };
+
+  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string);
+        if (data.highlights) {
+          setHighlights(data.highlights);
+          localStorage.setItem('cathedra_bible_highlights', JSON.stringify(data.highlights));
+        }
+        if (data.lastRead) {
+          setLastRead(data.lastRead);
+          localStorage.setItem('cathedra_bible_last_read', JSON.stringify(data.lastRead));
+        }
+        if (data.dailyStatus) {
+          Object.entries(data.dailyStatus).forEach(([key, value]) => {
+            localStorage.setItem(key, value as string);
+          });
+        }
+        toast.success('Dados importados com sucesso');
+      } catch (err) {
+        toast.error('Erro ao importar arquivo');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const fetchVerses = async (abbr: string, chapter: number) => {
+
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
@@ -156,14 +236,24 @@ const Bible: React.FC = () => {
         setTimeout(() => {
           const element = document.getElementById(`verse-${verse}`);
           if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            element.classList.add('bg-secondary/10');
-            setTimeout(() => element.classList.remove('bg-secondary/10'), 3000);
+            // Calculate offset for sticky header
+            const headerHeight = 56; // 14 * 4
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - headerHeight - 20;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+
+            element.classList.add('bg-secondary/20', 'scale-[1.02]');
+            setTimeout(() => element.classList.remove('bg-secondary/20', 'scale-[1.02]'), 3000);
           }
-        }, 500);
+        }, 300);
       } else {
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
+
 
     } catch (error: any) {
       toast.error('Erro ao carregar texto sagrado');
@@ -273,8 +363,29 @@ const Bible: React.FC = () => {
                     <span className="font-serif font-bold text-base">
                       {lastRead ? `${lastRead.bookName} ${lastRead.chapter}` : 'João 1'}
                     </span>
-                  </div>
-                </div>
+                <button 
+                  onClick={() => setViewMode('monthly_recap')}
+                  className="w-full flex items-center justify-center p-3 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-secondary transition-colors"
+                >
+                  <Icons.Calendar className="w-3 h-3 mr-2" />
+                  Recapitular Leituras do Mês
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-4 mb-12">
+              <button 
+                onClick={handleExportData}
+                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40"
+              >
+                <Icons.Download className="w-3 h-3" /> Exportar
+              </button>
+              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer">
+                <Icons.Upload className="w-3 h-3" /> Importar
+                <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
+              </label>
+            </div>
+
                 <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
               </button>
 
@@ -435,10 +546,15 @@ const Bible: React.FC = () => {
                         <div 
                           key={v.number} 
                           id={`verse-${v.number}`} 
-                          onClick={() => saveReadingProgress(selectedBook.abbr, selectedChapter, v.number)}
-                          className="flex gap-4 group relative transition-colors duration-1000 cursor-pointer active:bg-primary/[0.02]"
+                          onClick={() => {
+                            saveReadingProgress(selectedBook.abbr, selectedChapter, v.number);
+                            toggleHighlight(v.number);
+                          }}
+                          className={cn(
+                            "flex gap-4 group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-2 -mx-2 rounded-lg",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40"
+                          )}
                         >
-
                           <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {hasNote && (
@@ -450,13 +566,17 @@ const Bible: React.FC = () => {
                             {wrapWithDictionary(v.text)}
                             
                             <button 
-                              onClick={() => handleOpenAnnotation(v)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenAnnotation(v);
+                              }}
                               className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
                             >
                               <Icons.PenLine className="w-3.5 h-3.5" />
                             </button>
                           </p>
                         </div>
+
                       );
                     })}
 
@@ -503,8 +623,55 @@ const Bible: React.FC = () => {
               navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
               setViewMode('reading');
             }}
+            onEditNote={async (noteId, text, color) => {
+              await updateNote(noteId, text, color);
+              toast.success('Anotação atualizada');
+            }}
+            onDeleteNote={async (noteId) => {
+              await deleteNote(noteId);
+              toast.success('Anotação removida');
+            }}
           />
         )}
+
+        {viewMode === 'monthly_recap' && (
+          <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
+            <header className="px-6 h-16 flex items-center justify-between border-b border-primary/5">
+              <button onClick={() => setViewMode('home')} className="p-2 -ml-2 text-primary/40 active:text-secondary">
+                <Icons.X className="w-6 h-6" />
+              </button>
+              <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Recapitulação Mensal</h1>
+              <div className="w-10" />
+            </header>
+            <div className="flex-1 overflow-y-auto px-6 py-8 pb-32">
+              <div className="space-y-6">
+                {Array.from({ length: 30 }, (_, i) => {
+                  const date = new Date();
+                  date.setDate(date.getDate() - i);
+                  const dateStr = date.toISOString().split('T')[0];
+                  const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${dateStr}`);
+                  
+                  return (
+                    <div key={dateStr} className="flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm">
+                      <div className="text-left">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">
+                          {date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                        </span>
+                        <span className="font-serif font-bold text-base">Leitura de {dateStr}</span>
+                      </div>
+                      {dailyStatus === 'completed' ? (
+                        <Icons.CheckCircle className="w-5 h-5 text-green-500" />
+                      ) : (
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/20">Não concluída</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
       </AnimatePresence>
 
       <NoteEditModal 
