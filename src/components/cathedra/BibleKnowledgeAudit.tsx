@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
+import { toast } from 'sonner';
+
 
 interface BibleKnowledgeAuditProps {
   onClose: () => void;
