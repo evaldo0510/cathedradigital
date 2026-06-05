@@ -99,7 +99,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security'].includes(tab)) {
+    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y'].includes(tab)) {
+
       setActiveTab(tab as any);
     }
   }, [searchParams]);
