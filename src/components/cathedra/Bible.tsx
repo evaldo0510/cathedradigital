@@ -543,7 +543,13 @@ const Bible: React.FC = () => {
                 { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos' },
                 { label: 'Histórico', icon: Icons.History, info: 'Recentes' }
               ].map((w) => (
-                <button key={w.label} className="p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all text-left group">
+                <button 
+                  key={w.label} 
+                  onClick={() => {
+                    if (w.label === 'Favoritos') setViewMode('favorites');
+                  }}
+                  className="p-spacing-lg bg-background rounded-premium border border-primary/5 hover:border-primary/20 transition-all text-left group"
+                >
                   <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
                   <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
                   <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
