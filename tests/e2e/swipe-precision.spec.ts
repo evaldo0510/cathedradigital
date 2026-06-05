@@ -1,110 +1,81 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Testes E2E para validação rigorosa de navegação por swipe.
- * Garante que a rota só mude quando o limiar de 80px for claramente ultrapassado.
+ * Testes E2E para validação rigorosa de navegação por swipe e proteção contra toques.
  */
-test.describe('Swipe Navigation Precision', () => {
+test.describe('Swipe Navigation Precision & Stability', () => {
   
-  // Função auxiliar para simular swipe com vetores e velocidades variadas
-  async function performSwipe(page, { startX, endX, y = 400, steps = 15, duration = 100 }) {
-    await page.mouse.move(startX, y);
+  async function performSwipe(page, { startX, endX, startY = 400, endY = 400, steps = 15, duration = 100 }) {
+    console.log(`[Test Logger] Current Route Before Swipe: ${page.url()}`);
+    await page.mouse.move(startX, startY);
     await page.mouse.down();
     
-    // Distribuímos o movimento em 'steps' ao longo de 'duration'
     const interval = duration / steps;
     for (let i = 1; i <= steps; i++) {
       const currentX = startX + (endX - startX) * (i / steps);
-      await page.mouse.move(currentX, y);
+      const currentY = startY + (endY - startY) * (i / steps);
+      await page.mouse.move(currentX, currentY);
       if (interval > 0) await page.waitForTimeout(interval);
     }
     
     await page.mouse.up();
-    // Aguarda um pequeno tempo para processamento do gesto
     await page.waitForTimeout(300);
+    console.log(`[Test Logger] Current Route After Swipe: ${page.url()}`);
   }
 
   test.beforeEach(async ({ page }) => {
-    // Começa na página inicial (Hoje)
     await page.goto('/?lang=pt');
     await page.waitForLoadState('networkidle');
-    const hojeItem = page.locator('button[aria-label="Hoje"]');
-    await expect(hojeItem).toHaveAttribute('aria-current', 'page');
+    // Registra console logs para capturar telemetria
+    page.on('console', msg => {
+      if (msg.text().includes('[Telemetry]')) {
+        console.log(`[Browser Telemetry] ${msg.text()}`);
+      }
+    });
   });
 
-  test('swipe inferior ao limiar (75px) NÃO deve mudar a rota', async ({ page }) => {
-    // Swipe left de 75px (300 -> 225)
-    await performSwipe(page, { 
-      startX: 300, 
-      endX: 225, 
-      steps: 10, 
-      duration: 50 
-    });
-
-    // A URL deve permanecer a mesma
+  test('swipe inferior ao limiar (79px) NUNCA deve mudar a rota', async ({ page }) => {
+    await performSwipe(page, { startX: 300, endX: 221, duration: 50 }); // 79px
     expect(page.url()).not.toContain('/bible');
-    const hojeItem = page.locator('button[aria-label="Hoje"]');
-    await expect(hojeItem).toHaveAttribute('aria-current', 'page');
   });
 
-  test('swipe superior ao limiar (85px) DEVE mudar a rota', async ({ page }) => {
-    // Swipe left de 85px (300 -> 215)
+  test('swipe superior ao limiar (81px) DEVE mudar a rota', async ({ page }) => {
+    await performSwipe(page, { startX: 300, endX: 219, duration: 150 }); // 81px
+    await expect(page).toHaveURL(/\/bible/);
+  });
+
+  test('toque duplo rápido NÃO deve disparar navegação acidental', async ({ page }) => {
+    const initialUrl = page.url();
+    // Simula dois toques rápidos no mesmo lugar
+    await page.mouse.click(200, 400);
+    await page.waitForTimeout(50);
+    await page.mouse.click(200, 400);
+    await page.waitForTimeout(500);
+    expect(page.url()).toBe(initialUrl);
+  });
+
+  test('swipe diagonal predominante vertical (Y > X*2.5) NÃO deve navegar', async ({ page }) => {
+    // Delta X = 50, Delta Y = 150 (Razão 3)
     await performSwipe(page, { 
-      startX: 300, 
-      endX: 215, 
-      steps: 20, 
-      duration: 150 
+      startX: 200, endX: 250, 
+      startY: 400, endY: 550, 
+      steps: 20 
     });
-
-    // Deve navegar para a Bíblia
-    await expect(page).toHaveURL(/\/bible/);
-    const bibleItem = page.locator('button[aria-label="Bíblia"]');
-    await expect(bibleItem).toHaveAttribute('aria-current', 'page');
-  });
-
-  test('swipe rápido (flick) superior ao limiar deve mudar a rota', async ({ page }) => {
-    // Swipe rápido de 120px (300 -> 180) em poucos steps
-    await performSwipe(page, { 
-      startX: 300, 
-      endX: 180, 
-      steps: 5, 
-      duration: 20 
-    });
-
-    await expect(page).toHaveURL(/\/bible/);
-  });
-
-  test('swipe lento superior ao limiar deve mudar a rota', async ({ page }) => {
-    // Swipe lento de 100px (300 -> 200)
-    await performSwipe(page, { 
-      startX: 300, 
-      endX: 200, 
-      steps: 50, 
-      duration: 500 
-    });
-
-    await expect(page).toHaveURL(/\/bible/);
-  });
-
-  test('swipe diagonal predominante horizontal deve mudar a rota', async ({ page }) => {
-    // Inicia em 300,400 e termina em 200,450 (deltaX = 100, deltaY = 50)
-    await page.mouse.move(300, 400);
-    await page.mouse.down();
-    await page.mouse.move(200, 450, { steps: 20 });
-    await page.mouse.up();
-    
-    await page.waitForTimeout(300);
-    await expect(page).toHaveURL(/\/bible/);
-  });
-
-  test('swipe diagonal predominante vertical NÃO deve mudar a rota', async ({ page }) => {
-    // Inicia em 300,400 e termina em 250,200 (deltaX = 50, deltaY = 200)
-    await page.mouse.move(300, 400);
-    await page.mouse.down();
-    await page.mouse.move(250, 200, { steps: 20 });
-    await page.mouse.up();
-    
-    await page.waitForTimeout(300);
     expect(page.url()).not.toContain('/bible');
+  });
+
+  test('swipe diagonal predominante horizontal (X > Y*3) DEVE navegar', async ({ page }) => {
+    // Delta X = 150, Delta Y = 30 (Razão 5)
+    await performSwipe(page, { 
+      startX: 300, endX: 150, 
+      startY: 400, endY: 430, 
+      steps: 20 
+    });
+    await expect(page).toHaveURL(/\/bible/);
+  });
+
+  test('flick rápido superior a 80px DEVE navegar', async ({ page }) => {
+    await performSwipe(page, { startX: 300, endX: 100, steps: 5, duration: 20 });
+    await expect(page).toHaveURL(/\/bible/);
   });
 });

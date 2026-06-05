@@ -7,6 +7,10 @@ import { registerSW } from 'virtual:pwa-register';
 import { initSentry } from "./lib/sentry";
 
 initSentry();
+import { telemetry } from "./utils/navigation-telemetry";
+
+// Iniciar telemetria
+telemetry.log('App Initialized', 'info');
 
 
 // Guard: unregister service workers in preview/iframe contexts
