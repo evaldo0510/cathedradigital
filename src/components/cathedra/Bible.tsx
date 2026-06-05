@@ -442,6 +442,13 @@ const Bible: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <button 
+                  onClick={() => setIsConnectionEditorOpen(true)}
+                  className="p-2 text-secondary/40 active:scale-95 transition-transform"
+                  title="Editor de Conexões"
+                >
+                  <Icons.Edit3 className="w-5 h-5" />
+                </button>
+                <button 
                   onClick={() => setIsFeedbackOpen(true)}
                   className="p-2 text-secondary/40 active:scale-95 transition-transform"
                   title="Suporte & Feedback"
@@ -462,6 +469,7 @@ const Bible: React.FC = () => {
                   <Icons.List className="w-6 h-6" />
                 </button>
               </div>
+
 
 
             </header>
