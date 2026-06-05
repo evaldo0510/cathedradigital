@@ -498,9 +498,14 @@ const Bible: React.FC = () => {
 
   const selectBook = (book: BibleBook) => {
     setSelectedBook(book);
-    setViewMode('chapters');
+    setActiveSummaryBook(book);
+    // On mobile, we might want to switch to a 'chapters' view specifically
+    if (window.innerWidth < 768) {
+      setViewMode('chapters');
+    }
     window.scrollTo(0, 0);
   };
+
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
