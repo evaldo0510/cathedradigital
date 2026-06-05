@@ -1025,9 +1025,78 @@ const Bible: React.FC = () => {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {isConnectionEditorOpen && (
+          <div className="fixed inset-0 z-[220] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsConnectionEditorOpen(false)}
+              className="absolute inset-0 bg-[#0A0B0D]/80 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 space-y-6"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-display font-bold text-primary uppercase">Editor de Conexões</h3>
+                <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} className="rounded-full opacity-40">
+                  <Icons.X className="w-6 h-6" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-black uppercase text-primary/30">Referência Bíblica</span>
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: Jo 6,35" />
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-black uppercase text-primary/30">Referência CIC</span>
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: §1324" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase text-primary/30">Nota de Relacionamento</span>
+                  <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
+                </div>
+              </div>
+
+              <div className="p-4 bg-primary/[0.01] rounded-2xl border border-primary/5">
+                <span className="text-[8px] font-black uppercase text-primary/20 block mb-3">Histórico de Revisão</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="font-serif">Jo 1:1 ↔ CIC 279</span>
+                    <span className="text-green-500 font-bold uppercase tracking-tighter">Validado</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="font-serif">Mt 5:3 ↔ CIC 1716</span>
+                    <span className="text-stone-400 font-bold uppercase tracking-tighter">Pendente</span>
+                  </div>
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => {
+                  toast.success('Conexão enviada para validação teológica');
+                  setIsConnectionEditorOpen(false);
+                }}
+                className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg"
+              >
+                Cadastrar Relação
+              </Button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
+
 
 
 
