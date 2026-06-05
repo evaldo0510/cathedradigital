@@ -1,13 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { BIBLE_DATA } from '@/data/bible-books';
 
 interface BibleKnowledgeAuditProps {
   onClose: () => void;
+  auditData: {
+    totalBooks: number;
+    coveredBooks: number;
+    emptyBooks: string[];
+    totalChapters: number;
+  };
 }
 
-export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose }) => {
+export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData }) => {
+
   const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
   
   // Simulated audit data
