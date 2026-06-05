@@ -60,6 +60,8 @@ const Bible: React.FC = () => {
   const [isDailyCompleted, setIsDailyCompleted] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
+  const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string } | null>(null);
+
   
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
