@@ -375,11 +375,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const fetchI18nReport = async () => {
     // Simula leitura do arquivo json gerado pelos testes E2E
     const mockReport = [
-      { term: 'Retry Policy', context: 'Configuração Webhook', expected: 'Política de Retentativa' },
-      { term: 'Event Type', context: 'Transmissão Webhook', expected: 'Tipo de Evento' },
-      { term: 'Error Message', context: 'Logs de Transmissão', expected: 'Mensagem de Erro' },
-      { term: 'Scanning...', context: 'Painel de Segurança', expected: 'Verificando...' },
-      { term: 'A11y Check', context: 'Painel de QA', expected: 'Validação de Acessibilidade' }
+      { term: 'Retry Policy', context: 'Configuração Webhook', expected: 'Política de Retentativa', endpoint: 'https://api.vatican.va/webhooks', type: 'security_alert' },
+      { term: 'Event Type', context: 'Transmissão Webhook', expected: 'Tipo de Evento', endpoint: 'https://api.vatican.va/webhooks', type: 'audit_sync' },
+      { term: 'Error Message', context: 'Logs de Transmissão', expected: 'Mensagem de Erro', endpoint: 'https://webhook.site/test', type: 'security_alert' },
+      { term: 'Scanning...', context: 'Painel de Segurança', expected: 'Verificando...', endpoint: 'N/A', type: 'ui_label' },
+      { term: 'A11y Check', context: 'Painel de QA', expected: 'Validação de Acessibilidade', endpoint: 'N/A', type: 'ui_label' },
+      { term: 'Unauthorized', context: 'Mensagem de Erro Webhook', expected: 'Acesso Não Autorizado', endpoint: 'https://api.vatican.va/webhooks', type: 'error_msg' },
+      { term: 'Payload Delivery', context: 'Status Webhook', expected: 'Entrega de Conteúdo', endpoint: 'https://webhook.site/test', type: 'status' }
     ];
 
     setI18nFailures(mockReport);
