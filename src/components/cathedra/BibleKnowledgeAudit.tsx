@@ -230,6 +230,18 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }
   };
 
+  const fetchNotificationVersions = async (notificationId: string) => {
+    const { data, error } = await supabase
+      .from('bible_audit_notification_versions')
+      .select('*')
+      .eq('notification_id', notificationId)
+      .order('version', { ascending: false });
+    
+    if (!error && data) {
+      setNotificationVersions(data);
+    }
+  };
+
   const logAction = async (action: string, entityType?: string, entityId?: string, metadata: any = {}) => {
     await supabase.rpc('log_bible_audit_action', {
       p_action: action,
