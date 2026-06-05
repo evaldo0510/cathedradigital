@@ -14,6 +14,25 @@ import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
 import { BibleSkeleton } from './RouteSkeletons';
+import { useNotes } from '@/hooks/useNotes';
+import { NoteEditModal } from './NoteEditModal';
+import BibleSearch from './BibleSearch';
+import BibleFullNotesList from './BibleFullNotesList';
+
+// Helper for Daily Reading
+const getDailyReading = () => {
+  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+  const date = new Date();
+  const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
+  
+  // Pick a book and chapter deterministically
+  const bookIndex = dayOfYear % allBooks.length;
+  const book = allBooks[bookIndex];
+  const chapter = (dayOfYear % book.chapters) + 1;
+  
+  return { book, chapter };
+};
+
 
 const Bible: React.FC = () => {
   useRenderPerf('Sacra Biblia Mobile-First', 15);
@@ -23,12 +42,22 @@ const Bible: React.FC = () => {
   const { settings } = useReadingSettings();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes'>('home');
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // New States for Annotations and Progress
+  const [lastRead, setLastRead] = useState<any>(null);
+  const [dailyReading, setDailyReading] = useState(getDailyReading());
+  const [isDailyCompleted, setIsDailyCompleted] = useState(false);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
+  
+  const { notes, addNote, deleteNote } = useNotes('bible');
+
 
   // Sync with URL
   useEffect(() => {
@@ -56,6 +85,57 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Local Persistence Logic
+  useEffect(() => {
+    const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
+    if (savedLastRead) setLastRead(JSON.parse(savedLastRead));
+
+    const today = new Date().toISOString().split('T')[0];
+    const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
+    if (dailyStatus === 'completed') setIsDailyCompleted(true);
+  }, []);
+
+  const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    const book = allBooks.find(b => b.abbr === bookAbbr);
+    if (!book) return;
+
+    const progress = { 
+      bookName: book.name, 
+      bookAbbr: book.abbr, 
+      chapter,
+      verse: verse || 1
+    };
+    setLastRead(progress);
+    localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
+  }, []);
+
+
+  const markDailyAsCompleted = () => {
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
+    setIsDailyCompleted(true);
+    toast.success('Leitura do dia concluída!');
+  };
+
+  const handleOpenAnnotation = (verse: { number: number; text: string }) => {
+    setActiveVerse(verse);
+    setIsNoteModalOpen(true);
+  };
+
+  const handleSaveNote = async (text: string, color: string) => {
+    if (!activeVerse || !selectedBook) return;
+    
+    await addNote('bible', text, color, {
+      book_abbr: selectedBook.abbr,
+      chapter: selectedChapter,
+      verse: activeVerse.number
+    });
+    
+    setIsNoteModalOpen(false);
+    toast.success('Reflexão guardada');
+  };
+
   const fetchVerses = async (abbr: string, chapter: number) => {
     setIsLoading(true);
     try {
@@ -64,13 +144,34 @@ const Bible: React.FC = () => {
       });
       if (error) throw error;
       setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      
+      // Save progress automatically
+      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+      const book = allBooks.find(b => b.abbr === abbr);
+      if (book) saveReadingProgress(book.abbr, chapter);
+      
+      // Scroll to verse if specified
+      const verse = searchParams.get('v');
+      if (verse) {
+        setTimeout(() => {
+          const element = document.getElementById(`verse-${verse}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('bg-secondary/10');
+            setTimeout(() => element.classList.remove('bg-secondary/10'), 3000);
+          }
+        }, 500);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+
     } catch (error: any) {
       toast.error('Erro ao carregar texto sagrado');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const selectBook = (book: BibleBook) => {
     setSelectedBook(book);
@@ -145,22 +246,33 @@ const Bible: React.FC = () => {
             className="px-6 pt-10 pb-32 max-w-lg mx-auto"
           >
             {/* Minimal Header */}
-            <header className="mb-10 flex flex-col items-center">
-              <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
-              <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
+            <header className="mb-10 flex items-center justify-between">
+              <div className="w-10" /> {/* Spacer */}
+              <div className="flex flex-col items-center">
+                <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
+                <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
+              </div>
+              <button 
+                onClick={() => setViewMode('notes')}
+                className="p-2 text-secondary/60 active:scale-95 transition-transform"
+              >
+                <Icons.List className="w-6 h-6" />
+              </button>
             </header>
 
             {/* Above the Fold Actions */}
             <div className="space-y-4 mb-12">
               <button 
-                onClick={() => navigate('/bible?book=Jo&ch=6')}
+                onClick={() => lastRead ? navigate(`/bible?book=${lastRead.bookAbbr}&ch=${lastRead.chapter}${lastRead.verse ? `&v=${lastRead.verse}` : ''}`) : navigate('/bible?book=Jo&ch=1')}
                 className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-4">
-                  <Icons.Bookmark className="w-5 h-5 text-secondary/60" />
+                  <Icons.Bookmark className={cn("w-5 h-5", lastRead ? "text-secondary" : "text-secondary/60")} />
                   <div className="text-left">
                     <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Continuar leitura</span>
-                    <span className="font-serif font-bold text-base">João 6</span>
+                    <span className="font-serif font-bold text-base">
+                      {lastRead ? `${lastRead.bookName} ${lastRead.chapter}` : 'João 1'}
+                    </span>
                   </div>
                 </div>
                 <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
@@ -170,24 +282,46 @@ const Bible: React.FC = () => {
                 <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30" />
                 <input 
                   type="text" 
-                  placeholder="Buscar livro..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-14 pl-12 pr-4 bg-white border border-primary/5 rounded-xl text-sm shadow-sm focus:ring-1 focus:ring-secondary/20 transition-all outline-none"
+                  placeholder="Buscar nas Escrituras..."
+                  readOnly
+                  onClick={() => setViewMode('search')}
+                  className="w-full h-14 pl-12 pr-4 bg-white border border-primary/5 rounded-xl text-sm shadow-sm focus:ring-1 focus:ring-secondary/20 transition-all outline-none cursor-pointer"
                 />
               </div>
 
-              <button className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all">
-                <div className="flex items-center gap-4">
-                  <Icons.Sun className="w-5 h-5 text-secondary/60" />
-                  <div className="text-left">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Leitura do dia</span>
-                    <span className="font-serif font-bold text-base">Mateus 5,1-12</span>
+              <div className="relative group">
+                <button 
+                  onClick={() => navigate(`/bible?book=${dailyReading.book.abbr}&ch=${dailyReading.chapter}`)}
+                  className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <Icons.Sun className={cn("w-5 h-5", isDailyCompleted ? "text-green-500" : "text-secondary/60")} />
+                    <div className="text-left">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Leitura do dia</span>
+                      <span className="font-serif font-bold text-base">{dailyReading.book.name} {dailyReading.chapter}</span>
+                    </div>
                   </div>
-                </div>
-                <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
-              </button>
+                  {isDailyCompleted ? (
+                    <Icons.CheckCircle className="w-5 h-5 text-green-500/50" />
+                  ) : (
+                    <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
+                  )}
+                </button>
+                
+                {!isDailyCompleted && (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markDailyAsCompleted();
+                    }}
+                    className="absolute -top-2 -right-2 bg-secondary text-white text-[8px] font-black uppercase px-2 py-1 rounded-full shadow-lg"
+                  >
+                    Concluir
+                  </button>
+                )}
+              </div>
             </div>
+
 
             {/* Vertical Book List */}
             <div className="space-y-12">
@@ -290,14 +424,43 @@ const Bible: React.FC = () => {
                   </header>
 
                   <div className="space-y-8">
-                    {verses.map(v => (
-                      <div key={v.number} className="flex gap-4">
-                        <span className="text-[10px] font-serif font-bold text-secondary/30 mt-2 w-5 shrink-0 tabular-nums">{v.number}</span>
-                        <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight">
-                          {wrapWithDictionary(v.text)}
-                        </p>
-                      </div>
-                    ))}
+                    {verses.map(v => {
+                      const hasNote = notes.some(n => 
+                        n.book_abbr === selectedBook.abbr && 
+                        n.chapter === selectedChapter && 
+                        n.verse === v.number
+                      );
+                      
+                      return (
+                        <div 
+                          key={v.number} 
+                          id={`verse-${v.number}`} 
+                          onClick={() => saveReadingProgress(selectedBook.abbr, selectedChapter, v.number)}
+                          className="flex gap-4 group relative transition-colors duration-1000 cursor-pointer active:bg-primary/[0.02]"
+                        >
+
+                          <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
+                            <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
+                            {hasNote && (
+                              <div className="w-1.5 h-1.5 rounded-full bg-secondary/40 shadow-sm" title="Possui anotação" />
+                            )}
+                          </div>
+                          
+                          <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
+                            {wrapWithDictionary(v.text)}
+                            
+                            <button 
+                              onClick={() => handleOpenAnnotation(v)}
+                              className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                              <Icons.PenLine className="w-3.5 h-3.5" />
+                            </button>
+                          </p>
+                        </div>
+                      );
+                    })}
+
+
                   </div>
 
                   {/* Vertical Navigation Buttons */}
@@ -323,7 +486,34 @@ const Bible: React.FC = () => {
             </motion.div>
           </motion.div>
         )}
+        {viewMode === 'search' && (
+          <BibleSearch 
+            onClose={() => setViewMode('home')} 
+            onSelectResult={(book, chapter, verse) => {
+              navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
+              setViewMode('reading');
+            }} 
+          />
+        )}
+
+        {viewMode === 'notes' && (
+          <BibleFullNotesList 
+            onClose={() => setViewMode('home')}
+            onSelectReference={(book, chapter, verse) => {
+              navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
+              setViewMode('reading');
+            }}
+          />
+        )}
       </AnimatePresence>
+
+      <NoteEditModal 
+        isOpen={isNoteModalOpen}
+        onClose={() => setIsNoteModalOpen(false)}
+        onSave={handleSaveNote}
+        title={`${selectedBook?.name} ${selectedChapter}:${activeVerse?.number}`}
+      />
+
     </div>
   );
 };
