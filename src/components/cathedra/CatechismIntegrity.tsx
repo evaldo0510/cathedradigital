@@ -113,10 +113,10 @@ const CatechismIntegrity: React.FC = () => {
         .neq('id', 'placeholder'); // Deleta tudo
         
       if (!error) {
-        toast.success('Cache do catecismo limpo com sucesso');
+        toast.success('Conteúdo Padronizado: Cache do catecismo invalidado com sucesso');
         loadData();
       } else {
-        toast.error('Erro ao limpar cache');
+        toast.error('Falha na Verificação de Integridade: Erro ao invalidar cache do catecismo');
       }
     } catch (err) {
       toast.error('Erro de conexão');
