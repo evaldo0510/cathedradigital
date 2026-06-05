@@ -37,5 +37,55 @@ export const isRouteActive = (itemRoute: string, currentPath: string): boolean =
     return path.charAt(itemRoute.length) === '/' || itemRoute.endsWith('/');
   }
 
+
   return false;
 };
+
+/**
+ * Checks if a click/touch event is legitimate to prevent ghost clicks or accidental navigation.
+ * Particularly useful for mobile to ensure navigation only happens on deliberate user action.
+ */
+let lastNavTime = 0;
+const NAV_THROTTLE = 400; // ms
+
+export const isLegitimateClick = (event: any): boolean => {
+  // Throttle navigation to prevent double-tap issues
+  const now = Date.now();
+  if (now - lastNavTime < NAV_THROTTLE) {
+    return false;
+  }
+
+  // Always allow keyboard events (Enter, Space) which often have detail === 0
+  const isKeyboard = event instanceof KeyboardEvent || 
+                    (event.type === 'keydown' || event.type === 'keyup') ||
+                    (event.nativeEvent && (event.nativeEvent instanceof KeyboardEvent)) ||
+                    (event.key === 'Enter' || event.key === ' ');
+  
+  if (isKeyboard) {
+    lastNavTime = now;
+    return true;
+  }
+
+  // If it's a touch event, ensure it's a single touch
+  if (event.touches && event.touches.length > 1) {
+    return false;
+  }
+
+  // Protection against ghost clicks (synthetic clicks triggered by mobile browsers)
+  if (event.type === 'click' && event.detail === 0) {
+    const nativeEvent = event.nativeEvent || event;
+    // If it's a pointer event, check if it was triggered by a real pointer
+    if (nativeEvent.pointerType === 'mouse' || nativeEvent.pointerType === 'touch' || nativeEvent.pointerType === 'pen') {
+       lastNavTime = now;
+       return true;
+    }
+    // If no pointer info and not keyboard, it's likely a ghost click or accidental touch
+    return false;
+  }
+
+  lastNavTime = now;
+  return true;
+};
+
+
+

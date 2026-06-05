@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons, NAV_ITEMS } from '../../constants';
 import { AppRoute, User } from '../../types';
+import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
@@ -159,7 +160,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
   ];
 
-  const handleNav = useCallback((target: string | { path: string; onClick?: () => void }) => {
+  const handleNav = useCallback((target: string | { path: string; onClick?: () => void }, event?: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
+    if (event && !isLegitimateClick(event)) return;
+
     if (typeof target === 'object' && target.onClick) {
       target.onClick();
     } else {
@@ -214,10 +217,10 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             <header className="flex items-center justify-between mb-spacing-md pb-spacing-xs border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
                 className="flex items-center gap-spacing-md cursor-pointer group outline-none" 
-                onClick={() => handleNav('/')}
+                onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
+                onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-spacing-xs group-hover:scale-105 transition-transform duration-2000">
                   <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} aria-hidden="true" />
@@ -265,7 +268,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                             <li key={idx}>
                               <Button
                                 variant="ghost"
-                                onClick={() => handleNav(item)}
+                                onClick={(e) => handleNav(item, e)}
                                 onMouseEnter={() => prefetchRoute(item.path)}
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}

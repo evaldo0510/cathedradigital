@@ -8,6 +8,7 @@ import { useLang } from '@/hooks/useLang';
 
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/constants';
+import { isLegitimateClick } from '@/lib/navigation-utils';
 
 interface AppHeaderProps {
   user: any;
@@ -54,8 +55,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
-            onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
-            onClick={() => {
+            onKeyDown={(e) => e.key === 'Enter' && isLegitimateClick(e) && navigate('/')} 
+            onClick={(e) => {
+              if (!isLegitimateClick(e)) return;
               navigate('/');
               window.scrollTo({ top: 0, behavior: 'instant' });
             }}
@@ -76,7 +78,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(-1)}
+                  onClick={(e) => isLegitimateClick(e) && navigate(-1)}
                   className="w-[44px] h-[44px] md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
@@ -88,7 +90,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
+                  onClick={(e) => isLegitimateClick(e) && (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
                   className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
@@ -116,7 +118,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => navigate(AppRoute.PROFILE)}
+                      onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.PROFILE)}
                       className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
@@ -127,7 +129,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     </Button>
                   ) : (
                     <Button 
-                      onClick={() => navigate(AppRoute.LOGIN)} 
+                      onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.LOGIN)} 
                       className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-premium-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
                     >
                       {t('enter')}
@@ -146,7 +148,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     key={item.route} 
                     variant="ghost"
                     size="sm"
-                    onClick={() => {
+                    onClick={(e) => {
+                      if (!isLegitimateClick(e)) return;
                       navigate(item.route!);
                       window.scrollTo({ top: 0, behavior: 'instant' });
                     }}
