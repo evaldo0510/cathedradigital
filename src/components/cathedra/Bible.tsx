@@ -1109,7 +1109,7 @@ const Bible: React.FC = () => {
                 }}
                 className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg"
               >
-                Cadastrar Relação
+                Salvar Relação
               </Button>
             </motion.div>
           </div>
@@ -1119,6 +1119,7 @@ const Bible: React.FC = () => {
     </div>
   );
 };
+
 
 
 
