@@ -665,7 +665,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
 
                 <div className="p-6 bg-white border border-primary/5 rounded-3xl space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Breakpoint</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Ajustes por Dispositivo</h4>
                   <div className="space-y-3">
                     {['iPhone SE', 'iPhone 14', 'iPad mini', 'Pixel 7'].map(device => (
                       <div key={device} className="flex items-center justify-between text-[10px]">
