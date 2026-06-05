@@ -34,6 +34,12 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
     '279': { id: '279', label: 'CIC 279', type: 'catechism', summary: 'A criação do mundo.', connections: ['Gn-1-1', 'creatio'] },
   };
 
+  const PATH_SUGGESTIONS = [
+    { label: 'Caminho da Eucaristia', nodes: ['Jo-6-35', '1324', 'ede'] },
+    { label: 'Mistério da Criação', nodes: ['Gn-1-1', 'creatio', '279'] },
+  ];
+
+
   const currentNode = selectedNode ? nodes[selectedNode] : null;
   const connectedNodes = currentNode 
     ? currentNode.connections
