@@ -467,7 +467,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               { id: '14', label: 'iPhone 14', w: '390px', icon: Icons.Smartphone },
               { id: 'p7', label: 'Pixel 7', w: '412px', icon: Icons.Smartphone },
               { id: 's22', label: 'Galaxy S22', w: '360px', icon: Icons.Smartphone },
-              { id: 'mini', label: 'iPad mini', w: '768px', icon: Icons.Tablet },
+              { id: 'mini', label: 'iPad mini', w: '768px', icon: Icons.Layout },
               { id: 'desk', label: 'Desktop', w: '100%', icon: Icons.Layout }
             ].map(preset => (
               <button 
