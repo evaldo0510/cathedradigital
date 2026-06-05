@@ -56,7 +56,29 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
         <div className="w-10" />
       </header>
 
+      <div className="px-6 py-4 flex gap-2 border-b border-white/5 bg-white/5 overflow-x-auto no-scrollbar">
+        {(['all', 'bible', 'catechism', 'document', 'theme'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={cn(
+              "whitespace-nowrap px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+              filter === f 
+                ? "bg-secondary text-black shadow-sm" 
+                : "bg-white/5 text-stone-500"
+            )}
+          >
+            {f === 'all' && 'Tudo'}
+            {f === 'bible' && 'Bíblia'}
+            {f === 'catechism' && 'CIC'}
+            {f === 'document' && 'Magistério'}
+            {f === 'theme' && 'Temas'}
+          </button>
+        ))}
+      </div>
+
       <div className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-6">
+
         <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full">
