@@ -669,111 +669,164 @@ const Bible: React.FC = () => {
       
       {viewMode === 'home' && (
         <ContemplativeLayout
-          subtitle="Sanctum Archivum"
-          title="Bíblia Digital Premium"
-          icon={Icons.Logo}
-          maxW="max-w-spacing-4xl"
+          subtitle="A Palavra que transforma"
+          title="Bíblia Sagrada"
+          icon={Icons.BookOpen}
+          maxW="max-w-7xl"
         >
           <div className="w-full space-y-spacing-3xl pb-spacing-4xl">
-            {/* Seção Superior - Busca e Continuar */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
-               <div className="space-y-spacing-md">
-                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Exploratio</h4>
-                 <div className="relative group">
-                    <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-                    <input
-                      type="text"
-                      placeholder="Busca contemplativa na Palavra..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="search-input-premium pl-spacing-3xl bg-primary/[0.01] h-12 text-premium-sm"
-                    />
-                 </div>
-               </div>
-               
-               <div className="space-y-spacing-md">
-                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Continuatio</h4>
-                 <div className="bg-white/40 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-white/60 transition-all shadow-premium-sm">
-
-                   <div className="flex items-center gap-spacing-md">
-                     <Icons.Clock className="w-spacing-md h-spacing-md text-primary/20 group-hover:text-primary transition-colors" />
-                     <div className="flex flex-col">
-                       <span className="text-premium-xs font-bold text-primary/80">João 1,1-18</span>
-                       <span className="text-[9px] text-primary/30 italic">Lido há 2 horas</span>
-                     </div>
-                   </div>
-                   <Button variant="ghost" size="icon" className="rounded-premium-full"><Icons.ArrowRight size={16} /></Button>
-                 </div>
-               </div>
+            {/* Citação inspiracional discreta */}
+            <div className="text-center max-w-lg mx-auto mb-spacing-2xl">
+              <p className="text-premium-sm font-serif italic text-primary/40 leading-relaxed">
+                "Lâmpada para os meus pés é a tua palavra, e luz para o meu caminho."
+              </p>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary/20 mt-2 block">Salmo 119,105</span>
             </div>
 
-            {/* Widgets Rápidos - Elegantes e Discretos */}
-            <div className="flex flex-wrap md:flex-nowrap gap-spacing-md">
-              {[
-                { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha', action: () => {} },
-                { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365', progress: 35 },
-                { label: 'Favoritos', icon: Icons.Heart, info: '12 versículos', action: () => setViewMode('favorites') },
-                { label: 'Histórico', icon: Icons.History, info: 'Recentes', action: () => {} }
-              ].map((w) => (
-                <button 
-                  key={w.label} 
-                  onClick={w.action}
-                  className="flex-1 min-w-[140px] p-spacing-lg bg-white/40 backdrop-blur-xl hover:bg-white/60 rounded-premium border border-primary/5 transition-all text-left group shadow-premium-sm"
-                >
+            {/* Widgets de Ação Rápida */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md">
+               <div className="bg-white/60 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex flex-col justify-between shadow-premium-sm">
+                 <div className="flex justify-between items-start mb-4">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">Continuar leitura</span>
+                   <Icons.BookMarked className="w-4 h-4 text-primary/20" />
+                 </div>
+                 <div className="space-y-1">
+                   <h4 className="text-premium-lg font-bold text-primary/80">João 6,35</h4>
+                   <p className="text-[10px] text-primary/40 italic">Evangelho segundo São João</p>
+                 </div>
+                 <Button variant="outline" size="sm" className="mt-6 rounded-full bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all text-[10px] uppercase font-bold tracking-widest">
+                   Continuar lendo
+                 </Button>
+               </div>
 
-                  <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
-                  <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
-                  <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
-                  {w.progress !== undefined && (
-                    <div className="mt-2 w-full h-1 bg-primary/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-primary/20" style={{ width: `${w.progress}%` }} />
+               <div className="bg-white/60 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex flex-col justify-between shadow-premium-sm">
+                 <div className="flex justify-between items-start mb-4">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">Leitura do dia</span>
+                   <Icons.Sun className="w-4 h-4 text-primary/20" />
+                 </div>
+                 <div className="space-y-1">
+                   <h4 className="text-premium-lg font-bold text-primary/80">Mateus 5,1-12</h4>
+                   <p className="text-[10px] text-primary/40 italic">Sermão da Montanha</p>
+                 </div>
+                 <Button variant="outline" size="sm" className="mt-6 rounded-full bg-secondary/10 border-secondary/20 text-secondary hover:bg-secondary/20 transition-all text-[10px] uppercase font-bold tracking-widest">
+                   Ler agora
+                 </Button>
+               </div>
+
+               <div className="bg-white/60 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex flex-col justify-between shadow-premium-sm">
+                 <div className="flex justify-between items-start mb-4">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">Plano de leitura</span>
+                   <Icons.Activity className="w-4 h-4 text-primary/20" />
+                 </div>
+                 <div className="space-y-3">
+                   <h4 className="text-premium-base font-bold text-primary/80">Plano em 365 dias</h4>
+                   <div className="space-y-1">
+                    <div className="flex justify-between text-[8px] font-bold text-primary/30 uppercase">
+                      <span>Dia 127 de 365</span>
+                      <span>35%</span>
                     </div>
-                  )}
-                </button>
-              ))}
+                    <div className="w-full h-1 bg-primary/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-secondary/40" style={{ width: '35%' }} />
+                    </div>
+                   </div>
+                 </div>
+                 <Button variant="ghost" size="sm" className="mt-6 rounded-full text-primary/40 hover:bg-primary/5 transition-all text-[10px] uppercase font-bold tracking-widest">
+                   Ver plano
+                 </Button>
+               </div>
+
+               <div className="bg-white/60 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex flex-col justify-between shadow-premium-sm">
+                 <div className="flex justify-between items-start mb-4">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">Favoritos</span>
+                   <Icons.Heart className="w-4 h-4 text-primary/20" />
+                 </div>
+                 <div className="space-y-1">
+                   <h4 className="text-premium-lg font-bold text-primary/80">12 versículos</h4>
+                   <p className="text-[10px] text-primary/40 italic">Sua seleção sagrada</p>
+                 </div>
+                 <Button variant="ghost" size="sm" className="mt-6 rounded-full text-primary/40 hover:bg-primary/5 transition-all text-[10px] uppercase font-bold tracking-widest">
+                   Ver favoritos
+                 </Button>
+               </div>
             </div>
 
-            {/* A Biblioteca de Livros - Visual Hierárquico */}
+            {/* Sumário do Livro - Área de Navegação em Bloco */}
             <div className="pt-spacing-xl">
-              <div className="flex items-center justify-between mb-spacing-xl">
-                <h3 className="font-display text-premium-3xl">A Biblioteca</h3>
-                <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[9px] font-black uppercase tracking-widest opacity-40 hover:opacity-100">
-                  Ver todos os livros →
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl">
-                {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-                  <div key={t} className="space-y-spacing-lg">
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 border-b border-primary/5 pb-spacing-xs">{t}</h4>
-                    <div className="grid grid-cols-1 gap-spacing-sm">
-                      {BIBLE_DATA[t].slice(0, 3).map(cat => (
-                        <div key={cat.name} className="space-y-spacing-xs">
-                          <span className="text-[9px] font-serif italic text-primary/30">{cat.name}</span>
-                          <div className="flex flex-wrap gap-spacing-xs">
-                            {cat.books.slice(0, 5).map(b => (
-                              <button 
-                                key={b.abbr}
-                                onClick={() => selectBook(b)}
-                                className="px-spacing-md py-spacing-xs rounded-full border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.04] transition-all text-premium-xs font-medium text-primary/60"
-                              >
-                                {b.name}
-                              </button>
-                            ))}
-                            {cat.books.length > 5 && (
-                              <span className="text-[10px] text-primary/10 self-center">...</span>
-                            )}
-                          </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-xl">
+                <div className="lg:col-span-1 space-y-spacing-lg">
+                  <div className="space-y-1">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Antigo Testamento</h4>
+                    <div className="grid grid-cols-1 gap-1">
+                      {BIBLE_DATA['Antigo Testamento'].map(cat => (
+                        <div key={cat.name} className="p-spacing-md bg-white/20 hover:bg-white/40 rounded-premium border border-primary/5 transition-all cursor-pointer group">
+                           <div className="flex items-center gap-3">
+                             <Icons.BookText className="w-3 h-3 text-primary/20 group-hover:text-secondary transition-colors" />
+                             <span className="text-premium-xs font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</span>
+                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
-                ))}
+
+                  <div className="space-y-1">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Novo Testamento</h4>
+                    <div className="grid grid-cols-1 gap-1">
+                      {BIBLE_DATA['Novo Testamento'].map(cat => (
+                        <div key={cat.name} className="p-spacing-md bg-white/20 hover:bg-white/40 rounded-premium border border-primary/5 transition-all cursor-pointer group">
+                           <div className="flex items-center gap-3">
+                             <Icons.Cross className="w-3 h-3 text-primary/20 group-hover:text-secondary transition-colors" />
+                             <span className="text-premium-xs font-bold text-primary/60 group-hover:text-primary transition-colors">{cat.name}</span>
+                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 bg-white/40 backdrop-blur-xl rounded-premium-xl border border-primary/5 p-spacing-2xl shadow-premium">
+                   <div className="flex items-center justify-between border-b border-primary/5 pb-spacing-md mb-spacing-xl">
+                      <div className="flex flex-col">
+                        <span className="text-[8px] font-black tracking-[0.5em] text-primary/20 uppercase">Selectio Librorum</span>
+                        <h3 className="font-display text-premium-2xl italic text-primary/80">Evangelho segundo São João</h3>
+                      </div>
+                      <span className="text-[9px] font-black tracking-widest text-primary/20 uppercase">21 Capítulos</span>
+                   </div>
+
+                   <div className="grid grid-cols-1 gap-px bg-primary/5 rounded-premium overflow-hidden">
+                      {[
+                        "O Verbo se fez carne",
+                        "As bodas de Caná",
+                        "Jesus e Nicodemos",
+                        "Jesus e a Samaritana",
+                        "A cura do filho do oficial",
+                        "O pão da vida",
+                        "A festa dos Tabernáculos",
+                        "A mulher adúltera",
+                        "O bom pastor",
+                        "A ressurreição de Lázaro"
+                      ].map((title, idx) => (
+                        <button 
+                          key={idx}
+                          className="flex items-center justify-between p-spacing-lg bg-white/40 hover:bg-white/80 transition-all group"
+                        >
+                          <div className="flex items-center gap-spacing-xl">
+                            <span className="font-display text-premium-xl text-primary/20 group-hover:text-secondary transition-colors">{idx + 1}</span>
+                            <span className="text-premium-base font-serif italic text-primary/70 group-hover:text-primary transition-colors">{title}</span>
+                          </div>
+                          <Icons.ChevronRight className="w-4 h-4 text-primary/10 group-hover:text-primary transition-all group-hover:translate-x-1" />
+                        </button>
+                      ))}
+                   </div>
+                   <Button variant="ghost" className="w-full mt-6 text-[10px] uppercase font-bold tracking-widest text-primary/30 hover:text-primary transition-colors">
+                      Ver todos os 21 capítulos <Icons.ChevronDown className="ml-2 w-3 h-3" />
+                   </Button>
+                </div>
               </div>
             </div>
           </div>
         </ContemplativeLayout>
       )}
+
 
 
       {viewMode === 'books' && (
