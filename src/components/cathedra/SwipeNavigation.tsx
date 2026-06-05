@@ -29,16 +29,22 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
   );
 
 
-  const handleDragEnd = (_: any, info: PanInfo) => {
+  const handleDragEnd = (event: any, info: PanInfo) => {
     // Only handle swipes on mobile (simple check)
     if (window.innerWidth >= 1024) return;
 
-    const threshold = 100; // px
-    const velocity = 0.5;
+    // Check if the interaction was actually a deliberate swipe and not a stray touch
+    // This helps prevent accidental navigation
+    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) * 2;
+    if (!isHorizontalSwipe) return;
+
+    const threshold = 80; // px
+    const velocity = 0.3;
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
       if (currentIndex !== -1 && currentIndex < routes.length - 1) {
+        // Log to telemetry if available or just proceed
         navigate(routes[currentIndex + 1]);
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
@@ -56,8 +62,9 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
 
   return (
     <motion.div
-      className="w-full min-h-screen will-change-transform swipe-navigation"
+      className="w-full min-h-screen will-change-transform swipe-navigation pointer-events-auto"
       drag="x"
+
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.2}
       onDragEnd={handleDragEnd}
