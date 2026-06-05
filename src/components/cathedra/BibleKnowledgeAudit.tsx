@@ -55,25 +55,28 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="flex items-center gap-2">
           <button 
             onClick={() => {
-              const csv = `Tipo,Referencia,Target\n` + 
-                `Conexao,João 6:35,CIC 1324\n` +
-                `Conexao,Gênesis 1:1,Criação ex nihilo\n` +
-                `Lacuna,Obadias,Sem mapeamento\n` +
-                `Lacuna,3 João,Sem mapeamento\n` +
-                `Lacuna,Judas,Sem mapeamento`;
-              const blob = new Blob([csv], { type: 'text/csv' });
+              const headers = "Livro,Capitulo,Versiculo,Status,Conexoes\n";
+              const rows = auditData.emptyBooks.map(b => `${b},Todas,Todas,Lacuna,0`).join("\n") +
+                "\nJoão,6,35,Validado,3" +
+                "\nGênesis,1,1,Validado,2";
+              const csv = headers + rows;
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
               const url = URL.createObjectURL(blob);
               const link = document.createElement('a');
               link.href = url;
-              link.download = `auditoria-cathedra-${new Date().toISOString().split('T')[0]}.csv`;
+              link.setAttribute('download', `cobertura-cathedra-${new Date().toISOString().split('T')[0]}.csv`);
+              document.body.appendChild(link);
               link.click();
+              document.body.removeChild(link);
               URL.revokeObjectURL(url);
+              toast.success('Relatório CSV gerado com sucesso');
             }}
             className="p-2 text-primary/40 active:text-secondary"
-            title="Exportar Relatório"
+            title="Exportar Relatório CSV"
           >
             <Icons.FileText className="w-5 h-5" />
           </button>
+
           <div className="w-10" />
         </div>
 

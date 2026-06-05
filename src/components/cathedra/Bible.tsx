@@ -1088,22 +1088,46 @@ const Bible: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 bg-primary/[0.01] rounded-2xl border border-primary/5">
+              <div className="p-4 bg-primary/[0.01] rounded-2xl border border-primary/5 max-h-40 overflow-y-auto">
                 <span className="text-[8px] font-black uppercase text-primary/20 block mb-3">Histórico de Revisão</span>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-serif">Jo 1:1 ↔ CIC 279</span>
-                    <span className="text-green-500 font-bold uppercase tracking-tighter">Validado</span>
-                  </div>
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-serif">Mt 5:3 ↔ CIC 1716</span>
-                    <span className="text-stone-400 font-bold uppercase tracking-tighter">Pendente</span>
-                  </div>
+                <div className="space-y-3">
+                  {[
+                    { ref: 'Jo 1:1 ↔ CIC 279', status: 'Validado', author: 'Dr. Silva', date: '04/06/2026', diff: 'v1.2 → v1.3' },
+                    { ref: 'Mt 5:3 ↔ CIC 1716', status: 'Pendente', author: 'Ana M.', date: '05/06/2026', diff: 'Novo' },
+                  ].map((entry, idx) => (
+                    <div key={idx} className="space-y-1 border-b border-primary/5 pb-2 last:border-0 last:pb-0">
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="font-serif font-bold">{entry.ref}</span>
+                        <span className={cn(
+                          "font-bold uppercase tracking-tighter",
+                          entry.status === 'Validado' ? "text-green-500" : "text-stone-400"
+                        )}>{entry.status}</span>
+                      </div>
+                      <div className="flex justify-between text-[8px] text-primary/30 uppercase tracking-widest">
+                        <span>{entry.author} • {entry.date}</span>
+                        <span>{entry.diff}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <Button 
                 onClick={() => {
+                  // Simplified validation rules
+                  const verseInput = document.querySelector('input[placeholder="Ex: João 6,35"]') as HTMLInputElement;
+                  const cicInput = document.querySelector('input[placeholder="Ex: 1324"]') as HTMLInputElement;
+                  
+                  if (!verseInput?.value || !cicInput?.value) {
+                    toast.error('Preencha as referências obrigatórias');
+                    return;
+                  }
+
+                  if (verseInput.value.includes('Jo 1:1') && cicInput.value.includes('279')) {
+                    toast.warning('Esta conexão já existe no banco de dados');
+                    return;
+                  }
+
                   toast.success('Conexão enviada para validação teológica');
                   setIsConnectionEditorOpen(false);
                 }}
@@ -1111,6 +1135,8 @@ const Bible: React.FC = () => {
               >
                 Salvar Relação
               </Button>
+
+
             </motion.div>
           </div>
         )}

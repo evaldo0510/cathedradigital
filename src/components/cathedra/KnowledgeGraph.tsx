@@ -34,6 +34,12 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
     '279': { id: '279', label: 'CIC 279', type: 'catechism', summary: 'A criação do mundo.', connections: ['Gn-1-1', 'creatio'] },
   };
 
+  const PATH_SUGGESTIONS = [
+    { label: 'Caminho da Eucaristia', nodes: ['Jo-6-35', '1324', 'ede'] },
+    { label: 'Mistério da Criação', nodes: ['Gn-1-1', 'creatio', '279'] },
+  ];
+
+
   const currentNode = selectedNode ? nodes[selectedNode] : null;
   const connectedNodes = currentNode 
     ? currentNode.connections
@@ -165,11 +171,26 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
         </AnimatePresence>
       </div>
 
-      <footer className="p-8 text-center">
-        <p className="text-[9px] font-medium text-stone-600 uppercase tracking-widest">
+      <footer className="p-8 border-t border-white/5 space-y-4">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-[8px] font-black uppercase text-stone-600 tracking-[0.2em]">Caminhos Sugeridos</span>
+          <div className="flex gap-2">
+            {PATH_SUGGESTIONS.map((path, i) => (
+              <button 
+                key={i}
+                onClick={() => setSelectedNode(path.nodes[0])}
+                className="px-3 py-1.5 rounded-lg bg-secondary/5 border border-secondary/10 text-[9px] font-bold text-secondary hover:bg-secondary/10 transition-all"
+              >
+                {path.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="text-[9px] font-medium text-stone-700 uppercase tracking-widest text-center">
           Aperte em um nó para explorar a rede de conhecimento.
         </p>
       </footer>
+
     </div>
   );
 };
