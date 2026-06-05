@@ -1043,6 +1043,7 @@ const Bible: React.FC = () => {
                       </div>
                     )}
 
+
                     <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none" aria-hidden="true">{v.number}</span>
                     <span className="align-baseline" id={`v-text-${v.number}`}>{wrapWithDictionary(v.text)}</span>
                     
