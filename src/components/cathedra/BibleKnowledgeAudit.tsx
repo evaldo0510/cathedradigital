@@ -75,6 +75,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
+  const [notificationVersions, setNotificationVersions] = React.useState<any[]>([]);
+  const [showVersionModal, setShowVersionModal] = React.useState<string | null>(null);
+  const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
