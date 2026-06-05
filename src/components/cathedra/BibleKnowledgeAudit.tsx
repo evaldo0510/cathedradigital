@@ -661,6 +661,43 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     </select>
                   </div>
                   {comparison?.run1 && comparison?.run2 && (
+                    <div className="flex justify-end gap-2">
+                      <button 
+                        onClick={() => {
+                          const csv = "Livro,Run 1 Status,Run 2 Status,Mudanca,Motivo\n" + 
+                            comparison.run1.empty_books.map((b: string) => {
+                              const inRun2 = comparison.run2.empty_books.includes(b);
+                              const status = inRun2 ? "Lacuna" : "Resolvido";
+                              const change = inRun2 ? "Sem Mudança" : "Melhoria";
+                              return `${b},Lacuna,${inRun2 ? 'Lacuna' : 'OK'},${change},Sincronização API`;
+                            }).join("\n");
+                          
+                          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                          const url = URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.setAttribute('download', `comparativo-audit.csv`);
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          toast.success('Comparativo CSV exportado');
+                        }}
+                        className="text-[8px] font-black uppercase tracking-widest px-3 py-1.5 bg-white border border-primary/5 rounded-lg active:scale-95 flex items-center gap-1.5"
+                      >
+                        <Icons.FileSpreadsheet className="w-3 h-3" /> Exportar CSV
+                      </button>
+                      <button 
+                        onClick={() => {
+                          toast.info('Gerando PDF do comparativo...');
+                          window.print();
+                        }}
+                        className="text-[8px] font-black uppercase tracking-widest px-3 py-1.5 bg-white border border-primary/5 rounded-lg active:scale-95 flex items-center gap-1.5"
+                      >
+                        <Icons.Printer className="w-3 h-3" /> Exportar PDF
+                      </button>
+                    </div>
+                  )}
+                  {comparison?.run1 && comparison?.run2 && (
                     <div className="p-4 bg-white rounded-2xl border border-primary/5 space-y-4">
                       <div className="grid grid-cols-2 gap-8 divide-x divide-primary/5">
                         <div>
