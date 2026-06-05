@@ -9,7 +9,8 @@
     /* 1. Colors (HSL) */
     --background: 45 40% 98%; /* #FDF8F3 - Light Cream */
 
-    --foreground: 220 25% 10%;
+    --foreground: 220 25% 15%; /* Aumentado de 10% para 15% para suavizar mas manter contraste */
+
     
     --card: 45 35% 99.4%;
     --card-foreground: 220 25% 10%;
@@ -17,11 +18,12 @@
     --primary: 220 20% 12%;
     --primary-foreground: 45 40% 99%;
     
-    --secondary: 42 30% 45%;
-    --secondary-foreground: 220 20% 8%;
+    --secondary: 42 30% 35%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
+    --secondary-foreground: 45 40% 98%;
+
     
     --muted: 45 20% 97%;
-    --muted-foreground: 220 15% 35%; /* Melhora de contraste para WCAG AA no mobile */ 
+    --muted-foreground: 220 15% 25%; /* Aumentado de 35% para 25% para conformidade WCAG AA */ 
     
     --accent: 42 20% 95%;
     --accent-foreground: 220 20% 12%;
