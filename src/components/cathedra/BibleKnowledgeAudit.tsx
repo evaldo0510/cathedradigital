@@ -1018,7 +1018,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
                 
                 <div className="space-y-4">
-                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais Configurados</h3>
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Canais de Transmissão Ativos</h3>
                   {notificationSettings.map(n => (
                     <div key={n.id} className="p-4 bg-primary/[0.02] rounded-2xl border border-primary/5 space-y-4">
                       <div className="flex items-center justify-between">
