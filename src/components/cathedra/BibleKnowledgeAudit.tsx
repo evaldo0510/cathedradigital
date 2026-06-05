@@ -879,49 +879,94 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             <div className="flex items-center justify-between">
               <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade e Segurança</h3>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  <Icons.ShieldCheck className="w-3 h-3" />
-                  CI Security Active
-                </span>
+                <button 
+                  onClick={runSecurityScan}
+                  disabled={isScanning}
+                  className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
+                >
+                  {isScanning ? 'Scanning...' : 'Run Security Scan'}
+                </button>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Status do RLS</h4>
-                <div className="space-y-2">
-                  {[
-                    'bible_audit_notifications',
-                    'bible_audit_alerts',
-                    'bible_audit_webhook_logs',
-                    'bible_audit_runs'
-                  ].map(table => (
-                    <div key={table} className="flex items-center justify-between text-[10px]">
-                      <span className="font-mono text-primary/60">{table}</span>
-                      <span className="text-emerald-500 font-black uppercase tracking-widest">Protected</span>
-                    </div>
+              <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Últimas Execuções</h4>
+                  <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{securityScans.length} Runs</span>
+                </div>
+                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                  {securityScans.map(scan => (
+                    <button 
+                      key={scan.id}
+                      onClick={() => setSelectedScan(scan)}
+                      className={cn(
+                        "w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left",
+                        selectedScan?.id === scan.id ? "border-secondary bg-secondary/[0.02]" : "border-primary/5 hover:bg-primary/[0.01]"
+                      )}
+                    >
+                      <div className="space-y-0.5">
+                        <div className="text-[10px] font-bold text-primary/80">
+                          {new Date(scan.started_at).toLocaleString()}
+                        </div>
+                        <div className="text-[8px] font-mono text-primary/30 uppercase tracking-tighter truncate w-32">
+                          ID: {scan.id}
+                        </div>
+                      </div>
+                      <div className={cn(
+                        "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg",
+                        scan.status === 'passed' ? "text-emerald-600 bg-emerald-50" : "text-amber-600 bg-amber-50"
+                      )}>
+                        {scan.status}
+                      </div>
+                    </button>
                   ))}
                 </div>
               </div>
 
-              <div className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">CI Scan Run</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-primary/60">Último Scan</span>
-                    <span className="font-bold">{securityLogs.find(l => l.action === 'SCAN_RUN')?.created_at ? new Date(securityLogs.find(l => l.action === 'SCAN_RUN').created_at).toLocaleString() : 'N/A'}</span>
+              {selectedScan && (
+                <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Detalhes do Scan</h4>
+                    <button 
+                      onClick={() => {
+                        const { generateSecurityScanPDF } = require('@/utils/securityReport');
+                        generateSecurityScanPDF(selectedScan, securityLogs);
+                      }}
+                      className="text-primary/40 hover:text-secondary"
+                    >
+                      <Icons.Download className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-primary/60">Severidade Alta</span>
-                    <span className="text-emerald-500 font-bold">0 Bloqueios</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-primary/40 font-bold uppercase tracking-widest">Score</span>
+                      <span className="text-secondary font-black">{selectedScan.compliance_score}%</span>
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Issues Encontradas</span>
+                      <div className="space-y-1">
+                        {selectedScan.issues_found?.map((issue: any, idx: number) => (
+                          <div key={idx} className="flex gap-2 p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[10px]">
+                            <span className={cn(
+                              "px-1.5 py-0.5 rounded font-black uppercase tracking-widest h-fit",
+                              issue.level === 'high' ? "bg-rose-50 text-rose-600" : "bg-amber-50 text-amber-600"
+                            )}>
+                              {issue.level}
+                            </span>
+                            <span className="text-primary/60">{issue.message}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Log de Alterações de Segurança</h4>
-              <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y">
+              <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden divide-y">
                 {securityLogs.length > 0 ? securityLogs.map(log => (
                   <div key={log.id} className="p-4 flex flex-col gap-2 hover:bg-primary/[0.01]">
                     <div className="flex items-center justify-between">
@@ -931,15 +976,35 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] uppercase tracking-widest text-primary/30 bg-primary/5 px-1.5 py-0.5 rounded">{log.entity_name}</span>
                       {log.scan_id && (
-                        <span className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded flex items-center gap-1">
+                        <button 
+                          onClick={() => {
+                            const scan = securityScans.find(s => s.id === log.scan_id);
+                            if (scan) setSelectedScan(scan);
+                          }}
+                          className="text-[9px] text-secondary bg-secondary/5 px-1.5 py-0.5 rounded flex items-center gap-1 hover:bg-secondary/10 transition-colors"
+                        >
                           <Icons.Link className="w-2 h-2" />
-                          Scan Ref
-                        </span>
+                          Vínculo Scan
+                        </button>
                       )}
                     </div>
-                    {log.details && (
-                      <div className="p-3 bg-primary/[0.02] rounded-xl border border-primary/5 text-[9px] font-mono text-primary/60 overflow-x-auto">
-                        <pre>{JSON.stringify(log.details, null, 2)}</pre>
+                    {log.summary && (
+                      <p className="text-[10px] text-primary/60">{log.summary}</p>
+                    )}
+                    {log.before_state && log.after_state && (
+                      <div className="grid grid-cols-2 gap-4 mt-2">
+                        <div className="space-y-1">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Antes</span>
+                          <pre className="p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[9px] font-mono text-primary/40 overflow-x-auto max-h-24">
+                            {JSON.stringify(log.before_state, null, 2)}
+                          </pre>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Depois</span>
+                          <pre className="p-2 bg-secondary/[0.02] rounded-xl border border-secondary/5 text-[9px] font-mono text-secondary/40 overflow-x-auto max-h-24">
+                            {JSON.stringify(log.after_state, null, 2)}
+                          </pre>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -953,6 +1018,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           </motion.div>
         </div>
       )}
+
 
 
       {showExportModal && (
