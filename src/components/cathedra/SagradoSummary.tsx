@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { isLegitimateClick } from '@/lib/navigation-utils';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
@@ -36,11 +37,11 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                    {category.books.map((book) => (
                      <button
                        key={book.abbr}
-                       onClick={() => setActiveBook(book)}
+                       onClick={(e) => isLegitimateClick(e) && setActiveBook(book)}
                        aria-selected={activeBook?.abbr === book.abbr}
                        role="option"
                        onKeyDown={(e) => {
-                         if (e.key === 'Enter' || e.key === ' ') {
+                         if ((e.key === 'Enter' || e.key === ' ') && isLegitimateClick(e)) {
                            e.preventDefault();
                            setActiveBook(book);
                          }
@@ -93,10 +94,10 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
                 {Array.from({ length: activeBook.chapters }, (_, i) => i + 1).map((num) => (
                   <button
                     key={num}
-                    onClick={() => onSelectBook(activeBook)}
+                    onClick={(e) => isLegitimateClick(e) && onSelectBook(activeBook)}
                     aria-label={`Capítulo ${num}`}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if ((e.key === 'Enter' || e.key === ' ') && isLegitimateClick(e)) {
                         e.preventDefault();
                         onSelectBook(activeBook);
                       }
@@ -112,7 +113,7 @@ const SagradoSummary: React.FC<SagradoSummaryProps> = ({ onSelectBook, activeBoo
 
             <div className="p-10 border-t border-primary/5 bg-white/20 flex justify-center backdrop-blur-md">
                <Button 
-                 onClick={() => onSelectBook(activeBook)}
+                 onClick={(e) => isLegitimateClick(e) && onSelectBook(activeBook)}
                  className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all duration-500 font-display tracking-[0.3em] uppercase text-[10px] shadow-premium-lg"
                >
                  Abrir Escrituras

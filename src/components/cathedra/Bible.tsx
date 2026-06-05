@@ -13,6 +13,7 @@ import ContemplativeLayout from './ContemplativeLayout';
 import SagradoSummary from './SagradoSummary';
 import { BibleSkeleton } from './RouteSkeletons';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
+import { isLegitimateClick } from '@/lib/navigation-utils';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
@@ -80,7 +81,9 @@ const Bible: React.FC = () => {
     }
   };
 
-  const selectBook = (book: BibleBook) => {
+  const selectBook = (book: BibleBook, event?: React.MouseEvent | React.KeyboardEvent) => {
+    if (event && !isLegitimateClick(event)) return;
+
     setSelectedBook(book);
     setActiveSummaryBook(book);
     setViewMode('reading');
@@ -89,13 +92,17 @@ const Bible: React.FC = () => {
     navigate(`/bible?book=${book.abbr}&ch=1`);
   };
 
-  const selectChapter = (ch: number) => {
+  const selectChapter = (ch: number, event?: React.MouseEvent | React.KeyboardEvent) => {
+    if (event && !isLegitimateClick(event)) return;
+
     setSelectedChapter(ch);
     fetchVerses(selectedBook!.abbr, ch);
     navigate(`/bible?book=${selectedBook!.abbr}&ch=${ch}`);
   };
 
-  const goBack = () => {
+  const goBack = (event?: React.MouseEvent | React.KeyboardEvent) => {
+    if (event && !isLegitimateClick(event)) return;
+
     setViewMode('home');
     navigate('/bible');
   };
