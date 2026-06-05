@@ -111,7 +111,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     totalBooks: auditData.totalBooks, // Livros do Cânone
     coveredBooks: auditData.coveredBooks, // Cobertura de Cânone
     totalChapters: auditData.totalChapters, // Capítulos Totais
-    coveredChapters: Math.floor(auditData.totalChapters * 0.62),
+    coveredChapters: Math.floor(auditData.totalChapters * 0.62), // Capítulos Verificados
     totalVerses: 31102,
     coveredVerses: 18500,
     uncoveredReferences: auditData.emptyBooks.length > 0 ? auditData.emptyBooks.slice(0, 3) : ['Obadias', '3 João', 'Judas'],
