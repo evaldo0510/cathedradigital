@@ -199,36 +199,37 @@ const Bible: React.FC = () => {
           className={cn(settings.immersiveMode ? "max-w-prose" : "max-w-5xl")}
         >
           <div className="pb-16 animate-in fade-in duration-1000">
-            <div className="flex justify-between items-center mb-12 border-b border-primary/5 pb-4">
-              <Button variant="ghost" onClick={goBack} className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 hover:text-primary p-0 transition-all">← {selectedBook.name} {selectedChapter}</Button>
-              <div className="flex items-center gap-3">
-                <div className="h-px w-12 bg-primary/10" />
-                <span className="text-premium-sm font-serif italic text-primary/60">{selectedBook.chapterTitles?.[selectedChapter] || `Capitulum ${selectedChapter}`}</span>
+            <div className="flex justify-between items-center mb-16 border-b border-primary/5 pb-6">
+              <Button variant="ghost" onClick={goBack} className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary/60 hover:text-primary p-0 transition-all duration-500 hover:-translate-x-2">← {selectedBook.name} {selectedChapter}</Button>
+              <div className="flex items-center gap-6">
+                <div className="h-px w-16 bg-primary/5" />
+                <span className="text-[11px] font-serif italic text-primary/40 tracking-wide">{selectedBook.chapterTitles?.[selectedChapter] || `Capitulum ${selectedChapter}`}</span>
+                <div className="h-px w-16 bg-primary/5" />
               </div>
             </div>
 
             <div className="reader-text text-left max-w-2xl mx-auto pt-8">
               {isLoading ? <BibleSkeleton /> : (
                 verses.map(v => (
-                  <div key={v.number} className="mb-8 group relative flex gap-6">
-                    <span className="text-xs font-serif text-primary/20 mt-2 select-none w-6 shrink-0 text-right">{v.number}</span>
+                  <div key={v.number} className="mb-10 group relative flex gap-8">
+                    <span className="text-[11px] font-serif font-bold text-secondary/30 mt-1.5 select-none w-8 shrink-0 text-right tabular-nums">{v.number}</span>
                     <div className="flex-1">
                       {v.number === 1 && (
-                        <div className="flex flex-col items-center mb-16 pt-8 border-t border-primary/5 text-center">
-                          <Icons.Logo className="w-12 h-12 opacity-20 mb-8" />
-                          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-2 italic">Incipit Liber</span>
-                          <h3 className="text-premium-4xl font-display font-light text-primary/60 uppercase tracking-[0.3em] italic mb-8">{selectedBook.name} {v.chapter}</h3>
-                          <div className="flex items-center gap-4"><div className="w-12 h-px bg-primary/10" /><Icons.Wheat className="w-3 h-3 text-primary/10" /><div className="w-12 h-px bg-primary/10" /></div>
+                        <div className="flex flex-col items-center mb-20 pt-10 border-t border-primary/5 text-center">
+                          <Icons.Logo className="w-16 h-16 opacity-10 mb-10" />
+                          <span className="text-[9px] font-black uppercase tracking-[0.6em] text-secondary/30 mb-3 italic">Incipit Liber</span>
+                          <h3 className="text-5xl font-display font-light text-primary/70 uppercase tracking-[0.4em] italic mb-10">{selectedBook.name} {v.chapter}</h3>
+                          <div className="flex items-center gap-6"><div className="w-16 h-px bg-primary/5" /><Icons.Wheat className="w-4 h-4 text-secondary/20" /><div className="w-16 h-px bg-primary/5" /></div>
                         </div>
                       )}
-                      <p className="leading-[1.8] text-xl font-serif text-primary/90">{wrapWithDictionary(v.text)}</p>
+                      <p className="leading-[1.9] text-[20px] font-serif text-primary/90 tracking-tight text-justify indent-8 sm:indent-0">{wrapWithDictionary(v.text)}</p>
                       
-                      <div className="mt-4 flex justify-start gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                         <button className="text-[10px] font-bold uppercase tracking-widest text-primary/30 hover:text-secondary flex items-center gap-2">
-                           <Icons.Heart className="w-3 h-3" /> Favoritar
+                      <div className="mt-5 flex justify-start gap-5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-secondary flex items-center gap-2 transition-colors">
+                           <Icons.Heart className="w-3.5 h-3.5" /> Favoritar
                          </button>
-                         <button className="text-[10px] font-bold uppercase tracking-widest text-primary/30 hover:text-primary flex items-center gap-2" onClick={() => setEditingNote({ verse: v.number, text: '' })}>
-                           <Icons.Edit3 className="w-3 h-3" /> Anotar
+                         <button className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/20 hover:text-primary flex items-center gap-2 transition-colors" onClick={() => setEditingNote({ verse: v.number, text: '' })}>
+                           <Icons.Edit3 className="w-3.5 h-3.5" /> Anotar
                          </button>
                       </div>
                     </div>
