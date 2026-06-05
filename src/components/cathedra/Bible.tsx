@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -665,6 +667,10 @@ const Bible: React.FC = () => {
 
   return (
     <div className={cn("relative", settings.immersiveMode && viewMode === 'reading' && "bg-background")}>
+      <Helmet>
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+      </Helmet>
+
       <div className="reveal-header-trigger" />
       
       {viewMode === 'home' && (
