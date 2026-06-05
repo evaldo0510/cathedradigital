@@ -21,6 +21,8 @@ import BibleFullNotesList from './BibleFullNotesList';
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
+import { KnowledgeGraph } from './KnowledgeGraph';
+
 
 
 
