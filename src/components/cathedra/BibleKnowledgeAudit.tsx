@@ -1088,7 +1088,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
           <motion.div key="security" className="space-y-8">
             <div className="flex items-center justify-between">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Conformidade e Segurança</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Controle de Conformidade e Segurança</h3>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                   <button 
