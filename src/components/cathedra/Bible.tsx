@@ -423,12 +423,13 @@ const Bible: React.FC = () => {
                               onClick={() => handleOpenAnnotation(v)}
                               className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
                             >
-                              <Icons.Pen className="w-3.5 h-3.5" />
+                              <Icons.PenLine className="w-3.5 h-3.5" />
                             </button>
                           </p>
                         </div>
                       );
                     })}
+
 
                   </div>
 
