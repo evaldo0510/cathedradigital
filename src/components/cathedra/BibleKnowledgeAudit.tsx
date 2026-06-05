@@ -29,8 +29,9 @@ interface BibleKnowledgeAuditProps {
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks' | 'security' | 'a11y'>(
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks' | 'security' | 'a11y' | 'i18n-audit'>(
     (searchParams.get('tab') as any) || 'overview'
+
 
   );
   const [isScanning, setIsScanning] = React.useState(false);
@@ -101,7 +102,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y'].includes(tab)) {
+    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y', 'i18n-audit'].includes(tab)) {
+
 
       setActiveTab(tab as any);
     }
