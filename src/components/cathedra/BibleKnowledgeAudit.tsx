@@ -32,7 +32,31 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           <Icons.X className="w-6 h-6" />
         </button>
         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria de Conhecimento</h1>
-        <div className="w-10" />
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => {
+              const csv = `Tipo,Referencia,Target\n` + 
+                `Conexao,João 6:35,CIC 1324\n` +
+                `Conexao,Gênesis 1:1,Criação ex nihilo\n` +
+                `Lacuna,Obadias,Sem mapeamento\n` +
+                `Lacuna,3 João,Sem mapeamento\n` +
+                `Lacuna,Judas,Sem mapeamento`;
+              const blob = new Blob([csv], { type: 'text/csv' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `auditoria-cathedra-${new Date().toISOString().split('T')[0]}.csv`;
+              link.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="p-2 text-primary/40 active:text-secondary"
+            title="Exportar Relatório"
+          >
+            <Icons.FileText className="w-5 h-5" />
+          </button>
+          <div className="w-10" />
+        </div>
+
       </header>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 max-w-lg mx-auto w-full">

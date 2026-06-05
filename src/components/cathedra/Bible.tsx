@@ -307,21 +307,22 @@ const Bible: React.FC = () => {
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
   // Knowledge Connection System Mock Data
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string }[]> = {
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string, summary: string }[]> = {
     'Jo-6-35': [
-      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324' },
-      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16' },
-      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede' }
+      { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
+      { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' }
     ],
     'Gn-1-1': [
-      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279' },
-      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio' }
+      { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' }
     ],
     'Mt-5-3': [
-      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716' },
-      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs' }
+      { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716', summary: 'As Bem-aventuranças estão no centro da pregação de Jesus.' },
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' }
     ]
   };
+
 
   // Mock data for cross references
   const CROSS_REFERENCES: Record<string, string[]> = {
@@ -349,16 +350,30 @@ const Bible: React.FC = () => {
 
   const auditData = useMemo(() => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-    const booksWithContent = allBooks.filter(b => b.chapters > 0);
-    const emptyBooks = allBooks.filter(b => b.chapters === 0);
+    
+    // Identified books with connections mapping
+    const connectedBooks = new Set();
+    const uncoveredBooks: string[] = [];
+    
+    Object.keys(KNOWLEDGE_CONNECTIONS).forEach(key => {
+      const bookAbbr = key.split('-')[0];
+      connectedBooks.add(bookAbbr);
+    });
+
+    allBooks.forEach(b => {
+      if (!connectedBooks.has(b.abbr)) {
+        uncoveredBooks.push(b.name);
+      }
+    });
     
     return {
       totalBooks: allBooks.length,
-      coveredBooks: booksWithContent.length,
-      emptyBooks: emptyBooks.map(b => b.name),
+      coveredBooks: connectedBooks.size,
+      emptyBooks: uncoveredBooks,
       totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
     };
-  }, []);
+  }, [KNOWLEDGE_CONNECTIONS]);
+
 
   const filteredBooks = useMemo(() => {
 
@@ -690,7 +705,7 @@ const Bible: React.FC = () => {
 
                             {/* Knowledge Connection Bubbles */}
                             {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
-                              <div className="flex flex-wrap gap-2 pt-1 opacity-80">
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-80 max-h-12 overflow-hidden">
                                 {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
                                   <motion.button
                                     key={idx}
@@ -698,9 +713,16 @@ const Bible: React.FC = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      toast.info(`Navegando para ${conn.label}`);
+                                      toast(conn.label, {
+                                        description: conn.summary,
+                                        duration: 5000,
+                                        action: {
+                                          label: 'Abrir',
+                                          onClick: () => console.log('Abrir detalhe')
+                                        }
+                                      });
                                     }}
-                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all"
+                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all mb-1"
                                   >
                                     <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
                                     <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
@@ -708,6 +730,7 @@ const Bible: React.FC = () => {
                                 ))}
                               </div>
                             )}
+
 
 
                             {/* Cross References */}
