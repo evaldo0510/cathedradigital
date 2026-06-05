@@ -454,18 +454,55 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
   return (
-    <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col">
-      <header className="px-6 h-16 flex items-center justify-between border-b border-primary/5 bg-white/50 backdrop-blur-sm sticky top-0 z-20">
-        <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
-          <Icons.X className="w-6 h-6" />
-        </button>
-        <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
-        <div className="flex items-center gap-2">
-          <button onClick={() => toast.success('Link copiado')} className="p-2 text-primary/40"><Icons.Share2 className="w-5 h-5" /></button>
-          <button onClick={() => window.print()} className="p-2 text-primary/40"><Icons.Printer className="w-5 h-5" /></button>
-          <button onClick={() => setShowExportModal(true)} className="p-2 text-primary/40"><Icons.FileText className="w-5 h-5" /></button>
+    <div className="fixed inset-0 z-[110] bg-[#FAF9F6] flex flex-col md:flex-row">
+      {/* Mobile Device Preview Sidebar (Desktop Only) */}
+      <div className="hidden lg:flex w-64 border-r border-primary/5 bg-white/50 backdrop-blur-sm flex-col p-6 space-y-6 overflow-y-auto">
+        <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Visual Preview</h3>
+        <div className="space-y-4">
+          <button 
+            onClick={() => {
+              const preview = document.getElementById('audit-content-wrapper');
+              if (preview) preview.style.maxWidth = '390px';
+            }}
+            className="w-full p-4 bg-primary text-primary-foreground rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-between"
+          >
+            <span>iPhone 14</span>
+            <Icons.Smartphone className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => {
+              const preview = document.getElementById('audit-content-wrapper');
+              if (preview) preview.style.maxWidth = '100%';
+            }}
+            className="w-full p-4 bg-primary/5 text-primary/40 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-between"
+          >
+            <span>Desktop</span>
+            <Icons.Layout className="w-4 h-4" />
+          </button>
         </div>
-      </header>
+        
+        <div className="pt-6 border-t border-primary/5 space-y-4">
+          <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/20">Acessibilidade</h4>
+          <div className="flex items-center justify-between text-[10px] font-medium">
+            <span>Contraste AA</span>
+            <span className="text-emerald-500 font-bold">Pass</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="audit-content-wrapper" className="flex-1 flex flex-col mx-auto transition-all duration-500 bg-white shadow-2xl lg:shadow-none">
+        <header className="px-6 h-16 flex items-center justify-between border-b border-primary/5 bg-white/50 backdrop-blur-sm sticky top-0 z-20">
+          <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
+            <Icons.X className="w-6 h-6" />
+          </button>
+          <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Auditoria Bíblica</h1>
+          <div className="flex items-center gap-2">
+            <button onClick={() => toast.success('Link copiado')} className="p-2 text-primary/40"><Icons.Share2 className="w-5 h-5" /></button>
+            <button onClick={() => window.print()} className="p-2 text-primary/40"><Icons.Printer className="w-5 h-5" /></button>
+            <button onClick={() => setShowExportModal(true)} className="p-2 text-primary/40"><Icons.FileText className="w-5 h-5" /></button>
+          </div>
+        </header>
+
 
       <div className="px-6 border-b border-primary/5 bg-white/50 backdrop-blur-sm sticky top-16 z-10">
         <div className="flex gap-6 overflow-x-auto no-scrollbar py-3">
@@ -1254,7 +1291,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
           </div>
         </div>
       )}
-
+      </div>
     </div>
   );
 };
+
