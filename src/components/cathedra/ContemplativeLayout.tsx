@@ -32,7 +32,8 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
     <div 
       data-layout-root="true"
       className={cn(
-        "min-h-[100dvh] will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden", 
+        "min-h-[100dvh] will-change-[transform,opacity] flex flex-col items-center overflow-x-hidden transition-colors duration-1000", 
+        `reading-theme-${settings.theme}`,
         showPadding && "pt-[10px] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-0 md:px-[var(--layout-padding)]",
         containerClassName
       )}

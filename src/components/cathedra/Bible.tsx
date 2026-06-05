@@ -744,17 +744,18 @@ const Bible: React.FC = () => {
 
             {isLoading ? <BibleSkeleton /> : !fetchError && (
               <div className={cn(
-                `font-size-${settings.fontSize} font-family-${settings.fontFamily} reader-text space-y-spacing-lg`,
-                settings.immersiveMode && "text-center"
+                "reader-text space-y-spacing-xl pb-spacing-4xl mx-auto",
+                `font-size-${settings.fontSize} font-family-${settings.fontFamily}`,
+                settings.immersiveMode && "text-center max-w-2xl"
               )}>
                 {verses.map((v, i) => (
                   <div 
                     key={`${v.chapter}-${v.number}`} 
                     id={`v${v.number}`} 
                     className={cn(
-                      "group relative py-spacing-md transition-all duration-700 px-spacing-lg leading-relaxed",
-                      activeVerseNumber === v.number && "bg-primary/[0.03] shadow-[inset_4px_0_0_0_rgba(var(--primary),0.1)]",
-                      !settings.immersiveMode && "hover:bg-primary/[0.01]"
+                      "group relative py-spacing-md transition-all duration-700 px-spacing-xl rounded-premium border border-transparent",
+                      activeVerseNumber === v.number ? "bg-primary/[0.04] border-primary/10 shadow-premium-sm" : "hover:bg-primary/[0.01]",
+                      settings.immersiveMode ? "mx-auto text-center" : "text-left"
                     )}
                   >
                     {v.number === 1 && (
