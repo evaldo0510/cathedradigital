@@ -104,7 +104,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
   const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
   const [i18nPage, setI18nPage] = React.useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
@@ -1336,20 +1336,91 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Outras Pendências de Interface</h4>
-                  <div className="bg-white border border-primary/5 rounded-3xl divide-y overflow-hidden">
-                    {i18nFailures.filter(f => f.endpoint === 'N/A').map((failure, idx) => (
-                      <div key={idx} className="p-4 flex items-center justify-between hover:bg-primary/[0.01]">
-                        <div className="space-y-1">
-                          <span className="text-xs font-bold text-primary/80">{failure.term}</span>
-                          <p className="text-[9px] text-primary/30 uppercase tracking-widest">{failure.context}</p>
-                        </div>
-                        <div className="text-right space-y-1">
-                          <p className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Sugestão:</p>
-                          <p className="text-xs font-display italic text-emerald-700">"{failure.expected}"</p>
-                        </div>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Outras Pendências de Interface</h4>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-primary/20" />
+                        <input 
+                          value={i18nSearch}
+                          onChange={e => { setI18nSearch(e.target.value); setI18nPage(1); }}
+                          placeholder="Buscar termo..."
+                          className="bg-primary/5 rounded-full pl-8 pr-4 py-1.5 text-[10px] outline-none border border-transparent focus:border-secondary/20 w-40 transition-all"
+                        />
                       </div>
-                    ))}
+                      <select 
+                        value={i18nStatusFilter}
+                        onChange={e => { setI18nStatusFilter(e.target.value as any); setI18nPage(1); }}
+                        className="bg-primary/5 rounded-full px-3 py-1.5 text-[10px] font-bold outline-none border border-transparent focus:border-secondary/20"
+                      >
+                        <option value="all">Todos</option>
+                        <option value="pending">Pendente</option>
+                        <option value="mapped">Mapeado</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden">
+                    <div className="divide-y">
+                      {(() => {
+                        const filtered = i18nFailures
+                          .filter(f => f.endpoint === 'N/A')
+                          .filter(f => i18nStatusFilter === 'all' || f.status === i18nStatusFilter)
+                          .filter(f => !i18nSearch || f.term.toLowerCase().includes(i18nSearch.toLowerCase()) || f.expected.toLowerCase().includes(i18nSearch.toLowerCase()));
+                        
+                        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+                        const paginated = filtered.slice((i18nPage - 1) * itemsPerPage, i18nPage * itemsPerPage);
+
+                        if (paginated.length === 0) {
+                          return <div className="p-8 text-center text-[10px] text-primary/20 uppercase tracking-widest">Nenhum registro encontrado</div>;
+                        }
+
+                        return (
+                          <>
+                            {paginated.map((failure, idx) => (
+                              <div key={idx} className="p-4 flex items-center justify-between hover:bg-primary/[0.01]">
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs font-bold text-primary/80">{failure.term}</span>
+                                    {failure.status === 'mapped' ? (
+                                      <Icons.CheckCircle className="w-3 h-3 text-emerald-500" />
+                                    ) : (
+                                      <Icons.Clock className="w-3 h-3 text-amber-500" />
+                                    )}
+                                  </div>
+                                  <p className="text-[9px] text-primary/30 uppercase tracking-widest">{failure.context}</p>
+                                </div>
+                                <div className="text-right space-y-1">
+                                  <p className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Sugestão:</p>
+                                  <p className="text-xs font-display italic text-emerald-700">"{failure.expected}"</p>
+                                </div>
+                              </div>
+                            ))}
+                            {totalPages > 1 && (
+                              <div className="p-4 flex items-center justify-center gap-2 border-t border-primary/5">
+                                <button 
+                                  onClick={() => setI18nPage(p => Math.max(1, p - 1))}
+                                  disabled={i18nPage === 1}
+                                  className="p-1.5 hover:bg-primary/5 rounded-lg disabled:opacity-30"
+                                >
+                                  <Icons.ChevronLeft className="w-4 h-4" />
+                                </button>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-primary/40">
+                                  Página {i18nPage} de {totalPages}
+                                </span>
+                                <button 
+                                  onClick={() => setI18nPage(p => Math.min(totalPages, p + 1))}
+                                  disabled={i18nPage === totalPages}
+                                  className="p-1.5 hover:bg-primary/5 rounded-lg disabled:opacity-30"
+                                >
+                                  <Icons.ChevronRight className="w-4 h-4" />
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
               </div>
