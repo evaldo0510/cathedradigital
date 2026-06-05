@@ -7,7 +7,8 @@
     /* --- Core Visual Tokens: Cathedra Premium System --- */
     
     /* 1. Colors (HSL) */
-    --background: 45 35% 99.4%;
+    --background: 45 40% 99%; /* FDF8F3 - Light Cream */
+
     --foreground: 220 25% 10%;
     
     --card: 45 35% 99.4%;
@@ -114,11 +115,12 @@
 
   /* Reading Themes - Consolidated with Core */
   .reading-theme-paper { 
-    --background: 45 35% 99.4%; 
+    --background: 45 40% 99%; 
     --foreground: 220 25% 10%;
-    background-color: #FEFDFB !important;
+    background-color: #FDF8F3 !important;
     color: #1a1a1a !important;
   }
+
   .reading-theme-sepia { 
     --background: 38 35% 92%; 
     --foreground: 25 20% 20%; 
@@ -289,7 +291,7 @@
   }
 
   /* Atmosphere & Theme Depth - Variable Surface Levels */
-  .reading-theme-paper { background-color: #FEFDFB !important; color: #1a1a1a !important; }
+  .reading-theme-paper { background-color: #FDF8F3 !important; color: #1a1a1a !important; }
   .reading-theme-sepia { background-color: #E8E2D2 !important; color: #2b2621 !important; }
   .reading-theme-dark { background-color: #1A1C1E !important; color: #e0e0e0 !important; }
   .reading-theme-night { background-color: #0D0E10 !important; color: #b0b0b0 !important; }
