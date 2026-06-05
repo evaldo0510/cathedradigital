@@ -339,6 +339,14 @@ const Bible: React.FC = () => {
     ]
   };
 
+  const THEOLOGICAL_THEMES = [
+    { id: 'creatio', label: 'Criação', parent: null, connections: 12, tags: ['Dogma', 'Ontologia'] },
+    { id: 'eucharistia', label: 'Eucaristia', parent: null, connections: 45, tags: ['Sacramento', 'Liturgia'] },
+    { id: 'gratia', label: 'Graça', parent: null, connections: 28, tags: ['Soteriologia'] },
+    { id: 'trinitas', label: 'Santíssima Trindade', parent: null, connections: 34, tags: ['Mistério', 'Dogma'] },
+  ];
+
+
 
   const CROSS_REFERENCES: Record<string, string[]> = {
     'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
