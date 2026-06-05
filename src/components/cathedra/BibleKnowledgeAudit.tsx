@@ -194,13 +194,23 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     <span className="font-serif font-bold text-primary/80">{book}</span>
                     <p className="text-[9px] font-medium text-stone-400 uppercase tracking-tighter">Faltam referências do CIC e Magistério</p>
                   </div>
-                  <button 
-                    onClick={() => toast.info(`Iniciando mapeamento para ${book}`)}
-                    className="p-2 rounded-lg bg-secondary/5 text-secondary opacity-0 group-hover:opacity-100 transition-all active:scale-95"
-                    title="Mapear Manualmente"
-                  >
-                    <Icons.Plus className="w-4 h-4" />
-                  </button>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                    <button 
+                      onClick={() => toast.success(`${book} marcado como validado`)}
+                      className="p-2 rounded-lg bg-green-50 text-green-600 active:scale-95"
+                      title="Marcar como Validado"
+                    >
+                      <Icons.Check className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => toast.info(`Iniciando mapeamento para ${book}`)}
+                      className="p-2 rounded-lg bg-secondary/5 text-secondary active:scale-95"
+                      title="Mapear Manualmente"
+                    >
+                      <Icons.Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+
                 </div>
               ))}
             </div>
