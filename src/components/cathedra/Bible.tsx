@@ -379,14 +379,24 @@ const Bible: React.FC = () => {
         uncoveredBooks.push(b.name);
       }
     });
+
+    // Theological Themes Index (Phase 3)
+    const themes = Array.from(new Set(
+      Object.values(KNOWLEDGE_CONNECTIONS)
+        .flat()
+        .filter(c => c.type === 'theology')
+        .map(c => c.label)
+    ));
     
     return {
       totalBooks: allBooks.length,
       coveredBooks: connectedBooks.size,
       emptyBooks: uncoveredBooks,
       totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+      themesCount: themes.length,
     };
   }, [KNOWLEDGE_CONNECTIONS]);
+
 
 
   const filteredBooks = useMemo(() => {
