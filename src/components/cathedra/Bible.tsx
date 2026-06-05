@@ -14,6 +14,25 @@ import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
 import { BibleSkeleton } from './RouteSkeletons';
+import { useNotes } from '@/hooks/useNotes';
+import { NoteEditModal } from './NoteEditModal';
+import BibleSearch from './BibleSearch';
+import BibleFullNotesList from './BibleFullNotesList';
+
+// Helper for Daily Reading
+const getDailyReading = () => {
+  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+  const date = new Date();
+  const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
+  
+  // Pick a book and chapter deterministically
+  const bookIndex = dayOfYear % allBooks.length;
+  const book = allBooks[bookIndex];
+  const chapter = (dayOfYear % book.chapters) + 1;
+  
+  return { book, chapter };
+};
+
 
 const Bible: React.FC = () => {
   useRenderPerf('Sacra Biblia Mobile-First', 15);
