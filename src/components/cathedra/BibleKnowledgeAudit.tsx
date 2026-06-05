@@ -477,7 +477,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             className="w-full p-4 bg-primary/5 text-primary/40 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-between"
           >
             <span>Desktop</span>
-            <Icons.MonitorIcon className="w-4 h-4" />
+            <Icons.Layout className="w-4 h-4" />
           </button>
         </div>
         
