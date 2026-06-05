@@ -31,7 +31,7 @@ const Bible: React.FC = () => {
   const location = useLocation();
   const { settings, updateSettings } = useReadingSettings();
   
-  const [viewMode, setViewMode] = useState<'home' | 'books' | 'chapters' | 'reading'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'books' | 'chapters' | 'reading' | 'favorites'>('home');
 
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
