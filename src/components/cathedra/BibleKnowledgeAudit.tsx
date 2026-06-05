@@ -283,7 +283,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     }
   };
 
+  React.useEffect(() => {
+    fetchSecurityScans();
+  }, []);
+
   const fetchNotifications = async () => {
+
     const { data, error } = await supabase
       .from('bible_audit_notifications')
       .select('*')
