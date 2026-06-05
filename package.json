@@ -21,6 +21,7 @@
     "test:e2e:ci-replica": "HEADLESS=true CI=true VITE_SWIPE_THRESHOLD=80 VITE_SWIPE_RATIO=2.5 npx playwright test tests/e2e/swipe-precision.spec.ts --project=mobile-chrome --project=mobile-safari --reporter=list,html",
     "test:e2e:last-failed": "HEADLESS=true CI=true VITE_SWIPE_THRESHOLD=80 VITE_SWIPE_RATIO=2.5 npx playwright test --last-failed",
     "test:e2e:ci-replica-failed": "npm run test:e2e:last-failed",
+    "test:e2e:sync-failed": "node scripts/sync-failed-tests.js",
     "---doc:e2e---": "Ajuste parâmetros via VITE_SWIPE_THRESHOLD (default 80) e VITE_SWIPE_RATIO (default 2.5). Escolha devices via --project (mobile-chrome, mobile-safari).",
     "test:local:axe": "CI=true npx playwright test tests/e2e/accessibility.spec.ts",
     "test:ci": "vitest run --coverage --reporter=default --passWithNoTests",

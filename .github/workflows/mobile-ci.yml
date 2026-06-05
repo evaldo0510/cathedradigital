@@ -60,6 +60,24 @@ jobs:
           ! grep -rE "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" logs/ test-results/ || (echo "PII Leak Detected in Artifacts!" && exit 1)
           ! grep -rE "ey[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}" logs/ test-results/ || (echo "JWT Token Leak Detected!" && exit 1)
 
+      - name: Generate Evidence Manifest
+        if: always()
+        run: |
+          node -e "
+          const fs = require('fs');
+          if (fs.existsSync('playwright-report/results.json')) {
+            const results = JSON.parse(fs.readFileSync('playwright-report/results.json', 'utf8'));
+            const manifest = results.suites.flatMap(s => s.specs.flatMap(spec => spec.tests.map(t => ({
+              title: spec.title,
+              project: t.projectName,
+              status: t.status,
+              file: spec.file,
+              evidence: t.results.flatMap(r => r.attachments || [])
+            }))));
+            fs.writeFileSync('playwright-report/evidence-manifest.json', JSON.stringify(manifest, null, 2));
+          }
+          "
+
       - name: Upload Playwright HTML Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -77,6 +95,7 @@ jobs:
           path: test-results/
           retention-days: ${{ vars.RETENTION_DAYS_EVIDENCE || 3 }}
           if-no-files-found: error
+
 
       - name: PR Commentary on Failure
         if: failure() && github.event_name == 'pull_request'
@@ -112,7 +131,9 @@ jobs:
             }
             
             summary += `\n\n- **Relatório Completo & Traces:** [Download Artefatos](${artifact_url})`;
-            summary += `\n- **Reexecutar falhas:** Você pode usar o botão 'Re-run failed jobs' na aba Actions ou via \`workflow_dispatch\`.`;
+            summary += `\n- **Reexecutar falhas:** [Clique aqui para ir para a execução e clicar em 'Re-run failed jobs'](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id})`;
+            summary += `\n- **Dica:** Use \`npm run test:e2e:sync-failed\` localmente após baixar o relatório para replicar as falhas exatas.`;
+
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
