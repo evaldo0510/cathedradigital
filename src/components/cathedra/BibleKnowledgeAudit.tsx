@@ -1145,8 +1145,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                         "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg",
                         scan.status === 'passed' ? "text-emerald-600 bg-emerald-50" : "text-amber-600 bg-amber-50"
                       )}>
-                        {scan.status}
+                        {scan.status === 'passed' ? 'APROVADO' : 'AVISO'}
                       </div>
+
                     </button>
                   ))}
                 </div>
