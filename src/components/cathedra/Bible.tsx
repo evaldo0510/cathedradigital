@@ -300,8 +300,22 @@ const Bible: React.FC = () => {
   };
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
+  
+  // Mock data for cross references
+  const CROSS_REFERENCES: Record<string, string[]> = {
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3'],
+    'Mt-5-3': ['Lc-6-20'],
+  };
 
   const wrapWithDictionary = (text: string) => {
+    // Cross-references logic
+    const refKeyPrefix = selectedBook ? `${selectedBook.abbr}-${selectedChapter}-` : '';
+    
+    // We'll search for cross-references by verse if it matches the text
+    // For simplicity, we'll check if the verse index has a reference
+    
     const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
     return parts.map((part, i) => {
       if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
@@ -310,6 +324,8 @@ const Bible: React.FC = () => {
       return part;
     });
   };
+
+
 
   const filteredBooks = useMemo(() => {
     if (!searchQuery) return BIBLE_DATA;
@@ -328,7 +344,12 @@ const Bible: React.FC = () => {
   }, [searchQuery]);
 
   return (
-    <div className={cn("relative min-h-screen bg-[#FAF9F6] text-primary/90", settings.immersiveMode && "bg-[#FAF9F6]")}>
+    <div className={cn(
+      "relative min-h-screen transition-colors duration-1000 text-primary/90", 
+      settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]",
+      settings.immersiveMode && (settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]")
+    )}>
+
       <Helmet>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
       </Helmet>
@@ -340,7 +361,11 @@ const Bible: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="px-6 pt-10 pb-32 max-w-lg mx-auto"
+            className={cn(
+              "px-6 pt-10 pb-32 max-w-lg mx-auto transition-colors duration-1000",
+              settings.theme === 'night' && "bg-[#0D0E10] text-stone-400"
+            )}
+
           >
             {/* Minimal Header */}
             <header className="mb-10 flex items-center justify-between">
@@ -498,12 +523,20 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className="w-full h-16 flex items-center justify-between active:bg-primary/[0.02] transition-all px-2 group"
                 >
-                  <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
+                  <div className="flex flex-col text-left">
+                    <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
+                    {notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch) && (
+                      <span className="text-[8px] font-black uppercase tracking-widest text-secondary mt-1 flex items-center gap-1">
+                        <Icons.PenLine className="w-2.5 h-2.5" /> Meditado
+                      </span>
+                    )}
+                  </div>
                   {selectedBook.chapterTitles?.[ch] && (
                     <span className="text-[11px] font-serif italic text-primary/30 max-w-[150px] truncate text-right">{selectedBook.chapterTitles[ch]}</span>
                   )}
                   <Icons.ChevronRight className="w-4 h-4 text-primary/10 ml-4" />
                 </button>
+
               ))}
             </div>
           </motion.div>
@@ -518,7 +551,11 @@ const Bible: React.FC = () => {
             className="min-h-screen"
           >
             {/* Sticky Reading Header */}
-            <header className="sticky top-0 z-50 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-primary/5 px-4 h-14 flex items-center justify-between">
+            <header className={cn(
+              "sticky top-0 z-50 backdrop-blur-md border-b border-primary/5 px-4 h-14 flex items-center justify-between transition-colors duration-1000",
+              settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
+            )}>
+
               <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} className="p-2 text-primary/40 active:text-secondary">
                 <Icons.ChevronLeft className="w-6 h-6" />
               </button>
@@ -575,19 +612,43 @@ const Bible: React.FC = () => {
                             )}
                           </div>
                           
-                          <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
-                            {wrapWithDictionary(v.text)}
-                            
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenAnnotation(v);
-                              }}
-                              className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
-                            >
-                              <Icons.PenLine className="w-3.5 h-3.5" />
-                            </button>
-                          </p>
+                          <div className="flex-1 space-y-4">
+                            <p className="leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
+                              {wrapWithDictionary(v.text)}
+                              
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenAnnotation(v);
+                                }}
+                                className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                              >
+                                <Icons.PenLine className="w-3.5 h-3.5" />
+                              </button>
+                            </p>
+
+                            {/* Cross References */}
+                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].map(ref => {
+                                  const [b, c, vNum] = ref.split('-');
+                                  return (
+                                    <button
+                                      key={ref}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
+                                      }}
+                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/60 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                    >
+                                      {b} {c}:{vNum}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+
                         </div>
 
                       );
