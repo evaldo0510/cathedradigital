@@ -785,7 +785,14 @@ const Bible: React.FC = () => {
         )}
       </AnimatePresence>
 
+      {showKnowledgePanel && (
+        <BibleKnowledgeAudit 
+          onClose={() => setShowKnowledgePanel(false)} 
+        />
+      )}
+
       <NoteEditModal 
+
         isOpen={isNoteModalOpen}
         onClose={() => setIsNoteModalOpen(false)}
         onSave={handleSaveNote}
