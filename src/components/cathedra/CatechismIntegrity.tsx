@@ -319,7 +319,12 @@ const CatechismIntegrity: React.FC = () => {
                     </td>
                     <td className="px-spacing-lg py-spacing-md">
                       <span className="text-premium-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-premium-full bg-muted text-muted-foreground">
-                        {item.status}
+                        {item.status === 'not_cached' ? 'Não Cacheado' : 
+                         item.status === 'generated' ? 'Gerado' :
+                         item.status === 'official' ? 'Oficial' :
+                         item.status === 'error' ? 'Erro' :
+                         item.status === 'error_402' ? 'Erro 402' :
+                         item.status}
                       </span>
                     </td>
                     <td className="px-spacing-lg py-spacing-md text-right">
