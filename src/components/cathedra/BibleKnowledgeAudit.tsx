@@ -176,7 +176,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             </header>
             <div className="bg-white border border-primary/5 rounded-2xl overflow-hidden divide-y divide-primary/[0.03]">
               {auditData.theologicalThemes?.map(theme => (
-                <div key={theme.id} className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors">
+                <div 
+                  key={theme.id} 
+                  onClick={() => onThemeClick?.(theme.label)}
+                  className="p-4 flex items-center justify-between group hover:bg-primary/[0.01] transition-colors cursor-pointer"
+                >
+
                   <div className="space-y-1">
                     <span className="font-serif font-bold text-primary/80">{theme.label}</span>
                     <div className="flex gap-1">
