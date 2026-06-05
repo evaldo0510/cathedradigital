@@ -1219,7 +1219,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     {log.before_state && log.after_state && (
                       <div className="grid grid-cols-2 gap-4 mt-2">
                         <div className="space-y-1">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Antes</span>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">Configuração Anterior</span>
                           <pre className="p-2 bg-primary/[0.02] rounded-xl border border-primary/5 text-[9px] font-mono text-primary/40 overflow-x-auto max-h-24">
                             {JSON.stringify(log.before_state, null, 2)}
                           </pre>
