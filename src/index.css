@@ -234,11 +234,25 @@
 
   p, .body-text {
     @apply font-ui font-normal text-foreground/90; /* Aumentado de 80% para 90% para legibilidade */
-    font-size: clamp(var(--text-premium-sm), 1vw, var(--text-premium-base));
+    /* Escala responsiva por faixa de largura */
+    font-size: var(--text-premium-sm);
     line-height: 1.6;
     max-width: 65ch;
     letter-spacing: 0.01em;
   }
+
+  @media (min-width: 390px) {
+    p, .body-text {
+      font-size: var(--text-premium-base);
+    }
+  }
+
+  @media (min-width: 768px) {
+    p, .body-text {
+      font-size: var(--text-premium-lg);
+    }
+  }
+
 
   .dark p, .dark .body-text {
     @apply text-foreground/60;
