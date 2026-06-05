@@ -498,6 +498,21 @@ header:hover {
 }
 
 /* Suavização de leitura e Ritmo */
+[data-line-spacing='tight'] .reader-text { line-height: 1.6 !important; }
+[data-line-spacing='normal'] .reader-text { line-height: 2.1 !important; }
+[data-line-spacing='wide'] .reader-text { line-height: 2.8 !important; }
+
+[data-letter-spacing='tight'] .reader-text { letter-spacing: -0.01em !important; }
+[data-letter-spacing='normal'] .reader-text { letter-spacing: var(--letter-spacing-wide) !important; }
+[data-letter-spacing='wide'] .reader-text { letter-spacing: 0.1em !important; }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  [data-line-spacing='tight'] .reader-text { line-height: 1.4 !important; }
+  [data-line-spacing='normal'] .reader-text { line-height: 1.8 !important; }
+  [data-line-spacing='wide'] .reader-text { line-height: 2.2 !important; }
+}
+
 .visual-silence .reader-text {
   @apply tracking-wide opacity-[0.85] contrast-[0.95];
   filter: grayscale(0.2);
