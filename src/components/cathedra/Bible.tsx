@@ -370,29 +370,8 @@ const Bible: React.FC = () => {
                     <span className="font-serif font-bold text-base">
                       {lastRead ? `${lastRead.bookName} ${lastRead.chapter}` : 'João 1'}
                     </span>
-                <button 
-                  onClick={() => setViewMode('monthly_recap')}
-                  className="w-full flex items-center justify-center p-3 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-secondary transition-colors"
-                >
-                  <Icons.Calendar className="w-3 h-3 mr-2" />
-                  Recapitular Leituras do Mês
-                </button>
-              </div>
-            </div>
-
-            <div className="flex gap-4 mb-12">
-              <button 
-                onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40"
-              >
-                <Icons.Download className="w-3 h-3" /> Exportar
-              </button>
-              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer">
-                <Icons.Upload className="w-3 h-3" /> Importar
-                <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
-              </label>
-            </div>
-
+                  </div>
+                </div>
                 <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
               </button>
 
@@ -438,7 +417,29 @@ const Bible: React.FC = () => {
                   </button>
                 )}
               </div>
+
+              <button 
+                onClick={() => setViewMode('monthly_recap')}
+                className="w-full flex items-center justify-center p-3 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-secondary transition-colors"
+              >
+                <Icons.Calendar className="w-3 h-3 mr-2" />
+                Recapitular Leituras do Mês
+              </button>
             </div>
+
+            <div className="flex gap-4 mb-12">
+              <button 
+                onClick={handleExportData}
+                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40"
+              >
+                <Icons.Download className="w-3 h-3" /> Exportar
+              </button>
+              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer">
+                <Icons.Upload className="w-3 h-3" /> Importar
+                <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
+              </label>
+            </div>
+
 
 
             {/* Vertical Book List */}
