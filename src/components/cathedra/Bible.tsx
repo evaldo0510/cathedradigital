@@ -693,7 +693,8 @@ const Bible: React.FC = () => {
                
                <div className="space-y-spacing-md">
                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Continuatio</h4>
-                 <div className="bg-primary/[0.02] p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-primary/[0.04] transition-all">
+                 <div className="bg-white/40 backdrop-blur-xl p-spacing-lg rounded-premium border border-primary/5 flex items-center justify-between group cursor-pointer hover:bg-white/60 transition-all shadow-premium-sm">
+
                    <div className="flex items-center gap-spacing-md">
                      <Icons.Clock className="w-spacing-md h-spacing-md text-primary/20 group-hover:text-primary transition-colors" />
                      <div className="flex flex-col">
