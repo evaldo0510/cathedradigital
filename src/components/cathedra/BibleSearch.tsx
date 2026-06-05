@@ -25,8 +25,9 @@ interface BibleSearchProps {
 }
 
 
-const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose }) => {
-  const [query, setQuery] = useState('');
+const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, initialTheme }) => {
+  const [query, setQuery] = useState(initialTheme || '');
+
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
