@@ -67,13 +67,18 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
   '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
   'Jd': 65, 'Ap': 66,
-  'Tb': 67, 'Jt': 68, '1Mc': 69, '2Mc': 70, 'Sb': 71, 'Eclo': 72, 'Br': 73
+    'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
 /** Try bible-api.com first (Almeida translation) */
 async function fetchFromBibleApi(englishName: string, chapter: number) {
-  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=almeida`;
+  // If it's a deuterocanonical book, try specialized Catholic versions
+  const isDeutero = ['tobit', 'judith', 'wisdom', 'sirach', 'baruch', '1maccabees', '2maccabees'].includes(englishName.toLowerCase());
+  const translation = isDeutero ? 'webbe' : 'almeida';
+  
+  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=${translation}`;
   console.log('Trying bible-api.com:', url);
+
   const res = await fetch(url);
   if (!res.ok) return null;
   const data = await res.json();
@@ -83,21 +88,29 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
 
 /** Fallback to bolls.life (NAA — Nova Almeida Atualizada) */
 async function fetchFromBollsLife(bookId: number, chapter: number) {
-  const url = `https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`;
-  console.log('Fallback bolls.life:', url);
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const data = await res.json();
-  if (!Array.isArray(data) || data.length === 0) return null;
-  return data.map((v: any) => ({
-    number: v.verse,
-    text: (v.text || '')
-      .replace(/<sup>.*?<\/sup>/g, '')
-      .replace(/<[^>]+>/g, '')
-      .replace(/\s{2,}/g, ' ')
-      .trim(),
-  }));
+  // Try Vulgate (VULG) as a fallback for deuterocanonical structure if NAA fails
+  const versions = ['NAA', 'VULG'];
+  
+  for (const version of versions) {
+    const url = `https://bolls.life/get-chapter/${version}/${bookId}/${chapter}/`;
+    console.log(`Trying bolls.life (${version}):`, url);
+    const res = await fetch(url);
+    if (!res.ok) continue;
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) continue;
+    
+    return data.map((v: any) => ({
+      number: v.verse,
+      text: (v.text || '')
+        .replace(/<sup>.*?<\/sup>/g, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim(),
+    }));
+  }
+  return null;
 }
+
 
 // Rate limiter: 30 requests per minute per IP
 const rateLimitMap = new Map<string, number[]>();
