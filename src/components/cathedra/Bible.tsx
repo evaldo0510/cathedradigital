@@ -143,7 +143,7 @@ const Bible: React.FC = () => {
     toast.success('Reflexão guardada');
   };
 
-  const toggleHighlight = (verseNumber: number, color: string = 'yellow') => {
+  const toggleHighlight = (verseNumber: number, color: string) => {
     if (!selectedBook) return;
     const key = `${selectedBook.abbr}-${selectedChapter}-${verseNumber}`;
     const newHighlights = { ...highlights };
@@ -157,6 +157,7 @@ const Bible: React.FC = () => {
     setHighlights(newHighlights);
     localStorage.setItem('cathedra_bible_highlights', JSON.stringify(newHighlights));
   };
+
 
   const handleExportData = () => {
     const data = {
