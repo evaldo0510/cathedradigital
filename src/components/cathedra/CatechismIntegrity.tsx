@@ -97,6 +97,11 @@ const CatechismIntegrity: React.FC = () => {
       }
     } catch (err) {
       toast.error('Erro de conexão com o servidor');
+    } finally {
+      setIsReprocessing(false);
+    }
+  };
+
   const clearCache = async () => {
     if (!confirm('Deseja realmente limpar TODO o cache do catecismo? Esta ação é irreversível e exigirá nova geração por IA.')) return;
     
