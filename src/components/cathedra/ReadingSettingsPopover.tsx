@@ -109,7 +109,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           {/* Espaçamento */}
           <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento entre Linhas</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
             <div className="flex gap-spacing-sm">
               {lineSpacings.map((s) => (
                 <button
@@ -117,11 +117,11 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                   onClick={() => updateSettings({ lineSpacing: s.id })}
                   className={cn(
                     "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
-                    settings.lineSpacing === s.id ? "bg-primary/5 border-primary/20" : "border-primary/5 hover:bg-primary/[0.02]"
+                    settings.lineSpacing === s.id ? "bg-primary/5 border-primary/20 shadow-inner" : "border-primary/5 hover:bg-primary/[0.02]"
                   )}
                 >
                   <s.icon className={cn("w-spacing-md h-spacing-md", settings.lineSpacing === s.id ? "text-primary" : "text-primary/20")} />
-                  <span className="text-[8px] font-medium uppercase tracking-tighter opacity-40">{s.label}</span>
+                  <span className="text-[8px] font-bold uppercase tracking-tighter opacity-60">{s.label}</span>
                 </button>
               ))}
             </div>

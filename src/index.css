@@ -116,24 +116,32 @@
   .reading-theme-paper { 
     --background: 45 35% 99.4%; 
     --foreground: 220 25% 10%;
+    background-color: #FEFDFB !important;
+    color: #1a1a1a !important;
   }
   .reading-theme-sepia { 
     --background: 38 35% 92%; 
     --foreground: 25 20% 20%; 
     --primary: 25 20% 15%;
     --border: 25 20% 10% / 0.1;
+    background-color: #E8E2D2 !important;
+    color: #2b2621 !important;
   }
   .reading-theme-dark { 
     --background: 220 15% 12%; 
     --foreground: 45 10% 88%; 
     --primary: 42 15% 70%;
     --border: 45 15% 90% / 0.05;
+    background-color: #1A1C1E !important;
+    color: #e0e0e0 !important;
   }
   .reading-theme-night { 
     --background: 220 20% 7%; 
     --foreground: 45 10% 70%; 
     --primary: 42 15% 50%;
     --border: 45 15% 90% / 0.03;
+    background-color: #0D0E10 !important;
+    color: #b0b0b0 !important;
   }
 
   .high-contrast {
@@ -222,24 +230,27 @@
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/10 w-full;
-    font-size: clamp(var(--text-premium-base), 1.4vw, var(--text-premium-xl));
-    line-height: 2.1;
-    letter-spacing: var(--letter-spacing-wide);
-    font-weight: var(--font-weight-light);
+    @apply font-reader text-foreground selection:bg-primary/10 w-full mx-auto;
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    font-weight: 300;
     font-variant-numeric: oldstyle-nums;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
-  @screen sm {
-    .reader-text { font-size: var(--text-premium-xl); }
-  }
+  .line-spacing-tight .reader-text { line-height: 1.5; }
+  .line-spacing-normal .reader-text { line-height: 1.8; }
+  .line-spacing-wide .reader-text { line-height: 2.2; }
 
   @screen md {
     .reader-text {
-      font-size: 1.55rem;
-      line-height: 2.3;
-      letter-spacing: var(--letter-spacing-wide);
+      line-height: 2;
     }
+    .line-spacing-tight .reader-text { line-height: 1.7; }
+    .line-spacing-normal .reader-text { line-height: 2; }
+    .line-spacing-wide .reader-text { line-height: 2.5; }
   }
 
   .font-size-small { font-size: 0.875rem !important; }
@@ -271,10 +282,10 @@
   }
 
   /* Atmosphere & Theme Depth - Variable Surface Levels */
-  .reading-theme-paper { background-color: #FEFDFB; }
-  .reading-theme-sepia { background-color: #E8E2D2; }
-  .reading-theme-dark { background-color: hsl(220 12% 12%); }
-  .reading-theme-night { background-color: hsl(220 15% 8%); }
+  .reading-theme-paper { background-color: #FEFDFB !important; color: #1a1a1a !important; }
+  .reading-theme-sepia { background-color: #E8E2D2 !important; color: #2b2621 !important; }
+  .reading-theme-dark { background-color: #1A1C1E !important; color: #e0e0e0 !important; }
+  .reading-theme-night { background-color: #0D0E10 !important; color: #b0b0b0 !important; }
 }
 
 @layer components {
