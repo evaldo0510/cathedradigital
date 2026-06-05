@@ -407,6 +407,36 @@ export type Database = {
           },
         ]
       }
+      bible_audit_security_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          created_by: string | null
+          details: Json
+          entity_name: string
+          id: string
+          scan_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          created_by?: string | null
+          details: Json
+          entity_name: string
+          id?: string
+          scan_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          created_by?: string | null
+          details?: Json
+          entity_name?: string
+          id?: string
+          scan_id?: string | null
+        }
+        Relationships: []
+      }
       bible_audit_webhook_deliveries: {
         Row: {
           alert_id: string | null
@@ -3265,6 +3295,15 @@ export type Database = {
           p_severity?: string
         }
         Returns: undefined
+      }
+      log_security_policy_change: {
+        Args: {
+          p_action: string
+          p_details: Json
+          p_entity_name: string
+          p_scan_id?: string
+        }
+        Returns: string
       }
       mask_ip: { Args: { ip: string }; Returns: string }
       search_community_posts_fuzzy: {
