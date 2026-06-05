@@ -338,24 +338,43 @@ const Bible: React.FC = () => {
   };
 
 
-  // Mock data for cross references
-  const CROSS_REFERENCES: Record<string, string[]> = {
-    'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
-    'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
-    'Gn-1-1': ['Jo-1-1', 'Hb-11-3'],
-    'Mt-5-3': ['Lc-6-20'],
-  };
-
-  const wrapWithDictionary = (text: string) => {
-    // Knowledge connection logic handled in verse render
-    const parts = text.split(new RegExp(`(${dictionaryTerms.join('|')})`, 'gi'));
-    return parts.map((part, i) => {
-      if (dictionaryTerms.some(term => term.toLowerCase() === part.toLowerCase())) {
-        return <BibleDictionaryPopover key={i} term={part}>{part}</BibleDictionaryPopover>;
-      }
-      return part;
+  // Identified books with connections mapping
+  const auditData = useMemo(() => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    
+    const connectedBooks = new Set();
+    const uncoveredBooks: string[] = [];
+    const missingVerses: { book: string, chapter: number, verse: number }[] = [];
+    
+    Object.keys(KNOWLEDGE_CONNECTIONS).forEach(key => {
+      const bookAbbr = key.split('-')[0];
+      connectedBooks.add(bookAbbr);
     });
-  };
+
+    allBooks.forEach(b => {
+      if (!connectedBooks.has(b.abbr)) {
+        uncoveredBooks.push(b.name);
+      }
+    });
+
+    // Theological Themes Index (Phase 3)
+    const themes = Array.from(new Set(
+      Object.values(KNOWLEDGE_CONNECTIONS)
+        .flat()
+        .filter(c => c.type === 'theology')
+        .map(c => c.label)
+    ));
+    
+    return {
+      totalBooks: allBooks.length,
+      coveredBooks: connectedBooks.size,
+      emptyBooks: uncoveredBooks,
+      totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
+      themesCount: themes.length,
+      missingContent: missingVerses, // Ready for deep indexing
+    };
+  }, [KNOWLEDGE_CONNECTIONS]);
+
 
 
 
