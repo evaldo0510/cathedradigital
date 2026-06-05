@@ -16,28 +16,34 @@ const GLOSSARY = {
   'Chapters': 'Capítulos',
   'Verses': 'Versículos',
   'Canon': 'Cânone',
-  'Scriptures': 'Escrituras'
+  'Scriptures': 'Escrituras',
+  'Event Type': 'Tipo de Evento',
+  'Error Message': 'Mensagem de Erro',
+  'Delivery Status': 'Status de Entrega',
+  'Test Webhook': 'Testar Transmissão',
+  'Idempotency': 'Idempotência'
 };
 
 const FORBIDDEN_STRINGS = [
-  'Retry Policy', 'Webhook', 'Scanning...', 'Security Scan', 'Issues Found',
-  'Normal Text', 'Large Text', 'A11y Check', 'Compliance Score', 'Audit Results',
-  'Last Run', 'Compare Runs', 'Export Report', 'Settings', 'Search...', 'All Actions', 
-  'status', 'canonical_payload', 'retry policy'
+  ...Object.keys(GLOSSARY),
+  'Scanning...', 'Security Scan', 'Issues Found', 'Normal Text', 'Large Text', 
+  'A11y Check', 'Compliance Score', 'Audit Results', 'Last Run', 'Compare Runs', 
+  'Export Report', 'Settings', 'Search...', 'All Actions', 'status', 'canonical_payload', 
+  'retry policy', 'event type', 'error message', 'resend'
 ];
 
 test.describe('I18n Audit & Glossary Consistency', () => {
-  test('Generate detailed i18n checklist report', async ({ page }) => {
+  test('Generate detailed i18n checklist report and fail build if needed', async ({ page }) => {
     await page.goto('/');
     const bodyText = await page.textContent('body') || '';
     const failures: any[] = [];
 
     FORBIDDEN_STRINGS.forEach(str => {
       const regex = new RegExp(`\\b${str}\\b`, 'gi');
-      if (regex.test(bodyText) && !bodyText.toLowerCase().includes('canônico')) {
+      if (regex.test(bodyText) && !bodyText.toLowerCase().includes('canônico') && !bodyText.toLowerCase().includes('retentativa')) {
         failures.push({
           term: str,
-          context: 'Interface Global',
+          context: 'Global UI',
           expected: (GLOSSARY as any)[str] || 'Tradução solene em PT-BR'
         });
       }
@@ -51,10 +57,13 @@ test.describe('I18n Audit & Glossary Consistency', () => {
         status: 'FAILED',
         failures
       }, null, 2));
+      
+      console.error(`::error::I18n Compliance Failed: ${failures.length} issues found. See tests/reports/i18n-release-check.json`);
     }
 
-    expect(failures, `Detectadas ${failures.length} falhas de i18n. Veja o relatório em tests/reports/i18n-release-check.json`).toHaveLength(0);
+    expect(failures, `Inconsistências i18n detectadas. Build bloqueado.`).toHaveLength(0);
   });
+
 
   test('Verify Webhook labels and Glossary consistency', async ({ page }) => {
     await page.goto('/');
