@@ -13,8 +13,15 @@ interface BibleFullNotesListProps {
 }
 
 
-const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ onSelectReference, onClose }) => {
-  const { notes, deleteNote, loading } = useNotes('bible');
+const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({ 
+  onSelectReference, 
+  onClose,
+  onEditNote,
+  onDeleteNote 
+}) => {
+  const { notes, loading } = useNotes('bible');
+  const [editingNote, setEditingNote] = useState<UserNote | null>(null);
+
 
   // Group notes by book and chapter
   const groupedNotes = notes.reduce((acc: any, note) => {
