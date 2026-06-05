@@ -352,7 +352,11 @@ const Bible: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="px-6 pt-10 pb-32 max-w-lg mx-auto"
+            className={cn(
+              "px-6 pt-10 pb-32 max-w-lg mx-auto transition-colors duration-1000",
+              settings.theme === 'night' && "bg-[#0D0E10] text-stone-400"
+            )}
+
           >
             {/* Minimal Header */}
             <header className="mb-10 flex items-center justify-between">
