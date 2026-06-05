@@ -707,7 +707,7 @@ const Bible: React.FC = () => {
             </div>
 
             {/* Widgets Rápidos - Elegantes e Discretos */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+            <div className="flex flex-wrap md:flex-nowrap gap-spacing-md">
               {[
                 { label: 'Leitura do Dia', icon: Icons.Sun, info: 'Sermão da Montanha', action: () => {} },
                 { label: 'Plano 365 Dias', icon: Icons.Activity, info: 'Dia 127 de 365', progress: 35 },
@@ -717,8 +717,9 @@ const Bible: React.FC = () => {
                 <button 
                   key={w.label} 
                   onClick={w.action}
-                  className="p-spacing-lg bg-primary/[0.01] hover:bg-primary/[0.03] rounded-premium border border-primary/5 transition-all text-left group"
+                  className="flex-1 min-w-[140px] p-spacing-lg bg-white/40 backdrop-blur-xl hover:bg-white/60 rounded-premium border border-primary/5 transition-all text-left group shadow-premium-sm"
                 >
+
                   <w.icon className="w-spacing-md h-spacing-md text-primary/10 group-hover:text-primary transition-all mb-spacing-md" />
                   <span className="block text-[8px] font-black uppercase tracking-widest text-primary/30 mb-1">{w.label}</span>
                   <span className="block text-premium-xs font-bold text-primary/70">{w.info}</span>
