@@ -1247,7 +1247,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       {showExportModal && (
         <div className="fixed inset-0 z-[120] bg-black/20 backdrop-blur-sm flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4">
-             <h3 className="text-[10px] font-black uppercase tracking-widest">Opções de Exportação</h3>
+             <h3 className="text-[10px] font-black uppercase tracking-widest">Opções de Exportação de Dados</h3>
              <button onClick={() => toast.success('CSV Gerado')} className="w-full py-3 bg-secondary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">Exportar para CSV</button>
              <button onClick={() => setShowExportModal(false)} className="w-full py-3 bg-primary/5 text-primary/40 rounded-2xl text-[10px] font-black uppercase tracking-widest">Fechar</button>
           </div>
