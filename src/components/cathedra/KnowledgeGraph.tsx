@@ -144,12 +144,21 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
                 </p>
               </div>
               <div className="flex gap-2">
-                <button className="flex-1 h-10 rounded-xl bg-secondary text-black text-[9px] font-black uppercase tracking-widest">
+                <button 
+                  onClick={() => {
+                    if (onNavigateToContent && currentNode.type === 'bible') {
+                      const [b, c, v] = currentNode.id.split('-');
+                      onNavigateToContent(b, parseInt(c), parseInt(v));
+                    }
+                  }}
+                  className="flex-1 h-10 rounded-xl bg-secondary text-black text-[9px] font-black uppercase tracking-widest"
+                >
                   Ver Texto Completo
                 </button>
                 <button className="flex-1 h-10 rounded-xl bg-white/10 text-white text-[9px] font-black uppercase tracking-widest">
                   Ir para Origem
                 </button>
+
               </div>
             </motion.div>
           )}
