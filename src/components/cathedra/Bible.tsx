@@ -456,7 +456,34 @@ const Bible: React.FC = () => {
             </motion.div>
           </motion.div>
         )}
+        {viewMode === 'search' && (
+          <BibleSearch 
+            onClose={() => setViewMode('home')} 
+            onSelectResult={(book, chapter, verse) => {
+              navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
+              setViewMode('reading');
+            }} 
+          />
+        )}
+
+        {viewMode === 'notes' && (
+          <BibleFullNotesList 
+            onClose={() => setViewMode('home')}
+            onSelectReference={(book, chapter, verse) => {
+              navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
+              setViewMode('reading');
+            }}
+          />
+        )}
       </AnimatePresence>
+
+      <NoteEditModal 
+        isOpen={isNoteModalOpen}
+        onClose={() => setIsNoteModalOpen(false)}
+        onSave={handleSaveNote}
+        title={`${selectedBook?.name} ${selectedChapter}:${activeVerse?.number}`}
+      />
+
     </div>
   );
 };
