@@ -2,25 +2,30 @@ export interface BibleBook {
   name: string;
   abbr: string;
   chapters: number;
+  description?: string; // Descrição literária ou teológica do livro
 }
 
 export interface BibleCategory {
   name: string;
   books: BibleBook[];
+  description?: string; // Descrição do gênero literário (ex: Pentateuco)
 }
+
 
 export const BIBLE_DATA: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
     {
       name: 'Pentateuco',
+      description: 'A Lei de Moisés e as origens da Aliança.',
       books: [
-        { name: 'Gênesis', abbr: 'Gn', chapters: 50 },
-        { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
-        { name: 'Levítico', abbr: 'Lv', chapters: 27 },
-        { name: 'Números', abbr: 'Nm', chapters: 36 },
-        { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 }
+        { name: 'Gênesis', abbr: 'Gn', chapters: 50, description: 'As Origens do Mundo e do Povo da Aliança.' },
+        { name: 'Êxodo', abbr: 'Ex', chapters: 40, description: 'A Libertação do Egito e a Aliança do Sinai.' },
+        { name: 'Levítico', abbr: 'Lv', chapters: 27, description: 'As Leis do Culto e a Santidade do Povo.' },
+        { name: 'Números', abbr: 'Nm', chapters: 36, description: 'A Caminhada no Deserto rumo à Terra Prometida.' },
+        { name: 'Deuteronômio', abbr: 'Dt', chapters: 34, description: 'O Segundo Anúncio da Lei.' }
       ]
     },
+
     {
       name: 'Livros Históricos',
       books: [
@@ -86,13 +91,15 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
   'Novo Testamento': [
     {
       name: 'Evangelhos',
+      description: 'A Boa Nova de Jesus Cristo contada por quatro testemunhas.',
       books: [
-        { name: 'Mateus', abbr: 'Mt', chapters: 28 },
-        { name: 'Marcos', abbr: 'Mc', chapters: 16 },
-        { name: 'Lucas', abbr: 'Lc', chapters: 24 },
-        { name: 'João', abbr: 'Jo', chapters: 21 }
+        { name: 'Mateus', abbr: 'Mt', chapters: 28, description: 'O Evangelho do Reino e o Cumprimento das Promessas.' },
+        { name: 'Marcos', abbr: 'Mc', chapters: 16, description: 'O Caminho do Filho de Deus e o Segredo Messiânico.' },
+        { name: 'Lucas', abbr: 'Lc', chapters: 24, description: 'O Evangelho da Misericórdia e a Salvação Universal.' },
+        { name: 'João', abbr: 'Jo', chapters: 21, description: 'A Palavra Encarnada e o Testemunho do Discípulo Amado.' }
       ]
     },
+
     {
       name: 'Histórico',
       books: [
