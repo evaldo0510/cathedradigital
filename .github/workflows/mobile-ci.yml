@@ -53,7 +53,7 @@ jobs:
           CI: true
           HEADLESS: true
 
-      - name: Generate Evidence Manifest & Validate
+      - name: Generate Evidence Manifest & Validate Schema
         if: always()
         run: |
           node -e "
@@ -61,19 +61,16 @@ jobs:
           if (fs.existsSync('playwright-report/results.json')) {
             const results = JSON.parse(fs.readFileSync('playwright-report/results.json', 'utf8'));
             const manifest = [];
-            let allEvidencesExist = true;
+            let validationErrors = [];
 
             results.suites.forEach(suite => {
               suite.specs.forEach(spec => {
                 spec.tests.forEach(test => {
-                  const evidences = test.results.flatMap(r => r.attachments || []);
+                  if (!test.projectName) validationErrors.push('Missing projectName for ' + spec.title);
                   
-                  if (test.status === 'failed' || test.status === 'unexpected') {
-                    const hasTrace = evidences.some(a => a.name === 'trace');
-                    if (!hasTrace) {
-                      console.error('❌ Trace ausente para:', spec.title);
-                      allEvidencesExist = false;
-                    }
+                  const evidences = test.results.flatMap(r => r.attachments || []);
+                  if ((test.status === 'failed' || test.status === 'unexpected') && !evidences.some(a => a.name === 'trace')) {
+                    validationErrors.push('Missing trace for failed test: ' + spec.title);
                   }
 
                   manifest.push({
@@ -88,8 +85,12 @@ jobs:
               });
             });
             
+            if (validationErrors.length > 0) {
+              console.error('❌ Manifest Validation Failed:\n' + validationErrors.join('\n'));
+              process.exit(1);
+            }
+            
             fs.writeFileSync('playwright-report/evidence-manifest.json', JSON.stringify(manifest, null, 2));
-            if (!allEvidencesExist) process.exit(1);
           }
           "
 
@@ -102,15 +103,6 @@ jobs:
           retention-days: ${{ vars.RETENTION_DAYS_HTML || 7 }}
           if-no-files-found: error
 
-      - name: Upload Test Results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ github.run_id }}
-          path: test-results/
-          retention-days: ${{ vars.RETENTION_DAYS_EVIDENCE || 3 }}
-          if-no-files-found: error
-
       - name: PR Commentary on Failure
         if: failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -121,35 +113,35 @@ jobs:
             const artifact_url = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}/artifacts`;
             
             let summary = "### 🚨 Mobile E2E Failure Detected\n\n";
-            summary += "#### 📱 Resumo por Dispositivo\n\n";
             
             try {
               if (fs.existsSync('playwright-report/evidence-manifest.json')) {
                 const manifest = JSON.parse(fs.readFileSync('playwright-report/evidence-manifest.json', 'utf8'));
-                const grouped = manifest.reduce((acc, item) => {
-                  if (item.status === 'failed' || item.status === 'unexpected') {
-                    if (!acc[item.project]) acc[item.project] = [];
-                    acc[item.project].push(item);
-                  }
+                const failed = manifest.filter(t => t.status === 'failed' || t.status === 'unexpected');
+                
+                summary += `**Resumo:** ${failed.length} falhas detectadas.\n\n`;
+                
+                const grouped = failed.reduce((acc, item) => {
+                  if (!acc[item.project]) acc[item.project] = [];
+                  acc[item.project].push(item);
                   return acc;
                 }, {});
 
                 for (const [device, tests] of Object.entries(grouped)) {
-                  summary += `**${device}**\n\n`;
-                  summary += "| Teste | Status | Evidência |\n";
-                  summary += "| :--- | :--- | :--- |\n";
+                  summary += `<details open><summary><b>📱 ${device} (${tests.length} falhas)</b></summary>\n\n`;
+                  summary += "| Teste | Evidence |\n";
+                  summary += "| :--- | :--- |\n";
                   tests.forEach(t => {
-                    summary += `| ${t.title} | ❌ Falhou | [Ver Trace/HTML](${artifact_url}) |\n`;
+                    summary += `| ${t.title} | [Trace/HTML](${artifact_url}) |\n`;
                   });
-                  summary += "\n";
+                  summary += "\n</details>\n";
                 }
               }
             } catch (e) {
-              summary += `\n*Erro ao gerar resumo: ${e.message}*\n`;
+              summary += `\n*Erro ao gerar resumo detalhado.*\n`;
             }
             
-            summary += `\n- **Reexecutar falhas:** [Re-run failed jobs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id})`;
-            summary += `\n- **Local:** \`npm run test:e2e:sync-failed\``;
+            summary += `\n- **Ações:** [Re-run failed jobs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run_id}) | [Download Artefatos](${artifact_url})`;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -157,27 +149,3 @@ jobs:
               repo: context.repo.repo,
               body: summary
             })
-
-      - name: Notify CI Failure
-        if: failure()
-        run: |
-          PAYLOAD=$(cat <<EOF
-          {
-            "text": "🚨 *Cathedra Critical: Mobile Regression Detected*",
-            "attachments": [
-              {
-                "color": "#D42020",
-                "title": "Mobile Navigation Failure | Branch: ${GITHUB_REF_NAME}",
-                "title_link": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
-                "fields": [
-                  { "title": "Commit", "value": "${GITHUB_SHA:0:7}", "short": true },
-                  { "title": "Evidence Artifacts", "value": "<${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts|Download Screenshots & Logs>", "short": false }
-                ],
-                "footer": "AD MAIOREM DEI GLORIAM",
-                "ts": $(date +%s)
-              }
-            ]
-          }
-          EOF
-          )
-          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.CI_NOTIFICATION_WEBHOOK }} || echo "Webhook not configured"
