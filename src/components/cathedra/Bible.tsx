@@ -350,16 +350,30 @@ const Bible: React.FC = () => {
 
   const auditData = useMemo(() => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-    const booksWithContent = allBooks.filter(b => b.chapters > 0);
-    const emptyBooks = allBooks.filter(b => b.chapters === 0);
+    
+    // Identified books with connections mapping
+    const connectedBooks = new Set();
+    const uncoveredBooks: string[] = [];
+    
+    Object.keys(KNOWLEDGE_CONNECTIONS).forEach(key => {
+      const bookAbbr = key.split('-')[0];
+      connectedBooks.add(bookAbbr);
+    });
+
+    allBooks.forEach(b => {
+      if (!connectedBooks.has(b.abbr)) {
+        uncoveredBooks.push(b.name);
+      }
+    });
     
     return {
       totalBooks: allBooks.length,
-      coveredBooks: booksWithContent.length,
-      emptyBooks: emptyBooks.map(b => b.name),
+      coveredBooks: connectedBooks.size,
+      emptyBooks: uncoveredBooks,
       totalChapters: allBooks.reduce((acc, b) => acc + b.chapters, 0),
     };
-  }, []);
+  }, [KNOWLEDGE_CONNECTIONS]);
+
 
   const filteredBooks = useMemo(() => {
 
