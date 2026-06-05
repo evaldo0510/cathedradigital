@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { AppRoute } from '../../types';
-import { isRouteActive } from '@/lib/navigation-utils';
+import { isRouteActive, isLegitimateClick } from '@/lib/navigation-utils';
 
 import { Icons, NAV_ITEMS } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
@@ -201,7 +201,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
               onClick={(e) => {
                 // Previne cliques fantasmas ou duplos no mobile
-                if (e.defaultPrevented) return;
+                if (e.defaultPrevented || !isLegitimateClick(e)) return;
                 
                 if (item.isMenu) {
                   onOpenSidebar();

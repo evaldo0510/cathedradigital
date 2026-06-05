@@ -8,6 +8,7 @@ import { useLang } from '@/hooks/useLang';
 
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/constants';
+import { isLegitimateClick } from '@/lib/navigation-utils';
 
 interface AppHeaderProps {
   user: any;
@@ -54,8 +55,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
-            onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
-            onClick={() => {
+            onKeyDown={(e) => e.key === 'Enter' && isLegitimateClick(e) && navigate('/')} 
+            onClick={(e) => {
+              if (!isLegitimateClick(e)) return;
               navigate('/');
               window.scrollTo({ top: 0, behavior: 'instant' });
             }}
@@ -76,7 +78,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(-1)}
+                  onClick={(e) => isLegitimateClick(e) && navigate(-1)}
                   className="w-[44px] h-[44px] md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
