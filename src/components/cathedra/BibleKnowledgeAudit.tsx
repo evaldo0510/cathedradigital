@@ -1366,7 +1366,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
             <div className="grid grid-cols-2 gap-4">
                <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Anterior</label>
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Varredura de Referência</label>
                  <select 
                    className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
                    onChange={e => setScanComparison(prev => ({...prev, s1: securityScans.find(s => s.id === e.target.value)}))}
@@ -1376,7 +1376,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                  </select>
                </div>
                <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Scan Atual</label>
+                 <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Varredura Alvo</label>
                  <select 
                    className="w-full bg-primary/5 rounded-xl px-4 py-2 text-xs"
                    onChange={e => setScanComparison(prev => ({...prev, s2: securityScans.find(s => s.id === e.target.value)}))}
