@@ -400,14 +400,36 @@ const Bible: React.FC = () => {
                   </header>
 
                   <div className="space-y-8">
-                    {verses.map(v => (
-                      <div key={v.number} className="flex gap-4">
-                        <span className="text-[10px] font-serif font-bold text-secondary/30 mt-2 w-5 shrink-0 tabular-nums">{v.number}</span>
-                        <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight">
-                          {wrapWithDictionary(v.text)}
-                        </p>
-                      </div>
-                    ))}
+                    {verses.map(v => {
+                      const hasNote = notes.some(n => 
+                        n.book_abbr === selectedBook.abbr && 
+                        n.chapter === selectedChapter && 
+                        n.verse === v.number
+                      );
+                      
+                      return (
+                        <div key={v.number} className="flex gap-4 group relative">
+                          <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
+                            <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
+                            {hasNote && (
+                              <div className="w-1.5 h-1.5 rounded-full bg-secondary/40 shadow-sm" title="Possui anotação" />
+                            )}
+                          </div>
+                          
+                          <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
+                            {wrapWithDictionary(v.text)}
+                            
+                            <button 
+                              onClick={() => handleOpenAnnotation(v)}
+                              className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                              <Icons.Pen className="w-3.5 h-3.5" />
+                            </button>
+                          </p>
+                        </div>
+                      );
+                    })}
+
                   </div>
 
                   {/* Vertical Navigation Buttons */}
