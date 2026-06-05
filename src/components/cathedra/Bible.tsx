@@ -95,11 +95,21 @@ const Bible: React.FC = () => {
     if (dailyStatus === 'completed') setIsDailyCompleted(true);
   }, []);
 
-  const saveReadingProgress = useCallback((book: BibleBook, chapter: number) => {
-    const progress = { bookName: book.name, bookAbbr: book.abbr, chapter };
+  const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
+    const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+    const book = allBooks.find(b => b.abbr === bookAbbr);
+    if (!book) return;
+
+    const progress = { 
+      bookName: book.name, 
+      bookAbbr: book.abbr, 
+      chapter,
+      verse: verse || 1
+    };
     setLastRead(progress);
     localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
   }, []);
+
 
   const markDailyAsCompleted = () => {
     const today = new Date().toISOString().split('T')[0];
