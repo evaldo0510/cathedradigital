@@ -14,6 +14,7 @@ import {
   ArrowUpDown,
   ArrowUpRight,
   Award,
+  BarChart,
   Bell,
   Bird,
   Book,
