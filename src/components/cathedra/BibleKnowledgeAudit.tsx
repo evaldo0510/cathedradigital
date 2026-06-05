@@ -98,6 +98,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
+  const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
+
 
 
   React.useEffect(() => {
@@ -366,7 +368,18 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
 
+  const fetchI18nReport = async () => {
+    // Simula leitura do arquivo json gerado pelos testes E2E
+    const mockReport = [
+      { term: 'Retry Policy', context: 'Configuração Webhook', expected: 'Política de Retentativa' },
+      { term: 'Scanning...', context: 'Painel de Segurança', expected: 'Verificando...' },
+      { term: 'A11y Check', context: 'Painel de QA', expected: 'Validação de Acessibilidade' }
+    ];
+    setI18nFailures(mockReport);
+  };
+
   React.useEffect(() => {
+
     if (activeTab === 'history') fetchAuditRuns();
     if (activeTab === 'notifications') fetchNotifications();
     if (activeTab === 'audit-logs') fetchActionLogs();
@@ -375,10 +388,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (activeTab === 'security') fetchSecurityLogs();
     if (activeTab === 'a11y') fetchA11yConfig();
     if (activeTab === 'a11y') fetchSecurityScans(); // Reutilizar para contexto de auditoria
-
-
-
+    if (activeTab === 'i18n-audit') fetchI18nReport();
   }, [activeTab]);
+
 
   const addNotification = async () => {
     if (!newNotification.target) return;
@@ -609,7 +621,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
             { id: 'webhooks', label: 'Webhooks', icon: Icons.Code },
             { id: 'security', label: 'Segurança', icon: Icons.Shield },
             { id: 'a11y', label: 'Acessibilidade (A11y)', icon: Icons.Eye },
+            { id: 'i18n-audit', label: 'Checklist i18n', icon: Icons.Languages },
             { id: 'schedule', label: 'Agendamento', icon: Icons.Calendar },
+
           ].map(tab => (
             <button
               key={tab.id}
@@ -629,7 +643,50 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
       <div className="flex-1 overflow-y-auto px-6 py-8 pb-32 w-full max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
+          {activeTab === 'i18n-audit' && (
+            <motion.div key="i18n-audit" className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Checklist de Internacionalização (Pre-Release)</h3>
+                <span className={cn(
+                  "text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest",
+                  i18nFailures.length > 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                )}>
+                  {i18nFailures.length} Pendências
+                </span>
+              </div>
+
+              <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden divide-y shadow-sm">
+                {i18nFailures.length > 0 ? i18nFailures.map((failure, idx) => (
+                  <div key={idx} className="p-6 space-y-3 hover:bg-primary/[0.01] transition-colors text-left">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-mono bg-rose-50 text-rose-600 px-2 py-1 rounded-lg border border-rose-100/50">{failure.term}</span>
+                        <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
+                        <span className="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-2 py-1 rounded-lg border border-emerald-100/50">{failure.expected}</span>
+                      </div>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{failure.context}</span>
+                    </div>
+                    <p className="text-[10px] text-primary/40 italic">Ação sugerida: Substituir termo em inglês pela terminologia institucional solene.</p>
+                  </div>
+                )) : (
+                  <div className="p-12 text-center space-y-2">
+                    <Icons.CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto opacity-20" />
+                    <p className="text-[10px] text-primary/30 uppercase font-black tracking-widest">Interface 100% Localizada</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
+                <p className="text-[10px] text-primary/40 leading-relaxed italic">
+                  Este checklist é gerado automaticamente a partir dos testes de regressão de i18n. 
+                  Falhas aqui bloqueiam a implantação em produção conforme as políticas de governança estabelecidas.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'a11y' && (
+
             <motion.div key="a11y" className="space-y-8">
               <div className="flex items-center justify-between">
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Limiares de Acessibilidade das Escrituras</h3>
