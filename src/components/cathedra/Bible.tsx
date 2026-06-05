@@ -612,19 +612,43 @@ const Bible: React.FC = () => {
                             )}
                           </div>
                           
-                          <p className="flex-1 leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
-                            {wrapWithDictionary(v.text)}
-                            
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenAnnotation(v);
-                              }}
-                              className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
-                            >
-                              <Icons.PenLine className="w-3.5 h-3.5" />
-                            </button>
-                          </p>
+                          <div className="flex-1 space-y-4">
+                            <p className="leading-[1.85] text-[19px] font-serif text-primary/85 tracking-tight relative">
+                              {wrapWithDictionary(v.text)}
+                              
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenAnnotation(v);
+                                }}
+                                className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                              >
+                                <Icons.PenLine className="w-3.5 h-3.5" />
+                              </button>
+                            </p>
+
+                            {/* Cross References */}
+                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].map(ref => {
+                                  const [b, c, vNum] = ref.split('-');
+                                  return (
+                                    <button
+                                      key={ref}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
+                                      }}
+                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/60 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                    >
+                                      {b} {c}:{vNum}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+
                         </div>
 
                       );
