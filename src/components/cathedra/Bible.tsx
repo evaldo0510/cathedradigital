@@ -1109,21 +1109,21 @@ const Bible: React.FC = () => {
                     <span className="text-[10px] font-serif italic text-primary/20 mr-spacing-md align-top inline-block w-4 text-right select-none" aria-hidden="true">{v.number}</span>
                     <span className="align-baseline" id={`v-text-${v.number}`}>{wrapWithDictionary(v.text)}</span>
                     
-                    {!settings.immersiveMode && (
-                      <div className="absolute right-spacing-md top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                    <div className="flex flex-col items-center gap-spacing-md mt-spacing-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-4 py-1 rounded-full border border-primary/5 shadow-premium-sm">
                         <button 
                           onClick={() => toggleFavorite(v)}
                           aria-label={favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                           className={cn(
-                            "p-spacing-xs rounded-full hover:bg-primary/10",
+                            "p-1 rounded-full hover:bg-primary/5 transition-colors",
                             favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) 
-                              ? "text-primary" 
+                              ? "text-secondary" 
                               : "text-primary/20"
                           )}
                         >
                           <Icons.Heart 
                             className={cn(
-                              "w-spacing-sm h-spacing-sm",
+                              "w-3.5 h-3.5",
                               favorites.some(f => f.book_abbr === selectedBook?.abbr && f.chapter === selectedChapter && f.verse_number === v.number) && "fill-current"
                             )} 
                           />
@@ -1132,14 +1132,22 @@ const Bible: React.FC = () => {
                           onClick={() => setEditingNote({ verse: v.number, text: verseNotes.find(n => n.verse === v.number)?.note_text || '' })}
                           aria-label={verseNotes.some(n => n.verse === v.number) ? "Editar nota de estudo" : "Adicionar nota de estudo"}
                           className={cn(
-                            "p-spacing-xs rounded-full hover:bg-primary/10",
+                            "p-1 rounded-full hover:bg-primary/5 transition-colors",
                             verseNotes.some(n => n.verse === v.number) ? "text-primary" : "text-primary/20"
                           )}
                         >
-                          <Icons.Edit3 className="w-spacing-sm h-spacing-sm" />
+                          <Icons.Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                          aria-label="Compartilhar versículo"
+                          className="p-1 rounded-full hover:bg-primary/5 transition-colors text-primary/20"
+                        >
+                          <Icons.Share2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                    )}
+                      <Button variant="ghost" className="text-[8px] uppercase tracking-widest text-primary/10 hover:text-primary/30 h-auto p-0">Ver contexto</Button>
+                    </div>
+
 
                     {settings.showStudyMarginalia && filteredVerseNotes.find(n => n.verse === v.number) && (
                       <div 
