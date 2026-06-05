@@ -125,6 +125,33 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_audit_a11y_config: {
+        Row: {
+          device_overrides: Json | null
+          id: string
+          threshold_large: number | null
+          threshold_normal: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          device_overrides?: Json | null
+          id?: string
+          threshold_large?: number | null
+          threshold_normal?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          device_overrides?: Json | null
+          id?: string
+          threshold_large?: number | null
+          threshold_normal?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       bible_audit_action_logs: {
         Row: {
           action: string
