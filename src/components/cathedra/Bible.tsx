@@ -644,43 +644,14 @@ const Bible: React.FC = () => {
         )}
 
         {viewMode === 'monthly_recap' && (
-          <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
-            <header className="px-6 h-16 flex items-center justify-between border-b border-primary/5">
-              <button onClick={() => setViewMode('home')} className="p-2 -ml-2 text-primary/40 active:text-secondary">
-                <Icons.X className="w-6 h-6" />
-              </button>
-              <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Recapitulação Mensal</h1>
-              <div className="w-10" />
-            </header>
-            <div className="flex-1 overflow-y-auto px-6 py-8 pb-32">
-              <div className="space-y-6">
-                {Array.from({ length: 30 }, (_, i) => {
-                  const date = new Date();
-                  date.setDate(date.getDate() - i);
-                  const dateStr = date.toISOString().split('T')[0];
-                  const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${dateStr}`);
-                  
-                  return (
-                    <div key={dateStr} className="flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm">
-                      <div className="text-left">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">
-                          {date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
-                        </span>
-                        <span className="font-serif font-bold text-base">Leitura de {dateStr}</span>
-                      </div>
-                      {dailyStatus === 'completed' ? (
-                        <Icons.CheckCircle className="w-5 h-5 text-green-500" />
-                      ) : (
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/20">Não concluída</span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <MonthlyRecap 
+            onClose={() => setViewMode('home')}
+            onSelectDate={(bookAbbr, chapter) => {
+              navigate(`/bible?book=${bookAbbr}&ch=${chapter}`);
+              setViewMode('reading');
+            }}
+          />
         )}
-
       </AnimatePresence>
 
       <NoteEditModal 
@@ -689,6 +660,22 @@ const Bible: React.FC = () => {
         onSave={handleSaveNote}
         title={`${selectedBook?.name} ${selectedChapter}:${activeVerse?.number}`}
       />
+
+      <HighlightMenu
+        isOpen={isHighlightMenuOpen}
+        onClose={() => setIsHighlightMenuOpen(false)}
+        onSelectColor={(color) => {
+          if (activeVerse) {
+            toggleHighlight(activeVerse.number, color);
+            setIsHighlightMenuOpen(false);
+          }
+        }}
+        onAddNote={() => {
+          setIsHighlightMenuOpen(false);
+          setIsNoteModalOpen(true);
+        }}
+      />
+
 
     </div>
   );
