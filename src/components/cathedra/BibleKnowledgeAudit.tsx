@@ -1153,6 +1153,101 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               </div>
             </motion.div>
           )}
+          {activeTab === 'i18n-audit' && (
+            <motion.div key="i18n-audit" className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Relatório de Conformidade i18n</h3>
+                <span className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded-full">{i18nFailures.length} Pendências</span>
+              </div>
+
+              {/* Seção Específica de Webhooks */}
+              <div className="space-y-6">
+                <div className="p-6 bg-secondary/[0.02] border border-secondary/10 rounded-3xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary/60 flex items-center gap-2">
+                      <Icons.Share2 className="w-3 h-3" /> Monitoramento de Termos de Webhooks
+                    </h4>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-black uppercase tracking-widest text-primary/30">Filtrar por Endpoint</label>
+                      <select 
+                        value={webhookI18nFilters.endpoint}
+                        onChange={e => setWebhookI18nFilters(p => ({...p, endpoint: e.target.value}))}
+                        className="w-full bg-white border border-primary/5 rounded-xl px-3 py-2 text-[10px] outline-none"
+                      >
+                        <option value="all">Todos os Endpoints</option>
+                        {Array.from(new Set(i18nFailures.filter(f => f.endpoint !== 'N/A').map(f => f.endpoint))).map((url: any) => (
+                          <option key={url} value={url}>{url}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-black uppercase tracking-widest text-primary/30">Filtrar por Tipo</label>
+                      <select 
+                        value={webhookI18nFilters.eventType}
+                        onChange={e => setWebhookI18nFilters(p => ({...p, eventType: e.target.value}))}
+                        className="w-full bg-white border border-primary/5 rounded-xl px-3 py-2 text-[10px] outline-none"
+                      >
+                        <option value="all">Todos os Eventos</option>
+                        <option value="security_alert">Alertas de Segurança</option>
+                        <option value="audit_sync">Sincronização de Auditoria</option>
+                        <option value="error_msg">Mensagens de Erro</option>
+                        <option value="status">Status e Estados</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl border border-primary/5 divide-y overflow-hidden">
+                    {i18nFailures
+                      .filter(f => f.endpoint !== 'N/A')
+                      .filter(f => webhookI18nFilters.endpoint === 'all' || f.endpoint === webhookI18nFilters.endpoint)
+                      .filter(f => webhookI18nFilters.eventType === 'all' || f.type === webhookI18nFilters.eventType)
+                      .map((failure, idx) => (
+                      <div key={idx} className="p-4 flex items-center justify-between hover:bg-primary/[0.01]">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-rose-500">{failure.term}</span>
+                            <Icons.ArrowRight className="w-3 h-3 text-primary/20" />
+                            <span className="text-xs font-bold text-emerald-600 font-display italic">"{failure.expected}"</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[9px]">
+                            <span className="text-primary/30 uppercase tracking-widest font-black">{failure.context}</span>
+                            <span className="text-primary/10">•</span>
+                            <span className="text-primary/30 truncate max-w-[150px]">{failure.endpoint}</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-secondary/5 text-secondary/40">
+                            {failure.type?.replace('_', ' ')}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Outras Pendências de Interface</h4>
+                  <div className="bg-white border border-primary/5 rounded-3xl divide-y overflow-hidden">
+                    {i18nFailures.filter(f => f.endpoint === 'N/A').map((failure, idx) => (
+                      <div key={idx} className="p-4 flex items-center justify-between hover:bg-primary/[0.01]">
+                        <div className="space-y-1">
+                          <span className="text-xs font-bold text-primary/80">{failure.term}</span>
+                          <p className="text-[9px] text-primary/30 uppercase tracking-widest">{failure.context}</p>
+                        </div>
+                        <div className="text-right space-y-1">
+                          <p className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Sugestão:</p>
+                          <p className="text-xs font-display italic text-emerald-700">"{failure.expected}"</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
