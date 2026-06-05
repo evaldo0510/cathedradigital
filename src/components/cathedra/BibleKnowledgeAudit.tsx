@@ -118,16 +118,14 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       setScanResults({...results});
     }
 
-    if (run) {
       await supabase
         .from('bible_audit_runs')
         .update({ 
           status: 'completed', 
           completed_at: new Date().toISOString(),
-          logs: executionLogs
+          logs: executionLogs as any
         })
         .eq('id', run.id);
-    }
 
     setIsScanning(false);
     toast.success('Varredura de integridade concluída');
