@@ -1284,21 +1284,22 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
              {versionComparison?.v1 && versionComparison?.v2 && (
                <div className="bg-primary/[0.02] border border-primary/5 rounded-2xl p-6 space-y-6">
-                 <div className="flex items-center justify-between">
-                   <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Side-by-Side Comparison</h4>
-                   <div className="flex gap-2">
-                     <button 
-                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
-                       className="px-4 py-2 bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-secondary/20 transition-colors"
-                     >
-                       Reverter para v{versionComparison.v1.version}
-                     </button>
-                     <button 
-                       onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v2)}
-                       className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
-                     >
-                       Reverter para v{versionComparison.v2.version}
-                     </button>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Comparação Lado a Lado</h4>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v1)}
+                        className="px-4 py-2 bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-secondary/20 transition-colors"
+                      >
+                        Reverter para v{versionComparison.v1.version}
+                      </button>
+                      <button 
+                        onClick={() => revertNotificationPolicy(showVersionModal!, versionComparison.v2)}
+                        className="px-4 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95"
+                      >
+                        Reverter para v{versionComparison.v2.version}
+                      </button>
+
                    </div>
                  </div>
 
