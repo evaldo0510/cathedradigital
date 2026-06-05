@@ -1149,7 +1149,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
               {selectedScan && (
                 <div className="p-6 bg-white border border-primary/5 rounded-3xl shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Detalhes do Scan</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Detalhes da Verificação</h4>
+
                     <button 
                       onClick={() => {
                         const { generateSecurityScanPDF } = require('@/utils/securityReport');
