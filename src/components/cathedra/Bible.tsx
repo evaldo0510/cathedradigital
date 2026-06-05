@@ -232,14 +232,20 @@ const Bible: React.FC = () => {
   };
 
   const fetchVerses = async (abbr: string, chapter: number) => {
-
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: abbr, chapter }
       });
       if (error) throw error;
-      setVerses(data.verses.map((v: any) => ({ ...v, chapter })));
+      
+      const loadedVerses = data.verses || [];
+      setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
+      
+      if (loadedVerses.length === 0) {
+        toast.warning('Este capítulo parece estar sem conteúdo no momento.');
+      }
+
       
       // Save progress automatically
       const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
