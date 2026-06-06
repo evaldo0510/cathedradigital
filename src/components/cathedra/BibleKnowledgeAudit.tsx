@@ -1424,7 +1424,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
                         if (paginated.length === 0) {
                             return (
-                              <div className="p-12 flex flex-col items-center justify-center text-center space-y-4">
+                              <div className="p-12 flex flex-col items-center justify-center text-center space-y-4" role="status">
                                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center">
                                   <Icons.Search className="w-6 h-6 text-primary/20" />
                                 </div>
@@ -1434,10 +1434,11 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                 </div>
                                 <button 
                                   onClick={() => { setI18nSearch(''); setI18nStatusFilter('all'); }}
-                                  className="text-[9px] font-black uppercase tracking-widest text-secondary hover:underline"
+                                  className="text-[9px] font-black uppercase tracking-widest text-secondary hover:underline focus:outline-none focus:ring-2 focus:ring-secondary/20 rounded-md px-2 py-1"
                                 >
                                   Limpar filtros
                                 </button>
+                              </div>
                               </div>
                             );
                         }
