@@ -30,11 +30,27 @@ interface BibleKnowledgeAuditProps {
 
 export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClose, auditData, onThemeClick }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Estados i18n declarados antes do uso em outros hooks
+  const [i18nSearch, setI18nSearch] = React.useState(searchParams.get('i_search') || '');
+  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>((searchParams.get('i_status') as any) || 'all');
+  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState(searchParams.get('i_cat') || 'all');
+  const [i18nPage, setI18nPage] = React.useState(Number(searchParams.get('i_page')) || 1);
+  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>( (searchParams.get('i_sort') as any) || 'recent');
+  const itemsPerPage = 10;
+
+  const getTabFromUrl = () => {
+    const tab = searchParams.get('tab');
+    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y', 'i18n-audit'].includes(tab)) {
+      return tab as any;
+    }
+    return 'overview';
+  };
+
   const [activeTab, setActiveTab] = React.useState<'overview' | 'dashboard' | 'audit-logs' | 'schedule' | 'history' | 'notifications' | 'webhooks' | 'security' | 'a11y' | 'i18n-audit'>(
-    (searchParams.get('tab') as any) || 'overview'
-
-
+    getTabFromUrl()
   );
+
   const [isScanning, setIsScanning] = React.useState(false);
   const [scanResults, setScanResults] = React.useState<Record<string, 'ok' | 'empty' | 'pending'>>({});
   const [executionLogs, setExecutionLogs] = React.useState<AuditLog[]>([]);
@@ -73,23 +89,70 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     if (Object.values(searchParamFilters).some(v => v !== '' && v !== 'all')) {
       return searchParamFilters;
     }
-
+    
     const saved = localStorage.getItem('bible_audit_action_filters');
     return saved ? JSON.parse(saved) : searchParamFilters;
   });
   
   React.useEffect(() => {
     localStorage.setItem('bible_audit_action_filters', JSON.stringify(actionLogFilters));
+    
+    const newParams = new URLSearchParams(searchParams);
+    let changed = false;
+
     if (activeTab === 'audit-logs') {
-      const newParams = new URLSearchParams(searchParams);
-      if (actionLogFilters.search) newParams.set('a_search', actionLogFilters.search); else newParams.delete('a_search');
-      if (actionLogFilters.actionType !== 'all') newParams.set('a_type', actionLogFilters.actionType); else newParams.delete('a_type');
-      if (actionLogFilters.runId) newParams.set('a_run', actionLogFilters.runId); else newParams.delete('a_run');
-      if (actionLogFilters.startDate) newParams.set('a_start', actionLogFilters.startDate); else newParams.delete('a_start');
-      if (actionLogFilters.endDate) newParams.set('a_end', actionLogFilters.endDate); else newParams.delete('a_end');
-      setSearchParams(newParams);
+      const filters = [
+        { key: 'a_search', val: actionLogFilters.search, def: '' },
+        { key: 'a_type', val: actionLogFilters.actionType, def: 'all' },
+        { key: 'a_run', val: actionLogFilters.runId, def: '' },
+        { key: 'a_start', val: actionLogFilters.startDate, def: '' },
+        { key: 'a_end', val: actionLogFilters.endDate, def: '' }
+      ];
+
+      filters.forEach(({ key, val, def }) => {
+        if (val !== def) {
+          if (searchParams.get(key) !== val) {
+            newParams.set(key, val);
+            changed = true;
+          }
+        } else if (searchParams.has(key)) {
+          newParams.delete(key);
+          changed = true;
+        }
+      });
     }
-  }, [actionLogFilters, activeTab]);
+
+    if (activeTab === 'i18n-audit') {
+      const filters = [
+        { key: 'i_search', val: i18nSearch, def: '' },
+        { key: 'i_status', val: i18nStatusFilter, def: 'all' },
+        { key: 'i_cat', val: i18nCategoryFilter, def: 'all' },
+        { key: 'i_page', val: i18nPage.toString(), def: '1' },
+        { key: 'i_sort', val: i18nSortOrder, def: 'recent' }
+      ];
+
+      filters.forEach(({ key, val, def }) => {
+        if (val !== def) {
+          if (searchParams.get(key) !== val) {
+            newParams.set(key, val);
+            changed = true;
+          }
+        } else if (searchParams.has(key)) {
+          newParams.delete(key);
+          changed = true;
+        }
+      });
+    }
+
+    if (searchParams.get('tab') !== activeTab) {
+      newParams.set('tab', activeTab);
+      changed = true;
+    }
+
+    if (changed) {
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [actionLogFilters, activeTab, i18nSearch, i18nStatusFilter, i18nCategoryFilter, i18nPage, i18nSortOrder]);
 
   const [webhookDeliveries, setWebhookDeliveries] = React.useState<any[]>([]);
   const [isResending, setIsResending] = React.useState<string | null>(null);
@@ -104,27 +167,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
-  
-  // Persistência de filtros via URL
-  const [i18nSearch, setI18nSearch] = React.useState(searchParams.get('i_search') || '');
-  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>((searchParams.get('i_status') as any) || 'all');
-  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState(searchParams.get('i_cat') || 'all');
-  const [i18nPage, setI18nPage] = React.useState(Number(searchParams.get('i_page')) || 1);
-  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>( (searchParams.get('i_sort') as any) || 'recent');
-  const itemsPerPage = 10;
-
-  // Atualiza URL quando filtros mudam
-  React.useEffect(() => {
-    if (activeTab === 'i18n-audit') {
-      const newParams = new URLSearchParams(searchParams);
-      if (i18nSearch) newParams.set('i_search', i18nSearch); else newParams.delete('i_search');
-      if (i18nStatusFilter !== 'all') newParams.set('i_status', i18nStatusFilter); else newParams.delete('i_status');
-      if (i18nCategoryFilter !== 'all') newParams.set('i_cat', i18nCategoryFilter); else newParams.delete('i_cat');
-      if (i18nPage > 1) newParams.set('i_page', i18nPage.toString()); else newParams.delete('i_page');
-      if (i18nSortOrder !== 'recent') newParams.set('i_sort', i18nSortOrder); else newParams.delete('i_sort');
-      setSearchParams(newParams, { replace: true });
-    }
-  }, [i18nSearch, i18nStatusFilter, i18nCategoryFilter, i18nPage, i18nSortOrder, activeTab]);
 
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
@@ -133,12 +175,25 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
 
 
+  // Sincronização de estado inicial com a URL via useEffect para lidar com back/forward
   React.useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y', 'i18n-audit'].includes(tab)) {
-
-
+    if (tab && tab !== activeTab && ['overview', 'dashboard', 'audit-logs', 'schedule', 'history', 'notifications', 'webhooks', 'security', 'a11y', 'i18n-audit'].includes(tab)) {
       setActiveTab(tab as any);
+    }
+
+    if (activeTab === 'i18n-audit') {
+      const urlSearch = searchParams.get('i_search') || '';
+      const urlStatus = (searchParams.get('i_status') as any) || 'all';
+      const urlCat = searchParams.get('i_cat') || 'all';
+      const urlPage = Number(searchParams.get('i_page')) || 1;
+      const urlSort = (searchParams.get('i_sort') as any) || 'recent';
+
+      if (urlSearch !== i18nSearch) setI18nSearch(urlSearch);
+      if (urlStatus !== i18nStatusFilter) setI18nStatusFilter(urlStatus);
+      if (urlCat !== i18nCategoryFilter) setI18nCategoryFilter(urlCat);
+      if (urlPage !== i18nPage) setI18nPage(urlPage);
+      if (urlSort !== i18nSortOrder) setI18nSortOrder(urlSort);
     }
   }, [searchParams]);
 
