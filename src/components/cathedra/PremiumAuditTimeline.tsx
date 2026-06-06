@@ -216,6 +216,22 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
     toast.success('Combinação de filtros copiada para a área de transferência!');
   }, [searchQuery, filterBy]);
 
+  const filteredEvents = events.filter(e => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    switch (filterBy) {
+      case 'id': return e.transaction_id?.toLowerCase().includes(q);
+      case 'vendor': return e.vendor?.toLowerCase().includes(q);
+      case 'user': return e.user_id?.toLowerCase().includes(q);
+      case 'contract': return e.contract_number?.toLowerCase().includes(q);
+      default: return (
+        e.title.toLowerCase().includes(q) || 
+        e.transaction_id?.toLowerCase().includes(q) ||
+        e.contract_number?.toLowerCase().includes(q)
+      );
+    }
+  });
+
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -239,31 +255,10 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
       if (e.key === 'Escape') {
         setSelectedEventId(null);
       }
-      
-      if (e.key === 'Enter' && !selectedEventId && filteredEvents.length > 0) {
-        // If an item is focused (accessibility), open it. For now, just first if nothing else.
-        // We'll add better focus management in the render.
-      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleExportPDF, selectedEventId, filteredEvents]);
-
-  const filteredEvents = events.filter(e => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    switch (filterBy) {
-      case 'id': return e.transaction_id?.toLowerCase().includes(q);
-      case 'vendor': return e.vendor?.toLowerCase().includes(q);
-      case 'user': return e.user_id?.toLowerCase().includes(q);
-      case 'contract': return e.contract_number?.toLowerCase().includes(q);
-      default: return (
-        e.title.toLowerCase().includes(q) || 
-        e.transaction_id?.toLowerCase().includes(q) ||
-        e.contract_number?.toLowerCase().includes(q)
-      );
-    }
-  });
 
   if (isLoading) return <div className="animate-pulse space-y-4">
     {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted rounded-xl" />)}
