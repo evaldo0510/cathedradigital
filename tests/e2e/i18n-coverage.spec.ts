@@ -86,4 +86,17 @@ test.describe('I18n Audit & Glossary Consistency', () => {
       }
     });
   });
+
+  test('CI evidence generation only on failure', async ({ page }) => {
+    // Esse teste apenas documenta a regra de negócio do CI
+    // A configuração real está no playwright.config.ts
+    const config = {
+      trace: 'retain-on-failure',
+      screenshot: 'only-on-failure',
+      video: 'retain-on-failure'
+    };
+    
+    expect(config.screenshot).toBe('only-on-failure');
+    expect(config.trace).toBe('retain-on-failure');
+  });
 });

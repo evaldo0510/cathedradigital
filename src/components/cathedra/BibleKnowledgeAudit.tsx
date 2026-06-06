@@ -97,15 +97,34 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [showVersionModal, setShowVersionModal] = React.useState<string | null>(null);
   const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
+  const [selectedScan, setSelectedScan] = React.useState<any>(null);
+  const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
+  const [showScanCompareModal, setShowScanCompareModal] = React.useState(false);
+
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
-  const [i18nSearch, setI18nSearch] = React.useState('');
-  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
-  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
-  const [i18nPage, setI18nPage] = React.useState(1);
-  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>('recent');
+  
+  // Persistência de filtros via URL
+  const [i18nSearch, setI18nSearch] = React.useState(searchParams.get('i_search') || '');
+  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>((searchParams.get('i_status') as any) || 'all');
+  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState(searchParams.get('i_cat') || 'all');
+  const [i18nPage, setI18nPage] = React.useState(Number(searchParams.get('i_page')) || 1);
+  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>( (searchParams.get('i_sort') as any) || 'recent');
   const itemsPerPage = 10;
+
+  // Atualiza URL quando filtros mudam
+  React.useEffect(() => {
+    if (activeTab === 'i18n-audit') {
+      const newParams = new URLSearchParams(searchParams);
+      if (i18nSearch) newParams.set('i_search', i18nSearch); else newParams.delete('i_search');
+      if (i18nStatusFilter !== 'all') newParams.set('i_status', i18nStatusFilter); else newParams.delete('i_status');
+      if (i18nCategoryFilter !== 'all') newParams.set('i_cat', i18nCategoryFilter); else newParams.delete('i_cat');
+      if (i18nPage > 1) newParams.set('i_page', i18nPage.toString()); else newParams.delete('i_page');
+      if (i18nSortOrder !== 'recent') newParams.set('i_sort', i18nSortOrder); else newParams.delete('i_sort');
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [i18nSearch, i18nStatusFilter, i18nCategoryFilter, i18nPage, i18nSortOrder, activeTab]);
 
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
@@ -245,9 +264,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
   const [securityScans, setSecurityScans] = React.useState<any[]>([]);
-  const [selectedScan, setSelectedScan] = React.useState<any>(null);
-  const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
-  const [showScanCompareModal, setShowScanCompareModal] = React.useState(false);
 
 
   const fetchWebhookDeliveries = async () => {
@@ -1378,10 +1394,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     </div>
                   </div>
 
-                  <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden">
+                  <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden shadow-sm" role="region" aria-label="Lista de logs legados">
                     <div className="divide-y">
                       {i18nLoading ? (
-                        <div className="divide-y animate-pulse">
+                        <div className="divide-y animate-pulse" aria-busy="true" aria-live="polite">
                           {[1, 2, 3].map(i => (
                             <div key={i} className="p-4 flex items-center justify-between">
                               <div className="space-y-2">
@@ -1408,7 +1424,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
                         if (paginated.length === 0) {
                             return (
-                              <div className="p-12 flex flex-col items-center justify-center text-center space-y-4">
+                              <div className="p-12 flex flex-col items-center justify-center text-center space-y-4" role="status">
                                 <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center">
                                   <Icons.Search className="w-6 h-6 text-primary/20" />
                                 </div>
@@ -1418,7 +1434,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                 </div>
                                 <button 
                                   onClick={() => { setI18nSearch(''); setI18nStatusFilter('all'); }}
-                                  className="text-[9px] font-black uppercase tracking-widest text-secondary hover:underline"
+                                  className="text-[9px] font-black uppercase tracking-widest text-secondary hover:underline focus:outline-none focus:ring-2 focus:ring-secondary/20 rounded-md px-2 py-1"
                                 >
                                   Limpar filtros
                                 </button>
@@ -1448,16 +1464,16 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                               </div>
                             ))}
                             {totalPages > 1 && (
-                               <div className="p-4 flex items-center justify-center gap-4 border-t border-primary/5">
+                               <div className="p-4 flex items-center justify-center gap-4 border-t border-primary/5" role="navigation" aria-label="Paginação">
                                 <button 
                                   aria-label="Página Anterior"
-                                  onClick={() => { setI18nPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                  onClick={() => { setI18nPage(p => Math.max(1, p - 1)); }}
                                   disabled={i18nPage === 1}
                                   className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
                                   <Icons.ChevronLeft className="w-4 h-4" />
                                 </button>
-                                <div className="flex flex-col items-center">
+                                <div className="flex flex-col items-center" aria-current="page">
                                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/40 leading-none">
                                     Página
                                   </span>
@@ -1467,7 +1483,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                 </div>
                                 <button 
                                   aria-label="Próxima Página"
-                                  onClick={() => { setI18nPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                  onClick={() => { setI18nPage(p => Math.min(totalPages, p + 1)); }}
                                   disabled={i18nPage === totalPages}
                                   className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
