@@ -1439,7 +1439,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                   Limpar filtros
                                 </button>
                               </div>
-                              </div>
                             );
                         }
 
