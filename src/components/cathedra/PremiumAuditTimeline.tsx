@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -9,9 +9,22 @@ import {
   CreditCard, 
   Zap, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Search,
+  Download,
+  Copy,
+  Plus,
+  X,
+  Keyboard,
+  Filter
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { useSearchParams } from 'react-router-dom';
 
 interface AuditEvent {
   id: string;
@@ -21,6 +34,10 @@ interface AuditEvent {
   description: string;
   timestamp: string;
   transaction_id?: string;
+  user_id?: string;
+  contract_number?: string;
+  vendor?: string;
+  attachments?: string[];
 }
 
 export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) => {
