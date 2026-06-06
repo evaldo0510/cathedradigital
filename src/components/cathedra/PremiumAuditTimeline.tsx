@@ -16,7 +16,9 @@ import {
   Plus,
   X,
   Keyboard,
-  Filter
+  Filter,
+  FileText,
+  Paperclip
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -25,6 +27,7 @@ import { toast } from 'sonner';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { useSearchParams } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface AuditEvent {
   id: string;
@@ -61,7 +64,8 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
     
     const auditEvents: AuditEvent[] = [];
 
-    txs?.forEach(tx => {
+    txs?.forEach((tx: any) => {
+      const metadata = tx.webhook_payload as any;
       auditEvents.push({
         id: `tx-${tx.id}`,
         type: 'payment_attempt',
@@ -71,9 +75,9 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
         timestamp: tx.created_at,
         transaction_id: tx.payment_id,
         user_id: tx.user_id,
-        contract_number: tx.metadata?.contract_number || `CTR-${tx.id.slice(0, 6)}`,
-        vendor: tx.metadata?.vendor || 'Stripe/Paddle',
-        attachments: tx.metadata?.attachments || []
+        contract_number: metadata?.contract_number || `CTR-${tx.id.slice(0, 6)}`,
+        vendor: metadata?.vendor || 'Stripe/Paddle',
+        attachments: metadata?.attachments || []
       });
 
       if (tx.status === 'approved') {
@@ -296,7 +300,7 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
                 )}
                 {event.contract_number && (
                   <div className="flex items-center gap-1.5 text-[9px] font-mono text-muted-foreground/60 uppercase tracking-tighter">
-                    <Icons.FileText className="w-3 h-3" />
+                    <FileText className="w-3 h-3" />
                     Contrato: {event.contract_number}
                   </div>
                 )}
@@ -306,7 +310,7 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
                 <div className="mt-3 pt-3 border-t border-border/50 flex flex-wrap gap-2">
                   {event.attachments.map((att, i) => (
                     <div key={i} className="text-[8px] bg-primary/5 text-primary px-2 py-1 rounded flex items-center gap-1">
-                      <Icons.Paperclip className="w-2.5 h-2.5" />
+                      <Paperclip className="w-2.5 h-2.5" />
                       Anexo #{i + 1}
                     </div>
                   ))}
