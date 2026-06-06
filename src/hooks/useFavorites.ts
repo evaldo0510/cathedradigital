@@ -8,21 +8,35 @@ export interface FavoriteItem {
   timestamp: string;
 }
 
-const STORAGE_KEY = 'cathedra_favorites';
+const STORAGE_KEY = 'cathedra_favorites_v2';
 
-function loadFavorites(): FavoriteItem[] {
+function loadFavorites(projectId?: string): FavoriteItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const allFavorites = raw ? JSON.parse(raw) : {};
+    return projectId ? (allFavorites[projectId] || []) : Object.values(allFavorites).flat() as FavoriteItem[];
   } catch { return []; }
 }
 
-export function useFavorites() {
-  const [favorites, setFavorites] = useState<FavoriteItem[]>(loadFavorites);
+function saveFavorites(favorites: FavoriteItem[], projectId: string) {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const allFavorites = raw ? JSON.parse(raw) : {};
+    allFavorites[projectId] = favorites;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allFavorites));
+  } catch (e) { console.error('Error saving favorites:', e); }
+}
+
+export function useFavorites(projectId: string = 'global') {
+  const [favorites, setFavorites] = useState<FavoriteItem[]>(() => loadFavorites(projectId));
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+    setFavorites(loadFavorites(projectId));
+  }, [projectId]);
+
+  useEffect(() => {
+    saveFavorites(favorites, projectId);
+  }, [favorites, projectId]);
 
   const addFavorite = useCallback((item: Omit<FavoriteItem, 'id' | 'timestamp'>) => {
     setFavorites(prev => {
