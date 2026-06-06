@@ -97,15 +97,34 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   const [showVersionModal, setShowVersionModal] = React.useState<string | null>(null);
   const [versionComparison, setVersionComparison] = React.useState<{v1: any, v2: any} | null>(null);
 
+  const [selectedScan, setSelectedScan] = React.useState<any>(null);
+  const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
+  const [showScanCompareModal, setShowScanCompareModal] = React.useState(false);
+
   const [securityLogs, setSecurityLogs] = React.useState<any[]>([]);
   const [a11yConfig, setA11yConfig] = React.useState<any>(null);
   const [i18nFailures, setI18nFailures] = React.useState<any[]>([]);
-  const [i18nSearch, setI18nSearch] = React.useState('');
-  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>('all');
-  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState('all');
-  const [i18nPage, setI18nPage] = React.useState(1);
-  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>('recent');
+  
+  // Persistência de filtros via URL
+  const [i18nSearch, setI18nSearch] = React.useState(searchParams.get('i_search') || '');
+  const [i18nStatusFilter, setI18nStatusFilter] = React.useState<'all' | 'pending' | 'mapped'>((searchParams.get('i_status') as any) || 'all');
+  const [i18nCategoryFilter, setI18nCategoryFilter] = React.useState(searchParams.get('i_cat') || 'all');
+  const [i18nPage, setI18nPage] = React.useState(Number(searchParams.get('i_page')) || 1);
+  const [i18nSortOrder, setI18nSortOrder] = React.useState<'recent' | 'oldest'>( (searchParams.get('i_sort') as any) || 'recent');
   const itemsPerPage = 10;
+
+  // Atualiza URL quando filtros mudam
+  React.useEffect(() => {
+    if (activeTab === 'i18n-audit') {
+      const newParams = new URLSearchParams(searchParams);
+      if (i18nSearch) newParams.set('i_search', i18nSearch); else newParams.delete('i_search');
+      if (i18nStatusFilter !== 'all') newParams.set('i_status', i18nStatusFilter); else newParams.delete('i_status');
+      if (i18nCategoryFilter !== 'all') newParams.set('i_cat', i18nCategoryFilter); else newParams.delete('i_cat');
+      if (i18nPage > 1) newParams.set('i_page', i18nPage.toString()); else newParams.delete('i_page');
+      if (i18nSortOrder !== 'recent') newParams.set('i_sort', i18nSortOrder); else newParams.delete('i_sort');
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [i18nSearch, i18nStatusFilter, i18nCategoryFilter, i18nPage, i18nSortOrder, activeTab]);
 
   const [webhookI18nFilters, setWebhookI18nFilters] = React.useState({
     endpoint: 'all',
@@ -245,9 +264,6 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
   const [securityScans, setSecurityScans] = React.useState<any[]>([]);
-  const [selectedScan, setSelectedScan] = React.useState<any>(null);
-  const [scanComparison, setScanComparison] = React.useState<{s1: any, s2: any} | null>(null);
-  const [showScanCompareModal, setShowScanCompareModal] = React.useState(false);
 
 
   const fetchWebhookDeliveries = async () => {
