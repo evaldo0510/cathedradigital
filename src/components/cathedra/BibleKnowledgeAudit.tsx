@@ -1394,10 +1394,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     </div>
                   </div>
 
-                  <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden">
+                  <div className="bg-white border border-primary/5 rounded-3xl overflow-hidden shadow-sm" role="region" aria-label="Lista de logs legados">
                     <div className="divide-y">
                       {i18nLoading ? (
-                        <div className="divide-y animate-pulse">
+                        <div className="divide-y animate-pulse" aria-busy="true" aria-live="polite">
                           {[1, 2, 3].map(i => (
                             <div key={i} className="p-4 flex items-center justify-between">
                               <div className="space-y-2">
