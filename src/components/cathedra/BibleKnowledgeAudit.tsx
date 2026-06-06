@@ -1464,10 +1464,10 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                               </div>
                             ))}
                             {totalPages > 1 && (
-                               <div className="p-4 flex items-center justify-center gap-4 border-t border-primary/5">
+                               <div className="p-4 flex items-center justify-center gap-4 border-t border-primary/5" role="navigation" aria-label="Paginação">
                                 <button 
                                   aria-label="Página Anterior"
-                                  onClick={() => { setI18nPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                  onClick={() => { setI18nPage(p => Math.max(1, p - 1)); }}
                                   disabled={i18nPage === 1}
                                   className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
