@@ -1473,7 +1473,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                 >
                                   <Icons.ChevronLeft className="w-4 h-4" />
                                 </button>
-                                <div className="flex flex-col items-center">
+                                <div className="flex flex-col items-center" aria-current="page">
                                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/40 leading-none">
                                     Página
                                   </span>
