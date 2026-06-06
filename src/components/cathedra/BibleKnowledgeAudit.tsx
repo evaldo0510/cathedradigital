@@ -1483,7 +1483,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                                 </div>
                                 <button 
                                   aria-label="Próxima Página"
-                                  onClick={() => { setI18nPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                  onClick={() => { setI18nPage(p => Math.min(totalPages, p + 1)); }}
                                   disabled={i18nPage === totalPages}
                                   className="p-2 hover:bg-primary/5 rounded-xl disabled:opacity-30 outline-none focus:ring-2 focus:ring-secondary/20 transition-all border border-transparent focus:border-secondary/20"
                                 >
