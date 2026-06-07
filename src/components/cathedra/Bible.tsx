@@ -268,9 +268,39 @@ const Bible: React.FC = () => {
     reader.readAsText(file);
   };
 
+  const handleShareVerse = useCallback(() => {
+    if (!activeVerse || !selectedBook) return;
+    
+    const title = selectedBook.chapterTitles?.[selectedChapter] || '';
+    const text = `"${activeVerse.text}" — ${selectedBook.name} ${selectedChapter}:${activeVerse.number}${title ? ` (${title})` : ''}`;
+    const url = `${window.location.origin}/bible?book=${encodeURIComponent(selectedBook.abbr)}&ch=${selectedChapter}&v=${activeVerse.number}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Cathedra Bible',
+        text: text,
+        url: url,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(`${text}\n\nLeia mais no Cathedra: ${url}`);
+      toast.success('Link do versículo copiado!');
+    }
+  }, [activeVerse, selectedBook, selectedChapter]);
+
   const fetchVerses = async (abbr: string, chapter: number) => {
     setIsLoading(true);
     
+    // Tracking navigation history for Cross-References "back"
+    const currentVerse = searchParams.get('v');
+    if (currentVerse) {
+       // Only push if not already the last one (avoid loops)
+       setNavHistory(prev => {
+         const last = prev[prev.length - 1];
+         if (last?.book === abbr && last?.chapter === chapter && last?.verse === parseInt(currentVerse)) return prev;
+         return [...prev.slice(-10), { book: abbr, chapter, verse: parseInt(currentVerse) }];
+       });
+    }
+
     // Attempt offline recovery
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);

@@ -17,11 +17,20 @@ const COLORS = [
   { name: 'red', bg: 'bg-red-200', label: 'Vermelho' },
 ];
 
+interface HighlightMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectColor: (color: string) => void;
+  onAddNote: () => void;
+  onShare: () => void;
+}
+
 export const HighlightMenu: React.FC<HighlightMenuProps> = ({ 
   isOpen, 
   onClose, 
   onSelectColor,
-  onAddNote
+  onAddNote,
+  onShare
 }) => {
   return (
     <AnimatePresence>
@@ -66,13 +75,23 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
 
               <div className="h-px bg-primary/5" />
 
-              <button
-                onClick={onAddNote}
-                className="w-full flex items-center justify-center gap-3 p-4 bg-primary text-white rounded-2xl shadow-lg active:scale-[0.98] transition-all"
-              >
-                <Icons.PenLine className="w-4 h-4" />
-                <span className="text-[11px] font-black uppercase tracking-widest">Escrever Reflexão</span>
-              </button>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={onAddNote}
+                  className="flex items-center justify-center gap-2 p-4 bg-primary text-white rounded-2xl shadow-lg active:scale-[0.98] transition-all"
+                >
+                  <Icons.PenLine className="w-4 h-4" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Meditar</span>
+                </button>
+
+                <button
+                  onClick={onShare}
+                  className="flex items-center justify-center gap-2 p-4 bg-secondary/10 text-secondary rounded-2xl border border-secondary/20 active:scale-[0.98] transition-all"
+                >
+                  <Icons.Share2 className="w-4 h-4" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Partilhar</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         </>
