@@ -317,12 +317,40 @@ const Bible: React.FC = () => {
     }
 
     try {
+      // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: abbr, chapter }
       });
       if (error) throw error;
       
       const loadedVerses = data.verses || [];
+      
+      // 2. Fetch Real Bible Connections for this chapter
+      const { data: dbConnections } = await supabase
+        .from('bible_connections')
+        .select('*')
+        .like('verse_id', `${abbr}-${chapter}-%`);
+
+      // Update Dynamic Connections
+      if (dbConnections && dbConnections.length > 0) {
+        const newConns: Record<string, any[]> = { ...dynamicConnections };
+        dbConnections.forEach(conn => {
+          const key = conn.verse_id;
+          if (!newConns[key]) newConns[key] = [];
+          
+          if (!newConns[key].some(c => c.id === conn.reference_id)) {
+            newConns[key].push({
+              type: conn.category as any,
+              label: conn.reference_title,
+              color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
+              id: conn.reference_id || conn.id,
+              summary: conn.summary || ''
+            });
+          }
+        });
+        setDynamicConnections(newConns);
+      }
+
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
       
       if (loadedVerses.length > 0) {
@@ -415,7 +443,10 @@ const Bible: React.FC = () => {
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
   // Knowledge Connection System
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
+  const [dynamicConnections, setDynamicConnections] = useState<Record<string, any[]>>({});
+
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = useMemo(() => ({
+    ...dynamicConnections,
     'Jo-6-35': [
       { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
       { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
@@ -436,7 +467,7 @@ const Bible: React.FC = () => {
       { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' },
       { type: 'cross_ref', label: 'Lc 6:20', color: 'bg-amber-500', id: 'Lc-6-20', summary: 'Bem-aventurados vós, os pobres...' }
     ]
-  };
+  }), [dynamicConnections]);
 
   const THEOLOGICAL_THEMES = [
     { id: 'creatio', label: 'Criação', parent: null, connections: 12, tags: ['Dogma', 'Ontologia'] },

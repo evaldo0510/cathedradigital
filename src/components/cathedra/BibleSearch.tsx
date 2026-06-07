@@ -17,6 +17,7 @@ interface SearchResult {
   text: string;
   score?: number;
   relevance?: string;
+  isBible?: boolean; // True for Bible results, false for Magisterium/Catechism
 }
 
 
@@ -75,15 +76,42 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
       });
       if (error) throw error;
       
-      // Sort results by mock relevance if theme matches
-      let sortedResults = data.results || [];
+      // Fetch advanced results from Magisterium/Catechism for unified search
+      const { data: spiritualData } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .or(`content_text.ilike.%${query}%,title.ilike.%${query}%`)
+        .limit(5);
+
+      const spiritualResults = (spiritualData || []).map(s => {
+        const metadata = s.metadata as any;
+        return {
+          bookAbbrev: s.type === 'bible' ? (metadata?.book_abbr || 'Bíb') : (s.type === 'catechism' ? 'CIC' : 'Mag'),
+          bookName: s.title,
+          chapter: metadata?.chapter || 0,
+          verse: metadata?.verse || 0,
+          text: s.content_text,
+          score: 90,
+          relevance: 'Conteúdo da Tradição',
+          isBible: s.type === 'bible'
+        };
+      });
+
+      // Combine and Sort by Relevance Score
+      let combinedResults = [
+        ...(data.results || []).map((r: any) => ({ ...r, isBible: true })),
+        ...spiritualResults
+      ];
+
       if (matchedTheme) {
-        sortedResults = sortedResults.map((r: any) => ({
+        combinedResults = combinedResults.map((r: any) => ({
           ...r,
-          relevance: matchedTheme.reason,
-          score: Math.floor(Math.random() * 20) + 70 // Simulated score variation
-        })).sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
+          relevance: r.relevance || matchedTheme.reason,
+          score: r.score || (Math.floor(Math.random() * 20) + 70)
+        }));
       }
+      
+      const sortedResults = combinedResults.sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
       
       setResults(sortedResults);
       if (sortedResults.length === 0) {
