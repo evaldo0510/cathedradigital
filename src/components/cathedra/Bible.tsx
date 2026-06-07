@@ -611,7 +611,10 @@ const Bible: React.FC = () => {
             className="px-6 pt-10 pb-32 max-w-lg mx-auto"
           >
             <button 
-              onClick={() => navigate('/bible')}
+              onClick={() => {
+                navigate('/bible');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
               className="mb-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 active:text-secondary transition-colors"
             >
               <Icons.ChevronLeft className="w-4 h-4" /> Voltar
@@ -635,15 +638,23 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
-                    notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                      ? "bg-secondary/5 border-secondary/20"
-                      : "bg-white border-primary/5 hover:border-secondary/30"
+                    selectedChapter === ch && viewMode === 'reading' 
+                      ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
+                      : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
+                        ? "bg-secondary/5 border-secondary/20"
+                        : "bg-white border-primary/5 hover:border-secondary/30"
                   )}
 
                 >
-                  <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
+                  <span className={cn(
+                    "text-lg font-display transition-colors",
+                    selectedChapter === ch && viewMode === 'reading' ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                  )}>{ch}</span>
                   {selectedBook.chapterTitles?.[ch] && (
-                    <div className="w-1 h-1 rounded-full bg-secondary/40 mt-1" />
+                    <div className={cn(
+                      "w-1 h-1 rounded-full mt-1",
+                      selectedChapter === ch && viewMode === 'reading' ? "bg-secondary" : "bg-secondary/40"
+                    )} />
                   )}
                 </button>
               ))}
