@@ -83,6 +83,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
+  const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -415,6 +416,17 @@ const Bible: React.FC = () => {
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
       setSourceInfo('API de Produção');
       
+      // Update Diagnostic Logs
+      setDiagnosticLogs(prev => [...prev, {
+        sessionId,
+        timestamp: new Date().toISOString(),
+        book: data.book || abbr,
+        abbr: abbr,
+        chapter,
+        source: 'API de Produção',
+        verses: loadedVerses.length
+      }]);
+      
       if (loadedVerses.length > 0) {
         localStorage.setItem(offlineKey, JSON.stringify({ 
           verses: loadedVerses, 
@@ -639,56 +651,119 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-card border border-primary/10 rounded-3xl p-8 max-w-md w-full shadow-premium space-y-4"
+              className="bg-card border border-primary/10 rounded-3xl p-8 max-w-lg w-full shadow-premium space-y-4"
             >
               <h2 className="text-lg font-bold">Diagnóstico Cirúrgico</h2>
               <div className="space-y-2 text-xs font-mono bg-muted p-4 rounded-xl max-h-60 overflow-y-auto">
                  <p>Sessão: {sessionId}</p>
-                 <p>Timestamp: {new Date().toLocaleTimeString()}</p>
-                 <p className="border-t border-primary/5 pt-2">Livro: {selectedBook?.name} ({selectedBook?.abbr})</p>
+                 <p>Logs Coletados: {diagnosticLogs.length}</p>
+                 <p className="border-t border-primary/5 pt-2">Livro Atual: {selectedBook?.name}</p>
                  <p>Capítulo: {selectedChapter}</p>
-                 <p>Versículos: {verses.length}</p>
-                 <p>Fonte: <span className="text-secondary font-bold">{sourceInfo}</span></p>
+                 <p>Fonte Atual: <span className="text-secondary font-bold">{sourceInfo}</span></p>
                  <p className="border-t border-primary/5 pt-2">Invalidações: L:{invalidationStats.legacy} / E:{invalidationStats.expired}</p>
               </div>
-              <div className="flex flex-wrap gap-2">
+
+              <div className="space-y-4">
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-black uppercase text-primary/40">Filtros de Exportação</span>
+                  <div className="flex gap-2">
+                    <input 
+                      id="diag-book-filter"
+                      placeholder="Livro (ex: Jo)"
+                      className="flex-1 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                    />
+                    <input 
+                      id="diag-chapter-start"
+                      type="number"
+                      placeholder="Início"
+                      className="w-16 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                    />
+                    <input 
+                      id="diag-chapter-end"
+                      type="number"
+                      placeholder="Fim"
+                      className="w-16 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const bookFilter = (document.getElementById('diag-book-filter') as HTMLInputElement).value;
+                      const chStart = parseInt((document.getElementById('diag-chapter-start') as HTMLInputElement).value);
+                      const chEnd = parseInt((document.getElementById('diag-chapter-end') as HTMLInputElement).value);
+
+                      const filtered = diagnosticLogs.filter(log => {
+                        const matchesBook = !bookFilter || log.abbr.toLowerCase() === bookFilter.toLowerCase();
+                        const matchesStart = isNaN(chStart) || log.chapter >= chStart;
+                        const matchesEnd = isNaN(chEnd) || log.chapter <= chEnd;
+                        return matchesBook && matchesStart && matchesEnd;
+                      });
+
+                      const report = filtered.length > 0 ? filtered : diagnosticLogs;
+                      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `bible-diag-logs.json`;
+                      a.click();
+                    }}
+                    className="flex-1 text-[9px]"
+                  >
+                    Exportar JSON
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const bookFilter = (document.getElementById('diag-book-filter') as HTMLInputElement).value;
+                      const chStart = parseInt((document.getElementById('diag-chapter-start') as HTMLInputElement).value);
+                      const chEnd = parseInt((document.getElementById('diag-chapter-end') as HTMLInputElement).value);
+
+                      const filtered = diagnosticLogs.filter(log => {
+                        const matchesBook = !bookFilter || log.abbr.toLowerCase() === bookFilter.toLowerCase();
+                        const matchesStart = isNaN(chStart) || log.chapter >= chStart;
+                        const matchesEnd = isNaN(chEnd) || log.chapter <= chEnd;
+                        return matchesBook && matchesStart && matchesEnd;
+                      });
+
+                      const report = filtered.length > 0 ? filtered : diagnosticLogs;
+                      const headers = ['sessionId', 'timestamp', 'book', 'abbr', 'chapter', 'source', 'verses'];
+                      const csvContent = [
+                        headers.join(','),
+                        ...report.map(log => headers.map(h => log[h]).join(','))
+                      ].join('\n');
+
+                      const blob = new Blob([csvContent], { type: 'text/csv' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `bible-diag-logs.csv`;
+                      a.click();
+                    }}
+                    className="flex-1 text-[9px]"
+                  >
+                    Exportar CSV
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  size="sm"
                   onClick={() => {
                     const tobit = BIBLE_DATA['Antigo Testamento'][1].books.find(b => b.abbr === 'Tb');
                     if (tobit) selectBook(tobit);
                     setIsDiagnosticOpen(false);
                   }}
-                  className="flex-1 text-[9px]"
+                  className="flex-1 text-[10px]"
                 >
                   Simular Tobias
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    const report = {
-                      sessionId,
-                      timestamp: new Date().toISOString(),
-                      book: selectedBook?.name,
-                      abbr: selectedBook?.abbr,
-                      chapter: selectedChapter,
-                      source: sourceInfo,
-                      verses: verses.length
-                    };
-                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `bible-diag-${selectedBook?.abbr}-${selectedChapter}.json`;
-                    a.click();
-                  }}
-                  className="flex-1 text-[9px]"
-                >
-                  Exportar JSON
-                </Button>
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="w-full">Fechar</Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1">Fechar</Button>
               </div>
             </motion.div>
           </div>
