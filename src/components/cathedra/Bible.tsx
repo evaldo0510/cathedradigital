@@ -670,26 +670,27 @@ const Bible: React.FC = () => {
 
       if (response?.status === 404) {
         const errorData = data || {};
-        if (errorData.isDeutero) {
-          toast.error(`Atenção: ${errorData.error}`, { 
-            duration: 10000,
-            description: (
-              <div className="flex flex-col gap-2">
-                <p>Este livro deuterocanônico está sendo migrado para nossa fonte de verdade própria.</p>
-                <p className="text-[10px] opacity-70">CorrelationID: {errorData.correlationId}</p>
+        toast.error(`Atenção: ${errorData.error || 'Texto não encontrado'}`, { 
+          duration: 15000,
+          description: (
+            <div className="flex flex-col gap-2">
+              <p>O conteúdo solicitado não foi encontrado na nossa base local (Fonte Única de Verdade).</p>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-[10px] opacity-70 font-mono">ID: {errorData.correlationId?.substring(0, 8)}</span>
                 <a 
-                  href="/audit-report" 
-                  className="text-[10px] underline hover:text-primary transition-colors"
-                  onClick={(e) => { e.preventDefault(); navigate('/telemetry'); }}
+                  href={`/admin/audit?id=${errorData.correlationId}`}
+                  className="text-[10px] underline font-bold text-primary"
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigate(`/admin/audit?id=${errorData.correlationId}`); 
+                  }}
                 >
-                  Ver relatório de auditoria
+                  AUDITORIA CI
                 </a>
               </div>
-            )
-          });
-        } else {
-          toast.warning('Capítulo não encontrado.');
-        }
+            </div>
+          )
+        });
         setIsLoading(false);
         return;
       }
