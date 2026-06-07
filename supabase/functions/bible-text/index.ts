@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.3";
+const CACHE_VERSION = "v1.2.4";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
@@ -118,9 +118,9 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
   try {
     const prompt = `Translate the following Bible verses from ${bookName} Chapter ${chapter} into natural, high-quality Portuguese (Brazilian). 
     Use the formal and solemn tone typical of Catholic Bibles (like Bíblia de Jerusalém or Ave Maria). 
-    Return ONLY a JSON array of objects with "number" and "text" fields, matching the input structure.
+    Return ONLY a JSON object with a key "verses" containing the array of objects with "number" and "text" fields.
     
-    Input: ${JSON.stringify(verses.slice(0, 50))}`; // Limit to 50 verses per call for safety
+    Input: ${JSON.stringify(verses.slice(0, 80))}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -129,9 +129,9 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-lite", // Fast and good for translation
+        model: "google/gemini-2.5-flash-lite", // Using the available 2026 model
         messages: [
-          { role: "system", content: "You are an expert biblical translator specializing in Catholic Portuguese translations. You must return only the JSON array." },
+          { role: "system", content: "You are an expert biblical translator specializing in Catholic Portuguese translations. You must return only a JSON object with the key 'verses'." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" }
@@ -139,7 +139,8 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
     });
 
     if (!response.ok) {
-      console.error(`AI Gateway failed: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`AI Gateway failed: ${response.status} - ${errorText}`);
       return verses;
     }
 
@@ -147,15 +148,16 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
     const content = result.choices[0].message.content;
     const parsed = JSON.parse(content);
     
-    // Support various JSON structures the AI might return
     const translatedVerses = parsed.verses || parsed.results || (Array.isArray(parsed) ? parsed : null);
     
     if (translatedVerses && Array.isArray(translatedVerses)) {
-      // Map back to ensure we don't lose the original numbers if AI messed up
-      return verses.map((orig, i) => ({
-        number: orig.number,
-        text: translatedVerses[i]?.text || translatedVerses.find(v => v.number === orig.number)?.text || orig.text
-      }));
+      return verses.map((orig, i) => {
+        const translated = translatedVerses.find(v => v.number === orig.number) || translatedVerses[i];
+        return {
+          number: orig.number,
+          text: translated?.text || orig.text
+        };
+      });
     }
     
     return verses;
