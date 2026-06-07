@@ -98,7 +98,7 @@ const Bible: React.FC = () => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<{book: string, ch: number, v: number, text: string, type: string, screenshot?: string, title?: string, file: string}[]>([]);
+  const [scanResults, setScanResults] = useState<{id: string, book: string, ch: number, v: number, text: string, type: string, screenshot?: string, htmlSnippet: string, title?: string, file: string, timestamp: string}[]>([]);
 
 
 
