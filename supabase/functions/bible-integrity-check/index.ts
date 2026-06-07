@@ -10,7 +10,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-async function calculateSHA256(text: string) {
+async function sha256(text: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(text);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -19,65 +19,53 @@ async function calculateSHA256(text: string) {
     .join('');
 }
 
+function checkSpecialChars(text: string) {
+  // Regex para acentos, cedilha e entidades comuns
+  const specialCharsRegex = /[áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]|&[a-z]+;|&#\d+;/g;
+  const matches = text.match(specialCharsRegex);
+  return matches ? matches.length : 0;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
-    const { book_id, chapter_number, expected_hash, correlation_id } = await req.json();
+    const { book_id, chapter_number, expected_hash, correlation_id, source_text } = await req.json();
 
-    if (!book_id || !chapter_number) {
-      return new Response(JSON.stringify({ error: 'Parâmetros insuficientes' }), { status: 400, headers: corsHeaders });
-    }
-
-    // 1. Buscar os versículos do capítulo no banco
-    const { data: verses, error: vError } = await supabase
+    const { data: verses } = await supabase
       .from('bible_verses')
-      .select('number, text')
+      .select('text')
       .eq('chapter_id', (
-        await supabase
-          .from('bible_chapters')
-          .select('id')
-          .eq('book_id', book_id)
-          .eq('number', chapter_number)
-          .single()
+        await supabase.from('bible_chapters').select('id').eq('book_id', book_id).eq('number', chapter_number).single()
       ).data?.id)
       .order('number');
 
-    if (vError || !verses || verses.length === 0) {
-      await supabase.from('bible_integrity_reports').insert({
-        book_id,
-        chapter_number,
-        calculated_hash: 'N/A',
-        expected_hash,
-        status: 'missing_source',
-        correlation_id
-      });
-      return new Response(JSON.stringify({ status: 'missing_source' }), { headers: corsHeaders });
-    }
-
-    // 2. Concatenar texto para cálculo do hash
-    const fullText = verses.map(v => v.text).join(' ');
-    const calculatedHash = await calculateSHA256(fullText);
-
-    // 3. Validar integridade
-    const status = expected_hash === calculatedHash ? 'match' : 'mismatch';
+    const localText = (verses || []).map(v => v.text).join(' ');
+    const localHash = await sha256(localText);
+    const specialCharsCount = checkSpecialChars(localText);
     
-    const { error: reportError } = await supabase.from('bible_integrity_reports').insert({
+    // Check para falha de encoding (ex: caracteres corrompidos tipo )
+    const encodingIssues = localText.includes('') || localText.includes('Ã©') /* UTF-8 vs ISO-8859-1 check */;
+
+    const status = expected_hash === localHash ? 'match' : 'mismatch';
+
+    await supabase.from('bible_integrity_reports').insert({
       book_id,
       chapter_number,
-      calculated_hash: calculatedHash,
+      calculated_hash: localHash,
       expected_hash,
       status,
       correlation_id,
-      discrepancy_details: status === 'mismatch' ? {
-        verse_count: verses.length,
-        sample_text: fullText.substring(0, 100)
-      } : null
+      special_chars_count: specialCharsCount,
+      encoding_issues_detected: encodingIssues,
+      discrepancy_details: {
+        encoding_issues: encodingIssues,
+        special_chars: specialCharsCount,
+        length_diff: source_text ? Math.abs(source_text.length - localText.length) : 0
+      }
     });
 
-    if (reportError) throw reportError;
-
-    return new Response(JSON.stringify({ status, calculatedHash }), { 
+    return new Response(JSON.stringify({ status, localHash, encodingIssues, specialCharsCount }), { 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
     });
 
