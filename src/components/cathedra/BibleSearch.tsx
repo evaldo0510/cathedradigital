@@ -135,7 +135,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
           <input 
             autoFocus
             type="text" 
-            placeholder="Buscar nas Escrituras..."
+            placeholder="Pesquisar nas Escrituras..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full h-10 bg-transparent text-lg font-serif outline-none placeholder:text-primary/20"
@@ -176,7 +176,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                   </div>
                   {result.relevance && (
                     <p className="text-[10px] font-medium italic text-secondary/70">
-                      Razão: {result.relevance}
+                      Contexto: {result.relevance}
                     </p>
                   )}
                   <p className="font-serif text-[17px] leading-relaxed text-primary/70 group-active:text-primary transition-colors line-clamp-3">
@@ -189,7 +189,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
           ) : !isLoading && query.length >= 2 && (
             <div className="h-full flex flex-col items-center justify-center opacity-20 text-center space-y-4">
               <Icons.Search className="w-12 h-12" />
-              <p className="text-sm font-black uppercase tracking-widest italic">Pressione enter para pesquisar</p>
+              <p className="text-sm font-black uppercase tracking-widest italic">Pressione Enter para pesquisar</p>
             </div>
           )}
         </AnimatePresence>

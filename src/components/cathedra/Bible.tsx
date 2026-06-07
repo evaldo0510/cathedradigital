@@ -244,7 +244,7 @@ const Bible: React.FC = () => {
     });
     
     setIsNoteModalOpen(false);
-    toast.success('Reflexão guardada');
+    toast.success('Nota salva');
   };
 
   const toggleHighlight = (verseNumber: number, color: string) => {
@@ -335,7 +335,7 @@ const Bible: React.FC = () => {
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(`${text}\n\nLeia mais no Cathedra: ${url}`);
-      toast.success('Ligação do versículo copiada!');
+      toast.success('Link do versículo copiado!');
     }
   }, [activeVerse, selectedBook, selectedChapter]);
 

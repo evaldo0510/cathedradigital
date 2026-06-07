@@ -141,14 +141,24 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) continue;
     
-    return data.map((v: any) => ({
-      number: v.verse,
-      text: (v.text || '')
+    return data.map((v: any) => {
+      let text = (v.text || '')
         .replace(/<sup>.*?<\/sup>/g, '')
         .replace(/<[^>]+>/g, '')
         .replace(/\s{2,}/g, ' ')
-        .trim(),
-    }));
+        .trim();
+        
+      // Forçar tradução de termos comuns que vazam de algumas APIs
+      text = text.replace(/\bChapter\b/g, 'Capítulo')
+                 .replace(/\bVerse\b/g, 'Versículo')
+                 .replace(/\bLord\b/g, 'Senhor')
+                 .replace(/\bGod\b/g, 'Deus');
+                 
+      return {
+        number: v.verse,
+        text
+      };
+    });
   }
   return null;
 }
