@@ -367,12 +367,13 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       const { error: runError } = await supabase
         .from('bible_audit_runs')
         .insert([{
-          status: emptyChapters.length === 0 ? 'passed' : 'failed',
+          status: (emptyChapters.length === 0 && report.every(r => r.status !== 'language_violation')) ? 'passed' : 'failed',
           metadata: { 
             report, 
-            issues_count: emptyChapters.length + missingVerses.length,
+            issues_count: emptyChapters.length + missingVerses.length + report.filter(r => r.status === 'language_violation').length,
+            language_violations: report.filter(r => r.status === 'language_violation').map(r => ({ book: r.book, ch: r.chapter, issues: r.languageIssues })),
             validations,
-            certified: emptyChapters.length === 0 && missingVerses.length === 0
+            certified: emptyChapters.length === 0 && missingVerses.length === 0 && report.every(r => r.status !== 'language_violation')
           },
           created_at: startTime
         }]);

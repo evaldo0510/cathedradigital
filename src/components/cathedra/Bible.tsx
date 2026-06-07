@@ -388,6 +388,24 @@ const Bible: React.FC = () => {
 
 
   const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
+    // Cross-Navigation Validation: Detect if we are jumping between modules (e.g., from a connection)
+    const currentPath = window.location.pathname;
+    const isInterModuleNav = currentPath.includes('/catechism') || currentPath.includes('/magisterium');
+    
+    if (isInterModuleNav) {
+      console.log('[Stability] Inter-module navigation detected. Validating state preservation.');
+      // Measure navigation stability: if we transition back and forth too fast, it might be a loop
+      const lastNav = sessionStorage.getItem('last_module_nav');
+      if (lastNav && Date.now() - parseInt(lastNav) < 500) {
+        console.error('[Stability] High-frequency inter-module navigation detected (Jitter).');
+        supabase.from('analytics_events').insert([{
+          event_name: 'navigation_jitter_detected',
+          properties: { from: currentPath, to: '/bible', timestamp: new Date().toISOString() }
+        }]);
+      }
+      sessionStorage.setItem('last_module_nav', Date.now().toString());
+    }
+
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
     const book = allBooks.find(b => b.abbr === bookAbbr);
     if (!book) return;

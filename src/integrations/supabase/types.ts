@@ -222,15 +222,7 @@ export type Database = {
           run_id?: string | null
           severity?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "bible_audit_alerts_run_id_fkey"
-            columns: ["run_id"]
-            isOneToOne: false
-            referencedRelation: "bible_audit_runs"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bible_audit_notification_versions: {
         Row: {
@@ -343,11 +335,12 @@ export type Database = {
           covered_books: number | null
           covered_chapters: number | null
           covered_verses: number | null
-          created_at: string | null
+          created_at: string
           created_by: string | null
-          empty_books: Json | null
+          empty_books: string[] | null
           id: string
           logs: Json | null
+          metadata: Json | null
           search_queries: Json | null
           started_at: string | null
           status: string
@@ -361,14 +354,15 @@ export type Database = {
           covered_books?: number | null
           covered_chapters?: number | null
           covered_verses?: number | null
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          empty_books?: Json | null
+          empty_books?: string[] | null
           id?: string
           logs?: Json | null
+          metadata?: Json | null
           search_queries?: Json | null
           started_at?: string | null
-          status?: string
+          status: string
           total_books?: number | null
           total_chapters?: number | null
           total_verses?: number | null
@@ -379,11 +373,12 @@ export type Database = {
           covered_books?: number | null
           covered_chapters?: number | null
           covered_verses?: number | null
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          empty_books?: Json | null
+          empty_books?: string[] | null
           id?: string
           logs?: Json | null
+          metadata?: Json | null
           search_queries?: Json | null
           started_at?: string | null
           status?: string
@@ -424,15 +419,7 @@ export type Database = {
           name?: string
           next_run?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "bible_audit_schedules_last_run_id_fkey"
-            columns: ["last_run_id"]
-            isOneToOne: false
-            referencedRelation: "bible_audit_runs"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bible_audit_security_logs: {
         Row: {
