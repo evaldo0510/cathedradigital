@@ -603,34 +603,37 @@ const Bible: React.FC = () => {
               <Icons.ChevronLeft className="w-4 h-4" /> Voltar
             </button>
 
-            <header className="mb-12 text-center">
-              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-2">{selectedBook.name}</h1>
+            <header className="mb-8 text-center">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/50 mb-2 block">Sumário Bíblico</span>
+              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-4">{selectedBook.name}</h1>
+              {selectedBook.description && (
+                <p className="text-sm font-serif italic text-primary/40 leading-relaxed max-w-xs mx-auto mb-6">
+                  {selectedBook.description}
+                </p>
+              )}
               <div className="w-12 h-px bg-secondary/20 mx-auto" />
             </header>
 
-            <div className="divide-y divide-primary/[0.03]">
+            <div className="grid grid-cols-4 gap-3">
               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => (
                 <button 
                   key={ch}
                   onClick={() => selectChapter(ch)}
-                  className="w-full h-16 flex items-center justify-between active:bg-primary/[0.02] transition-all px-2 group"
-                >
-                  <div className="flex flex-col text-left">
-                    <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
-                    {notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch) && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-secondary mt-1 flex items-center gap-1">
-                        <Icons.PenLine className="w-2.5 h-2.5" /> Meditado
-                      </span>
-                    )}
-                  </div>
-                  {selectedBook.chapterTitles?.[ch] && (
-                    <span className="text-[11px] font-serif italic text-primary/30 max-w-[150px] truncate text-right">{selectedBook.chapterTitles[ch]}</span>
+                  className={cn(
+                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group",
+                    notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
+                      ? "bg-secondary/5 border-secondary/20"
+                      : "bg-white border-primary/5 hover:border-secondary/30 shadow-sm"
                   )}
-                  <Icons.ChevronRight className="w-4 h-4 text-primary/10 ml-4" />
+                >
+                  <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
+                  {selectedBook.chapterTitles?.[ch] && (
+                    <div className="w-1 h-1 rounded-full bg-secondary/40 mt-1" />
+                  )}
                 </button>
-
               ))}
             </div>
+
           </motion.div>
         )}
 
