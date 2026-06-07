@@ -25,7 +25,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
     { id: 'paper', label: 'Claro', color: 'bg-[#FEFDFB]', text: 'text-stone-900' },
     { id: 'sepia', label: 'Pergaminho', color: 'bg-[#E8E2D2]', text: 'text-stone-800' },
     { id: 'dark', label: 'Escuro', color: 'bg-[#1A1C1E]', text: 'text-stone-200' },
-    { id: 'night', label: 'Noite', color: 'bg-[#0D0E10]', text: 'text-stone-400' },
+    { id: 'night', label: 'Noite', color: 'bg-[#000000]', text: 'text-stone-100' },
   ] as const;
 
   const fontSizes = [
