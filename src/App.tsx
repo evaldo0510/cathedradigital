@@ -124,6 +124,7 @@ const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage
 const TelemetryDashboard = lazy(() => import('./components/cathedra/TelemetryDashboard'));
 const NavigationErrorInspector = lazy(() => import('./components/cathedra/NavigationErrorInspector'));
 const AuditDashboard = lazy(() => import('./pages/AuditDashboard'));
+const IntegrityReport = lazy(() => import('./pages/IntegrityReport'));
 
 
 
@@ -511,6 +512,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/telemetry" element={<TelemetryDashboard />} />
                       <Route path="/ui-errors" element={<NavigationErrorInspector />} />
                       <Route path="/audit" element={<AuditDashboard />} />
+                      <Route path="/integrity" element={<IntegrityReport />} />
 
 
                     </Routes>
