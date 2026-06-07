@@ -573,11 +573,12 @@ const Bible: React.FC = () => {
                   key={ch}
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group",
+                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
                     notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
                       ? "bg-secondary/5 border-secondary/20"
                       : "bg-white border-primary/5 hover:border-secondary/30"
                   )}
+
                 >
                   <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
                   {selectedBook.chapterTitles?.[ch] && (
