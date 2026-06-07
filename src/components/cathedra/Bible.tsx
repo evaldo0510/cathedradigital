@@ -324,20 +324,23 @@ const Bible: React.FC = () => {
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
-  // Knowledge Connection System Mock Data
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string, summary: string }[]> = {
+  // Knowledge Connection System
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
     'Jo-6-35': [
       { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
       { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
-      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' }
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
+      { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
     ],
     'Gn-1-1': [
       { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
-      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' }
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' },
+      { type: 'cross_ref', label: 'Jo 1:1', color: 'bg-amber-500', id: 'Jo-1-1', summary: 'No princípio era o Verbo...' }
     ],
     'Mt-5-3': [
       { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716', summary: 'As Bem-aventuranças estão no centro da pregação de Jesus.' },
-      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' }
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' },
+      { type: 'cross_ref', label: 'Lc 6:20', color: 'bg-amber-500', id: 'Lc-6-20', summary: 'Bem-aventurados vós, os pobres...' }
     ]
   };
 
@@ -346,15 +349,14 @@ const Bible: React.FC = () => {
     { id: 'eucharistia', label: 'Eucaristia', parent: null, connections: 45, tags: ['Sacramento', 'Liturgia'] },
     { id: 'gratia', label: 'Graça', parent: null, connections: 28, tags: ['Soteriologia'] },
     { id: 'trinitas', label: 'Santíssima Trindade', parent: null, connections: 34, tags: ['Mistério', 'Dogma'] },
+    { id: 'mariologia', label: 'Mariologia', parent: null, connections: 18, tags: ['Santos', 'Dogma'] },
   ];
 
-
-
   const CROSS_REFERENCES: Record<string, string[]> = {
-    'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
-    'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
-    'Gn-1-1': ['Jo-1-1', 'Hb-11-3'],
-    'Mt-5-3': ['Lc-6-20'],
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1', 'Sl 33:6'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9', 'Ef 2:4'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3', 'Sl 102:25'],
+    'Mt-5-3': ['Lc-6-20', 'Is 57:15'],
   };
 
   const wrapWithDictionary = (text: string) => {
