@@ -1,4 +1,4 @@
-name: Language Consistency Guard
+name: Language & Navigation Guard
 
 on:
   push:
@@ -7,32 +7,57 @@ on:
     branches: [ main, master ]
 
 jobs:
-  check-language:
-    name: Validate Portuguese Vernacular
+  validate-language:
+    name: Unit Language Consistency
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
       - name: Install dependencies
         run: bun install
-
-      - name: Run Language Consistency Tests
+      - name: Run Unit Tests
         run: bunx vitest run src/components/cathedra/__tests__/LanguageConsistency.test.ts
 
-      - name: Static Code Analysis for English Terms
+  e2e-integrity:
+    name: E2E Navigation & Language Integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps
+      - name: Run E2E Integrity Scan
+        run: bunx playwright test tests/e2e/bible-integrity.spec.ts --project=chromium --project=mobile-chrome
+        env:
+          CI: true
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
+      - name: Upload Integrity Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integrity-reports
+          path: |
+            REPORTS/
+            playwright-report/
+            test-results/
+
+  static-scan:
+    name: Static Code Language Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan for Forbidden Terms
         run: |
-          # Scan for forbidden terms in source files (excluding tests and node_modules)
-          # We use a strict regex to avoid false positives in code logic
           FORBIDDEN='(Chapter|Verse|Book|Search|Loading|Error|Settings|Cancel|Save|Delete|Share|Back|Summary)'
-          if grep -rEi "$FORBIDDEN" src/ --exclude-dir=__tests__ --exclude=*.test.tsx; then
-            echo "❌ CRITICAL: Suspected English terms found in UI code. Please use Portuguese equivalents."
+          # Exclude test files, images, and node_modules
+          if grep -rEi "$FORBIDDEN" src/ --exclude-dir=__tests__ --exclude=*.test.tsx --exclude=*.test.ts --exclude=*.png --exclude=*.svg; then
+            echo "❌ CRITICAL: Forbidden English terms found in UI code. Build failed."
             exit 1
           else
-            echo "✅ Language validation passed."
+            echo "✅ Static scan passed."
           fi
