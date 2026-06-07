@@ -22,7 +22,8 @@ import {
   Save,
   Trash2,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ import 'jspdf-autotable';
 import { useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useSavedFilters, SavedFilter } from '@/hooks/useSavedFilters';
+import { SavedFiltersManager } from './SavedFiltersManager';
 import {
   Dialog,
   DialogContent,
@@ -47,6 +49,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface AuditEvent {
   id: string;
@@ -73,8 +82,9 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
   const [newFilterName, setNewFilterName] = useState('');
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [exportRange, setExportRange] = useState<'all' | 'visible'>('all');
+  const [isManagerOpen, setIsManagerOpen] = useState(false);
   
-  const { filters, saveFilter, deleteFilter, duplicateFilter } = useSavedFilters('premium-audit');
+  const { filters, saveFilter, deleteFilter } = useSavedFilters('premium-audit');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const fetchAuditTrail = useCallback(async () => {
@@ -192,8 +202,8 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
   }, [events, userId, searchQuery, filterBy]);
 
   const handleApplyFilter = (filter: SavedFilter) => {
-    setSearchQuery(filter.query);
-    setFilterBy(filter.filterBy as any);
+    setSearchQuery(filter.query || '');
+    setFilterBy((filter.filter_by as any) || 'all');
     toast.success(`Filtro "${filter.name}" aplicado!`);
   };
 
@@ -340,12 +350,34 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
           <Button variant="outline" size="icon" onClick={handleShare} className="rounded-xl" title="Copiar Link com Filtros">
             <ExternalLink className="w-4 h-4" />
           </Button>
+
+          <Sheet open={isManagerOpen} onOpenChange={setIsManagerOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-xl" title="Gerenciar Filtros Salvos">
+                <Settings className="w-4 h-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+              <SheetHeader>
+                <SheetTitle>Gerenciar Filtros Salvos</SheetTitle>
+              </SheetHeader>
+              <div className="py-6">
+                <SavedFiltersManager 
+                  projectId="premium-audit" 
+                  onApply={(f) => {
+                    handleApplyFilter(f);
+                    setIsManagerOpen(false);
+                  }} 
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
         {filters.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-2 border-t border-border mt-2">
             <span className="text-[10px] uppercase font-bold text-muted-foreground w-full mb-1">Filtros Salvos:</span>
-            {filters.map(f => (
+            {filters.slice(0, 5).map(f => (
               <div key={f.id} className="flex items-center gap-1 bg-muted/50 rounded-lg p-1 pr-2 border border-border">
                 <Button 
                   variant="ghost" 
@@ -362,13 +394,10 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => duplicateFilter(f)}>
-                      <Copy className="h-3 w-3 mr-2" /> Duplicar
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
                       const url = new URL(window.location.href);
-                      url.searchParams.set('q', f.query);
-                      url.searchParams.set('f', f.filterBy);
+                      url.searchParams.set('q', f.query || '');
+                      url.searchParams.set('f', f.filter_by || 'all');
                       navigator.clipboard.writeText(url.toString());
                       toast.success('Link do filtro copiado!');
                     }}>
@@ -381,6 +410,16 @@ export const PremiumAuditTimeline: React.FC<{ userId: string }> = ({ userId }) =
                 </DropdownMenu>
               </div>
             ))}
+            {filters.length > 5 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 text-[10px] px-2 text-primary"
+                onClick={() => setIsManagerOpen(true)}
+              >
+                +{filters.length - 5} mais
+              </Button>
+            )}
           </div>
         )}
 
