@@ -164,8 +164,9 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                 >
 
                   <div className="flex items-center gap-2">
+                    {/* Garantindo que o nome do livro seja exibido no vernáculo correto */}
                     <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
-                      {result.bookName} {result.chapter}:{result.verse}
+                      {result.bookName.replace('Tobit', 'Tobias').replace('Judith', 'Judite').replace('Wisdom', 'Sabedoria').replace('Sirach', 'Eclesiástico').replace('Baruch', 'Baruc')} {result.chapter}:{result.verse}
                     </span>
                     <div className="flex-1 h-px bg-primary/5" />
                     {result.score && (
