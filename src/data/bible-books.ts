@@ -3,6 +3,7 @@ export interface BibleBook {
   abbr: string;
   chapters: number;
   description?: string; // Descrição literária ou teológica do livro
+  context?: string; // Contexto histórico ou estrutural do livro
   chapterTitles?: Record<number, string>; // Títulos curtos para os capítulos
 }
 
