@@ -96,6 +96,8 @@ const Bible: React.FC = () => {
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string } | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResults, setScanResults] = useState<{book: string, ch: number, v: number, text: string, type: string}[]>([]);
 
 
 
@@ -430,6 +432,24 @@ const Bible: React.FC = () => {
           }
         });
         setDynamicConnections(newConns);
+      }
+      
+      // Auto-scan validation for real evidence
+      if (viewMode === 'reading' && isScanning) {
+        const forbiddenEnRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees)\\b`, 'i');
+        const found = loadedVerses.filter((v: any) => forbiddenEnRegex.test(v.text));
+        if (found.length > 0) {
+          setScanResults(prev => [
+            ...prev,
+            ...found.map((f: any) => ({
+              book: data.book || abbr,
+              ch: chapter,
+              v: f.number,
+              text: f.text,
+              type: 'Conteúdo Bíblico (API)'
+            }))
+          ]);
+        }
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
