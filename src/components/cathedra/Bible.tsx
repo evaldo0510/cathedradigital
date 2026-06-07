@@ -779,9 +779,8 @@ const Bible: React.FC = () => {
                       );
                     })}
                   </div>
-
-                  )}
                 </div>
+
 
 
 
