@@ -168,7 +168,14 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
       text = text.replace(/\bChapter\b/g, 'Capítulo')
                  .replace(/\bVerse\b/g, 'Versículo')
                  .replace(/\bLord\b/g, 'Senhor')
-                 .replace(/\bGod\b/g, 'Deus');
+                 .replace(/\bGod\b/g, 'Deus')
+                 .replace(/\bTobit\b/g, 'Tobias')
+                 .replace(/\bJudith\b/g, 'Judite')
+                 .replace(/\bWisdom\b/g, 'Sabedoria')
+                 .replace(/\bSirach\b/g, 'Eclesiástico')
+                 .replace(/\bBaruch\b/g, 'Baruc')
+                 .replace(/\bMaccabees\b/g, 'Macabeus')
+                 .replace(/\bObadiah\b/g, 'Abdias');
                  
       return {
         number: v.verse,

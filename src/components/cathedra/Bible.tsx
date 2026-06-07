@@ -405,18 +405,22 @@ const Bible: React.FC = () => {
     if (cached) {
       try {
         const cachedData = JSON.parse(cached);
-        const isLegacy = !cachedData.v || cachedData.v < 2; // Versão 2 introduz tradução forçada
-        const isExpired = Date.now() - cachedData.timestamp > 1000 * 60 * 60 * 24 * 7; // 1 week
+        // Force PT check: If book name in data is English, it's legacy
+        const isLegacy = !cachedData.v || cachedData.v < 3 || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cachedData.book)); 
+        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
-          setSourceInfo('Cache Local (v2)');
+          setSourceInfo('Cache Local (v3)');
         } else {
           console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
           if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
           if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
+          // Also clear from IndexedDB if exists
+          const { deleteFromStore } = await import('@/lib/offlineCache');
+          await deleteFromStore('bible', `${abbr}:${chapter}`);
         }
       } catch(e) {}
     }
