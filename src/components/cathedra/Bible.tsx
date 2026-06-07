@@ -109,7 +109,7 @@ const Bible: React.FC = () => {
     const scanForEnglish = async () => {
       // 1. Fetch dynamic allowlist from DB
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
-      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || [])];
+      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || []), 'Tobias', 'Judite', 'Sabedoria', 'Eclesiastico', 'Baruc'];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
@@ -145,7 +145,7 @@ const Bible: React.FC = () => {
         }
       }
     };
-    const timeout = setTimeout(scanForEnglish, 3000); // Wait for animations
+    const timeout = setTimeout(scanForEnglish, 5000); // Increased to wait for full lazy rendering
     return () => clearTimeout(timeout);
   }, [location.pathname]);
 
