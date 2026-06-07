@@ -19,6 +19,7 @@ import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
+import { BibleReader } from './BibleReader';
 
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
@@ -132,6 +133,10 @@ const Bible: React.FC = () => {
     };
     setLastRead(progress);
     localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
+    
+    // Offline storage for favorites/progress
+    const offlineKey = `offline_bible_progress_${bookAbbr}`;
+    localStorage.setItem(offlineKey, JSON.stringify({ ...progress, timestamp: Date.now() }));
   }, []);
 
 
@@ -243,6 +248,21 @@ const Bible: React.FC = () => {
 
   const fetchVerses = async (abbr: string, chapter: number) => {
     setIsLoading(true);
+    
+    // Attempt offline recovery
+    const offlineKey = `bible_cache_${abbr}_${chapter}`;
+    const cached = localStorage.getItem(offlineKey);
+    if (cached) {
+      try {
+        const cachedData = JSON.parse(cached);
+        if (Date.now() - cachedData.timestamp < 1000 * 60 * 60 * 24 * 7) { // 1 week cache
+          setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
+          setIsLoading(false);
+          // Still fetch in background to refresh
+        }
+      } catch(e) {}
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: abbr, chapter }
@@ -252,7 +272,9 @@ const Bible: React.FC = () => {
       const loadedVerses = data.verses || [];
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
       
-      if (loadedVerses.length === 0) {
+      if (loadedVerses.length > 0) {
+        localStorage.setItem(offlineKey, JSON.stringify({ verses: loadedVerses, timestamp: Date.now() }));
+      } else {
         toast.warning('Este capítulo parece estar sem conteúdo no momento.');
       }
 
