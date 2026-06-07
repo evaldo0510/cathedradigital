@@ -640,7 +640,7 @@ const Bible: React.FC = () => {
                       <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
                     </div>
                     <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
-                      {selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
+                      {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
                     </p>
                   </motion.div>
 
