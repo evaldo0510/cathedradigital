@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { BibleBook } from '@/data/bible-books';
+import { BibleBook, BIBLE_DATA } from '@/data/bible-books';
+
 
 interface BibleHomeProps {
   onSelectBook: (book: BibleBook) => void;
