@@ -1,8 +1,5 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-
-const SUPABASE_URL = "https://gpwrpmoniglarqwfyryp.supabase.co";
-
-console.log("Gerando script SQL para migração de dados...");
+import { createClient } from "@supabase/supabase-js";
+import * as fs from "fs";
 
 const DEUTERO_BOOKS = [
   { abbr: '1Mc', name: '1 Macabeus', chapters: 16 },
@@ -44,7 +41,7 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number,
 }
 
 async function migrate() {
-  const aiKey = Deno.env.get("LOVABLE_API_KEY");
+  const aiKey = process.env.LOVABLE_API_KEY;
   if (!aiKey) {
      console.error("LOVABLE_API_KEY ausente.");
      return;
@@ -63,16 +60,13 @@ async function migrate() {
          
          console.log(`-- Cap ${ch} traduzido`);
          
-         // Gerar SQL para execução posterior ou via psql
-         // Note: we need the book_id. We'll use a subquery.
-         const chapterSql = `WITH b AS (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') INSERT INTO bible_chapters (book_id, number) SELECT id, ${ch} FROM b ON CONFLICT (book_id, number) DO UPDATE SET updated_at = now() RETURNING id;`;
+         const chapterSql = `WITH b AS (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') INSERT INTO bible_chapters (book_id, number) SELECT id, ${ch} FROM b ON CONFLICT (book_id, number) DO UPDATE SET updated_at = now() RETURNING id;\n`;
          
-         // This is complex for a raw script. We'll use a temporary file.
          const versesSql = ptVerses.map((v: any) => 
-            `INSERT INTO bible_verses (chapter_id, number, text) SELECT id, ${v.number}, '${v.text.replace(/'/g, "''")}' FROM (SELECT id FROM bible_chapters WHERE book_id = (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') AND number = ${ch}) c ON CONFLICT (chapter_id, number) DO UPDATE SET text = EXCLUDED.text;`
-         ).join('\n');
+            `INSERT INTO bible_verses (chapter_id, number, text) SELECT id, ${v.number}, '${v.text.replace(/'/g, "''")}' FROM (SELECT id FROM bible_chapters WHERE book_id = (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') AND number = ${ch}) c ON CONFLICT (chapter_id, number) DO UPDATE SET text = EXCLUDED.text;\n`
+         ).join('');
          
-         await Deno.writeTextFile("migration_data.sql", chapterSql + "\n" + versesSql + "\n", { append: true });
+         fs.appendFileSync("migration_data.sql", chapterSql + versesSql);
          
          await new Promise(r => setTimeout(r, 200));
        } catch(e) {
