@@ -638,7 +638,7 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
-                    selectedChapter === ch && viewMode === 'reading' 
+                    selectedChapter === ch
                       ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
                       : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
                         ? "bg-secondary/5 border-secondary/20"
@@ -648,12 +648,12 @@ const Bible: React.FC = () => {
                 >
                   <span className={cn(
                     "text-lg font-display transition-colors",
-                    selectedChapter === ch && viewMode === 'reading' ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                    selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
                   )}>{ch}</span>
                   {selectedBook.chapterTitles?.[ch] && (
                     <div className={cn(
                       "w-1 h-1 rounded-full mt-1",
-                      selectedChapter === ch && viewMode === 'reading' ? "bg-secondary" : "bg-secondary/40"
+                      selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
                     )} />
                   )}
                 </button>
