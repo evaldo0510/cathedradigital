@@ -104,6 +104,24 @@ const Bible: React.FC = () => {
 
   // Sync with URL
   useEffect(() => {
+    // Escaneamento de runtime para detectar termos em inglês no DOM
+    const scanForEnglish = () => {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      const forbidden = /\b(Chapter|Verse|Book|Search|Loading|Error|Settings|Cancel|Save|Delete|Share|Back|Summary)\b/i;
+      while(node = walker.nextNode()) {
+        const text = node.textContent;
+        if (text && forbidden.test(text)) {
+          console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}"`, node.parentElement);
+        }
+      }
+    };
+    const timeout = setTimeout(scanForEnglish, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Sync with URL continued
+  useEffect(() => {
     const bookAbbr = searchParams.get('book');
     const chapter = searchParams.get('ch');
 
