@@ -39,7 +39,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Virtualization logic simplified for this component
+  // Lógica de virtualização simplificada para este componente
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
   
   useEffect(() => {
@@ -47,7 +47,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       if (!containerRef.current) return;
       const scrollPos = window.scrollY;
       const windowHeight = window.innerHeight;
-      // Heuristic for large chapters like Psalm 119
+      // Heurística para capítulos grandes como o Salmo 119
       if (verses.length > 100) {
         const index = Math.floor(scrollPos / 100);
         setVisibleRange({
@@ -169,7 +169,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             const highlightColor = highlights[verseKey];
             const verseConnections = connections[verseKey] || [];
             
-            // Injecting placeholders for empty connections in Demo mode
+            // Injetando espaços reservados para conexões vazias no modo Demo
             const finalConnections = verseConnections.length > 0 ? verseConnections : (connections['all'] || []);
 
             return (
@@ -194,7 +194,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                   </p>
                 </div>
 
-                {/* Connections indicator */}
+                {/* Indicador de conexões */}
                 {finalConnections.length > 0 && (
                   <div className="flex items-center gap-2 mt-3 ml-6">
                     {finalConnections.map((conn, idx) => (

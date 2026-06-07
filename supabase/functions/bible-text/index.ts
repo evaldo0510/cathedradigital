@@ -85,7 +85,7 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
   // If it's a deuterocanonical book, try specialized Catholic versions
   const isDeutero = ['tobit', 'judith', 'wisdom', 'sirach', 'baruch', '1maccabees', '2maccabees'].includes(englishName.toLowerCase());
   
-  // Salmos 151 special case (extra-canonical / Catholic / Orthodox)
+  // Caso especial para Salmo 151 (extra-canônico / Católico / Ortodoxo)
   if (englishName.toLowerCase() === 'psalms' && chapter === 151) {
     return [{ number: 1, text: "Eu era o menor entre meus irmãos, e o mais moço na casa de meu pai; pastoreava as ovelhas de meu pai. Minhas mãos fizeram um órgão, meus dedos ajustaram um saltério. E quem o anunciará ao meu Senhor? Ele mesmo, o Senhor, Ele mesmo ouve. Ele enviou o Seu anjo, e tirou-me de trás das ovelhas de meu pai, e ungiu-me com o óleo da Sua unção. Meus irmãos eram belos e altos, mas o Senhor não Se agradou deles. Saí ao encontro do filisteu, e ele amaldiçoou-me pelos seus ídolos. Mas eu, arrancando-lhe a espada, decepei-lhe a cabeça, e tirei a afronta dos filhos de Israel." }];
   }
@@ -104,12 +104,12 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
 /** Fallback to bolls.life (NAA — Nova Almeida Atualizada) */
 async function fetchFromBollsLife(bookId: number, chapter: number) {
   // Try Vulgate (VULG) as a fallback for deuterocanonical structure if NAA fails
-  // Try specialized versions for Obadiah (Abdias) if standard fails
+  // Tente versões especializadas para Abdias se o padrão falhar
   const versions = ['NAA', 'VULG', 'NVT'];
   
-  // Special case for Obadiah/Abdias (often has issues in APIs due to single chapter)
+  // Caso especial para Abdias (frequentemente apresenta problemas em APIs devido ao capítulo único)
   if (bookId === 31) {
-    // Obadiah text from a reliable Catholic source as fallback
+    // Texto de Abdias de uma fonte católica confiável como fallback
     const obadiahText = [
       { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
       { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
@@ -117,7 +117,7 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
       { number: 4, text: "Se te elevares como a águia, e se puseres o teu ninho entre as estrelas, dali te derrubarei, diz o Senhor." },
       // ... adding a few more for the audit to pass, though ideally we fetch all
     ];
-    // We'll still try the API first
+    // Continuaremos tentando a API primeiro
   }
 
   for (const version of versions) {
@@ -141,7 +141,7 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
 }
 
 
-// Rate limiter: 30 requests per minute per IP
+// Limitador de taxa: 30 requisições por minuto por IP
 const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT = 30;
 const RATE_WINDOW_MS = 60_000;
