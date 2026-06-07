@@ -139,9 +139,11 @@ const Bible: React.FC = () => {
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
-          const cached = JSON.parse(localStorage.getItem(key) || '{}');
+          const cachedValue = localStorage.getItem(key);
+          if (!cachedValue) return;
+          const cached = JSON.parse(cachedValue);
           const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
-          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cached.book);
+          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cached.book);
           
           if (isLegacyVersion || hasEnglishBook) {
             localStorage.removeItem(key);
@@ -173,8 +175,8 @@ const Bible: React.FC = () => {
       ];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      let node;
-      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
+      let node: Node | null;
+      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis)\\b`, 'i');
       
       const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
       if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
@@ -576,8 +578,8 @@ const Bible: React.FC = () => {
       try {
         const cachedData = JSON.parse(cached);
         // Force PT check: If book name in data is English, it's legacy
-        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cachedData.book)); 
-        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
+        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cachedData.book)); 
+        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 3; // 3 days for faster rotation during stabilization
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
