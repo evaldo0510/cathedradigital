@@ -1,16 +1,41 @@
-import { test, expect } from 'vitest';
+import { test, expect, describe } from 'vitest';
 import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '../../../constants/language-config';
+import { getElementSelector } from '../../../lib/utils';
 
-test('Bíblia não deve conter termos em inglês na interface principal, respeitando a allowlist', () => {
-  // Simula o conteúdo do DOM
-  const bodyText = document.body.innerText || "";
-  
-  FORBIDDEN_ENGLISH_WORDS.forEach(word => {
-    // Só falha se não estiver na allowlist (embora os proibidos geralmente não estejam)
-    if (LANGUAGE_ALLOWLIST.includes(word)) return;
+describe('Language Consistency & Runtime Scanner', () => {
+  test('Bíblia não deve conter termos em inglês na interface principal, respeitando a allowlist', () => {
+    const bodyText = document.body.innerText || "";
+    
+    FORBIDDEN_ENGLISH_WORDS.forEach(word => {
+      if (LANGUAGE_ALLOWLIST.includes(word)) return;
+      const regex = new RegExp(`\\b${word}\\b`, 'i');
+      expect(bodyText).not.toMatch(regex);
+    });
+  });
 
-    const regex = new RegExp(`\\b${word}\\b`, 'i');
-    expect(bodyText).not.toMatch(regex);
+  test('getElementSelector deve gerar um seletor CSS estável e correto', () => {
+    const container = document.createElement('div');
+    container.id = 'test-container';
+    const article = document.createElement('article');
+    const p1 = document.createElement('p');
+    const p2 = document.createElement('p');
+    
+    article.appendChild(p1);
+    article.appendChild(p2);
+    container.appendChild(article);
+    document.body.appendChild(container);
+
+    const selector = getElementSelector(p2);
+    
+    expect(selector).toContain('div#test-container');
+    expect(selector).toContain('article');
+    expect(selector).toContain('p:nth-of-type(2)');
+    
+    // Validar se o seletor é funcional
+    const found = document.querySelector(selector);
+    expect(found).toBe(p2);
+
+    document.body.removeChild(container);
   });
 });
 
