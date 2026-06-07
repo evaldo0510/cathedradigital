@@ -12,7 +12,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const CACHE_VERSION = "v1.3.1";
+const CACHE_VERSION = "v1.3.2";
 
 const DEUTERO_ABBREVS = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
 
@@ -39,6 +39,7 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
+
 async function fetchFromBollsLife(bookId: number, chapter: number) {
   try {
     const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
@@ -61,6 +62,10 @@ serve(async (req) => {
     // 1. Prioridade Máxima: Banco Cathedra
     const dbResult = await fetchFromCathedraDb(abbrev, chapter);
     if (dbResult) {
+      console.log(JSON.stringify({
+        level: 'info', requestId, event: 'bible_fetch_success',
+        book: abbrev, chapter, source: 'Cathedra (Banco)', duration_ms: Math.round(performance.now() - startTime)
+      }));
       return new Response(JSON.stringify({
         book: dbResult.bookName, chapter, verses: dbResult.verses,
         metadata: { source: 'Cathedra (Banco)', cache_version: CACHE_VERSION }
@@ -69,7 +74,12 @@ serve(async (req) => {
 
     // BLOQUEIO DETERMINÍSTICO: Deuterocanônicos DEVEM vir do banco.
     if (DEUTERO_ABBREVS.includes(abbrev)) {
-      return new Response(JSON.stringify({ error: `O livro ${abbrev} ainda não foi migrado para o banco Cathedra ou o capítulo ${chapter} não existe.` }), { status: 404, headers: corsHeaders });
+      const errorMsg = `O livro ${abbrev} ainda não foi migrado para o banco Cathedra ou o capítulo ${chapter} não existe.`;
+      console.warn(JSON.stringify({
+        level: 'warning', requestId, event: 'bible_fetch_missing_deutero',
+        book: abbrev, chapter, error: errorMsg, timestamp
+      }));
+      return new Response(JSON.stringify({ error: errorMsg, isDeutero: true }), { status: 404, headers: corsHeaders });
     }
 
     // 2. Protocanônicos: Fallback BollsLife
@@ -77,6 +87,10 @@ serve(async (req) => {
     if (bookId) {
       const verses = await fetchFromBollsLife(bookId, chapter);
       if (verses) {
+        console.log(JSON.stringify({
+          level: 'info', requestId, event: 'bible_fetch_success',
+          book: abbrev, chapter, source: 'BollsLife (NAA)', duration_ms: Math.round(performance.now() - startTime)
+        }));
         return new Response(JSON.stringify({
           book: abbrev, chapter, verses,
           metadata: { source: 'BollsLife (NAA)', cache_version: CACHE_VERSION }
@@ -84,7 +98,12 @@ serve(async (req) => {
       }
     }
 
+    console.error(JSON.stringify({
+      level: 'error', requestId, event: 'bible_fetch_not_found',
+      book: abbrev, chapter, timestamp
+    }));
     return new Response(JSON.stringify({ error: 'Texto indisponível' }), { status: 404, headers: corsHeaders });
+
   } catch (e) {
     return new Response(JSON.stringify({ error: 'Erro interno', message: e.message }), { status: 500, headers: corsHeaders });
   }
