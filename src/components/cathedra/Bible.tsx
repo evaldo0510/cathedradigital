@@ -1751,16 +1751,15 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </div>
               </div>
               
-              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8 mb-8">
+              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8 mb-8 space-y-4">
                 <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
                   {expandedConnection.summary}
                 </p>
                 
                 {expandedConnection.type === 'catechism' && (
-                  <div className="mt-4 pt-4 border-t border-primary/5">
-                    <p className="text-[10px] font-medium text-primary/30 uppercase tracking-widest">
-                      Fonte: Catecismo da Igreja Católica
-                    </p>
+                  <div className="pt-4 border-t border-primary/5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-3">Parágrafo Relacionado</p>
+                    <CatechismParagraphPreview paragraphId={expandedConnection.id} />
                   </div>
                 )}
               </div>
