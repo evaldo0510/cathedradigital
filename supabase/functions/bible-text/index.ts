@@ -190,7 +190,7 @@ serve(async (req) => {
 
     if (!abbrev || !chapter) {
       return new Response(
-        JSON.stringify({ error: 'Parâmetros "abbrev"/"book" e "chapter" são obrigatórios.' }),
+        JSON.stringify({ error: translateApiMessage('Invalid parameter') }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
