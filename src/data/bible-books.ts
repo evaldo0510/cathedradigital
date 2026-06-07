@@ -54,7 +54,23 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
       name: 'Livros Sapienciais',
       books: [
         { name: 'Jó', abbr: 'Jó', chapters: 42 },
-        { name: 'Salmos', abbr: 'Sl', chapters: 150 },
+        { 
+          name: 'Salmos', 
+          abbr: 'Sl', 
+          chapters: 151,
+          description: 'Hinos e Orações do Povo de Deus.',
+          context: 'O saltério é o coração da oração da Igreja, reunindo todas as emoções humanas diante de Deus.',
+          chapterTitles: {
+            23: "O Bom Pastor",
+            51: "Miserere: Oração de arrependimento",
+            91: "A proteção divina",
+            103: "Bendize, ó minha alma, ao Senhor",
+            119: "A excelência da Lei de Deus",
+            139: "A onisciência e onipresença de Deus",
+            150: "Louvai ao Senhor",
+            151: "O Salmo de Davi após vencer Golias"
+          }
+        },
         { name: 'Provérbios', abbr: 'Pr', chapters: 31 },
         { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12 },
         { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8 },
@@ -79,7 +95,16 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Oseias', abbr: 'Os', chapters: 14 },
         { name: 'Joel', abbr: 'Jl', chapters: 4 },
         { name: 'Amós', abbr: 'Am', chapters: 9 },
-        { name: 'Abdias', abbr: 'Ab', chapters: 1 },
+        { 
+          name: 'Abdias', 
+          abbr: 'Ab', 
+          chapters: 1,
+          description: 'O Juízo contra Edom e o Reino do Senhor.',
+          context: 'O menor livro do Antigo Testamento, foca na justiça divina contra os que oprimem o povo de Deus.',
+          chapterTitles: {
+            1: "O juízo de Edom e a restauração de Israel"
+          }
+        },
         { name: 'Jonas', abbr: 'Jn', chapters: 4 },
         { name: 'Miqueias', abbr: 'Mq', chapters: 7 },
         { name: 'Naum', abbr: 'Na', chapters: 3 },
