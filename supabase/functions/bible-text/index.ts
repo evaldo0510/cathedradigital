@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,8 +7,13 @@ const corsHeaders = {
   'Access-Control-Expose-Headers': 'ETag',
 };
 
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
 // Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.4";
+const CACHE_VERSION = "v1.2.6";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
@@ -60,110 +66,36 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Jd': 65, 'Ap': 66, 'Tb': 68, 'Jdt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
-function robustTranslate(text: string): { translated: string, correctionCount: number } {
-  if (!text) return { translated: '', correctionCount: 0 };
-  let translated = text;
-  let count = 0;
-  const map: Record<string, string> = {
-    '\\bChapter\\b': 'Capítulo', '\\bVerse\\b': 'Versículo', '\\bTobit\\b': 'Tobias',
-    '\\bJudith\\b': 'Judite', '\\bWisdom\\b': 'Sabedoria', '\\bSirach\\b': 'Eclesiástico',
-    '\\bBaruch\\b': 'Baruc', '\\bMaccabees\\b': 'Macabeus', '\\bObadiah\\b': 'Abdias',
-    '\\bLord\\b': 'Senhor', '\\bGod\\b': 'Deus', '\\bJesus\\b': 'Jesus', '\\bChrist\\b': 'Cristo',
-    '\\bMary\\b': 'Maria', '\\bPeter\\b': 'Pedro', '\\bJohn\\b': 'João', '\\bPaul\\b': 'Paulo',
-    '\\bGenesis\\b': 'Gênesis', '\\bExodus\\b': 'Êxodo', '\\bLeviticus\\b': 'Levítico',
-    '\\bNumbers\\b': 'Números', '\\bDeuteronomy\\b': 'Deuteronômio', '\\bPsalms\\b': 'Salmos'
-  };
-
-  for (const [eng, pt] of Object.entries(map)) {
-    const regex = new RegExp(eng, 'gi');
-    const matches = translated.match(regex);
-    if (matches) {
-      count += matches.length;
-      translated = translated.replace(regex, pt);
-    }
-  }
-  return { translated, correctionCount: count };
-}
-
-async function fetchFromBibleApi(englishName: string, chapter: number) {
-  const isDeutero = ['tobit', 'judith', 'wisdom', 'sirach', 'baruch', '1maccabees', '2maccabees'].includes(englishName.toLowerCase());
-  const translation = isDeutero ? 'webbe' : 'almeida';
-  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=${translation}`;
-  
+async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) return { data: null, error: `BibleAPI failed: ${res.status}` };
-    const data = await res.json();
-    if (!data.verses || data.verses.length === 0) return { data: null, error: 'Empty verses' };
-    
-    let totalCorrections = 0;
-    const verses = data.verses.map((v: any) => {
-      const { translated, correctionCount } = robustTranslate(v.text?.trim() || '');
-      totalCorrections += correctionCount;
-      return { number: v.verse, text: translated };
-    });
-    return { data: verses, corrections: totalCorrections };
-  } catch (e) {
-    return { data: null, error: e.message };
-  }
-}
+    const { data: book } = await supabase
+      .from('bible_books')
+      .select('id')
+      .eq('abbrev', abbrev)
+      .single();
 
-async function translateWithAI(verses: any[], bookName: string, chapter: number) {
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  if (!LOVABLE_API_KEY) {
-    console.error("LOVABLE_API_KEY not found. Skipping AI translation.");
-    return verses;
-  }
+    if (!book) return null;
 
-  try {
-    const prompt = `Translate the following Bible verses from ${bookName} Chapter ${chapter} into natural, high-quality Portuguese (Brazilian). 
-    Use the formal and solemn tone typical of Catholic Bibles (like Bíblia de Jerusalém or Ave Maria). 
-    Return ONLY a JSON object with a key "verses" containing the array of objects with "number" and "text" fields.
-    
-    Input: ${JSON.stringify(verses.slice(0, 80))}`;
+    const { data: chapterRecord } = await supabase
+      .from('bible_chapters')
+      .select('id')
+      .eq('book_id', book.id)
+      .eq('number', chapter)
+      .single();
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite", // Using the available 2026 model
-        messages: [
-          { role: "system", content: "You are an expert biblical translator specializing in Catholic Portuguese translations. You must return only a JSON object with the key 'verses'." },
-          { role: "user", content: prompt }
-        ],
-        response_format: { type: "json_object" }
-      }),
-    });
+    if (!chapterRecord) return null;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`AI Gateway failed: ${response.status} - ${errorText}`);
-      return verses;
-    }
+    const { data: verses } = await supabase
+      .from('bible_verses')
+      .select('number, text')
+      .eq('chapter_id', chapterRecord.id)
+      .order('number', { ascending: true });
 
-    const result = await response.json();
-    const content = result.choices[0].message.content;
-    const parsed = JSON.parse(content);
-    
-    const translatedVerses = parsed.verses || parsed.results || (Array.isArray(parsed) ? parsed : null);
-    
-    if (translatedVerses && Array.isArray(translatedVerses)) {
-      return verses.map((orig, i) => {
-        const translated = translatedVerses.find(v => v.number === orig.number) || translatedVerses[i];
-        return {
-          number: orig.number,
-          text: translated?.text || orig.text
-        };
-      });
-    }
-    
+    if (!verses || verses.length === 0) return null;
     return verses;
   } catch (e) {
-    console.error("AI Translation error:", e);
-    return verses;
+    console.error("DB Fetch Error:", e);
+    return null;
   }
 }
 
@@ -175,14 +107,26 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) return { data: null, error: 'Empty data' };
     
-    let totalCorrections = 0;
-    const verses = data.map((v: any) => {
-      const clean = (v.text || '').replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ').trim();
-      const { translated, correctionCount } = robustTranslate(clean);
-      totalCorrections += correctionCount;
-      return { number: v.verse, text: translated };
-    });
-    return { data: verses, corrections: totalCorrections };
+    const verses = data.map((v: any) => ({
+      number: v.verse,
+      text: (v.text || '').replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ').trim()
+    }));
+    return { data: verses };
+  } catch (e) {
+    return { data: null, error: e.message };
+  }
+}
+
+async function fetchFromBibleApi(englishName: string, chapter: number) {
+  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=webbe`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return { data: null, error: `BibleAPI failed: ${res.status}` };
+    const data = await res.json();
+    if (!data.verses || data.verses.length === 0) return { data: null, error: 'Empty verses' };
+    
+    const verses = data.verses.map((v: any) => ({ number: v.verse, text: v.text }));
+    return { data: verses };
   } catch (e) {
     return { data: null, error: e.message };
   }
@@ -195,30 +139,14 @@ serve(async (req) => {
   
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
-  let abbrev = 'unknown';
-  let chapter = 0;
-
   try {
     const rawBody = await req.text();
-    if (!rawBody) {
-       return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
-    }
+    if (!rawBody) return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
+    
     const body = JSON.parse(rawBody);
-    abbrev = body.abbrev;
-    chapter = body.chapter;
+    const { abbrev, chapter } = body;
     
-    // ETag check can happen BEFORE body validation if we have enough info in headers, 
-    // but here ETag depends on englishName which comes from abbrev.
-    // So we need abbrev even for 304.
-    
-    if (!abbrev || !chapter) {
-      const errorMsg = 'Parâmetros inválidos: abbrev e chapter são obrigatórios';
-      console.error(JSON.stringify({ 
-        level: 'error', requestId, event: 'bible_request_invalid', 
-        error: errorMsg, timestamp 
-      }));
-      return new Response(JSON.stringify({ error: errorMsg }), { status: 400, headers: corsHeaders });
-    }
+    if (!abbrev || !chapter) return new Response(JSON.stringify({ error: 'Parâmetros inválidos' }), { status: 400, headers: corsHeaders });
 
     const findCaseInsensitive = (map: Record<string, any>, key: string) => {
       const lowerKey = key.toLowerCase();
@@ -230,88 +158,37 @@ serve(async (req) => {
     const ptName = findCaseInsensitive(BOOK_PT_MAP, abbrev) || abbrev;
     const bookId = findCaseInsensitive(BOLLS_BOOK_ID, abbrev);
 
-    // ETag Generation - Includes version to ensure global invalidation when needed
-    const etagValue = `"${CACHE_VERSION}-${englishName}-${chapter}"`;
-    const clientEtag = req.headers.get('if-none-match');
-    
-    // Normalize ETags for comparison (remove weak ETag prefix and quotes)
-    const normalize = (tag: string | null) => tag ? tag.trim().replace(/^W\//, '').replace(/"/g, '') : null;
-    
-    const normalizedClientEtag = normalize(clientEtag);
-    const normalizedServerEtag = normalize(etagValue);
-
-    if (normalizedClientEtag && normalizedClientEtag === normalizedServerEtag) {
-      console.log(JSON.stringify({
-        level: 'info', requestId, event: 'bible_cache_hit_etag',
-        book: abbrev, chapter, duration_ms: Math.round(performance.now() - startTime),
-        timestamp
-      }));
-      return new Response(null, { status: 304, headers: { ...corsHeaders, 'ETag': etagValue } });
-    }
-
-    const results = await Promise.allSettled([
-      fetchFromBibleApi(englishName, chapter),
-      bookId ? fetchFromBollsLife(bookId, chapter) : Promise.resolve({ data: null, error: 'No ID' })
-    ]);
-
     let verses = null;
     let source = 'none';
-    let correctionCount = 0;
-    let errors = [];
 
-    // Prioritize BollsLife (Native Portuguese)
-    const bollsResult = results[1];
-    if (bollsResult.status === 'fulfilled' && bollsResult.value.data) {
-      verses = bollsResult.value.data;
-      source = 'BollsLife (NAA)';
-      correctionCount = bollsResult.value.corrections || 0;
+    // 1. Tentar Fonte de Verdade Cathedra (Banco Local)
+    verses = await fetchFromCathedraDb(abbrev, chapter);
+    if (verses) {
+      source = 'Cathedra (Banco)';
     } else {
-      // Fallback to BibleAPI + AI Translation if BollsLife fails (common for Deuterocanonical)
-      const bibleApiResult = results[0];
-      if (bibleApiResult.status === 'fulfilled' && bibleApiResult.value.data) {
-        verses = bibleApiResult.value.data;
-        source = 'BibleAPI (WEBBE)';
-        correctionCount = bibleApiResult.value.corrections || 0;
-        
-        // Detect English text and translate
-        const isEnglish = verses.some(v => /\b(the|and|shall|unto|from)\b/i.test(v.text));
-        if (isEnglish) {
-          console.log(`[AI] English detected in ${abbrev} ${chapter}. Translating...`);
-          verses = await translateWithAI(verses, ptName, chapter);
-          source += ' + AI Translation';
+      // 2. Fallback para Protocanônicos (BollsLife NAA)
+      if (bookId) {
+        const bollsRes = await fetchFromBollsLife(bookId, chapter);
+        if (bollsRes.data) {
+          verses = bollsRes.data;
+          source = 'BollsLife (NAA)';
+        }
+      }
+      
+      // 3. Fallback Última Instância (BibleAPI WEBBE) - Apenas se não for deuterocanônico (que deveria estar no banco)
+      if (!verses) {
+        const bibleApiRes = await fetchFromBibleApi(englishName, chapter);
+        if (bibleApiRes.data) {
+          verses = bibleApiRes.data;
+          source = 'BibleAPI (WEBBE)';
         }
       }
     }
 
-    if (!verses) {
-      for (const r of results) {
-        if (r.status === 'rejected') errors.push(r.reason?.message || 'Unknown');
-        else if (r.status === 'fulfilled' && r.value.error) errors.push(r.value.error);
-      }
-    }
-
-    const duration = performance.now() - startTime;
-    const success = !!verses;
-    
-    // Structured Logging with Metrics
-    console.log(JSON.stringify({
-      level: success ? 'info' : 'warning',
-      requestId,
-      event: 'bible_fetch_complete',
-      book: abbrev,
-      englishName,
-      chapter,
-      source,
-      success,
-      duration_ms: Math.round(duration),
-      correction_count: correctionCount,
-      correction_rate: verses?.length ? (correctionCount / verses.length).toFixed(4) : 0,
-      errors: errors.length > 0 ? errors : undefined,
-      cache_version: CACHE_VERSION,
-      timestamp
-    }));
-
     if (verses) {
+      const duration = Math.round(performance.now() - startTime);
+      console.log(`[Bible] Request ${requestId}: ${abbrev} ${chapter} from ${source} (${duration}ms)`);
+      
       return new Response(
         JSON.stringify({ 
           book: ptName, 
@@ -324,7 +201,6 @@ serve(async (req) => {
           headers: { 
             ...corsHeaders, 
             'Content-Type': 'application/json',
-            'ETag': etagValue,
             'Cache-Control': 'public, max-age=604800, s-maxage=604800',
             'X-Request-Id': requestId
           } 
@@ -332,19 +208,9 @@ serve(async (req) => {
       );
     }
 
-    return new Response(
-      JSON.stringify({ book: ptName, chapter, verses: [], text: 'Texto indisponível.', requestId }),
-      { status: 404, headers: corsHeaders }
-    );
+    return new Response(JSON.stringify({ error: 'Texto indisponível', requestId }), { status: 404, headers: corsHeaders });
 
   } catch (error) {
-    console.error(JSON.stringify({ 
-      level: 'critical', requestId, event: 'bible_critical_error', 
-      book: abbrev, chapter, error: error.message, stack: error.stack, timestamp 
-    }));
-    return new Response(JSON.stringify({ error: 'Erro interno no processamento do texto bíblico', requestId }), { 
-      status: 500, 
-      headers: corsHeaders 
-    });
+    return new Response(JSON.stringify({ error: 'Erro interno', message: error.message }), { status: 500, headers: corsHeaders });
   }
 });
