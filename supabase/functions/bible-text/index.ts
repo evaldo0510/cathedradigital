@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.1";
+const CACHE_VERSION = "v1.2.2";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
@@ -17,7 +17,7 @@ const BOOK_NAME_MAP: Record<string, string> = {
   '1Mc': '1maccabees', '2Mc': '2maccabees', 'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 
   'Ecl': 'ecclesiastes', 'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
   'Is': 'isaiah', 'Jr': 'jeremiah', 'Lm': 'lamentations', 'Br': 'baruch',
-  'Ez': 'ezequiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
+  'Ez': 'ezekiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
   'Ab': 'obadiah', 'Jn': 'jonah', 'Mq': 'micah', 'Na': 'nahum', 'Hab': 'habakkuk',
   'Sf': 'zephaniah', 'Ag': 'haggai', 'Zc': 'zechariah', 'Ml': 'malachi',
   'Mt': 'matthew', 'Mc': 'mark', 'Lc': 'luke', 'Jo': 'john',
@@ -68,7 +68,10 @@ function robustTranslate(text: string): { translated: string, correctionCount: n
     '\\bChapter\\b': 'Capítulo', '\\bVerse\\b': 'Versículo', '\\bTobit\\b': 'Tobias',
     '\\bJudith\\b': 'Judite', '\\bWisdom\\b': 'Sabedoria', '\\bSirach\\b': 'Eclesiástico',
     '\\bBaruch\\b': 'Baruc', '\\bMaccabees\\b': 'Macabeus', '\\bObadiah\\b': 'Abdias',
-    '\\bLord\\b': 'Senhor', '\\bGod\\b': 'Deus', '\\bJesus\\b': 'Jesus', '\\bChrist\\b': 'Cristo'
+    '\\bLord\\b': 'Senhor', '\\bGod\\b': 'Deus', '\\bJesus\\b': 'Jesus', '\\bChrist\\b': 'Cristo',
+    '\\bMary\\b': 'Maria', '\\bPeter\\b': 'Pedro', '\\bJohn\\b': 'João', '\\bPaul\\b': 'Paulo',
+    '\\bGenesis\\b': 'Gênesis', '\\bExodus\\b': 'Êxodo', '\\bLeviticus\\b': 'Levítico',
+    '\\bNumbers\\b': 'Números', '\\bDeuteronomy\\b': 'Deuteronômio', '\\bPsalms\\b': 'Salmos'
   };
 
   for (const [eng, pt] of Object.entries(map)) {
@@ -139,10 +142,9 @@ serve(async (req) => {
   try {
     const rawBody = await req.text();
     if (!rawBody) {
-       // Support empty body for testing ETag with GET-like logic or 304 behavior if headers present
-       // However, we usually expect a JSON body for POST
+       return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
     }
-    const body = rawBody ? JSON.parse(rawBody) : {};
+    const body = JSON.parse(rawBody);
     abbrev = body.abbrev;
     chapter = body.chapter;
     

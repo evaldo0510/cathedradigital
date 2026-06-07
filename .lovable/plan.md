@@ -1,46 +1,33 @@
-Transform the Bible module into a premium, contemplative reading experience inspired by manuscripts and classical libraries. This involves a complete visual overhaul of the Bible landing page, book selection, and reading interface, prioritizing typography and removing administrative noise.
+I will execute a structural stabilization of the Bible component to recover its functional integrity and eliminate English terms, following the "CATHEDRA BIBLE RECOVERY PHASE" mission.
 
-### 1. Visual Identity & Design Tokens
-- Update global CSS/styles to enhance the "Digital Bible" feel.
-- Utilize the provided color palette: Cream (#FDF8F3), Parchment (#F3E9D2), Gold (#D4AF37), Charcoal (#2C2C2C), Deep Brown (#6B4E31).
-- Enforce serif typography (Playfair Display for titles, Lora/Merriweather for text) as primary.
+### 1. Diagnosis & Evidence Gathering
+- **Language Violations**: Identification of English book names (e.g., "Tobit", "Judith", "Wisdom", "Sirach") appearing in the UI due to legacy caches or incomplete mapping in the `bible-text` Edge Function.
+- **Content Issues**: Verification of "missing content" reports, specifically for books like Abdias (Obadiah) which was identified as having a local fallback.
+- **Duplication**: The `BOOK_NAME_MAP` and `BOOK_PT_MAP` in the Edge Function need to be synchronized with the frontend `BIBLE_DATA` to ensure a single source of truth.
 
-### 2. Bible Home Redesign (`src/components/cathedra/Bible.tsx`)
-- Create a new "Bible Home" area above the books list.
-- Implement discrete widgets for:
-  - **Continue Reading**: Prominent but elegant resumption.
-  - **Daily Reading**: Current liturgical or daily verse.
-  - **Reading Plan**: Progress indicator.
-  - **Favorites & History**: Quick access links.
-- Move search to a more integrated, less "input-like" position.
+### 2. Stabilization & Correction (Frontend)
+- **Hard-Coded Correction**: Refine the runtime scanner in `Bible.tsx` to include all missing Brazilian Portuguese (PT-BR) book mappings and common UI terms (e.g., "Chapter", "Verse").
+- **Cache Invalidation**: Force a global cache purge by bumping the `cacheSyncVersion` in `Bible.tsx` to match the Edge Function's versioning.
+- **Navigation Stabilizer**: Ensure `selectBook` and `selectChapter` handle compound names and route parameters consistently between desktop and mobile.
+- **Bible ↔ CIC Reset**: Verify the connection logic to prevent involuntary switching between modules.
 
-### 3. Book Selection (Hierarchical Library)
-- Replace the simple testamento toggle with a unified, hierarchical library view.
-- Categories: Old Testament (Pentateuch, Historical, Wisdom, Prophets), New Testament (Gospels, Acts, Epistles, Revelation).
-- Books styled as "library chapters" rather than buttons.
+### 3. Backend & Data API Stabilization (Edge Functions)
+- **`bible-text` Function**:
+    - Update `BOOK_NAME_MAP` to handle all abbreviations used by the frontend.
+    - Enhance `robustTranslate` with more exhaustive mapping.
+    - Fix the "Unexpected end of JSON input" error observed in logs when the external API fails.
+- **`bible-search` Function**:
+    - Replace the mock logic with real database querying or better-simulated results that respect the language allowlist.
 
-### 4. Chapter Summary Redesign
-- Replace numerical grids (1, 2, 3...) with an elegant "Table of Contents" style list.
-- Each chapter will show its title (e.g., "Capítulo 1 — O Verbo se fez carne").
-- Add reading progress indicators for each chapter.
-
-### 5. Reading Experience Overhaul
-- Center text with generous margins and line-height.
-- Implement "Reading Mode" (full immersive).
-- Add controls for:
-  - Font size adjustment.
-  - Quick favorite for verses.
-  - Note creation.
-  - Sharing options.
-- Integrate the audio player more subtly into the text flow or a refined floating bar.
-
-### 6. Mobile Optimization
-- Simplify header height and "above the fold" content.
-- Focus 80% of screen real estate on text during reading.
-- Ensure the Bible Home follows the "Search, Continue, Daily" priority.
+### 4. Validation & Quality Assurance
+- **Automated Sweep**: Run the built-in "Deep Scan" auditor in the Diagnostic Panel to navigate through problematic books (Deuterocanonical) and capture evidence.
+- **Mobile Navigation Test**: Use the preview to verify swipe navigation and chapter switching on small screens.
+- **Integrity Report**: Generate the CSV/JSON report as requested to prove zero occurrences of English.
 
 ### Technical Details
-- Update `Bible.tsx` to handle the new view states.
-- Create or refine helper components for the hierarchical list and TOC chapters.
-- Ensure state persistence for reading progress and favorites is seamless.
-- Maintain accessibility with visible focus and high contrast support.
+- **Files Affected**:
+    - `src/components/cathedra/Bible.tsx` (Scanner, Cache, Diagnostic UI)
+    - `supabase/functions/bible-text/index.ts` (API Mapping, Fallbacks, ETags)
+    - `src/data/bible-books.ts` (Source of Truth for Book Names)
+    - `src/components/cathedra/BibleSearch.tsx` (Search UI Translation)
+- **Version Control**: Bump CACHE_VERSION to `v1.2.2`.
