@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.2";
+const CACHE_VERSION = "v1.2.3";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
@@ -108,6 +108,63 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
   }
 }
 
+async function translateWithAI(verses: any[], bookName: string, chapter: number) {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  if (!LOVABLE_API_KEY) {
+    console.error("LOVABLE_API_KEY not found. Skipping AI translation.");
+    return verses;
+  }
+
+  try {
+    const prompt = `Translate the following Bible verses from ${bookName} Chapter ${chapter} into natural, high-quality Portuguese (Brazilian). 
+    Use the formal and solemn tone typical of Catholic Bibles (like Bíblia de Jerusalém or Ave Maria). 
+    Return ONLY a JSON array of objects with "number" and "text" fields, matching the input structure.
+    
+    Input: ${JSON.stringify(verses.slice(0, 50))}`; // Limit to 50 verses per call for safety
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.0-flash-lite", // Fast and good for translation
+        messages: [
+          { role: "system", content: "You are an expert biblical translator specializing in Catholic Portuguese translations. You must return only the JSON array." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" }
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(`AI Gateway failed: ${response.status}`);
+      return verses;
+    }
+
+    const result = await response.json();
+    const content = result.choices[0].message.content;
+    const parsed = JSON.parse(content);
+    
+    // Support various JSON structures the AI might return
+    const translatedVerses = parsed.verses || parsed.results || (Array.isArray(parsed) ? parsed : null);
+    
+    if (translatedVerses && Array.isArray(translatedVerses)) {
+      // Map back to ensure we don't lose the original numbers if AI messed up
+      return verses.map((orig, i) => ({
+        number: orig.number,
+        text: translatedVerses[i]?.text || translatedVerses.find(v => v.number === orig.number)?.text || orig.text
+      }));
+    }
+    
+    return verses;
+  } catch (e) {
+    console.error("AI Translation error:", e);
+    return verses;
+  }
+}
+
 async function fetchFromBollsLife(bookId: number, chapter: number) {
   const url = `https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`;
   try {
@@ -200,16 +257,34 @@ serve(async (req) => {
     let correctionCount = 0;
     let errors = [];
 
-    for (const [idx, r] of results.entries()) {
-      if (r.status === 'fulfilled' && r.value.data) {
-        verses = r.value.data;
-        source = idx === 0 ? 'BibleAPI' : 'BollsLife';
-        correctionCount = r.value.corrections || 0;
-        break;
-      } else if (r.status === 'fulfilled') {
-        errors.push(r.value.error);
-      } else if (r.status === 'rejected') {
-        errors.push(r.reason?.message || 'Unknown promise rejection');
+    // Prioritize BollsLife (Native Portuguese)
+    const bollsResult = results[1];
+    if (bollsResult.status === 'fulfilled' && bollsResult.value.data) {
+      verses = bollsResult.value.data;
+      source = 'BollsLife (NAA)';
+      correctionCount = bollsResult.value.corrections || 0;
+    } else {
+      // Fallback to BibleAPI + AI Translation if BollsLife fails (common for Deuterocanonical)
+      const bibleApiResult = results[0];
+      if (bibleApiResult.status === 'fulfilled' && bibleApiResult.value.data) {
+        verses = bibleApiResult.value.data;
+        source = 'BibleAPI (WEBBE)';
+        correctionCount = bibleApiResult.value.corrections || 0;
+        
+        // Detect English text and translate
+        const isEnglish = verses.some(v => /\b(the|and|shall|unto|from)\b/i.test(v.text));
+        if (isEnglish) {
+          console.log(`[AI] English detected in ${abbrev} ${chapter}. Translating...`);
+          verses = await translateWithAI(verses, ptName, chapter);
+          source += ' + AI Translation';
+        }
+      }
+    }
+
+    if (!verses) {
+      for (const r of results) {
+        if (r.status === 'rejected') errors.push(r.reason?.message || 'Unknown');
+        else if (r.status === 'fulfilled' && r.value.error) errors.push(r.value.error);
       }
     }
 

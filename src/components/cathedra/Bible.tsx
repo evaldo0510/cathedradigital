@@ -90,7 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
-  const [cacheSyncVersion, setCacheSyncVersion] = useState(7); // Versão incrementada para v1.2.3 para invalidação global pós-estabilização
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(8); // Bumped to v8 for AI Translation stabilization
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -731,7 +731,7 @@ const Bible: React.FC = () => {
         localStorage.setItem(offlineKey, JSON.stringify({ 
           verses: loadedVerses, 
           timestamp: Date.now(),
-          v: 3, // Versão da tradução PT garantida
+          v: 8, // Versão da tradução PT garantida via AI Fallback
           book: data.book || abbr
         }));
       } else {
