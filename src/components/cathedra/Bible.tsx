@@ -90,7 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
-  const [cacheSyncVersion, setCacheSyncVersion] = useState(4); // Current functional version
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(5); // Versão incrementada para invalidação global v1.2.0
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
