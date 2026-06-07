@@ -1075,8 +1075,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           variant="ghost" 
                           size="sm"
                           onClick={() => {
-                            const csv = "ID,Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,Evidencia_HTML\n" + 
-                              scanResults.map(r => `"${r.id}","${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${r.htmlSnippet.substring(0, 50)}..."`).join("\n");
+                            const csv = "ID,Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,SessionID,Timestamp,Evidencia_HTML\n" + 
+                              scanResults.map(r => `"${r.id}","${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${sessionId}","${r.timestamp}","${r.htmlSnippet.substring(0, 50).replace(/"/g, '""')}..."`).join("\n");
                             const blob = new Blob([csv], { type: 'text/csv' });
                             const url = URL.createObjectURL(blob);
                             const link = document.createElement('a');
