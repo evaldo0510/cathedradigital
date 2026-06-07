@@ -109,7 +109,7 @@ const Bible: React.FC = () => {
     const scanForEnglish = async () => {
       // 1. Fetch dynamic allowlist from DB
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
-      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || []), 'Tobias', 'Judite', 'Sabedoria', 'Eclesiastico', 'Baruc'];
+      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || []), 'Tobias', 'Judite', 'Sabedoria', 'Eclesiastico', 'Baruc', 'Tobit', 'Judith', 'Wisdom', 'Sirach', 'Baruch', 'Maccabees'];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
@@ -366,7 +366,7 @@ const Bible: React.FC = () => {
     try {
       // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: abbr, chapter }
+        body: { book: encodeURIComponent(abbr), chapter }
       });
       if (error) throw error;
       
