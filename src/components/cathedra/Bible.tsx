@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+/**
+ * Bible Component - CATHEDRA BIBLE REGRESSION RECOVERY
+ * Version: 4.0.0 (Stabilized)
+ */
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
