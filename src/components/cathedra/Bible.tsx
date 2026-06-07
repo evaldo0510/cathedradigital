@@ -90,7 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
-  const [cacheSyncVersion, setCacheSyncVersion] = useState(5); // Versão incrementada para invalidação global v1.2.0
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(6); // Versão incrementada para v1.2.2 para invalidação global
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -270,7 +270,14 @@ const Bible: React.FC = () => {
         'Loading': 'Carregando',
         'Settings': 'Configurações',
         'Home': 'Início',
-        'Continue Reading': 'Continuar Lendo'
+        'Continue Reading': 'Continuar Lendo',
+        'Back': 'Voltar',
+        'Bible': 'Bíblia',
+        'Catechism': 'Catecismo',
+        'Magisterium': 'Magistério',
+        'Cancel': 'Cancelar',
+        'Save': 'Salvar',
+        'Summary': 'Resumo'
       };
       
       while(node = walker.nextNode()) {

@@ -166,7 +166,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                   <div className="flex items-center gap-2">
                     {/* Garantindo que o nome do livro seja exibido no vernáculo correto */}
                     <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
-                      {result.bookName.replace('Tobit', 'Tobias').replace('Judith', 'Judite').replace('Wisdom', 'Sabedoria').replace('Sirach', 'Eclesiástico').replace('Baruch', 'Baruc').replace('Maccabees', 'Macabeus').replace('Obadiah', 'Abdias').replace('Psalms', 'Salmos').replace('Genesis', 'Gênesis').replace('Exodus', 'Êxodo')} {result.chapter}:{result.verse}
+                      {result.bookName.replace('Tobit', 'Tobias').replace('Judith', 'Judite').replace('Wisdom', 'Sabedoria').replace('Sirach', 'Eclesiástico').replace('Baruch', 'Baruc').replace('Maccabees', 'Macabeus').replace('Obadiah', 'Abdias').replace('Psalms', 'Salmos').replace('Genesis', 'Gênesis').replace('Exodus', 'Êxodo').replace('Leviticus', 'Levítico').replace('Numbers', 'Números').replace('Deuteronomy', 'Deuteronômio')} {result.chapter}:{result.verse}
                     </span>
                     <div className="flex-1 h-px bg-primary/5" />
                     {result.score && (
