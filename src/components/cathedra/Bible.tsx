@@ -32,6 +32,29 @@ import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
+import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+
+const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
+  const pNum = parseInt(paragraphId);
+  const { data, isLoading } = useCatechismParagraph(pNum, !isNaN(pNum));
+
+  if (isNaN(pNum)) return null;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-2 animate-pulse">
+        <div className="h-3 bg-primary/10 rounded w-full" />
+        <div className="h-3 bg-primary/10 rounded w-5/6" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
+      {data?.content || 'Conteúdo não disponível.'}
+    </div>
+  );
+};
 
 // Knowledge Connection System (Mock for development, will be replaced by DB)
 const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
