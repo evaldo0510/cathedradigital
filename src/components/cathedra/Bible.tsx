@@ -99,6 +99,20 @@ const Bible: React.FC = () => {
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scanResults, setScanResults] = useState<{id: string, book: string, ch: number, v: number, text: string, type: string, screenshot?: string, htmlSnippet: string, title?: string, file: string, timestamp: string}[]>([]);
+  
+  const groupedScanResults = useMemo(() => {
+    const groups: Record<string, typeof scanResults> = {};
+    scanResults.forEach(res => {
+      const key = `${res.book} Cap. ${res.ch}`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(res);
+    });
+    // Ordenar chaves e resultados internos
+    return Object.keys(groups).sort().reduce((acc, key) => {
+      acc[key] = groups[key].sort((a, b) => a.v - b.v);
+      return acc;
+    }, {} as Record<string, typeof scanResults>);
+  }, [scanResults]);
 
 
 
@@ -913,26 +927,42 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   </div>
 
                   {scanResults.length > 0 && (
-                    <div className="space-y-3">
-                      <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-60 overflow-y-auto space-y-3">
-                        {scanResults.map((res, i) => (
-                          <div key={i} className="space-y-2 border-b border-primary/5 pb-3 last:border-0 last:pb-0">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] font-bold text-red-500">[{res.id}] {res.book} {res.ch}:{res.v}</span>
-                              <span className="text-[8px] opacity-40 italic">{res.type}</span>
+                    <div className="space-y-4">
+                      <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-[400px] overflow-y-auto space-y-6">
+                        {Object.entries(groupedScanResults).map(([groupKey, items]) => (
+                          <div key={groupKey} className="space-y-3">
+                            <div className="flex items-center gap-2 sticky top-0 bg-card/90 backdrop-blur-sm py-1 z-10">
+                              <span className="text-[10px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md">
+                                {groupKey}
+                              </span>
+                              <div className="flex-1 h-px bg-red-500/10" />
+                              <span className="text-[8px] opacity-40">{items.length} ocorrências</span>
                             </div>
-                            <p className="text-[9px] font-serif leading-tight italic">"{res.text.substring(0, 100)}..."</p>
-                            {res.screenshot && (
-                              <div className="relative group cursor-pointer" onClick={() => {
-                                const win = window.open("");
-                                win?.document.write(`<img src="${res.screenshot}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />`);
-                              }}>
-                                <img src={res.screenshot} className="w-full h-20 object-cover rounded-lg border border-primary/10" alt="Screenshot" />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                                  <span className="text-[8px] text-white font-bold uppercase">Ver Screenshot Original</span>
+                            
+                            {items.map((res, i) => (
+                              <div key={res.id} className="pl-2 space-y-2 border-l-2 border-red-500/10 pb-4 last:pb-0">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[9px] font-bold text-red-500">Versículo {res.v}</span>
+                                  <span className="text-[8px] opacity-40 italic">{res.type}</span>
                                 </div>
+                                <p className="text-[9px] font-serif leading-tight italic">"{res.text.substring(0, 100)}..."</p>
+                                {res.screenshot && (
+                                  <div className="relative group cursor-pointer" onClick={() => {
+                                    const win = window.open("");
+                                    win?.document.write(`
+                                      <body style="margin:0;background:#000;display:flex;align-items:center;justify-center;min-height:100vh;">
+                                        <img src="${res.screenshot}" style="max-width:100%;max-height:100vh;object-fit:contain;" />
+                                      </body>
+                                    `);
+                                  }}>
+                                    <img src={res.screenshot} className="w-full h-24 object-cover rounded-lg border border-primary/10" alt="Screenshot" />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                                      <span className="text-[8px] text-white font-bold uppercase">Ver Screenshot Original</span>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                            )}
+                            ))}
                           </div>
                         ))}
                       </div>
