@@ -205,6 +205,65 @@ const Bible: React.FC = () => {
         'Leviticus': 'Levítico',
         'Numbers': 'Números',
         'Deuteronomy': 'Deuteronômio',
+        'Joshua': 'Josué',
+        'Judges': 'Juízes',
+        'Ruth': 'Rute',
+        '1 Samuel': '1 Samuel',
+        '2 Samuel': '2 Samuel',
+        '1 Kings': '1 Reis',
+        '2 Kings': '2 Reis',
+        '1 Chronicles': '1 Crônicas',
+        '2 Chronicles': '2 Crônicas',
+        'Ezra': 'Esdras',
+        'Nehemiah': 'Neemias',
+        'Esther': 'Ester',
+        'Job': 'Jó',
+        'Proverbs': 'Provérbios',
+        'Ecclesiastes': 'Eclesiastes',
+        'Song of Solomon': 'Cântico dos Cânticos',
+        'Isaiah': 'Isaías',
+        'Jeremiah': 'Jeremias',
+        'Lamentations': 'Lamentações',
+        'Ezekiel': 'Ezequiel',
+        'Daniel': 'Daniel',
+        'Hosea': 'Oseias',
+        'Joel': 'Joel',
+        'Amos': 'Amós',
+        'Jonah': 'Jonas',
+        'Micah': 'Miqueias',
+        'Nahum': 'Naum',
+        'Habakkuk': 'Habacuc',
+        'Zephaniah': 'Sofonias',
+        'Haggai': 'Ageu',
+        'Zechariah': 'Zacarias',
+        'Malachi': 'Malaquias',
+        'Matthew': 'Mateus',
+        'Mark': 'Marcos',
+        'Luke': 'Lucas',
+        'John': 'João',
+        'Acts': 'Atos',
+        'Romans': 'Romanos',
+        '1 Corinthians': '1 Coríntios',
+        '2 Corinthians': '2 Coríntios',
+        'Galatians': 'Gálatas',
+        'Ephesians': 'Efésios',
+        'Philippians': 'Filipenses',
+        'Colossians': 'Colossenses',
+        '1 Thessalonians': '1 Tessalonicenses',
+        '2 Thessalonians': '2 Tessalonicenses',
+        '1 Timothy': '1 Timóteo',
+        '2 Timothy': '2 Timóteo',
+        'Titus': 'Tito',
+        'Philemon': 'Filemon',
+        'Hebrews': 'Hebreus',
+        'James': 'Tiago',
+        '1 Peter': '1 Pedro',
+        '2 Peter': '2 Pedro',
+        '1 John': '1 João',
+        '2 John': '2 João',
+        '3 John': '3 João',
+        'Jude': 'Judas',
+        'Revelation': 'Apocalipse',
         'Chapter': 'Capítulo',
         'Verse': 'Versículo',
         'Search': 'Pesquisar',
@@ -623,7 +682,8 @@ const Bible: React.FC = () => {
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
-      setSourceInfo(`API de Produção (${data.source || 'Edge'})`);
+      const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
+      setSourceInfo(sourceLabel);
       
       // Update Diagnostic Logs
       setDiagnosticLogs(prev => [
@@ -633,8 +693,9 @@ const Bible: React.FC = () => {
           book: data.book || abbr,
           abbr: abbr,
           chapter,
-          source: `API de Produção (${data.source || 'Edge'})`,
-          verses: loadedVerses.length
+          source: sourceLabel,
+          verses: loadedVerses.length,
+          file: 'src/components/cathedra/Bible.tsx'
         },
         ...prev.slice(0, 99)
       ]);
@@ -1014,8 +1075,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           variant="ghost" 
                           size="sm"
                           onClick={() => {
-                            const csv = "ID,Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,Evidencia_HTML\n" + 
-                              scanResults.map(r => `"${r.id}","${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${r.htmlSnippet.substring(0, 50)}..."`).join("\n");
+                            const csv = "ID,Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,SessionID,Timestamp,Evidencia_HTML\n" + 
+                              scanResults.map(r => `"${r.id}","${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${sessionId}","${r.timestamp}","${r.htmlSnippet.substring(0, 50).replace(/"/g, '""')}..."`).join("\n");
                             const blob = new Blob([csv], { type: 'text/csv' });
                             const url = URL.createObjectURL(blob);
                             const link = document.createElement('a');
@@ -1040,7 +1101,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         setScanResults([]);
                         toast.info('Iniciando varredura com screenshots PNG...');
                         const runDeepScan = async () => {
-                          const targetBooks = ['Tb', 'Jt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
+                          const targetBooks = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
                           for (const abbr of targetBooks) {
                             for (let ch = 1; ch <= 2; ch++) {
                               await fetchVerses(abbr, ch);
@@ -1105,6 +1166,18 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               </div>
               
               <div className="flex gap-2">
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={() => {
+                    Object.keys(localStorage).filter(k => k.startsWith('bible_cache_')).forEach(k => localStorage.removeItem(k));
+                    toast.success('Cache Bíblico Limpo');
+                    window.location.reload();
+                  }}
+                  className="flex-1 uppercase text-[10px] font-black"
+                >
+                  Limpar Cache
+                </Button>
                 <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar Painel</Button>
               </div>
             </motion.div>

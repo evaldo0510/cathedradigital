@@ -10,12 +10,12 @@ const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
   'Js': 'joshua', 'Jz': 'judges', 'Rt': 'ruth', '1Sm': '1samuel', '2Sm': '2samuel',
   '1Rs': '1kings', '2Rs': '2kings', '1Cr': '1chronicles', '2Cr': '2chronicles',
-  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jt': 'judith', 'Est': 'esther',
+  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jdt': 'judith', 'Est': 'esther',
   '1Mc': '1maccabees', '2Mc': '2maccabees',
   'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 'Ecl': 'ecclesiastes',
   'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
   'Is': 'isaiah', 'Jr': 'jeremiah', 'Lm': 'lamentations', 'Br': 'baruch',
-  'Ez': 'ezekiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
+  'Ez': 'ezequiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
   'Ab': 'obadiah', 'Jn': 'jonah', 'Mq': 'micah', 'Na': 'nahum', 'Hab': 'habakkuk',
   'Sf': 'zephaniah', 'Ag': 'haggai', 'Zc': 'zechariah', 'Ml': 'malachi',
   'Mt': 'matthew', 'Mc': 'mark', 'Lc': 'luke', 'Jo': 'john',
@@ -42,7 +42,7 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
   'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', '1Sm': '1 Samuel', '2Sm': '2 Samuel',
   '1Rs': '1 Reis', '2Rs': '2 Reis', '1Cr': '1 Crônicas', '2Cr': '2 Crônicas',
-  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jt': 'Judite', 'Est': 'Ester',
+  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jdt': 'Judite', 'Est': 'Ester',
   '1Mc': '1 Macabeus', '2Mc': '2 Macabeus',
   'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios', 'Ecl': 'Eclesiastes',
   'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
@@ -57,6 +57,17 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Tt': 'Tito', 'Fm': 'Filemon', 'Hb': 'Hebreus', 'Tg': 'Tiago',
   '1Pd': '1 Pedro', '2Pd': '2 Pedro', '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João',
   'Jd': 'Judas', 'Ap': 'Apocalipse',
+  // Reverse Map for full names
+  'Genesis': 'Gênesis', 'Exodus': 'Êxodo', 'Leviticus': 'Levítico', 'Numbers': 'Números', 'Deuteronomy': 'Deuteronômio',
+  'Joshua': 'Josué', 'Judges': 'Juízes', 'Ruth': 'Rute', 'Tobit': 'Tobias', 'Judith': 'Judite', 'Esther': 'Ester',
+  'Job': 'Jó', 'Psalms': 'Salmos', 'Proverbs': 'Provérbios', 'Ecclesiastes': 'Eclesiastes',
+  'Isaiah': 'Isaías', 'Jeremiah': 'Jeremias', 'Lamentations': 'Lamentações', 'Baruch': 'Baruc',
+  'Ezekiel': 'Ezequiel', 'Daniel': 'Daniel', 'Hosea': 'Oseias', 'Joel': 'Joel', 'Amos': 'Amós',
+  'Obadiah': 'Abdias', 'Jonah': 'Jonas', 'Micah': 'Miqueias', 'Nahum': 'Naum', 'Habakkuk': 'Habacuc',
+  'Zephaniah': 'Sofonias', 'Haggai': 'Ageu', 'Zechariah': 'Zacarias', 'Malachi': 'Malaquias',
+  'Matthew': 'Mateus', 'Mark': 'Marcos', 'Luke': 'Lucas', 'John': 'João',
+  'Acts': 'Atos', 'Romans': 'Romanos', 'Galatians': 'Gálatas', 'Ephesians': 'Efésios', 'Philippians': 'Filipenses', 'Colossians': 'Colossenses',
+  'Titus': 'Tito', 'Philemon': 'Filemon', 'Hebrews': 'Hebreus', 'James': 'Tiago', 'Jude': 'Judas', 'Revelation': 'Apocalipse'
 };
 
 // bolls.life uses standard Protestant book IDs (1-66) and common Catholic ones (67-73)
@@ -77,7 +88,7 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
   '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
   'Jd': 65, 'Ap': 66,
-    'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
+  'Tb': 68, 'Jdt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
 /**
@@ -91,6 +102,43 @@ function translateApiMessage(msg: string): string {
     'Invalid parameter': 'Parâmetro inválido'
   };
   return map[msg] || msg;
+}
+
+/**
+ * Tradução agressiva de termos que vazam das APIs
+ */
+function robustTranslate(text: string): string {
+  if (!text) return '';
+  let translated = text;
+  const map: Record<string, string> = {
+    '\\bChapter\\b': 'Capítulo',
+    '\\bVerse\\b': 'Versículo',
+    '\\bTobit\\b': 'Tobias',
+    '\\bJudith\\b': 'Judite',
+    '\\bWisdom\\b': 'Sabedoria',
+    '\\bSirach\\b': 'Eclesiástico',
+    '\\bBaruch\\b': 'Baruc',
+    '\\bMaccabees\\b': 'Macabeus',
+    '\\bObadiah\\b': 'Abdias',
+    '\\bPsalms\\b': 'Salmos',
+    '\\bGenesis\\b': 'Gênesis',
+    '\\bExodus\\b': 'Êxodo',
+    '\\bLeviticus\\b': 'Levítico',
+    '\\bNumbers\\b': 'Números',
+    '\\bDeuteronomy\\b': 'Deuteronômio',
+    '\\bLord\\b': 'Senhor',
+    '\\bGod\\b': 'Deus',
+    '\\bJesus\\b': 'Jesus',
+    '\\bChrist\\b': 'Cristo',
+    '\\bSpirit\\b': 'Espírito',
+    '\\bHoly\\b': 'Santo'
+  };
+
+  for (const [eng, pt] of Object.entries(map)) {
+    const regex = new RegExp(eng, 'gi');
+    translated = translated.replace(regex, pt);
+  }
+  return translated;
 }
 
 /** Try bible-api.com first (Almeida translation) */
@@ -107,11 +155,19 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
   const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=${translation}`;
   console.log('Trying bible-api.com:', url);
 
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const data = await res.json();
-  if (!data.verses || !Array.isArray(data.verses) || data.verses.length === 0) return null;
-  return data.verses.map((v: any) => ({ number: v.verse, text: v.text?.trim() || '' }));
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.verses || !Array.isArray(data.verses) || data.verses.length === 0) return null;
+    
+    return data.verses.map((v: any) => ({ 
+      number: v.verse, 
+      text: robustTranslate(v.text?.trim() || '') 
+    }));
+  } catch (e) {
+    return null;
+  }
 }
 
 /** Fallback to bolls.life (NAA — Nova Almeida Atualizada) */
