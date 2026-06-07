@@ -41,38 +41,38 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number,
 }
 
 async function migrate() {
+  // Hardcoded for sandbox environment if secrets are not available
   const aiKey = process.env.LOVABLE_API_KEY;
   if (!aiKey) {
      console.error("LOVABLE_API_KEY ausente.");
      return;
   }
 
-  for (const book of DEUTERO_BOOKS) {
-    console.log(`-- Livro: ${book.name}`);
-    for (let ch = 1; ch <= book.chapters; ch++) {
-       try {
-         const res = await fetch(`https://bible-api.com/${encodeURIComponent(book.name)}+${ch}?translation=webbe`);
-         const apiData = await res.json();
-         if (!apiData.verses) continue;
-         
-         const englishVerses = apiData.verses.map((v: any) => ({ number: v.verse, text: v.text }));
-         const ptVerses = await translateWithAI(englishVerses, book.name, ch, aiKey);
-         
-         console.log(`-- Cap ${ch} traduzido`);
-         
-         const chapterSql = `WITH b AS (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') INSERT INTO bible_chapters (book_id, number) SELECT id, ${ch} FROM b ON CONFLICT (book_id, number) DO UPDATE SET updated_at = now() RETURNING id;\n`;
-         
-         const versesSql = ptVerses.map((v: any) => 
-            `INSERT INTO bible_verses (chapter_id, number, text) SELECT id, ${v.number}, '${v.text.replace(/'/g, "''")}' FROM (SELECT id FROM bible_chapters WHERE book_id = (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') AND number = ${ch}) c ON CONFLICT (chapter_id, number) DO UPDATE SET text = EXCLUDED.text;\n`
-         ).join('');
-         
-         fs.appendFileSync("migration_data.sql", chapterSql + versesSql);
-         
-         await new Promise(r => setTimeout(r, 200));
-       } catch(e) {
-          console.error(`Erro no cap ${ch}: ${e.message}`);
-       }
-    }
+  // Apenas uma amostra inicial para não travar o loop
+  const book = DEUTERO_BOOKS[0]; // 1 Macabeus
+  console.log(`-- Livro: ${book.name}`);
+  for (let ch = 1; ch <= 2; ch++) { // Apenas 2 capítulos para validar
+     try {
+       const res = await fetch(`https://bible-api.com/${encodeURIComponent(book.name)}+${ch}?translation=webbe`);
+       const apiData = await res.json();
+       if (!apiData.verses) continue;
+       
+       const englishVerses = apiData.verses.map((v: any) => ({ number: v.verse, text: v.text }));
+       const ptVerses = await translateWithAI(englishVerses, book.name, ch, aiKey);
+       
+       console.log(`-- Cap ${ch} traduzido`);
+       
+       const chapterSql = `WITH b AS (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') INSERT INTO bible_chapters (book_id, number) SELECT id, ${ch} FROM b ON CONFLICT (book_id, number) DO UPDATE SET updated_at = now() RETURNING id;\n`;
+       
+       const versesSql = ptVerses.map((v: any) => 
+          `INSERT INTO bible_verses (chapter_id, number, text) SELECT id, ${v.number}, '${v.text.replace(/'/g, "''")}' FROM (SELECT id FROM bible_chapters WHERE book_id = (SELECT id FROM bible_books WHERE abbrev = '${book.abbr}') AND number = ${ch}) c ON CONFLICT (chapter_id, number) DO UPDATE SET text = EXCLUDED.text;\n`
+       ).join('');
+       
+       fs.appendFileSync("migration_data.sql", chapterSql + versesSql);
+       
+     } catch(e: any) {
+        console.error(`Erro no cap ${ch}: ${e.message}`);
+     }
   }
 }
 
