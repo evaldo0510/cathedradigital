@@ -137,9 +137,18 @@ serve(async (req) => {
   let chapter = 0;
 
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    if (!rawBody) {
+       // Support empty body for testing ETag with GET-like logic or 304 behavior if headers present
+       // However, we usually expect a JSON body for POST
+    }
+    const body = rawBody ? JSON.parse(rawBody) : {};
     abbrev = body.abbrev;
     chapter = body.chapter;
+    
+    // ETag check can happen BEFORE body validation if we have enough info in headers, 
+    // but here ETag depends on englishName which comes from abbrev.
+    // So we need abbrev even for 304.
     
     if (!abbrev || !chapter) {
       const errorMsg = 'Parâmetros inválidos: abbrev e chapter são obrigatórios';
