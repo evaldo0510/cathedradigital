@@ -10,7 +10,7 @@ const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
   'Js': 'joshua', 'Jz': 'judges', 'Rt': 'ruth', '1Sm': '1samuel', '2Sm': '2samuel',
   '1Rs': '1kings', '2Rs': '2kings', '1Cr': '1chronicles', '2Cr': '2chronicles',
-  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jt': 'judith', 'Est': 'esther',
+  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jdt': 'judith', 'Est': 'esther',
   '1Mc': '1maccabees', '2Mc': '2maccabees',
   'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 'Ecl': 'ecclesiastes',
   'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
@@ -42,7 +42,7 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
   'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', '1Sm': '1 Samuel', '2Sm': '2 Samuel',
   '1Rs': '1 Reis', '2Rs': '2 Reis', '1Cr': '1 Crônicas', '2Cr': '2 Crônicas',
-  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jt': 'Judite', 'Est': 'Ester',
+  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jdt': 'Judite', 'Est': 'Ester',
   '1Mc': '1 Macabeus', '2Mc': '2 Macabeus',
   'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios', 'Ecl': 'Eclesiastes',
   'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
@@ -88,7 +88,7 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
   '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
   'Jd': 65, 'Ap': 66,
-  'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
+  'Tb': 68, 'Jdt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
 /**
