@@ -467,7 +467,7 @@ const Bible: React.FC = () => {
       { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' },
       { type: 'cross_ref', label: 'Lc 6:20', color: 'bg-amber-500', id: 'Lc-6-20', summary: 'Bem-aventurados vós, os pobres...' }
     ]
-  };
+  }), [dynamicConnections]);
 
   const THEOLOGICAL_THEMES = [
     { id: 'creatio', label: 'Criação', parent: null, connections: 12, tags: ['Dogma', 'Ontologia'] },
