@@ -4055,6 +4055,14 @@ export type Database = {
         Args: { p_message: string; p_severity: string; p_type: string }
         Returns: undefined
       }
+      verify_security_invariants: {
+        Args: never
+        Returns: {
+          error_message: string
+          status: string
+          test_name: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
