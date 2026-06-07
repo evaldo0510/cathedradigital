@@ -1,0 +1,38 @@
+name: Language Consistency Guard
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  check-language:
+    name: Validate Portuguese Vernacular
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run Language Consistency Tests
+        run: bunx vitest run src/components/cathedra/__tests__/LanguageConsistency.test.ts
+
+      - name: Static Code Analysis for English Terms
+        run: |
+          # Scan for forbidden terms in source files (excluding tests and node_modules)
+          # We use a strict regex to avoid false positives in code logic
+          FORBIDDEN='(Chapter|Verse|Book|Search|Loading|Error|Settings|Cancel|Save|Delete|Share|Back|Summary)'
+          if grep -rEi "$FORBIDDEN" src/ --exclude-dir=__tests__ --exclude=*.test.tsx; then
+            echo "❌ CRITICAL: Suspected English terms found in UI code. Please use Portuguese equivalents."
+            exit 1
+          else
+            echo "✅ Language validation passed."
+          fi
