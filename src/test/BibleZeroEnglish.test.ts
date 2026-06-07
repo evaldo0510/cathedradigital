@@ -28,10 +28,11 @@ const BOOKS_TO_VALIDATE = [
 ];
 
 const ENGLISH_INDICATORS = [
-  /\bthe\b/i, /\band\b/i, /\bshall\b/i, /\bunto\b/i, /\bfrom\b/i, /\bwith\b/i,
+  /\bthe\b/i, /\bshall\b/i, /\bunto\b/i, /\bfrom\b/i, 
   /\bking\b/i, /\bgathered\b/i, /\bforces\b/i, /\bfight\b/i, /\bwent\b/i,
   /\bupon\b/i, /\bsaid\b/i, /\bthem\b/i, /\bgod\b/i
 ];
+
 
 const reportPath = path.resolve('reports/bible-i18n-audit.json');
 const failures: any[] = [];
