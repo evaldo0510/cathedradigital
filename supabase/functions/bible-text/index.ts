@@ -6,8 +6,8 @@ const corsHeaders = {
   'Access-Control-Expose-Headers': 'ETag',
 };
 
-// Version for ETag invalidation
-const CACHE_VERSION = "v1.2.0";
+// Version for ETag invalidation - Bump this to force client cache refresh
+const CACHE_VERSION = "v1.2.1";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
@@ -129,15 +129,34 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
 serve(async (req) => {
   const startTime = performance.now();
   const requestId = crypto.randomUUID();
+  const timestamp = new Date().toISOString();
   
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
+  let abbrev = 'unknown';
+  let chapter = 0;
+
   try {
-    const body = await req.json();
-    const { abbrev, chapter } = body;
+    const rawBody = await req.text();
+    if (!rawBody) {
+       // Support empty body for testing ETag with GET-like logic or 304 behavior if headers present
+       // However, we usually expect a JSON body for POST
+    }
+    const body = rawBody ? JSON.parse(rawBody) : {};
+    abbrev = body.abbrev;
+    chapter = body.chapter;
+    
+    // ETag check can happen BEFORE body validation if we have enough info in headers, 
+    // but here ETag depends on englishName which comes from abbrev.
+    // So we need abbrev even for 304.
     
     if (!abbrev || !chapter) {
-      return new Response(JSON.stringify({ error: 'Parâmetros inválidos' }), { status: 400, headers: corsHeaders });
+      const errorMsg = 'Parâmetros inválidos: abbrev e chapter são obrigatórios';
+      console.error(JSON.stringify({ 
+        level: 'error', requestId, event: 'bible_request_invalid', 
+        error: errorMsg, timestamp 
+      }));
+      return new Response(JSON.stringify({ error: errorMsg }), { status: 400, headers: corsHeaders });
     }
 
     const findCaseInsensitive = (map: Record<string, any>, key: string) => {
@@ -150,9 +169,22 @@ serve(async (req) => {
     const ptName = findCaseInsensitive(BOOK_PT_MAP, abbrev) || abbrev;
     const bookId = findCaseInsensitive(BOLLS_BOOK_ID, abbrev);
 
-    // ETag Generation
+    // ETag Generation - Includes version to ensure global invalidation when needed
     const etagValue = `"${CACHE_VERSION}-${englishName}-${chapter}"`;
-    if (req.headers.get('if-none-match') === etagValue) {
+    const clientEtag = req.headers.get('if-none-match');
+    
+    // Normalize ETags for comparison (remove weak ETag prefix and quotes)
+    const normalize = (tag: string | null) => tag ? tag.trim().replace(/^W\//, '').replace(/"/g, '') : null;
+    
+    const normalizedClientEtag = normalize(clientEtag);
+    const normalizedServerEtag = normalize(etagValue);
+
+    if (normalizedClientEtag && normalizedClientEtag === normalizedServerEtag) {
+      console.log(JSON.stringify({
+        level: 'info', requestId, event: 'bible_cache_hit_etag',
+        book: abbrev, chapter, duration_ms: Math.round(performance.now() - startTime),
+        timestamp
+      }));
       return new Response(null, { status: 304, headers: { ...corsHeaders, 'ETag': etagValue } });
     }
 
@@ -174,46 +206,66 @@ serve(async (req) => {
         break;
       } else if (r.status === 'fulfilled') {
         errors.push(r.value.error);
+      } else if (r.status === 'rejected') {
+        errors.push(r.reason?.message || 'Unknown promise rejection');
       }
     }
 
     const duration = performance.now() - startTime;
+    const success = !!verses;
     
-    // Structured Logging
+    // Structured Logging with Metrics
     console.log(JSON.stringify({
-      level: verses ? 'info' : 'error',
+      level: success ? 'info' : 'warning',
       requestId,
-      event: 'bible_fetch',
+      event: 'bible_fetch_complete',
       book: abbrev,
+      englishName,
       chapter,
       source,
+      success,
       duration_ms: Math.round(duration),
       correction_count: correctionCount,
+      correction_rate: verses?.length ? (correctionCount / verses.length).toFixed(4) : 0,
       errors: errors.length > 0 ? errors : undefined,
-      timestamp: new Date().toISOString()
+      cache_version: CACHE_VERSION,
+      timestamp
     }));
 
     if (verses) {
       return new Response(
-        JSON.stringify({ book: ptName, chapter, verses, text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n') }),
+        JSON.stringify({ 
+          book: ptName, 
+          chapter, 
+          verses, 
+          text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
+          metadata: { source, requestId, timestamp, cache_version: CACHE_VERSION }
+        }),
         { 
           headers: { 
             ...corsHeaders, 
             'Content-Type': 'application/json',
             'ETag': etagValue,
-            'Cache-Control': 'public, max-age=604800, s-maxage=604800'
+            'Cache-Control': 'public, max-age=604800, s-maxage=604800',
+            'X-Request-Id': requestId
           } 
         }
       );
     }
 
     return new Response(
-      JSON.stringify({ book: ptName, chapter, verses: [], text: 'Texto indisponível.' }),
+      JSON.stringify({ book: ptName, chapter, verses: [], text: 'Texto indisponível.', requestId }),
       { status: 404, headers: corsHeaders }
     );
 
   } catch (error) {
-    console.error(JSON.stringify({ level: 'critical', requestId, event: 'bible_error', error: error.message }));
-    return new Response(JSON.stringify({ error: 'Erro interno' }), { status: 500, headers: corsHeaders });
+    console.error(JSON.stringify({ 
+      level: 'critical', requestId, event: 'bible_critical_error', 
+      book: abbrev, chapter, error: error.message, stack: error.stack, timestamp 
+    }));
+    return new Response(JSON.stringify({ error: 'Erro interno no processamento do texto bíblico', requestId }), { 
+      status: 500, 
+      headers: corsHeaders 
+    });
   }
 });
