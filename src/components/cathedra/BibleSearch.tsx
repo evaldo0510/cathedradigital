@@ -83,16 +83,19 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
         .or(`content_text.ilike.%${query}%,title.ilike.%${query}%`)
         .limit(5);
 
-      const spiritualResults = (spiritualData || []).map(s => ({
-        bookAbbrev: s.type === 'bible' ? (s.metadata?.book_abbr || 'Bíb') : (s.type === 'catechism' ? 'CIC' : 'Mag'),
-        bookName: s.title,
-        chapter: s.metadata?.chapter || 0,
-        verse: s.metadata?.verse || 0,
-        text: s.content_text,
-        score: 90,
-        relevance: 'Conteúdo da Tradição',
-        isBible: s.type === 'bible'
-      }));
+      const spiritualResults = (spiritualData || []).map(s => {
+        const metadata = s.metadata as any;
+        return {
+          bookAbbrev: s.type === 'bible' ? (metadata?.book_abbr || 'Bíb') : (s.type === 'catechism' ? 'CIC' : 'Mag'),
+          bookName: s.title,
+          chapter: metadata?.chapter || 0,
+          verse: metadata?.verse || 0,
+          text: s.content_text,
+          score: 90,
+          relevance: 'Conteúdo da Tradição',
+          isBible: s.type === 'bible'
+        };
+      });
 
       // Combine and Sort by Relevance Score
       let combinedResults = [
