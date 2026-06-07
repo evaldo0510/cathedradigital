@@ -391,6 +391,10 @@ const Bible: React.FC = () => {
       { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
       { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
     ],
+    // New empty placeholder for connections
+    'all': [
+      { type: 'theology', label: 'Conexões Relacionadas', color: 'bg-primary/20', id: 'coming-soon', summary: 'As conexões vivas entre a Palavra e a Tradição estarão disponíveis em breve.' }
+    ],
     'Gn-1-1': [
       { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
       { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' },
@@ -607,7 +611,10 @@ const Bible: React.FC = () => {
             className="px-6 pt-10 pb-32 max-w-lg mx-auto"
           >
             <button 
-              onClick={() => navigate('/bible')}
+              onClick={() => {
+                navigate('/bible');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
               className="mb-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 active:text-secondary transition-colors"
             >
               <Icons.ChevronLeft className="w-4 h-4" /> Voltar
@@ -631,15 +638,23 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
-                    notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                      ? "bg-secondary/5 border-secondary/20"
-                      : "bg-white border-primary/5 hover:border-secondary/30"
+                    selectedChapter === ch
+                      ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
+                      : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
+                        ? "bg-secondary/5 border-secondary/20"
+                        : "bg-white border-primary/5 hover:border-secondary/30"
                   )}
 
                 >
-                  <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
+                  <span className={cn(
+                    "text-lg font-display transition-colors",
+                    selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                  )}>{ch}</span>
                   {selectedBook.chapterTitles?.[ch] && (
-                    <div className="w-1 h-1 rounded-full bg-secondary/40 mt-1" />
+                    <div className={cn(
+                      "w-1 h-1 rounded-full mt-1",
+                      selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
+                    )} />
                   )}
                 </button>
               ))}
