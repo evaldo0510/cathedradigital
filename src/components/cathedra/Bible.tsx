@@ -19,11 +19,32 @@ import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
+import { BibleReader } from './BibleReader';
 
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
+
+// Knowledge Connection System (Mock for development, will be replaced by DB)
+const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
+  'Jo-6-35': [
+    { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
+    { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
+    { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
+    { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
+  ],
+  'Gn-1-1': [
+    { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
+    { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' },
+    { type: 'cross_ref', label: 'Jo 1:1', color: 'bg-amber-500', id: 'Jo-1-1', summary: 'No princípio era o Verbo...' }
+  ],
+  'Mt-5-3': [
+    { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716', summary: 'As Bem-aventuranças estão no centro da pregação de Jesus.' },
+    { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' },
+    { type: 'cross_ref', label: 'Lc 6:20', color: 'bg-amber-500', id: 'Lc-6-20', summary: 'Bem-aventurados vós, os pobres...' }
+  ]
+};
 
 
 
@@ -87,16 +108,18 @@ const Bible: React.FC = () => {
 
     if (bookAbbr && chapter) {
       const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const book = allBooks.find(b => b.abbr === bookAbbr);
+      const decodedAbbr = decodeURIComponent(bookAbbr);
+      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
       if (book) {
         setSelectedBook(book);
         setSelectedChapter(parseInt(chapter));
         setViewMode('reading');
-        fetchVerses(bookAbbr, parseInt(chapter));
+        fetchVerses(book.abbr, parseInt(chapter));
       }
     } else if (bookAbbr) {
       const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const book = allBooks.find(b => b.abbr === bookAbbr);
+      const decodedAbbr = decodeURIComponent(bookAbbr);
+      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
       if (book) {
         setSelectedBook(book);
         setViewMode('chapters');
@@ -132,6 +155,10 @@ const Bible: React.FC = () => {
     };
     setLastRead(progress);
     localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
+    
+    // Offline storage for favorites/progress
+    const offlineKey = `offline_bible_progress_${bookAbbr}`;
+    localStorage.setItem(offlineKey, JSON.stringify({ ...progress, timestamp: Date.now() }));
   }, []);
 
 
@@ -243,6 +270,21 @@ const Bible: React.FC = () => {
 
   const fetchVerses = async (abbr: string, chapter: number) => {
     setIsLoading(true);
+    
+    // Attempt offline recovery
+    const offlineKey = `bible_cache_${abbr}_${chapter}`;
+    const cached = localStorage.getItem(offlineKey);
+    if (cached) {
+      try {
+        const cachedData = JSON.parse(cached);
+        if (Date.now() - cachedData.timestamp < 1000 * 60 * 60 * 24 * 7) { // 1 week cache
+          setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
+          setIsLoading(false);
+          // Still fetch in background to refresh
+        }
+      } catch(e) {}
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: abbr, chapter }
@@ -252,7 +294,9 @@ const Bible: React.FC = () => {
       const loadedVerses = data.verses || [];
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
       
-      if (loadedVerses.length === 0) {
+      if (loadedVerses.length > 0) {
+        localStorage.setItem(offlineKey, JSON.stringify({ verses: loadedVerses, timestamp: Date.now() }));
+      } else {
         toast.warning('Este capítulo parece estar sem conteúdo no momento.');
       }
 
@@ -288,6 +332,17 @@ const Bible: React.FC = () => {
 
 
     } catch (error: any) {
+      // Local fallback for Abdias or connection issues
+      if (abbr === 'Ab') {
+         const obadiahText = [
+            { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
+            { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
+            { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" }
+         ];
+         setVerses(obadiahText.map(v => ({ ...v, chapter: 1 })));
+         setIsLoading(false);
+         return;
+      }
       toast.error('Erro ao carregar texto sagrado');
     } finally {
       setIsLoading(false);
@@ -297,12 +352,12 @@ const Bible: React.FC = () => {
 
   const selectBook = (book: BibleBook) => {
     setSelectedBook(book);
-    navigate(`/bible?book=${book.abbr}`);
+    navigate(`/bible?book=${encodeURIComponent(book.abbr)}`);
   };
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
-    navigate(`/bible?book=${selectedBook!.abbr}&ch=${ch}`);
+    navigate(`/bible?book=${encodeURIComponent(selectedBook!.abbr)}&ch=${ch}`);
     // Scroll context top
     window.scrollTo({ top: 0, behavior: 'instant' });
   };

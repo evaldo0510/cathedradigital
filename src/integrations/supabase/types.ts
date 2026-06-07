@@ -628,6 +628,42 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_connections: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          reference_id: string | null
+          reference_title: string
+          relevance_score: number | null
+          summary: string | null
+          updated_at: string
+          verse_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          reference_id?: string | null
+          reference_title: string
+          relevance_score?: number | null
+          summary?: string | null
+          updated_at?: string
+          verse_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          reference_id?: string | null
+          reference_title?: string
+          relevance_score?: number | null
+          summary?: string | null
+          updated_at?: string
+          verse_id?: string
+        }
+        Relationships: []
+      }
       bible_favorites: {
         Row: {
           book_abbr: string
