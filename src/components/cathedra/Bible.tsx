@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { BibleBook as IBibleBook, BIBLE_DATA } from '@/data/bible-books';
-
-// Extension to handle context field which is not in the base interface but present in data
-interface BibleBook extends IBibleBook {
-  context?: string;
-}
-
+import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,9 +10,6 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
-import { useRenderPerf } from '@/hooks/useRenderPerf';
-// Remove import from data if we want local extension or keep as is if interface matches
-// import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
