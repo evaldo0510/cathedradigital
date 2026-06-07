@@ -66,6 +66,7 @@ const getDailyReading = () => {
 
 const Bible: React.FC = () => {
   const [isConnectionEditorOpen, setIsConnectionEditorOpen] = useState(false);
+  const [navHistory, setNavHistory] = useState<{book: string, chapter: number, verse?: number}[]>([]);
 
   useRenderPerf('Sacra Biblia Mobile-First', 15);
 
@@ -991,6 +992,7 @@ const Bible: React.FC = () => {
           setIsHighlightMenuOpen(false);
           setIsNoteModalOpen(true);
         }}
+        onShare={handleShareVerse}
       />
 
 
@@ -1015,9 +1017,26 @@ const Bible: React.FC = () => {
                   <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">{expandedConnection.label}</h3>
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Documentum Sacrum</span>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setExpandedConnection(null)} className="rounded-full opacity-40 hover:opacity-100">
-                  <Icons.X className="w-6 h-6" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  {navHistory.length > 1 && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => {
+                        const prev = navHistory[navHistory.length - 2];
+                        setNavHistory(prevHistory => prevHistory.slice(0, -1));
+                        navigate(`/bible?book=${encodeURIComponent(prev.book)}&ch=${prev.chapter}&v=${prev.verse}`);
+                        setExpandedConnection(null);
+                      }} 
+                      className="rounded-full text-secondary hover:bg-secondary/10"
+                    >
+                      <Icons.History className="w-5 h-5" />
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="icon" onClick={() => setExpandedConnection(null)} className="rounded-full opacity-40 hover:opacity-100">
+                    <Icons.X className="w-6 h-6" />
+                  </Button>
+                </div>
               </div>
               
               <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8">
