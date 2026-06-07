@@ -1559,6 +1559,30 @@ export type Database = {
         }
         Relationships: []
       }
+      language_allowlist: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          description: string | null
+          id: string
+          term: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          term: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          term?: string
+        }
+        Relationships: []
+      }
       nexus_synonyms: {
         Row: {
           canonical_slug: string

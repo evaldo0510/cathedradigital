@@ -115,6 +115,7 @@ const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPassword
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
+const LanguageAdmin = lazy(() => import('./components/cathedra/LanguageAdmin'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
@@ -502,6 +503,7 @@ const AppLayout: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
+                      <Route path="/language" element={<LanguageAdmin />} />
                       <Route path="/seo-verify" element={<SEOVerificationPage />} />
                       <Route path="/a11y-audit" element={<A11yAuditPage />} />
                       <Route path="/visual-audit" element={<VisualAuditPage />} />

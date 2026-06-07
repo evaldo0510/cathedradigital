@@ -311,6 +311,18 @@ const AdminDashboard: React.FC = () => {
               <p className="text-premium-xs opacity-50 mt-spacing-xs">Inspeciona erros de UI e TypeErrors.</p>
             </CathedraCard>
 
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/language')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.Languages className="text-primary" />
+                <Badge variant="outline">Linguagem</Badge>
+              </div>
+              <h3 className="font-bold">Gestão de Vernáculo</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">Gerencie a allowlist e auditoria.</p>
+            </CathedraCard>
+
           </div>
           
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
