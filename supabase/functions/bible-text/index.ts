@@ -120,7 +120,7 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
     Use the formal and solemn tone typical of Catholic Bibles (like Bíblia de Jerusalém or Ave Maria). 
     Return ONLY a JSON object with a key "verses" containing the array of objects with "number" and "text" fields.
     
-    Input: ${JSON.stringify(verses.slice(0, 70))}`; // Increased limit slightly, gpt-4o-mini can handle it
+    Input: ${JSON.stringify(verses.slice(0, 80))}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -129,7 +129,7 @@ async function translateWithAI(verses: any[], bookName: string, chapter: number)
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o-mini",
+        model: "google/gemini-2.5-flash-lite", // Using the available 2026 model
         messages: [
           { role: "system", content: "You are an expert biblical translator specializing in Catholic Portuguese translations. You must return only a JSON object with the key 'verses'." },
           { role: "user", content: prompt }
