@@ -1563,10 +1563,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               </button>
                             </p>
 
-                            {/* Knowledge Connection Bubbles */}
+                            {/* Knowledge Connection Bubbles - Enhanced V1 UI */}
                             {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
-                              <div className="flex flex-wrap gap-2 pt-1 opacity-80 max-h-12 overflow-hidden">
-                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-90 max-h-24 overflow-hidden">
+                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 5).map((conn, idx) => (
                                   <motion.button
                                     key={idx}
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -1575,11 +1575,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       e.stopPropagation();
                                       setExpandedConnection(conn);
                                     }}
-
-                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all mb-1"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 shadow-sm active:scale-95 transition-all mb-1 hover:bg-secondary/20"
                                   >
-                                    <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
-                                    <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
+                                    <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", conn.color || "bg-secondary")} />
+                                    <span className="text-[9px] font-black uppercase tracking-wider text-secondary">{conn.label}</span>
                                   </motion.button>
                                 ))}
                               </div>
