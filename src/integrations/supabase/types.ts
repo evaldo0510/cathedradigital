@@ -649,8 +649,10 @@ export type Database = {
           id: string
           reference_id: string | null
           reference_title: string
+          relevance_level: string | null
           relevance_score: number | null
           summary: string | null
+          theological_theme: string | null
           updated_at: string
           verse_id: string
         }
@@ -660,8 +662,10 @@ export type Database = {
           id?: string
           reference_id?: string | null
           reference_title: string
+          relevance_level?: string | null
           relevance_score?: number | null
           summary?: string | null
+          theological_theme?: string | null
           updated_at?: string
           verse_id: string
         }
@@ -671,8 +675,10 @@ export type Database = {
           id?: string
           reference_id?: string | null
           reference_title?: string
+          relevance_level?: string | null
           relevance_score?: number | null
           summary?: string | null
+          theological_theme?: string | null
           updated_at?: string
           verse_id?: string
         }
