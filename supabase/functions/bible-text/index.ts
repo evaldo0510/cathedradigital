@@ -255,7 +255,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Bible text error:', error);
     return new Response(
-      JSON.stringify({ error: "Erro interno. Tente novamente." }),
+      JSON.stringify({ error: translateApiMessage('Internal server error') }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
