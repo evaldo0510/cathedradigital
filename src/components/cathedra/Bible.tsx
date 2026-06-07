@@ -127,6 +127,19 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
+      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache
+      const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
+      cacheKeys.forEach(key => {
+        try {
+          const cached = JSON.parse(localStorage.getItem(key) || '{}');
+          if (cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cached.book)) {
+            localStorage.removeItem(key);
+            console.log(`[Cache Invalidation] Removed legacy English cache: ${key}`);
+            setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
+          }
+        } catch (e) {}
+      });
+
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
       const allAllowed = [
         ...LANGUAGE_ALLOWLIST, 
@@ -179,10 +192,25 @@ const Bible: React.FC = () => {
 
           // Se ainda contiver termos proibidos e não estiver na allowlist, registrar
           if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase().includes(allowed.toLowerCase()))) {
-             // Log violation (debounced or limited to avoid spam)
+             // Log violation
              const lastLog = sessionStorage.getItem(`last_lang_log_${newText}`);
              if (!lastLog || Date.now() - parseInt(lastLog) > 60000) {
                 sessionStorage.setItem(`last_lang_log_${newText}`, Date.now().toString());
+                
+                // Add to diagnostic logs for real-time reporting
+                setDiagnosticLogs(prev => [
+                  {
+                    id: crypto.randomUUID(),
+                    term: newText,
+                    url: window.location.href,
+                    session_id: session,
+                    timestamp: new Date().toISOString(),
+                    selector: getElementSelector(node.parentElement || document.body),
+                    source: 'DOM Scan (Runtime)'
+                  },
+                  ...prev.slice(0, 99)
+                ]);
+
                 await supabase.from('analytics_events').insert([{
                   event_name: 'language_violation',
                   properties: {
@@ -404,6 +432,7 @@ const Bible: React.FC = () => {
        });
     }
 
+
     // Attempt offline recovery
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);
@@ -420,17 +449,33 @@ const Bible: React.FC = () => {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo('Cache Local (v3)');
+          
+          // Registro diagnóstico por livro e capítulo
+          setDiagnosticLogs(prev => [
+            {
+              sessionId,
+              timestamp: new Date().toISOString(),
+              book: cachedData.book || abbr,
+              abbr,
+              chapter,
+              source: 'Cache Local (v3)',
+              verses: cachedData.verses?.length || 0
+            },
+            ...prev.slice(0, 99)
+          ]);
+
+          return;
         } else {
           console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
           if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
           if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
-          // Also clear from IndexedDB if exists
-          const { deleteFromStore } = await import('@/lib/offlineCache');
-          await deleteFromStore('bible', `${abbr}:${chapter}`);
         }
-      } catch(e) {}
+      } catch(e) {
+        localStorage.removeItem(offlineKey);
+      }
     }
+
 
     try {
       setSourceInfo('Buscando na Nuvem...');
@@ -514,28 +559,33 @@ const Bible: React.FC = () => {
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
-      setSourceInfo('API de Produção');
+      setSourceInfo(`API de Produção (${data.source || 'Edge'})`);
       
       // Update Diagnostic Logs
-      setDiagnosticLogs(prev => [...prev, {
-        sessionId,
-        timestamp: new Date().toISOString(),
-        book: data.book || abbr,
-        abbr: abbr,
-        chapter,
-        source: 'API de Produção',
-        verses: loadedVerses.length
-      }]);
+      setDiagnosticLogs(prev => [
+        {
+          sessionId,
+          timestamp: new Date().toISOString(),
+          book: data.book || abbr,
+          abbr: abbr,
+          chapter,
+          source: `API de Produção (${data.source || 'Edge'})`,
+          verses: loadedVerses.length
+        },
+        ...prev.slice(0, 99)
+      ]);
       
       if (loadedVerses.length > 0) {
         localStorage.setItem(offlineKey, JSON.stringify({ 
           verses: loadedVerses, 
           timestamp: Date.now(),
-          v: 2 // Versão da tradução PT garantida
+          v: 3, // Versão da tradução PT garantida
+          book: data.book || abbr
         }));
       } else {
         toast.warning('Este capítulo parece estar sem conteúdo sagrado no momento.');
       }
+
 
       
       // Save progress automatically
