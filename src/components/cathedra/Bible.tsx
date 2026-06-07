@@ -1166,6 +1166,18 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               </div>
               
               <div className="flex gap-2">
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={() => {
+                    Object.keys(localStorage).filter(k => k.startsWith('bible_cache_')).forEach(k => localStorage.removeItem(k));
+                    toast.success('Cache Bíblico Limpo');
+                    window.location.reload();
+                  }}
+                  className="flex-1 uppercase text-[10px] font-black"
+                >
+                  Limpar Cache
+                </Button>
                 <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar Painel</Button>
               </div>
             </motion.div>
