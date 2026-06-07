@@ -37,6 +37,15 @@ describe('Language Consistency & Runtime Scanner', () => {
 
     document.body.removeChild(container);
   });
+
+  test('Termos ingleses proibidos (Tobit, Judith, Wisdom, Sirach) nunca devem aparecer na UI', () => {
+    const forbiddenEnBooks = ['Tobit', 'Judith', 'Wisdom', 'Sirach'];
+    const bodyText = document.body.innerText || "";
+    
+    forbiddenEnBooks.forEach(book => {
+      expect(bodyText).not.toContain(book);
+    });
+  });
 });
 
 test('Mensagens de erro da API devem estar em português', async () => {
