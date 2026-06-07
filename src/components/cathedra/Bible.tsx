@@ -445,7 +445,7 @@ const Bible: React.FC = () => {
   // Knowledge Connection System
   const [dynamicConnections, setDynamicConnections] = useState<Record<string, any[]>>({});
 
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = useMemo(() => ({
+const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = useMemo(() => ({
     ...dynamicConnections,
     'Jo-6-35': [
       { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
@@ -453,7 +453,7 @@ const Bible: React.FC = () => {
       { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
       { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
     ],
-    // New empty placeholder for connections
+    // Espaço reservado para conexões futuras
     'all': [
       { type: 'theology', label: 'Conexões Relacionadas', color: 'bg-primary/20', id: 'coming-soon', summary: 'As conexões vivas entre a Palavra e a Tradição estarão disponíveis em breve.' }
     ],
@@ -1046,7 +1046,7 @@ const Bible: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">{expandedConnection.label}</h3>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Documentum Sacrum</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Documento Sagrado</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {navHistory.length > 1 && (
@@ -1073,7 +1073,7 @@ const Bible: React.FC = () => {
               <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8">
                 <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
                   {expandedConnection.summary}
-                  {" "}Este texto representa o ensino oficial da Igreja sobre o tema. O Catecismo e o Magistério fornecem a lente interpretativa para as Sagradas Escrituras, garantindo a fidelidade à Tradição Apostólica.
+                  {" "}Este texto representa o ensinamento oficial da Igreja sobre o tema. O Catecismo e o Magistério fornecem a lente interpretativa para as Sagradas Escrituras, garantindo a fidelidade à Tradição Apostólica.
                 </p>
               </div>
               

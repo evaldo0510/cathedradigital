@@ -16,7 +16,7 @@ serve(async (req) => {
     // Normalize query for better matching
     const normalizedQuery = (query || "").toLowerCase().trim()
 
-    // Mock search logic refined for consistency
+    // Lógica de busca mock refinada para consistência
     const allResults = [
       { bookAbbrev: 'Jo', bookName: 'João', chapter: 3, verse: 16, text: 'Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.', score: 95 },
       { bookAbbrev: 'Gn', bookName: 'Gênesis', chapter: 1, verse: 1, text: 'No princípio criou Deus o céu e a terra.', score: 90 },
