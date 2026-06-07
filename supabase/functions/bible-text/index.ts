@@ -15,7 +15,7 @@ const BOOK_NAME_MAP: Record<string, string> = {
   'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 'Ecl': 'ecclesiastes',
   'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
   'Is': 'isaiah', 'Jr': 'jeremiah', 'Lm': 'lamentations', 'Br': 'baruch',
-  'Ez': 'ezekiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
+  'Ez': 'ezequiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
   'Ab': 'obadiah', 'Jn': 'jonah', 'Mq': 'micah', 'Na': 'nahum', 'Hab': 'habakkuk',
   'Sf': 'zephaniah', 'Ag': 'haggai', 'Zc': 'zechariah', 'Ml': 'malachi',
   'Mt': 'matthew', 'Mc': 'mark', 'Lc': 'luke', 'Jo': 'john',
@@ -57,6 +57,17 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Tt': 'Tito', 'Fm': 'Filemon', 'Hb': 'Hebreus', 'Tg': 'Tiago',
   '1Pd': '1 Pedro', '2Pd': '2 Pedro', '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João',
   'Jd': 'Judas', 'Ap': 'Apocalipse',
+  // Reverse Map for full names
+  'Genesis': 'Gênesis', 'Exodus': 'Êxodo', 'Leviticus': 'Levítico', 'Numbers': 'Números', 'Deuteronomy': 'Deuteronômio',
+  'Joshua': 'Josué', 'Judges': 'Juízes', 'Ruth': 'Rute', 'Tobit': 'Tobias', 'Judith': 'Judite', 'Esther': 'Ester',
+  'Job': 'Jó', 'Psalms': 'Salmos', 'Proverbs': 'Provérbios', 'Ecclesiastes': 'Eclesiastes',
+  'Isaiah': 'Isaías', 'Jeremiah': 'Jeremias', 'Lamentations': 'Lamentações', 'Baruch': 'Baruc',
+  'Ezekiel': 'Ezequiel', 'Daniel': 'Daniel', 'Hosea': 'Oseias', 'Joel': 'Joel', 'Amos': 'Amós',
+  'Obadiah': 'Abdias', 'Jonah': 'Jonas', 'Micah': 'Miqueias', 'Nahum': 'Naum', 'Habakkuk': 'Habacuc',
+  'Zephaniah': 'Sofonias', 'Haggai': 'Ageu', 'Zechariah': 'Zacarias', 'Malachi': 'Malaquias',
+  'Matthew': 'Mateus', 'Mark': 'Marcos', 'Luke': 'Lucas', 'John': 'João',
+  'Acts': 'Atos', 'Romans': 'Romanos', 'Galatians': 'Gálatas', 'Ephesians': 'Efésios', 'Philippians': 'Filipenses', 'Colossians': 'Colossenses',
+  'Titus': 'Tito', 'Philemon': 'Filemon', 'Hebrews': 'Hebreus', 'James': 'Tiago', 'Jude': 'Judas', 'Revelation': 'Apocalipse'
 };
 
 // bolls.life uses standard Protestant book IDs (1-66) and common Catholic ones (67-73)
@@ -77,7 +88,7 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
   '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
   'Jd': 65, 'Ap': 66,
-    'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
+  'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
 /**
