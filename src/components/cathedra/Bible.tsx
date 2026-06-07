@@ -128,11 +128,11 @@ const Bible: React.FC = () => {
 
           console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}" no seletor ${selector}`);
           
-          // Enviar relatório para log (audit_logs table schema sync)
+          // Enviar relatório para log usando a tabela analytics_events
           await supabase.from('analytics_events').insert([{
-            event_type: 'language_violation',
-            metadata: report,
-            path: location.pathname
+            event_name: 'language_violation',
+            properties: report as any,
+            url: window.location.href
           }]);
         }
       }
