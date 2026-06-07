@@ -107,37 +107,45 @@ const Bible: React.FC = () => {
   useEffect(() => {
     // Escaneamento de runtime para detectar termos em inglês no DOM
     const scanForEnglish = async () => {
+      // 1. Fetch dynamic allowlist from DB
+      const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
+      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || [])];
+      
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
       const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
+      const sessionId = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
+      if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', sessionId);
       
       while(node = walker.nextNode()) {
         const text = node.textContent?.trim();
         if (text && forbiddenRegex.test(text)) {
-          // Ignorar se estiver na allowlist (ex: Cathedra)
-          if (LANGUAGE_ALLOWLIST.some(allowed => text.toLowerCase() === allowed.toLowerCase())) continue;
+          // Ignorar se estiver na allowlist
+          if (allAllowed.some(allowed => text.toLowerCase() === allowed.toLowerCase())) continue;
 
           const selector = getElementSelector(node.parentElement as HTMLElement);
           const report = {
             term: text,
-            context: node.parentElement?.innerText?.substring(0, 100),
+            context: node.parentElement?.innerText?.substring(0, 150),
             selector: selector,
             url: window.location.href,
-            timestamp: new Date().toISOString()
+            session_id: sessionId,
+            timestamp: new Date().toISOString(),
+            environment: import.meta.env.MODE
           };
 
-          console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}" no seletor ${selector}`);
+          console.warn(`[Auditoria Linguística] Termo suspeito detectado: "${text}" no seletor ${selector}`);
           
-          // Enviar relatório para log usando a tabela analytics_events
           await supabase.from('analytics_events').insert([{
             event_name: 'language_violation',
             properties: report as any,
-            url: window.location.href
+            url: window.location.href,
+            session_id: sessionId
           }]);
         }
       }
     };
-    const timeout = setTimeout(scanForEnglish, 2000);
+    const timeout = setTimeout(scanForEnglish, 3000); // Wait for animations
     return () => clearTimeout(timeout);
   }, [location.pathname]);
 
