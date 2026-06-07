@@ -420,7 +420,7 @@ const Bible: React.FC = () => {
       setDiagnosticLogs(prev => [...prev, {
         sessionId,
         timestamp: new Date().toISOString(),
-        book: ptName,
+        book: data.book || abbr,
         abbr: abbr,
         chapter,
         source: 'API de Produção',
