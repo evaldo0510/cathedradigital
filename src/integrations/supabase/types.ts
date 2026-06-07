@@ -674,6 +674,7 @@ export type Database = {
           expires_at: string
           hash: string
           id: string
+          version: number | null
         }
         Insert: {
           cache_key: string
@@ -682,6 +683,7 @@ export type Database = {
           expires_at: string
           hash: string
           id?: string
+          version?: number | null
         }
         Update: {
           cache_key?: string
@@ -690,6 +692,7 @@ export type Database = {
           expires_at?: string
           hash?: string
           id?: string
+          version?: number | null
         }
         Relationships: []
       }
@@ -856,8 +859,10 @@ export type Database = {
           correlation_id: string | null
           created_at: string | null
           discrepancy_details: Json | null
+          encoding_issues_detected: boolean | null
           expected_hash: string | null
           id: string
+          special_chars_count: number | null
           status: string
         }
         Insert: {
@@ -867,8 +872,10 @@ export type Database = {
           correlation_id?: string | null
           created_at?: string | null
           discrepancy_details?: Json | null
+          encoding_issues_detected?: boolean | null
           expected_hash?: string | null
           id?: string
+          special_chars_count?: number | null
           status: string
         }
         Update: {
@@ -878,8 +885,10 @@ export type Database = {
           correlation_id?: string | null
           created_at?: string | null
           discrepancy_details?: Json | null
+          encoding_issues_detected?: boolean | null
           expected_hash?: string | null
           id?: string
+          special_chars_count?: number | null
           status?: string
         }
         Relationships: [
