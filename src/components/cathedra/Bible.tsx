@@ -107,50 +107,69 @@ const Bible: React.FC = () => {
 
 
 
-  // Sync with URL
+  // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
-    // Escaneamento de runtime para detectar termos em inglês no DOM
-    const scanForEnglish = async () => {
-      // 1. Fetch dynamic allowlist from DB
+    const scanAndFix = async () => {
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
-      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || []), 'Tobias', 'Judite', 'Sabedoria', 'Eclesiastico', 'Baruc', 'Tobit', 'Judith', 'Wisdom', 'Sirach', 'Baruch', 'Maccabees'];
+      const allAllowed = [
+        ...LANGUAGE_ALLOWLIST, 
+        ...(dynamicAllowlist?.map(a => a.term) || []), 
+        'Tobias', 'Judite', 'Sabedoria', 'Eclesiástico', 'Baruc', '1 Macabeus', '2 Macabeus', 'Abdias'
+      ];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
       const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
-      const sessionId = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
-      if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', sessionId);
+      
+      const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
+      if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
+
+      // Map de correção em tempo real (Hard Patch)
+      const correctionMap: Record<string, string> = {
+        'Tobit': 'Tobias',
+        'Judith': 'Judite',
+        'Wisdom': 'Sabedoria',
+        'Sirach': 'Eclesiástico',
+        'Baruch': 'Baruc',
+        'Maccabees': 'Macabeus',
+        'Obadiah': 'Abdias',
+        'Chapter': 'Capítulo',
+        'Verse': 'Versículo',
+        'Search': 'Pesquisar',
+        'Loading': 'Carregando',
+        'Settings': 'Configurações'
+      };
       
       while(node = walker.nextNode()) {
-        const text = node.textContent?.trim();
-        if (text && forbiddenRegex.test(text)) {
-          // Ignorar se estiver na allowlist
+        const text = node.textContent?.trim() || '';
+        if (text && (forbiddenRegex.test(text) || Object.keys(correctionMap).some(k => text.includes(k)))) {
+          // Se o texto exato ou parcial for uma das chaves de correção
+          for (const [eng, pt] of Object.entries(correctionMap)) {
+            if (text.includes(eng)) {
+              console.warn(`[Auto-Fix] Corrigindo "${eng}" para "${pt}" no DOM.`);
+              node.textContent = node.textContent?.replace(new RegExp(eng, 'g'), pt) || null;
+            }
+          }
+
           if (allAllowed.some(allowed => text.toLowerCase() === allowed.toLowerCase())) continue;
 
-          const selector = getElementSelector(node.parentElement as HTMLElement);
-          const report = {
-            term: text,
-            context: node.parentElement?.innerText?.substring(0, 150),
-            selector: selector,
-            url: window.location.href,
-            session_id: sessionId,
-            timestamp: new Date().toISOString(),
-            environment: import.meta.env.MODE
-          };
-
-          console.warn(`[Auditoria Linguística] Termo suspeito detectado: "${text}" no seletor ${selector}`);
-          
+          // Registrar violação se persistir ou for suspeita
           await supabase.from('analytics_events').insert([{
             event_name: 'language_violation',
-            properties: report as any,
+            properties: {
+              term: text,
+              url: window.location.href,
+              session_id: session,
+              timestamp: new Date().toISOString()
+            },
             url: window.location.href,
-            session_id: sessionId
+            session_id: session
           }]);
         }
       }
     };
-    const timeout = setTimeout(scanForEnglish, 5000); // Increased to wait for full lazy rendering
-    return () => clearTimeout(timeout);
+    const timer = setInterval(scanAndFix, 2000); // Varredura contínua para capturar lazy content
+    return () => clearInterval(timer);
   }, [location.pathname]);
 
   // Sync with URL continued
