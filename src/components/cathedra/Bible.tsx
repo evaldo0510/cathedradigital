@@ -97,7 +97,7 @@ const Bible: React.FC = () => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<{book: string, ch: number, v: number, text: string, type: string}[]>([]);
+  const [scanResults, setScanResults] = useState<{book: string, ch: number, v: number, text: string, type: string, screenshot?: string, title?: string, file: string}[]>([]);
 
 
 
@@ -434,11 +434,15 @@ const Bible: React.FC = () => {
         setDynamicConnections(newConns);
       }
       
-      // Auto-scan validation for real evidence
+      // Auto-scan validation for real evidence with visual captures
       if (viewMode === 'reading' && isScanning) {
         const forbiddenEnRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees)\\b`, 'i');
         const found = loadedVerses.filter((v: any) => forbiddenEnRegex.test(v.text));
+        
         if (found.length > 0) {
+          // Capturar evidência visual do trecho (Simulação de screenshot via captura de HTML string para o CSV)
+          const visualSnippet = document.querySelector('.bible-content-container')?.innerHTML.substring(0, 1000) || 'Não disponível';
+          
           setScanResults(prev => [
             ...prev,
             ...found.map((f: any) => ({
@@ -446,7 +450,10 @@ const Bible: React.FC = () => {
               ch: chapter,
               v: f.number,
               text: f.text,
-              type: 'Conteúdo Bíblico (API)'
+              type: sourceInfo || 'API/Edge Function',
+              screenshot: `Snippet: ${visualSnippet.substring(0, 100)}...`,
+              title: selectedBook?.chapterTitles?.[chapter] || 'Sem título',
+              file: 'src/components/cathedra/Bible.tsx'
             }))
           ]);
         }
@@ -847,8 +854,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       variant="outline" 
                       size="sm"
                       onClick={() => {
-                        const csv = "Livro,Capitulo,Versiculo,Texto,Fonte\n" + 
-                          scanResults.map(r => `"${r.book}",${r.ch},${r.v},"${r.text.replace(/"/g, '""')}",${r.type}`).join("\n");
+                        const csv = "Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,Evidencia_Visual\n" + 
+                          scanResults.map(r => `"${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${r.screenshot}"`).join("\n");
                         const blob = new Blob([csv], { type: 'text/csv' });
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
