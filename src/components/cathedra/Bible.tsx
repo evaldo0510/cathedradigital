@@ -634,8 +634,8 @@ const Bible: React.FC = () => {
               ))}
             </div>
           </motion.div>
-
         )}
+
 
 
         {viewMode === 'reading' && selectedBook && (
