@@ -391,6 +391,10 @@ const Bible: React.FC = () => {
       { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
       { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
     ],
+    // New empty placeholder for connections
+    'all': [
+      { type: 'theology', label: 'Conexões Relacionadas', color: 'bg-primary/20', id: 'coming-soon', summary: 'As conexões vivas entre a Palavra e a Tradição estarão disponíveis em breve.' }
+    ],
     'Gn-1-1': [
       { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
       { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' },

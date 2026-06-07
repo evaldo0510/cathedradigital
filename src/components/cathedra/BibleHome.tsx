@@ -44,19 +44,24 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
                 if (book) onSelectBook(book);
               }
             }}
-            className="p-6 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
+            className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar</span>
-              <Icons.ChevronRight className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar</span>
+              <Icons.ChevronRight className="w-3 h-3 text-primary/20 group-hover:text-secondary transition-colors" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-display text-primary/80">
-                {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).bookName}
-              </span>
-              <span className="text-xs text-primary/40 font-serif">
-                Capítulo {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).chapter}
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-lg font-display text-primary/80 leading-tight">
+                  {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).bookName}
+                </span>
+                <span className="text-[10px] text-primary/40 font-serif">
+                  Capítulo {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).chapter}
+                </span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-secondary/5 flex items-center justify-center">
+                 <Icons.BookOpen className="w-4 h-4 text-secondary/40" />
+              </div>
             </div>
           </button>
         ) : null}
