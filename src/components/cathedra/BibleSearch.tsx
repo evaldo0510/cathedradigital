@@ -166,7 +166,22 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                   <div className="flex items-center gap-2">
                     {/* Garantindo que o nome do livro seja exibido no vernáculo correto */}
                     <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
-                      {result.bookName.replace('Tobit', 'Tobias').replace('Judith', 'Judite').replace('Wisdom', 'Sabedoria').replace('Sirach', 'Eclesiástico').replace('Baruch', 'Baruc').replace('Maccabees', 'Macabeus').replace('Obadiah', 'Abdias').replace('Psalms', 'Salmos').replace('Genesis', 'Gênesis').replace('Exodus', 'Êxodo').replace('Leviticus', 'Levítico').replace('Numbers', 'Números').replace('Deuteronomy', 'Deuteronômio')} {result.chapter}:{result.verse}
+                      {result.bookName
+                        .replace(/\bTobit\b/g, 'Tobias')
+                        .replace(/\bJudith\b/g, 'Judite')
+                        .replace(/\bWisdom\b/g, 'Sabedoria')
+                        .replace(/\bSirach\b/g, 'Eclesiástico')
+                        .replace(/\bBaruch\b/g, 'Baruc')
+                        .replace(/\bMaccabees\b/g, 'Macabeus')
+                        .replace(/\bObadiah\b/g, 'Abdias')
+                        .replace(/\bPsalms\b/g, 'Salmos')
+                        .replace(/\bGenesis\b/g, 'Gênesis')
+                        .replace(/\bExodus\b/g, 'Êxodo')
+                        .replace(/\bLeviticus\b/g, 'Levítico')
+                        .replace(/\bNumbers\b/g, 'Números')
+                        .replace(/\bDeuteronomy\b/g, 'Deuteronômio')
+                        .replace(/\bChapter\b/g, 'Capítulo')
+                      } {result.chapter}:{result.verse}
                     </span>
                     <div className="flex-1 h-px bg-primary/5" />
                     {result.score && (
