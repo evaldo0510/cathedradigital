@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
+import { Button } from '@/components/ui/button';
 
 interface Verse {
   number: number;
