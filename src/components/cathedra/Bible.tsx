@@ -489,45 +489,24 @@ const Bible: React.FC = () => {
 
             </header>
 
-            {/* Above the Fold Actions */}
+            {/* Bible Home Experience */}
             <div className="space-y-4 mb-12">
               <BibleHome onSelectBook={selectBook} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
-                
-                {!isDailyCompleted && (
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      markDailyAsCompleted();
-                    }}
-                    className="absolute -top-2 -right-2 bg-secondary text-white text-[8px] font-black uppercase px-2 py-1 rounded-full shadow-lg"
-                  >
-                    Concluir
-                  </button>
-                )}
-              </div>
-
-              <button 
-                onClick={() => setViewMode('monthly_recap')}
-                className="w-full flex items-center justify-center p-3 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-secondary transition-colors"
-              >
-                <Icons.Calendar className="w-3 h-3 mr-2" />
-                Recapitular Leituras do Mês
-              </button>
             </div>
 
             <div className="flex gap-4 mb-12">
               <button 
                 onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40"
+                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 shadow-sm"
               >
                 <Icons.Download className="w-3 h-3" /> Exportar
               </button>
-              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer">
+              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
                 <Icons.Upload className="w-3 h-3" /> Importar
                 <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
               </label>
             </div>
+
 
 
 
