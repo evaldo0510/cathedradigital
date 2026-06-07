@@ -4103,7 +4103,6 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      tmp_security_test_vulnerability: { Args: never; Returns: string }
       track_webhook_alert: {
         Args: { p_message: string; p_severity: string; p_type: string }
         Returns: undefined
