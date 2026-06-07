@@ -90,7 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
-  const [cacheSyncVersion, setCacheSyncVersion] = useState(4); // Current functional version
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(5); // Versão incrementada para invalidação global v1.2.0
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -599,14 +599,28 @@ const Bible: React.FC = () => {
       }
     }
 
-
     try {
       setSourceInfo('Buscando na Nuvem...');
-      // 1. Fetch Bible Text
-      const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: abbr, chapter } // Removed encodeURIComponent as it might be causing issues with some APIs expecting plain strings
+      
+      const etagValue = `"v1.2.0-${abbr.toLowerCase()}-${chapter}"`;
+      const { data, error, response } = await supabase.functions.invoke('bible-text', {
+        body: { abbrev: abbr, chapter },
+        headers: { 'if-none-match': localStorage.getItem(`etag_${abbr}_${chapter}`) || '' }
       });
+
+      if (response?.status === 304) {
+        const cached = JSON.parse(localStorage.getItem(offlineKey) || '{}');
+        setVerses(cached.verses.map((v: any) => ({ ...v, chapter })));
+        setIsLoading(false);
+        setSourceInfo('Sincronizado (ETag 304)');
+        return;
+      }
+
       if (error) throw error;
+      
+      const serverEtag = response?.headers.get('ETag');
+      if (serverEtag) localStorage.setItem(`etag_${abbr}_${chapter}`, serverEtag);
+
       
       const loadedVerses = data.verses || [];
       
