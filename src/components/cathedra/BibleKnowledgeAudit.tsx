@@ -1016,8 +1016,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                  <button onClick={() => startIntegrityScan(false)} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest">
-                    {isScanning ? 'Verificando...' : 'Executar Auditoria'}
+                  <button onClick={runAuditScan} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                    {isScanning ? 'Verificando...' : 'Iniciar Auditoria Premium'}
+
                   </button>
                   <button onClick={() => startIntegrityScan(true)} className="w-full py-3 border border-secondary text-secondary rounded-full text-[10px] font-black uppercase tracking-widest">
                     Retentar Etapas Falhas

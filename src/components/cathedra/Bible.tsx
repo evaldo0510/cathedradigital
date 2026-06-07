@@ -834,23 +834,26 @@ const Bible: React.FC = () => {
 
 
                   {/* Vertical Navigation Buttons */}
-                  <footer className="pt-20 space-y-4">
-                    <Button 
-                      onClick={nextChapter}
-                      disabled={selectedChapter >= selectedBook.chapters}
-                      className="w-full h-16 rounded-xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all"
-                    >
-                      Próximo Capítulo
-                    </Button>
-                    <Button 
-                      variant="ghost"
-                      onClick={prevChapter}
-                      disabled={selectedChapter <= 1}
-                      className="w-full h-14 text-primary/40 text-[10px] font-black uppercase tracking-widest"
-                    >
-                      Capítulo Anterior
-                    </Button>
+                  <footer className="pt-12 pb-20 space-y-4">
+                    <div className="flex gap-4">
+                      <Button 
+                        onClick={prevChapter}
+                        disabled={selectedChapter <= 1}
+                        variant="outline"
+                        className="flex-1 h-16 rounded-2xl border-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest shadow-sm"
+                      >
+                        <Icons.ChevronLeft className="w-4 h-4 mr-2" /> Anterior
+                      </Button>
+                      <Button 
+                        onClick={nextChapter}
+                        disabled={selectedChapter >= selectedBook.chapters}
+                        className="flex-[2] h-16 rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all"
+                      >
+                        Próximo Capítulo <Icons.ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
                   </footer>
+
                 </article>
               )}
             </motion.div>
