@@ -633,9 +633,9 @@ const Bible: React.FC = () => {
                 </button>
               ))}
             </div>
-
           </motion.div>
         )}
+
 
         {viewMode === 'reading' && selectedBook && (
           <motion.div 
@@ -674,6 +674,21 @@ const Bible: React.FC = () => {
                     <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
                   </header>
 
+                  {/* Context Banner */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-secondary/5 rounded-2xl border border-secondary/10 mb-8"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icons.Info className="w-4 h-4 text-secondary/40" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
+                    </div>
+                    <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
+                      {selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
+                    </p>
+                  </motion.div>
+
                   <div className="space-y-8">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-20 text-center space-y-6 bg-primary/[0.02] rounded-3xl border border-primary/5 p-8">
@@ -693,7 +708,9 @@ const Bible: React.FC = () => {
                         </Button>
                       </div>
                     ) : (
-                      verses.map(v => {
+                      <div className="space-y-6">
+                        {verses.map((v, index) => {
+
 
                       const hasNote = notes.some(n => 
                         n.book_abbr === selectedBook.abbr && 
