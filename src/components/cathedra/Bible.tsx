@@ -682,7 +682,8 @@ const Bible: React.FC = () => {
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
-      setSourceInfo(`API de Produção (${data.source || 'Edge'})`);
+      const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
+      setSourceInfo(sourceLabel);
       
       // Update Diagnostic Logs
       setDiagnosticLogs(prev => [
@@ -692,8 +693,9 @@ const Bible: React.FC = () => {
           book: data.book || abbr,
           abbr: abbr,
           chapter,
-          source: `API de Produção (${data.source || 'Edge'})`,
-          verses: loadedVerses.length
+          source: sourceLabel,
+          verses: loadedVerses.length,
+          file: 'src/components/cathedra/Bible.tsx'
         },
         ...prev.slice(0, 99)
       ]);
