@@ -104,6 +104,43 @@ function translateApiMessage(msg: string): string {
   return map[msg] || msg;
 }
 
+/**
+ * Tradução agressiva de termos que vazam das APIs
+ */
+function robustTranslate(text: string): string {
+  if (!text) return '';
+  let translated = text;
+  const map: Record<string, string> = {
+    '\\bChapter\\b': 'Capítulo',
+    '\\bVerse\\b': 'Versículo',
+    '\\bTobit\\b': 'Tobias',
+    '\\bJudith\\b': 'Judite',
+    '\\bWisdom\\b': 'Sabedoria',
+    '\\bSirach\\b': 'Eclesiástico',
+    '\\bBaruch\\b': 'Baruc',
+    '\\bMaccabees\\b': 'Macabeus',
+    '\\bObadiah\\b': 'Abdias',
+    '\\bPsalms\\b': 'Salmos',
+    '\\bGenesis\\b': 'Gênesis',
+    '\\bExodus\\b': 'Êxodo',
+    '\\bLeviticus\\b': 'Levítico',
+    '\\bNumbers\\b': 'Números',
+    '\\bDeuteronomy\\b': 'Deuteronômio',
+    '\\bLord\\b': 'Senhor',
+    '\\bGod\\b': 'Deus',
+    '\\bJesus\\b': 'Jesus',
+    '\\bChrist\\b': 'Cristo',
+    '\\bSpirit\\b': 'Espírito',
+    '\\bHoly\\b': 'Santo'
+  };
+
+  for (const [eng, pt] of Object.entries(map)) {
+    const regex = new RegExp(eng, 'gi');
+    translated = translated.replace(regex, pt);
+  }
+  return translated;
+}
+
 /** Try bible-api.com first (Almeida translation) */
 async function fetchFromBibleApi(englishName: string, chapter: number) {
   // If it's a deuterocanonical book, try specialized Catholic versions
@@ -118,11 +155,19 @@ async function fetchFromBibleApi(englishName: string, chapter: number) {
   const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=${translation}`;
   console.log('Trying bible-api.com:', url);
 
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const data = await res.json();
-  if (!data.verses || !Array.isArray(data.verses) || data.verses.length === 0) return null;
-  return data.verses.map((v: any) => ({ number: v.verse, text: v.text?.trim() || '' }));
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.verses || !Array.isArray(data.verses) || data.verses.length === 0) return null;
+    
+    return data.verses.map((v: any) => ({ 
+      number: v.verse, 
+      text: robustTranslate(v.text?.trim() || '') 
+    }));
+  } catch (e) {
+    return null;
+  }
 }
 
 /** Fallback to bolls.life (NAA — Nova Almeida Atualizada) */
