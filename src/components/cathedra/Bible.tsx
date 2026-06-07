@@ -84,6 +84,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(4); // Current functional version
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -127,18 +128,35 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
-      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache
+      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache ou versão incompatível
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
           const cached = JSON.parse(localStorage.getItem(key) || '{}');
-          if (cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cached.book)) {
+          const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
+          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cached.book);
+          
+          if (isLegacyVersion || hasEnglishBook) {
             localStorage.removeItem(key);
-            console.log(`[Cache Invalidation] Removed legacy English cache: ${key}`);
+            console.log(`[Cache Invalidation] Removed legacy/English cache: ${key} (v:${cached.v || 'none'})`);
             setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
           }
         } catch (e) {}
       });
+
+      // Synchronize with remote cache version if user is logged in
+      if (user) {
+        const { data: meta } = await supabase
+          .from('bible_cache_metadata')
+          .select('client_version, last_purged_at')
+          .single();
+        
+        if (meta && meta.client_version > cacheSyncVersion) {
+          console.log(`[Cache Sync] Remote version higher (${meta.client_version}). Purging local cache.`);
+          cacheKeys.forEach(k => localStorage.removeItem(k));
+          setCacheSyncVersion(meta.client_version);
+        }
+      }
 
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
       const allAllowed = [
@@ -163,6 +181,12 @@ const Bible: React.FC = () => {
         'Baruch': 'Baruc',
         'Maccabees': 'Macabeus',
         'Obadiah': 'Abdias',
+        'Psalms': 'Salmos',
+        'Genesis': 'Gênesis',
+        'Exodus': 'Êxodo',
+        'Leviticus': 'Levítico',
+        'Numbers': 'Números',
+        'Deuteronomy': 'Deuteronômio',
         'Chapter': 'Capítulo',
         'Verse': 'Versículo',
         'Search': 'Pesquisar',
@@ -442,13 +466,13 @@ const Bible: React.FC = () => {
       try {
         const cachedData = JSON.parse(cached);
         // Force PT check: If book name in data is English, it's legacy
-        const isLegacy = !cachedData.v || cachedData.v < 3 || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cachedData.book)); 
+        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cachedData.book)); 
         const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
-          setSourceInfo('Cache Local (v3)');
+          setSourceInfo(`Cache Local (v${cacheSyncVersion})`);
           
           // Registro diagnóstico por livro e capítulo
           setDiagnosticLogs(prev => [
