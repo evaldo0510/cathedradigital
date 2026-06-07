@@ -50,6 +50,7 @@ export const APP_ROUTES: RouteConfig[] = [
 
   // Admin
   { path: '/admin', label: 'Painel Admin', icon: Icons.Lock, showInMenu: false, category: 'admin' },
+  { path: '/admin/audit', label: 'Dashboard de Auditoria', icon: Icons.Activity, showInMenu: false, category: 'admin' },
   { path: '/telemetry', label: 'Telemetria', icon: Icons.Activity, showInMenu: false, category: 'admin' },
   { path: '/security', label: 'Segurança', icon: Icons.Shield, showInMenu: false, category: 'admin' },
 ];
