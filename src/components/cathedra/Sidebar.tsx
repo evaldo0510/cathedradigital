@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
-import { User } from '../../types';
+import { User, AppRoute } from '../../types';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
@@ -12,6 +12,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { APP_ROUTES } from '@/config/routes';
+
 
 
 
