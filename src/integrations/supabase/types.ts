@@ -2049,6 +2049,39 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_filters: {
+        Row: {
+          created_at: string | null
+          filter_by: string | null
+          id: string
+          name: string
+          project_id: string | null
+          query: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          filter_by?: string | null
+          id?: string
+          name: string
+          project_id?: string | null
+          query?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          filter_by?: string | null
+          id?: string
+          name?: string
+          project_id?: string | null
+          query?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       secret_leaks: {
         Row: {
           details: Json | null
