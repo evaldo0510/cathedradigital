@@ -1,4 +1,4 @@
-import { expect, test, describe } from 'vitest';
+import { expect, test, describe, afterAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -34,11 +34,10 @@ const ENGLISH_INDICATORS = [
 ];
 
 const reportPath = path.resolve('reports/bible-i18n-audit.json');
+const failures: any[] = [];
 
 describe('Bible Zero English CI Pipeline', { timeout: 60000 }, () => {
-  const failures: any[] = [];
-
-  test.afterAll(() => {
+  afterAll(() => {
     // Gerar relatório de falhas para o CI consumir
     if (!fs.existsSync('reports')) fs.mkdirSync('reports', { recursive: true });
     fs.writeFileSync(reportPath, JSON.stringify({
@@ -101,4 +100,5 @@ describe('Bible Zero English CI Pipeline', { timeout: 60000 }, () => {
     });
   });
 });
+
 
