@@ -168,6 +168,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             const verseKey = `${book.abbr}-${chapter}-${v.number}`;
             const highlightColor = highlights[verseKey];
             const verseConnections = connections[verseKey] || [];
+            
+            // Injecting placeholders for empty connections in Demo mode
+            const finalConnections = verseConnections.length > 0 ? verseConnections : (connections['all'] || []);
 
             return (
               <motion.div 
@@ -175,26 +178,26 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 id={`verse-${v.number}`}
                 onClick={() => onVerseAction(v)}
                 className={cn(
-                  "relative group cursor-pointer transition-all duration-300 rounded-lg p-1 -m-1",
+                  "relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2",
                   highlightColor ? `bg-${highlightColor}/10` : "hover:bg-primary/[0.02]"
                 )}
               >
-                <div className="flex items-start gap-3">
-                  <sup className="mt-2 text-xs font-bold text-secondary/60 select-none">
+                <div className="flex items-start gap-4">
+                  <sup className="mt-2 text-[10px] font-black text-secondary/40 select-none tabular-nums">
                     {v.number}
                   </sup>
                   <p className={cn(
-                    "leading-relaxed transition-colors",
-                    settings.theme === 'night' ? 'text-stone-300' : 'text-primary/90'
+                    "leading-relaxed transition-colors font-serif",
+                    settings.theme === 'night' ? "text-stone-300" : "text-primary/90"
                   )}>
                     {v.text}
                   </p>
                 </div>
 
                 {/* Connections indicator */}
-                {verseConnections.length > 0 && (
-                  <div className="flex gap-1 mt-2 ml-6">
-                    {verseConnections.map((conn, idx) => (
+                {finalConnections.length > 0 && (
+                  <div className="flex items-center gap-2 mt-3 ml-6">
+                    {finalConnections.map((conn, idx) => (
                       <button
                         key={idx}
                         onClick={(e) => {
@@ -202,11 +205,15 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                           onConnectionClick(conn);
                         }}
                         className={cn(
-                          "w-2 h-2 rounded-full",
-                          conn.color || "bg-secondary/40"
+                          "flex items-center gap-1.5 px-2 py-0.5 rounded-full border transition-all hover:scale-105",
+                          conn.id === 'coming-soon' 
+                            ? "bg-primary/[0.03] border-primary/5 text-primary/30" 
+                            : "bg-secondary/10 border-secondary/20 text-secondary"
                         )}
-                        title={conn.label}
-                      />
+                      >
+                        <div className={cn("w-1.5 h-1.5 rounded-full", conn.color || "bg-secondary/40")} />
+                        <span className="text-[8px] font-black uppercase tracking-widest">{conn.label}</span>
+                      </button>
                     ))}
                   </div>
                 )}
