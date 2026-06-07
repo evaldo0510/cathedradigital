@@ -128,11 +128,11 @@ const Bible: React.FC = () => {
 
           console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}" no seletor ${selector}`);
           
-          // Enviar relatório para log (simulado via console ou Supabase se desejado)
-          await supabase.from('audit_logs').insert([{
-            level: 'warn',
-            message: `Suspected English term: ${text}`,
-            metadata: report
+          // Enviar relatório para log (audit_logs table schema sync)
+          await supabase.from('analytics_events').insert([{
+            event_type: 'language_violation',
+            metadata: report,
+            path: location.pathname
           }]);
         }
       }
