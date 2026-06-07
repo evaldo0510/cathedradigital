@@ -81,6 +81,7 @@ const Bible: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [searchQuery, setSearchQuery] = useState('');
   
   // New States for Annotations and Progress
@@ -352,18 +353,26 @@ const Bible: React.FC = () => {
     // Attempt offline recovery
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);
+    
+    // Invalidação de cache antigo: Se o cache não tiver a flag de tradução PT, ignorar
     if (cached) {
       try {
         const cachedData = JSON.parse(cached);
-        if (Date.now() - cachedData.timestamp < 1000 * 60 * 60 * 24 * 7) { // 1 week cache
+        const isLegacy = !cachedData.v || cachedData.v < 2; // Versão 2 introduz tradução forçada
+        
+        if (!isLegacy && (Date.now() - cachedData.timestamp < 1000 * 60 * 60 * 24 * 7)) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
-          // Still fetch in background to refresh
+          setSourceInfo('Cache Local (v2)');
+        } else {
+          console.log(`[Cache] Invalidando cache legado ou expirado para ${abbr} ${chapter}`);
+          localStorage.removeItem(offlineKey);
         }
       } catch(e) {}
     }
 
     try {
+      setSourceInfo('Buscando na Nuvem...');
       // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { book: encodeURIComponent(abbr), chapter }
@@ -399,9 +408,14 @@ const Bible: React.FC = () => {
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
+      setSourceInfo('API de Produção');
       
       if (loadedVerses.length > 0) {
-        localStorage.setItem(offlineKey, JSON.stringify({ verses: loadedVerses, timestamp: Date.now() }));
+        localStorage.setItem(offlineKey, JSON.stringify({ 
+          verses: loadedVerses, 
+          timestamp: Date.now(),
+          v: 2 // Versão da tradução PT garantida
+        }));
       } else {
         toast.warning('Este capítulo parece estar sem conteúdo sagrado no momento.');
       }
@@ -447,8 +461,10 @@ const Bible: React.FC = () => {
          ];
          setVerses(obadiahText.map(v => ({ ...v, chapter: 1 })));
          setIsLoading(false);
+         setSourceInfo('Fallback Local (Abdias)');
          return;
       }
+      setSourceInfo('Erro no Carregamento');
       toast.error('Erro ao carregar texto sagrado');
     } finally {
       setIsLoading(false);
@@ -625,9 +641,23 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                  <p>Livro Atual: {selectedBook?.name} ({selectedBook?.abbr})</p>
                  <p>Capítulo: {selectedChapter}</p>
                  <p>Versículos: {verses.length}</p>
-                 <p>Allowlist: {LANGUAGE_ALLOWLIST.length + (LANGUAGE_ALLOWLIST.includes('Tobias') ? 0 : 5)}</p>
+                 <p>Fonte do Texto: <span className="text-secondary font-bold">{sourceInfo}</span></p>
+                 <p>Allowlist: {LANGUAGE_ALLOWLIST.length + 5}</p>
               </div>
-              <Button onClick={() => setIsDiagnosticOpen(false)} className="w-full">Fechar</Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    const tobit = BIBLE_DATA['Antigo Testamento'][1].books.find(b => b.abbr === 'Tb');
+                    if (tobit) selectBook(tobit);
+                    setIsDiagnosticOpen(false);
+                  }}
+                  className="flex-1 text-[10px]"
+                >
+                  Simular Tobias
+                </Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1">Fechar</Button>
+              </div>
             </motion.div>
           </div>
         )}
