@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -434,28 +435,48 @@ const Bible: React.FC = () => {
         setDynamicConnections(newConns);
       }
       
-      // Auto-scan validation for real evidence with visual captures
+      // Auto-scan validation with PNG screenshots and detailed JSON reporting
       if (viewMode === 'reading' && isScanning) {
         const forbiddenEnRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees)\\b`, 'i');
         const found = loadedVerses.filter((v: any) => forbiddenEnRegex.test(v.text));
         
         if (found.length > 0) {
-          // Capturar evidência visual do trecho (Simulação de screenshot via captura de HTML string para o CSV)
-          const visualSnippet = document.querySelector('.bible-content-container')?.innerHTML.substring(0, 1000) || 'Não disponível';
+          const container = document.querySelector('.bible-content-container') as HTMLElement;
+          const visualSnippet = container?.innerHTML.substring(0, 500) || 'Não disponível';
           
-          setScanResults(prev => [
-            ...prev,
-            ...found.map((f: any) => ({
-              book: data.book || abbr,
-              ch: chapter,
-              v: f.number,
-              text: f.text,
-              type: sourceInfo || 'API/Edge Function',
-              screenshot: `Snippet: ${visualSnippet.substring(0, 100)}...`,
-              title: selectedBook?.chapterTitles?.[chapter] || 'Sem título',
-              file: 'src/components/cathedra/Bible.tsx'
-            }))
-          ]);
+          const captureScreenshot = async () => {
+            let screenshotData = '';
+            if (container) {
+              try {
+                const canvas = await html2canvas(container, {
+                  scale: 1,
+                  useCORS: true,
+                  logging: false
+                });
+                screenshotData = canvas.toDataURL('image/png');
+              } catch (e) {
+                console.error('Screenshot error:', e);
+              }
+            }
+
+            setScanResults(prev => [
+              ...prev,
+              ...found.map((f: any) => ({
+                id: `evid_${crypto.randomUUID().substring(0, 8)}`,
+                book: data.book || abbr,
+                ch: chapter,
+                v: f.number,
+                text: f.text,
+                type: sourceInfo || 'API/Edge Function',
+                screenshot: screenshotData,
+                htmlSnippet: visualSnippet,
+                title: selectedBook?.chapterTitles?.[chapter] || 'Sem título',
+                file: 'src/components/cathedra/Bible.tsx',
+                timestamp: new Date().toISOString()
+              }))
+            ]);
+          };
+          captureScreenshot();
         }
       }
 
