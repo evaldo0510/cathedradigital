@@ -1101,7 +1101,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         setScanResults([]);
                         toast.info('Iniciando varredura com screenshots PNG...');
                         const runDeepScan = async () => {
-                          const targetBooks = ['Tb', 'Jt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
+                          const targetBooks = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
                           for (const abbr of targetBooks) {
                             for (let ch = 1; ch <= 2; ch++) {
                               await fetchVerses(abbr, ch);
