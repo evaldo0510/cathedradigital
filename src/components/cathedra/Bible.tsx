@@ -90,7 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
-  const [cacheSyncVersion, setCacheSyncVersion] = useState(6); // Versão incrementada para v1.2.2 para invalidação global
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(7); // Versão incrementada para v1.2.3 para invalidação global pós-estabilização
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -139,9 +139,11 @@ const Bible: React.FC = () => {
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
-          const cached = JSON.parse(localStorage.getItem(key) || '{}');
+          const cachedValue = localStorage.getItem(key);
+          if (!cachedValue) return;
+          const cached = JSON.parse(cachedValue);
           const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
-          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cached.book);
+          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cached.book);
           
           if (isLegacyVersion || hasEnglishBook) {
             localStorage.removeItem(key);
@@ -173,8 +175,8 @@ const Bible: React.FC = () => {
       ];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      let node;
-      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
+      let node: Node | null;
+      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis)\\b`, 'i');
       
       const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
       if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
@@ -277,7 +279,11 @@ const Bible: React.FC = () => {
         'Magisterium': 'Magistério',
         'Cancel': 'Cancelar',
         'Save': 'Salvar',
-        'Summary': 'Resumo'
+        'Summary': 'Resumo',
+        'Ecclesiasticus': 'Eclesiástico',
+        'Wisdom of Solomon': 'Sabedoria',
+        'Song of Songs': 'Cântico dos Cânticos',
+        'Apocalypse': 'Apocalipse'
       };
       
       while(node = walker.nextNode()) {
@@ -572,8 +578,8 @@ const Bible: React.FC = () => {
       try {
         const cachedData = JSON.parse(cached);
         // Force PT check: If book name in data is English, it's legacy
-        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cachedData.book)); 
-        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
+        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cachedData.book)); 
+        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 3; // 3 days for faster rotation during stabilization
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
@@ -1122,7 +1128,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         setScanResults([]);
                         toast.info('Iniciando varredura com screenshots PNG...');
                         const runDeepScan = async () => {
-                          const targetBooks = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
+                          const targetBooks = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc', 'Sl', 'Gn'];
                           for (const abbr of targetBooks) {
                             for (let ch = 1; ch <= 2; ch++) {
                               await fetchVerses(abbr, ch);

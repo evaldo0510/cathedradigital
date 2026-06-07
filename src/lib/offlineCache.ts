@@ -3,12 +3,13 @@
 import { supabase } from '@/integrations/supabase/client';
 
 const DB_NAME = 'cathedra_cache';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Incremented for recovery validation
 
 export interface CacheEntry {
   key: string;
   data: any;
   cachedAt: number;
+  v?: number; // Version for invalidation
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -54,7 +55,8 @@ async function putInStore(storeName: string, key: string, data: any): Promise<vo
     const db = await openDB();
     const tx = db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
-    store.put({ key, data, cachedAt: Date.now() } as CacheEntry);
+    const CACHE_SYNC_VERSION = 7; // Sync with Bible component
+    store.put({ key, data, cachedAt: Date.now(), v: CACHE_SYNC_VERSION } as CacheEntry);
     localStorage.setItem('cathedra_last_sync', Date.now().toString());
     window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {
