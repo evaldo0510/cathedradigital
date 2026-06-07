@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,8 @@ interface BibleHomeProps {
 }
 
 export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery, setSearchQuery }) => {
-  // Sync reading status from localStorage if it exists
   const lastReadRaw = localStorage.getItem('cathedra_bible_last_read');
-  const lastRead = lastReadRaw ? JSON.parse(lastReadRaw) : null;
+  const lastRead = React.useMemo(() => lastReadRaw ? JSON.parse(lastReadRaw) : null, [lastReadRaw]);
 
   return (
     <div className="space-y-8 pb-12 max-w-lg mx-auto px-4">
