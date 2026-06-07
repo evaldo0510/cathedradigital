@@ -2528,6 +2528,53 @@ export type Database = {
         }
         Relationships: []
       }
+      security_findings: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          evidence: Json | null
+          id: string
+          recommendation: string | null
+          resolved_at: string | null
+          scan_id: string | null
+          severity: string
+          target: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          evidence?: Json | null
+          id?: string
+          recommendation?: string | null
+          resolved_at?: string | null
+          scan_id?: string | null
+          severity: string
+          target: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          evidence?: Json | null
+          id?: string
+          recommendation?: string | null
+          resolved_at?: string | null
+          scan_id?: string | null
+          severity?: string
+          target?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_findings_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "security_scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_logs: {
         Row: {
           action: string
@@ -2558,6 +2605,36 @@ export type Database = {
           ip_address?: string | null
           resource?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      security_scans: {
+        Row: {
+          completed_at: string | null
+          findings_count: number | null
+          id: string
+          metadata: Json | null
+          started_at: string | null
+          status: string
+          triggered_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          findings_count?: number | null
+          id?: string
+          metadata?: Json | null
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          findings_count?: number | null
+          id?: string
+          metadata?: Json | null
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
         }
         Relationships: []
       }
@@ -3780,6 +3857,16 @@ export type Database = {
       }
     }
     Functions: {
+      audit_security_definer_privileges: {
+        Args: never
+        Returns: {
+          details: string
+          function_name: string
+          issue_type: string
+          schema_name: string
+          severity: string
+        }[]
+      }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
@@ -3841,6 +3928,7 @@ export type Database = {
         Args: { p_book_abbr?: string; p_user_id: string }
         Returns: undefined
       }
+      run_manual_security_scan: { Args: never; Returns: string }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
@@ -3966,6 +4054,14 @@ export type Database = {
       track_webhook_alert: {
         Args: { p_message: string; p_severity: string; p_type: string }
         Returns: undefined
+      }
+      verify_security_invariants: {
+        Args: never
+        Returns: {
+          error_message: string
+          status: string
+          test_name: string
+        }[]
       }
     }
     Enums: {
