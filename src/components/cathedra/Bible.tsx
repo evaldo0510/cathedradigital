@@ -119,7 +119,7 @@ const Bible: React.FC = () => {
   
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
-  const { notes, addNote, deleteNote, updateNote } = useNotes('bible');
+  const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
@@ -155,45 +155,52 @@ const Bible: React.FC = () => {
         'Search': 'Pesquisar',
         'Loading': 'Carregando',
         'Settings': 'Configurações',
-        'Home': 'Início'
+        'Home': 'Início',
+        'Continue Reading': 'Continuar Lendo'
       };
       
       while(node = walker.nextNode()) {
-        const text = node.textContent?.trim() || '';
-        if (text) {
+        const text = node.textContent || '';
+        if (text.trim()) {
           // Correção agressiva de termos mapeados
           let newText = text;
           let changed = false;
           for (const [eng, pt] of Object.entries(correctionMap)) {
-            if (newText.includes(eng)) {
-              newText = newText.replace(new RegExp(`\\b${eng}\\b`, 'g'), pt);
+            const regex = new RegExp(`\\b${eng}\\b`, 'g');
+            if (regex.test(newText)) {
+              newText = newText.replace(regex, pt);
               changed = true;
             }
           }
 
           if (changed) {
-            console.warn(`[Auto-Fix] Corrigindo no DOM.`);
             node.textContent = newText;
           }
 
           // Se ainda contiver termos proibidos e não estiver na allowlist, registrar
-          if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase() === allowed.toLowerCase())) {
-            await supabase.from('analytics_events').insert([{
-              event_name: 'language_violation',
-              properties: {
-                term: newText,
-                url: window.location.href,
-                session_id: session,
-                timestamp: new Date().toISOString()
-              },
-              url: window.location.href,
-              session_id: session
-            }]);
+          if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase().includes(allowed.toLowerCase()))) {
+             // Log violation (debounced or limited to avoid spam)
+             const lastLog = sessionStorage.getItem(`last_lang_log_${newText}`);
+             if (!lastLog || Date.now() - parseInt(lastLog) > 60000) {
+                sessionStorage.setItem(`last_lang_log_${newText}`, Date.now().toString());
+                await supabase.from('analytics_events').insert([{
+                  event_name: 'language_violation',
+                  properties: {
+                    term: newText,
+                    url: window.location.href,
+                    session_id: session,
+                    timestamp: new Date().toISOString(),
+                    selector: getElementSelector(node.parentElement || document.body)
+                  },
+                  url: window.location.href,
+                  session_id: session
+                }]);
+             }
           }
         }
       }
     };
-    const timer = setInterval(scanAndFix, 2000); 
+    const timer = setInterval(scanAndFix, 1500); 
     return () => clearInterval(timer);
   }, [location.pathname]);
 
@@ -405,18 +412,22 @@ const Bible: React.FC = () => {
     if (cached) {
       try {
         const cachedData = JSON.parse(cached);
-        const isLegacy = !cachedData.v || cachedData.v < 2; // Versão 2 introduz tradução forçada
-        const isExpired = Date.now() - cachedData.timestamp > 1000 * 60 * 60 * 24 * 7; // 1 week
+        // Force PT check: If book name in data is English, it's legacy
+        const isLegacy = !cachedData.v || cachedData.v < 3 || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cachedData.book)); 
+        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
-          setSourceInfo('Cache Local (v2)');
+          setSourceInfo('Cache Local (v3)');
         } else {
           console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
           if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
           if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
+          // Also clear from IndexedDB if exists
+          const { deleteFromStore } = await import('@/lib/offlineCache');
+          await deleteFromStore('bible', `${abbr}:${chapter}`);
         }
       } catch(e) {}
     }
