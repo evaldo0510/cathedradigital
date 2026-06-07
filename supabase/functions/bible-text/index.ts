@@ -179,7 +179,7 @@ serve(async (req) => {
   }
 
   if (isRateLimited(getClientIP(req))) {
-    return new Response(JSON.stringify({ error: 'Limite de requisições excedido. Aguarde um momento.' }),
+    return new Response(JSON.stringify({ error: translateApiMessage('Rate limit exceeded') }),
       { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } });
   }
 
