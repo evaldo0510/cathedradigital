@@ -39,7 +39,7 @@ export const BibleAuditDashboard: React.FC<BibleAuditDashboardProps> = ({ data }
           { label: 'Versículos', value: `${data.stats.coveredVerses}/${data.stats.totalVerses}`, icon: Icons.Type },
           { label: 'Integridade', value: `${Math.round((data.stats.coveredChapters / data.stats.totalChapters) * 100)}%`, icon: Icons.ShieldCheck },
         ].map((stat, i) => (
-          <div key={i} className="p-4 bg-white border border-primary/5 rounded-2xl shadow-sm space-y-2">
+          <div key={i} className="p-4 bg-background/50 backdrop-blur-sm border border-primary/5 rounded-2xl shadow-sm space-y-2">
             <div className="flex items-center justify-between">
               <stat.icon className="w-4 h-4 text-secondary" />
               <span className="text-[8px] font-black uppercase tracking-widest text-primary/20">{stat.label}</span>
@@ -51,7 +51,7 @@ export const BibleAuditDashboard: React.FC<BibleAuditDashboardProps> = ({ data }
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* Coverage Pie */}
-        <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
+        <div className="bg-background/50 backdrop-blur-sm p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Distribuição de Cobertura</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -77,7 +77,7 @@ export const BibleAuditDashboard: React.FC<BibleAuditDashboardProps> = ({ data }
         </div>
 
         {/* Evolution Line */}
-        <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
+        <div className="bg-background/50 backdrop-blur-sm p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Evolução da Auditoria</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -115,7 +115,7 @@ export const BibleAuditDashboard: React.FC<BibleAuditDashboardProps> = ({ data }
       </div>
 
       {/* Book Breakdown */}
-      <div className="bg-white p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
+      <div className="bg-background/50 backdrop-blur-sm p-6 border border-primary/5 rounded-2xl shadow-sm space-y-4">
         <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Detalhamento por Livro (Top 10 Lacunas)</h3>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
