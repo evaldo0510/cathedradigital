@@ -67,7 +67,8 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         },
         { 
           name: 'Judite', 
-          abbr: 'Jt', 
+          abbr: 'Jdt', 
+
           chapters: 16, 
           category: 'Histórico / Edificante',
           author: 'Desconhecido',
