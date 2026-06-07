@@ -13,6 +13,9 @@ interface BibleHomeProps {
 }
 
 export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery, setSearchQuery }) => {
+  const lastReadRaw = localStorage.getItem('cathedra_bible_last_read');
+  const lastRead = React.useMemo(() => lastReadRaw ? JSON.parse(lastReadRaw) : null, [lastReadRaw]);
+
   return (
     <div className="space-y-8 pb-12 max-w-lg mx-auto px-4">
       {/* Hero Section */}
@@ -33,16 +36,12 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
 
       {/* Continue Reading Widget */}
       <div className="grid grid-cols-1 gap-4">
-        {localStorage.getItem('cathedra_bible_last_read') ? (
+        {lastRead ? (
           <button 
             onClick={() => {
-              const last = localStorage.getItem('cathedra_bible_last_read');
-              if (last) {
-                const p = JSON.parse(last);
-                const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-                const book = allBooks.find(b => b.abbr === p.bookAbbr);
-                if (book) onSelectBook(book);
-              }
+              const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+              const book = allBooks.find(b => b.abbr === lastRead.bookAbbr);
+              if (book) onSelectBook(book);
             }}
             className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
@@ -53,10 +52,10 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-lg font-display text-primary/80 leading-tight">
-                  {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).bookName}
+                  {lastRead.bookName}
                 </span>
                 <span className="text-[10px] text-primary/40 font-serif">
-                  Capítulo {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).chapter}
+                  Capítulo {lastRead.chapter}
                 </span>
               </div>
               <div className="w-10 h-10 rounded-full bg-secondary/5 flex items-center justify-center">

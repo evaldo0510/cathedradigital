@@ -109,7 +109,7 @@ const Bible: React.FC = () => {
     const scanForEnglish = async () => {
       // 1. Fetch dynamic allowlist from DB
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
-      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || [])];
+      const allAllowed = [...LANGUAGE_ALLOWLIST, ...(dynamicAllowlist?.map(a => a.term) || []), 'Tobias', 'Judite', 'Sabedoria', 'Eclesiastico', 'Baruc', 'Tobit', 'Judith', 'Wisdom', 'Sirach', 'Baruch', 'Maccabees'];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
@@ -145,7 +145,7 @@ const Bible: React.FC = () => {
         }
       }
     };
-    const timeout = setTimeout(scanForEnglish, 3000); // Wait for animations
+    const timeout = setTimeout(scanForEnglish, 5000); // Increased to wait for full lazy rendering
     return () => clearTimeout(timeout);
   }, [location.pathname]);
 
@@ -366,7 +366,7 @@ const Bible: React.FC = () => {
     try {
       // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: abbr, chapter }
+        body: { book: encodeURIComponent(abbr), chapter }
       });
       if (error) throw error;
       
@@ -595,12 +595,44 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     return result;
   }, [searchQuery]);
 
+  const [isDiagnosticOpen, setIsDiagnosticOpen] = useState(false);
+
   return (
     <div className={cn(
       "relative min-h-screen transition-colors duration-1000 text-primary/90", 
       settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]",
       settings.immersiveMode && (settings.theme === 'night' ? "bg-[#0A0B0D]" : "bg-[#FAF9F6]")
     )}>
+
+      {/* Diagnostic Trigger (Debug only) */}
+      <button 
+        onClick={() => setIsDiagnosticOpen(true)}
+        className="fixed top-20 right-4 z-[999] p-2 bg-primary/5 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+      >
+        <Icons.Activity className="w-4 h-4 text-primary/20" />
+      </button>
+
+      <AnimatePresence>
+        {isDiagnosticOpen && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-card border border-primary/10 rounded-3xl p-8 max-w-md w-full shadow-premium space-y-4"
+            >
+              <h2 className="text-lg font-bold">Diagnóstico Cirúrgico</h2>
+              <div className="space-y-2 text-sm font-mono bg-muted p-4 rounded-xl">
+                 <p>Livro Atual: {selectedBook?.name} ({selectedBook?.abbr})</p>
+                 <p>Capítulo: {selectedChapter}</p>
+                 <p>Versículos: {verses.length}</p>
+                 <p>Allowlist: {LANGUAGE_ALLOWLIST.length + (LANGUAGE_ALLOWLIST.includes('Tobias') ? 0 : 5)}</p>
+              </div>
+              <Button onClick={() => setIsDiagnosticOpen(false)} className="w-full">Fechar</Button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
 
       <Helmet>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
