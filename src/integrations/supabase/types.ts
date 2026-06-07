@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      _migration_env: {
+        Row: {
+          key: string
+          value: string | null
+        }
+        Insert: {
+          key: string
+          value?: string | null
+        }
+        Update: {
+          key?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
       achievements: {
         Row: {
           category: string

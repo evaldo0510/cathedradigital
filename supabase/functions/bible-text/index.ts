@@ -12,48 +12,9 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-// Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.6";
+const CACHE_VERSION = "v1.3.0";
 
-const BOOK_NAME_MAP: Record<string, string> = {
-  'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
-  'Js': 'joshua', 'Jz': 'judges', 'Rt': 'ruth', '1Sm': '1samuel', '2Sm': '2samuel',
-  '1Rs': '1kings', '2Rs': '2kings', '1Cr': '1chronicles', '2Cr': '2chronicles',
-  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jdt': 'judith', 'Est': 'esther',
-  '1Mc': '1maccabees', '2Mc': '2maccabees', 'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 
-  'Ecl': 'ecclesiastes', 'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
-  'Is': 'isaiah', 'Jr': 'jeremiah', 'Lm': 'lamentations', 'Br': 'baruch',
-  'Ez': 'ezekiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
-  'Ab': 'obadiah', 'Jn': 'jonah', 'Mq': 'micah', 'Na': 'nahum', 'Hab': 'habakkuk',
-  'Sf': 'zephaniah', 'Ag': 'haggai', 'Zc': 'zechariah', 'Ml': 'malachi',
-  'Mt': 'matthew', 'Mc': 'mark', 'Lc': 'luke', 'Jo': 'john',
-  'At': 'acts', 'Rm': 'romans', '1Cor': '1corinthians', '2Cor': '2corinthians',
-  'Gl': 'galatians', 'Ef': 'ephesians', 'Fl': 'philippians', 'Cl': 'colossians',
-  '1Ts': '1thessalonians', '2Ts': '2thessalonians', '1Tm': '1timothy', '2Tm': '2timothy',
-  'Tt': 'titus', 'Fm': 'philemon', 'Hb': 'hebrews', 'Tg': 'james',
-  '1Pd': '1peter', '2Pd': '2peter', '1Jo': '1john', '2Jo': '2john', '3Jo': '3john',
-  'Jd': 'jude', 'Ap': 'revelation'
-};
-
-const BOOK_PT_MAP: Record<string, string> = {
-  'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
-  'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', '1Sm': '1 Samuel', '2Sm': '2 Samuel',
-  '1Rs': '1 Reis', '2Rs': '2 Reis', '1Cr': '1 Crônicas', '2Cr': '2 Crônicas',
-  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jdt': 'Judite', 'Est': 'Ester',
-  '1Mc': '1 Macabeus', '2Mc': '2 Macabeus', 'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios', 
-  'Ecl': 'Eclesiastes', 'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
-  'Is': 'Isaías', 'Jr': 'Jeremias', 'Lm': 'Lamentações', 'Br': 'Baruc',
-  'Ez': 'Ezequiel', 'Dn': 'Daniel', 'Os': 'Oseias', 'Jl': 'Joel', 'Am': 'Amós',
-  'Ab': 'Abdias', 'Jn': 'Jonas', 'Mq': 'Miqueias', 'Na': 'Naum', 'Hab': 'Habacuc',
-  'Sf': 'Sofonias', 'Ag': 'Ageu', 'Zc': 'Zacarias', 'Ml': 'Malaquias',
-  'Mt': 'Mateus', 'Mc': 'Marcos', 'Lc': 'Lucas', 'Jo': 'João',
-  'At': 'Atos', 'Rm': 'Romanos', '1Cor': '1 Coríntios', '2Cor': '2 Coríntios',
-  'Gl': 'Gálatas', 'Ef': 'Efésios', 'Fl': 'Filipenses', 'Cl': 'Colossenses',
-  '1Ts': '1 Tessalonicenses', '2Ts': '2 Tessalonicenses', '1Tm': '1 Timóteo', '2Tm': '2 Timóteo',
-  'Tt': 'Tito', 'Fm': 'Filemon', 'Hb': 'Hebreus', 'Tg': 'Tiago',
-  '1Pd': '1 Pedro', '2Pd': '2 Pedro', '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João',
-  'Jd': 'Judas', 'Ap': 'Apocalipse'
-};
+const DEUTERO_ABBREVS = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
 
 const BOLLS_BOOK_ID: Record<string, number> = {
   'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5, 'Js': 6, 'Jz': 7, 'Rt': 8, '1Sm': 9, '2Sm': 10,
@@ -63,154 +24,65 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Zc': 38, 'Ml': 39, 'Mt': 40, 'Mc': 41, 'Lc': 42, 'Jo': 43, 'At': 44, 'Rm': 45, '1Cor': 46,
   '2Cor': 47, 'Gl': 48, 'Ef': 49, 'Fl': 50, 'Cl': 51, '1Ts': 52, '2Ts': 53, '1Tm': 54, '2Tm': 55,
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59, '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
-  'Jd': 65, 'Ap': 66, 'Tb': 68, 'Jdt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
+  'Jd': 65, 'Ap': 66
 };
 
 async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   try {
-    const { data: book } = await supabase
-      .from('bible_books')
-      .select('id')
-      .eq('abbrev', abbrev)
-      .single();
-
+    const { data: book } = await supabase.from('bible_books').select('id, name').eq('abbrev', abbrev).single();
     if (!book) return null;
-
-    const { data: chapterRecord } = await supabase
-      .from('bible_chapters')
-      .select('id')
-      .eq('book_id', book.id)
-      .eq('number', chapter)
-      .single();
-
-    if (!chapterRecord) return null;
-
-    const { data: verses } = await supabase
-      .from('bible_verses')
-      .select('number, text')
-      .eq('chapter_id', chapterRecord.id)
-      .order('number', { ascending: true });
-
+    const { data: ch } = await supabase.from('bible_chapters').select('id').eq('book_id', book.id).eq('number', chapter).single();
+    if (!ch) return null;
+    const { data: verses } = await supabase.from('bible_verses').select('number, text').eq('chapter_id', ch.id).order('number');
     if (!verses || verses.length === 0) return null;
-    return verses;
-  } catch (e) {
-    console.error("DB Fetch Error:", e);
-    return null;
-  }
+    return { verses, bookName: book.name };
+  } catch { return null; }
 }
 
 async function fetchFromBollsLife(bookId: number, chapter: number) {
-  const url = `https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`;
   try {
-    const res = await fetch(url);
-    if (!res.ok) return { data: null, error: `Bolls failed: ${res.status}` };
+    const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
+    if (!res.ok) return null;
     const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) return { data: null, error: 'Empty data' };
-    
-    const verses = data.map((v: any) => ({
-      number: v.verse,
-      text: (v.text || '').replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ').trim()
-    }));
-    return { data: verses };
-  } catch (e) {
-    return { data: null, error: e.message };
-  }
-}
-
-async function fetchFromBibleApi(englishName: string, chapter: number) {
-  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=webbe`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return { data: null, error: `BibleAPI failed: ${res.status}` };
-    const data = await res.json();
-    if (!data.verses || data.verses.length === 0) return { data: null, error: 'Empty verses' };
-    
-    const verses = data.verses.map((v: any) => ({ number: v.verse, text: v.text }));
-    return { data: verses };
-  } catch (e) {
-    return { data: null, error: e.message };
-  }
+    if (!Array.isArray(data)) return null;
+    return data.map((v: any) => ({ number: v.verse, text: (v.text || '').replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ').trim() }));
+  } catch { return null; }
 }
 
 serve(async (req) => {
-  const startTime = performance.now();
-  const requestId = crypto.randomUUID();
-  const timestamp = new Date().toISOString();
-  
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
-
   try {
-    const rawBody = await req.text();
-    if (!rawBody) return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
-    
-    const body = JSON.parse(rawBody);
-    const { abbrev, chapter } = body;
-    
+    const { abbrev, chapter } = await req.json();
     if (!abbrev || !chapter) return new Response(JSON.stringify({ error: 'Parâmetros inválidos' }), { status: 400, headers: corsHeaders });
 
-    const findCaseInsensitive = (map: Record<string, any>, key: string) => {
-      const lowerKey = key.toLowerCase();
-      const match = Object.keys(map).find(k => k.toLowerCase() === lowerKey);
-      return match ? map[match] : null;
-    };
+    // 1. Prioridade Máxima: Banco Cathedra
+    const dbResult = await fetchFromCathedraDb(abbrev, chapter);
+    if (dbResult) {
+      return new Response(JSON.stringify({
+        book: dbResult.bookName, chapter, verses: dbResult.verses,
+        metadata: { source: 'Cathedra (Banco)', cache_version: CACHE_VERSION }
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
-    const englishName = findCaseInsensitive(BOOK_NAME_MAP, abbrev) || abbrev.toLowerCase();
-    const ptName = findCaseInsensitive(BOOK_PT_MAP, abbrev) || abbrev;
-    const bookId = findCaseInsensitive(BOLLS_BOOK_ID, abbrev);
+    // BLOQUEIO: Deuterocanônicos DEVEM vir do banco. Se não estiver lá, não buscar fora.
+    if (DEUTERO_ABBREVS.includes(abbrev)) {
+      return new Response(JSON.stringify({ error: `O livro ${abbrev} ainda não foi migrado para o banco Cathedra.` }), { status: 404, headers: corsHeaders });
+    }
 
-    let verses = null;
-    let source = 'none';
-
-    // 1. Tentar Fonte de Verdade Cathedra (Banco Local)
-    verses = await fetchFromCathedraDb(abbrev, chapter);
-    if (verses) {
-      source = 'Cathedra (Banco)';
-    } else {
-      // 2. Fallback para Protocanônicos (BollsLife NAA)
-      if (bookId) {
-        const bollsRes = await fetchFromBollsLife(bookId, chapter);
-        if (bollsRes.data) {
-          verses = bollsRes.data;
-          source = 'BollsLife (NAA)';
-        }
-      }
-      
-      // 3. Fallback Última Instância (BibleAPI WEBBE) - Apenas se não for deuterocanônico (que deveria estar no banco)
-      if (!verses) {
-        const bibleApiRes = await fetchFromBibleApi(englishName, chapter);
-        if (bibleApiRes.data) {
-          verses = bibleApiRes.data;
-          source = 'BibleAPI (WEBBE)';
-        }
+    // 2. Protocanônicos: Fallback BollsLife
+    const bookId = BOLLS_BOOK_ID[abbrev];
+    if (bookId) {
+      const verses = await fetchFromBollsLife(bookId, chapter);
+      if (verses) {
+        return new Response(JSON.stringify({
+          book: abbrev, chapter, verses,
+          metadata: { source: 'BollsLife (NAA)', cache_version: CACHE_VERSION }
+        }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
     }
 
-    if (verses) {
-      const duration = Math.round(performance.now() - startTime);
-      console.log(`[Bible] Request ${requestId}: ${abbrev} ${chapter} from ${source} (${duration}ms)`);
-      
-      return new Response(
-        JSON.stringify({ 
-          book: ptName, 
-          chapter, 
-          verses, 
-          text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
-          metadata: { source, requestId, timestamp, cache_version: CACHE_VERSION }
-        }),
-        { 
-          headers: { 
-            ...corsHeaders, 
-            'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=604800, s-maxage=604800',
-            'X-Request-Id': requestId
-          } 
-        }
-      );
-    }
-
-    return new Response(JSON.stringify({ error: 'Texto indisponível', requestId }), { status: 404, headers: corsHeaders });
-
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Erro interno', message: error.message }), { status: 500, headers: corsHeaders });
+    return new Response(JSON.stringify({ error: 'Texto indisponível' }), { status: 404, headers: corsHeaders });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: 'Erro interno', message: e.message }), { status: 500, headers: corsHeaders });
   }
 });
