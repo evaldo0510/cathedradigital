@@ -591,6 +591,39 @@ export type Database = {
           },
         ]
       }
+      bible_books: {
+        Row: {
+          abbrev: string
+          canonical_type: string | null
+          chapters_count: number
+          created_at: string
+          id: string
+          name: string
+          testament: string | null
+          updated_at: string
+        }
+        Insert: {
+          abbrev: string
+          canonical_type?: string | null
+          chapters_count: number
+          created_at?: string
+          id?: string
+          name: string
+          testament?: string | null
+          updated_at?: string
+        }
+        Update: {
+          abbrev?: string
+          canonical_type?: string | null
+          chapters_count?: number
+          created_at?: string
+          id?: string
+          name?: string
+          testament?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bible_cache_metadata: {
         Row: {
           client_version: number
@@ -617,6 +650,38 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      bible_chapters: {
+        Row: {
+          book_id: string
+          created_at: string
+          id: string
+          number: number
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          id?: string
+          number: number
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          id?: string
+          number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_chapters_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "bible_books"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bible_chapters_read: {
         Row: {
@@ -713,6 +778,41 @@ export type Database = {
           verse_number?: number
         }
         Relationships: []
+      }
+      bible_verses: {
+        Row: {
+          chapter_id: string
+          created_at: string
+          id: string
+          number: number
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string
+          id?: string
+          number: number
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string
+          id?: string
+          number?: number
+          text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_verses_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "bible_chapters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       catechism_cache: {
         Row: {
