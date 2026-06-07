@@ -779,15 +779,12 @@ const Bible: React.FC = () => {
                                     >
                                       {b} {c}:{vNum}
                                     </button>
-                                  );
-                    })}
-                  </div>
-                )}
-
-
-
-                        </div>
-                      );
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
