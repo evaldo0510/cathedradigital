@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,7 +10,6 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
-import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
@@ -303,6 +303,8 @@ const Bible: React.FC = () => {
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
     navigate(`/bible?book=${selectedBook!.abbr}&ch=${ch}`);
+    // Scroll context top
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const nextChapter = useCallback(() => {
@@ -638,7 +640,7 @@ const Bible: React.FC = () => {
                       <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
                     </div>
                     <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
-                      {selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
+                      {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
                     </p>
                   </motion.div>
 
@@ -768,15 +770,12 @@ const Bible: React.FC = () => {
                                     >
                                       {b} {c}:{vNum}
                                     </button>
-                                  );
-                    })}
-                  </div>
-                )}
-
-
-
-                        </div>
-                      );
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
