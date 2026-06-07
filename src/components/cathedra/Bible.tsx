@@ -590,9 +590,6 @@ const Bible: React.FC = () => {
           </motion.div>
         )}
 
-
-
-
         {viewMode === 'reading' && selectedBook && (
           <motion.div 
             key="reading"
