@@ -127,6 +127,19 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
+      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache
+      const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
+      cacheKeys.forEach(key => {
+        try {
+          const cached = JSON.parse(localStorage.getItem(key) || '{}');
+          if (cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cached.book)) {
+            localStorage.removeItem(key);
+            console.log(`[Cache Invalidation] Removed legacy English cache: ${key}`);
+            setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
+          }
+        } catch (e) {}
+      });
+
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
       const allAllowed = [
         ...LANGUAGE_ALLOWLIST, 
@@ -179,10 +192,25 @@ const Bible: React.FC = () => {
 
           // Se ainda contiver termos proibidos e não estiver na allowlist, registrar
           if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase().includes(allowed.toLowerCase()))) {
-             // Log violation (debounced or limited to avoid spam)
+             // Log violation
              const lastLog = sessionStorage.getItem(`last_lang_log_${newText}`);
              if (!lastLog || Date.now() - parseInt(lastLog) > 60000) {
                 sessionStorage.setItem(`last_lang_log_${newText}`, Date.now().toString());
+                
+                // Add to diagnostic logs for real-time reporting
+                setDiagnosticLogs(prev => [
+                  {
+                    id: crypto.randomUUID(),
+                    term: newText,
+                    url: window.location.href,
+                    session_id: session,
+                    timestamp: new Date().toISOString(),
+                    selector: getElementSelector(node.parentElement || document.body),
+                    source: 'DOM Scan (Runtime)'
+                  },
+                  ...prev.slice(0, 99)
+                ]);
+
                 await supabase.from('analytics_events').insert([{
                   event_name: 'language_violation',
                   properties: {
