@@ -559,28 +559,33 @@ const Bible: React.FC = () => {
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
-      setSourceInfo('API de Produção');
+      setSourceInfo(`API de Produção (${data.source || 'Edge'})`);
       
       // Update Diagnostic Logs
-      setDiagnosticLogs(prev => [...prev, {
-        sessionId,
-        timestamp: new Date().toISOString(),
-        book: data.book || abbr,
-        abbr: abbr,
-        chapter,
-        source: 'API de Produção',
-        verses: loadedVerses.length
-      }]);
+      setDiagnosticLogs(prev => [
+        {
+          sessionId,
+          timestamp: new Date().toISOString(),
+          book: data.book || abbr,
+          abbr: abbr,
+          chapter,
+          source: `API de Produção (${data.source || 'Edge'})`,
+          verses: loadedVerses.length
+        },
+        ...prev.slice(0, 99)
+      ]);
       
       if (loadedVerses.length > 0) {
         localStorage.setItem(offlineKey, JSON.stringify({ 
           verses: loadedVerses, 
           timestamp: Date.now(),
-          v: 2 // Versão da tradução PT garantida
+          v: 3, // Versão da tradução PT garantida
+          book: data.book || abbr
         }));
       } else {
         toast.warning('Este capítulo parece estar sem conteúdo sagrado no momento.');
       }
+
 
       
       // Save progress automatically
