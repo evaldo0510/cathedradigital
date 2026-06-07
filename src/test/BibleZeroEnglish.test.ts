@@ -21,9 +21,9 @@ const ENGLISH_INDICATORS = [
   /\bking\b/i, /\bgathered\b/i, /\bforces\b/i, /\bfight\b/i, /\bwent\b/i
 ];
 
-describe('Bible Zero English (Edge Function Validation)', () => {
+describe('Bible Zero English (Edge Function Validation)', { timeout: 30000 }, () => {
   DEUTERO_BOOKS.forEach(book => {
-    test(`Verify ${book.name} (Chapter 1) content is in Portuguese`, async () => {
+    test(`Verify ${book.name} (Chapter ${book.abbr === '1Mc' ? 14 : 1}) content is in Portuguese`, async () => {
       // Usamos o capítulo 14 para 1 Macabeus conforme solicitado
       const chapter = book.abbr === '1Mc' ? 14 : 1;
       
