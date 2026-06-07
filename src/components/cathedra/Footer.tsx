@@ -6,6 +6,8 @@ import { AppRoute } from '../../types';
 import { useLang } from '@/hooks/useLang';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
+import { APP_ROUTES } from '@/config/routes';
+
 
 const DIOCESES_BR = [
   // Arquidioceses de SP
@@ -312,18 +314,12 @@ const Footer: React.FC = React.memo(() => {
           </div>
           <div className="flex items-center gap-spacing-xl">
             <nav className="flex items-center" aria-label="Links institucionais">
-              {[
-                { label: t('about') || 'Sobre', route: AppRoute.ABOUT }, 
-                { label: t('partners') || 'Parceiros', route: AppRoute.PARTNERS },
-                { label: t('privacy') || 'Privacidade', route: AppRoute.PRIVACY }, 
-                { label: t('terms') || 'Termos', route: AppRoute.TERMS },
-                { label: 'Transparência', route: AppRoute.TRANSPARENCY },
-                { label: 'Design System', route: '/design-system' }
+              {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
 
-              ].map((item, index, array) => (
                 <React.Fragment key={item.label}>
                   <Button 
-                    onClick={() => navigate(item.route)} 
+                    onClick={() => navigate(item.path)} 
+
                     className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-spacing-sm py-spacing-2xs rounded"
                     aria-label={item.label}
                   >

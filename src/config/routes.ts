@@ -40,6 +40,13 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/notes', label: 'Notas', icon: Icons.FileText, showInMenu: true, category: 'user' },
   { path: '/achievements', label: 'Conquistas', icon: Icons.Trophy, showInMenu: true, category: 'user' },
   { path: '/settings', label: 'Configurações', icon: Icons.Settings, showInMenu: true, category: 'user' },
+  { path: '/about', label: 'Sobre', icon: Icons.Info, showInMenu: false, category: 'user' },
+  { path: '/partners', label: 'Parceiros', icon: Icons.Users, showInMenu: false, category: 'user' },
+  { path: '/privacy', label: 'Privacidade', icon: Icons.Shield, showInMenu: false, category: 'user' },
+  { path: '/terms', label: 'Termos', icon: Icons.FileText, showInMenu: false, category: 'user' },
+  { path: '/transparencia', label: 'Transparência', icon: Icons.Activity, showInMenu: false, category: 'user' },
+  { path: '/design-system', label: 'Design System', icon: Icons.Palette, showInMenu: false, category: 'user' },
+
 
   // Admin
   { path: '/admin', label: 'Painel Admin', icon: Icons.Lock, showInMenu: false, category: 'admin' },
