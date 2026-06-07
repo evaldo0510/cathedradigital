@@ -80,6 +80,19 @@ const BOLLS_BOOK_ID: Record<string, number> = {
     'Tb': 68, 'Jt': 69, '1Mc': 74, '2Mc': 75, 'Sb': 70, 'Eclo': 71, 'Br': 73
 };
 
+/**
+ * Normaliza textos de erro e metadados para garantir o vernáculo português.
+ */
+function translateApiMessage(msg: string): string {
+  const map: Record<string, string> = {
+    'Not found': 'Conteúdo não encontrado',
+    'Internal server error': 'Erro interno do servidor',
+    'Rate limit exceeded': 'Limite de requisições excedido',
+    'Invalid parameter': 'Parâmetro inválido'
+  };
+  return map[msg] || msg;
+}
+
 /** Try bible-api.com first (Almeida translation) */
 async function fetchFromBibleApi(englishName: string, chapter: number) {
   // If it's a deuterocanonical book, try specialized Catholic versions
