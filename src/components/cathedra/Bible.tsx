@@ -656,10 +656,8 @@ const Bible: React.FC = () => {
     try {
       setSourceInfo('Buscando na Nuvem...');
       
-      const etagValue = `"v1.2.0-${abbr.toLowerCase()}-${chapter}"`;
       const { data, error, response } = await supabase.functions.invoke('bible-text', {
-        body: { abbrev: abbr, chapter },
-        headers: { 'if-none-match': localStorage.getItem(`etag_${abbr}_${chapter}`) || '' }
+        body: { abbrev: abbr, chapter }
       });
 
       if (response?.status === 304) {
@@ -670,10 +668,25 @@ const Bible: React.FC = () => {
         return;
       }
 
+      if (response?.status === 404) {
+        const errorData = data || {};
+        if (errorData.isDeutero) {
+          toast.error(`Atenção: ${errorData.error}`, { 
+            duration: 8000,
+            description: "Este livro deuterocanônico está sendo migrado para nossa fonte de verdade própria e este capítulo ainda não está disponível."
+          });
+        } else {
+          toast.warning('Capítulo não encontrado.');
+        }
+        setIsLoading(false);
+        return;
+      }
+
       if (error) throw error;
       
       const serverEtag = response?.headers.get('ETag');
       if (serverEtag) localStorage.setItem(`etag_${abbr}_${chapter}`, serverEtag);
+
 
       
       const loadedVerses = data.verses || [];
