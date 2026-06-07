@@ -194,27 +194,41 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                   </p>
                 </div>
 
-                {/* Indicador de conexões */}
+                {/* Indicador de conexões - Knowledge Graph Cathedra V1 */}
                 {finalConnections.length > 0 && (
-                  <div className="flex items-center gap-2 mt-3 ml-6">
-                    {finalConnections.map((conn, idx) => (
-                      <button
-                        key={idx}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onConnectionClick(conn);
-                        }}
-                        className={cn(
-                          "flex items-center gap-1.5 px-2 py-0.5 rounded-full border transition-all hover:scale-105",
-                          conn.id === 'coming-soon' 
-                            ? "bg-primary/[0.03] border-primary/5 text-primary/30" 
-                            : "bg-secondary/10 border-secondary/20 text-secondary"
-                        )}
-                      >
-                        <div className={cn("w-1.5 h-1.5 rounded-full", conn.color || "bg-secondary/40")} />
-                        <span className="text-[8px] font-black uppercase tracking-widest">{conn.label}</span>
-                      </button>
-                    ))}
+                  <div className="flex flex-wrap items-center gap-2 mt-3 ml-6">
+                    {finalConnections.map((conn, idx) => {
+                      const isEssential = conn.relevance_level === 'essential' || conn.relevance === 'essential';
+                      
+                      return (
+                        <button
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onConnectionClick(conn);
+                          }}
+                          className={cn(
+                            "flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all hover:scale-105 active:scale-95",
+                            conn.id === 'coming-soon' 
+                              ? "bg-primary/[0.03] border-primary/5 text-primary/30" 
+                              : isEssential
+                                ? "bg-secondary/20 border-secondary/40 text-secondary shadow-sm shadow-secondary/10"
+                                : "bg-primary/[0.04] border-primary/10 text-primary/60"
+                          )}
+                        >
+                          <div className={cn(
+                            "w-1.5 h-1.5 rounded-full animate-pulse", 
+                            conn.color || (isEssential ? "bg-secondary" : "bg-primary/40")
+                          )} />
+                          <div className="flex flex-col items-start leading-none">
+                            <span className="text-[8px] font-black uppercase tracking-widest">{conn.label}</span>
+                            {conn.theological_theme && (
+                              <span className="text-[6px] font-bold uppercase tracking-tight opacity-60">{conn.theological_theme}</span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </motion.div>

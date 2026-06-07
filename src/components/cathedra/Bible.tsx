@@ -674,7 +674,9 @@ const Bible: React.FC = () => {
               label: conn.reference_title,
               color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
               id: conn.reference_id || conn.id,
-              summary: conn.summary || ''
+              summary: conn.summary || '',
+              theological_theme: conn.theological_theme,
+              relevance_level: conn.relevance_level
             });
           }
         });
