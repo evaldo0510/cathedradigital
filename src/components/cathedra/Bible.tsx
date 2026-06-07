@@ -589,52 +589,6 @@ const Bible: React.FC = () => {
           </motion.div>
         )}
 
-          <motion.div 
-            key="chapters"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="px-6 pt-10 pb-32 max-w-lg mx-auto"
-          >
-            <button 
-              onClick={() => navigate('/bible')}
-              className="mb-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 active:text-secondary transition-colors"
-            >
-              <Icons.ChevronLeft className="w-4 h-4" /> Voltar
-            </button>
-
-            <header className="mb-8 text-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/50 mb-2 block">Sumário Bíblico</span>
-              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-4">{selectedBook.name}</h1>
-              {selectedBook.description && (
-                <p className="text-sm font-serif italic text-primary/40 leading-relaxed max-w-xs mx-auto mb-6">
-                  {selectedBook.description}
-                </p>
-              )}
-              <div className="w-12 h-px bg-secondary/20 mx-auto" />
-            </header>
-
-            <div className="grid grid-cols-4 gap-3">
-              {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => (
-                <button 
-                  key={ch}
-                  onClick={() => selectChapter(ch)}
-                  className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group",
-                    notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                      ? "bg-secondary/5 border-secondary/20"
-                      : "bg-white border-primary/5 hover:border-secondary/30 shadow-sm"
-                  )}
-                >
-                  <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
-                  {selectedBook.chapterTitles?.[ch] && (
-                    <div className="w-1 h-1 rounded-full bg-secondary/40 mt-1" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
 
 
 
