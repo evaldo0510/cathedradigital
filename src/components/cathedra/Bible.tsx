@@ -16,6 +16,7 @@ import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
 import { BibleSkeleton } from './RouteSkeletons';
 import { useNotes } from '@/hooks/useNotes';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
