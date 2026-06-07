@@ -432,6 +432,7 @@ const Bible: React.FC = () => {
        });
     }
 
+
     // Attempt offline recovery
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);
