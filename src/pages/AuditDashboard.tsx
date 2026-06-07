@@ -164,7 +164,7 @@ export default function AuditDashboard() {
                             {log.content_hash.substring(0, 8)}...
                           </code>
                           {log.content_hash !== log.db_content_hash && (
-                            <AlertCircle className="h-3 w-3 text-red-500" title="Divergência detectada!" />
+                            <AlertCircle className="h-3 w-3 text-red-500" />
                           )}
                         </div>
                       ) : '-'}
