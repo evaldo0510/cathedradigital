@@ -284,7 +284,7 @@ const Bible: React.FC = () => {
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(`${text}\n\nLeia mais no Cathedra: ${url}`);
-      toast.success('Link do versículo copiado!');
+      toast.success('Ligação do versículo copiada!');
     }
   }, [activeVerse, selectedBook, selectedChapter]);
 
@@ -356,7 +356,7 @@ const Bible: React.FC = () => {
       if (loadedVerses.length > 0) {
         localStorage.setItem(offlineKey, JSON.stringify({ verses: loadedVerses, timestamp: Date.now() }));
       } else {
-        toast.warning('Este capítulo parece estar sem conteúdo no momento.');
+        toast.warning('Este capítulo parece estar sem conteúdo sagrado no momento.');
       }
 
       

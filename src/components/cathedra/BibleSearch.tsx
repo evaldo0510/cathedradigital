@@ -103,13 +103,11 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
         ...spiritualResults
       ];
 
-      if (matchedTheme) {
-        combinedResults = combinedResults.map((r: any) => ({
+          combinedResults = combinedResults.map((r: any) => ({
           ...r,
           relevance: r.relevance || matchedTheme.reason,
           score: r.score || (Math.floor(Math.random() * 20) + 70)
         }));
-      }
       
       const sortedResults = combinedResults.sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
       
@@ -178,7 +176,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                   </div>
                   {result.relevance && (
                     <p className="text-[10px] font-medium italic text-secondary/70">
-                      Motivo: {result.relevance}
+                      Razão: {result.relevance}
                     </p>
                   )}
                   <p className="font-serif text-[17px] leading-relaxed text-primary/70 group-active:text-primary transition-colors line-clamp-3">
@@ -191,7 +189,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
           ) : !isLoading && query.length >= 2 && (
             <div className="h-full flex flex-col items-center justify-center opacity-20 text-center space-y-4">
               <Icons.Search className="w-12 h-12" />
-              <p className="text-sm font-black uppercase tracking-widest italic">Pressione enter para buscar</p>
+              <p className="text-sm font-black uppercase tracking-widest italic">Pressione enter para pesquisar</p>
             </div>
           )}
         </AnimatePresence>
