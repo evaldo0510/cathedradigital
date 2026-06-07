@@ -96,18 +96,50 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           <motion.h3 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-lg font-display text-primary/70 italic"
+            className="text-lg font-display text-primary/70 italic max-w-sm mx-auto"
           >
             {book.chapterTitles[chapter]}
           </motion.h3>
         )}
         
-        {book.context && chapter === 1 && (
-          <div className="mt-8 p-6 rounded-3xl bg-primary/[0.02] border border-primary/5 text-left space-y-3">
-             <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
-             <p className="text-sm font-serif leading-relaxed text-primary/70">
-               {book.context}
-             </p>
+        {chapter === 1 && (book.context || book.author || book.themes) && (
+          <div className="mt-8 p-6 rounded-3xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
+             <div className="flex items-center justify-between">
+               <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Introdução ao Livro</span>
+               {book.category && <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">{book.category}</span>}
+             </div>
+             
+             {book.context && (
+               <p className="text-sm font-serif leading-relaxed text-primary/70">
+                 {book.context}
+               </p>
+             )}
+
+             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-primary/5">
+                {book.author && (
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block">Autor</span>
+                    <span className="text-xs font-serif text-primary/60">{book.author}</span>
+                  </div>
+                )}
+                {book.date && (
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block">Data</span>
+                    <span className="text-xs font-serif text-primary/60">{book.date}</span>
+                  </div>
+                )}
+             </div>
+
+             {book.themes && (
+               <div className="pt-2">
+                 <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block mb-1">Temas Principais</span>
+                 <div className="flex flex-wrap gap-2">
+                   {book.themes.map(t => (
+                     <span key={t} className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-primary/5 text-primary/50">{t}</span>
+                   ))}
+                 </div>
+               </div>
+             )}
           </div>
         )}
       </div>
