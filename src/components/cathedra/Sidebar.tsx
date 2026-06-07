@@ -1,16 +1,19 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
-import { Icons, NAV_ITEMS } from '../../constants';
-import { AppRoute, User } from '../../types';
+import { Icons } from '../../constants';
+import { User, AppRoute } from '../../types';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { APP_ROUTES } from '@/config/routes';
+
+
 
 
 interface SidebarProps {
@@ -112,53 +115,46 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
     };
   }, [isOpen, onClose]);
   
-  const sections = [
-    ...(isAdmin ? [{
-      label: t('admin'),
-      items: [
-        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck /> },
-        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock /> },
+  const sections = useMemo(() => {
+    const adminRoutes = APP_ROUTES.filter(r => r.category === 'admin').map(r => ({
+      label: r.label,
+      path: r.path,
+      icon: <r.icon size={20} />
+    }));
 
-      ]
+    const spiritualRoutes = APP_ROUTES.filter(r => r.category === 'spiritual').map(r => ({
+      label: r.label,
+      path: r.path,
+      icon: <r.icon size={20} />
+    }));
 
-    }] : []),
-    {
-      label: 'Peregrinação',
-      items: [
-        { label: 'O Meu Dia', path: AppRoute.HOJE, icon: <Icons.Sun /> },
-        { label: 'Minha Jornada', path: AppRoute.DIARIO, icon: <Icons.BookOpen /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart /> },
-      ]
-    },
-    {
-      label: 'Portal Sagrado',
-      items: [
-        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <Icons.Bible /> },
-        { label: 'Catecismo', path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
-        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Magisterium /> },
-      ]
-    },
-    {
-      label: 'Tesouros da Fé',
-      items: [
-        { label: 'Santos & Papas', path: AppRoute.SAINTS, icon: <Icons.Saints /> },
-        { label: 'Liturgia & Missal', path: AppRoute.LITURGIA, icon: <Icons.ScrollText /> },
-        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library /> },
-        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes /> },
-      ]
-    },
-    {
-      label: 'Sistema',
-      items: [
-        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
-        { label: 'Configurações', path: '/settings', icon: <Icons.Settings /> },
-        { label: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Info /> },
-      ]
-    }
+    const coreRoutes = APP_ROUTES.filter(r => r.category === 'core' && r.path !== '/').map(r => ({
+      label: r.label,
+      path: r.path,
+      icon: <r.icon size={20} />
+    }));
 
+    const contentRoutes = APP_ROUTES.filter(r => r.category === 'content').map(r => ({
+      label: r.label,
+      path: r.path,
+      icon: <r.icon size={20} />
+    }));
 
-  ];
+    const userRoutes = APP_ROUTES.filter(r => r.category === 'user').map(r => ({
+      label: r.label,
+      path: r.path,
+      icon: <r.icon size={20} />
+    }));
+
+    return [
+      ...(isAdmin ? [{ label: t('admin'), items: adminRoutes }] : []),
+      { label: 'Peregrinação', items: spiritualRoutes },
+      { label: 'Portal Sagrado', items: coreRoutes },
+      { label: 'Tesouros da Fé', items: contentRoutes },
+      { label: 'Sistema', items: userRoutes }
+    ];
+  }, [isAdmin, t]);
+
 
   const handleNav = useCallback((target: string | { path: string; onClick?: () => void }, event?: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     if (event && !isLegitimateClick(event)) return;
@@ -279,7 +275,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
                               >
                                   <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
-                                    {React.cloneElement(item.icon as React.ReactElement, { size: 20, strokeWidth: isActive ? 1.5 : 1.2, "aria-hidden": "true" })}
+                                    {item.icon}
                                   </span>
                                 <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (

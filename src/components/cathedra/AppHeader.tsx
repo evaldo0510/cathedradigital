@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, Language } from '@/types';
@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
 
 import { cn } from '@/lib/utils';
-import { NAV_ITEMS } from '@/constants';
 import { isLegitimateClick } from '@/lib/navigation-utils';
+import { APP_ROUTES, getBreadcrumbs } from '@/config/routes';
 
 interface AppHeaderProps {
   user: any;
@@ -30,12 +30,14 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const [isReady, setIsReady] = useState(false);
   
   useEffect(() => {
-    // Avoid layout shift by delaying the backdrop/blur until after mount
     setIsReady(true);
   }, []);
   
-  
   const isDashboard = pathname === '/';
+  const breadcrumbs = useMemo(() => getBreadcrumbs(pathname), [pathname]);
+  const headerRoutes = useMemo(() => 
+    APP_ROUTES.filter(r => r.showInMenu && r.category === 'core').slice(0, 4)
+  , []);
 
   return (
     <>
@@ -49,11 +51,11 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
       >
         <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
 
-          {/* Logo Section - Minimalist on Mobile */}
+          {/* Logo Section */}
           <div 
             className="flex items-center gap-spacing-xs md:gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-premium-full" 
             role="link" 
-            aria-label="Ir para a página inicial do Cathedra"
+            aria-label="Ir para a página inicial"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && isLegitimateClick(e) && navigate('/')} 
             onClick={(e) => {
@@ -69,6 +71,23 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               </span>
             </div>
           </div>
+
+          {/* Breadcrumbs for desktop */}
+          {!isDashboard && (
+            <nav className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-primary/30 ml-4 overflow-hidden truncate">
+              {breadcrumbs.map((crumb, idx) => (
+                <React.Fragment key={crumb.path}>
+                  <span className={cn(
+                    "hover:text-primary transition-colors cursor-pointer",
+                    idx === breadcrumbs.length - 1 && "text-primary/60 font-bold"
+                  )} onClick={() => navigate(crumb.path)}>
+                    {crumb.label}
+                  </span>
+                  {idx < breadcrumbs.length - 1 && <span className="opacity-20">/</span>}
+                </React.Fragment>
+              ))}
+            </nav>
+          )}
 
           {/* Navigation & Controls Section */}
           <div className="flex items-center justify-end gap-spacing-2xs md:gap-spacing-lg">
@@ -112,7 +131,6 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               </div>
 
               <div className="flex items-center gap-spacing-2xs md:gap-spacing-md">
-                {/* Desktop-only Profile */}
                 <div className="flex md:block">
                   {user ? (
                     <Button
@@ -136,29 +154,28 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     </Button>
                   )}
                 </div>
-
               </div>
             </div>
 
-            {/* Desktop Navigation Links - Hidden on Mobile and Tablet to avoid duplication with BottomNav */}
+            {/* Desktop Navigation Links */}
             {isDashboard && (
               <nav className="hidden lg:flex items-center gap-spacing-xs border-l border-primary/10 pl-spacing-xl ml-spacing-md" aria-label="Navegação principal">
-                {NAV_ITEMS(t, lang).filter(item => !item.isMenu).map(item => (
+                {headerRoutes.map(item => (
                   <Button 
-                    key={item.route} 
+                    key={item.path} 
                     variant="ghost"
                     size="sm"
                     onClick={(e) => {
                       if (!isLegitimateClick(e)) return;
-                      navigate(item.route!);
+                      navigate(item.path);
                       window.scrollTo({ top: 0, behavior: 'instant' });
                     }}
                     className={`px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
-                      pathname === item.route ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
+                      pathname === item.path ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
                     }`}
                   >
                     {item.label}
-                    {pathname === item.route && (
+                    {pathname === item.path && (
                       <motion.div layoutId="nav-active" className="absolute -bottom-spacing-2xs left-spacing-2xs/2 -translate-x-1/2 w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary" />
                     )}
                   </Button>

@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button';
-import React, { useCallback, useRef, useContext } from 'react';
+import React, { useCallback, useRef, useContext, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { AppRoute } from '../../types';
 import { isRouteActive, isLegitimateClick } from '@/lib/navigation-utils';
 
-import { Icons, NAV_ITEMS } from '@/constants';
+import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
+import { APP_ROUTES } from '@/config/routes';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -52,13 +52,14 @@ function useRipple() {
 
 interface BottomNavItemProps {
   label: string;
-  icon: React.ElementType;
-  route: string;
+  icon: any;
+  route?: string;
   isActive: boolean;
   onClick: (e: React.MouseEvent | React.TouchEvent) => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
   shouldReduceMotion?: boolean;
   "data-testid"?: string;
+  isMenu?: boolean;
 }
 
 const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({ 
@@ -71,7 +72,6 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
   shouldReduceMotion = false,
   "data-testid": dataTestId,
 }) => {
-  const navigate = useNavigate();
   return (
   <Button 
     variant="ghost"
@@ -86,9 +86,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     data-testid={dataTestId}
     className={cn(
       "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
-      "min-w-[48px] min-h-[48px]", // Garante área mínima de toque de 48x48px (padrão a11y)
+      "min-w-[48px] min-h-[48px]", 
       isActive 
-
         ? 'text-primary' 
         : 'text-muted-foreground/40 hover:text-primary/60'
     )}
@@ -162,61 +161,70 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const triggerRipple = useRipple();
-  const { t, lang } = useContext(LangContext);
+  const { t } = useContext(LangContext);
   const shouldReduceMotion = useReducedMotion();
 
+  const items = useMemo(() => {
+    const mainItems = APP_ROUTES
+      .filter(r => r.showInMenu && ['core', 'spiritual'].includes(r.category || ''))
+      .slice(0, 4)
+      .map(r => ({
+        label: r.label,
+        route: r.path,
+        icon: r.icon,
+        isMenu: false
+      }));
 
-  const items = NAV_ITEMS(t, lang).map(item => ({
-    ...item,
-    IconComponent: (Icons as any)[item.icon as string],
-    iconName: item.icon as string
-  }));
+    // Add Menu/More item
+    mainItems.push({
+      label: 'Mais',
+      route: '',
+      icon: Icons.Menu,
+      isMenu: true
+    });
 
+    return mainItems;
+  }, []);
 
   return (
     <nav 
       className={cn(
         "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/80 backdrop-blur-xl border-t border-primary/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
-        "min-h-[64px]", // Garante altura mínima para alvos de toque
+        "min-h-[64px]", 
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full relative">
-        {items.map((item: any, i: number) => {
+        {items.map((item, i) => {
           const isActive = item.isMenu 
             ? false 
             : (item.route ? isRouteActive(item.route, currentPath) : false);
-
 
           return (
             <BottomNavItem 
               key={item.label + i}
               label={item.label}
-              icon={item.IconComponent}
+              icon={item.icon}
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
-              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.iconName.toLowerCase()}`}
-
+              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.label.toLowerCase()}`}
               onClick={(e) => {
-                // Previne cliques fantasmas ou duplos no mobile
                 if (e.defaultPrevented || !isLegitimateClick(e)) return;
                 
                 if (item.isMenu) {
                   onOpenSidebar();
                 } else if (item.route) {
-                  // Verificação extra para evitar navegação em loop ou indesejada
                   if (location.pathname === item.route) return;
-                  
                   navigate(item.route);
                   window.scrollTo({ top: 0, behavior: 'instant' });
                 }
               }}
               onRipple={triggerRipple}
             />
-        );
-      })}
+          );
+        })}
       </div>
     </nav>
   );
