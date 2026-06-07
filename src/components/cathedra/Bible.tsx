@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+/**
+ * Bible Component - CATHEDRA BIBLE REGRESSION RECOVERY
+ * Version: 4.0.0 (Stabilized)
+ */
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
@@ -16,6 +20,7 @@ import ReadingSettingsPopover from './ReadingSettingsPopover';
 import { useAuth } from '@/hooks/useAuth';
 import { BibleSkeleton } from './RouteSkeletons';
 import { useNotes } from '@/hooks/useNotes';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
@@ -53,7 +58,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 // Helper for Daily Reading
 const getDailyReading = () => {
-  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).filter(b => b.name !== 'Abdias' || b.chapters === 1);
+
   const date = new Date();
   const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
   
@@ -84,6 +90,7 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
+  const [cacheSyncVersion, setCacheSyncVersion] = useState(4); // Current functional version
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
@@ -120,6 +127,7 @@ const Bible: React.FC = () => {
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
+  const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
@@ -127,18 +135,35 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
-      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache
+      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache ou versão incompatível
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
           const cached = JSON.parse(localStorage.getItem(key) || '{}');
-          if (cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cached.book)) {
+          const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
+          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cached.book);
+          
+          if (isLegacyVersion || hasEnglishBook) {
             localStorage.removeItem(key);
-            console.log(`[Cache Invalidation] Removed legacy English cache: ${key}`);
+            console.log(`[Cache Invalidation] Removed legacy/English cache: ${key} (v:${cached.v || 'none'})`);
             setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
           }
         } catch (e) {}
       });
+
+      // Synchronize with remote cache version if user is logged in
+      if (user) {
+        const { data: meta } = await supabase
+          .from('bible_cache_metadata')
+          .select('client_version, last_purged_at')
+          .single();
+        
+        if (meta && meta.client_version > cacheSyncVersion) {
+          console.log(`[Cache Sync] Remote version higher (${meta.client_version}). Purging local cache.`);
+          cacheKeys.forEach(k => localStorage.removeItem(k));
+          setCacheSyncVersion(meta.client_version);
+        }
+      }
 
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
       const allAllowed = [
@@ -154,6 +179,17 @@ const Bible: React.FC = () => {
       const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
       if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
 
+      // 2. Invalidação agressiva de ETag (Simulado com versioning local/remoto)
+      if (user) {
+        const etag = localStorage.getItem('cathedra_bible_etag');
+        const { data: remoteEtag } = await supabase.from('bible_cache_metadata').select('client_version').single();
+        if (remoteEtag && etag !== String(remoteEtag.client_version)) {
+            console.log('[Stability] Etag mismatch. Purging for recovery.');
+            cacheKeys.forEach(k => localStorage.removeItem(k));
+            localStorage.setItem('cathedra_bible_etag', String(remoteEtag.client_version));
+        }
+      }
+
       // Map de correção em tempo real (Hard Patch)
       const correctionMap: Record<string, string> = {
         'Tobit': 'Tobias',
@@ -163,6 +199,12 @@ const Bible: React.FC = () => {
         'Baruch': 'Baruc',
         'Maccabees': 'Macabeus',
         'Obadiah': 'Abdias',
+        'Psalms': 'Salmos',
+        'Genesis': 'Gênesis',
+        'Exodus': 'Êxodo',
+        'Leviticus': 'Levítico',
+        'Numbers': 'Números',
+        'Deuteronomy': 'Deuteronômio',
         'Chapter': 'Capítulo',
         'Verse': 'Versículo',
         'Search': 'Pesquisar',
@@ -287,10 +329,32 @@ const Bible: React.FC = () => {
     setLastRead(progress);
     localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
     
+    // Remote sync for cross-device functional recovery
+    if (user) {
+      syncRemoteLastRead({
+        content_type: 'bible',
+        content_id: bookAbbr,
+        chapter,
+        label: `${book.name} ${chapter}`,
+        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}`,
+        is_last_read: true
+      });
+      
+      // Store state in persistence table for navigation recovery
+      supabase.from('reading_state_history').insert([{
+        user_id: user.id,
+        content_type: 'bible',
+        content_id: bookAbbr,
+        chapter,
+        view_mode: 'reading',
+        metadata: { ...progress, timestamp: Date.now() }
+      }]);
+    }
+    
     // Offline storage for favorites/progress
     const offlineKey = `offline_bible_progress_${bookAbbr}`;
     localStorage.setItem(offlineKey, JSON.stringify({ ...progress, timestamp: Date.now() }));
-  }, []);
+  }, [user, syncRemoteLastRead]);
 
 
   const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
@@ -442,13 +506,13 @@ const Bible: React.FC = () => {
       try {
         const cachedData = JSON.parse(cached);
         // Force PT check: If book name in data is English, it's legacy
-        const isLegacy = !cachedData.v || cachedData.v < 3 || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah/i.test(cachedData.book)); 
+        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis/i.test(cachedData.book)); 
         const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7; // 1 week
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
-          setSourceInfo('Cache Local (v3)');
+          setSourceInfo(`Cache Local (v${cacheSyncVersion})`);
           
           // Registro diagnóstico por livro e capítulo
           setDiagnosticLogs(prev => [
@@ -481,7 +545,7 @@ const Bible: React.FC = () => {
       setSourceInfo('Buscando na Nuvem...');
       // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: encodeURIComponent(abbr), chapter }
+        body: { book: abbr, chapter } // Removed encodeURIComponent as it might be causing issues with some APIs expecting plain strings
       });
       if (error) throw error;
       

@@ -604,6 +604,33 @@ export type Database = {
           },
         ]
       }
+      bible_cache_metadata: {
+        Row: {
+          client_version: number
+          created_at: string
+          id: string
+          last_purged_at: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          client_version?: number
+          created_at?: string
+          id?: string
+          last_purged_at?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          client_version?: number
+          created_at?: string
+          id?: string
+          last_purged_at?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
@@ -1977,6 +2004,48 @@ export type Database = {
           reading_type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      reading_state_history: {
+        Row: {
+          chapter: number | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          paragraph: number | null
+          scroll_position: number | null
+          user_id: string
+          verse: number | null
+          view_mode: string | null
+        }
+        Insert: {
+          chapter?: number | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          paragraph?: number | null
+          scroll_position?: number | null
+          user_id: string
+          verse?: number | null
+          view_mode?: string | null
+        }
+        Update: {
+          chapter?: number | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          paragraph?: number | null
+          scroll_position?: number | null
+          user_id?: string
+          verse?: number | null
+          view_mode?: string | null
         }
         Relationships: []
       }
@@ -3475,6 +3544,10 @@ export type Database = {
         Returns: string
       }
       mask_ip: { Args: { ip: string }; Returns: string }
+      purge_user_bible_cache: {
+        Args: { p_book_abbr?: string; p_user_id: string }
+        Returns: undefined
+      }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
