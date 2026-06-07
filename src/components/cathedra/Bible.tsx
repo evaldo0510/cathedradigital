@@ -672,8 +672,20 @@ const Bible: React.FC = () => {
         const errorData = data || {};
         if (errorData.isDeutero) {
           toast.error(`Atenção: ${errorData.error}`, { 
-            duration: 8000,
-            description: "Este livro deuterocanônico está sendo migrado para nossa fonte de verdade própria e este capítulo ainda não está disponível."
+            duration: 10000,
+            description: (
+              <div className="flex flex-col gap-2">
+                <p>Este livro deuterocanônico está sendo migrado para nossa fonte de verdade própria.</p>
+                <p className="text-[10px] opacity-70">CorrelationID: {errorData.correlationId}</p>
+                <a 
+                  href="/audit-report" 
+                  className="text-[10px] underline hover:text-primary transition-colors"
+                  onClick={(e) => { e.preventDefault(); navigate('/telemetry'); }}
+                >
+                  Ver relatório de auditoria
+                </a>
+              </div>
+            )
           });
         } else {
           toast.warning('Capítulo não encontrado.');
@@ -681,6 +693,7 @@ const Bible: React.FC = () => {
         setIsLoading(false);
         return;
       }
+
 
       if (error) throw error;
       
