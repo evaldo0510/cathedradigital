@@ -92,6 +92,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_feature_flags: {
+        Row: {
+          description: string | null
+          feature_key: string
+          id: string
+          is_enabled: boolean | null
+          metadata: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          description?: string | null
+          feature_key: string
+          id?: string
+          is_enabled?: boolean | null
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          description?: string | null
+          feature_key?: string
+          id?: string
+          is_enabled?: boolean | null
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       app_metrics: {
         Row: {
           created_at: string | null
@@ -636,6 +663,33 @@ export type Database = {
           name?: string
           testament?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      bible_cache_l2: {
+        Row: {
+          cache_key: string
+          content: Json
+          created_at: string | null
+          expires_at: string
+          hash: string
+          id: string
+        }
+        Insert: {
+          cache_key: string
+          content: Json
+          created_at?: string | null
+          expires_at: string
+          hash: string
+          id?: string
+        }
+        Update: {
+          cache_key?: string
+          content?: Json
+          created_at?: string | null
+          expires_at?: string
+          hash?: string
+          id?: string
         }
         Relationships: []
       }
