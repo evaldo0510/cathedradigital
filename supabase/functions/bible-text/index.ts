@@ -173,11 +173,16 @@ serve(async (req) => {
     const etagValue = `"${CACHE_VERSION}-${englishName}-${chapter}"`;
     const clientEtag = req.headers.get('if-none-match');
     
+    // Debug ETag check
+    console.log(`[ETag Debug] Server: ${etagValue}, Client: ${clientEtag}`);
+    
     // Normalize ETags for comparison (remove weak ETag prefix and quotes)
     const normalize = (tag: string | null) => tag ? tag.trim().replace(/^W\//, '').replace(/"/g, '') : null;
     
     const normalizedClientEtag = normalize(clientEtag);
     const normalizedServerEtag = normalize(etagValue);
+
+    console.log(`[ETag Debug] Normalized Server: ${normalizedServerEtag}, Normalized Client: ${normalizedClientEtag}`);
 
     if (normalizedClientEtag && normalizedClientEtag === normalizedServerEtag) {
       console.log(JSON.stringify({
