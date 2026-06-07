@@ -1239,6 +1239,57 @@ export type Database = {
           },
         ]
       }
+      core_audit_logs: {
+        Row: {
+          capitulo: number | null
+          content_hash: string | null
+          correlation_id: string
+          created_at: string | null
+          db_content_hash: string | null
+          duration_ms: number | null
+          error_code: string | null
+          event_name: string
+          id: string
+          livro: string | null
+          payload: Json | null
+          response: Json | null
+          status_code: number | null
+          timestamp: string | null
+        }
+        Insert: {
+          capitulo?: number | null
+          content_hash?: string | null
+          correlation_id: string
+          created_at?: string | null
+          db_content_hash?: string | null
+          duration_ms?: number | null
+          error_code?: string | null
+          event_name: string
+          id?: string
+          livro?: string | null
+          payload?: Json | null
+          response?: Json | null
+          status_code?: number | null
+          timestamp?: string | null
+        }
+        Update: {
+          capitulo?: number | null
+          content_hash?: string | null
+          correlation_id?: string
+          created_at?: string | null
+          db_content_hash?: string | null
+          duration_ms?: number | null
+          error_code?: string | null
+          event_name?: string
+          id?: string
+          livro?: string | null
+          payload?: Json | null
+          response?: Json | null
+          status_code?: number | null
+          timestamp?: string | null
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           code: string
@@ -3137,6 +3188,33 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      vatican_cache: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          title: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+          url?: string
         }
         Relationships: []
       }
