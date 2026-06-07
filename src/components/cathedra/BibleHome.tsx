@@ -33,33 +33,43 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
 
       {/* Continue Reading Widget */}
       <div className="grid grid-cols-1 gap-4">
-        <button 
-          onClick={() => {
-            const last = localStorage.getItem('cathedra_bible_last_read');
-            if (last) {
-              const p = JSON.parse(last);
-              onSelectBook(Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).find(b => b.abbr === p.bookAbbr)!);
-            }
-          }}
-          className="p-6 rounded-2xl border border-primary/5 bg-background hover:bg-primary/[0.02] transition-all text-left group shadow-sm"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-secondary">Continuar Leitura</span>
-            <Icons.ChevronRight className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
+        {localStorage.getItem('cathedra_bible_last_read') ? (
+          <button 
+            onClick={() => {
+              const last = localStorage.getItem('cathedra_bible_last_read');
+              if (last) {
+                const p = JSON.parse(last);
+                onSelectBook(Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).find(b => b.abbr === p.bookAbbr)!);
+              }
+            }}
+            className="p-6 rounded-2xl border border-primary/5 bg-background hover:bg-primary/[0.02] transition-all text-left group shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-secondary">Continuar Leitura</span>
+              <Icons.ChevronRight className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-display text-primary/80">
+                {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).bookName}
+              </span>
+              <span className="text-xs text-primary/40 font-serif">
+                Capítulo {JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).chapter}
+              </span>
+            </div>
+          </button>
+        ) : (
+          <div className="p-8 text-center rounded-2xl border border-dashed border-primary/10 bg-primary/[0.01]">
+            <p className="text-xs text-primary/40 font-serif mb-4">"No princípio era o Verbo..."</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-[10px] font-black uppercase tracking-widest border-primary/10"
+              onClick={() => onSelectBook(BIBLE_DATA['Antigo Testamento'][0].books[0])}
+            >
+              Iniciar Gênesis
+            </Button>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-display text-primary/80">
-              {localStorage.getItem('cathedra_bible_last_read') 
-                ? JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).bookName 
-                : 'Nenhum progresso'}
-            </span>
-            <span className="text-xs text-primary/40 font-serif">
-               {localStorage.getItem('cathedra_bible_last_read') 
-                ? `Capítulo ${JSON.parse(localStorage.getItem('cathedra_bible_last_read')!).chapter}` 
-                : 'Comece sua jornada hoje'}
-            </span>
-          </div>
-        </button>
+        )}
       </div>
 
       {/* Quick Access Grid */}

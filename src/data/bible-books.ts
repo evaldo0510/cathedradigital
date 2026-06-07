@@ -103,6 +103,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
           abbr: 'Jo', 
           chapters: 21, 
           description: 'A Palavra Encarnada e o Testemunho do Discípulo Amado.',
+          context: 'O Evangelho de João é único entre os quatro Evangelhos. Foca na divindade de Cristo ("O Verbo") e utiliza uma linguagem altamente simbólica e teológica.',
           chapterTitles: {
             1: "O Verbo se fez carne",
             2: "As bodas de Caná",
