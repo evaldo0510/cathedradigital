@@ -39,13 +39,15 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
               const last = localStorage.getItem('cathedra_bible_last_read');
               if (last) {
                 const p = JSON.parse(last);
-                onSelectBook(Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).find(b => b.abbr === p.bookAbbr)!);
+                const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+                const book = allBooks.find(b => b.abbr === p.bookAbbr);
+                if (book) onSelectBook(book);
               }
             }}
-            className="p-6 rounded-2xl border border-primary/5 bg-background hover:bg-primary/[0.02] transition-all text-left group shadow-sm"
+            className="p-6 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-secondary">Continuar Leitura</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar</span>
               <Icons.ChevronRight className="w-4 h-4 text-primary/20 group-hover:text-secondary transition-colors" />
             </div>
             <div className="flex flex-col">
@@ -57,19 +59,7 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
               </span>
             </div>
           </button>
-        ) : (
-          <div className="p-8 text-center rounded-2xl border border-dashed border-primary/10 bg-primary/[0.01]">
-            <p className="text-xs text-primary/40 font-serif mb-4">"No princípio era o Verbo..."</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="text-[10px] font-black uppercase tracking-widest border-primary/10"
-              onClick={() => onSelectBook(BIBLE_DATA['Antigo Testamento'][0].books[0])}
-            >
-              Iniciar Gênesis
-            </Button>
-          </div>
-        )}
+        ) : null}
       </div>
 
       {/* Quick Access Grid */}
