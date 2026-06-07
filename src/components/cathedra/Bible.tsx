@@ -449,17 +449,33 @@ const Bible: React.FC = () => {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo('Cache Local (v3)');
+          
+          // Registro diagnóstico por livro e capítulo
+          setDiagnosticLogs(prev => [
+            {
+              sessionId,
+              timestamp: new Date().toISOString(),
+              book: cachedData.book || abbr,
+              abbr,
+              chapter,
+              source: 'Cache Local (v3)',
+              verses: cachedData.verses?.length || 0
+            },
+            ...prev.slice(0, 99)
+          ]);
+
+          return;
         } else {
           console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
           if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
           if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
-          // Also clear from IndexedDB if exists
-          const { deleteFromStore } = await import('@/lib/offlineCache');
-          await deleteFromStore('bible', `${abbr}:${chapter}`);
         }
-      } catch(e) {}
+      } catch(e) {
+        localStorage.removeItem(offlineKey);
+      }
     }
+
 
     try {
       setSourceInfo('Buscando na Nuvem...');
