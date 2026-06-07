@@ -46,7 +46,7 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
             className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar Lendo</span>
               <Icons.ChevronRight className="w-3 h-3 text-primary/20 group-hover:text-secondary transition-colors" />
             </div>
             <div className="flex items-center justify-between">
