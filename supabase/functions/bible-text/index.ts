@@ -12,7 +12,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const CACHE_VERSION = "v1.3.0";
+const CACHE_VERSION = "v1.3.1";
 
 const DEUTERO_ABBREVS = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
 
@@ -52,7 +52,10 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
   try {
-    const { abbrev, chapter } = await req.json();
+    const rawBody = await req.text();
+    if (!rawBody) return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
+    
+    const { abbrev, chapter } = JSON.parse(rawBody);
     if (!abbrev || !chapter) return new Response(JSON.stringify({ error: 'Parâmetros inválidos' }), { status: 400, headers: corsHeaders });
 
     // 1. Prioridade Máxima: Banco Cathedra
@@ -64,9 +67,9 @@ serve(async (req) => {
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // BLOQUEIO: Deuterocanônicos DEVEM vir do banco. Se não estiver lá, não buscar fora.
+    // BLOQUEIO DETERMINÍSTICO: Deuterocanônicos DEVEM vir do banco.
     if (DEUTERO_ABBREVS.includes(abbrev)) {
-      return new Response(JSON.stringify({ error: `O livro ${abbrev} ainda não foi migrado para o banco Cathedra.` }), { status: 404, headers: corsHeaders });
+      return new Response(JSON.stringify({ error: `O livro ${abbrev} ainda não foi migrado para o banco Cathedra ou o capítulo ${chapter} não existe.` }), { status: 404, headers: corsHeaders });
     }
 
     // 2. Protocanônicos: Fallback BollsLife
