@@ -786,6 +786,7 @@ const Bible: React.FC = () => {
 
 
 
+
                   {/* Vertical Navigation Buttons */}
                   <footer className="pt-12 pb-20 space-y-4">
                     <div className="flex gap-4">
