@@ -693,8 +693,16 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     size="sm"
                     onClick={() => {
                       const bookFilter = (document.getElementById('diag-book-filter') as HTMLInputElement).value;
-                      const chStart = parseInt((document.getElementById('diag-chapter-start') as HTMLInputElement).value);
-                      const chEnd = parseInt((document.getElementById('diag-chapter-end') as HTMLInputElement).value);
+                      const chStartRaw = (document.getElementById('diag-chapter-start') as HTMLInputElement).value;
+                      const chEndRaw = (document.getElementById('diag-chapter-end') as HTMLInputElement).value;
+                      
+                      const chStart = parseInt(chStartRaw);
+                      const chEnd = parseInt(chEndRaw);
+
+                      if (chStartRaw && chEndRaw && chStart > chEnd) {
+                        toast.error('O capítulo inicial não pode ser maior que o final.');
+                        return;
+                      }
 
                       const filtered = diagnosticLogs.filter(log => {
                         const matchesBook = !bookFilter || log.abbr.toLowerCase() === bookFilter.toLowerCase();
@@ -702,6 +710,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         const matchesEnd = isNaN(chEnd) || log.chapter <= chEnd;
                         return matchesBook && matchesStart && matchesEnd;
                       });
+
+                      if (filtered.length === 0 && diagnosticLogs.length > 0) {
+                        toast.warning('Nenhum log encontrado para este intervalo específico.');
+                        return;
+                      }
 
                       const report = filtered.length > 0 ? filtered : diagnosticLogs;
                       const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
@@ -720,8 +733,16 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     size="sm"
                     onClick={() => {
                       const bookFilter = (document.getElementById('diag-book-filter') as HTMLInputElement).value;
-                      const chStart = parseInt((document.getElementById('diag-chapter-start') as HTMLInputElement).value);
-                      const chEnd = parseInt((document.getElementById('diag-chapter-end') as HTMLInputElement).value);
+                      const chStartRaw = (document.getElementById('diag-chapter-start') as HTMLInputElement).value;
+                      const chEndRaw = (document.getElementById('diag-chapter-end') as HTMLInputElement).value;
+
+                      const chStart = parseInt(chStartRaw);
+                      const chEnd = parseInt(chEndRaw);
+
+                      if (chStartRaw && chEndRaw && chStart > chEnd) {
+                        toast.error('O capítulo inicial não pode ser maior que o final.');
+                        return;
+                      }
 
                       const filtered = diagnosticLogs.filter(log => {
                         const matchesBook = !bookFilter || log.abbr.toLowerCase() === bookFilter.toLowerCase();
@@ -729,6 +750,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         const matchesEnd = isNaN(chEnd) || log.chapter <= chEnd;
                         return matchesBook && matchesStart && matchesEnd;
                       });
+
+                      if (filtered.length === 0 && diagnosticLogs.length > 0) {
+                        toast.warning('Nenhum log encontrado para este intervalo.');
+                        return;
+                      }
 
                       const report = filtered.length > 0 ? filtered : diagnosticLogs;
                       const headers = ['sessionId', 'timestamp', 'book', 'abbr', 'chapter', 'source', 'verses'];
