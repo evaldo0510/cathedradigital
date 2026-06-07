@@ -32,6 +32,29 @@ import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
+import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+
+const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
+  const pNum = parseInt(paragraphId);
+  const { data, isLoading } = useCatechismParagraph(pNum, !isNaN(pNum));
+
+  if (isNaN(pNum)) return null;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-2 animate-pulse">
+        <div className="h-3 bg-primary/10 rounded w-full" />
+        <div className="h-3 bg-primary/10 rounded w-5/6" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
+      {data?.content || 'Conteúdo não disponível.'}
+    </div>
+  );
+};
 
 // Knowledge Connection System (Mock for development, will be replaced by DB)
 const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
@@ -101,7 +124,7 @@ const Bible: React.FC = () => {
   const [isDailyCompleted, setIsDailyCompleted] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
-  const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string } | null>(null);
+  const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string, color?: string, theological_theme?: string } | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -1540,10 +1563,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               </button>
                             </p>
 
-                            {/* Knowledge Connection Bubbles */}
+                            {/* Knowledge Connection Bubbles - Enhanced V1 UI */}
                             {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
-                              <div className="flex flex-wrap gap-2 pt-1 opacity-80 max-h-12 overflow-hidden">
-                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 3).map((conn, idx) => (
+                              <div className="flex flex-wrap gap-2 pt-1 opacity-90 max-h-24 overflow-hidden">
+                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 5).map((conn, idx) => (
                                   <motion.button
                                     key={idx}
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -1552,11 +1575,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       e.stopPropagation();
                                       setExpandedConnection(conn);
                                     }}
-
-                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/50 border border-primary/5 shadow-sm active:scale-95 transition-all mb-1"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 shadow-sm active:scale-95 transition-all mb-1 hover:bg-secondary/20"
                                   >
-                                    <div className={cn("w-1.5 h-1.5 rounded-full", conn.color)} />
-                                    <span className="text-[8px] font-black uppercase tracking-wider text-primary/50">{conn.label}</span>
+                                    <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", conn.color || "bg-secondary")} />
+                                    <span className="text-[9px] font-black uppercase tracking-wider text-secondary">{conn.label}</span>
                                   </motion.button>
                                 ))}
                               </div>
@@ -1707,70 +1729,85 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
       <AnimatePresence>
         {expandedConnection && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-6 pointer-events-none">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setExpandedConnection(null)}
-              className="absolute inset-0 bg-background/40 backdrop-blur-md"
+              className="absolute inset-0 bg-background/20 backdrop-blur-[2px] pointer-events-auto"
             />
+            
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 md:p-10 space-y-6"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-8 pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden"
             >
-              <div className="flex items-center justify-between">
+              {/* Drag handle for mobile-first feel */}
+              <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-6 lg:hidden" />
+              
+              <div className="flex items-center justify-between mb-6">
                 <div className="space-y-1">
-                  <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">{expandedConnection.label}</h3>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Documento Sagrado</span>
+                  <div className="flex items-center gap-2">
+                    <div className={cn("w-2 h-2 rounded-full animate-pulse", expandedConnection.color)} />
+                    <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">
+                      {expandedConnection.label}
+                    </h3>
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/60">
+                    {expandedConnection.theological_theme || 'Conexão Teológica'}
+                  </span>
                 </div>
+                
                 <div className="flex items-center gap-2">
-                  {navHistory.length > 1 && (
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => {
-                        const prev = navHistory[navHistory.length - 2];
-                        setNavHistory(prevHistory => prevHistory.slice(0, -1));
-                        navigate(`/bible?book=${encodeURIComponent(prev.book)}&ch=${prev.chapter}&v=${prev.verse}`);
-                        setExpandedConnection(null);
-                      }} 
-                      className="rounded-full text-secondary hover:bg-secondary/10"
-                    >
-                      <Icons.History className="w-5 h-5" />
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="icon" onClick={() => setExpandedConnection(null)} className="rounded-full opacity-40 hover:opacity-100">
-                    <Icons.X className="w-6 h-6" />
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setExpandedConnection(null)} 
+                    className="rounded-full w-10 h-10 bg-primary/5 hover:bg-primary/10"
+                  >
+                    <Icons.X className="w-5 h-5 opacity-40" />
                   </Button>
                 </div>
               </div>
               
-              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8">
+              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8 mb-8 space-y-4">
                 <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
                   {expandedConnection.summary}
-                  {" "}Este texto representa o ensinamento oficial da Igreja sobre o tema. O Catecismo e o Magistério fornecem a lente interpretativa para as Sagradas Escrituras, garantindo a fidelidade à Tradição Apostólica.
                 </p>
+                
+                {expandedConnection.type === 'catechism' && (
+                  <div className="pt-4 border-t border-primary/5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-3">Parágrafo Relacionado</p>
+                    <CatechismParagraphPreview paragraphId={expandedConnection.id} />
+                  </div>
+                )}
               </div>
               
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-4">
                 <Button 
-                  onClick={() => {
-                    setIsGraphOpen(true);
-                  }}
                   variant="outline"
-                  className="flex-1 h-14 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10"
+                  onClick={() => {
+                    if (expandedConnection.type === 'catechism') {
+                      navigate(`/catechism?p=${expandedConnection.id}`);
+                    } else if (expandedConnection.type === 'document') {
+                      navigate(`/magisterium?doc=${expandedConnection.id}`);
+                    }
+                    setExpandedConnection(null);
+                  }}
+                  className="h-16 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10 hover:bg-primary/5"
                 >
-                  <Icons.Orbit className="w-4 h-4 mr-2" /> Explorar Grafo
+                  <Icons.BookOpen className="w-4 h-4 mr-2 text-secondary" /> 
+                  Ler no {expandedConnection.type === 'catechism' ? 'Catecismo' : 'Documento'}
                 </Button>
 
                 <Button 
                   onClick={() => setExpandedConnection(null)}
-                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all"
+                  className="h-16 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
                 >
-                  Concluir Consulta
+                  Continuar Leitura
                 </Button>
               </div>
             </motion.div>
