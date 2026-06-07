@@ -119,7 +119,7 @@ const Bible: React.FC = () => {
   
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
-  const { notes, addNote, deleteNote, updateNote, fetchNotes } = useNotes('bible');
+  const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
