@@ -173,11 +173,18 @@ serve(async (req) => {
     const etagValue = `"${CACHE_VERSION}-${englishName}-${chapter}"`;
     const clientEtag = req.headers.get('if-none-match');
     
-    // Normalize client ETag for comparison (remove W/ prefix if present)
-    const normalizedClientEtag = clientEtag?.replace(/^W\//, '');
-    const normalizedServerEtag = etagValue.replace(/^W\//, '');
+    // Normalize ETags for comparison (remove weak ETag prefix and quotes)
+    const normalize = (tag: string | null) => tag ? tag.replace(/^W\//, '').replace(/"/g, '') : null;
+    
+    const normalizedClientEtag = normalize(clientEtag);
+    const normalizedServerEtag = normalize(etagValue);
 
-    if (normalizedClientEtag === normalizedServerEtag) {
+    console.log(JSON.stringify({
+      level: 'debug', requestId, event: 'etag_comparison',
+      clientEtag, etagValue, normalizedClientEtag, normalizedServerEtag, timestamp
+    }));
+
+    if (normalizedClientEtag && normalizedClientEtag === normalizedServerEtag) {
       console.log(JSON.stringify({
         level: 'info', requestId, event: 'bible_cache_hit_etag',
         book: abbrev, chapter, duration_ms: Math.round(performance.now() - startTime),
