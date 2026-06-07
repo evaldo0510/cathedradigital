@@ -503,6 +503,7 @@ const AppLayout: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
+                      <Route path="/language" element={<LanguageAdmin />} />
                       <Route path="/seo-verify" element={<SEOVerificationPage />} />
                       <Route path="/a11y-audit" element={<A11yAuditPage />} />
                       <Route path="/visual-audit" element={<VisualAuditPage />} />
