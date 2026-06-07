@@ -82,6 +82,8 @@ const Bible: React.FC = () => {
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
+  const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
+  const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
   const [searchQuery, setSearchQuery] = useState('');
   
   // New States for Annotations and Progress
@@ -359,13 +361,16 @@ const Bible: React.FC = () => {
       try {
         const cachedData = JSON.parse(cached);
         const isLegacy = !cachedData.v || cachedData.v < 2; // Versão 2 introduz tradução forçada
+        const isExpired = Date.now() - cachedData.timestamp > 1000 * 60 * 60 * 24 * 7; // 1 week
         
-        if (!isLegacy && (Date.now() - cachedData.timestamp < 1000 * 60 * 60 * 24 * 7)) {
+        if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo('Cache Local (v2)');
         } else {
-          console.log(`[Cache] Invalidando cache legado ou expirado para ${abbr} ${chapter}`);
+          console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
+          if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
+          if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
         }
       } catch(e) {}
@@ -637,26 +642,53 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               className="bg-card border border-primary/10 rounded-3xl p-8 max-w-md w-full shadow-premium space-y-4"
             >
               <h2 className="text-lg font-bold">Diagnóstico Cirúrgico</h2>
-              <div className="space-y-2 text-sm font-mono bg-muted p-4 rounded-xl">
-                 <p>Livro Atual: {selectedBook?.name} ({selectedBook?.abbr})</p>
+              <div className="space-y-2 text-xs font-mono bg-muted p-4 rounded-xl max-h-60 overflow-y-auto">
+                 <p>Sessão: {sessionId}</p>
+                 <p>Timestamp: {new Date().toLocaleTimeString()}</p>
+                 <p className="border-t border-primary/5 pt-2">Livro: {selectedBook?.name} ({selectedBook?.abbr})</p>
                  <p>Capítulo: {selectedChapter}</p>
                  <p>Versículos: {verses.length}</p>
-                 <p>Fonte do Texto: <span className="text-secondary font-bold">{sourceInfo}</span></p>
-                 <p>Allowlist: {LANGUAGE_ALLOWLIST.length + 5}</p>
+                 <p>Fonte: <span className="text-secondary font-bold">{sourceInfo}</span></p>
+                 <p className="border-t border-primary/5 pt-2">Invalidações: L:{invalidationStats.legacy} / E:{invalidationStats.expired}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button 
                   variant="outline" 
+                  size="sm"
                   onClick={() => {
                     const tobit = BIBLE_DATA['Antigo Testamento'][1].books.find(b => b.abbr === 'Tb');
                     if (tobit) selectBook(tobit);
                     setIsDiagnosticOpen(false);
                   }}
-                  className="flex-1 text-[10px]"
+                  className="flex-1 text-[9px]"
                 >
                   Simular Tobias
                 </Button>
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1">Fechar</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const report = {
+                      sessionId,
+                      timestamp: new Date().toISOString(),
+                      book: selectedBook?.name,
+                      abbr: selectedBook?.abbr,
+                      chapter: selectedChapter,
+                      source: sourceInfo,
+                      verses: verses.length
+                    };
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `bible-diag-${selectedBook?.abbr}-${selectedChapter}.json`;
+                    a.click();
+                  }}
+                  className="flex-1 text-[9px]"
+                >
+                  Exportar JSON
+                </Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="w-full">Fechar</Button>
               </div>
             </motion.div>
           </div>
