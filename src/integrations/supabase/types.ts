@@ -2501,6 +2501,54 @@ export type Database = {
         }
         Relationships: []
       }
+      security_alerts: {
+        Row: {
+          created_at: string | null
+          finding_id: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          scan_id: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          finding_id?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          scan_id?: string | null
+          severity: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          finding_id?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          scan_id?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_alerts_finding_id_fkey"
+            columns: ["finding_id"]
+            isOneToOne: false
+            referencedRelation: "security_findings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_alerts_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "security_scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_audit_logs: {
         Row: {
           created_at: string
@@ -3874,6 +3922,10 @@ export type Database = {
       generate_security_diff_summary: {
         Args: { after_val: Json; before_val: Json }
         Returns: string
+      }
+      generate_security_scan_alerts: {
+        Args: { p_scan_id: string }
+        Returns: number
       }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       get_pending_webhook_retries: {
