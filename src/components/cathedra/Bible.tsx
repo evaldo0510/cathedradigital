@@ -53,7 +53,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 // Helper for Daily Reading
 const getDailyReading = () => {
-  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
+  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).filter(b => b.name !== 'Abdias' || b.chapters === 1);
+
   const date = new Date();
   const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
   
@@ -121,6 +122,7 @@ const Bible: React.FC = () => {
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
+  const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
@@ -171,6 +173,17 @@ const Bible: React.FC = () => {
       
       const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
       if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
+
+      // 2. Invalidação agressiva de ETag (Simulado com versioning local/remoto)
+      if (user) {
+        const etag = localStorage.getItem('cathedra_bible_etag');
+        const { data: remoteEtag } = await supabase.from('bible_cache_metadata').select('client_version').single();
+        if (remoteEtag && etag !== String(remoteEtag.client_version)) {
+            console.log('[Stability] Etag mismatch. Purging for recovery.');
+            cacheKeys.forEach(k => localStorage.removeItem(k));
+            localStorage.setItem('cathedra_bible_etag', String(remoteEtag.client_version));
+        }
+      }
 
       // Map de correção em tempo real (Hard Patch)
       const correctionMap: Record<string, string> = {
@@ -311,10 +324,32 @@ const Bible: React.FC = () => {
     setLastRead(progress);
     localStorage.setItem('cathedra_bible_last_read', JSON.stringify(progress));
     
+    // Remote sync for cross-device functional recovery
+    if (user) {
+      syncRemoteLastRead({
+        content_type: 'bible',
+        content_id: bookAbbr,
+        chapter,
+        label: `${book.name} ${chapter}`,
+        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}`,
+        is_last_read: true
+      });
+      
+      // Store state in persistence table for navigation recovery
+      supabase.from('reading_state_history').insert([{
+        user_id: user.id,
+        content_type: 'bible',
+        content_id: bookAbbr,
+        chapter,
+        view_mode: 'reading',
+        metadata: { ...progress, timestamp: Date.now() }
+      }]);
+    }
+    
     // Offline storage for favorites/progress
     const offlineKey = `offline_bible_progress_${bookAbbr}`;
     localStorage.setItem(offlineKey, JSON.stringify({ ...progress, timestamp: Date.now() }));
-  }, []);
+  }, [user, syncRemoteLastRead]);
 
 
   const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
@@ -505,7 +540,7 @@ const Bible: React.FC = () => {
       setSourceInfo('Buscando na Nuvem...');
       // 1. Fetch Bible Text
       const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { book: encodeURIComponent(abbr), chapter }
+        body: { book: abbr, chapter } // Removed encodeURIComponent as it might be causing issues with some APIs expecting plain strings
       });
       if (error) throw error;
       
