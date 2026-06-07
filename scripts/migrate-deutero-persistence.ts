@@ -1,9 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY!;
+// Pegando do process.env (Vite/Bun no sandbox injeta automaticamente em alguns casos ou via shell)
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
 
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("ERRO: Variáveis de ambiente ausentes.");
+  console.log("DICA: Use 'export VAR=value' antes de rodar ou verifique se o sandbox as injetou.");
+  process.exit(1);
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -18,6 +24,8 @@ const DEUTERO_BOOKS = [
 ];
 
 async function translateWithAI(verses: any[], bookName: string, chapter: number) {
+  if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY ausente.");
+  
   const prompt = `Translate the following Bible verses from ${bookName} Chapter ${chapter} into natural, high-quality Portuguese (Brazilian). 
   Use the formal and solemn tone typical of Catholic Bibles (like Bíblia de Jerusalém or Ave Maria). 
   Return ONLY a JSON object with a key "verses" containing the array of objects with "number" and "text" fields.
@@ -52,7 +60,6 @@ async function migrateDeutero() {
   for (const book of DEUTERO_BOOKS) {
     console.log(`\n📖 Processando ${book.name}...`);
     
-    // 1. Garantir livro no banco
     const { data: bookRecord, error: bookError } = await supabase
       .from('bible_books')
       .upsert({ 
@@ -70,13 +77,10 @@ async function migrateDeutero() {
       continue;
     }
 
-    // 2. Migrar cada capítulo
     for (let ch = 1; ch <= book.chapters; ch++) {
       console.log(`  - Capítulo ${ch}/${book.chapters}`);
       
       try {
-        // Fetch from BibleAPI (English WEBBE)
-        const englishName = book.name.toLowerCase().replace(' ', '');
         const res = await fetch(`https://bible-api.com/${encodeURIComponent(book.name)}+${ch}?translation=webbe`);
         const apiData = await res.json();
         
@@ -86,11 +90,8 @@ async function migrateDeutero() {
         }
 
         const englishVerses = apiData.verses.map((v: any) => ({ number: v.verse, text: v.text }));
-        
-        // Translate to Portuguese
         const ptVerses = await translateWithAI(englishVerses, book.name, ch);
 
-        // Save Chapter
         const { data: chapterRecord, error: chError } = await supabase
           .from('bible_chapters')
           .upsert({ book_id: bookRecord.id, number: ch })
@@ -102,7 +103,6 @@ async function migrateDeutero() {
           continue;
         }
 
-        // Save Verses
         const verseInserts = ptVerses.map((v: any) => ({
           chapter_id: chapterRecord.id,
           number: v.number,
@@ -118,11 +118,10 @@ async function migrateDeutero() {
         } else {
           console.log(`    ✅ Cap ${ch} migrado com sucesso (${ptVerses.length} versículos)`);
         }
-
-        // Sleep to avoid rate limits
-        await new Promise(r => setTimeout(r, 500));
         
-      } catch (err) {
+        await new Promise(r => setTimeout(r, 200));
+        
+      } catch (err: any) {
         console.error(`    💥 Erro crítico no capítulo ${ch}:`, err.message);
       }
     }
