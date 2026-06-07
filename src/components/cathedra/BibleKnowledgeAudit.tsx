@@ -6,7 +6,9 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { BibleAuditDashboard } from './BibleAuditDashboard';
+import { getBibleAuditReport } from '@/data/bible-audit-logic';
 import { Badge } from '@/components/ui/badge';
+
 
 interface AuditLog {
   timestamp: string;
@@ -334,9 +336,51 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
   };
 
 
+  const runAuditScan = async () => {
+    setIsScanning(true);
+    toast.info('Iniciando Auditoria de Conteúdo...');
+    
+    try {
+      const report = await getBibleAuditReport(async (abbr, ch) => {
+        const { data, error } = await supabase.functions.invoke('bible-text', {
+          body: { book: abbr, chapter: ch }
+        });
+        if (error) throw error;
+        return data.verses || [];
+      });
+
+      const startTime = new Date().toISOString();
+      const emptyChapters = report.filter(r => r.status === 'empty');
+      const missingVerses = report.filter(r => r.status === 'missing_verses');
+
+      const issues = [
+        ...emptyChapters.map(r => ({ level: 'error', message: `Capítulo Vazio: ${r.book} ${r.chapter}`, category: 'CONTEÚDO' })),
+        ...missingVerses.map(r => ({ level: 'warn', message: `Versículos Ausentes: ${r.book} ${r.chapter} (${r.verseCount} encontrados)`, category: 'CONTEÚDO' }))
+      ];
+
+      const { error: runError } = await supabase
+        .from('bible_audit_runs')
+        .insert([{
+          status: issues.some(i => i.level === 'error') ? 'failed' : 'passed',
+          metadata: { report, issues_count: issues.length },
+          created_at: startTime
+        }]);
+
+      if (!runError) {
+        toast.success('Auditoria concluída com sucesso');
+        fetchAuditRuns();
+      }
+    } catch (e: any) {
+      toast.error('Erro na auditoria: ' + e.message);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   const runSecurityScan = async () => {
     setIsScanning(true);
     toast.info('Iniciando Varredura de Segurança...');
+
     
     // Simulate scan results from linter/tests
     const startTime = new Date().toISOString();
@@ -972,8 +1016,9 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                  <button onClick={() => startIntegrityScan(false)} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest">
-                    {isScanning ? 'Verificando...' : 'Executar Auditoria'}
+                  <button onClick={runAuditScan} disabled={isScanning} className="w-full py-3 bg-secondary text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                    {isScanning ? 'Verificando...' : 'Iniciar Auditoria Premium'}
+
                   </button>
                   <button onClick={() => startIntegrityScan(true)} className="w-full py-3 border border-secondary text-secondary rounded-full text-[10px] font-black uppercase tracking-widest">
                     Retentar Etapas Falhas

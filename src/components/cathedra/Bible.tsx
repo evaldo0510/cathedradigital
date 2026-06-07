@@ -17,7 +17,9 @@ import { BibleSkeleton } from './RouteSkeletons';
 import { useNotes } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
+import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
+
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
@@ -324,20 +326,23 @@ const Bible: React.FC = () => {
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
   
-  // Knowledge Connection System Mock Data
-  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology', label: string, color: string, id: string, summary: string }[]> = {
+  // Knowledge Connection System
+  const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
     'Jo-6-35': [
       { type: 'catechism', label: 'CIC 1324', color: 'bg-blue-500', id: '1324', summary: 'A Eucaristia é "fonte e ápice de toda a vida cristã".' },
       { type: 'bible', label: 'Êxodo 16', color: 'bg-green-500', id: 'Ex-16', summary: 'O maná no deserto como prefiguração do Pão da Vida.' },
-      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' }
+      { type: 'document', label: 'Ecclesia de Eucharistia', color: 'bg-purple-500', id: 'ede', summary: 'Encíclica de João Paulo II sobre a centralidade da Eucaristia.' },
+      { type: 'cross_ref', label: 'Sl 78:24', color: 'bg-amber-500', id: 'Sl-78-24', summary: 'Fez chover sobre eles o maná para comerem.' }
     ],
     'Gn-1-1': [
       { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
-      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' }
+      { type: 'theology', label: 'Criação ex nihilo', color: 'bg-orange-500', id: 'creatio', summary: 'A doutrina de que Deus criou o universo do nada.' },
+      { type: 'cross_ref', label: 'Jo 1:1', color: 'bg-amber-500', id: 'Jo-1-1', summary: 'No princípio era o Verbo...' }
     ],
     'Mt-5-3': [
       { type: 'catechism', label: 'CIC 1716', color: 'bg-blue-500', id: '1716', summary: 'As Bem-aventuranças estão no centro da pregação de Jesus.' },
-      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' }
+      { type: 'document', label: 'Veritatis Splendor', color: 'bg-purple-500', id: 'vs', summary: 'Sobre algumas questões fundamentais do ensino moral da Igreja.' },
+      { type: 'cross_ref', label: 'Lc 6:20', color: 'bg-amber-500', id: 'Lc-6-20', summary: 'Bem-aventurados vós, os pobres...' }
     ]
   };
 
@@ -346,15 +351,14 @@ const Bible: React.FC = () => {
     { id: 'eucharistia', label: 'Eucaristia', parent: null, connections: 45, tags: ['Sacramento', 'Liturgia'] },
     { id: 'gratia', label: 'Graça', parent: null, connections: 28, tags: ['Soteriologia'] },
     { id: 'trinitas', label: 'Santíssima Trindade', parent: null, connections: 34, tags: ['Mistério', 'Dogma'] },
+    { id: 'mariologia', label: 'Mariologia', parent: null, connections: 18, tags: ['Santos', 'Dogma'] },
   ];
 
-
-
   const CROSS_REFERENCES: Record<string, string[]> = {
-    'Jo-1-1': ['Gn-1-1', '1Jo-1-1'],
-    'Jo-3-16': ['Rm-5-8', '1Jo-4-9'],
-    'Gn-1-1': ['Jo-1-1', 'Hb-11-3'],
-    'Mt-5-3': ['Lc-6-20'],
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1', 'Sl 33:6'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9', 'Ef 2:4'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3', 'Sl 102:25'],
+    'Mt-5-3': ['Lc-6-20', 'Is 57:15'],
   };
 
   const wrapWithDictionary = (text: string) => {
@@ -487,88 +491,24 @@ const Bible: React.FC = () => {
 
             </header>
 
-            {/* Above the Fold Actions */}
+            {/* Bible Home Experience */}
             <div className="space-y-4 mb-12">
-              <button 
-                onClick={() => lastRead ? navigate(`/bible?book=${lastRead.bookAbbr}&ch=${lastRead.chapter}${lastRead.verse ? `&v=${lastRead.verse}` : ''}`) : navigate('/bible?book=Jo&ch=1')}
-                className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
-              >
-                <div className="flex items-center gap-4">
-                  <Icons.Bookmark className={cn("w-5 h-5", lastRead ? "text-secondary" : "text-secondary/60")} />
-                  <div className="text-left">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Continuar leitura</span>
-                    <span className="font-serif font-bold text-base">
-                      {lastRead ? `${lastRead.bookName} ${lastRead.chapter}` : 'João 1'}
-                    </span>
-                  </div>
-                </div>
-                <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
-              </button>
-
-              <div className="relative">
-                <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30" />
-                <input 
-                  type="text" 
-                  placeholder="Buscar nas Escrituras..."
-                  readOnly
-                  onClick={() => setViewMode('search')}
-                  className="w-full h-14 pl-12 pr-4 bg-white border border-primary/5 rounded-xl text-sm shadow-sm focus:ring-1 focus:ring-secondary/20 transition-all outline-none cursor-pointer"
-                />
-              </div>
-
-              <div className="relative group">
-                <button 
-                  onClick={() => navigate(`/bible?book=${dailyReading.book.abbr}&ch=${dailyReading.chapter}`)}
-                  className="w-full flex items-center justify-between p-4 bg-white border border-primary/5 rounded-xl shadow-sm active:scale-[0.98] transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <Icons.Sun className={cn("w-5 h-5", isDailyCompleted ? "text-green-500" : "text-secondary/60")} />
-                    <div className="text-left">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-primary/30 block mb-0.5">Leitura do dia</span>
-                      <span className="font-serif font-bold text-base">{dailyReading.book.name} {dailyReading.chapter}</span>
-                    </div>
-                  </div>
-                  {isDailyCompleted ? (
-                    <Icons.CheckCircle className="w-5 h-5 text-green-500/50" />
-                  ) : (
-                    <Icons.ChevronRight className="w-4 h-4 text-primary/10" />
-                  )}
-                </button>
-                
-                {!isDailyCompleted && (
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      markDailyAsCompleted();
-                    }}
-                    className="absolute -top-2 -right-2 bg-secondary text-white text-[8px] font-black uppercase px-2 py-1 rounded-full shadow-lg"
-                  >
-                    Concluir
-                  </button>
-                )}
-              </div>
-
-              <button 
-                onClick={() => setViewMode('monthly_recap')}
-                className="w-full flex items-center justify-center p-3 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-secondary transition-colors"
-              >
-                <Icons.Calendar className="w-3 h-3 mr-2" />
-                Recapitular Leituras do Mês
-              </button>
+              <BibleHome onSelectBook={selectBook} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             </div>
 
             <div className="flex gap-4 mb-12">
               <button 
                 onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40"
+                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 shadow-sm"
               >
                 <Icons.Download className="w-3 h-3" /> Exportar
               </button>
-              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer">
+              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
                 <Icons.Upload className="w-3 h-3" /> Importar
                 <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
               </label>
             </div>
+
 
 
 
@@ -616,32 +556,35 @@ const Bible: React.FC = () => {
               <Icons.ChevronLeft className="w-4 h-4" /> Voltar
             </button>
 
-            <header className="mb-12 text-center">
-              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-2">{selectedBook.name}</h1>
+            <header className="mb-8 text-center">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/50 mb-2 block">Sumário Bíblico</span>
+              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-4">{selectedBook.name}</h1>
+              {selectedBook.description && (
+                <p className="text-sm font-serif italic text-primary/40 leading-relaxed max-w-xs mx-auto mb-6">
+                  {selectedBook.description}
+                </p>
+              )}
               <div className="w-12 h-px bg-secondary/20 mx-auto" />
             </header>
 
-            <div className="divide-y divide-primary/[0.03]">
+            <div className="grid grid-cols-4 gap-3">
               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => (
                 <button 
                   key={ch}
                   onClick={() => selectChapter(ch)}
-                  className="w-full h-16 flex items-center justify-between active:bg-primary/[0.02] transition-all px-2 group"
-                >
-                  <div className="flex flex-col text-left">
-                    <span className="font-serif text-xl text-primary/70 group-active:text-secondary transition-colors">Capítulo {ch}</span>
-                    {notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch) && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-secondary mt-1 flex items-center gap-1">
-                        <Icons.PenLine className="w-2.5 h-2.5" /> Meditado
-                      </span>
-                    )}
-                  </div>
-                  {selectedBook.chapterTitles?.[ch] && (
-                    <span className="text-[11px] font-serif italic text-primary/30 max-w-[150px] truncate text-right">{selectedBook.chapterTitles[ch]}</span>
+                  className={cn(
+                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
+                    notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
+                      ? "bg-secondary/5 border-secondary/20"
+                      : "bg-white border-primary/5 hover:border-secondary/30"
                   )}
-                  <Icons.ChevronRight className="w-4 h-4 text-primary/10 ml-4" />
-                </button>
 
+                >
+                  <span className="text-lg font-display text-primary/70 group-active:text-secondary">{ch}</span>
+                  {selectedBook.chapterTitles?.[ch] && (
+                    <div className="w-1 h-1 rounded-full bg-secondary/40 mt-1" />
+                  )}
+                </button>
               ))}
             </div>
           </motion.div>
@@ -684,6 +627,21 @@ const Bible: React.FC = () => {
                     <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
                   </header>
 
+                  {/* Context Banner */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-secondary/5 rounded-2xl border border-secondary/10 mb-8"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icons.Info className="w-4 h-4 text-secondary/40" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
+                    </div>
+                    <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
+                      {selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
+                    </p>
+                  </motion.div>
+
                   <div className="space-y-8">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-20 text-center space-y-6 bg-primary/[0.02] rounded-3xl border border-primary/5 p-8">
@@ -703,7 +661,9 @@ const Bible: React.FC = () => {
                         </Button>
                       </div>
                     ) : (
-                      verses.map(v => {
+                      <div className="space-y-6">
+                        {verses.map((v, index) => {
+
 
                       const hasNote = notes.some(n => 
                         n.book_abbr === selectedBook.abbr && 
@@ -809,38 +769,48 @@ const Bible: React.FC = () => {
                                       {b} {c}:{vNum}
                                     </button>
                                   );
-                                })}
-                              </div>
-                            )}
-                          </div>
+                    })}
+                  </div>
+                )}
+
 
 
                         </div>
-
                       );
-                    })
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
 
 
+
+
+
+
+
+
                   {/* Vertical Navigation Buttons */}
-                  <footer className="pt-20 space-y-4">
-                    <Button 
-                      onClick={nextChapter}
-                      disabled={selectedChapter >= selectedBook.chapters}
-                      className="w-full h-16 rounded-xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all"
-                    >
-                      Próximo Capítulo
-                    </Button>
-                    <Button 
-                      variant="ghost"
-                      onClick={prevChapter}
-                      disabled={selectedChapter <= 1}
-                      className="w-full h-14 text-primary/40 text-[10px] font-black uppercase tracking-widest"
-                    >
-                      Capítulo Anterior
-                    </Button>
+                  <footer className="pt-12 pb-20 space-y-4">
+                    <div className="flex gap-4">
+                      <Button 
+                        onClick={prevChapter}
+                        disabled={selectedChapter <= 1}
+                        variant="outline"
+                        className="flex-1 h-16 rounded-2xl border-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest shadow-sm"
+                      >
+                        <Icons.ChevronLeft className="w-4 h-4 mr-2" /> Anterior
+                      </Button>
+                      <Button 
+                        onClick={nextChapter}
+                        disabled={selectedChapter >= selectedBook.chapters}
+                        className="flex-[2] h-16 rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all"
+                      >
+                        Próximo Capítulo <Icons.ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
                   </footer>
+
                 </article>
               )}
             </motion.div>
