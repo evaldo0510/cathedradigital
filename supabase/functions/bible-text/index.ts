@@ -171,7 +171,13 @@ serve(async (req) => {
 
     // ETag Generation - Includes version to ensure global invalidation when needed
     const etagValue = `"${CACHE_VERSION}-${englishName}-${chapter}"`;
-    if (req.headers.get('if-none-match') === etagValue || req.headers.get('if-none-match') === `W/${etagValue}`) {
+    const clientEtag = req.headers.get('if-none-match');
+    
+    // Normalize client ETag for comparison (remove W/ prefix if present)
+    const normalizedClientEtag = clientEtag?.replace(/^W\//, '');
+    const normalizedServerEtag = etagValue.replace(/^W\//, '');
+
+    if (normalizedClientEtag === normalizedServerEtag) {
       console.log(JSON.stringify({
         level: 'info', requestId, event: 'bible_cache_hit_etag',
         book: abbrev, chapter, duration_ms: Math.round(performance.now() - startTime),
