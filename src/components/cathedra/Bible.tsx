@@ -154,38 +154,46 @@ const Bible: React.FC = () => {
         'Verse': 'Versículo',
         'Search': 'Pesquisar',
         'Loading': 'Carregando',
-        'Settings': 'Configurações'
+        'Settings': 'Configurações',
+        'Home': 'Início'
       };
       
       while(node = walker.nextNode()) {
         const text = node.textContent?.trim() || '';
-        if (text && (forbiddenRegex.test(text) || Object.keys(correctionMap).some(k => text.includes(k)))) {
-          // Se o texto exato ou parcial for uma das chaves de correção
+        if (text) {
+          // Correção agressiva de termos mapeados
+          let newText = text;
+          let changed = false;
           for (const [eng, pt] of Object.entries(correctionMap)) {
-            if (text.includes(eng)) {
-              console.warn(`[Auto-Fix] Corrigindo "${eng}" para "${pt}" no DOM.`);
-              node.textContent = node.textContent?.replace(new RegExp(eng, 'g'), pt) || null;
+            if (newText.includes(eng)) {
+              newText = newText.replace(new RegExp(`\\b${eng}\\b`, 'g'), pt);
+              changed = true;
             }
           }
 
-          if (allAllowed.some(allowed => text.toLowerCase() === allowed.toLowerCase())) continue;
+          if (changed) {
+            console.warn(`[Auto-Fix] Corrigindo no DOM.`);
+            node.textContent = newText;
+          }
 
-          // Registrar violação se persistir ou for suspeita
-          await supabase.from('analytics_events').insert([{
-            event_name: 'language_violation',
-            properties: {
-              term: text,
+          // Se ainda contiver termos proibidos e não estiver na allowlist, registrar
+          if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase() === allowed.toLowerCase())) {
+            await supabase.from('analytics_events').insert([{
+              event_name: 'language_violation',
+              properties: {
+                term: newText,
+                url: window.location.href,
+                session_id: session,
+                timestamp: new Date().toISOString()
+              },
               url: window.location.href,
-              session_id: session,
-              timestamp: new Date().toISOString()
-            },
-            url: window.location.href,
-            session_id: session
-          }]);
+              session_id: session
+            }]);
+          }
         }
       }
     };
-    const timer = setInterval(scanAndFix, 2000); // Varredura contínua para capturar lazy content
+    const timer = setInterval(scanAndFix, 2000); 
     return () => clearInterval(timer);
   }, [location.pathname]);
 

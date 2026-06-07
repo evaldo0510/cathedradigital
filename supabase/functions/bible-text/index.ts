@@ -122,15 +122,31 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
   
   // Caso especial para Abdias (frequentemente apresenta problemas em APIs devido ao capítulo único)
   if (bookId === 31) {
-    // Texto de Abdias de uma fonte católica confiável como fallback
+    // Abdias frequently has issues in APIs due to single chapter structure.
     const obadiahText = [
       { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
       { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
       { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" },
       { number: 4, text: "Se te elevares como a águia, e se puseres o teu ninho entre as estrelas, dali te derrubarei, diz o Senhor." },
-      // ... adding a few more for the audit to pass, though ideally we fetch all
+      { number: 5, text: "Se viessem a ti ladrões ou salteadores de noite (como estás destruído!), não furtariam apenas o que lhes bastasse? Se a ti viessem os vindimadores, não deixariam pelo menos alguns cachos?" },
+      { number: 6, text: "Como foram esquadrinhados os bens de Esaú! Como foram buscados os seus tesouros escondidos!" },
+      { number: 7, text: "Todos os teus aliados te levaram até a fronteira; os que estavam em paz contigo te enganaram e prevaleceram contra ti; os que comem o teu pão puseram uma armadilha debaixo de ti; não há nele entendimento." },
+      { number: 8, text: "Não acontecerá naquele dia, diz o Senhor, que farei perecer os sábios de Edom e o entendimento do monte de Esaú?" },
+      { number: 9, text: "E os teus valentes, ó Temã, ficarão atemorizados, para que do monte de Esaú seja cada um exterminado pela matança." },
+      { number: 10, text: "Por causa da violência feita a teu irmão Jacó, cobrir-te-á a confusão, e serás exterminado para sempre." },
+      { number: 11, text: "No dia em que estiveste do lado oposto, no dia em que estranhos levaram os seus bens, e os estrangeiros entraram pelas suas portas e lançaram sortes sobre Jerusalém, tu mesmo eras como um deles." },
+      { number: 12, text: "Mas tu não devias ter olhado com prazer para o dia de teu irmão, no dia do seu infortúnio; nem te alegrado sobre os filhos de Judá, no dia da sua ruína; nem falado de boca cheia, no dia da angústia." },
+      { number: 13, text: "Não devias ter entrado pela porta do meu povo, no dia da sua calamidade; sim, tu não devias ter olhado com prazer para o seu mal, no dia da sua calamidade; nem lançado mão nos seus bens, no dia da sua calamidade." },
+      { number: 14, text: "Nem devias ter parado nas encruzilhadas, para exterminares os que escapassem; nem entregado os que lhe restassem, no dia da angústia." },
+      { number: 15, text: "Porque o dia do Senhor está perto, sobre todas as nações; como tu fizeste, assim se fará contigo; o teu mal recairá sobre a tua cabeça." },
+      { number: 16, text: "Porque, como vós bebestes no meu santo monte, assim beberão de contínuo todas as nações; beberão, e sorverão, e serão como se nunca tivessem sido." },
+      { number: 17, text: "Mas no monte Sião haverá livramento; ele será santo; e os da casa de Jacó possuirão as suas herdades." },
+      { number: 18, text: "E a casa de Jacó será um fogo, e a casa de José uma chama, e a casa de Esaú restolho; e incendiar-se-ão contra eles, e os consumirão; e ninguém restará da casa de Esaú, porque o Senhor o falou." },
+      { number: 19, text: "E os do sul possuirão o monte de Esaú, e os da planície os filisteus; possuirão também os campos de Efraim, e os campos de Samaria; e Benjamim possuirá a Gileade." },
+      { number: 20, text: "E os cativos deste exército dos filhos de Israel possuirão os cananeus até Sarepta; e os cativos de Jerusalém, que estão em Sefarade, possuirão as cidades do sul." },
+      { number: 21, text: "E subirão salvadores ao monte Sião, para julgarem o monte de Esaú; e o reino será do Senhor." }
     ];
-    // Continuaremos tentando a API primeiro
+    return obadiahText;
   }
 
   for (const version of versions) {
