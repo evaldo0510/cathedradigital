@@ -824,10 +824,12 @@ const Bible: React.FC = () => {
 
                         </div>
 
-                      );
-                    })
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
+
 
 
                   {/* Vertical Navigation Buttons */}
