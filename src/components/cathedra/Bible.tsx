@@ -96,6 +96,8 @@ const Bible: React.FC = () => {
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string } | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResults, setScanResults] = useState<{book: string, ch: number, v: number, text: string, type: string}[]>([]);
 
 
 
@@ -430,6 +432,24 @@ const Bible: React.FC = () => {
           }
         });
         setDynamicConnections(newConns);
+      }
+      
+      // Auto-scan validation for real evidence
+      if (viewMode === 'reading' && isScanning) {
+        const forbiddenEnRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees)\\b`, 'i');
+        const found = loadedVerses.filter((v: any) => forbiddenEnRegex.test(v.text));
+        if (found.length > 0) {
+          setScanResults(prev => [
+            ...prev,
+            ...found.map((f: any) => ({
+              book: data.book || abbr,
+              ch: chapter,
+              v: f.number,
+              text: f.text,
+              type: 'Conteúdo Bíblico (API)'
+            }))
+          ]);
+        }
       }
 
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
@@ -794,21 +814,70 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     Exportar CSV
                   </Button>
                 </div>
+
+                <div className="pt-4 border-t border-primary/5 space-y-4">
+                  <span className="text-[10px] font-black uppercase text-primary/40">Varredura de Evidências Reais</span>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setIsScanning(true);
+                        setScanResults([]);
+                        toast.info('Iniciando varredura profunda...');
+                        const runDeepScan = async () => {
+                          const targetBooks = ['Tb', 'Jt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
+                          for (const abbr of targetBooks) {
+                            for (let ch = 1; ch <= 2; ch++) {
+                              await fetchVerses(abbr, ch);
+                              await new Promise(r => setTimeout(r, 1200));
+                            }
+                          }
+                          setIsScanning(false);
+                          toast.success('Varredura concluída');
+                        };
+                        runDeepScan();
+                      }}
+                      disabled={isScanning}
+                      className="flex-1 text-[9px] uppercase font-bold text-secondary"
+                    >
+                      {isScanning ? 'Varrendo...' : 'Iniciar Varredura'}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const csv = "Livro,Capitulo,Versiculo,Texto,Fonte\n" + 
+                          scanResults.map(r => `"${r.book}",${r.ch},${r.v},"${r.text.replace(/"/g, '""')}",${r.type}`).join("\n");
+                        const blob = new Blob([csv], { type: 'text/csv' });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `evidencias-ingles.csv`;
+                        link.click();
+                      }}
+                      disabled={scanResults.length === 0}
+                      className="flex-1 text-[9px] uppercase font-bold"
+                    >
+                      Exportar ({scanResults.length})
+                    </Button>
+                  </div>
+
+                  {scanResults.length > 0 && (
+                    <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-40 overflow-y-auto space-y-2">
+                      <p className="text-[9px] font-black text-red-500 uppercase">Detectado:</p>
+                      {scanResults.map((res, i) => (
+                        <div key={i} className="text-[8px] font-mono border-b border-primary/5 pb-1">
+                          [{res.book} {res.ch}:{res.v}] {res.text.substring(0, 40)}...
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    const tobit = BIBLE_DATA['Antigo Testamento'][1].books.find(b => b.abbr === 'Tb');
-                    if (tobit) selectBook(tobit);
-                    setIsDiagnosticOpen(false);
-                  }}
-                  className="flex-1 text-[10px]"
-                >
-                  Simular Tobias
-                </Button>
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1">Fechar</Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar</Button>
               </div>
             </motion.div>
           </div>
