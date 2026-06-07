@@ -1,15 +1,14 @@
 import { test, expect } from 'vitest';
+import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '../../../constants/language-config';
 
-const FORBIDDEN_ENGLISH_WORDS = [
-  'Chapter', 'Verse', 'Book', 'Search', 'Loading', 'Error', 
-  'Settings', 'Cancel', 'Save', 'Delete', 'Share', 'Back', 'Summary'
-];
-
-test('Bíblia não deve conter termos em inglês na interface principal', () => {
-  // Simula o conteúdo do DOM (em um teste real usaríamos bibliotecas como testing-library)
+test('Bíblia não deve conter termos em inglês na interface principal, respeitando a allowlist', () => {
+  // Simula o conteúdo do DOM
   const bodyText = document.body.innerText || "";
   
   FORBIDDEN_ENGLISH_WORDS.forEach(word => {
+    // Só falha se não estiver na allowlist (embora os proibidos geralmente não estejam)
+    if (LANGUAGE_ALLOWLIST.includes(word)) return;
+
     const regex = new RegExp(`\\b${word}\\b`, 'i');
     expect(bodyText).not.toMatch(regex);
   });

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
-import { cn } from '@/lib/utils';
+import { cn, getElementSelector } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
@@ -20,6 +20,7 @@ import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
 import { BibleReader } from './BibleReader';
+import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '@/constants/language-config';
 
 import { MonthlyRecap } from './MonthlyRecap';
 import { HighlightMenu } from './HighlightMenu';
@@ -105,20 +106,40 @@ const Bible: React.FC = () => {
   // Sync with URL
   useEffect(() => {
     // Escaneamento de runtime para detectar termos em inglês no DOM
-    const scanForEnglish = () => {
+    const scanForEnglish = async () => {
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
-      const forbidden = /\b(Chapter|Verse|Book|Search|Loading|Error|Settings|Cancel|Save|Delete|Share|Back|Summary)\b/i;
+      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
+      
       while(node = walker.nextNode()) {
-        const text = node.textContent;
-        if (text && forbidden.test(text)) {
-          console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}"`, node.parentElement);
+        const text = node.textContent?.trim();
+        if (text && forbiddenRegex.test(text)) {
+          // Ignorar se estiver na allowlist (ex: Cathedra)
+          if (LANGUAGE_ALLOWLIST.some(allowed => text.toLowerCase() === allowed.toLowerCase())) continue;
+
+          const selector = getElementSelector(node.parentElement as HTMLElement);
+          const report = {
+            term: text,
+            context: node.parentElement?.innerText?.substring(0, 100),
+            selector: selector,
+            url: window.location.href,
+            timestamp: new Date().toISOString()
+          };
+
+          console.warn(`[Auditoria Linguística] Termo estrangeiro suspeito detectado: "${text}" no seletor ${selector}`);
+          
+          // Enviar relatório para log (simulado via console ou Supabase se desejado)
+          await supabase.from('audit_logs').insert([{
+            level: 'warn',
+            message: `Suspected English term: ${text}`,
+            metadata: report
+          }]);
         }
       }
     };
     const timeout = setTimeout(scanForEnglish, 2000);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [location.pathname]);
 
   // Sync with URL continued
   useEffect(() => {
