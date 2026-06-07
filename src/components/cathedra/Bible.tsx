@@ -844,7 +844,46 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </div>
 
                 <div className="pt-4 border-t border-primary/5 space-y-4">
-                  <span className="text-[10px] font-black uppercase text-primary/40">Varredura de Evidências Reais</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase text-primary/40">Relatório de Auditoria Final</span>
+                    {scanResults.length > 0 && (
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            const blob = new Blob([JSON.stringify(scanResults, null, 2)], { type: 'application/json' });
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `auditoria-final-${new Date().toISOString()}.json`;
+                            link.click();
+                          }}
+                          className="h-6 text-[8px] uppercase font-bold px-2"
+                        >
+                          JSON
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            const csv = "ID,Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,Evidencia_HTML\n" + 
+                              scanResults.map(r => `"${r.id}","${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${r.htmlSnippet.substring(0, 50)}..."`).join("\n");
+                            const blob = new Blob([csv], { type: 'text/csv' });
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `auditoria-final-${new Date().toISOString()}.csv`;
+                            link.click();
+                          }}
+                          className="h-6 text-[8px] uppercase font-bold px-2"
+                        >
+                          CSV
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex gap-2">
                     <Button 
                       variant="outline" 
@@ -852,60 +891,58 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       onClick={() => {
                         setIsScanning(true);
                         setScanResults([]);
-                        toast.info('Iniciando varredura profunda...');
+                        toast.info('Iniciando varredura com screenshots PNG...');
                         const runDeepScan = async () => {
                           const targetBooks = ['Tb', 'Jt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
                           for (const abbr of targetBooks) {
                             for (let ch = 1; ch <= 2; ch++) {
                               await fetchVerses(abbr, ch);
-                              await new Promise(r => setTimeout(r, 1200));
+                              await new Promise(r => setTimeout(r, 2000));
                             }
                           }
                           setIsScanning(false);
-                          toast.success('Varredura concluída');
+                          toast.success('Varredura e capturas concluídas');
                         };
                         runDeepScan();
                       }}
                       disabled={isScanning}
                       className="flex-1 text-[9px] uppercase font-bold text-secondary"
                     >
-                      {isScanning ? 'Varrendo...' : 'Iniciar Varredura'}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => {
-                        const csv = "Livro,Capitulo,Versiculo,Titulo,Texto,Fonte,Arquivo,Evidencia_Visual\n" + 
-                          scanResults.map(r => `"${r.book}",${r.ch},${r.v},"${r.title}","${r.text.replace(/"/g, '""')}","${r.type}","${r.file}","${r.screenshot}"`).join("\n");
-                        const blob = new Blob([csv], { type: 'text/csv' });
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `evidencias-ingles.csv`;
-                        link.click();
-                      }}
-                      disabled={scanResults.length === 0}
-                      className="flex-1 text-[9px] uppercase font-bold"
-                    >
-                      Exportar ({scanResults.length})
+                      {isScanning ? 'Varrendo...' : 'Nova Auditoria'}
                     </Button>
                   </div>
 
                   {scanResults.length > 0 && (
-                    <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-40 overflow-y-auto space-y-2">
-                      <p className="text-[9px] font-black text-red-500 uppercase">Detectado:</p>
-                      {scanResults.map((res, i) => (
-                        <div key={i} className="text-[8px] font-mono border-b border-primary/5 pb-1">
-                          [{res.book} {res.ch}:{res.v}] {res.text.substring(0, 40)}...
-                        </div>
-                      ))}
+                    <div className="space-y-3">
+                      <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-60 overflow-y-auto space-y-3">
+                        {scanResults.map((res, i) => (
+                          <div key={i} className="space-y-2 border-b border-primary/5 pb-3 last:border-0 last:pb-0">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px] font-bold text-red-500">[{res.id}] {res.book} {res.ch}:{res.v}</span>
+                              <span className="text-[8px] opacity-40 italic">{res.type}</span>
+                            </div>
+                            <p className="text-[9px] font-serif leading-tight italic">"{res.text.substring(0, 100)}..."</p>
+                            {res.screenshot && (
+                              <div className="relative group cursor-pointer" onClick={() => {
+                                const win = window.open("");
+                                win?.document.write(`<img src="${res.screenshot}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />`);
+                              }}>
+                                <img src={res.screenshot} className="w-full h-20 object-cover rounded-lg border border-primary/10" alt="Screenshot" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                                  <span className="text-[8px] text-white font-bold uppercase">Ver Screenshot Original</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
               
               <div className="flex gap-2">
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar</Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar Painel</Button>
               </div>
             </motion.div>
           </div>
