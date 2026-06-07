@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Version for ETag invalidation - Bump this to force client cache refresh
-const CACHE_VERSION = "v1.2.3";
+const CACHE_VERSION = "v1.2.4";
 
 const BOOK_NAME_MAP: Record<string, string> = {
   'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
