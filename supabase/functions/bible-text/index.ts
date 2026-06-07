@@ -12,10 +12,29 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const CACHE_VERSION = "v1.3.3";
+const CACHE_VERSION = "v1.3.4";
 
 const DEUTERO_ABBREVS = ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'];
 
+const BOOK_PT_MAP: Record<string, string> = {
+  'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
+  'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', '1Sm': '1 Samuel', '2Sm': '2 Samuel',
+  '1Rs': '1 Reis', '2Rs': '2 Reis', '1Cr': '1 Crônicas', '2Cr': '2 Crônicas',
+  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jdt': 'Judite', 'Est': 'Ester',
+  '1Mc': '1 Macabeus', '2Mc': '2 Macabeus', 'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios', 
+  'Ecl': 'Eclesiastes', 'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
+  'Is': 'Isaías', 'Jr': 'Jeremias', 'Lm': 'Lamentações', 'Br': 'Baruc',
+  'Ez': 'Ezequiel', 'Dn': 'Daniel', 'Os': 'Oseias', 'Jl': 'Joel', 'Am': 'Amós',
+  'Ab': 'Abdias', 'Jn': 'Jonas', 'Mq': 'Miqueias', 'Na': 'Naum', 'Hab': 'Habacuc',
+  'Sf': 'Sofonias', 'Ag': 'Ageu', 'Zc': 'Zacarias', 'Ml': 'Malaquias',
+  'Mt': 'Mateus', 'Mc': 'Marcos', 'Lc': 'Lucas', 'Jo': 'João',
+  'At': 'Atos', 'Rm': 'Romanos', '1Cor': '1 Coríntios', '2Cor': '2 Coríntios',
+  'Gl': 'Gálatas', 'Ef': 'Efésios', 'Fl': 'Filipenses', 'Cl': 'Colossenses',
+  '1Ts': '1 Tessalonicenses', '2Ts': '2 Tessalonicenses', '1Tm': '1 Timóteo', '2Tm': '2 Timóteo',
+  'Tt': 'Tito', 'Fm': 'Filemon', 'Hb': 'Hebreus', 'Tg': 'Tiago',
+  '1Pd': '1 Pedro', '2Pd': '2 Pedro', '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João',
+  'Jd': 'Judas', 'Ap': 'Apocalipse'
+};
 
 const BOLLS_BOOK_ID: Record<string, number> = {
   'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5, 'Js': 6, 'Jz': 7, 'Rt': 8, '1Sm': 9, '2Sm': 10,
@@ -40,7 +59,6 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
-
 async function fetchFromBollsLife(bookId: number, chapter: number) {
   try {
     const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
@@ -52,60 +70,98 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
 }
 
 serve(async (req) => {
+  const startTime = performance.now();
+  const correlationId = req.headers.get('x-correlation-id') || crypto.randomUUID();
+  const timestamp = new Date().toISOString();
+  
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+
   try {
     const rawBody = await req.text();
-    if (!rawBody) return new Response(JSON.stringify({ error: 'Body vazio' }), { status: 400, headers: corsHeaders });
+    if (!rawBody) return new Response(JSON.stringify({ error: 'Body vazio', correlationId }), { status: 400, headers: corsHeaders });
     
-    const { abbrev, chapter } = JSON.parse(rawBody);
-    if (!abbrev || !chapter) return new Response(JSON.stringify({ error: 'Parâmetros inválidos' }), { status: 400, headers: corsHeaders });
+    let abbrev, chapter;
+    try {
+      const body = JSON.parse(rawBody);
+      abbrev = body.abbrev;
+      chapter = body.chapter;
+    } catch {
+      return new Response(JSON.stringify({ error: 'JSON inválido', correlationId }), { status: 400, headers: corsHeaders });
+    }
+
+    if (!abbrev || !chapter) return new Response(JSON.stringify({ error: 'Parâmetros inválidos', correlationId }), { status: 400, headers: corsHeaders });
+
+    const findCaseInsensitive = (map: Record<string, any>, key: string) => {
+      const lowerKey = key.toLowerCase();
+      const match = Object.keys(map).find(k => k.toLowerCase() === lowerKey);
+      return match ? map[match] : null;
+    };
+
+    const ptName = findCaseInsensitive(BOOK_PT_MAP, abbrev) || abbrev;
+    const bookId = findCaseInsensitive(BOLLS_BOOK_ID, abbrev);
 
     // 1. Prioridade Máxima: Banco Cathedra
     const dbResult = await fetchFromCathedraDb(abbrev, chapter);
     if (dbResult) {
       console.log(JSON.stringify({
-        level: 'info', requestId, event: 'bible_fetch_success',
-        book: abbrev, chapter, source: 'Cathedra (Banco)', duration_ms: Math.round(performance.now() - startTime)
+        level: 'info', correlationId, event: 'bible_fetch_success',
+        livro: abbrev, capítulo: chapter, source: 'Cathedra (Banco)', duration_ms: Math.round(performance.now() - startTime)
       }));
       return new Response(JSON.stringify({
         book: dbResult.bookName, chapter, verses: dbResult.verses,
-        metadata: { source: 'Cathedra (Banco)', cache_version: CACHE_VERSION }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        metadata: { source: 'Cathedra (Banco)', cache_version: CACHE_VERSION, correlationId }
+      }), { 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } 
+      });
     }
 
     // BLOQUEIO DETERMINÍSTICO: Deuterocanônicos DEVEM vir do banco.
     if (DEUTERO_ABBREVS.includes(abbrev)) {
       const errorMsg = `O livro ${abbrev} ainda não foi migrado para o banco Cathedra ou o capítulo ${chapter} não existe.`;
       console.warn(JSON.stringify({
-        level: 'warning', requestId, event: 'bible_fetch_missing_deutero',
-        book: abbrev, chapter, error: errorMsg, timestamp
+        level: 'warning', correlationId, event: 'bible_fetch_missing_deutero',
+        livro: abbrev, capítulo: chapter, códigoErro: 'DEUTERO_MISSING', trecho: 'N/A', timestamp
       }));
-      return new Response(JSON.stringify({ error: errorMsg, isDeutero: true }), { status: 404, headers: corsHeaders });
+      return new Response(JSON.stringify({ error: errorMsg, isDeutero: true, correlationId }), { 
+        status: 404, 
+        headers: { ...corsHeaders, 'x-correlation-id': correlationId } 
+      });
     }
 
     // 2. Protocanônicos: Fallback BollsLife
-    const bookId = BOLLS_BOOK_ID[abbrev];
     if (bookId) {
       const verses = await fetchFromBollsLife(bookId, chapter);
       if (verses) {
         console.log(JSON.stringify({
-          level: 'info', requestId, event: 'bible_fetch_success',
-          book: abbrev, chapter, source: 'BollsLife (NAA)', duration_ms: Math.round(performance.now() - startTime)
+          level: 'info', correlationId, event: 'bible_fetch_success',
+          livro: abbrev, capítulo: chapter, source: 'BollsLife (NAA)', duration_ms: Math.round(performance.now() - startTime)
         }));
         return new Response(JSON.stringify({
           book: abbrev, chapter, verses,
-          metadata: { source: 'BollsLife (NAA)', cache_version: CACHE_VERSION }
-        }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          metadata: { source: 'BollsLife (NAA)', cache_version: CACHE_VERSION, correlationId }
+        }), { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } 
+        });
       }
     }
 
     console.error(JSON.stringify({
-      level: 'error', requestId, event: 'bible_fetch_not_found',
-      book: abbrev, chapter, timestamp
+      level: 'error', correlationId, event: 'bible_fetch_not_found',
+      livro: abbrev, capítulo: chapter, timestamp
     }));
-    return new Response(JSON.stringify({ error: 'Texto indisponível' }), { status: 404, headers: corsHeaders });
+    return new Response(JSON.stringify({ error: 'Texto indisponível', correlationId }), { 
+      status: 404, 
+      headers: { ...corsHeaders, 'x-correlation-id': correlationId } 
+    });
 
-  } catch (e) {
-    return new Response(JSON.stringify({ error: 'Erro interno', message: e.message }), { status: 500, headers: corsHeaders });
+  } catch (error: any) {
+    console.error(JSON.stringify({
+      level: 'critical', correlationId, event: 'bible_internal_error',
+      error: error.message, timestamp
+    }));
+    return new Response(JSON.stringify({ error: 'Erro interno', message: error.message, correlationId }), { 
+      status: 500, 
+      headers: corsHeaders 
+    });
   }
 });
