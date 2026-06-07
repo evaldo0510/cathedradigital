@@ -315,11 +315,9 @@ const Footer: React.FC = React.memo(() => {
           <div className="flex items-center gap-spacing-xl">
             <nav className="flex items-center" aria-label="Links institucionais">
               {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
-
                 <React.Fragment key={item.label}>
                   <Button 
                     onClick={() => navigate(item.path)} 
-
                     className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-spacing-sm py-spacing-2xs rounded"
                     aria-label={item.label}
                   >
@@ -331,6 +329,7 @@ const Footer: React.FC = React.memo(() => {
                   )}
                 </React.Fragment>
               ))}
+
             </nav>
             <Button 
               onClick={scrollToTop} 
