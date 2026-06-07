@@ -794,6 +794,50 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_integrity_reports: {
+        Row: {
+          book_id: string | null
+          calculated_hash: string
+          chapter_number: number
+          correlation_id: string | null
+          created_at: string | null
+          discrepancy_details: Json | null
+          expected_hash: string | null
+          id: string
+          status: string
+        }
+        Insert: {
+          book_id?: string | null
+          calculated_hash: string
+          chapter_number: number
+          correlation_id?: string | null
+          created_at?: string | null
+          discrepancy_details?: Json | null
+          expected_hash?: string | null
+          id?: string
+          status: string
+        }
+        Update: {
+          book_id?: string | null
+          calculated_hash?: string
+          chapter_number?: number
+          correlation_id?: string | null
+          created_at?: string | null
+          discrepancy_details?: Json | null
+          expected_hash?: string | null
+          id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_integrity_reports_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "bible_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_verses: {
         Row: {
           chapter_id: string
