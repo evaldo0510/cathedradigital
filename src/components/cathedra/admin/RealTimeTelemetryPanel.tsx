@@ -38,10 +38,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
   }, []);
 
   const filteredEvents = useMemo(() => {
+    const periodMs = parseInt(filter.period) * 60 * 1000;
+    const now = Date.now();
     return events.filter(e => {
+      const matchPeriod = filter.period === 'All' || (now - e.timestamp) <= periodMs;
       const matchComp = filter.component === 'All' || e.component === filter.component;
       const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
-      return matchComp && matchEnd;
+      return matchPeriod && matchComp && matchEnd;
     });
   }, [events, filter]);
 
