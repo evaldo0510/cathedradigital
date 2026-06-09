@@ -347,8 +347,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
       </div>
 
       <Card className="rounded-[2.5rem] border-primary/10 shadow-premium overflow-hidden">
-        <CardHeader className="bg-muted/20 border-b border-border/40 py-spacing-md">
-          <CardTitle className="text-premium-xs font-black uppercase tracking-widest">Logs de Eventos Recentes</CardTitle>
+        <CardHeader className="bg-muted/20 border-b border-border/40 py-spacing-md flex flex-row items-center justify-between">
+          <CardTitle className="text-premium-xs font-black uppercase tracking-widest">Feed de Eventos Filtrado</CardTitle>
+          <Badge variant="outline" className="text-[9px] font-mono">Mostrando {filteredEvents.length} eventos</Badge>
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
@@ -357,12 +358,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Horário</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Tipo</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Componente</th>
+                <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Endpoint</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Detalhes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              {events.slice(-5).reverse().map((event, i) => (
-                <tr key={i} className="hover:bg-muted/5">
+              {filteredEvents.slice(-10).reverse().map((event, i) => (
+                <tr key={i} className="hover:bg-muted/5 transition-colors">
                   <td className="px-spacing-md py-spacing-sm font-mono text-[9px] opacity-60">
                     {new Date(event.timestamp).toLocaleTimeString()}
                   </td>
@@ -370,7 +372,8 @@ const RealTimeTelemetryPanel: React.FC = () => {
                     <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${
                       event.type === 'error' || event.type === 'navigation_error' ? 'bg-destructive/10 text-destructive' :
                       event.type === 'request' ? 'bg-blue-500/10 text-blue-600' :
-                      'bg-amber-500/10 text-amber-600'
+                      event.type === 'alert' ? 'bg-amber-500/10 text-amber-600' :
+                      'bg-emerald-500/10 text-emerald-600'
                     }`}>
                       {event.type}
                     </span>
@@ -378,8 +381,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
                   <td className="px-spacing-md py-spacing-sm text-[10px] font-bold">
                     {event.component || 'Global'}
                   </td>
+                  <td className="px-spacing-md py-spacing-sm text-[10px] opacity-60 font-mono">
+                    {event.endpoint || '-'}
+                  </td>
                   <td className="px-spacing-md py-spacing-sm text-[10px] opacity-60 truncate max-w-[200px]">
-                    {event.responseTime ? `${event.responseTime}ms` : event.metadata ? JSON.stringify(event.metadata) : '-'}
+                    {event.responseTime ? `${event.responseTime}ms` : 
+                     event.type === 'alert' ? alert.metadata?.title :
+                     event.metadata ? JSON.stringify(event.metadata) : '-'}
                   </td>
                 </tr>
               ))}
