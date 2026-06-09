@@ -32,6 +32,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
       const role = session?.user?.app_metadata?.role;
       setIsAdmin(role === 'admin');
       setCurrentUserId(session?.user?.id);
+      
+      const { data } = await supabase.from('telemetry_settings').select('value').eq('key', 'notification_config').maybeSingle();
+      if (data?.value) setNotificationConfig(data.value as any);
     };
     checkAdmin();
   }, []);
