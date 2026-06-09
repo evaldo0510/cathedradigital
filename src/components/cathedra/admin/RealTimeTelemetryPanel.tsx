@@ -10,6 +10,9 @@ import {
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
+  const [thresholds, setThresholds] = useState(Telemetry.getThresholds());
+  const [filter, setFilter] = useState({ component: 'All', endpoint: 'All' });
+  const [showConfig, setShowConfig] = useState(false);
 
   useEffect(() => {
     // Subscrever a atualizações de telemetria
