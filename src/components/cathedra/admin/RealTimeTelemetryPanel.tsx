@@ -13,6 +13,8 @@ import {
 } from 'recharts';
 import { CathedraButton } from '../CathedraButton';
 import AdminAuditPage from './AdminAuditPage';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
@@ -20,6 +22,16 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [filter, setFilter] = useState({ component: 'All', endpoint: 'All', period: '60' });
   const [showConfig, setShowConfig] = useState(false);
   const [showAudit, setShowAudit] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const role = session?.user?.app_metadata?.role;
+      setIsAdmin(role === 'admin');
+    };
+    checkAdmin();
+  }, []);
 
   useEffect(() => {
     // Subscrever a atualizações de telemetria
@@ -110,6 +122,10 @@ const RealTimeTelemetryPanel: React.FC = () => {
   };
 
   const updateThreshold = (key: string, value: string) => {
+    if (!isAdmin) {
+      toast.error('Apenas administradores podem alterar configurações de telemetria');
+      return;
+    }
     const num = parseFloat(value);
     if (isNaN(num)) return;
     const newConfig = { ...thresholds, [key]: num };
