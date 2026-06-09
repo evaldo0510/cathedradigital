@@ -1,5 +1,6 @@
 
 import { trackEvent } from './analytics';
+import { supabase } from '@/integrations/supabase/client';
 
 const redactPII = (text: string) => {
   if (!text) return text;
@@ -10,7 +11,7 @@ const redactPII = (text: string) => {
 
 export type TelemetryEvent = {
   timestamp: number;
-  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error' | 'alert';
+  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error' | 'alert' | 'config_change' | 'export';
   responseTime?: number;
   component?: string;
   endpoint?: string;
@@ -32,9 +33,47 @@ class Telemetry {
     avgLatency: 500,
     effectTriggers: 50
   };
+  private static isInitialized = false;
 
-  static setThresholds(config: Partial<ThresholdConfig>) {
+  static async init() {
+    if (this.isInitialized) return;
+    try {
+      const { data, error } = await supabase
+        .from('telemetry_settings')
+        .select('value')
+        .eq('key', 'thresholds')
+        .single();
+      
+      if (!error && data?.value) {
+        this.thresholds = data.value as ThresholdConfig;
+      }
+    } catch (e) {
+      console.error('[Telemetry] Failed to load thresholds from DB', e);
+    }
+    this.isInitialized = true;
+  }
+
+  static async setThresholds(config: Partial<ThresholdConfig>) {
+    const oldThresholds = { ...this.thresholds };
     this.thresholds = { ...this.thresholds, ...config };
+    
+    try {
+      await supabase
+        .from('telemetry_settings')
+        .upsert({ 
+          key: 'thresholds', 
+          value: this.thresholds,
+          updated_at: new Date().toISOString()
+        });
+      
+      this.audit('config_change', 'Alteração de Limiares', {
+        old: oldThresholds,
+        new: this.thresholds
+      }, 'info');
+    } catch (e) {
+      console.error('[Telemetry] Failed to save thresholds', e);
+    }
+    this.notify();
   }
 
   static getThresholds() {
@@ -45,15 +84,13 @@ class Telemetry {
     const newEvent = { ...event, timestamp: Date.now() };
     this.events.push(newEvent);
     
-    // Manter apenas os últimos 1000 eventos para não sobrecarregar a memória
-    if (this.events.length > 1000) {
+    if (this.events.length > 2000) {
       this.events.shift();
     }
     
     this.notify();
     this.checkThresholds();
     
-    // Também log no console para debug se necessário
     if (event.type === 'error' || event.type === 'navigation_error') {
       console.error(`[Telemetry] ${event.type} in ${event.component || 'Global'}`, event.metadata);
     }
@@ -80,7 +117,7 @@ class Telemetry {
     const recentAlerts = this.events.filter(e => 
       e.type === 'alert' && 
       e.metadata?.title === title && 
-      (Date.now() - e.timestamp) < 60000
+      (Date.now() - e.timestamp) < 300000 // 5 minutos de cooldown
     );
     
     if (recentAlerts.length > 0) return;
@@ -90,6 +127,22 @@ class Telemetry {
       severity,
       metadata: { title, message }
     });
+
+    this.audit('alert', title, { message, severity }, severity);
+  }
+
+  static async audit(eventType: string, title: string, details: any, severity: string = 'info') {
+    try {
+      await supabase.from('telemetry_audit').insert({
+        event_type: eventType,
+        title,
+        details,
+        severity,
+        created_at: new Date().toISOString()
+      });
+    } catch (e) {
+      console.error('[Telemetry] Audit failed', e);
+    }
   }
 
   static getEvents() {
@@ -157,5 +210,8 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
 
   return errorId;
 };
+
+// Initialize telemetry thresholds
+Telemetry.init();
 
 export default Telemetry;
