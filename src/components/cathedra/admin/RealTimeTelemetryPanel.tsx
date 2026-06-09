@@ -1,12 +1,17 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import Telemetry, { TelemetryEvent } from '@/lib/telemetry';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Icons } from '@/constants';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
+} from '@/components/ui/select';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, BarChart, Bar, Cell 
+  AreaChart, Area, BarChart, Bar, Cell, ComposedChart 
 } from 'recharts';
+import { CathedraButton } from '../CathedraButton';
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
