@@ -386,7 +386,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
                   </td>
                   <td className="px-spacing-md py-spacing-sm text-[10px] opacity-60 truncate max-w-[200px]">
                     {event.responseTime ? `${event.responseTime}ms` : 
-                     event.type === 'alert' ? alert.metadata?.title :
+                     event.type === 'alert' ? event.metadata?.title :
                      event.metadata ? JSON.stringify(event.metadata) : '-'}
                   </td>
                 </tr>
