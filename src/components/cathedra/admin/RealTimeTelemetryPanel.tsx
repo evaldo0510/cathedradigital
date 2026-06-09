@@ -12,12 +12,14 @@ import {
   AreaChart, Area, BarChart, Bar, Cell, ComposedChart 
 } from 'recharts';
 import { CathedraButton } from '../CathedraButton';
+import AdminAuditPage from './AdminAuditPage';
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
   const [thresholds, setThresholds] = useState(Telemetry.getThresholds());
-  const [filter, setFilter] = useState({ component: 'All', endpoint: 'All' });
+  const [filter, setFilter] = useState({ component: 'All', endpoint: 'All', period: '60' });
   const [showConfig, setShowConfig] = useState(false);
+  const [showAudit, setShowAudit] = useState(false);
 
   useEffect(() => {
     // Subscrever a atualizações de telemetria
@@ -37,10 +39,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
   }, []);
 
   const filteredEvents = useMemo(() => {
+    const periodMs = parseInt(filter.period) * 60 * 1000;
+    const now = Date.now();
     return events.filter(e => {
+      const matchPeriod = filter.period === 'All' || (now - e.timestamp) <= periodMs;
       const matchComp = filter.component === 'All' || e.component === filter.component;
       const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
-      return matchComp && matchEnd;
+      return matchPeriod && matchComp && matchEnd;
     });
   }, [events, filter]);
 
@@ -82,10 +87,16 @@ const RealTimeTelemetryPanel: React.FC = () => {
 
   const handleExport = (format: 'json' | 'csv') => {
     const data = format === 'json' 
-      ? JSON.stringify(events, null, 2)
-      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + events.map(e => 
+      ? JSON.stringify(filteredEvents, null, 2)
+      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + filteredEvents.map(e => 
           `${new Date(e.timestamp).toISOString()},${e.type},"${e.component || ''}","${e.endpoint || ''}",${e.responseTime || ''},"${JSON.stringify(e.metadata || {}).replace(/"/g, '""')}"`
         ).join("\n");
+    
+    Telemetry.audit('export', `Exportação de Telemetria (${format.toUpperCase()})`, {
+      eventCount: filteredEvents.length,
+      period: filter.period,
+      format
+    });
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -115,8 +126,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
             Telemetria Avançada
           </h2>
           <div className="flex items-center gap-spacing-sm">
+            <CathedraButton 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowAudit(!showAudit)}
+              className="h-6 px-2 text-[10px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary"
+            >
+              <Icons.History className="w-3 h-3 mr-1" />
+              {showAudit ? 'Voltar para Tempo Real' : 'Ver Auditoria'}
+            </CathedraButton>
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-30">|</span>
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream de Dados em Tempo Real</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream Live</span>
           </div>
         </div>
 
@@ -176,7 +197,11 @@ const RealTimeTelemetryPanel: React.FC = () => {
         </Card>
       )}
 
-      <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
+      {showAudit ? (
+        <AdminAuditPage />
+      ) : (
+        <>
+          <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
         <div className="flex items-center gap-2 px-spacing-md">
           <Icons.Filter className="w-4 h-4 opacity-40" />
           <span className="text-[9px] font-black uppercase opacity-40">Filtros:</span>
@@ -197,6 +222,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
           </SelectTrigger>
           <SelectContent className="rounded-xl border-primary/10">
             {endpoints.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+          </SelectContent>
+        </Select>
+
+        <Select value={filter.period} onValueChange={(v) => setFilter(f => ({ ...f, period: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Período" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            <SelectItem value="15">Últimos 15 min</SelectItem>
+            <SelectItem value="60">Últimos 60 min</SelectItem>
+            <SelectItem value="120">Últimas 2 horas</SelectItem>
+            <SelectItem value="All">Todo o histórico</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -395,6 +432,8 @@ const RealTimeTelemetryPanel: React.FC = () => {
           </table>
         </div>
       </Card>
+        </>
+      )}
     </div>
   );
 };
