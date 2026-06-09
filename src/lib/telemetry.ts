@@ -10,15 +10,36 @@ const redactPII = (text: string) => {
 
 export type TelemetryEvent = {
   timestamp: number;
-  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error';
+  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error' | 'alert';
   responseTime?: number;
   component?: string;
+  endpoint?: string;
+  severity?: 'info' | 'warning' | 'critical';
   metadata?: any;
+};
+
+export type ThresholdConfig = {
+  errorRate: number; // %
+  avgLatency: number; // ms
+  effectTriggers: number; // per minute
 };
 
 class Telemetry {
   private static events: TelemetryEvent[] = [];
   private static listeners: ((events: TelemetryEvent[]) => void)[] = [];
+  private static thresholds: ThresholdConfig = {
+    errorRate: 10,
+    avgLatency: 500,
+    effectTriggers: 50
+  };
+
+  static setThresholds(config: Partial<ThresholdConfig>) {
+    this.thresholds = { ...this.thresholds, ...config };
+  }
+
+  static getThresholds() {
+    return { ...this.thresholds };
+  }
 
   static log(event: Omit<TelemetryEvent, 'timestamp'>) {
     const newEvent = { ...event, timestamp: Date.now() };
@@ -30,11 +51,41 @@ class Telemetry {
     }
     
     this.notify();
+    this.checkThresholds();
     
     // Também log no console para debug se necessário
     if (event.type === 'error' || event.type === 'navigation_error') {
-      console.error(`[Telemetry] ${event.type} in ${event.component}`, event.metadata);
+      console.error(`[Telemetry] ${event.type} in ${event.component || 'Global'}`, event.metadata);
     }
+  }
+
+  private static checkThresholds() {
+    const summary = this.getMetricsSummary();
+    
+    if (summary.errorRate > this.thresholds.errorRate) {
+      this.triggerAlert('Taxa de erros elevada', `Atual: ${summary.errorRate.toFixed(1)}% (Limite: ${this.thresholds.errorRate}%)`, 'critical');
+    }
+    
+    if (summary.avgResponseTime > this.thresholds.avgLatency) {
+      this.triggerAlert('Latência média elevada', `Atual: ${Math.round(summary.avgResponseTime)}ms (Limite: ${this.thresholds.avgLatency}ms)`, 'warning');
+    }
+
+    if (summary.effectTriggers > this.thresholds.effectTriggers) {
+      this.triggerAlert('Excesso de useEffect triggers', `Atual: ${summary.effectTriggers}pm (Limite: ${this.thresholds.effectTriggers}pm)`, 'warning');
+    }
+  }
+
+  private static triggerAlert(title: string, message: string, severity: 'warning' | 'critical') {
+    const lastAlert = this.events.filter(e => e.type === 'alert' && e.metadata?.title === title).pop();
+    
+    // Debounce alertas: não repetir o mesmo alerta em menos de 30 segundos
+    if (lastAlert && Date.now() - lastAlert.timestamp < 30000) return;
+
+    this.log({
+      type: 'alert',
+      severity,
+      metadata: { title, message }
+    });
   }
 
   static getEvents() {
