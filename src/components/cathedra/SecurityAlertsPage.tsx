@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import Telemetry from '@/lib/telemetry';
 import { 
   Dialog, 
   DialogContent, 
@@ -66,7 +67,14 @@ const SecurityAlertsPage = () => {
     // Bloqueia se já estiver carregando
     if (loading) return;
 
-    // Log de disparo do Effect/Action
+    // Log de disparo do Effect/Action para Telemetria
+    const fetchStart = Date.now();
+    Telemetry.log({ 
+      type: 'effect_trigger', 
+      component: 'SecurityAlertsPage',
+      metadata: { reason: force ? 'Manual' : 'Automático' }
+    });
+    
     console.log(`[Security] Disparando fetchAlerts. Motivo: ${force ? 'Manual' : 'Automático'}`);
     
     // Verificação de Cache (Debounce implícito por tempo)
@@ -92,9 +100,24 @@ const SecurityAlertsPage = () => {
       localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: now }));
       setMetrics(prev => ({ ...prev, lastFetch: now }));
       
+      // Log de Sucesso na Telemetria
+      Telemetry.log({ 
+        type: 'request', 
+        component: 'SecurityAlertsPage',
+        responseTime: Date.now() - fetchStart
+      });
+      
     } catch (err) {
       console.error('[Security] Erro crítico após retries:', err);
       setMetrics(prev => ({ ...prev, errors: prev.errors + 1 }));
+      
+      // Log de Erro na Telemetria
+      Telemetry.log({ 
+        type: 'error', 
+        component: 'SecurityAlertsPage',
+        metadata: { error: String(err) }
+      });
+      
       toast.error('Erro ao carregar alertas após múltiplas tentativas.');
     } finally {
       setLoading(false);
