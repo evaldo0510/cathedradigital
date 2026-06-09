@@ -132,13 +132,20 @@ class Telemetry {
     this.audit('alert', title, { message, severity }, severity);
   }
 
-  static async audit(eventType: string, title: string, details: any, severity: string = 'info') {
+  static async audit(eventType: string, title: string, details: any, severity: string = 'info', userId?: string) {
     try {
+      let effectiveUserId = userId;
+      if (!effectiveUserId) {
+        const { data } = await supabase.auth.getUser();
+        effectiveUserId = data.user?.id;
+      }
+
       await supabase.from('telemetry_audit').insert({
         event_type: eventType,
         title,
         details,
         severity,
+        user_id: effectiveUserId,
         created_at: new Date().toISOString()
       });
     } catch (e) {
