@@ -196,7 +196,11 @@ const RealTimeTelemetryPanel: React.FC = () => {
         </Card>
       )}
 
-      <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
+      {showAudit ? (
+        <AdminAuditPage />
+      ) : (
+        <>
+          <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
         <div className="flex items-center gap-2 px-spacing-md">
           <Icons.Filter className="w-4 h-4 opacity-40" />
           <span className="text-[9px] font-black uppercase opacity-40">Filtros:</span>
