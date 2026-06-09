@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -16,17 +16,29 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 
+// Configurações de Cache e Retry
+const CACHE_KEY = 'security_alerts_cache';
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const INITIAL_BACKOFF = 1000;
+const MAX_RETRIES = 3;
+
 const SecurityAlertsPage = () => {
   const [alerts, setAlerts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<any>(null);
+  const [metrics, setMetrics] = useState({ fetchCount: 0, lastFetch: 0, errors: 0 });
+  
+  const isInitialMount = useRef(true);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    fetchAlerts();
-  }, []);
+  // Memoization de métricas para evitar disparos desnecessários
+  const stats = useMemo(() => ({
+    unreadCount: alerts.filter(a => !a.is_read).length,
+    totalCount: alerts.length
+  }), [alerts]);
 
-  const fetchAlerts = async () => {
-    setLoading(true);
+  // Implementação de Backoff Exponencial
+  const fetchWithRetry = useCallback(async (retryCount = 0): Promise<any> => {
     try {
       const { data, error } = await supabase
         .from('security_alerts' as any)
@@ -36,18 +48,72 @@ const SecurityAlertsPage = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching alerts:', error);
-        toast.error('Erro ao carregar alertas de segurança');
-      } else {
-        setAlerts(data || []);
-      }
+      if (error) throw error;
+      return data;
     } catch (err) {
-      console.error('Unexpected error:', err);
+      if (retryCount < MAX_RETRIES) {
+        const backoff = INITIAL_BACKOFF * Math.pow(2, retryCount);
+        console.warn(`[Security] Falha na consulta. Tentando novamente em ${backoff}ms...`, err);
+        await new Promise(resolve => setTimeout(resolve, backoff));
+        return fetchWithRetry(retryCount + 1);
+      }
+      throw err;
+    }
+  }, []);
+
+  // Busca de alertas com Cache, Debounce e Controle de Concorrência
+  const fetchAlerts = useCallback(async (force = false) => {
+    // Bloqueia se já estiver carregando
+    if (loading) return;
+
+    // Log de disparo do Effect/Action
+    console.log(`[Security] Disparando fetchAlerts. Motivo: ${force ? 'Manual' : 'Automático'}`);
+    
+    // Verificação de Cache (Debounce implícito por tempo)
+    const now = Date.now();
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!force && cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (now - timestamp < CACHE_TTL) {
+        console.log('[Security] Usando dados do cache.');
+        setAlerts(data);
+        return;
+      }
+    }
+
+    setLoading(true);
+    setMetrics(prev => ({ ...prev, fetchCount: prev.fetchCount + 1 }));
+
+    try {
+      const data = await fetchWithRetry();
+      setAlerts(data || []);
+      
+      // Atualiza Cache
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: now }));
+      setMetrics(prev => ({ ...prev, lastFetch: now }));
+      
+    } catch (err) {
+      console.error('[Security] Erro crítico após retries:', err);
+      setMetrics(prev => ({ ...prev, errors: prev.errors + 1 }));
+      toast.error('Erro ao carregar alertas após múltiplas tentativas.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, fetchWithRetry]);
+
+  // Effect otimizado com controle de montagem e limpeza
+  useEffect(() => {
+    if (isInitialMount.current) {
+      fetchAlerts();
+      isInitialMount.current = false;
+    }
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [fetchAlerts]);
 
   const markAsRead = async (id: string) => {
     const { error } = await supabase
@@ -58,7 +124,10 @@ const SecurityAlertsPage = () => {
     if (error) {
       toast.error('Erro ao marcar como lido');
     } else {
-      setAlerts(alerts.map(a => a.id === id ? { ...a, is_read: true } : a));
+      const updatedAlerts = alerts.map(a => a.id === id ? { ...a, is_read: true } : a);
+      setAlerts(updatedAlerts);
+      // Invalida cache local
+      localStorage.removeItem(CACHE_KEY);
     }
   };
 
@@ -85,11 +154,25 @@ const SecurityAlertsPage = () => {
             <Icons.Bell className="w-spacing-xl h-spacing-xl" />
             Alertas de Segurança
           </h1>
-          <p className="text-muted-foreground font-serif italic">Notificações de vulnerabilidades e novos achados.</p>
+          <div className="flex items-center gap-spacing-md mt-spacing-xs">
+            <p className="text-muted-foreground font-serif italic">Notificações de vulnerabilidades e novos achados.</p>
+            <div className="flex items-center gap-spacing-xs bg-primary/5 px-spacing-sm py-spacing-3xs rounded-full border border-primary/10">
+              <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Métricas:</span>
+              <span className="text-[9px] font-bold text-primary">{metrics.fetchCount} reqs</span>
+              <span className="text-[9px] font-bold text-emerald-600">{stats.unreadCount} novos</span>
+              {metrics.errors > 0 && <span className="text-[9px] font-bold text-destructive">{metrics.errors} falhas</span>}
+            </div>
+          </div>
         </div>
-        <Button onClick={fetchAlerts} variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs">
+        <Button 
+          onClick={() => fetchAlerts(true)} 
+          variant="outline" 
+          size="sm" 
+          disabled={loading}
+          className="rounded-premium-full gap-spacing-xs"
+        >
           <Icons.RefreshCw className={`w-spacing-sm h-spacing-sm ${loading ? 'animate-spin' : ''}`} />
-          Atualizar
+          {loading ? 'Sincronizando...' : 'Atualizar'}
         </Button>
       </div>
 
