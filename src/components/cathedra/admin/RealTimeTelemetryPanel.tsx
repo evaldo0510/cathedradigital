@@ -1,15 +1,23 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import Telemetry, { TelemetryEvent } from '@/lib/telemetry';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Icons } from '@/constants';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
+} from '@/components/ui/select';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, BarChart, Bar, Cell 
+  AreaChart, Area, BarChart, Bar, Cell, ComposedChart 
 } from 'recharts';
+import { CathedraButton } from '../CathedraButton';
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
+  const [thresholds, setThresholds] = useState(Telemetry.getThresholds());
+  const [filter, setFilter] = useState({ component: 'All', endpoint: 'All' });
+  const [showConfig, setShowConfig] = useState(false);
 
   useEffect(() => {
     // Subscrever a atualizações de telemetria
@@ -28,12 +36,23 @@ const RealTimeTelemetryPanel: React.FC = () => {
     };
   }, []);
 
+  const filteredEvents = useMemo(() => {
+    return events.filter(e => {
+      const matchComp = filter.component === 'All' || e.component === filter.component;
+      const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
+      return matchComp && matchEnd;
+    });
+  }, [events, filter]);
+
+  const components = useMemo(() => ['All', ...new Set(events.map(e => e.component).filter(Boolean))], [events]);
+  const endpoints = useMemo(() => ['All', ...new Set(events.map(e => e.endpoint).filter(Boolean))], [events]);
+
   const metrics = useMemo(() => {
     const now = Date.now();
     const last60s = now - 60000;
     
     // Filtrar eventos dos últimos 60 segundos para os gráficos de linha do tempo
-    const recentEvents = events.filter(e => e.timestamp > last60s);
+    const recentEvents = filteredEvents.filter(e => e.timestamp > last60s);
     
     // Agrupar por segundos para o gráfico
     const timePoints = [];
@@ -59,20 +78,159 @@ const RealTimeTelemetryPanel: React.FC = () => {
       timePoints,
       summary
     };
-  }, [events]);
+  }, [filteredEvents]);
+
+  const handleExport = (format: 'json' | 'csv') => {
+    const data = format === 'json' 
+      ? JSON.stringify(events, null, 2)
+      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + events.map(e => 
+          `${new Date(e.timestamp).toISOString()},${e.type},"${e.component || ''}","${e.endpoint || ''}",${e.responseTime || ''},"${JSON.stringify(e.metadata || {}).replace(/"/g, '""')}"`
+        ).join("\n");
+    
+    const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `telemetry-export-${new Date().toISOString()}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const updateThreshold = (key: string, value: string) => {
+    const num = parseFloat(value);
+    if (isNaN(num)) return;
+    const newConfig = { ...thresholds, [key]: num };
+    setThresholds(newConfig);
+    Telemetry.setThresholds(newConfig);
+  };
 
   return (
     <div className="space-y-spacing-lg animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <h2 className="text-premium-xl font-black uppercase tracking-tight flex items-center gap-spacing-xs">
-          <Icons.Activity className="text-primary animate-pulse" />
-          Monitoramento em Tempo Real
-        </h2>
-        <div className="flex items-center gap-spacing-sm">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Live Telemetry stream</span>
+      <div className="flex flex-col gap-spacing-md md:flex-row md:items-center md:justify-between bg-muted/20 p-spacing-lg rounded-[2.5rem] border border-primary/5 shadow-premium-sm">
+        <div className="space-y-1">
+          <h2 className="text-premium-xl font-black uppercase tracking-tight flex items-center gap-spacing-xs">
+            <Icons.Activity className="text-primary animate-pulse" />
+            Telemetria Avançada
+          </h2>
+          <div className="flex items-center gap-spacing-sm">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream de Dados em Tempo Real</span>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-spacing-sm">
+          <CathedraButton 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowConfig(!showConfig)}
+            className="rounded-premium-full border-primary/20"
+          >
+            <Icons.Settings className="w-4 h-4 mr-2" />
+            Limiares
+          </CathedraButton>
+          
+          <div className="flex items-center bg-background/50 rounded-premium-full p-1 border border-border/40">
+            <CathedraButton variant="ghost" size="sm" onClick={() => handleExport('csv')} className="h-8 rounded-premium-full px-3 text-[10px]">
+              CSV
+            </CathedraButton>
+            <CathedraButton variant="ghost" size="sm" onClick={() => handleExport('json')} className="h-8 rounded-premium-full px-3 text-[10px]">
+              JSON
+            </CathedraButton>
+          </div>
         </div>
       </div>
+
+      {showConfig && (
+        <Card className="rounded-[2rem] border-primary/20 bg-primary/[0.02] animate-in slide-in-from-top-4 duration-300">
+          <CardContent className="p-spacing-lg grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Erros (%)</label>
+              <Input 
+                type="number" 
+                value={thresholds.errorRate} 
+                onChange={(e) => updateThreshold('errorRate', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Latência (ms)</label>
+              <Input 
+                type="number" 
+                value={thresholds.avgLatency} 
+                onChange={(e) => updateThreshold('avgLatency', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Effect Triggers (pm)</label>
+              <Input 
+                type="number" 
+                value={thresholds.effectTriggers} 
+                onChange={(e) => updateThreshold('effectTriggers', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
+        <div className="flex items-center gap-2 px-spacing-md">
+          <Icons.Filter className="w-4 h-4 opacity-40" />
+          <span className="text-[9px] font-black uppercase opacity-40">Filtros:</span>
+        </div>
+        
+        <Select value={filter.component} onValueChange={(v) => setFilter(f => ({ ...f, component: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Componente" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            {components.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          </SelectContent>
+        </Select>
+
+        <Select value={filter.endpoint} onValueChange={(v) => setFilter(f => ({ ...f, endpoint: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Endpoint" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            {endpoints.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {events.filter(e => e.type === 'alert').length > 0 && (
+        <div className="space-y-spacing-sm">
+          <h3 className="text-[10px] font-black uppercase tracking-widest px-spacing-md opacity-60 flex items-center gap-2">
+            <Icons.ShieldAlert className="w-3 h-3 text-destructive" />
+            Alertas de Performance Ativos
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            {events.filter(e => e.type === 'alert').slice(-3).reverse().map((alert, i) => (
+              <div key={i} className={`p-spacing-md rounded-[1.5rem] border animate-in zoom-in-95 duration-300 ${
+                alert.severity === 'critical' ? 'bg-destructive/10 border-destructive/30' : 'bg-amber-500/10 border-amber-500/30'
+              }`}>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className={`text-[11px] font-black uppercase ${
+                      alert.severity === 'critical' ? 'text-destructive' : 'text-amber-600'
+                    }`}>
+                      {alert.metadata?.title}
+                    </p>
+                    <p className="text-[10px] opacity-70 leading-tight">{alert.metadata?.message}</p>
+                  </div>
+                  <Badge variant={alert.severity === 'critical' ? 'destructive' : 'secondary'} className="text-[8px] rounded-full">
+                    {alert.severity}
+                  </Badge>
+                </div>
+                <p className="mt-2 text-[8px] opacity-40 font-mono">{new Date(alert.timestamp).toLocaleTimeString()}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
         <MetricCard 
@@ -111,12 +269,12 @@ const RealTimeTelemetryPanel: React.FC = () => {
           <CardHeader className="bg-muted/30 border-b border-border/40 py-spacing-md">
             <CardTitle className="text-premium-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.Zap className="w-spacing-sm h-spacing-sm text-amber-500" />
-              Ciclos de Renderização & Requests
+              Linha do Tempo: Render Cycles vs API
             </CardTitle>
           </CardHeader>
           <CardContent className="p-spacing-lg h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={metrics.timePoints}>
+              <ComposedChart data={metrics.timePoints}>
                 <defs>
                   <linearGradient id="colorEffects" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
@@ -132,22 +290,20 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 <Area 
                   type="monotone" 
                   dataKey="effects" 
-                  name="Effects" 
+                  name="useEffect Triggers" 
                   stroke="hsl(var(--primary))" 
                   fillOpacity={1} 
                   fill="url(#colorEffects)" 
                   strokeWidth={2}
                 />
-                <Area 
-                  type="monotone" 
+                <Bar 
                   dataKey="requests" 
-                  name="Requests" 
-                  stroke="#3b82f6" 
-                  fillOpacity={0.1} 
+                  name="API Requests" 
                   fill="#3b82f6" 
-                  strokeWidth={2}
+                  barSize={10} 
+                  radius={[4, 4, 0, 0]}
                 />
-              </AreaChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -191,8 +347,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
       </div>
 
       <Card className="rounded-[2.5rem] border-primary/10 shadow-premium overflow-hidden">
-        <CardHeader className="bg-muted/20 border-b border-border/40 py-spacing-md">
-          <CardTitle className="text-premium-xs font-black uppercase tracking-widest">Logs de Eventos Recentes</CardTitle>
+        <CardHeader className="bg-muted/20 border-b border-border/40 py-spacing-md flex flex-row items-center justify-between">
+          <CardTitle className="text-premium-xs font-black uppercase tracking-widest">Feed de Eventos Filtrado</CardTitle>
+          <Badge variant="outline" className="text-[9px] font-mono">Mostrando {filteredEvents.length} eventos</Badge>
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
@@ -201,12 +358,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Horário</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Tipo</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Componente</th>
+                <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Endpoint</th>
                 <th className="px-spacing-md py-spacing-xs text-[9px] font-black uppercase opacity-40">Detalhes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              {events.slice(-5).reverse().map((event, i) => (
-                <tr key={i} className="hover:bg-muted/5">
+              {filteredEvents.slice(-10).reverse().map((event, i) => (
+                <tr key={i} className="hover:bg-muted/5 transition-colors">
                   <td className="px-spacing-md py-spacing-sm font-mono text-[9px] opacity-60">
                     {new Date(event.timestamp).toLocaleTimeString()}
                   </td>
@@ -214,7 +372,8 @@ const RealTimeTelemetryPanel: React.FC = () => {
                     <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${
                       event.type === 'error' || event.type === 'navigation_error' ? 'bg-destructive/10 text-destructive' :
                       event.type === 'request' ? 'bg-blue-500/10 text-blue-600' :
-                      'bg-amber-500/10 text-amber-600'
+                      event.type === 'alert' ? 'bg-amber-500/10 text-amber-600' :
+                      'bg-emerald-500/10 text-emerald-600'
                     }`}>
                       {event.type}
                     </span>
@@ -222,8 +381,13 @@ const RealTimeTelemetryPanel: React.FC = () => {
                   <td className="px-spacing-md py-spacing-sm text-[10px] font-bold">
                     {event.component || 'Global'}
                   </td>
+                  <td className="px-spacing-md py-spacing-sm text-[10px] opacity-60 font-mono">
+                    {event.endpoint || '-'}
+                  </td>
                   <td className="px-spacing-md py-spacing-sm text-[10px] opacity-60 truncate max-w-[200px]">
-                    {event.responseTime ? `${event.responseTime}ms` : event.metadata ? JSON.stringify(event.metadata) : '-'}
+                    {event.responseTime ? `${event.responseTime}ms` : 
+                     event.type === 'alert' ? event.metadata?.title :
+                     event.metadata ? JSON.stringify(event.metadata) : '-'}
                   </td>
                 </tr>
               ))}

@@ -10,15 +10,36 @@ const redactPII = (text: string) => {
 
 export type TelemetryEvent = {
   timestamp: number;
-  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error';
+  type: 'effect_trigger' | 'request' | 'error' | 'navigation_error' | 'alert';
   responseTime?: number;
   component?: string;
+  endpoint?: string;
+  severity?: 'info' | 'warning' | 'critical';
   metadata?: any;
+};
+
+export type ThresholdConfig = {
+  errorRate: number; // %
+  avgLatency: number; // ms
+  effectTriggers: number; // per minute
 };
 
 class Telemetry {
   private static events: TelemetryEvent[] = [];
   private static listeners: ((events: TelemetryEvent[]) => void)[] = [];
+  private static thresholds: ThresholdConfig = {
+    errorRate: 10,
+    avgLatency: 500,
+    effectTriggers: 50
+  };
+
+  static setThresholds(config: Partial<ThresholdConfig>) {
+    this.thresholds = { ...this.thresholds, ...config };
+  }
+
+  static getThresholds() {
+    return { ...this.thresholds };
+  }
 
   static log(event: Omit<TelemetryEvent, 'timestamp'>) {
     const newEvent = { ...event, timestamp: Date.now() };
@@ -30,11 +51,45 @@ class Telemetry {
     }
     
     this.notify();
+    this.checkThresholds();
     
     // Também log no console para debug se necessário
     if (event.type === 'error' || event.type === 'navigation_error') {
-      console.error(`[Telemetry] ${event.type} in ${event.component}`, event.metadata);
+      console.error(`[Telemetry] ${event.type} in ${event.component || 'Global'}`, event.metadata);
     }
+  }
+
+  private static checkThresholds() {
+    const summary = this.getMetricsSummary();
+    const thresholds = this.thresholds;
+    
+    if (summary.errorRate > thresholds.errorRate) {
+      this.triggerAlert('Taxa de erros elevada', `Atual: ${summary.errorRate.toFixed(1)}% (Limite: ${thresholds.errorRate}%)`, 'critical');
+    }
+    
+    if (summary.avgResponseTime > thresholds.avgLatency) {
+      this.triggerAlert('Latência média elevada', `Atual: ${Math.round(summary.avgResponseTime)}ms (Limite: ${thresholds.avgLatency}ms)`, 'warning');
+    }
+
+    if (summary.effectTriggers > thresholds.effectTriggers) {
+      this.triggerAlert('Excesso de useEffect triggers', `Atual: ${summary.effectTriggers}pm (Limite: ${thresholds.effectTriggers}pm)`, 'warning');
+    }
+  }
+
+  private static triggerAlert(title: string, message: string, severity: 'warning' | 'critical') {
+    const recentAlerts = this.events.filter(e => 
+      e.type === 'alert' && 
+      e.metadata?.title === title && 
+      (Date.now() - e.timestamp) < 60000
+    );
+    
+    if (recentAlerts.length > 0) return;
+
+    this.log({
+      type: 'alert',
+      severity,
+      metadata: { title, message }
+    });
   }
 
   static getEvents() {
@@ -49,7 +104,6 @@ class Telemetry {
   }
 
   private static notify() {
-    // Usar um pequeno debounce ou requestAnimationFrame para evitar re-renders excessivos
     if (this.listeners.length > 0) {
       const currentEvents = [...this.events];
       this.listeners.forEach(l => l(currentEvents));
@@ -80,13 +134,8 @@ class Telemetry {
   }
 }
 
-/**
- * Função exportada para manter compatibilidade com componentes existentes
- */
 export const trackNavigationError = (error: Error, context?: Record<string, any>) => {
   const errorId = `err_${Math.random().toString(36).substr(2, 9)}`;
-  
-  // Redigir PII da mensagem de erro
   const safeMessage = redactPII(error.message);
   const safeContext = context ? JSON.parse(redactPII(JSON.stringify(context))) : undefined;
 
@@ -100,7 +149,6 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
     }
   });
 
-  // Integrar com o analytics existente
   trackEvent('error', {
     errorId,
     message: safeMessage,
