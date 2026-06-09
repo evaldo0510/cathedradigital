@@ -61,25 +61,29 @@ class Telemetry {
 
   private static checkThresholds() {
     const summary = this.getMetricsSummary();
+    const thresholds = this.thresholds;
     
-    if (summary.errorRate > this.thresholds.errorRate) {
-      this.triggerAlert('Taxa de erros elevada', `Atual: ${summary.errorRate.toFixed(1)}% (Limite: ${this.thresholds.errorRate}%)`, 'critical');
+    if (summary.errorRate > thresholds.errorRate) {
+      this.triggerAlert('Taxa de erros elevada', `Atual: ${summary.errorRate.toFixed(1)}% (Limite: ${thresholds.errorRate}%)`, 'critical');
     }
     
-    if (summary.avgResponseTime > this.thresholds.avgLatency) {
-      this.triggerAlert('Latência média elevada', `Atual: ${Math.round(summary.avgResponseTime)}ms (Limite: ${this.thresholds.avgLatency}ms)`, 'warning');
+    if (summary.avgResponseTime > thresholds.avgLatency) {
+      this.triggerAlert('Latência média elevada', `Atual: ${Math.round(summary.avgResponseTime)}ms (Limite: ${thresholds.avgLatency}ms)`, 'warning');
     }
 
-    if (summary.effectTriggers > this.thresholds.effectTriggers) {
-      this.triggerAlert('Excesso de useEffect triggers', `Atual: ${summary.effectTriggers}pm (Limite: ${this.thresholds.effectTriggers}pm)`, 'warning');
+    if (summary.effectTriggers > thresholds.effectTriggers) {
+      this.triggerAlert('Excesso de useEffect triggers', `Atual: ${summary.effectTriggers}pm (Limite: ${thresholds.effectTriggers}pm)`, 'warning');
     }
   }
 
   private static triggerAlert(title: string, message: string, severity: 'warning' | 'critical') {
-    const lastAlert = this.events.filter(e => e.type === 'alert' && e.metadata?.title === title).pop();
+    const recentAlerts = this.events.filter(e => 
+      e.type === 'alert' && 
+      e.metadata?.title === title && 
+      (Date.now() - e.timestamp) < 60000
+    );
     
-    // Debounce alertas: não repetir o mesmo alerta em menos de 30 segundos
-    if (lastAlert && Date.now() - lastAlert.timestamp < 30000) return;
+    if (recentAlerts.length > 0) return;
 
     this.log({
       type: 'alert',
@@ -100,7 +104,6 @@ class Telemetry {
   }
 
   private static notify() {
-    // Usar um pequeno debounce ou requestAnimationFrame para evitar re-renders excessivos
     if (this.listeners.length > 0) {
       const currentEvents = [...this.events];
       this.listeners.forEach(l => l(currentEvents));
@@ -131,13 +134,8 @@ class Telemetry {
   }
 }
 
-/**
- * Função exportada para manter compatibilidade com componentes existentes
- */
 export const trackNavigationError = (error: Error, context?: Record<string, any>) => {
   const errorId = `err_${Math.random().toString(36).substr(2, 9)}`;
-  
-  // Redigir PII da mensagem de erro
   const safeMessage = redactPII(error.message);
   const safeContext = context ? JSON.parse(redactPII(JSON.stringify(context))) : undefined;
 
@@ -151,7 +149,6 @@ export const trackNavigationError = (error: Error, context?: Record<string, any>
     }
   });
 
-  // Integrar com o analytics existente
   trackEvent('error', {
     errorId,
     message: safeMessage,
