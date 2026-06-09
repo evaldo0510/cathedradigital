@@ -24,6 +24,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [showAudit, setShowAudit] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  const [notificationConfig, setNotificationConfig] = useState({ slack_webhook: '', email: '', enabled: false });
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -31,6 +32,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
       const role = session?.user?.app_metadata?.role;
       setIsAdmin(role === 'admin');
       setCurrentUserId(session?.user?.id);
+      
+      const { data } = await supabase.from('telemetry_settings').select('value').eq('key', 'notification_config').maybeSingle();
+      if (data?.value) setNotificationConfig(data.value as any);
     };
     checkAdmin();
   }, []);
@@ -135,6 +139,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
     Telemetry.setThresholds(newConfig, currentUserId);
   };
 
+  const updateNotificationConfig = async (newConfig: any) => {
+    if (!isAdmin) return;
+    setNotificationConfig(newConfig);
+    await supabase.from('telemetry_settings').upsert({
+      key: 'notification_config',
+      value: newConfig,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUserId
+    });
+    toast.success('Configurações de notificação atualizadas');
+  };
+
   return (
     <div className="space-y-spacing-lg animate-in fade-in duration-500">
       <div className="flex flex-col gap-spacing-md md:flex-row md:items-center md:justify-between bg-muted/20 p-spacing-lg rounded-[2.5rem] border border-primary/5 shadow-premium-sm">
@@ -222,6 +238,53 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 className="rounded-xl h-10 border-primary/10 disabled:opacity-50"
 
               />
+            </div>
+
+            <div className="col-span-full h-[1px] bg-primary/5 my-2" />
+            
+            <div className="col-span-full space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+                  <Icons.Bell className="w-3 h-3" /> Configurações de Notificação (Admin Only)
+                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase opacity-40">Status:</span>
+                  <CathedraButton 
+                    size="sm" 
+                    variant={notificationConfig.enabled ? "primary" : "outline"}
+                    className="h-6 rounded-full text-[9px]"
+                    onClick={() => updateNotificationConfig({ ...notificationConfig, enabled: !notificationConfig.enabled })}
+                    disabled={!isAdmin}
+                  >
+                    {notificationConfig.enabled ? 'Ativo' : 'Inativo'}
+                  </CathedraButton>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase opacity-60">Slack Webhook URL</label>
+                  <Input 
+                    placeholder="https://hooks.slack.com/services/..."
+                    value={notificationConfig.slack_webhook} 
+                    onChange={(e) => setNotificationConfig(prev => ({ ...prev, slack_webhook: e.target.value }))}
+                    onBlur={() => updateNotificationConfig(notificationConfig)}
+                    disabled={!isAdmin}
+                    className="rounded-xl h-10 border-primary/10 disabled:opacity-50 text-[10px]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase opacity-60">E-mail para Alertas</label>
+                  <Input 
+                    placeholder="admin@exemplo.com"
+                    value={notificationConfig.email} 
+                    onChange={(e) => setNotificationConfig(prev => ({ ...prev, email: e.target.value }))}
+                    onBlur={() => updateNotificationConfig(notificationConfig)}
+                    disabled={!isAdmin}
+                    className="rounded-xl h-10 border-primary/10 disabled:opacity-50 text-[10px]"
+                  />
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
