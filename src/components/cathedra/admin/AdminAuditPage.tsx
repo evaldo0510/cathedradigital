@@ -109,14 +109,14 @@ const AdminAuditPage: React.FC = () => {
     if (formatExt === 'json') {
       content = JSON.stringify(auditLogs, null, 2);
     } else {
-      const headers = ['Data/Hora', 'Evento', 'Severidade', 'Título', 'Admin', 'Detalhes'];
+      const headers = ['"Data/Hora"', '"Evento"', '"Severidade"', '"Título"', '"Admin"', '"Detalhes"'];
       const rows = auditLogs.map(log => [
-        format(new Date(log.created_at), 'dd/MM/yyyy HH:mm:ss'),
-        log.event_type,
-        log.severity,
-        log.title,
-        log.profiles?.name || 'Sistema',
-        JSON.stringify(log.details).replace(/"/g, '""')
+        `"${format(new Date(log.created_at), 'dd/MM/yyyy HH:mm:ss')}"`,
+        `"${log.event_type}"`,
+        `"${log.severity}"`,
+        `"${(log.title || '').replace(/"/g, '""')}"`,
+        `"${(log.profiles?.name || 'Sistema').replace(/"/g, '""')}"`,
+        `"${JSON.stringify(log.details).replace(/"/g, '""')}"`
       ]);
       content = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     }
