@@ -24,6 +24,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [showAudit, setShowAudit] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  const [notificationConfig, setNotificationConfig] = useState({ slack_webhook: '', email: '', enabled: false });
 
   useEffect(() => {
     const checkAdmin = async () => {
