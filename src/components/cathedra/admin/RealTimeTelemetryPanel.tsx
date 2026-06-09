@@ -31,12 +31,23 @@ const RealTimeTelemetryPanel: React.FC = () => {
     };
   }, []);
 
+  const filteredEvents = useMemo(() => {
+    return events.filter(e => {
+      const matchComp = filter.component === 'All' || e.component === filter.component;
+      const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
+      return matchComp && matchEnd;
+    });
+  }, [events, filter]);
+
+  const components = useMemo(() => ['All', ...new Set(events.map(e => e.component).filter(Boolean))], [events]);
+  const endpoints = useMemo(() => ['All', ...new Set(events.map(e => e.endpoint).filter(Boolean))], [events]);
+
   const metrics = useMemo(() => {
     const now = Date.now();
     const last60s = now - 60000;
     
     // Filtrar eventos dos últimos 60 segundos para os gráficos de linha do tempo
-    const recentEvents = events.filter(e => e.timestamp > last60s);
+    const recentEvents = filteredEvents.filter(e => e.timestamp > last60s);
     
     // Agrupar por segundos para o gráfico
     const timePoints = [];
