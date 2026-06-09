@@ -32,6 +32,7 @@ const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
 const PerfGovernanceDashboard = lazy(() => import('./PerfGovernanceDashboard'));
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
+const RealTimeTelemetryPanel = lazy(() => import('./admin/RealTimeTelemetryPanel'));
 
 
 interface UserProfile extends AdminUser {}
@@ -204,6 +205,9 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="governance" data-test="tab-governance" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Governança
             </TabsTrigger>
+            <TabsTrigger value="telemetry" data-test="tab-telemetry" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
+              <Icons.Zap className="w-spacing-sm h-spacing-sm text-amber-500" /> Telemetria
+            </TabsTrigger>
 
             <TabsTrigger value="content" data-test="tab-content" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> Conteúdo
@@ -355,6 +359,11 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        <TabsContent value="telemetry">
+          <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+            <RealTimeTelemetryPanel />
+          </Suspense>
+        </TabsContent>
 
         <TabsContent value="content">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
