@@ -139,6 +139,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
     Telemetry.setThresholds(newConfig, currentUserId);
   };
 
+  const updateNotificationConfig = async (newConfig: any) => {
+    if (!isAdmin) return;
+    setNotificationConfig(newConfig);
+    await supabase.from('telemetry_settings').upsert({
+      key: 'notification_config',
+      value: newConfig,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUserId
+    });
+    toast.success('Configurações de notificação atualizadas');
+  };
+
   return (
     <div className="space-y-spacing-lg animate-in fade-in duration-500">
       <div className="flex flex-col gap-spacing-md md:flex-row md:items-center md:justify-between bg-muted/20 p-spacing-lg rounded-[2.5rem] border border-primary/5 shadow-premium-sm">
