@@ -201,6 +201,37 @@ const RealTimeTelemetryPanel: React.FC = () => {
         </Select>
       </div>
 
+      {events.filter(e => e.type === 'alert').length > 0 && (
+        <div className="space-y-spacing-sm">
+          <h3 className="text-[10px] font-black uppercase tracking-widest px-spacing-md opacity-60 flex items-center gap-2">
+            <Icons.ShieldAlert className="w-3 h-3 text-destructive" />
+            Alertas de Performance Ativos
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            {events.filter(e => e.type === 'alert').slice(-3).reverse().map((alert, i) => (
+              <div key={i} className={`p-spacing-md rounded-[1.5rem] border animate-in zoom-in-95 duration-300 ${
+                alert.severity === 'critical' ? 'bg-destructive/10 border-destructive/30' : 'bg-amber-500/10 border-amber-500/30'
+              }`}>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className={`text-[11px] font-black uppercase ${
+                      alert.severity === 'critical' ? 'text-destructive' : 'text-amber-600'
+                    }`}>
+                      {alert.metadata?.title}
+                    </p>
+                    <p className="text-[10px] opacity-70 leading-tight">{alert.metadata?.message}</p>
+                  </div>
+                  <Badge variant={alert.severity === 'critical' ? 'destructive' : 'secondary'} className="text-[8px] rounded-full">
+                    {alert.severity}
+                  </Badge>
+                </div>
+                <p className="mt-2 text-[8px] opacity-40 font-mono">{new Date(alert.timestamp).toLocaleTimeString()}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
         <MetricCard 
           title="Disparos Effect" 
