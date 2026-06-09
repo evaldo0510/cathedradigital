@@ -12,6 +12,7 @@ import {
   AreaChart, Area, BarChart, Bar, Cell, ComposedChart 
 } from 'recharts';
 import { CathedraButton } from '../CathedraButton';
+import AdminAuditPage from './AdminAuditPage';
 
 const RealTimeTelemetryPanel: React.FC = () => {
   const [events, setEvents] = useState<TelemetryEvent[]>(Telemetry.getEvents());
