@@ -86,10 +86,16 @@ const RealTimeTelemetryPanel: React.FC = () => {
 
   const handleExport = (format: 'json' | 'csv') => {
     const data = format === 'json' 
-      ? JSON.stringify(events, null, 2)
-      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + events.map(e => 
+      ? JSON.stringify(filteredEvents, null, 2)
+      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + filteredEvents.map(e => 
           `${new Date(e.timestamp).toISOString()},${e.type},"${e.component || ''}","${e.endpoint || ''}",${e.responseTime || ''},"${JSON.stringify(e.metadata || {}).replace(/"/g, '""')}"`
         ).join("\n");
+    
+    Telemetry.audit('export', `Exportação de Telemetria (${format.toUpperCase()})`, {
+      eventCount: filteredEvents.length,
+      period: filter.period,
+      format
+    });
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
