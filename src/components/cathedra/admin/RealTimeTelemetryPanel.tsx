@@ -125,8 +125,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
             Telemetria Avançada
           </h2>
           <div className="flex items-center gap-spacing-sm">
+            <CathedraButton 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowAudit(!showAudit)}
+              className="h-6 px-2 text-[10px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary"
+            >
+              <Icons.History className="w-3 h-3 mr-1" />
+              {showAudit ? 'Voltar para Tempo Real' : 'Ver Auditoria'}
+            </CathedraButton>
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-30">|</span>
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream de Dados em Tempo Real</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream Live</span>
           </div>
         </div>
 
