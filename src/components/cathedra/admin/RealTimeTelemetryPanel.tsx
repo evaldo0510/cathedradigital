@@ -269,12 +269,12 @@ const RealTimeTelemetryPanel: React.FC = () => {
           <CardHeader className="bg-muted/30 border-b border-border/40 py-spacing-md">
             <CardTitle className="text-premium-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.Zap className="w-spacing-sm h-spacing-sm text-amber-500" />
-              Ciclos de Renderização & Requests
+              Linha do Tempo: Render Cycles vs API
             </CardTitle>
           </CardHeader>
           <CardContent className="p-spacing-lg h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={metrics.timePoints}>
+              <ComposedChart data={metrics.timePoints}>
                 <defs>
                   <linearGradient id="colorEffects" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
@@ -290,22 +290,20 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 <Area 
                   type="monotone" 
                   dataKey="effects" 
-                  name="Effects" 
+                  name="useEffect Triggers" 
                   stroke="hsl(var(--primary))" 
                   fillOpacity={1} 
                   fill="url(#colorEffects)" 
                   strokeWidth={2}
                 />
-                <Area 
-                  type="monotone" 
+                <Bar 
                   dataKey="requests" 
-                  name="Requests" 
-                  stroke="#3b82f6" 
-                  fillOpacity={0.1} 
+                  name="API Requests" 
                   fill="#3b82f6" 
-                  strokeWidth={2}
+                  barSize={10} 
+                  radius={[4, 4, 0, 0]}
                 />
-              </AreaChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
