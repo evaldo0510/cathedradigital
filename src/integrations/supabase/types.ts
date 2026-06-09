@@ -2977,6 +2977,36 @@ export type Database = {
         }
         Relationships: []
       }
+      telemetry_audit: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_type: string
+          id: string
+          severity: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_type: string
+          id?: string
+          severity?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string
+          id?: string
+          severity?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       telemetry_audit_logs: {
         Row: {
           action_type: string | null
@@ -3001,6 +3031,30 @@ export type Database = {
           inspector_id?: string | null
           masked_ip?: string | null
           request_id?: string
+        }
+        Relationships: []
+      }
+      telemetry_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
         }
         Relationships: []
       }
