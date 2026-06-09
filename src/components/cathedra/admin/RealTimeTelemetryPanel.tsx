@@ -182,13 +182,21 @@ const RealTimeTelemetryPanel: React.FC = () => {
       {showConfig && (
         <Card className="rounded-[2rem] border-primary/20 bg-primary/[0.02] animate-in slide-in-from-top-4 duration-300">
           <CardContent className="p-spacing-lg grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+            {!isAdmin && (
+              <div className="col-span-full mb-2 flex items-center gap-2 text-destructive text-[10px] font-bold uppercase">
+                <Icons.Lock className="w-3 h-3" />
+                Apenas visualização - Acesso restrito a administradores
+              </div>
+            )}
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase opacity-60">Limite Erros (%)</label>
               <Input 
                 type="number" 
                 value={thresholds.errorRate} 
                 onChange={(e) => updateThreshold('errorRate', e.target.value)}
-                className="rounded-xl h-10 border-primary/10"
+                disabled={!isAdmin}
+                className="rounded-xl h-10 border-primary/10 disabled:opacity-50"
+
               />
             </div>
             <div className="space-y-2">
@@ -197,7 +205,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 type="number" 
                 value={thresholds.avgLatency} 
                 onChange={(e) => updateThreshold('avgLatency', e.target.value)}
-                className="rounded-xl h-10 border-primary/10"
+                disabled={!isAdmin}
+                className="rounded-xl h-10 border-primary/10 disabled:opacity-50"
+
               />
             </div>
             <div className="space-y-2">
@@ -206,7 +216,9 @@ const RealTimeTelemetryPanel: React.FC = () => {
                 type="number" 
                 value={thresholds.effectTriggers} 
                 onChange={(e) => updateThreshold('effectTriggers', e.target.value)}
-                className="rounded-xl h-10 border-primary/10"
+                disabled={!isAdmin}
+                className="rounded-xl h-10 border-primary/10 disabled:opacity-50"
+
               />
             </div>
           </CardContent>
