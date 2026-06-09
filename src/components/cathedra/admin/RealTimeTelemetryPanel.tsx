@@ -432,6 +432,8 @@ const RealTimeTelemetryPanel: React.FC = () => {
           </table>
         </div>
       </Card>
+        </>
+      )}
     </div>
   );
 };
