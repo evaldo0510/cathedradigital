@@ -108,15 +108,97 @@ const RealTimeTelemetryPanel: React.FC = () => {
 
   return (
     <div className="space-y-spacing-lg animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <h2 className="text-premium-xl font-black uppercase tracking-tight flex items-center gap-spacing-xs">
-          <Icons.Activity className="text-primary animate-pulse" />
-          Monitoramento em Tempo Real
-        </h2>
-        <div className="flex items-center gap-spacing-sm">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Live Telemetry stream</span>
+      <div className="flex flex-col gap-spacing-md md:flex-row md:items-center md:justify-between bg-muted/20 p-spacing-lg rounded-[2.5rem] border border-primary/5 shadow-premium-sm">
+        <div className="space-y-1">
+          <h2 className="text-premium-xl font-black uppercase tracking-tight flex items-center gap-spacing-xs">
+            <Icons.Activity className="text-primary animate-pulse" />
+            Telemetria Avançada
+          </h2>
+          <div className="flex items-center gap-spacing-sm">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Stream de Dados em Tempo Real</span>
+          </div>
         </div>
+
+        <div className="flex flex-wrap items-center gap-spacing-sm">
+          <CathedraButton 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowConfig(!showConfig)}
+            className="rounded-premium-full border-primary/20"
+          >
+            <Icons.Settings className="w-4 h-4 mr-2" />
+            Limiares
+          </CathedraButton>
+          
+          <div className="flex items-center bg-background/50 rounded-premium-full p-1 border border-border/40">
+            <CathedraButton variant="ghost" size="sm" onClick={() => handleExport('csv')} className="h-8 rounded-premium-full px-3 text-[10px]">
+              CSV
+            </CathedraButton>
+            <CathedraButton variant="ghost" size="sm" onClick={() => handleExport('json')} className="h-8 rounded-premium-full px-3 text-[10px]">
+              JSON
+            </CathedraButton>
+          </div>
+        </div>
+      </div>
+
+      {showConfig && (
+        <Card className="rounded-[2rem] border-primary/20 bg-primary/[0.02] animate-in slide-in-from-top-4 duration-300">
+          <CardContent className="p-spacing-lg grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Erros (%)</label>
+              <Input 
+                type="number" 
+                value={thresholds.errorRate} 
+                onChange={(e) => updateThreshold('errorRate', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Latência (ms)</label>
+              <Input 
+                type="number" 
+                value={thresholds.avgLatency} 
+                onChange={(e) => updateThreshold('avgLatency', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase opacity-60">Limite Effect Triggers (pm)</label>
+              <Input 
+                type="number" 
+                value={thresholds.effectTriggers} 
+                onChange={(e) => updateThreshold('effectTriggers', e.target.value)}
+                className="rounded-xl h-10 border-primary/10"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
+        <div className="flex items-center gap-2 px-spacing-md">
+          <Icons.Filter className="w-4 h-4 opacity-40" />
+          <span className="text-[9px] font-black uppercase opacity-40">Filtros:</span>
+        </div>
+        
+        <Select value={filter.component} onValueChange={(v) => setFilter(f => ({ ...f, component: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Componente" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            {components.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          </SelectContent>
+        </Select>
+
+        <Select value={filter.endpoint} onValueChange={(v) => setFilter(f => ({ ...f, endpoint: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Endpoint" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            {endpoints.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
