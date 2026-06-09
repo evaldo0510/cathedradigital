@@ -216,7 +216,7 @@ const AdminAuditPage: React.FC = () => {
                     <TableCell className="font-bold text-[11px]">{log.title}</TableCell>
                     <TableCell className="text-right pr-spacing-lg">
                       {log.event_type === 'config_change' && (
-                        <Icons.ArrowRightLeft className="w-3 h-3 text-primary ml-auto opacity-40" />
+                        <Icons.ArrowUpDown className="w-3 h-3 text-primary ml-auto opacity-40" />
                       )}
                     </TableCell>
                   </TableRow>
