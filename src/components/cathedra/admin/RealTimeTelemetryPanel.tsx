@@ -73,7 +73,33 @@ const RealTimeTelemetryPanel: React.FC = () => {
       timePoints,
       summary
     };
-  }, [events]);
+  }, [filteredEvents]);
+
+  const handleExport = (format: 'json' | 'csv') => {
+    const data = format === 'json' 
+      ? JSON.stringify(events, null, 2)
+      : "Timestamp,Type,Component,Endpoint,ResponseTime,Metadata\n" + events.map(e => 
+          `${new Date(e.timestamp).toISOString()},${e.type},"${e.component || ''}","${e.endpoint || ''}",${e.responseTime || ''},"${JSON.stringify(e.metadata || {}).replace(/"/g, '""')}"`
+        ).join("\n");
+    
+    const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `telemetry-export-${new Date().toISOString()}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const updateThreshold = (key: string, value: string) => {
+    const num = parseFloat(value);
+    if (isNaN(num)) return;
+    const newConfig = { ...thresholds, [key]: num };
+    setThresholds(newConfig);
+    Telemetry.setThresholds(newConfig);
+  };
 
   return (
     <div className="space-y-spacing-lg animate-in fade-in duration-500">
