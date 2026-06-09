@@ -219,6 +219,18 @@ const RealTimeTelemetryPanel: React.FC = () => {
             {endpoints.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
           </SelectContent>
         </Select>
+
+        <Select value={filter.period} onValueChange={(v) => setFilter(f => ({ ...f, period: v }))}>
+          <SelectTrigger className="w-[180px] h-9 rounded-premium-full border-none bg-transparent hover:bg-muted/30">
+            <SelectValue placeholder="Período" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-primary/10">
+            <SelectItem value="15">Últimos 15 min</SelectItem>
+            <SelectItem value="60">Últimos 60 min</SelectItem>
+            <SelectItem value="120">Últimas 2 horas</SelectItem>
+            <SelectItem value="All">Todo o histórico</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {events.filter(e => e.type === 'alert').length > 0 && (
