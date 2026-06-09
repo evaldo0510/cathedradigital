@@ -53,7 +53,7 @@ class Telemetry {
     this.isInitialized = true;
   }
 
-  static async setThresholds(config: Partial<ThresholdConfig>) {
+  static async setThresholds(config: Partial<ThresholdConfig>, userId?: string) {
     const oldThresholds = { ...this.thresholds };
     this.thresholds = { ...this.thresholds, ...config };
     
@@ -63,13 +63,14 @@ class Telemetry {
         .upsert({ 
           key: 'thresholds', 
           value: this.thresholds,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          updated_by: userId
         });
       
       this.audit('config_change', 'Alteração de Limiares', {
         old: oldThresholds,
         new: this.thresholds
-      }, 'info');
+      }, 'info', userId);
     } catch (e) {
       console.error('[Telemetry] Failed to save thresholds', e);
     }
@@ -131,13 +132,20 @@ class Telemetry {
     this.audit('alert', title, { message, severity }, severity);
   }
 
-  static async audit(eventType: string, title: string, details: any, severity: string = 'info') {
+  static async audit(eventType: string, title: string, details: any, severity: string = 'info', userId?: string) {
     try {
+      let effectiveUserId = userId;
+      if (!effectiveUserId) {
+        const { data } = await supabase.auth.getUser();
+        effectiveUserId = data.user?.id;
+      }
+
       await supabase.from('telemetry_audit').insert({
         event_type: eventType,
         title,
         details,
         severity,
+        user_id: effectiveUserId,
         created_at: new Date().toISOString()
       });
     } catch (e) {

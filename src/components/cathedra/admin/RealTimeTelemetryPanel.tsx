@@ -23,12 +23,14 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [showConfig, setShowConfig] = useState(false);
   const [showAudit, setShowAudit] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
   useEffect(() => {
     const checkAdmin = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       const role = session?.user?.app_metadata?.role;
       setIsAdmin(role === 'admin');
+      setCurrentUserId(session?.user?.id);
     };
     checkAdmin();
   }, []);
@@ -108,7 +110,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
       eventCount: filteredEvents.length,
       period: filter.period,
       format
-    });
+    }, 'info', currentUserId);
     
     const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -130,7 +132,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
     if (isNaN(num)) return;
     const newConfig = { ...thresholds, [key]: num };
     setThresholds(newConfig);
-    Telemetry.setThresholds(newConfig);
+    Telemetry.setThresholds(newConfig, currentUserId);
   };
 
   return (
