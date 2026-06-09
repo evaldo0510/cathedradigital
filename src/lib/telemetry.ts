@@ -135,9 +135,16 @@ class Telemetry {
   static async audit(eventType: string, title: string, details: any, severity: string = 'info', userId?: string) {
     try {
       let effectiveUserId = userId;
+      let userName = 'Sistema';
+
       if (!effectiveUserId) {
         const { data } = await supabase.auth.getUser();
         effectiveUserId = data.user?.id;
+      }
+
+      if (effectiveUserId) {
+        const { data: profile } = await supabase.from('profiles').select('name').eq('id', effectiveUserId).maybeSingle();
+        if (profile) userName = profile.name;
       }
 
       await supabase.from('telemetry_audit').insert({
@@ -148,6 +155,19 @@ class Telemetry {
         user_id: effectiveUserId,
         created_at: new Date().toISOString()
       });
+
+      // Disparar notificações para eventos críticos ou mudanças de config
+      if (severity === 'critical' || eventType === 'config_change') {
+        await supabase.functions.invoke('telemetry-notifications', {
+          body: {
+            type: eventType,
+            title,
+            details,
+            severity,
+            user_name: userName
+          }
+        });
+      }
     } catch (e) {
       console.error('[Telemetry] Audit failed', e);
     }
