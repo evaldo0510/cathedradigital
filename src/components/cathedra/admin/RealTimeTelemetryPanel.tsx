@@ -24,6 +24,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [showAudit, setShowAudit] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  const [customRange, setCustomRange] = useState({ start: '', end: '' });
   const [notificationConfig, setNotificationConfig] = useState({ slack_webhook: '', email: '', enabled: false });
 
   useEffect(() => {
@@ -57,10 +58,15 @@ const RealTimeTelemetryPanel: React.FC = () => {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    const periodMs = parseInt(filter.period) * 60 * 1000;
     const now = Date.now();
+    let periodMs = 0;
+    
+    if (filter.period !== 'All' && filter.period !== 'custom') {
+      periodMs = parseInt(filter.period) * 60 * 1000;
+    }
+
     return events.filter(e => {
-      const matchPeriod = filter.period === 'All' || (now - e.timestamp) <= periodMs;
+      const matchPeriod = filter.period === 'All' || filter.period === 'custom' || (now - e.timestamp) <= periodMs;
       const matchComp = filter.component === 'All' || e.component === filter.component;
       const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
       return matchPeriod && matchComp && matchEnd;
@@ -326,6 +332,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
             <SelectItem value="15">Últimos 15 min</SelectItem>
             <SelectItem value="60">Últimos 60 min</SelectItem>
             <SelectItem value="120">Últimas 2 horas</SelectItem>
+            <SelectItem value="custom">Intervalo personalizado</SelectItem>
             <SelectItem value="All">Todo o histórico</SelectItem>
           </SelectContent>
         </Select>
