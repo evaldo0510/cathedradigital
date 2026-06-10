@@ -24,6 +24,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
   const [showAudit, setShowAudit] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  const [customRange, setCustomRange] = useState({ start: '', end: '' });
   const [notificationConfig, setNotificationConfig] = useState({ slack_webhook: '', email: '', enabled: false });
 
   useEffect(() => {
@@ -57,15 +58,28 @@ const RealTimeTelemetryPanel: React.FC = () => {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    const periodMs = parseInt(filter.period) * 60 * 1000;
     const now = Date.now();
+    let periodMs = 0;
+    
+    if (filter.period !== 'All' && filter.period !== 'custom') {
+      periodMs = parseInt(filter.period) * 60 * 1000;
+    }
+
+    const startTs = customRange.start ? new Date(customRange.start).getTime() : 0;
+    const endTs = customRange.end ? new Date(customRange.end).getTime() : Infinity;
+
     return events.filter(e => {
-      const matchPeriod = filter.period === 'All' || (now - e.timestamp) <= periodMs;
+      const matchPeriod = filter.period === 'All' 
+        ? true 
+        : filter.period === 'custom'
+          ? (e.timestamp >= startTs && e.timestamp <= endTs)
+          : (now - e.timestamp) <= periodMs;
+          
       const matchComp = filter.component === 'All' || e.component === filter.component;
       const matchEnd = filter.endpoint === 'All' || e.endpoint === filter.endpoint;
       return matchPeriod && matchComp && matchEnd;
     });
-  }, [events, filter]);
+  }, [events, filter, customRange]);
 
   const components = useMemo(() => ['All', ...new Set(events.map(e => e.component).filter(Boolean))], [events]);
   const endpoints = useMemo(() => ['All', ...new Set(events.map(e => e.endpoint).filter(Boolean))], [events]);
@@ -326,10 +340,30 @@ const RealTimeTelemetryPanel: React.FC = () => {
             <SelectItem value="15">Últimos 15 min</SelectItem>
             <SelectItem value="60">Últimos 60 min</SelectItem>
             <SelectItem value="120">Últimas 2 horas</SelectItem>
+            <SelectItem value="custom">Intervalo personalizado</SelectItem>
             <SelectItem value="All">Todo o histórico</SelectItem>
           </SelectContent>
         </Select>
       </div>
+
+      {filter.period === 'custom' && (
+        <div className="flex items-center gap-spacing-md bg-muted/5 p-spacing-sm rounded-premium-full border border-primary/5 animate-in slide-in-from-top-2">
+          <span className="text-[9px] font-black uppercase opacity-40 px-spacing-md">Intervalo:</span>
+          <Input 
+            type="datetime-local" 
+            className="w-[180px] h-8 text-[10px] rounded-full bg-background/50 border-none" 
+            value={customRange.start}
+            onChange={(e) => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
+          />
+          <span className="text-[9px] opacity-30">até</span>
+          <Input 
+            type="datetime-local" 
+            className="w-[180px] h-8 text-[10px] rounded-full bg-background/50 border-none" 
+            value={customRange.end}
+            onChange={(e) => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
+          />
+        </div>
+      )}
 
       {events.filter(e => e.type === 'alert').length > 0 && (
         <div className="space-y-spacing-sm">
