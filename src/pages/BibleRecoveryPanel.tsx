@@ -19,7 +19,10 @@ const BibleRecoveryPanel: React.FC = () => {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
 
-  useEffect(() => bibleRecoveryStore.subscribe(setEvents), []);
+  useEffect(() => {
+    const unsub = bibleRecoveryStore.subscribe(setEvents);
+    return () => { unsub(); };
+  }, []);
 
   const start = async () => {
     setRunning(true);
