@@ -160,9 +160,32 @@ serve(async (req) => {
       });
     }
 
+    // Stale fallback: serve último snapshot conhecido em vez de invalidar
+    const stale = await getCacheL2Stale(cacheKey);
+    if (stale) {
+      return new Response(JSON.stringify({
+        ...stale,
+        metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true }
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+    }
+
     return new Response(JSON.stringify({ error: 'Texto não encontrado', correlationId }), { status: 404, headers: corsHeaders });
 
   } catch (error: any) {
+    // Última linha de defesa: tentar stale em qualquer erro inesperado
+    try {
+      const body = await req.clone().json().catch(() => ({}));
+      const key = body?.abbrev && body?.chapter ? `${body.abbrev}:${body.chapter}` : null;
+      if (key) {
+        const stale = await getCacheL2Stale(key);
+        if (stale) {
+          return new Response(JSON.stringify({
+            ...stale,
+            metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Error Recovery)', correlationId, shouldInvalidateL1: false, stale: true }
+          }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+        }
+      }
+    } catch {}
     return new Response(JSON.stringify({ error: 'Erro interno', correlationId }), { status: 500, headers: corsHeaders });
   }
 });
