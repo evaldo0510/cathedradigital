@@ -52,6 +52,25 @@ async function getCacheL2(key: string, currentVersion: number) {
   } catch { return null; }
 }
 
+/**
+ * Fallback de cache: retorna o snapshot mais recente do capítulo
+ * IGNORANDO versão e expiração. Usado apenas quando todas as fontes
+ * vivas falham, para evitar invalidação agressiva e manter 100% PT
+ * sem travar a interface.
+ */
+async function getCacheL2Stale(key: string) {
+  try {
+    const { data } = await supabase
+      .from('bible_cache_l2')
+      .select('content')
+      .eq('cache_key', key)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    return data?.content;
+  } catch { return null; }
+}
+
 async function setCacheL2(key: string, content: any, hash: string, version: number) {
   try {
     const expireDate = new Date();
@@ -141,9 +160,32 @@ serve(async (req) => {
       });
     }
 
+    // Stale fallback: serve último snapshot conhecido em vez de invalidar
+    const stale = await getCacheL2Stale(cacheKey);
+    if (stale) {
+      return new Response(JSON.stringify({
+        ...stale,
+        metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true }
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+    }
+
     return new Response(JSON.stringify({ error: 'Texto não encontrado', correlationId }), { status: 404, headers: corsHeaders });
 
   } catch (error: any) {
+    // Última linha de defesa: tentar stale em qualquer erro inesperado
+    try {
+      const body = await req.clone().json().catch(() => ({}));
+      const key = body?.abbrev && body?.chapter ? `${body.abbrev}:${body.chapter}` : null;
+      if (key) {
+        const stale = await getCacheL2Stale(key);
+        if (stale) {
+          return new Response(JSON.stringify({
+            ...stale,
+            metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Error Recovery)', correlationId, shouldInvalidateL1: false, stale: true }
+          }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+        }
+      }
+    } catch {}
     return new Response(JSON.stringify({ error: 'Erro interno', correlationId }), { status: 500, headers: corsHeaders });
   }
 });
