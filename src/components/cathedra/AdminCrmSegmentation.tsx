@@ -40,7 +40,7 @@ const hoursSince = (date: string | null) => {
   return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60));
 };
 
-const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
+const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser, totalUsers, page, setPage, pageSize }) => {
   const [segment, setSegment] = useState<Segment>('all');
   const [sortBy, setSortBy] = useState<'last_visit' | 'xp' | 'created_at'>('last_visit');
   const [sortAsc, setSortAsc] = useState(false);
