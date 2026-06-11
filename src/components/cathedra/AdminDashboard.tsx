@@ -49,7 +49,9 @@ interface CRMUser {
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: stats, isLoading, error: statsError } = useAdminDashboardData();
+  const [page, setPage] = useState(0);
+  const pageSize = 20;
+  const { data: stats, isLoading, error: statsError } = useAdminDashboardData(page, pageSize);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [manualEmail, setManualEmail] = useState('');
@@ -253,9 +255,16 @@ const AdminDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="users">
+        <TabsContent value="users" className="space-y-spacing-md">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
-            <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
+            <AdminCrmSegmentation 
+              users={users} 
+              onSelectUser={setSelectedUser}
+              totalUsers={stats?.totalUsers || 0}
+              page={page}
+              setPage={setPage}
+              pageSize={pageSize}
+            />
           </Suspense>
         </TabsContent>
 
