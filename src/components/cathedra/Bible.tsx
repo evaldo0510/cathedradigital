@@ -593,55 +593,24 @@ const Bible: React.FC = () => {
 
   const fetchVerses = async (abbr: string, chapter: number) => {
     setIsLoading(true);
+    setSourceInfo('Buscando...');
     
-    // Tracking navigation history for Cross-References "back"
-    const currentVerse = searchParams.get('v');
-    if (currentVerse) {
-       // Only push if not already the last one (avoid loops)
-       setNavHistory(prev => {
-         const last = prev[prev.length - 1];
-         if (last?.book === abbr && last?.chapter === chapter && last?.verse === parseInt(currentVerse)) return prev;
-         return [...prev.slice(-10), { book: abbr, chapter, verse: parseInt(currentVerse) }];
-       });
-    }
-
-
-    // Attempt offline recovery
+    // 1. Check L1 Cache
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);
     
-    // Invalidação de cache antigo: Se o cache não tiver a flag de tradução PT, ignorar
     if (cached) {
       try {
         const cachedData = JSON.parse(cached);
-        // Force PT check: If book name in data is English, it's legacy
-        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cachedData.book)); 
-        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 3; // 3 days for faster rotation during stabilization
+        const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cachedData.book));
+        const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7;
         
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo(`Cache Local (v${cacheSyncVersion})`);
-          
-          // Registro diagnóstico por livro e capítulo
-          setDiagnosticLogs(prev => [
-            {
-              sessionId,
-              timestamp: new Date().toISOString(),
-              book: cachedData.book || abbr,
-              abbr,
-              chapter,
-              source: 'Cache Local (v3)',
-              verses: cachedData.verses?.length || 0
-            },
-            ...prev.slice(0, 99)
-          ]);
-
           return;
         } else {
-          console.log(`[Cache] Invalidando cache para ${abbr} ${chapter}`);
-          if (isLegacy) setInvalidationStats(s => ({ ...s, legacy: s.legacy + 1 }));
-          if (isExpired) setInvalidationStats(s => ({ ...s, expired: s.expired + 1 }));
           localStorage.removeItem(offlineKey);
         }
       } catch(e) {
@@ -653,12 +622,12 @@ const Bible: React.FC = () => {
       setSourceInfo('Buscando na Nuvem...');
       
       const { data, error, response } = await supabase.functions.invoke('bible-text', {
-        body: { abbrev: abbr, chapter }
+        body: { abbrev: abbr, chapter, client_cache_version: cacheSyncVersion }
       });
 
       if (response?.status === 304) {
-        const cached = JSON.parse(localStorage.getItem(offlineKey) || '{}');
-        setVerses(cached.verses.map((v: any) => ({ ...v, chapter })));
+        const cachedRes = JSON.parse(localStorage.getItem(offlineKey) || '{}');
+        setVerses(cachedRes.verses.map((v: any) => ({ ...v, chapter })));
         setIsLoading(false);
         setSourceInfo('Sincronizado (ETag 304)');
         return;
@@ -666,31 +635,10 @@ const Bible: React.FC = () => {
 
       if (response?.status === 404) {
         const errorData = data || {};
-        toast.error(`Atenção: ${errorData.error || 'Texto não encontrado'}`, { 
-          duration: 15000,
-          description: (
-            <div className="flex flex-col gap-2">
-              <p>O conteúdo solicitado não foi encontrado na nossa base local (Fonte Única de Verdade).</p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] opacity-70 font-mono">ID: {errorData.correlationId?.substring(0, 8)}</span>
-                <a 
-                  href={`/admin/audit?id=${errorData.correlationId}`}
-                  className="text-[10px] underline font-bold text-primary"
-                  onClick={(e) => { 
-                    e.preventDefault(); 
-                    navigate(`/admin/audit?id=${errorData.correlationId}`); 
-                  }}
-                >
-                  AUDITORIA CI
-                </a>
-              </div>
-            </div>
-          )
-        });
+        toast.error(`Atenção: ${errorData.error || 'Texto não encontrado'}`);
         setIsLoading(false);
         return;
       }
-
 
       if (error) throw error;
       
@@ -797,11 +745,11 @@ const Bible: React.FC = () => {
         localStorage.setItem(offlineKey, JSON.stringify({ 
           verses: loadedVerses, 
           timestamp: Date.now(),
-          v: 8, // Versão da tradução PT garantida via AI Fallback
+          v: cacheSyncVersion,
           book: data.book || abbr
         }));
       } else {
-        toast.warning('Este capítulo parece estar sem conteúdo sagrado no momento.');
+        toast.warning('Capítulo sem conteúdo no momento.');
       }
 
 
