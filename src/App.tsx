@@ -114,6 +114,7 @@ const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransa
 const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
+const BibleRecoveryPanel = lazy(() => import('./pages/BibleRecoveryPanel'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const LanguageAdmin = lazy(() => import('./components/cathedra/LanguageAdmin'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
@@ -498,6 +499,7 @@ const AppLayout: React.FC = () => {
               <Route path="/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
+              <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
 
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={
