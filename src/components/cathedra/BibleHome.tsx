@@ -74,9 +74,9 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
       {/* Quick Access Grid */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Icons.Calendar, label: 'Leitura Diária', action: () => {} },
-          { icon: Icons.Bookmark, label: 'Marcadores', action: () => {} },
-          { icon: Icons.Book, label: 'Biblioteca Sagrada', action: () => {} }
+          { icon: Icons.Calendar, label: 'Leitura Diária', action: () => toast.info('Funcionalidade em manutenção') },
+          { icon: Icons.Bookmark, label: 'Marcadores', action: () => toast.info('Funcionalidade em manutenção') },
+          { icon: Icons.Book, label: 'Biblioteca', action: () => toast.info('Funcionalidade em manutenção') }
         ].map((item) => (
           <button key={item.label} onClick={item.action} className="flex flex-col items-center p-4 rounded-2xl border border-primary/5 bg-background hover:bg-primary/[0.02] transition-all group">
             <item.icon className="w-5 h-5 text-primary/30 group-hover:text-secondary transition-colors mb-2" />

@@ -378,6 +378,7 @@ const Bible: React.FC = () => {
         setSelectedBook(book);
         setSelectedChapter(parseInt(chapter));
         setViewMode('reading');
+        // Usar chapter original para fetch e parsear v depois se necessário
         fetchVerses(book.abbr, parseInt(chapter));
       }
     } else if (bookAbbr) {
