@@ -76,11 +76,13 @@ export function useRenderPerf(componentName: string, threshold = 5) {
         console.groupEnd();
       }
 
-      // Record performance event in audit trail
-      supabase.from('app_metrics').insert([{
-        metric_type: 'performance_event',
-        metadata: report
-      }]).then(() => {}, (err) => console.error("Perf Logging Error", err));
+      // Record performance event in audit trail (Background)
+      if (duration > 1000 || renderCount.current > threshold) {
+        supabase.from('app_metrics').insert([{
+          metric_type: 'performance_event',
+          metadata: report
+        }]).then(() => {}, (err) => {});
+      }
 
       // Log to Sentry if metrics exceed thresholds
       if (metrics.current.cls > 0.1 || metrics.current.inp > 200 || renderCount.current > threshold) {

@@ -46,12 +46,12 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Josué', abbr: 'Js', chapters: 24, category: 'Histórico' },
         { name: 'Juízes', abbr: 'Jz', chapters: 21, category: 'Histórico' },
         { name: 'Rute', abbr: 'Rt', chapters: 4, category: 'Histórico' },
-        { name: '1 Samuel', abbr: '1Sm', chapters: 31, category: 'Histórico' },
-        { name: '2 Samuel', abbr: '2Sm', chapters: 24, category: 'Histórico' },
-        { name: '1 Reis', abbr: '1Rs', chapters: 22, category: 'Histórico' },
-        { name: '2 Reis', abbr: '2Rs', chapters: 25, category: 'Histórico' },
-        { name: '1 Crônicas', abbr: '1Cr', chapters: 29, category: 'Histórico' },
-        { name: '2 Crônicas', abbr: '2Cr', chapters: 36, category: 'Histórico' },
+        { name: '1 Samuel', abbr: '1 Sm', chapters: 31, category: 'Histórico' },
+        { name: '2 Samuel', abbr: '2 Sm', chapters: 24, category: 'Histórico' },
+        { name: '1 Reis', abbr: '1 Rs', chapters: 22, category: 'Histórico' },
+        { name: '2 Reis', abbr: '2 Rs', chapters: 25, category: 'Histórico' },
+        { name: '1 Crônicas', abbr: '1 Cr', chapters: 29, category: 'Histórico' },
+        { name: '2 Crônicas', abbr: '2 Cr', chapters: 36, category: 'Histórico' },
         { name: 'Esdras', abbr: 'Esd', chapters: 10, category: 'Histórico' },
         { name: 'Neemias', abbr: 'Ne', chapters: 13, category: 'Histórico' },
         { 
@@ -80,7 +80,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Ester', abbr: 'Est', chapters: 16, category: 'Histórico' },
         { 
           name: '1 Macabeus', 
-          abbr: '1Mc', 
+          abbr: '1 Mc', 
           chapters: 16, 
           category: 'Histórico',
           author: 'Desconhecido (Judeu Palestinense)',
@@ -91,7 +91,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         },
         { 
           name: '2 Macabeus', 
-          abbr: '2Mc', 
+          abbr: '2 Mc', 
           chapters: 15, 
           category: 'Histórico / Teológico',
           author: 'Desconhecido (Baseado em Jasão de Cirene)',
@@ -181,7 +181,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Amós', abbr: 'Am', chapters: 9, category: 'Profético' },
         { 
           name: 'Abdias', 
-          abbr: 'Ab', 
+          abbr: 'Abd', 
           chapters: 1,
           category: 'Profético',
           author: 'Abdias',
@@ -216,6 +216,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
           name: 'João', 
           abbr: 'Jo', 
           chapters: 21, 
+
           category: 'Evangelho',
           author: 'João Apóstolo',
           date: 'Séc. I (90-100 d.C.)',
@@ -258,16 +259,16 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
       name: 'Cartas de Paulo',
       books: [
         { name: 'Romanos', abbr: 'Rm', chapters: 16, category: 'Epístola' },
-        { name: '1 Coríntios', abbr: '1Cor', chapters: 16, category: 'Epístola' },
-        { name: '2 Coríntios', abbr: '2Cor', chapters: 13, category: 'Epístola' },
+        { name: '1 Coríntios', abbr: '1 Cor', chapters: 16, category: 'Epístola' },
+        { name: '2 Coríntios', abbr: '2 Cor', chapters: 13, category: 'Epístola' },
         { name: 'Gálatas', abbr: 'Gl', chapters: 6, category: 'Epístola' },
         { name: 'Efésios', abbr: 'Ef', chapters: 6, category: 'Epístola' },
         { name: 'Filipenses', abbr: 'Fl', chapters: 4, category: 'Epístola' },
         { name: 'Colossenses', abbr: 'Cl', chapters: 4, category: 'Epístola' },
-        { name: '1 Tessalonicenses', abbr: '1Ts', chapters: 5, category: 'Epístola' },
-        { name: '2 Tessalonicenses', abbr: '2Ts', chapters: 3, category: 'Epístola' },
-        { name: '1 Timóteo', abbr: '1Tm', chapters: 6, category: 'Epístola' },
-        { name: '2 Timóteo', abbr: '2Tm', chapters: 4, category: 'Epístola' },
+        { name: '1 Tessalonicenses', abbr: '1 Ts', chapters: 5, category: 'Epístola' },
+        { name: '2 Tessalonicenses', abbr: '2 Ts', chapters: 3, category: 'Epístola' },
+        { name: '1 Timóteo', abbr: '1 Tm', chapters: 6, category: 'Epístola' },
+        { name: '2 Timóteo', abbr: '2 Tm', chapters: 4, category: 'Epístola' },
         { name: 'Tito', abbr: 'Tt', chapters: 3, category: 'Epístola' },
         { name: 'Filemon', abbr: 'Fm', chapters: 1, category: 'Epístola' }
       ]
@@ -277,11 +278,11 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
       books: [
         { name: 'Hebreus', abbr: 'Hb', chapters: 13, category: 'Epístola' },
         { name: 'Tiago', abbr: 'Tg', chapters: 5, category: 'Epístola' },
-        { name: '1 Pedro', abbr: '1Pd', chapters: 5, category: 'Epístola' },
-        { name: '2 Pedro', abbr: '2Pd', chapters: 3, category: 'Epístola' },
-        { name: '1 João', abbr: '1Jo', chapters: 5, category: 'Epístola' },
-        { name: '2 João', abbr: '2Jo', chapters: 1, category: 'Epístola' },
-        { name: '3 João', abbr: '3Jo', chapters: 1, category: 'Epístola' },
+        { name: '1 Pedro', abbr: '1 Pd', chapters: 5, category: 'Epístola' },
+        { name: '2 Pedro', abbr: '2 Pd', chapters: 3, category: 'Epístola' },
+        { name: '1 João', abbr: '1 Jo', chapters: 5, category: 'Epístola' },
+        { name: '2 João', abbr: '2 Jo', chapters: 1, category: 'Epístola' },
+        { name: '3 João', abbr: '3 Jo', chapters: 1, category: 'Epístola' },
         { name: 'Judas', abbr: 'Jd', chapters: 1, category: 'Epístola' }
       ]
     },
