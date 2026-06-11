@@ -181,7 +181,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Amós', abbr: 'Am', chapters: 9, category: 'Profético' },
         { 
           name: 'Abdias', 
-          abbr: 'Ab', 
+          abbr: 'Abd', 
           chapters: 1,
           category: 'Profético',
           author: 'Abdias',
@@ -216,6 +216,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
           name: 'João', 
           abbr: 'Jo', 
           chapters: 21, 
+
           category: 'Evangelho',
           author: 'João Apóstolo',
           date: 'Séc. I (90-100 d.C.)',
