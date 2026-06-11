@@ -255,9 +255,16 @@ const AdminDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="users">
+        <TabsContent value="users" className="space-y-spacing-md">
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
-            <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
+            <AdminCrmSegmentation 
+              users={users} 
+              onSelectUser={setSelectedUser}
+              totalUsers={stats?.totalUsers || 0}
+              page={page}
+              setPage={setPage}
+              pageSize={pageSize}
+            />
           </Suspense>
         </TabsContent>
 
