@@ -1,102 +1,39 @@
 import { useEffect, useRef } from 'react';
-import * as Sentry from "@sentry/react";
-import { onCLS, onINP, onLCP, onFCP } from 'web-vitals';
-import { useLocation } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 
 /**
- * A hook to monitor component render performance and re-render counts.
- * Also measures CLS, INP, and LCP for performance regression tracking.
+ * Lightweight render performance probe.
+ *
+ * Padronizado para coletar APENAS o essencial:
+ *  - contagem de renders
+ *  - duração da montagem até o primeiro effect
+ *
+ * Em produção é praticamente um no-op (sem PerformanceObserver, sem inserts
+ * no banco, sem breadcrumbs Sentry por render). Isso evita re-renders e
+ * escrita excessiva de logs durante a navegação.
+ *
+ * Para habilitar amostragem mínima em produção, defina
+ * `window.__PERF_SAMPLE__ = 0.05` (5%) via console ou flag.
  */
-export function useRenderPerf(componentName: string, threshold = 5) {
+export function useRenderPerf(componentName: string, _threshold = 5) {
   const renderCount = useRef(0);
-  const startTime = useRef(performance.now());
-  const location = useLocation();
-  const metrics = useRef({
-    cls: 0,
-    inp: 0,
-    lcp: 0,
-    fcp: 0,
-    tbt: 0
-  });
-
+  const mountedAt = useRef<number>(0);
   renderCount.current++;
 
   useEffect(() => {
-    // Track Web Vitals
-    onCLS((metric) => {
-      metrics.current.cls = metric.value;
-    });
-    onINP((metric) => {
-      metrics.current.inp = metric.value;
-    });
-    onLCP((metric) => {
-      metrics.current.lcp = metric.value;
-    });
-    onFCP((metric) => {
-      metrics.current.fcp = metric.value;
-    });
-
-    // Measure TBT (Estimated from Long Tasks during session)
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (entry.duration > 50) {
-          metrics.current.tbt += (entry.duration - 50);
-        }
-      }
-    });
-
-    try {
-      observer.observe({ type: 'longtask', buffered: true });
-    } catch (e) {
-      // Browser might not support longtask
-    }
+    mountedAt.current = performance.now();
 
     return () => {
-      observer.disconnect();
-
-      const duration = performance.now() - startTime.current;
-      const route = location.pathname;
-      
-      const report = {
-        component: componentName,
-        route,
-        duration: `${duration.toFixed(2)}ms`,
-        renders: renderCount.current,
-        cls: metrics.current.cls.toFixed(4),
-        inp: `${metrics.current.inp.toFixed(2)}ms`,
-        lcp: `${metrics.current.lcp.toFixed(2)}ms`,
-        tbt: `${metrics.current.tbt.toFixed(2)}ms`,
-        timestamp: new Date().toISOString()
-      };
-
-      if (import.meta.env.DEV) {
-        console.group(`[Perf Audit] ${componentName} @ ${route}`);
-        console.table(report);
-        console.groupEnd();
+      if (!import.meta.env.DEV) {
+        const sample = (globalThis as any).__PERF_SAMPLE__ ?? 0;
+        if (Math.random() > sample) return;
       }
-
-      // Record performance event in audit trail (Background)
-      if (duration > 1000 || renderCount.current > threshold) {
-        supabase.from('app_metrics').insert([{
-          metric_type: 'performance_event',
-          metadata: report
-        }]).then(() => {}, (err) => {});
-      }
-
-      // Log to Sentry if metrics exceed thresholds
-      if (metrics.current.cls > 0.1 || metrics.current.inp > 200 || renderCount.current > threshold) {
-        Sentry.addBreadcrumb({
-          category: 'performance_audit',
-          message: `Perf Regression in ${componentName}`,
-          level: 'warning',
-          data: report
-        });
-      }
+      const duration = performance.now() - mountedAt.current;
+      // Single, cheap log line. No table, no group, no network.
+      // eslint-disable-next-line no-console
+      console.debug(
+        `[perf] ${componentName} renders=${renderCount.current} dur=${duration.toFixed(0)}ms`
+      );
     };
-  }, [componentName, threshold, location.pathname]);
-
-  useEffect(() => {
-    startTime.current = performance.now();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [componentName]);
 }
