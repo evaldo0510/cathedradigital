@@ -27,6 +27,10 @@ interface UserProfile {
 interface Props {
   users: UserProfile[];
   onSelectUser: (user: UserProfile) => void;
+  totalUsers: number;
+  page: number;
+  setPage: (page: number) => void;
+  pageSize: number;
 }
 
 type Segment = 'all' | 'new' | 'active' | 'engaged' | 'deep' | 'inactive';
