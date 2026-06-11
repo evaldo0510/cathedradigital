@@ -338,12 +338,12 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
   const runAuditScan = async () => {
     setIsScanning(true);
-    toast.info('Iniciando Auditoria Final Premium...');
+    toast.info('Iniciando Auditoria de Estabilidade...');
     
     try {
       const report = await getBibleAuditReport(async (abbr, ch) => {
         const { data, error } = await supabase.functions.invoke('bible-text', {
-          body: { book: abbr, chapter: ch }
+          body: { abbrev: abbr, chapter: ch, client_cache_version: 0 }
         });
         if (error) throw error;
         return data.verses || [];

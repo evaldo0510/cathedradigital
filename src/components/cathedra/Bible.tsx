@@ -158,7 +158,7 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
-      // 1. Invalidar Caches Antigos se detectado inglês no metadata do cache ou versão incompatível
+      // 1. Invalidar Caches Antigos se versão incompatível
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
@@ -166,11 +166,10 @@ const Bible: React.FC = () => {
           if (!cachedValue) return;
           const cached = JSON.parse(cachedValue);
           const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
-          const hasEnglishBook = cached.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cached.book);
           
-          if (isLegacyVersion || hasEnglishBook) {
+          if (isLegacyVersion) {
             localStorage.removeItem(key);
-            console.log(`[Cache Invalidation] Removed legacy/English cache: ${key} (v:${cached.v || 'none'})`);
+            console.log(`[Cache Invalidation] Removed legacy cache: ${key} (v:${cached.v || 'none'})`);
             setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
           }
         } catch (e) {}
@@ -193,18 +192,17 @@ const Bible: React.FC = () => {
       const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
       const allAllowed = [
         ...LANGUAGE_ALLOWLIST, 
-        ...(dynamicAllowlist?.map(a => a.term) || []), 
-        'Tobias', 'Judite', 'Sabedoria', 'Eclesiástico', 'Baruc', '1 Macabeus', '2 Macabeus', 'Abdias'
+        ...(dynamicAllowlist?.map(a => a.term) || [])
       ];
       
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node: Node | null;
-      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis)\\b`, 'i');
+      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
       
       const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
       if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
 
-      // 2. Invalidação agressiva de ETag (Simulado com versioning local/remoto)
+      // 2. Invalidação agressiva de ETag
       if (user) {
         const etag = localStorage.getItem('cathedra_bible_etag');
         const { data: remoteEtag } = await supabase.from('bible_cache_metadata').select('client_version').single();
@@ -327,14 +325,12 @@ const Bible: React.FC = () => {
             node.textContent = newText;
           }
 
-          // Se ainda contiver termos proibidos e não estiver na allowlist, registrar
+          // Monitoramento de violações
           if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase().includes(allowed.toLowerCase()))) {
-             // Log violation
              const lastLog = sessionStorage.getItem(`last_lang_log_${newText}`);
              if (!lastLog || Date.now() - parseInt(lastLog) > 60000) {
                 sessionStorage.setItem(`last_lang_log_${newText}`, Date.now().toString());
                 
-                // Add to diagnostic logs for real-time reporting
                 setDiagnosticLogs(prev => [
                   {
                     id: crypto.randomUUID(),
@@ -365,9 +361,9 @@ const Bible: React.FC = () => {
         }
       }
     };
-    const timer = setInterval(scanAndFix, 1500); 
+    const timer = setInterval(scanAndFix, 2000); // Frequência ajustada para 2s (performance)
     return () => clearInterval(timer);
-  }, [location.pathname]);
+  }, [location.pathname, user, cacheSyncVersion]);
 
   // Sync with URL continued
   useEffect(() => {
