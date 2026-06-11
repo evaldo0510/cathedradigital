@@ -52,6 +52,25 @@ async function getCacheL2(key: string, currentVersion: number) {
   } catch { return null; }
 }
 
+/**
+ * Fallback de cache: retorna o snapshot mais recente do capítulo
+ * IGNORANDO versão e expiração. Usado apenas quando todas as fontes
+ * vivas falham, para evitar invalidação agressiva e manter 100% PT
+ * sem travar a interface.
+ */
+async function getCacheL2Stale(key: string) {
+  try {
+    const { data } = await supabase
+      .from('bible_cache_l2')
+      .select('content')
+      .eq('cache_key', key)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    return data?.content;
+  } catch { return null; }
+}
+
 async function setCacheL2(key: string, content: any, hash: string, version: number) {
   try {
     const expireDate = new Date();
