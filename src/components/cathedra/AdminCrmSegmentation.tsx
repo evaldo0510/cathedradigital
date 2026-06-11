@@ -225,6 +225,33 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser, totalUsers
               </tbody>
             </table>
           </div>
+          
+          <div className="flex items-center justify-between p-spacing-sm border-t border-border">
+            <p className="text-premium-xs text-muted-foreground">
+              Mostrando {users.length} de {totalUsers} usuários
+            </p>
+            <div className="flex items-center gap-spacing-xs">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => setPage(Math.max(0, page - 1))}
+                disabled={page === 0}
+                className="h-spacing-xl text-premium-xs"
+              >
+                Anterior
+              </Button>
+              <span className="text-premium-xs font-bold">Página {page + 1}</span>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => setPage(page + 1)}
+                disabled={(page + 1) * pageSize >= totalUsers}
+                className="h-spacing-xl text-premium-xs"
+              >
+                Próxima
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
