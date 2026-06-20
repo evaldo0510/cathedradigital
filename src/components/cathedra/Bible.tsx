@@ -852,7 +852,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     ],
     // Espaço reservado para conexões futuras
     'all': [
-      { type: 'theology', label: 'Conexões Relacionadas', color: 'bg-primary/20', id: 'coming-soon', summary: 'As conexões vivas entre a Palavra e a Tradição estarão disponíveis em breve.' }
+      { type: 'theology', label: 'Nexus', color: 'bg-secondary', id: 'nexus-bible', summary: 'Ponto de conexão entre a Palavra, a Tradição e a vida interior.' }
     ],
     'Gn-1-1': [
       { type: 'catechism', label: 'CIC 279', color: 'bg-blue-500', id: '279', summary: '"No princípio, Deus criou o céu e a terra": três coisas são aqui afirmadas.' },
@@ -1275,6 +1275,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   <Icons.Activity className="w-6 h-6" />
                 </button>
                 <button 
+                  onClick={() => navigate('/bible-recovery')}
+                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  title="Recovery Bíblia"
+                >
+                  <Icons.Stethoscope className="w-6 h-6" />
+                </button>
+                <button 
                   onClick={() => setViewMode('notes')}
                   className="p-2 text-secondary/60 active:scale-95 transition-transform"
                 >
@@ -1508,6 +1515,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                           
                           <div className="flex-1 space-y-4">
+                            {(() => {
+                              const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
+                              const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || KNOWLEDGE_CONNECTIONS.all || [];
+                              const crossRefs = CROSS_REFERENCES[connectionKey] || [];
+
+                              return (
+                                <>
                             <p 
                               className={cn(
                                 "leading-[1.85] font-serif text-primary/85 tracking-tight relative",
@@ -1536,9 +1550,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             </p>
 
                             {/* Knowledge Connection Bubbles - Enhanced V1 UI */}
-                            {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                            {verseConnections.length > 0 && (
                               <div className="flex flex-wrap gap-2 pt-1 opacity-90 max-h-24 overflow-hidden">
-                                {KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].slice(0, 5).map((conn, idx) => (
+                                {verseConnections.slice(0, 5).map((conn, idx) => (
                                   <motion.button
                                     key={idx}
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -1559,9 +1573,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
                             {/* Cross References */}
-                            {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && !KNOWLEDGE_CONNECTIONS[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] && (
+                            {crossRefs.length > 0 && !KNOWLEDGE_CONNECTIONS[connectionKey] && (
                               <div className="flex flex-wrap gap-2 pt-2">
-                                {CROSS_REFERENCES[`${selectedBook.abbr}-${selectedChapter}-${v.number}`].map(ref => {
+                                {crossRefs.map(ref => {
                                   const [b, c, vNum] = ref.split('-');
                                   return (
                                     <button
@@ -1578,6 +1592,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   })}
                                 </div>
                               )}
+                                </>
+                              );
+                            })()}
                             </div>
                           </div>
                         );

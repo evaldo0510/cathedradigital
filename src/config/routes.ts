@@ -32,6 +32,7 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/prayer', label: 'Orações', icon: Icons.Flame, showInMenu: true, category: 'content' },
   { path: '/rosary', label: 'Rosário', icon: Icons.Hash, showInMenu: true, category: 'content' },
   { path: '/via-crucis', label: 'Via Sacra', icon: Icons.Activity, showInMenu: true, category: 'content' },
+  { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: true, category: 'content' },
   { path: '/glossary', label: 'Glossário', icon: Icons.BookOpen, showInMenu: true, category: 'content' },
 
   // User Profile
