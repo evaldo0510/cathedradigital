@@ -1407,14 +1407,24 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     "text-lg font-display transition-colors",
                     selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
                   )}>{ch}</span>
-                  {selectedBook.chapterTitles?.[ch] && (
-                    <div className={cn(
-                      "w-1 h-1 rounded-full mt-1",
-                      selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
-                    )} />
-                  )}
+                  <div className="flex items-center gap-1 mt-1">
+                    {selectedBook.chapterTitles?.[ch] && (
+                      <div className={cn(
+                        "w-1 h-1 rounded-full",
+                        selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
+                      )} />
+                    )}
+                    {cicCitationMap.chapters.has(ch) && (
+                      <div
+                        className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
+                        title="Contém citação do Catecismo (CIC)"
+                        aria-label="Capítulo com citação do Catecismo"
+                      />
+                    )}
+                  </div>
                 </button>
               ))}
+
             </div>
           </motion.div>
         )}
