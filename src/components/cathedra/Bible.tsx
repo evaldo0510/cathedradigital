@@ -942,6 +942,42 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     return { chapters, verses };
   }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
 
+  // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
+  useEffect(() => {
+    if (!selectedBook) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('bible_connections')
+          .select('verse_id, category, reference_id, reference_title, summary')
+          .like('verse_id', `${selectedBook.abbr}-%`);
+        if (cancelled || error || !data || data.length === 0) return;
+        setDynamicConnections(prev => {
+          const next = { ...prev };
+          data.forEach((conn: any) => {
+            const key = conn.verse_id;
+            if (!next[key]) next[key] = [];
+            if (!next[key].some((c: any) => c.id === (conn.reference_id || conn.id))) {
+              next[key].push({
+                type: conn.category,
+                label: conn.reference_title,
+                color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
+                id: conn.reference_id,
+                summary: conn.summary || '',
+              });
+            }
+          });
+          return next;
+        });
+      } catch {
+        /* silent — fallback to hard-coded KNOWLEDGE_CONNECTIONS */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [selectedBook]);
+
+
 
   const filteredBooks = useMemo(() => {
 
