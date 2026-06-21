@@ -1582,26 +1582,48 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               </button>
                             </p>
 
-                            {/* Knowledge Connection Bubbles - Enhanced V1 UI */}
+                            {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div className="flex flex-wrap gap-2 pt-1 opacity-90 max-h-24 overflow-hidden">
-                                {verseConnections.slice(0, 5).map((conn, idx) => (
-                                  <motion.button
-                                    key={idx}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setExpandedConnection(conn);
-                                    }}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 shadow-sm active:scale-95 transition-all mb-1 hover:bg-secondary/20"
-                                  >
-                                    <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", conn.color || "bg-secondary")} />
-                                    <span className="text-[9px] font-black uppercase tracking-wider text-secondary">{conn.label}</span>
-                                  </motion.button>
-                                ))}
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                                {verseConnections.slice(0, 6).map((conn, idx) => {
+                                  const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
+                                    catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-700', stripe: 'bg-blue-500', kicker: 'Catecismo' },
+                                    bible: { icon: <Icons.BookOpen className="w-3 h-3" />, tone: 'text-emerald-700', stripe: 'bg-emerald-500', kicker: 'Escritura' },
+                                    document: { icon: <Icons.ScrollText className="w-3 h-3" />, tone: 'text-purple-700', stripe: 'bg-purple-500', kicker: 'Magistério' },
+                                    theology: { icon: <Icons.Sparkles className="w-3 h-3" />, tone: 'text-secondary', stripe: 'bg-secondary', kicker: 'Nexus' },
+                                    cross_ref: { icon: <Icons.Link2 className="w-3 h-3" />, tone: 'text-amber-700', stripe: 'bg-amber-500', kicker: 'Referência' },
+                                  };
+                                  const meta = typeMeta[conn.type] || typeMeta.theology;
+                                  return (
+                                    <motion.button
+                                      key={idx}
+                                      initial={{ opacity: 0, y: 4 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      transition={{ delay: idx * 0.03 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setExpandedConnection(conn);
+                                      }}
+                                      className="group relative overflow-hidden rounded-md border border-primary/10 bg-white hover:border-secondary/40 hover:bg-secondary/[0.03] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98]"
+                                    >
+                                      <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
+                                      <div className="pl-2.5 pr-2 py-1.5 flex flex-col gap-0.5">
+                                        <div className="flex items-center gap-1.5">
+                                          <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
+                                          <span className={cn("text-[8px] font-black uppercase tracking-[0.12em] opacity-70", meta.tone)}>
+                                            {meta.kicker}
+                                          </span>
+                                        </div>
+                                        <span className="text-[11px] font-bold text-primary leading-tight truncate">
+                                          {conn.label}
+                                        </span>
+                                      </div>
+                                    </motion.button>
+                                  );
+                                })}
                               </div>
                             )}
+
 
 
 
