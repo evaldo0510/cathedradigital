@@ -1591,7 +1591,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                     bible: { icon: <Icons.BookOpen className="w-3 h-3" />, tone: 'text-emerald-700', stripe: 'bg-emerald-500', kicker: 'Escritura' },
                                     document: { icon: <Icons.ScrollText className="w-3 h-3" />, tone: 'text-purple-700', stripe: 'bg-purple-500', kicker: 'Magistério' },
                                     theology: { icon: <Icons.Sparkles className="w-3 h-3" />, tone: 'text-secondary', stripe: 'bg-secondary', kicker: 'Nexus' },
-                                    cross_ref: { icon: <Icons.Link2 className="w-3 h-3" />, tone: 'text-amber-700', stripe: 'bg-amber-500', kicker: 'Referência' },
+                                    cross_ref: { icon: <Icons.Link className="w-3 h-3" />, tone: 'text-amber-700', stripe: 'bg-amber-500', kicker: 'Referência' },
                                   };
                                   const meta = typeMeta[conn.type] || typeMeta.theology;
                                   return (
