@@ -1528,8 +1528,15 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           )}
                         >
 
-                          <div className="flex flex-col items-center gap-2 mt-2 w-5 shrink-0">
+                          <div className="flex flex-col items-center gap-1.5 mt-2 w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
+                            {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
+                              <div
+                                className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
+                                title="Versículo com citação do Catecismo (CIC)"
+                                aria-label="Versículo com citação do Catecismo"
+                              />
+                            )}
                             {hasNote && (
                               <div className="flex flex-col items-center gap-1">
                                 <div className="w-1.5 h-1.5 rounded-full bg-secondary/60 shadow-sm" title="Possui anotação" />
@@ -1537,6 +1544,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               </div>
                             )}
                           </div>
+
 
                           
                           <div className="flex-1 space-y-4">
