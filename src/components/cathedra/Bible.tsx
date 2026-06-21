@@ -924,8 +924,23 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     };
   }, [KNOWLEDGE_CONNECTIONS]);
 
-
-
+  // Map of CIC catechism citations per book → { chapters: Set, verses: Set("ch-v") }
+  const cicCitationMap = useMemo(() => {
+    const chapters = new Set<number>();
+    const verses = new Set<string>();
+    if (!selectedBook) return { chapters, verses };
+    Object.entries(KNOWLEDGE_CONNECTIONS).forEach(([key, conns]) => {
+      if (key === 'all') return;
+      const [abbr, ch, v] = key.split('-');
+      if (abbr !== selectedBook.abbr) return;
+      const hasCIC = conns.some(c => c.type === 'catechism');
+      if (!hasCIC) return;
+      const chNum = Number(ch);
+      if (!Number.isNaN(chNum)) chapters.add(chNum);
+      if (v) verses.add(`${ch}-${v}`);
+    });
+    return { chapters, verses };
+  }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
 
 
   const filteredBooks = useMemo(() => {
