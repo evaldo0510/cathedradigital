@@ -97,17 +97,45 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
+// Mapa completo das abreviações em PT → IDs do bolls.life (NAA, ordem católica/protestante padrão)
+const BOLLS_MAP: Record<string, number> = {
+  // Antigo Testamento
+  'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5,
+  'Js': 6, 'Jz': 7, 'Rt': 8,
+  '1Sm': 9, '2Sm': 10, '1Rs': 11, '2Rs': 12,
+  '1Cr': 13, '2Cr': 14, 'Ed': 15, 'Ne': 16, 'Et': 17,
+  'Jó': 18, 'Job': 18, 'Sl': 19, 'Pv': 20, 'Ec': 21, 'Ct': 22,
+  'Is': 23, 'Jr': 24, 'Lm': 25, 'Ez': 26, 'Dn': 27,
+  'Os': 28, 'Jl': 29, 'Am': 30, 'Ab': 31, 'Jn': 32, 'Mq': 33,
+  'Na': 34, 'Hc': 35, 'Sf': 36, 'Ag': 37, 'Zc': 38, 'Ml': 39,
+  // Novo Testamento
+  'Mt': 40, 'Mc': 41, 'Lc': 42, 'Jo': 43, 'At': 44,
+  'Rm': 45, '1Co': 46, '2Co': 47, 'Gl': 48, 'Ef': 49,
+  'Fp': 50, 'Cl': 51, '1Ts': 52, '2Ts': 53,
+  '1Tm': 54, '2Tm': 55, 'Tt': 56, 'Fm': 57,
+  'Hb': 58, 'Tg': 59, '1Pe': 60, '2Pe': 61,
+  '1Jo': 62, '2Jo': 63, '3Jo': 64, 'Jd': 65, 'Ap': 66,
+};
+
 async function fetchFromBollsLife(abbrev: string, chapter: number) {
-    // Mapa ID bolls (abreviado para este exemplo, no real seria completo)
-    const BOLLS_MAP: Record<string, number> = { 'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5 };
     const bookId = BOLLS_MAP[abbrev];
-    if (!bookId) return null;
+    if (!bookId) {
+        console.warn(`[bible-text] BOLLS_MAP miss for abbrev="${abbrev}"`);
+        return null;
+    }
     try {
         const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
-        if (!res.ok) return null;
+        if (!res.ok) {
+            console.warn(`[bible-text] BollsLife ${res.status} for ${abbrev} ${chapter}`);
+            return null;
+        }
         const data = await res.json();
-        return data.map((v: any) => ({ number: v.verse, text: v.text.replace(/<[^>]+>/g, '').trim() }));
-    } catch { return null; }
+        if (!Array.isArray(data) || data.length === 0) return null;
+        return data.map((v: any) => ({ number: v.verse, text: String(v.text || '').replace(/<[^>]+>/g, '').trim() }));
+    } catch (e) {
+        console.error(`[bible-text] BollsLife fetch error ${abbrev} ${chapter}:`, e);
+        return null;
+    }
 }
 
 serve(async (req) => {
