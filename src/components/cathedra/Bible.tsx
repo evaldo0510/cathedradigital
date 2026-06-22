@@ -1884,6 +1884,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 <Button 
                   variant="outline"
                   onClick={() => {
+                    console.info('[Nexus] navigate', { from: 'bible', to: expandedConnection.type, id: expandedConnection.id });
                     if (expandedConnection.type === 'catechism') {
                       navigate(`/catechism?p=${expandedConnection.id}`);
                     } else if (expandedConnection.type === 'document') {
