@@ -1586,7 +1586,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           <div className="flex-1 space-y-4">
                             {(() => {
                               const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
-                              const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || KNOWLEDGE_CONNECTIONS.all || [];
+                              const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || [];
                               const crossRefs = CROSS_REFERENCES[connectionKey] || [];
 
                               return (
