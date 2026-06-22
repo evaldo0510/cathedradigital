@@ -1638,6 +1638,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       transition={{ delay: idx * 0.03 }}
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        // Telemetria: clique em bolha do Nexus
+                                        console.info('[Nexus] click', {
+                                          book: selectedBook.abbr,
+                                          chapter: selectedChapter,
+                                          verse: v.number,
+                                          type: conn.type,
+                                          label: conn.label,
+                                          id: conn.id,
+                                        });
+                                        try {
+                                          window.dispatchEvent(new CustomEvent('nexus:click', {
+                                            detail: { book: selectedBook.abbr, chapter: selectedChapter, verse: v.number, ...conn }
+                                          }));
+                                        } catch {}
                                         setExpandedConnection(conn);
                                       }}
                                       className="group relative overflow-hidden rounded-md border border-primary/10 bg-white hover:border-secondary/40 hover:bg-secondary/[0.03] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98]"
