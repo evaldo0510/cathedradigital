@@ -943,6 +943,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
   }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
+  const connectionsErrorShownRef = useRef(false);
   useEffect(() => {
     if (!selectedBook) return;
     let cancelled = false;
@@ -954,7 +955,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           .like('verse_id', `${selectedBook.abbr}-%`);
         if (cancelled) return;
         if (error) {
-          console.warn('[Nexus] bible_connections fetch failed — falling back to local data', error.message);
+          const is406 = (error as any)?.code === 'PGRST406' || /406/.test(error.message || '');
+          console.warn('[Nexus] bible_connections fetch failed — usando fallback local', {
+            code: (error as any)?.code,
+            message: error.message,
+            book: selectedBook.abbr,
+            is406,
+          });
+          if (!connectionsErrorShownRef.current) {
+            connectionsErrorShownRef.current = true;
+            toast.message('Conexões do Nexus em modo offline', {
+              description: 'Algumas referências do Catecismo podem aparecer reduzidas. Exibindo dados locais.',
+              duration: 4000,
+            });
+          }
           return;
         }
         if (!data || data.length === 0) return;
@@ -976,11 +990,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           return next;
         });
       } catch (err) {
-        console.warn('[Nexus] connection prefetch threw — using local fallback', err);
+        console.warn('[Nexus] connection prefetch threw — usando fallback local', err);
       }
     })();
     return () => { cancelled = true; };
   }, [selectedBook]);
+
+
 
 
 
@@ -1599,6 +1615,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               return (
                                 <>
                             <p 
+                              data-testid={`verse-text-${v.number}`}
                               className={cn(
                                 "leading-[1.85] font-serif text-primary/85 tracking-tight relative",
                                 settings.fontSize === 'small' && "text-[16px]",
@@ -1627,7 +1644,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                             {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
                                     catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-700', stripe: 'bg-blue-500', kicker: 'Catecismo' },
