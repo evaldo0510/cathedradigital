@@ -952,7 +952,12 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           .from('bible_connections')
           .select('verse_id, category, reference_id, reference_title, summary')
           .like('verse_id', `${selectedBook.abbr}-%`);
-        if (cancelled || error || !data || data.length === 0) return;
+        if (cancelled) return;
+        if (error) {
+          console.warn('[Nexus] bible_connections fetch failed — falling back to local data', error.message);
+          return;
+        }
+        if (!data || data.length === 0) return;
         setDynamicConnections(prev => {
           const next = { ...prev };
           data.forEach((conn: any) => {
@@ -970,12 +975,14 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           });
           return next;
         });
-      } catch {
-        /* silent — fallback to hard-coded KNOWLEDGE_CONNECTIONS */
+      } catch (err) {
+        console.warn('[Nexus] connection prefetch threw — using local fallback', err);
       }
     })();
     return () => { cancelled = true; };
   }, [selectedBook]);
+
+
 
 
 
