@@ -943,6 +943,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
   }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
+  const connectionsErrorShownRef = useRef(false);
   useEffect(() => {
     if (!selectedBook) return;
     let cancelled = false;
@@ -954,7 +955,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           .like('verse_id', `${selectedBook.abbr}-%`);
         if (cancelled) return;
         if (error) {
-          console.warn('[Nexus] bible_connections fetch failed — falling back to local data', error.message);
+          const is406 = (error as any)?.code === 'PGRST406' || /406/.test(error.message || '');
+          console.warn('[Nexus] bible_connections fetch failed — usando fallback local', {
+            code: (error as any)?.code,
+            message: error.message,
+            book: selectedBook.abbr,
+            is406,
+          });
+          if (!connectionsErrorShownRef.current) {
+            connectionsErrorShownRef.current = true;
+            toast.message('Conexões do Nexus em modo offline', {
+              description: 'Algumas referências do Catecismo podem aparecer reduzidas. Exibindo dados locais.',
+              duration: 4000,
+            });
+          }
           return;
         }
         if (!data || data.length === 0) return;
@@ -976,11 +990,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           return next;
         });
       } catch (err) {
-        console.warn('[Nexus] connection prefetch threw — using local fallback', err);
+        console.warn('[Nexus] connection prefetch threw — usando fallback local', err);
       }
     })();
     return () => { cancelled = true; };
   }, [selectedBook]);
+
+
 
 
 
