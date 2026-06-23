@@ -1615,6 +1615,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               return (
                                 <>
                             <p 
+                              data-testid={`verse-text-${v.number}`}
                               className={cn(
                                 "leading-[1.85] font-serif text-primary/85 tracking-tight relative",
                                 settings.fontSize === 'small' && "text-[16px]",
