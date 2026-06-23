@@ -1644,7 +1644,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                             {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
                                     catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-700', stripe: 'bg-blue-500', kicker: 'Catecismo' },
