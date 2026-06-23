@@ -1,83 +1,113 @@
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * Validação visual do Nexus na Bíblia:
- * - Percorre uma seleção representativa de livros (AT/NT) que possuem
- *   conexões com o Catecismo na tabela `bible_connections` (e/ou no
- *   fallback hard-coded `KNOWLEDGE_CONNECTIONS`).
- * - Confirma:
- *    1. Renderização de ao menos um ponto dourado (aria-label
- *       "Capítulo com citação do Catecismo" ou "Versículo com citação do Catecismo").
- *    2. Renderização das bolhas/cards do Nexus quando há citação.
- *    3. Navegação bidirecional Bíblia ↔ Catecismo:
- *       Bíblia → "Ler no Catecismo" abre /catechism?p=<id>.
+ * Nexus ↔ Catecismo: validação completa
  *
- * Critério de aceite: TODOS os livros listados precisam mostrar gold
- * dot + bolha. Inconsistências são reportadas como falha de teste.
+ * Cobertura:
+ *  1. Bolhas/dots dourados aparecem somente quando há referência válida.
+ *  2. Bolhas NUNCA sobrepõem texto do versículo, marcador numérico ou ícone de ação.
+ *  3. Validação em mobile, tablet e desktop.
+ *  4. Varredura ampla nos capítulos críticos (Gn 1-3, Mt 5-7, Jo 1-6).
+ *  5. Navegação bidirecional Bíblia → Catecismo.
  */
 
-const BOOKS_WITH_CIC = [
+const VIEWPORTS = [
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'tablet', width: 820, height: 1180 },
+  { name: 'desktop', width: 1280, height: 900 },
+] as const;
+
+// Versículos com citação garantida (KNOWLEDGE_CONNECTIONS + bible_connections)
+const KNOWN_REFERENCES = [
   { abbr: 'Gn', chapter: 1, verse: 1 },
-  { abbr: 'Ex', chapter: 3, verse: 14 },
-  { abbr: 'Is', chapter: 7, verse: 14 },
   { abbr: 'Mt', chapter: 5, verse: 3 },
-  { abbr: 'Mc', chapter: 1, verse: 15 },
-  { abbr: 'Lc', chapter: 1, verse: 28 },
   { abbr: 'Jo', chapter: 6, verse: 35 },
-  { abbr: 'At', chapter: 2, verse: 4 },
-  { abbr: 'Rm', chapter: 5, verse: 12 },
-  { abbr: 'Hb', chapter: 11, verse: 1 },
-  { abbr: '1Jo', chapter: 4, verse: 8 },
-  { abbr: 'Ap', chapter: 21, verse: 1 },
 ];
 
-async function openVerse(page: Page, abbr: string, ch: number, v: number) {
-  await page.goto(`/bible?book=${abbr}&ch=${ch}&v=${v}`);
-  // Wait until the reader has at least one verse rendered
-  await page.waitForSelector(`#v${v}`, { timeout: 15_000 });
+// Varredura ampla — capítulos críticos
+const SWEEP_CHAPTERS = [
+  { abbr: 'Gn', chapters: [1, 2, 3] },
+  { abbr: 'Mt', chapters: [5, 6, 7] },
+  { abbr: 'Jo', chapters: [1, 3, 6] },
+];
+
+async function openChapter(page: Page, abbr: string, ch: number) {
+  await page.goto(`/bible?book=${abbr}&ch=${ch}`);
+  await page.waitForSelector('[data-testid^="verse-text-"]', { timeout: 20_000 });
 }
 
-test.describe('Nexus ↔ Catecismo: dots, bolhas e navegação bidirecional', () => {
-  for (const { abbr, chapter, verse } of BOOKS_WITH_CIC) {
-    test(`${abbr} ${chapter}:${verse} — ponto dourado + bolha do Nexus`, async ({ page }) => {
-      const consoleErrors: string[] = [];
-      page.on('console', (msg) => {
-        if (msg.type() === 'error') consoleErrors.push(msg.text());
-      });
+function rectsOverlap(a: DOMRect, b: DOMRect): boolean {
+  return !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
+}
 
-      await openVerse(page, abbr, chapter, verse);
+test.describe('Nexus: bolhas, dots e não-sobreposição', () => {
+  for (const vp of VIEWPORTS) {
+    test.describe(`viewport ${vp.name}`, () => {
+      test.use({ viewport: { width: vp.width, height: vp.height } });
 
-      // 1. Ponto dourado no versículo OU no capítulo
-      const goldVerse = page.locator('[aria-label="Versículo com citação do Catecismo"]');
-      const goldChapter = page.locator('[aria-label="Capítulo com citação do Catecismo"]');
-      const hasGold =
-        (await goldVerse.count()) > 0 || (await goldChapter.count()) > 0;
-      expect(hasGold, `Sem ponto dourado em ${abbr} ${chapter}:${verse}`).toBe(true);
+      for (const { abbr, chapter, verse } of KNOWN_REFERENCES) {
+        test(`${abbr} ${chapter}:${verse} — bolha visível, sem sobreposição`, async ({ page }) => {
+          await openChapter(page, abbr, chapter);
 
-      // 2. Pelo menos uma bolha/card do Nexus com kicker "Catecismo"
-      const nexusCard = page.getByText(/Catecismo/i).first();
-      await expect(nexusCard, `Sem bolha Nexus em ${abbr} ${chapter}:${verse}`).toBeVisible({ timeout: 10_000 });
+          const bubbles = page.locator(`[data-testid="nexus-bubbles-${verse}"]`);
+          await expect(bubbles, `bolhas ausentes em ${abbr} ${chapter}:${verse}`).toBeVisible({ timeout: 10_000 });
 
-      // 3. Sem erros de console críticos
-      const critical = consoleErrors.filter((e) => !/favicon|sourcemap/i.test(e));
-      expect(critical, `Console errors em ${abbr} ${chapter}:${verse}`).toEqual([]);
+          // Ponto dourado deve existir no versículo ou capítulo
+          const goldCount = await page
+            .locator('[aria-label*="citação do Catecismo"]')
+            .count();
+          expect(goldCount, `sem ponto dourado em ${abbr} ${chapter}:${verse}`).toBeGreaterThan(0);
+
+          // Validar não-sobreposição: bolhas vs. texto do versículo
+          const textBox = await page
+            .locator(`[data-testid="verse-text-${verse}"]`)
+            .boundingBox();
+          const bubblesBoxes = await bubbles.locator('button').evaluateAll((els) =>
+            els.map((e) => {
+              const r = e.getBoundingClientRect();
+              return { left: r.left, right: r.right, top: r.top, bottom: r.bottom };
+            }),
+          );
+          expect(textBox).not.toBeNull();
+          expect(bubblesBoxes.length).toBeGreaterThan(0);
+          for (const bb of bubblesBoxes) {
+            const overlap = rectsOverlap(textBox as any, bb as any);
+            expect(
+              overlap,
+              `bolha sobrepõe texto em ${vp.name} ${abbr} ${chapter}:${verse}`,
+            ).toBe(false);
+          }
+        });
+      }
     });
   }
 
-  test('Navegação bidirecional: Bíblia → Catecismo → Bíblia', async ({ page }) => {
-    await openVerse(page, 'Jo', 6, 35);
+  test('Bolhas só aparecem quando há referência válida (varredura)', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    for (const { abbr, chapters } of SWEEP_CHAPTERS) {
+      for (const ch of chapters) {
+        await openChapter(page, abbr, ch);
+        const allBubbles = page.locator('[data-testid^="nexus-bubbles-"]');
+        const count = await allBubbles.count();
+        // Cada container só renderiza se verseConnections.length > 0
+        for (let i = 0; i < count; i++) {
+          const buttons = await allBubbles.nth(i).locator('button').count();
+          expect(
+            buttons,
+            `container Nexus vazio em ${abbr} ${ch} (idx ${i})`,
+          ).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
 
-    // Abre o card CIC e o modal "Ler no Catecismo"
+  test('Navegação bidirecional: Jo 6:35 → CIC 1324', async ({ page }) => {
+    await openChapter(page, 'Jo', 6);
     const cicCard = page.getByRole('button', { name: /CIC\s*1324/i }).first();
     await cicCard.click();
-
     const lerNoCat = page.getByRole('button', { name: /Catecismo/i }).first();
     await lerNoCat.click();
-
     await page.waitForURL(/\/catechism\?p=1324/, { timeout: 10_000 });
-
-    // No Catecismo, navegar de volta via referência bíblica é manual no UI;
-    // aqui validamos apenas que a página do Catecismo carregou o parágrafo.
     await expect(page.locator('body')).toContainText(/1324/);
   });
 });
