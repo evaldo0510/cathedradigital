@@ -666,6 +666,54 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_cache_admin_audit: {
+        Row: {
+          abbrev: string | null
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          chapter_from: number | null
+          chapter_to: number | null
+          count: number | null
+          created_at: string
+          details: Json
+          failed: number | null
+          id: number
+          succeeded: number | null
+          target: string | null
+        }
+        Insert: {
+          abbrev?: string | null
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          chapter_from?: number | null
+          chapter_to?: number | null
+          count?: number | null
+          created_at?: string
+          details?: Json
+          failed?: number | null
+          id?: number
+          succeeded?: number | null
+          target?: string | null
+        }
+        Update: {
+          abbrev?: string | null
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          chapter_from?: number | null
+          chapter_to?: number | null
+          count?: number | null
+          created_at?: string
+          details?: Json
+          failed?: number | null
+          id?: number
+          succeeded?: number | null
+          target?: string | null
+        }
+        Relationships: []
+      }
       bible_cache_alerts: {
         Row: {
           abbrev: string | null
@@ -4139,6 +4187,21 @@ export type Database = {
           issue_type: string
           schema_name: string
           severity: string
+        }[]
+      }
+      bible_chapter_drilldown: {
+        Args: { p_abbrev: string; p_hours?: number }
+        Returns: {
+          avg_ms: number
+          bolls_calls: number
+          bolls_failures: number
+          chapter: number
+          hits: number
+          max_ms: number
+          misses: number
+          p95_ms: number
+          stale: number
+          total: number
         }[]
       }
       check_daily_reminders: { Args: never; Returns: undefined }
