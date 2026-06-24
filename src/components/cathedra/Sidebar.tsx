@@ -394,7 +394,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-spacing-xl w-spacing-xl rounded-premium-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
+                      className="h-spacing-xl w-spacing-xl rounded-premium-lg text-primary/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <Icons.LogOut className="w-spacing-sm h-spacing-sm" />
                     </Button>
