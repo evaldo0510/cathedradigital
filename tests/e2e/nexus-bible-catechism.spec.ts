@@ -213,3 +213,132 @@ test.describe('Nexus: múltiplas bolhas sem sobreposição', () => {
     });
   }
 });
+
+/**
+ * Acessibilidade das bolhas do Nexus:
+ *  - Foco navegável via Tab + indicador focus-visible
+ *  - Accessible name (aria-label ou texto) descritivo
+ *  - Tap target mínimo (44×44 mobile, 32×32 desktop/tablet)
+ *  - Contraste WCAG AA (≥ 3:1 para UI/texto grande)
+ */
+function relLuminance(rgb: [number, number, number]): number {
+  const [r, g, b] = rgb.map((c) => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contrastRatio(fg: [number, number, number], bg: [number, number, number]) {
+  const L1 = relLuminance(fg);
+  const L2 = relLuminance(bg);
+  const [hi, lo] = L1 > L2 ? [L1, L2] : [L2, L1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+function parseColor(css: string): [number, number, number] | null {
+  const m = css.match(/rgba?\(([^)]+)\)/);
+  if (!m) return null;
+  const parts = m[1].split(',').map((x) => parseFloat(x.trim()));
+  if (parts.length < 3) return null;
+  return [parts[0], parts[1], parts[2]];
+}
+
+test.describe('Nexus: acessibilidade das bolhas', () => {
+  for (const vp of VIEWPORTS) {
+    test.describe(`viewport ${vp.name}`, () => {
+      test.use({ viewport: { width: vp.width, height: vp.height } });
+
+      for (const { abbr, chapter, verse } of KNOWN_REFERENCES) {
+        test(`${abbr} ${chapter}:${verse} — foco, label, tap target e contraste`, async ({ page }) => {
+          await openChapter(page, abbr, chapter);
+          const container = page.locator(`[data-testid="nexus-bubbles-${verse}"]`);
+          await expect(container).toBeVisible({ timeout: 10_000 });
+          const buttons = container.locator('button');
+          const total = await buttons.count();
+          expect(total, `nenhuma bolha em ${abbr} ${chapter}:${verse}`).toBeGreaterThan(0);
+
+          const minTap = vp.name === 'mobile' ? 44 : 32;
+
+          for (let i = 0; i < total; i++) {
+            const btn = buttons.nth(i);
+
+            // 1) Nome acessível
+            const aria = await btn.getAttribute('aria-label');
+            const txt = (await btn.innerText()).trim();
+            const name = (aria || txt || '').trim();
+            expect(
+              name.length,
+              `bolha #${i} sem nome acessível em ${vp.name} ${abbr} ${chapter}:${verse}`,
+            ).toBeGreaterThan(1);
+
+            // 2) Tap target
+            const box = await btn.boundingBox();
+            expect(box, `bolha #${i} sem boundingBox`).not.toBeNull();
+            if (box) {
+              expect(
+                box.height,
+                `tap target altura < ${minTap}px (${box.height.toFixed(1)}) em ${vp.name} bolha #${i}`,
+              ).toBeGreaterThanOrEqual(minTap - 0.5);
+              expect(
+                box.width,
+                `tap target largura < ${minTap}px (${box.width.toFixed(1)}) em ${vp.name} bolha #${i}`,
+              ).toBeGreaterThanOrEqual(minTap - 0.5);
+            }
+
+            // 3) Foco navegável + indicador visível
+            await btn.focus();
+            const focused = await btn.evaluate((el) => el === document.activeElement);
+            expect(focused, `bolha #${i} não recebe foco`).toBe(true);
+            const focusStyles = await btn.evaluate((el) => {
+              const cs = getComputedStyle(el);
+              return {
+                outlineWidth: cs.outlineWidth,
+                outlineStyle: cs.outlineStyle,
+                boxShadow: cs.boxShadow,
+              };
+            });
+            const hasVisibleFocus =
+              (parseFloat(focusStyles.outlineWidth) > 0 && focusStyles.outlineStyle !== 'none') ||
+              (!!focusStyles.boxShadow && focusStyles.boxShadow !== 'none');
+            expect(
+              hasVisibleFocus,
+              `bolha #${i} sem indicador de foco visível em ${vp.name}`,
+            ).toBeTruthy();
+
+            // 4) Contraste WCAG AA (UI ≥ 3:1)
+            const { fg, bg } = await btn.evaluate((el) => {
+              const cs = getComputedStyle(el);
+              let node: HTMLElement | null = el as HTMLElement;
+              let bgColor = cs.backgroundColor;
+              while (
+                node &&
+                (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent')
+              ) {
+                node = node.parentElement;
+                if (!node) break;
+                bgColor = getComputedStyle(node).backgroundColor;
+              }
+              return { fg: cs.color, bg: bgColor || 'rgb(255,255,255)' };
+            });
+            const fgRgb = parseColor(fg);
+            const bgRgb = parseColor(bg);
+            if (fgRgb && bgRgb) {
+              const ratio = contrastRatio(fgRgb, bgRgb);
+              expect(
+                ratio,
+                `contraste ${ratio.toFixed(2)}:1 < 3:1 em ${vp.name} ${abbr} ${chapter}:${verse} bolha #${i}`,
+              ).toBeGreaterThanOrEqual(3);
+            }
+          }
+
+          // 5) Tab percorre todas as bolhas sem perder o foco
+          await buttons.first().focus();
+          for (let i = 1; i < total; i++) {
+            await page.keyboard.press('Tab');
+          }
+          const lastFocusedTag = await page.evaluate(() => document.activeElement?.tagName);
+          expect(lastFocusedTag, 'Tab perdeu o foco do documento').toBeTruthy();
+        });
+      }
+    });
+  }
+});
