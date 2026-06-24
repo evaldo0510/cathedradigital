@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Icons } from '@/constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import type { Saint } from '@/data/saints';
 import { useAllSaintsDB } from '@/hooks/useSaints';
+import { useLiturgicalMonth } from '@/hooks/useLiturgicalMonth';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
 import { AnimatePresence } from 'framer-motion';
+
 
 interface LiturgicalDay {
   date: Date;
