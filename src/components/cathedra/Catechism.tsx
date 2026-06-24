@@ -42,6 +42,7 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
 import { CathedraCard } from './CathedraCard';
+import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
@@ -50,7 +51,7 @@ const CatechismContent: React.FC<{
   onHighlightClick?: (note: UserNote) => void;
   highlights?: UserNote[];
 }> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, highlights = [] }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
+  const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
 
@@ -77,13 +78,47 @@ const CatechismContent: React.FC<{
   }
 
   if (isError) {
+    const err: any = error;
+    const code: string = err?.code ?? 'unknown';
+    const status = err?.status;
+    const title =
+      code === 'unauthorized' ? `Sessão expirada — faça login para ler §${paragraph}.` :
+      code === 'forbidden'    ? `Sem permissão para acessar §${paragraph}.` :
+      code === 'not_found'    ? `Parágrafo §${paragraph} ainda não está disponível no banco oficial.` :
+      code === 'network'      ? `Sem conexão para carregar §${paragraph}.` :
+                                `Ops! Não conseguimos carregar §${paragraph}.`;
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-spacing-md text-destructive font-serif text-premium-sm py-spacing-md space-y-spacing-xs">
+      <div
+        role="alert"
+        aria-live="polite"
+        data-testid={`catechism-error-${paragraph}`}
+        className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-spacing-md text-destructive font-serif text-premium-sm py-spacing-md space-y-spacing-xs"
+      >
         <div className="font-bold flex items-center gap-spacing-xs">
-           <Icons.Cross className="w-spacing-md h-spacing-md" />
-           Ops! Problema ao carregar o parágrafo §{paragraph}.
+          <Icons.Cross className="w-spacing-md h-spacing-md" />
+          {title}
         </div>
-        <Button onClick={() => window.location.reload()} variant="outline" size="sm">Tentar novamente</Button>
+        {err?.message && (
+          <div className="text-premium-xs text-destructive/80 font-sans">
+            {err.message}{status ? ` (HTTP ${status})` : ''}
+          </div>
+        )}
+        <div className="flex items-center gap-spacing-xs pt-spacing-xs">
+          <Button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            variant="outline"
+            size="sm"
+            data-testid={`catechism-retry-${paragraph}`}
+          >
+            {isFetching ? 'Tentando…' : 'Tentar novamente'}
+          </Button>
+          {code === 'unauthorized' && (
+            <Button asChild variant="ghost" size="sm">
+              <a href="/auth">Entrar</a>
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
@@ -332,6 +367,7 @@ const Catechism: React.FC = memo(() => {
              <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
           </div>
         </div>
+        <CatechismDiagnosticPanel />
       </ContemplativeLayout>
     );
   }

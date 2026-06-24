@@ -3,7 +3,11 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  'Content-Type': 'application/json',
 };
+
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: corsHeaders });
 
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
@@ -14,45 +18,55 @@ serve(async (req: Request) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
   try {
-    const body = await req.json();
-    const paragraph = body.paragraph;
+    const body = await req.json().catch(() => ({} as any));
+    const paragraph = Number(body?.paragraph);
 
-    if (!paragraph || paragraph < 1 || paragraph > 2865) {
-      return new Response(JSON.stringify({ error: 'Parágrafo inválido' }), { status: 400, headers: corsHeaders });
+    if (!Number.isFinite(paragraph) || paragraph < 1 || paragraph > 2865) {
+      return json({ error: 'Parágrafo inválido', code: 'invalid_input', paragraph }, 400);
     }
 
-    // Load Existing (Official Priority)
-    let existingContent: any = null;
-    let source: string = 'official';
+    if (!supabaseUrl || !serviceKey) {
+      console.error('[catechism-text] missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+      return json({ error: 'Configuração de servidor ausente', code: 'server_misconfig' }, 500);
+    }
 
-    const officialResp = await fetch(`${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=*`, {
-      headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
-    });
-    
+    let existingContent: any = null;
+    let source: 'official' | 'cached' = 'official';
+
+    const officialResp = await fetch(
+      `${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=*`,
+      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+    );
+
     if (officialResp.ok) {
       const rows = await officialResp.json();
       if (rows?.[0]?.content) {
         existingContent = rows[0];
         source = 'official';
       }
+    } else {
+      console.error('[catechism-text] official query failed', officialResp.status, await officialResp.text().catch(() => ''));
     }
 
     if (!existingContent) {
-      const dbResp = await fetch(`${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`, {
-        headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
-      });
+      const dbResp = await fetch(
+        `${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`,
+        { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+      );
       if (dbResp.ok) {
         const rows = await dbResp.json();
         if (rows?.[0]?.content) {
           existingContent = rows[0];
           source = 'cached';
         }
+      } else {
+        console.error('[catechism-text] cache query failed', dbResp.status);
       }
     }
 
     if (existingContent) {
-      return new Response(JSON.stringify({ 
-        paragraph, 
+      return json({
+        paragraph,
         content: existingContent.content,
         textoBase: existingContent.texto_base || existingContent.textoBase,
         explicacao: existingContent.explicacao,
@@ -60,18 +74,21 @@ serve(async (req: Request) => {
         aplicacaoPratica: existingContent.aplicacao_pratica || existingContent.aplicacaoPratica,
         reflexaoFinal: existingContent.reflexao_final || existingContent.reflexaoFinal,
         exercicio: existingContent.exercicio,
-        status: source
-      }), { headers: corsHeaders });
+        status: source,
+      });
     }
 
-    // If not found, return a specific error that the frontend can handle
-    return new Response(JSON.stringify({ 
-      paragraph, 
-      status: 'not_found',
-      error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.` 
-    }), { headers: corsHeaders });
-
+    return json(
+      {
+        paragraph,
+        status: 'not_found',
+        code: 'not_found',
+        error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.`,
+      },
+      404,
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), { status: 500, headers: corsHeaders });
+    console.error('[catechism-text] unhandled', error);
+    return json({ error: 'Erro interno. Tente novamente.', code: 'internal_error' }, 500);
   }
 });
