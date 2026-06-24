@@ -274,7 +274,9 @@ serve(async (req) => {
     const reason = !resolvedBollsId
       ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON em supabase/functions/_shared/bibleCanon.ts.`
       : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" (bollsId=${resolvedBollsId}) não foi encontrado em nenhuma fonte (Cathedra, BollsLife, cache stale).`;
-    return new Response(JSON.stringify({
+    // Contrato: BibleTextErrorSchema valida que TODOS os campos obrigatórios estão presentes
+    // antes de devolver. Se algo divergir, cai no catch e responde 500 com correlationId.
+    const errorBody = BibleTextErrorSchema.parse({
       error: 'Texto não encontrado',
       reason,
       received_abbrev: abbrev,
@@ -283,7 +285,8 @@ serve(async (req) => {
       bollsId: resolvedBollsId,
       chapter,
       correlationId,
-    }), {
+    });
+    return new Response(JSON.stringify(errorBody), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
     });
