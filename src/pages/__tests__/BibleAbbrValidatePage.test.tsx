@@ -38,6 +38,8 @@ describe('BibleAbbrValidatePage', () => {
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     invokeMock.mockReset();
+    toastSuccess.mockReset();
+    toastError.mockReset();
     localStorage.clear();
   });
 
