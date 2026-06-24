@@ -151,7 +151,7 @@ export type ContrastViolation = {
   required: number;
   isLarge: boolean;
   suggestions: TokenSuggestion[];
-  ref: WeakRef<Element>;
+  ref: { deref(): Element | undefined };
 };
 
 export type AuditResult = {
