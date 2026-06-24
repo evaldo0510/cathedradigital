@@ -15,6 +15,7 @@
  * Renders nothing in production builds.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { contrastConfig, getEffectiveConfigSnapshot } from '@/lib/contrast-config';
 
 type RGBA = { r: number; g: number; b: number; a: number };
 
