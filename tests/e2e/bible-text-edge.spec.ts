@@ -93,3 +93,13 @@ test('bible-text edge: capítulo indisponível → 404 com canonical_abbr/bollsI
   expect(json.received_abbrev).toBe('gn');
   expect(json.correlationId).toBe('e2e-gn-999');
 });
+
+test('bible-text edge: invalid_payload ecoa exatamente o x-correlation-id enviado', async () => {
+  // Garante o contrato: o correlationId no payload de erro é byte-idêntico ao header enviado.
+  const sent = `e2e-echo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const { status, json } = await callBibleText({ abbrev: '' }, sent);
+  expect([400, 422]).toContain(status);
+  expect(json.correlationId).toBe(sent);
+  expect(typeof json.correlationId).toBe('string');
+  expect(json.correlationId.length).toBe(sent.length);
+});
