@@ -129,7 +129,22 @@ const BY_ABBR: Record<string, BibleBook> = (() => {
 
 export function findBookByAbbr(abbr: string): BibleBook | undefined {
   if (!abbr) return undefined;
-  return BY_ABBR[abbr] || BY_ABBR[abbr.charAt(0).toUpperCase() + abbr.slice(1)];
+  const trimmed = abbr.trim();
+  if (BY_ABBR[trimmed]) return BY_ABBR[trimmed];
+  const cap = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  if (BY_ABBR[cap]) return BY_ABBR[cap];
+  // Tolerate spaces/punctuation (e.g. "2 Cr", "2.Cr", "2-cr") with case-insensitive fallback.
+  const compact = trimmed.toLowerCase().replace(/[\s._\-]+/g, '');
+  for (const [k, v] of Object.entries(BY_ABBR)) {
+    if (k.toLowerCase() === compact) return v;
+  }
+  return undefined;
+}
+
+/** Normaliza para a forma canônica do BIBLE_CANON (ex.: "2 Cr" → "2Cr"). */
+export function normalizeAbbr(input: string): string {
+  if (!input) return input;
+  return findBookByAbbr(input)?.abbr ?? input.trim();
 }
 
 export function bookNameFromAbbr(abbr: string): string {
