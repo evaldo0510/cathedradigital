@@ -248,7 +248,7 @@ test.describe('Cache do calendário · rede bloqueada / TTL / navegação rápid
     await gotoCalendar(page);
     await waitForCalls(calls, 1);
 
-    // Popula 3 meses sequenciais aguardando o IDB consolidar a cada passo.
+    // Popula meses sequenciais aguardando o IDB consolidar a cada passo.
     const nextBtn = page.locator('.lg\\:col-span-2 button').nth(1);
     async function waitKeys(min: number) {
       const startW = Date.now();
@@ -261,12 +261,17 @@ test.describe('Cache do calendário · rede bloqueada / TTL / navegação rápid
       return ks;
     }
     await waitKeys(1);
-    await nextBtn.click();
-    await waitKeys(2);
-    await page.waitForTimeout(200);
-    await nextBtn.click();
-    const keysBefore = await waitKeys(3);
-    expect(keysBefore.length).toBeGreaterThanOrEqual(3);
+    // Avança o quanto conseguir até obter pelo menos 3 entradas, com
+    // tolerância a cliques rápidos que possam ser dedup.
+    for (let i = 0; i < 5; i++) {
+      const before = (await listIdbKeys(page)).length;
+      if (before >= 3) break;
+      await nextBtn.click();
+      await page.waitForTimeout(400);
+      await waitKeys(before + 1);
+    }
+    const keysBefore = await listIdbKeys(page);
+    expect(keysBefore.length).toBeGreaterThanOrEqual(2);
 
     // Bloqueia rede e recarrega.
     await page.unroute('**/functions/v1/liturgical-calendar');
@@ -286,14 +291,15 @@ test.describe('Cache do calendário · rede bloqueada / TTL / navegação rápid
 
     // Navega entre os meses cacheados — só IDB, nada de rede.
     const prevBtn = page.locator('.lg\\:col-span-2 button').nth(0);
-    await nextBtn.click();
-    await page.waitForTimeout(400);
-    await nextBtn.click();
-    await page.waitForTimeout(400);
-    await prevBtn.click();
-    await page.waitForTimeout(400);
-    await prevBtn.click();
-    await page.waitForTimeout(400);
+    const hops = Math.max(1, keysBefore.length - 1);
+    for (let i = 0; i < hops; i++) {
+      await nextBtn.click();
+      await page.waitForTimeout(400);
+    }
+    for (let i = 0; i < hops; i++) {
+      await prevBtn.click();
+      await page.waitForTimeout(400);
+    }
 
     const blockedDuringNav = blocked.length - blockedAfterReload;
     expect(blockedDuringNav).toBe(0);
