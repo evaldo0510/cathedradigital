@@ -117,6 +117,7 @@ const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const BibleRecoveryPanel = lazy(() => import('./pages/BibleRecoveryPanel'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const LanguageAdmin = lazy(() => import('./components/cathedra/LanguageAdmin'));
+const BibleCoverageAdmin = lazy(() => import('./components/cathedra/BibleCoverageAdmin'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
@@ -517,6 +518,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/audit" element={<AuditDashboard />} />
                       <Route path="/integrity" element={<IntegrityReport />} />
                       <Route path="/security-alerts" element={<SecurityAlertsPage />} />
+                      <Route path="/bible-coverage" element={<BibleCoverageAdmin />} />
 
 
                     </Routes>
