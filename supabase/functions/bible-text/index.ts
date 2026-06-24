@@ -210,7 +210,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         ...cached,
         metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: ttlHours }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT' } });
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' } });
     }
 
     const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
