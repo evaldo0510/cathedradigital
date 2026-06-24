@@ -44,8 +44,8 @@ const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({
   return (
     <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
       <header className="px-6 h-16 flex items-center justify-between border-b border-primary/5">
-        <button onClick={onClose} className="p-2 -ml-2 text-primary/40 active:text-secondary">
-          <Icons.X className="w-6 h-6" />
+        <button onClick={onClose} aria-label="Fechar notas" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+          <Icons.X className="w-6 h-6" aria-hidden="true" />
         </button>
         <h1 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/80">Minhas Reflexões</h1>
         <div className="w-10" /> {/* Spacer */}
