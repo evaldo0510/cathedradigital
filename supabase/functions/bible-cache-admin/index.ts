@@ -373,6 +373,98 @@ serve(async (req) => {
       return json(j, r.status);
     }
 
+    if (action === 'compare') {
+      const a = body?.a as { since?: string; until?: string } | undefined;
+      const b = body?.b as { since?: string; until?: string } | undefined;
+      const abbrev = body?.abbrev ? String(body.abbrev) : null;
+      if (!a?.since || !a?.until || !b?.since || !b?.until) {
+        return json({ error: 'invalid_windows', hint: 'a/b must each include since and until (ISO)' }, 400);
+      }
+      const aSince = new Date(a.since).toISOString();
+      const aUntil = new Date(a.until).toISOString();
+      const bSince = new Date(b.since).toISOString();
+      const bUntil = new Date(b.until).toISOString();
+
+      async function aggregateBooks(since: string, until: string) {
+        const { data, error } = await admin.from('bible_cache_metrics')
+          .select('abbrev, hits, misses, stale, total, sum_ms, p95_ms, bolls_calls, bolls_failures')
+          .gte('bucket_start', since).lte('bucket_start', until);
+        if (error) throw new Error(error.message);
+        const perBook = new Map<string, any>();
+        const g = { hits: 0, misses: 0, stale: 0, total: 0, sum_ms: 0, bolls_calls: 0, bolls_failures: 0, p95_samples: [] as number[] };
+        for (const r of (data as any[] ?? [])) {
+          const s = perBook.get(r.abbrev) || { abbrev: r.abbrev, hits: 0, misses: 0, stale: 0, total: 0, sum_ms: 0, bolls_calls: 0, bolls_failures: 0, max_p95: 0 };
+          s.hits += r.hits ?? 0; s.misses += r.misses ?? 0; s.stale += r.stale ?? 0;
+          s.total += r.total ?? 0; s.sum_ms += Number(r.sum_ms ?? 0);
+          s.bolls_calls += r.bolls_calls ?? 0; s.bolls_failures += r.bolls_failures ?? 0;
+          s.max_p95 = Math.max(s.max_p95, r.p95_ms ?? 0);
+          perBook.set(r.abbrev, s);
+          g.hits += r.hits ?? 0; g.misses += r.misses ?? 0; g.stale += r.stale ?? 0;
+          g.total += r.total ?? 0; g.sum_ms += Number(r.sum_ms ?? 0);
+          g.bolls_calls += r.bolls_calls ?? 0; g.bolls_failures += r.bolls_failures ?? 0;
+          if (r.p95_ms) g.p95_samples.push(r.p95_ms);
+        }
+        const books = [...perBook.values()].map((s) => ({
+          ...s,
+          hit_rate: s.total ? s.hits / s.total : 0,
+          avg_ms: s.total ? Math.round(s.sum_ms / s.total) : 0,
+          bolls_rate: s.total ? s.bolls_calls / s.total : 0,
+        }));
+        g.p95_samples.sort((x, y) => x - y);
+        const p95 = g.p95_samples.length ? (g.p95_samples[Math.floor(g.p95_samples.length * 0.95)] || g.p95_samples[g.p95_samples.length - 1]) : 0;
+        const global = {
+          hits: g.hits, misses: g.misses, stale: g.stale, total: g.total,
+          hit_rate: g.total ? g.hits / g.total : 0,
+          avg_ms: g.total ? Math.round(g.sum_ms / g.total) : 0,
+          p95_ms: p95,
+          bolls_calls: g.bolls_calls, bolls_failures: g.bolls_failures,
+          bolls_rate: g.total ? g.bolls_calls / g.total : 0,
+        };
+        return { global, books };
+      }
+
+      async function aggregateChapters(since: string, until: string, abbr: string) {
+        const { data, error } = await admin.from('bible_cache_metric_events')
+          .select('chapter, cache, total_ms, bolls_called, bolls_ok')
+          .eq('abbrev', abbr).gte('created_at', since).lte('created_at', until)
+          .limit(50000);
+        if (error) throw new Error(error.message);
+        const map = new Map<number, { chapter: number; hits: number; misses: number; stale: number; total: number; sum_ms: number; bolls_calls: number; bolls_failures: number; samples: number[] }>();
+        for (const r of (data as any[] ?? [])) {
+          const ch = Number(r.chapter); if (!Number.isFinite(ch)) continue;
+          const s = map.get(ch) || { chapter: ch, hits: 0, misses: 0, stale: 0, total: 0, sum_ms: 0, bolls_calls: 0, bolls_failures: 0, samples: [] };
+          s.total += 1;
+          if (r.cache === 'HIT') s.hits += 1;
+          else if (r.cache === 'STALE') s.stale += 1;
+          else if (r.cache === 'MISS') s.misses += 1;
+          if (typeof r.total_ms === 'number') { s.sum_ms += r.total_ms; s.samples.push(r.total_ms); }
+          if (r.bolls_called) s.bolls_calls += 1;
+          if (r.bolls_called && r.bolls_ok === false) s.bolls_failures += 1;
+          map.set(ch, s);
+        }
+        return [...map.values()].map((s) => {
+          s.samples.sort((x, y) => x - y);
+          const p95 = s.samples.length ? (s.samples[Math.floor(s.samples.length * 0.95)] || s.samples[s.samples.length - 1]) : 0;
+          return {
+            chapter: s.chapter, hits: s.hits, misses: s.misses, stale: s.stale, total: s.total,
+            avg_ms: s.total ? Math.round(s.sum_ms / s.total) : 0,
+            p95_ms: p95,
+            bolls_calls: s.bolls_calls, bolls_failures: s.bolls_failures,
+            hit_rate: s.total ? s.hits / s.total : 0,
+            bolls_rate: s.total ? s.bolls_calls / s.total : 0,
+          };
+        }).sort((x, y) => x.chapter - y.chapter);
+      }
+
+      const [aBooks, bBooks] = await Promise.all([aggregateBooks(aSince, aUntil), aggregateBooks(bSince, bUntil)]);
+      let chapters: { a: any[]; b: any[] } | null = null;
+      if (abbrev) {
+        const [ca, cb] = await Promise.all([aggregateChapters(aSince, aUntil, abbrev), aggregateChapters(bSince, bUntil, abbrev)]);
+        chapters = { a: ca, b: cb };
+      }
+      return json({ a: { ...aBooks, since: aSince, until: aUntil }, b: { ...bBooks, since: bSince, until: bUntil }, abbrev, chapters });
+    }
+
     return json({ error: 'unknown_action', action }, 400);
   } catch (e: any) {
     console.error('[bible-cache-admin] error:', e);
