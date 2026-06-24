@@ -92,6 +92,10 @@ jobs:
           retention-days: 90
           if-no-files-found: ignore
 
+      - name: Validate trend.json shape (antes do upload)
+        if: always()
+        run: deno run --allow-read scripts/validate-edge-trend.ts
+
       - name: Upload trend.json (comparação entre execuções)
         if: always()
         uses: actions/upload-artifact@v4
