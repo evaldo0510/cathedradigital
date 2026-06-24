@@ -371,8 +371,8 @@ export default function ContrastInspector() {
     runAudit();
   }, [runAudit]);
 
-  const settingsRef = useRef<InspectorSettings>(settings);
-  settingsRef.current = settings;
+
+
 
   const handleImportFile = useCallback(async (file: File) => {
     try {
