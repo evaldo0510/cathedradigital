@@ -105,6 +105,7 @@ const Bible: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { settings } = useReadingSettings();
+  const { enabled: highContrast, toggle: toggleHighContrast } = useHighContrast();
   const { user } = useAuth();
 
   const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes' | 'monthly_recap'>('home');
