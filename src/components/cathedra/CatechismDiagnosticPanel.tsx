@@ -38,6 +38,40 @@ const SEVERITY: Record<string, 'error' | 'warn' | 'ok'> = {
   final_error: 'error',
 };
 
+const exportDiagReport = (
+  buffer: CatechismDiagEvent[],
+  persisted: CatechismDiagEvent[],
+) => {
+  const lastError =
+    [...buffer, ...persisted].find((ev) =>
+      ['final_error', 'edge_error', 'official_error', 'unauthorized', 'forbidden', 'edge_not_found'].includes(ev.step),
+    ) ?? null;
+
+  const report = {
+    generatedAt: new Date().toISOString(),
+    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    counts: { buffer: buffer.length, persisted: persisted.length },
+    lastError,
+    timeline: buffer,
+    persistedErrors: persisted,
+  };
+
+  try {
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `catechism-diagnostic-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  } catch {
+    /* ignore — best effort */
+  }
+};
+
 const CatechismDiagnosticPanel: React.FC = () => {
   const location = useLocation();
   const [enabled, setEnabled] = useState<boolean>(() => isCatechismDebugOn());
@@ -113,14 +147,25 @@ const CatechismDiagnosticPanel: React.FC = () => {
 
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Linha do tempo</div>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-6 text-[10px]"
-              onClick={clearCatechismDiag}
-            >
-              Limpar
-            </Button>
+            <div className="flex items-center gap-spacing-2xs">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={() => exportDiagReport(buffer, persisted)}
+                data-testid="catechism-diagnostic-export"
+              >
+                Exportar JSON
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={clearCatechismDiag}
+              >
+                Limpar
+              </Button>
+            </div>
           </div>
 
           <ScrollArea className="h-[240px] rounded-premium border border-border/40 bg-muted/20">
