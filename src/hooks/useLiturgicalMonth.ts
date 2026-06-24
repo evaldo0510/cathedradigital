@@ -65,29 +65,48 @@ export interface LiturgicalCacheStats {
   networkErrors: number;
 }
 
-const emptyStats = (): LiturgicalCacheStats => ({ hits: 0, misses: 0, staleHits: 0, networkErrors: 0 });
+interface StatsStore {
+  totals: LiturgicalCacheStats;
+  perKey: Record<string, LiturgicalCacheStats>;
+}
 
-const readStats = (): LiturgicalCacheStats => {
+const emptyStats = (): LiturgicalCacheStats => ({ hits: 0, misses: 0, staleHits: 0, networkErrors: 0 });
+const emptyStore = (): StatsStore => ({ totals: emptyStats(), perKey: {} });
+
+const readStore = (): StatsStore => {
   try {
     const raw = typeof window !== 'undefined' ? window.localStorage.getItem(STATS_KEY) : null;
-    if (!raw) return emptyStats();
-    return { ...emptyStats(), ...JSON.parse(raw) };
+    if (!raw) return emptyStore();
+    const parsed = JSON.parse(raw);
+    // Backward-compat com o formato antigo (flat)
+    if (parsed && typeof parsed === 'object' && 'totals' in parsed && 'perKey' in parsed) {
+      return { totals: { ...emptyStats(), ...parsed.totals }, perKey: parsed.perKey ?? {} };
+    }
+    return { totals: { ...emptyStats(), ...parsed }, perKey: {} };
   } catch {
-    return emptyStats();
+    return emptyStore();
   }
 };
 
-const bumpStat = (key: keyof LiturgicalCacheStats) => {
+const bumpStat = (stat: keyof LiturgicalCacheStats, monthKey?: string) => {
   if (typeof window === 'undefined') return;
-  const next = readStats();
-  next[key] += 1;
+  const store = readStore();
+  store.totals[stat] += 1;
+  if (monthKey) {
+    const cur = store.perKey[monthKey] ?? emptyStats();
+    cur[stat] += 1;
+    store.perKey[monthKey] = cur;
+  }
   try {
-    window.localStorage.setItem(STATS_KEY, JSON.stringify(next));
-    window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { stat: key } }));
+    window.localStorage.setItem(STATS_KEY, JSON.stringify(store));
+    window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { stat, monthKey } }));
   } catch { /* silent */ }
 };
 
-export const getLiturgicalCacheStats = readStats;
+export const getLiturgicalCacheStats = (): LiturgicalCacheStats => readStore().totals;
+export const getLiturgicalCacheStatsByKey = (): Record<string, LiturgicalCacheStats> => readStore().perKey;
+export const getLiturgicalCacheStatsForKey = (key: string): LiturgicalCacheStats =>
+  readStore().perKey[key] ?? emptyStats();
 
 export const resetLiturgicalCacheStats = () => {
   try {
@@ -95,6 +114,7 @@ export const resetLiturgicalCacheStats = () => {
     window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { stat: 'reset' } }));
   } catch { /* silent */ }
 };
+
 
 const buildKey = (year: number, month: number, calendar: string, lang: string) =>
   ['liturgical-month', calendar, lang, year, month] as const;
