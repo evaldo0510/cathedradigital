@@ -393,39 +393,60 @@ const MagisteriumViewer: React.FC = () => {
     return (
       <div
         data-testid="magisterium-error-fallback"
+        data-unrecoverable={unrecoverable ? 'true' : 'false'}
+        data-failure-count={failureCount}
+        role="alert"
+        aria-live="assertive"
         className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg"
       >
         <div className="w-spacing-3xl h-spacing-3xl bg-destructive/10 rounded-premium flex items-center justify-center mx-auto">
-          <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" />
+          <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" aria-hidden="true" />
         </div>
         <div className="space-y-spacing-xs">
-          <h2 className="text-premium-2xl font-serif font-bold">Ops! Algo deu errado</h2>
-          <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
+          <h2 className="text-premium-2xl font-serif font-bold text-foreground">
+            {unrecoverable ? 'Não foi possível carregar este documento' : 'Ops! Algo deu errado'}
+          </h2>
+          <p className="text-muted-foreground">
+            {unrecoverable
+              ? `Tentamos ${failureCount} vezes sem sucesso. O documento parece indisponível agora — abra-o diretamente no vatican.va ou tente novamente mais tarde.`
+              : (error || 'Documento não disponível.')}
+          </p>
+          {unrecoverable && (
+            <p
+              data-testid="magisterium-unrecoverable-message"
+              className="text-sm font-medium text-destructive"
+            >
+              Modo não-recuperável: novas tentativas automáticas foram interrompidas.
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap items-center justify-center gap-spacing-sm">
-          <Button
-            onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
-            variant="default"
-            className="rounded-premium-full"
-            data-testid="magisterium-retry"
-          >
-            <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" />
-            Tentar novamente
-          </Button>
+          {!unrecoverable && (
+            <Button
+              onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
+              variant="default"
+              className="rounded-premium-full"
+              data-testid="magisterium-retry"
+              autoFocus
+            >
+              <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" aria-hidden="true" />
+              Tentar novamente {failureCount > 0 ? `(${failureCount}/${MAX_RETRIES})` : ''}
+            </Button>
+          )}
           {canonicalUrl && (
             <a
               href={canonicalUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="magisterium-external-fallback"
-              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm hover:bg-primary/5 transition-colors"
+              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm text-foreground hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
+              <Icons.ExternalLink className="w-spacing-md h-spacing-md" aria-hidden="true" />
               Abrir no vatican.va
             </a>
           )}
           <Button onClick={() => navigate(-1)} variant="ghost" className="rounded-premium-full">
-            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" aria-hidden="true" /> Voltar
           </Button>
         </div>
         <MagisteriumDiagnosticPanel />
