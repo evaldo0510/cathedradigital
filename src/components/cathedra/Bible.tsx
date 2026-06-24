@@ -33,6 +33,7 @@ import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useHighContrast } from '@/hooks/useHighContrast';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = parseInt(paragraphId);
