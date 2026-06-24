@@ -355,7 +355,7 @@ describe('BibleAbbrValidatePage', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: undefined, configurable: true, writable: true,
     });
-    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(true);
+    const execSpy = (document as any).execCommand = vi.fn().mockReturnValue(true); const execSpy2 = (document as any).execCommand;
     invokeMock.mockResolvedValue(ok('2Cr', 14));
     render(<BibleAbbrValidatePage />);
     await flushDebounce();
@@ -378,7 +378,7 @@ describe('BibleAbbrValidatePage', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText }, configurable: true, writable: true,
     });
-    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(true);
+    const execSpy = (document as any).execCommand = vi.fn().mockReturnValue(true); const execSpy2 = (document as any).execCommand;
     invokeMock.mockResolvedValue(ok('2Cr', 14));
     render(<BibleAbbrValidatePage />);
     await flushDebounce();
@@ -402,7 +402,7 @@ describe('BibleAbbrValidatePage', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: undefined, configurable: true, writable: true,
     });
-    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(false);
+    const execSpy = (document as any).execCommand = vi.fn().mockReturnValue(false); const execSpy2 = (document as any).execCommand;
     invokeMock.mockResolvedValue(ok('2Cr', 14));
     render(<BibleAbbrValidatePage />);
     await flushDebounce();
