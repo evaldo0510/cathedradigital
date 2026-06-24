@@ -15,7 +15,7 @@
  *   BIBLE_TEXT_MAX_OTHER                (default 0)
  *   GITHUB_RUN_ID, GITHUB_REPOSITORY, GITHUB_SERVER_URL
  */
-import { classifyError } from "../supabase/functions/_shared/bibleTextSchema.ts";
+import { classifyError } from "../supabase/functions/_shared/bibleTextSchema.factory.ts";
 
 const REPORT_DIR = "reports/edge";
 const TREND_FILE = `${REPORT_DIR}/trend.json`;
