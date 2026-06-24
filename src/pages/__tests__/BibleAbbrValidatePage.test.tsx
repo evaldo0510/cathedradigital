@@ -237,15 +237,17 @@ describe('BibleAbbrValidatePage', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText },
       configurable: true,
+      writable: true,
     });
     invokeMock.mockResolvedValue(ok('2Cr', 14));
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<BibleAbbrValidatePage />);
     await flushDebounce();
     await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
 
     const copyBtn = screen.getByRole('button', { name: /copiar canonical_abbr/i });
-    await user.click(copyBtn);
+    await act(async () => {
+      fireEvent.click(copyBtn);
+    });
 
     expect(writeText).toHaveBeenCalledWith('2Cr');
     await waitFor(() =>
@@ -262,15 +264,17 @@ describe('BibleAbbrValidatePage', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText },
       configurable: true,
+      writable: true,
     });
     invokeMock.mockResolvedValue(ok('2Cr', 14));
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<BibleAbbrValidatePage />);
     await flushDebounce();
     await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
 
     const copyBtn = screen.getByRole('button', { name: /copiar bollsid/i });
-    await user.click(copyBtn);
+    await act(async () => {
+      fireEvent.click(copyBtn);
+    });
 
     expect(writeText).toHaveBeenCalledWith('14');
     await waitFor(() =>
