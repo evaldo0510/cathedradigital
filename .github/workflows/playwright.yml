@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [chromium]
+        project: [chromium, firefox, webkit]
 
     steps:
       - uses: actions/checkout@v4
