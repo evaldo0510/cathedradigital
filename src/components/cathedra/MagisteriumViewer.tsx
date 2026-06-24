@@ -45,6 +45,9 @@ const MagisteriumViewer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryNonce, setRetryNonce] = useState(0);
+  const [failureCount, setFailureCount] = useState(0);
+  const MAX_RETRIES = 3;
+  const unrecoverable = failureCount >= MAX_RETRIES;
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
@@ -87,11 +90,19 @@ const MagisteriumViewer: React.FC = () => {
     fetchLastRead();
   }, [getLastRead]);
 
+  useEffect(() => { setFailureCount(0); }, [id]);
+
+  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
+  const lastFetchKey = useRef<string | null>(null);
   useEffect(() => {
     const fetchDoc = async () => {
       if (!id) return;
+      const key = `${id}::${retryNonce}`;
+      if (lastFetchKey.current === key) return;
+      lastFetchKey.current = key;
       setLoading(true);
       setError(null);
+
 
       const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       const url = MAGISTERIUM_URLS[id];
@@ -141,11 +152,13 @@ const MagisteriumViewer: React.FC = () => {
         });
 
         setContent({ title: data.title || id, text });
+        setFailureCount(0);
       } catch (err: any) {
         console.error('Error fetching document:', err);
         window.dispatchEvent(new CustomEvent('supabase-unreachable'));
         const msg = err?.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.';
         setError(msg);
+        setFailureCount((n) => n + 1);
         logMagisteriumDiag({ docId: id, url, step: 'final_error', message: msg });
         toast.error('Não foi possível carregar o documento.');
       } finally {
@@ -386,39 +399,60 @@ const MagisteriumViewer: React.FC = () => {
     return (
       <div
         data-testid="magisterium-error-fallback"
+        data-unrecoverable={unrecoverable ? 'true' : 'false'}
+        data-failure-count={failureCount}
+        role="alert"
+        aria-live="assertive"
         className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg"
       >
         <div className="w-spacing-3xl h-spacing-3xl bg-destructive/10 rounded-premium flex items-center justify-center mx-auto">
-          <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" />
+          <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" aria-hidden="true" />
         </div>
         <div className="space-y-spacing-xs">
-          <h2 className="text-premium-2xl font-serif font-bold">Ops! Algo deu errado</h2>
-          <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
+          <h2 className="text-premium-2xl font-serif font-bold text-foreground">
+            {unrecoverable ? 'Não foi possível carregar este documento' : 'Ops! Algo deu errado'}
+          </h2>
+          <p className="text-muted-foreground">
+            {unrecoverable
+              ? `Tentamos ${failureCount} vezes sem sucesso. O documento parece indisponível agora — abra-o diretamente no vatican.va ou tente novamente mais tarde.`
+              : (error || 'Documento não disponível.')}
+          </p>
+          {unrecoverable && (
+            <p
+              data-testid="magisterium-unrecoverable-message"
+              className="text-sm font-medium text-destructive"
+            >
+              Modo não-recuperável: novas tentativas automáticas foram interrompidas.
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap items-center justify-center gap-spacing-sm">
-          <Button
-            onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
-            variant="default"
-            className="rounded-premium-full"
-            data-testid="magisterium-retry"
-          >
-            <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" />
-            Tentar novamente
-          </Button>
+          {!unrecoverable && (
+            <Button
+              onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
+              variant="default"
+              className="rounded-premium-full"
+              data-testid="magisterium-retry"
+              autoFocus
+            >
+              <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" aria-hidden="true" />
+              Tentar novamente {failureCount > 0 ? `(${failureCount}/${MAX_RETRIES})` : ''}
+            </Button>
+          )}
           {canonicalUrl && (
             <a
               href={canonicalUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="magisterium-external-fallback"
-              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm hover:bg-primary/5 transition-colors"
+              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm text-foreground hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
+              <Icons.ExternalLink className="w-spacing-md h-spacing-md" aria-hidden="true" />
               Abrir no vatican.va
             </a>
           )}
           <Button onClick={() => navigate(-1)} variant="ghost" className="rounded-premium-full">
-            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" aria-hidden="true" /> Voltar
           </Button>
         </div>
         <MagisteriumDiagnosticPanel />
