@@ -1,16 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyConfigOverride,
   contrastConfig,
   describeExclusion,
   effectiveSelector,
   getEffectiveConfigSnapshot,
   getRouteThresholds,
   isTargetEnabled,
+  normalizeImportedConfig,
   requiredRatio,
   resolveRoutes,
   ruleMatches,
   type ContrastConfig,
 } from '../contrast-config';
+
 
 const baseConfig = (): ContrastConfig => ({
   defaultThresholds: { level: 'AA', largeMode: 'auto' },
