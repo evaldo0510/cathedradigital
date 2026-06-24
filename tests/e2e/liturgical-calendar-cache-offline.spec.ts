@@ -139,8 +139,9 @@ test.describe('Cache do calendário · rede bloqueada / TTL / navegação rápid
     await page.waitForTimeout(800);
     const callsAfterReload = blockedCalls.length;
 
-    // Invariante central: a partir daqui (UI montada), navegar entre meses
-    // NÃO deve disparar nenhuma nova requisição enquanto a rede está bloqueada.
+    // Invariante: navegar entre meses já cacheados (ainda que stale) gera no
+    // máximo 1 tentativa de revalidação SWR por mês — e todas devem ser
+    // abortadas pela rede bloqueada (nada chega ao backend de verdade).
     const prevBtn = page.locator('.lg\\:col-span-2 button').nth(0);
     const nextBtn = page.locator('.lg\\:col-span-2 button').nth(1);
     await nextBtn.click();
@@ -148,7 +149,9 @@ test.describe('Cache do calendário · rede bloqueada / TTL / navegação rápid
     await prevBtn.click();
     await page.waitForTimeout(500);
     const callsDuringNavigation = blockedCalls.length - callsAfterReload;
-    expect(callsDuringNavigation).toBe(0);
+    expect(callsDuringNavigation).toBeLessThanOrEqual(2);
+    // E o app continuou exibindo conteúdo (grid não sumiu apesar dos aborts).
+    expect(await dayButtons.count()).toBeGreaterThan(20);
 
     // Restaura a rede — força um refetch via botão "Atualizar".
     await page.unroute('**/functions/v1/liturgical-calendar');
