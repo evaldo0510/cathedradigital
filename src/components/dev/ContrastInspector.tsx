@@ -267,7 +267,19 @@ export default function ContrastInspector() {
 
   const [info, setInfo] = useState<Inspection | null>(null);
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 16 });
+  const [settings, setSettingsState] = useState<InspectorSettings>(() => readSettings());
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const lastTargetRef = useRef<Element | null>(null);
+  const settingsRef = useRef<InspectorSettings>(settings);
+  settingsRef.current = settings;
+
+  const updateSettings = useCallback((patch: Partial<InspectorSettings>) => {
+    setSettingsState((prev) => {
+      const next = { ...prev, ...patch };
+      writeSettings(next);
+      return next;
+    });
+  }, []);
 
   const persistActive = useCallback((next: boolean) => {
     setActive(next);
@@ -278,6 +290,11 @@ export default function ContrastInspector() {
     }
   }, []);
 
+  // Re-evaluate the last hovered element whenever settings change so badges update.
+  useEffect(() => {
+    if (lastTargetRef.current) setInfo(inspectElement(lastTargetRef.current, settings));
+  }, [settings]);
+
   // Hotkey toggle: Alt+Shift+C
   useEffect(() => {
     if (!enabled) return;
@@ -286,13 +303,14 @@ export default function ContrastInspector() {
         e.preventDefault();
         persistActive(!active);
       }
-      if (e.key === 'Escape' && active) {
+      if (e.key === 'Escape' && (active || settingsOpen)) {
+        setSettingsOpen(false);
         persistActive(false);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [enabled, active, persistActive]);
+  }, [enabled, active, settingsOpen, persistActive]);
 
   // Hover tracking + Alt+Click export
   useEffect(() => {
@@ -301,7 +319,7 @@ export default function ContrastInspector() {
       const t = e.target as Element | null;
       if (!t || (t as HTMLElement).closest?.('[data-contrast-inspector]')) return;
       lastTargetRef.current = t;
-      setInfo(inspectElement(t));
+      setInfo(inspectElement(t, settingsRef.current));
       const pad = 16;
       const panelW = 360;
       const panelH = 260;
@@ -317,7 +335,7 @@ export default function ContrastInspector() {
       if (!t || (t as HTMLElement).closest?.('[data-contrast-inspector]')) return;
       e.preventDefault();
       e.stopPropagation();
-      exportElement(t);
+      exportElement(t, settingsRef.current);
     };
     window.addEventListener('mousemove', onMove, true);
     window.addEventListener('click', onClick, true);
@@ -326,6 +344,7 @@ export default function ContrastInspector() {
       window.removeEventListener('click', onClick, true);
     };
   }, [enabled, active]);
+
 
   const badge = useMemo(() => {
     if (!info) return null;
