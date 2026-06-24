@@ -268,6 +268,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             <p className="text-premium-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
             <p className="text-premium-xs text-muted-foreground italic">{errorDetails}</p>
             <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-spacing-xl rounded-premium-full text-premium-xs uppercase font-black tracking-widest">Tentar Novamente</Button>
+            <NexusDebugPanel info={debug} />
           </div>
         ) : (
 
