@@ -8,8 +8,10 @@ vi.mock('@/integrations/supabase/client', () => ({
   supabase: { functions: { invoke: (...args: unknown[]) => invokeMock(...args) } },
 }));
 
+const toastSuccess = vi.fn();
+const toastError = vi.fn();
 vi.mock('sonner', () => ({
-  toast: { success: vi.fn(), error: vi.fn() },
+  toast: { success: (...a: unknown[]) => toastSuccess(...a), error: (...a: unknown[]) => toastError(...a) },
 }));
 
 vi.mock('@/contexts/ReadingSettingsContext', () => ({
