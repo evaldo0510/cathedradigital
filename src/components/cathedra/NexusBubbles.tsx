@@ -446,6 +446,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   >
                     Navegação A-Z
                   </Button>
+                  <NexusDebugPanel info={debug} />
                 </div>
               )}
             </>
