@@ -372,28 +372,28 @@ export default function BibleAbbrValidatePage() {
           {!localError && data && (
             <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 text-sm items-center">
               <dt className="text-muted-foreground">Input</dt>
-              <dd className="font-mono">{JSON.stringify(data.input)}</dd>
+              <dd className="font-mono text-foreground">{JSON.stringify(data.input)}</dd>
 
               <dt className="text-muted-foreground">Normalized</dt>
-              <dd className="font-mono">{JSON.stringify(data.normalized)}</dd>
+              <dd className="font-mono text-foreground">{JSON.stringify(data.normalized)}</dd>
 
               <dt className="text-muted-foreground">canonical_abbr</dt>
-              <dd className="flex items-center gap-2">
-                <span className="font-mono">{data.canonical_abbr ?? '—'}</span>
+              <dd className="flex items-center gap-2 text-foreground">
+                <span className="font-mono text-foreground">{data.canonical_abbr ?? '—'}</span>
                 {data.canonical_abbr && <CopyButton value={data.canonical_abbr} label="canonical_abbr" />}
               </dd>
 
               <dt className="text-muted-foreground">book_name</dt>
-              <dd>{data.book_name ?? '—'}</dd>
+              <dd className="text-foreground">{data.book_name ?? '—'}</dd>
 
               <dt className="text-muted-foreground">bollsId</dt>
-              <dd className="flex items-center gap-2">
-                <span className="font-mono">{data.bollsId ?? '—'}</span>
+              <dd className="flex items-center gap-2 text-foreground">
+                <span className="font-mono text-foreground">{data.bollsId ?? '—'}</span>
                 {data.bollsId !== null && <CopyButton value={data.bollsId} label="bollsId" />}
               </dd>
 
               <dt className="text-muted-foreground">testament</dt>
-              <dd>
+              <dd className="text-foreground">
                 {data.testament ? (
                   <Badge variant="secondary">
                     {data.testament === 'OT' ? 'Antigo Testamento' : 'Novo Testamento'}
@@ -406,7 +406,7 @@ export default function BibleAbbrValidatePage() {
               {data.deuterocanonical && (
                 <>
                   <dt className="text-muted-foreground">Deuterocanônico</dt>
-                  <dd><Badge variant="outline">sim</Badge></dd>
+                  <dd className="text-foreground"><Badge variant="outline">sim</Badge></dd>
                 </>
               )}
 
@@ -417,6 +417,7 @@ export default function BibleAbbrValidatePage() {
                 </>
               )}
             </dl>
+
           )}
         </CardContent>
       </Card>
