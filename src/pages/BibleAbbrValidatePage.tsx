@@ -73,7 +73,11 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
         try {
           await navigator.clipboard.writeText(String(value));
           setCopied(true);
-          toast.success(`${label} copiado`, { description: String(value) });
+          toast.success(`${label} copiado`, {
+            description: String(value),
+            duration: Infinity,
+            closeButton: true,
+          });
           setTimeout(() => setCopied(false), 1500);
         } catch {
           toast.error('Não foi possível copiar');
