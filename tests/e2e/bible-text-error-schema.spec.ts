@@ -1,7 +1,7 @@
 import { test, expect, request } from '@playwright/test';
 import { z } from 'zod';
 import 'dotenv/config';
-import { BibleTextErrorSchema } from '../../src/shared/bibleTextSchema';
+import { BibleTextErrorSchema, BibleTextInvalidPayloadSchema } from '../../src/shared/bibleTextSchema';
 
 /**
  * E2E de contrato: garante que a edge `bible-text` retorna em 404
