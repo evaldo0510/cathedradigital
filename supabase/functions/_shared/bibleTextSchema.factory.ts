@@ -11,6 +11,12 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function buildBibleTextSchemas(z: any) {
+  const BibleTextInputSchema = z.object({
+    abbrev: z.string().trim().min(1, "abbrev é obrigatório").max(16, "abbrev muito longo"),
+    chapter: z.number({ invalid_type_error: "chapter deve ser número" }).int().positive(),
+    client_cache_version: z.union([z.string(), z.number()]).optional(),
+  }).strict();
+
   const BibleVerseSchema = z.object({
     number: z.number().int().positive(),
     text: z.string().min(1),
@@ -62,6 +68,7 @@ export function buildBibleTextSchemas(z: any) {
   ]);
 
   return {
+    BibleTextInputSchema,
     BibleVerseSchema,
     BibleTextMetadataSchema,
     BibleTextSuccessSchema,

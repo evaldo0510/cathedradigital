@@ -1,5 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import {
+  BibleTextInputSchema,
+  BibleTextErrorSchema,
+  BibleTextInvalidPayloadSchema,
+} from "../_shared/bibleTextSchema.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -163,20 +168,34 @@ serve(async (req) => {
 
   let abbrev: string | undefined;
   let chapter: number | undefined;
+  let client_cache_version: string | number | undefined;
   try {
-    const body = await req.json().catch(() => ({}));
-    abbrev = body?.abbrev;
-    chapter = Number(body?.chapter);
-    const client_cache_version = body?.client_cache_version;
+    const raw = await req.json().catch(() => ({}));
+    // Normaliza chapter para number antes do parse (clientes podem mandar string).
+    const candidate = {
+      ...(typeof raw === 'object' && raw ? raw : {}),
+      chapter: raw?.chapter === undefined || raw?.chapter === null
+        ? raw?.chapter
+        : Number(raw?.chapter),
+    };
 
-    // Validação defensiva: protege contra payloads malformados (não joga 500).
-    if (!abbrev || typeof abbrev !== 'string' || !Number.isFinite(chapter) || chapter <= 0) {
-      console.warn('[bible-text] invalid payload', { correlationId, abbrev, chapter });
-      return new Response(JSON.stringify({
-        error: 'Parâmetros inválidos: informe { abbrev: string, chapter: number > 0 }',
+    const parsed = BibleTextInputSchema.safeParse(candidate);
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors;
+      const invalidBody = BibleTextInvalidPayloadSchema.parse({
+        error: `Parâmetros inválidos: ${JSON.stringify(fieldErrors)}`,
         correlationId,
-      }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+      });
+      console.warn('[bible-text] invalid payload', { correlationId, fieldErrors, raw });
+      return new Response(JSON.stringify(invalidBody), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
+      });
     }
+
+    abbrev = parsed.data.abbrev;
+    chapter = parsed.data.chapter;
+    client_cache_version = parsed.data.client_cache_version;
 
     console.info('[bible-text] start', { correlationId, abbrev, chapter });
 
@@ -255,7 +274,9 @@ serve(async (req) => {
     const reason = !resolvedBollsId
       ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON em supabase/functions/_shared/bibleCanon.ts.`
       : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" (bollsId=${resolvedBollsId}) não foi encontrado em nenhuma fonte (Cathedra, BollsLife, cache stale).`;
-    return new Response(JSON.stringify({
+    // Contrato: BibleTextErrorSchema valida que TODOS os campos obrigatórios estão presentes
+    // antes de devolver. Se algo divergir, cai no catch e responde 500 com correlationId.
+    const errorBody = BibleTextErrorSchema.parse({
       error: 'Texto não encontrado',
       reason,
       received_abbrev: abbrev,
@@ -264,7 +285,8 @@ serve(async (req) => {
       bollsId: resolvedBollsId,
       chapter,
       correlationId,
-    }), {
+    });
+    return new Response(JSON.stringify(errorBody), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
     });
