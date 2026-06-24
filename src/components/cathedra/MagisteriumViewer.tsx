@@ -24,6 +24,11 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import { NoteEditModal } from './NoteEditModal';
+import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
+import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
+
+const MIN_DOC_LEN = 500;
+
 
 
 
