@@ -2,16 +2,11 @@ import { test, expect, type Page, type TestInfo } from '@playwright/test';
 
 /**
  * Data-driven WCAG contrast regression across the main public routes.
- * Runs per route × theme (light/dark). For each (route, target) it:
- *   1. measures the WCAG contrast ratio of the text against the effective
- *      background (walking ancestors so transparent layers resolve correctly),
- *   2. attaches a JSON report,
- *   3. on failure, attaches a page screenshot + per-element outerHTML +
- *      computed-styles + element screenshot.
- *
- * The aggregated attachments are post-processed by
- *   scripts/contrast-report.ts → playwright-report/contrast-summary.{md,json}
- * which the CI workflow uploads as a build artifact.
+ * Runs per route × theme (light/dark). Each (route, target) measurement honors
+ * per-route thresholds declared in contrast.config.ts (AA/AAA · large/normal
+ * override). On failure we attach the page screenshot, the offending element's
+ * outerHTML, computed-style snapshot and an element screenshot so the CI
+ * aggregator can link them in the PR comment.
  */
 
 // ---------- in-page helpers ----------
@@ -109,7 +104,7 @@ async function setTheme(page: Page, theme: 'light' | 'dark') {
 }
 
 // ---------- coverage matrix (resolved from contrast.config.ts) ----------
-import { contrastConfig, effectiveSelector, resolveRoutes } from './contrast.config';
+import { contrastConfig, effectiveSelector, requiredRatio, resolveRoutes } from './contrast.config';
 
 const ROUTES = resolveRoutes();
 
@@ -161,6 +156,7 @@ for (const theme of ['light', 'dark'] as const) {
     test(`contrast WCAG · ${route.path} · ${theme}`, async ({ page }, info) => {
       info.annotations.push({ type: 'contrast-route', description: route.path });
       info.annotations.push({ type: 'contrast-theme', description: theme });
+      info.annotations.push({ type: 'contrast-level', description: route.thresholds.level });
 
       await page.emulateMedia({ colorScheme: theme });
       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
@@ -173,6 +169,7 @@ for (const theme of ['light', 'dark'] as const) {
 
       const measurements: Array<{ target: string; selector: string; rows: Measurement[] }> = [];
       const failures: FailureRow[] = [];
+      const { level, largeMode } = route.thresholds;
 
       for (const t of route.targets) {
         const sel = effectiveSelector(t);
@@ -180,7 +177,9 @@ for (const theme of ['light', 'dark'] as const) {
         measurements.push({ target: t.name, selector: sel, rows });
         for (const m of rows) {
           if (!m.found || m.ratio === undefined) continue;
-          const required = m.isLarge ? 3 : 4.5;
+          const autoLarge = !!m.isLarge;
+          const isLarge = largeMode === 'large' ? true : largeMode === 'normal' ? false : autoLarge;
+          const required = requiredRatio(isLarge, level);
           if (m.ratio < required) {
             failures.push({
               route: route.path,
@@ -199,7 +198,19 @@ for (const theme of ['light', 'dark'] as const) {
       }
 
       await info.attach(`contrast-${route.path.replace(/[^a-z0-9]+/gi, '_') || 'root'}-${theme}.json`, {
-        body: JSON.stringify({ route: route.path, theme, url: page.url(), measurements, failures }, null, 2),
+        body: JSON.stringify(
+          {
+            route: route.path,
+            theme,
+            url: page.url(),
+            thresholds: route.thresholds,
+            excludedTargets: route.excludedTargets,
+            measurements,
+            failures,
+          },
+          null,
+          2,
+        ),
         contentType: 'application/json',
       });
 
@@ -211,6 +222,4 @@ for (const theme of ['light', 'dark'] as const) {
       ).toEqual([]);
     });
   }
-}
-
 }

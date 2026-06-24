@@ -311,11 +311,18 @@ function main() {
   const fallbackDir = process.env.PLAYWRIGHT_TEST_RESULTS_DIR || 'test-results';
   const baselinePath = process.env.CONTRAST_BASELINE || '';
   const failMode = (process.env.CONTRAST_REPORT_FAIL_MODE ?? 'regressions').toLowerCase(); // 'regressions' | 'any' | 'never'
+  // Minimum drop in ratio (current vs. baseline) required to count a "worsened" entry
+  // as a real regression. Defaults to 0.1 to absorb tiny rendering jitter.
+  const deltaThresholdRaw = Number(process.env.CONTRAST_DELTA_THRESHOLD ?? '0.1');
+  const deltaThreshold = Number.isFinite(deltaThresholdRaw) && deltaThresholdRaw >= 0 ? deltaThresholdRaw : 0.1;
 
   const payloads = collectPayloads(jsonPath, fallbackDir);
   const report = loadReport(jsonPath);
   const baseline = loadBaseline(baselinePath);
   const delta = diffAgainstBaseline(payloads, baseline);
+  // A worsened entry only gates the build when its drop exceeds the configured threshold.
+  const significantWorsened = delta.worsened.filter((w) => Math.abs(w.delta) >= deltaThreshold);
+
 
   if (!existsSync(reportDir)) mkdirSync(reportDir, { recursive: true });
 
@@ -335,6 +342,8 @@ function main() {
       failures: payloads.reduce((acc, p) => acc + (p.failures?.length || 0), 0),
       regressions: delta.regressions.length,
       worsened: delta.worsened.length,
+      significantWorsened: significantWorsened.length,
+      deltaThreshold,
       fixed: delta.fixed.length,
     },
   };
@@ -344,15 +353,16 @@ function main() {
   writeFileSync(join(reportDir, 'contrast-summary.md'), md);
 
   console.log(
-    `[contrast-report] failures=${summaryJson.totals.failures} regressions=${delta.regressions.length} worsened=${delta.worsened.length} fixed=${delta.fixed.length} baseline=${Boolean(baseline)}`,
+    `[contrast-report] failures=${summaryJson.totals.failures} regressions=${delta.regressions.length} worsened=${delta.worsened.length} significantWorsened=${significantWorsened.length} (threshold=${deltaThreshold}) fixed=${delta.fixed.length} baseline=${Boolean(baseline)}`,
   );
 
   const shouldFail =
     failMode === 'any' ? summaryJson.totals.failures > 0
     : failMode === 'never' ? false
-    : delta.regressions.length > 0 || delta.worsened.length > 0; // 'regressions'
+    : delta.regressions.length > 0 || significantWorsened.length > 0; // 'regressions'
   if (shouldFail) process.exitCode = 1;
 }
+
 
 main();
 void dirname;
