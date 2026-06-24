@@ -9,6 +9,7 @@ import { buildBibleTextSchemas, classifyError } from "./bibleTextSchema.factory.
 
 const schemas = buildBibleTextSchemas(z);
 
+export const BibleTextInputSchema = schemas.BibleTextInputSchema;
 export const BibleVerseSchema = schemas.BibleVerseSchema;
 export const BibleTextMetadataSchema = schemas.BibleTextMetadataSchema;
 export const BibleTextSuccessSchema = schemas.BibleTextSuccessSchema;
