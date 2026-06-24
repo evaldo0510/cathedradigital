@@ -47,9 +47,9 @@ test.describe('Magisterium · a11y do fallback', () => {
     await page.keyboard.press('Tab');
     await expect(page.getByTestId('magisterium-external-fallback')).toBeFocused();
 
-    // Tab → botão "Voltar" (não há armadilha — o foco sai do retry)
+    // Tab → botão "Voltar" (escopado ao fallback)
     await page.keyboard.press('Tab');
-    const voltar = page.getByRole('button', { name: /Voltar/i });
+    const voltar = fallback.getByRole('button', { name: /Voltar/i });
     await expect(voltar).toBeFocused();
 
     // Re-foca o retry e aciona com Enter — deve refazer fetch

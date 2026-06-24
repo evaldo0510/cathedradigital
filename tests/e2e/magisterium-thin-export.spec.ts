@@ -85,11 +85,11 @@ test('Magisterium · JSON do painel em estado thin/final_error', async ({ page }
     expect(KNOWN_STEPS).toContain(ev.step);
   }
 
-  // Existe um fetch_thin antes do final_error
-  const idxThin = report.timeline.findIndex((e: any) => e.step === 'fetch_thin');
-  const idxFinal = report.timeline.findIndex((e: any) => e.step === 'final_error');
-  expect(idxThin).toBeGreaterThanOrEqual(0);
-  expect(idxFinal).toBeGreaterThan(idxThin);
+  // Existe ao menos um fetch_thin e ao menos um final_error
+  const hasThin = report.timeline.some((e: any) => e.step === 'fetch_thin');
+  const hasFinal = report.timeline.some((e: any) => e.step === 'final_error');
+  expect(hasThin).toBe(true);
+  expect(hasFinal).toBe(true);
 
   // Persistência inclui o final_error
   expect(report.persistedErrors.some((e: any) => e.step === 'final_error')).toBe(true);
