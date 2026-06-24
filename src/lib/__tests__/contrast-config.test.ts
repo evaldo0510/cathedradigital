@@ -1,16 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyConfigOverride,
   contrastConfig,
   describeExclusion,
   effectiveSelector,
   getEffectiveConfigSnapshot,
   getRouteThresholds,
   isTargetEnabled,
+  normalizeImportedConfig,
   requiredRatio,
   resolveRoutes,
   ruleMatches,
   type ContrastConfig,
 } from '../contrast-config';
+
 
 const baseConfig = (): ContrastConfig => ({
   defaultThresholds: { level: 'AA', largeMode: 'auto' },
@@ -103,5 +106,34 @@ describe('config snapshot export', () => {
     const snap = getEffectiveConfigSnapshot(contrastConfig);
     expect(snap.denySelectors.length).toBeGreaterThan(0);
     expect(snap.routes.length).toBeGreaterThan(0);
+  });
+});
+
+describe('import / override round-trip', () => {
+  it('normalizes an exported snapshot and applies it to a config', () => {
+    const source = baseConfig();
+    const snapshot = { inspector: { level: 'AAA' }, contrast: getEffectiveConfigSnapshot(source) };
+    const override = normalizeImportedConfig(snapshot);
+    expect(override.denySelectors).toContain('.sr-only');
+    expect(override.maxNodesPerSelector).toBe(5);
+
+    const target: ContrastConfig = baseConfig();
+    target.maxNodesPerSelector = 99;
+    target.denySelectors = [];
+    applyConfigOverride(override, target);
+    expect(target.maxNodesPerSelector).toBe(5);
+    expect(target.denySelectors).toContain('.sr-only');
+  });
+
+  it('rejects non-object payloads with a helpful error', () => {
+    expect(() => normalizeImportedConfig(null)).toThrow(/Config inválido/);
+    expect(() => normalizeImportedConfig('foo')).toThrow(/Config inválido/);
+  });
+
+  it('applies per-route threshold overrides to matching routes only', () => {
+    const cfg = baseConfig();
+    applyConfigOverride({ routeThresholds: { '/secure': { level: 'AA' }, '/missing': { level: 'AAA' } } }, cfg);
+    expect(cfg.routes.find((r) => r.path === '/secure')?.thresholds?.level).toBe('AA');
+    expect(cfg.routes.find((r) => r.path === '/')?.thresholds).toBeUndefined();
   });
 });

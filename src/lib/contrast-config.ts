@@ -190,3 +190,87 @@ export function getEffectiveConfigSnapshot(cfg: ContrastConfig = contrastConfig)
     })),
   };
 }
+
+// ---------- runtime overrides (browser only) ----------
+// The overlay can import a previously exported JSON. We mutate the shared
+// `contrastConfig` object in place so every consumer (snapshot, resolver,
+// inspector panel) sees the same effective state, and we persist the override
+// in localStorage so a reload keeps it active.
+
+const CONFIG_OVERRIDE_KEY = 'cathedra:contrast-inspector:config-override';
+
+export type ContrastConfigOverride = Partial<
+  Pick<ContrastConfig, 'maxNodesPerSelector' | 'defaultThresholds' | 'denySelectors' | 'allowlist' | 'denylist'>
+> & {
+  /** Per-route threshold overrides keyed by route path; merged into matching routes. */
+  routeThresholds?: Record<string, ContrastRouteThreshold>;
+};
+
+/** Accepts either a raw override or a snapshot produced by getEffectiveConfigSnapshot. */
+export function normalizeImportedConfig(input: unknown): ContrastConfigOverride {
+  if (!input || typeof input !== 'object') throw new Error('Config inválido: esperado objeto JSON.');
+  const obj = input as Record<string, unknown>;
+  // Snapshots wrap the contrast block under `contrast`.
+  const src = (obj.contrast && typeof obj.contrast === 'object' ? (obj.contrast as Record<string, unknown>) : obj);
+  const out: ContrastConfigOverride = {};
+  if (typeof src.maxNodesPerSelector === 'number' && src.maxNodesPerSelector > 0) {
+    out.maxNodesPerSelector = Math.min(200, Math.floor(src.maxNodesPerSelector));
+  }
+  if (src.defaultThresholds && typeof src.defaultThresholds === 'object') {
+    const d = src.defaultThresholds as Partial<Required<ContrastRouteThreshold>>;
+    out.defaultThresholds = {
+      level: d.level === 'AAA' ? 'AAA' : 'AA',
+      largeMode: d.largeMode === 'normal' || d.largeMode === 'large' ? d.largeMode : 'auto',
+    };
+  }
+  if (Array.isArray(src.denySelectors)) out.denySelectors = src.denySelectors.filter((s): s is string => typeof s === 'string');
+  if (Array.isArray(src.allowlist)) out.allowlist = src.allowlist as ContrastRule[];
+  if (Array.isArray(src.denylist)) out.denylist = src.denylist as ContrastRule[];
+  if (Array.isArray(src.routes)) {
+    out.routeThresholds = {};
+    for (const r of src.routes as Array<{ path?: string; thresholds?: ContrastRouteThreshold }>) {
+      if (r?.path && r.thresholds) out.routeThresholds[r.path] = r.thresholds;
+    }
+  }
+  return out;
+}
+
+export function applyConfigOverride(override: ContrastConfigOverride, cfg: ContrastConfig = contrastConfig): void {
+  if (override.maxNodesPerSelector !== undefined) cfg.maxNodesPerSelector = override.maxNodesPerSelector;
+  if (override.defaultThresholds) cfg.defaultThresholds = { ...cfg.defaultThresholds, ...override.defaultThresholds };
+  if (override.denySelectors) cfg.denySelectors = [...override.denySelectors];
+  if (override.allowlist) cfg.allowlist = [...override.allowlist];
+  if (override.denylist) cfg.denylist = [...override.denylist];
+  if (override.routeThresholds) {
+    for (const r of cfg.routes) {
+      const t = override.routeThresholds[r.path];
+      if (t) r.thresholds = { ...r.thresholds, ...t };
+    }
+  }
+}
+
+export function persistConfigOverride(override: ContrastConfigOverride): void {
+  try { localStorage.setItem(CONFIG_OVERRIDE_KEY, JSON.stringify(override)); } catch { /* ignore */ }
+}
+
+export function clearConfigOverride(): void {
+  try { localStorage.removeItem(CONFIG_OVERRIDE_KEY); } catch { /* ignore */ }
+}
+
+export function loadPersistedConfigOverride(cfg: ContrastConfig = contrastConfig): ContrastConfigOverride | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(CONFIG_OVERRIDE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as ContrastConfigOverride;
+    applyConfigOverride(parsed, cfg);
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+// Auto-apply persisted override on module load (browser only). The Playwright
+// spec runs in Node, where localStorage is undefined, so this is a no-op there.
+if (typeof window !== 'undefined') loadPersistedConfigOverride();
+

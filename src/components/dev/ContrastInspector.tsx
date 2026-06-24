@@ -15,7 +15,14 @@
  * Renders nothing in production builds.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { contrastConfig, getEffectiveConfigSnapshot } from '@/lib/contrast-config';
+import {
+  applyConfigOverride,
+  clearConfigOverride,
+  contrastConfig,
+  getEffectiveConfigSnapshot,
+  normalizeImportedConfig,
+  persistConfigOverride,
+} from '@/lib/contrast-config';
 
 type RGBA = { r: number; g: number; b: number; a: number };
 
@@ -328,9 +335,39 @@ export default function ContrastInspector() {
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 16 });
   const [settings, setSettingsState] = useState<InspectorSettings>(() => readSettings());
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importStatus, setImportStatus] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
+  const [, forceRerender] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const lastTargetRef = useRef<Element | null>(null);
   const settingsRef = useRef<InspectorSettings>(settings);
   settingsRef.current = settings;
+
+  const handleImportFile = useCallback(async (file: File) => {
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      if (json?.inspector && typeof json.inspector === 'object') {
+        const next: InspectorSettings = {
+          level: json.inspector.level === 'AAA' ? 'AAA' : 'AA',
+          largeMode: ['auto', 'normal', 'large'].includes(json.inspector.largeMode) ? json.inspector.largeMode : 'auto',
+          maxNodesPerSelector:
+            Number.isFinite(json.inspector.maxNodesPerSelector) && json.inspector.maxNodesPerSelector > 0
+              ? Math.min(200, Math.floor(json.inspector.maxNodesPerSelector))
+              : DEFAULT_SETTINGS.maxNodesPerSelector,
+        };
+        setSettingsState(next);
+        writeSettings(next);
+      }
+      const override = normalizeImportedConfig(json);
+      applyConfigOverride(override);
+      persistConfigOverride(override);
+      forceRerender((n) => n + 1);
+      setImportStatus({ kind: 'ok', msg: 'Config aplicada e persistida.' });
+    } catch (e) {
+      setImportStatus({ kind: 'err', msg: `Falha ao importar: ${(e as Error).message}` });
+    }
+  }, []);
+
 
   const updateSettings = useCallback((patch: Partial<InspectorSettings>) => {
     setSettingsState((prev) => {
@@ -559,21 +596,64 @@ export default function ContrastInspector() {
 
           <FiltersSection />
 
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            style={{ display: 'none' }}
+            aria-label="Importar config JSON"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handleImportFile(f);
+              e.target.value = '';
+            }}
+          />
+
+          {importStatus && (
+            <div
+              role="status"
+              style={{
+                marginTop: 6, padding: '4px 8px', borderRadius: 6, fontSize: 11,
+                background: importStatus.kind === 'ok' ? 'rgba(16,185,129,0.18)' : 'rgba(220,38,38,0.18)',
+                color: importStatus.kind === 'ok' ? 'rgb(110,231,183)' : 'rgb(252,165,165)',
+                border: `1px solid ${importStatus.kind === 'ok' ? 'rgba(16,185,129,0.4)' : 'rgba(220,38,38,0.4)'}`,
+              }}
+            >
+              {importStatus.msg}
+            </div>
+          )}
+
           <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
             <button
               type="button"
               onClick={() => exportEffectiveConfig(settings)}
-              title="Download level, text size mode, maxNodes and effective allowlist/denylist"
+              title="Baixar level, text size mode, maxNodes e allow/denylist efetivos"
               style={{
                 flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
                 border: '1px solid rgba(148,163,184,0.3)', background: 'rgb(16,185,129)', color: 'white', fontWeight: 600,
               }}
             >
-              Export config
+              Export
             </button>
             <button
               type="button"
-              onClick={() => { setSettingsState(DEFAULT_SETTINGS); writeSettings(DEFAULT_SETTINGS); }}
+              onClick={() => fileInputRef.current?.click()}
+              title="Importar JSON exportado e reaplicar level, text size mode, maxNodes e allow/denylist"
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgb(168,85,247)', color: 'white', fontWeight: 600,
+              }}
+            >
+              Import
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSettingsState(DEFAULT_SETTINGS);
+                writeSettings(DEFAULT_SETTINGS);
+                clearConfigOverride();
+                setImportStatus({ kind: 'ok', msg: 'Override removido. Recarregue para aplicar.' });
+              }}
               style={{
                 flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
                 border: '1px solid rgba(148,163,184,0.3)', background: 'rgba(30,41,59,0.6)', color: 'white',
@@ -594,6 +674,7 @@ export default function ContrastInspector() {
           </div>
         </div>
       )}
+
 
 
 
