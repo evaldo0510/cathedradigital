@@ -777,3 +777,123 @@ function formatAge(s: number) {
   if (s < 86400) return `${(s / 3600).toFixed(1)}h`;
   return `${(s / 86400).toFixed(1)}d`;
 }
+
+function DeltaKpi({ label, a, b, fmt, higherIsBetter }: { label: string; a: number; b: number; fmt: (v: number) => string; higherIsBetter: boolean }) {
+  const delta = b - a;
+  const improved = higherIsBetter ? delta > 0 : delta < 0;
+  const worsened = higherIsBetter ? delta < 0 : delta > 0;
+  const color = Math.abs(delta) < 1e-9 ? 'text-muted-foreground' : improved ? 'text-emerald-600' : worsened ? 'text-red-600' : '';
+  const arrow = Math.abs(delta) < 1e-9 ? '–' : delta > 0 ? '▲' : '▼';
+  return (
+    <Card className="p-3">
+      <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 flex items-baseline gap-2 text-sm">
+        <span className="text-muted-foreground">A {fmt(a)}</span>
+        <span>→</span>
+        <span className="font-semibold">B {fmt(b)}</span>
+      </div>
+      <div className={`mt-1 text-base font-semibold ${color}`}>{arrow} Δ {fmt(Math.abs(delta))}</div>
+    </Card>
+  );
+}
+
+type CmpBookLike = { abbrev: string; total: number; hit_rate: number; max_p95: number; bolls_rate: number };
+function CompareBookTable({ a, b }: { a: CmpBookLike[]; b: CmpBookLike[] }) {
+  const mapA = new Map(a.map((x) => [x.abbrev, x]));
+  const mapB = new Map(b.map((x) => [x.abbrev, x]));
+  const keys = Array.from(new Set([...mapA.keys(), ...mapB.keys()])).sort();
+  const rows = keys.map((k) => {
+    const ra = mapA.get(k); const rb = mapB.get(k);
+    return {
+      abbrev: k,
+      totalA: ra?.total ?? 0, totalB: rb?.total ?? 0,
+      hrA: ra?.hit_rate ?? 0, hrB: rb?.hit_rate ?? 0,
+      p95A: ra?.max_p95 ?? 0, p95B: rb?.max_p95 ?? 0,
+      bA: ra?.bolls_rate ?? 0, bB: rb?.bolls_rate ?? 0,
+    };
+  }).sort((x, y) => (Math.abs((y.hrB - y.hrA)) - Math.abs((x.hrB - x.hrA))));
+  return (
+    <table className="w-full text-sm">
+      <thead className="text-left text-xs uppercase text-muted-foreground">
+        <tr>
+          <th className="py-2 pr-3">Livro</th>
+          <th className="py-2 pr-3">Calls A→B</th>
+          <th className="py-2 pr-3">Hit rate A→B (Δ)</th>
+          <th className="py-2 pr-3">p95 A→B (Δ ms)</th>
+          <th className="py-2 pr-3">Bolls A→B (Δ)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.abbrev} className="border-t border-border/40">
+            <td className="py-2 pr-3 font-mono">{r.abbrev}</td>
+            <td className="py-2 pr-3 text-xs text-muted-foreground">{r.totalA} → {r.totalB}</td>
+            <DeltaCell a={r.hrA} b={r.hrB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+            <DeltaCell a={r.p95A} b={r.p95B} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+            <DeltaCell a={r.bA} b={r.bB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+          </tr>
+        ))}
+        {rows.length === 0 && <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">Sem dados nas janelas</td></tr>}
+      </tbody>
+    </table>
+  );
+}
+
+type CmpChapterLike = { chapter: number; total: number; hit_rate: number; p95_ms: number; bolls_rate: number };
+function CompareChapterTable({ a, b }: { a: CmpChapterLike[]; b: CmpChapterLike[] }) {
+  const mapA = new Map(a.map((x) => [x.chapter, x]));
+  const mapB = new Map(b.map((x) => [x.chapter, x]));
+  const keys = Array.from(new Set([...mapA.keys(), ...mapB.keys()])).sort((x, y) => x - y);
+  const rows = keys.map((k) => {
+    const ra = mapA.get(k); const rb = mapB.get(k);
+    return {
+      chapter: k,
+      totalA: ra?.total ?? 0, totalB: rb?.total ?? 0,
+      hrA: ra?.hit_rate ?? 0, hrB: rb?.hit_rate ?? 0,
+      p95A: ra?.p95_ms ?? 0, p95B: rb?.p95_ms ?? 0,
+      bA: ra?.bolls_rate ?? 0, bB: rb?.bolls_rate ?? 0,
+    };
+  });
+  return (
+    <div className="max-h-96 overflow-auto">
+      <table className="w-full text-sm">
+        <thead className="sticky top-0 bg-background text-left text-xs uppercase text-muted-foreground">
+          <tr>
+            <th className="py-2 pr-3">Cap.</th>
+            <th className="py-2 pr-3">Calls A→B</th>
+            <th className="py-2 pr-3">Hit rate (Δ)</th>
+            <th className="py-2 pr-3">p95 (Δ ms)</th>
+            <th className="py-2 pr-3">Bolls (Δ)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.chapter} className="border-t border-border/40">
+              <td className="py-2 pr-3 font-mono">{r.chapter}</td>
+              <td className="py-2 pr-3 text-xs text-muted-foreground">{r.totalA} → {r.totalB}</td>
+              <DeltaCell a={r.hrA} b={r.hrB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+              <DeltaCell a={r.p95A} b={r.p95B} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+              <DeltaCell a={r.bA} b={r.bB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+            </tr>
+          ))}
+          {rows.length === 0 && <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">Sem dados nas janelas</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DeltaCell({ a, b, fmt, higherIsBetter }: { a: number; b: number; fmt: (v: number) => string; higherIsBetter: boolean }) {
+  const delta = b - a;
+  const eps = Math.abs(delta) < 1e-9;
+  const improved = !eps && (higherIsBetter ? delta > 0 : delta < 0);
+  const worsened = !eps && (higherIsBetter ? delta < 0 : delta > 0);
+  const color = eps ? 'text-muted-foreground' : improved ? 'text-emerald-600' : worsened ? 'text-red-600' : '';
+  const arrow = eps ? '–' : delta > 0 ? '▲' : '▼';
+  return (
+    <td className="py-2 pr-3 text-xs">
+      <span className="text-muted-foreground">{fmt(a)} → {fmt(b)}</span>
+      <span className={`ml-2 font-semibold ${color}`}>{arrow} {fmt(Math.abs(delta))}</span>
+    </td>
+  );
+}
