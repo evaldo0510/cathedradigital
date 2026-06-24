@@ -820,14 +820,6 @@ export default function ContrastInspector() {
           onRescan={runAudit}
           onClose={() => setAuditOpen(false)}
           onApplyFix={applyFix}
-          onHighlight={(v) => {
-            const el = v.ref.deref();
-            if (!el) return;
-            (el as HTMLElement).scrollIntoView({ block: 'center', behavior: 'smooth' });
-            const prev = (el as HTMLElement).style.outline;
-            (el as HTMLElement).style.outline = '2px solid rgb(168,85,247)';
-            setTimeout(() => { (el as HTMLElement).style.outline = prev; }, 1500);
-          }}
         />
       )}
     </>
@@ -835,36 +827,62 @@ export default function ContrastInspector() {
   );
 }
 
-/** Floating audit panel — lists all WCAG violations on the current route+theme. */
+/** Floating audit panel — lists violations, switches to detail view with persistent highlight. */
 function AuditPanel({
   audit,
   onRescan,
   onClose,
   onApplyFix,
-  onHighlight,
 }: {
   audit: AuditResult | null;
   onRescan: () => void;
   onClose: () => void;
   onApplyFix: (v: ContrastViolation) => void;
-  onHighlight: (v: ContrastViolation) => void;
 }) {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const highlightedRef = useRef<{ el: HTMLElement; prevOutline: string; prevOffset: string } | null>(null);
+
+  const clearHighlight = useCallback(() => {
+    const cur = highlightedRef.current;
+    if (cur) {
+      cur.el.style.outline = cur.prevOutline;
+      cur.el.style.outlineOffset = cur.prevOffset;
+      highlightedRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => clearHighlight(), [clearHighlight]);
+
+  const selected = audit?.violations.find((v) => v.id === selectedId) ?? null;
+
+  useEffect(() => {
+    clearHighlight();
+    if (!selected) return;
+    const el = selected.ref.deref() as HTMLElement | undefined;
+    if (!el) return;
+    highlightedRef.current = { el, prevOutline: el.style.outline, prevOffset: el.style.outlineOffset };
+    el.style.outline = '3px solid rgb(168,85,247)';
+    el.style.outlineOffset = '2px';
+    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [selected, clearHighlight]);
+
   const exportAudit = () => {
     if (!audit) return;
-    const payload = {
-      ...audit,
-      violations: audit.violations.map(({ ref: _ref, ...rest }) => rest),
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const safeRoute = audit.route.replace(/[^a-z0-9]+/gi, '_') || 'root';
-    a.href = url;
-    a.download = `contrast-audit-${safeRoute}-${audit.theme}-${audit.level}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    const payload = { ...audit, violations: audit.violations.map(({ ref: _ref, ...rest }) => rest) };
+    triggerDownload(
+      new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }),
+      `contrast-audit-${safe(audit.route)}-${audit.theme}-${audit.level}.json`,
+    );
+  };
+
+  const exportReport = () => {
+    if (!audit) return;
+    const md = renderReportMarkdown(audit);
+    try { navigator.clipboard?.writeText(md); } catch { /* ignore */ }
+    triggerDownload(
+      new Blob([md], { type: 'text/markdown' }),
+      `contrast-report-${safe(audit.route)}-${audit.theme}-${audit.level}.md`,
+    );
   };
 
   return (
@@ -873,108 +891,182 @@ function AuditPanel({
       role="dialog"
       aria-label="Auditoria de contraste"
       style={{
-        position: 'fixed',
-        top: 12,
-        right: 12,
-        zIndex: 2147483647,
-        width: 460,
-        maxHeight: '85vh',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'rgba(15,23,42,0.97)',
-        color: 'rgb(241,245,249)',
-        border: '1px solid rgba(148,163,184,0.3)',
-        borderRadius: 12,
+        position: 'fixed', top: 12, right: 12, zIndex: 2147483647,
+        width: 480, maxHeight: '85vh', display: 'flex', flexDirection: 'column',
+        background: 'rgba(15,23,42,0.97)', color: 'rgb(241,245,249)',
+        border: '1px solid rgba(148,163,184,0.3)', borderRadius: 12,
         boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-        fontSize: 11,
-        lineHeight: 1.45,
+        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 11, lineHeight: 1.45,
       }}
     >
       <header style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>
+        {selected && (
+          <button
+            type="button"
+            onClick={() => setSelectedId(null)}
+            style={panelBtn('rgba(168,85,247,0.9)')}
+            aria-label="Voltar à lista"
+          >
+            ← Lista
+          </button>
+        )}
         <strong style={{ flex: 1 }}>
-          Audit{audit ? ` · ${audit.route} · ${audit.theme} · ${audit.level}` : ''}
+          {selected ? `Detalhe · ${selected.selector}` : `Audit${audit ? ` · ${audit.route} · ${audit.theme} · ${audit.level}` : ''}`}
         </strong>
-        <button type="button" onClick={onRescan} style={panelBtn('rgb(59,130,246)')}>Rescan</button>
-        <button type="button" onClick={exportAudit} style={panelBtn('rgb(16,185,129)')}>Export</button>
-        <button type="button" onClick={onClose} style={panelBtn('rgba(30,41,59,0.6)')} aria-label="Fechar auditoria">✕</button>
+        {!selected && <button type="button" onClick={onRescan} style={panelBtn('rgb(59,130,246)')}>Rescan</button>}
+        {!selected && <button type="button" onClick={exportReport} style={panelBtn('rgb(168,85,247)')} title="Baixar relatório Markdown (rota, seletor, cor, token)">Report</button>}
+        {!selected && <button type="button" onClick={exportAudit} style={panelBtn('rgb(16,185,129)')}>JSON</button>}
+        <button type="button" onClick={() => { clearHighlight(); onClose(); }} style={panelBtn('rgba(30,41,59,0.6)')} aria-label="Fechar auditoria">✕</button>
       </header>
 
       {!audit ? (
         <div style={{ padding: 16, opacity: 0.7 }}>Escaneando…</div>
       ) : audit.violations.length === 0 ? (
-        <div style={{ padding: 16 }}>
-          ✅ Nenhuma violação em <strong>{audit.scanned}</strong> elementos de texto.
-        </div>
+        <div style={{ padding: 16 }}>✅ Nenhuma violação em <strong>{audit.scanned}</strong> elementos de texto.</div>
+      ) : selected ? (
+        <ViolationDetail v={selected} onApplyFix={onApplyFix} />
       ) : (
-        <div style={{ overflow: 'auto', padding: '6px 8px' }}>
-          <div style={{ opacity: 0.7, margin: '4px 6px 8px' }}>
-            {audit.violations.length} violações em {audit.scanned} elementos · clique numa linha para destacar
-          </div>
+        <ListView audit={audit} onSelect={setSelectedId} />
+      )}
+    </div>
+  );
+}
+
+function ListView({ audit, onSelect }: { audit: AuditResult; onSelect: (id: string) => void }) {
+  return (
+    <div style={{ overflow: 'auto', padding: '6px 8px' }}>
+      <div style={{ opacity: 0.7, margin: '4px 6px 8px' }}>
+        {audit.violations.length} violações em {audit.scanned} elementos · clique numa linha para detalhar
+      </div>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10 }}>
+        <thead style={{ position: 'sticky', top: 0, background: 'rgba(15,23,42,0.95)' }}>
+          <tr style={{ textAlign: 'left', opacity: 0.7 }}>
+            <th style={th}>Seletor</th>
+            <th style={th}>Cor → BG</th>
+            <th style={th}>Token sugerido</th>
+            <th style={{ ...th, textAlign: 'right' }}>Razão</th>
+          </tr>
+        </thead>
+        <tbody>
           {audit.violations.map((v) => (
-            <div
+            <tr
               key={v.id}
-              style={{
-                padding: 8,
-                marginBottom: 6,
-                borderRadius: 8,
-                background: 'rgba(30,41,59,0.6)',
-                border: '1px solid rgba(220,38,38,0.35)',
-              }}
+              onClick={() => onSelect(v.id)}
+              style={{ cursor: 'pointer', borderTop: '1px solid rgba(148,163,184,0.15)' }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <button
-                  type="button"
-                  onClick={() => onHighlight(v)}
-                  style={{ ...panelBtn('rgba(148,163,184,0.2)'), flex: 1, textAlign: 'left' }}
-                  title="Rolar até o elemento e destacar"
-                >
-                  <strong>{v.selector}</strong>
-                  <span style={{ opacity: 0.7 }}> — {v.text || '(sem texto)'}</span>
-                </button>
-                <span style={{ padding: '2px 6px', borderRadius: 4, background: 'rgb(220,38,38)', color: 'white', fontWeight: 700 }}>
-                  {v.ratio}:1 / {v.required}
+              <td style={td}>
+                <strong>{v.selector}</strong>
+                <div style={{ opacity: 0.6, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {v.text || '(sem texto)'}
+                </div>
+              </td>
+              <td style={td}>
+                <span style={{ display: 'inline-block', width: 8, height: 8, background: v.color, border: '1px solid #888', marginRight: 3 }} />
+                <span style={{ display: 'inline-block', width: 8, height: 8, background: v.background, border: '1px solid #888', marginRight: 4 }} />
+                <span style={{ opacity: 0.7 }}>{shortColor(v.color)}/{shortColor(v.background)}</span>
+              </td>
+              <td style={td}>
+                {v.suggestions[0] ? (
+                  <strong style={{ color: 'rgb(110,231,183)' }}>{v.suggestions[0].to}</strong>
+                ) : (
+                  <span style={{ opacity: 0.5 }}>—</span>
+                )}
+              </td>
+              <td style={{ ...td, textAlign: 'right' }}>
+                <span style={{ padding: '1px 5px', borderRadius: 3, background: 'rgb(220,38,38)', color: 'white', fontWeight: 700 }}>
+                  {v.ratio}/{v.required}
                 </span>
-              </div>
-              <div style={{ marginTop: 4, opacity: 0.75 }}>
-                <span style={{ opacity: 0.6 }}>fg/bg:</span> {v.color} → {v.background}
-                {v.isLarge ? ' · large' : ''}
-              </div>
-              <div style={{ marginTop: 4 }}>
-                <span style={{ opacity: 0.6 }}>classes:</span>{' '}
-                <code style={{ background: 'rgba(148,163,184,0.18)', padding: '0 4px', borderRadius: 3 }}>
-                  {v.classes || '—'}
-                </code>
-              </div>
-              {v.suggestions.length > 0 ? (
-                <div style={{ marginTop: 6, padding: 6, borderRadius: 6, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)' }}>
-                  <div style={{ opacity: 0.8, marginBottom: 4 }}>Sugestões de token semântico:</div>
-                  {v.suggestions.map((s, i) => (
-                    <div key={i}>
-                      <code>{s.from}</code> → <strong>{s.to}</strong>
-                      <div style={{ opacity: 0.65, fontSize: 10 }}>{s.rationale}</div>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => onApplyFix(v)}
-                    style={{ ...panelBtn('rgb(16,185,129)'), marginTop: 6, width: '100%' }}
-                  >
-                    Aplicar fix · copiar patch
-                  </button>
-                </div>
-              ) : (
-                <div style={{ marginTop: 6, opacity: 0.6 }}>
-                  Sem sugestão automática — revise o componente manualmente (cor pode vir de CSS, gradient ou inline style).
-                </div>
-              )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ViolationDetail({ v, onApplyFix }: { v: ContrastViolation; onApplyFix: (v: ContrastViolation) => void }) {
+  return (
+    <div style={{ overflow: 'auto', padding: 12 }}>
+      <div style={{ marginBottom: 8, padding: 8, borderRadius: 6, background: 'rgba(168,85,247,0.18)', border: '1px solid rgba(168,85,247,0.4)' }}>
+        <strong>Elemento destacado na página</strong> · highlight persistente até clicar <em>← Lista</em>.
+      </div>
+      <div style={{ marginBottom: 6 }}>
+        <span style={{ padding: '2px 6px', borderRadius: 4, background: 'rgb(220,38,38)', color: 'white', fontWeight: 700 }}>
+          {v.ratio}:1 / requer {v.required}:1{v.isLarge ? ' · large' : ''}
+        </span>
+      </div>
+      <Row label="Seletor"><code>{v.selector}</code></Row>
+      <Row label="Texto">{v.text || '(sem texto)'}</Row>
+      <Row label="Cor atual">
+        <span style={{ display: 'inline-block', width: 10, height: 10, background: v.color, border: '1px solid #888', marginRight: 4 }} />
+        {v.color}
+      </Row>
+      <Row label="Background">
+        <span style={{ display: 'inline-block', width: 10, height: 10, background: v.background, border: '1px solid #888', marginRight: 4 }} />
+        {v.background}
+      </Row>
+      <Row label="Classes">
+        <code style={{ background: 'rgba(148,163,184,0.18)', padding: '0 4px', borderRadius: 3, wordBreak: 'break-all' }}>{v.classes || '—'}</code>
+      </Row>
+      {v.suggestions.length > 0 ? (
+        <div style={{ marginTop: 8, padding: 8, borderRadius: 6, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)' }}>
+          <div style={{ opacity: 0.85, marginBottom: 4 }}>Sugestões de token semântico:</div>
+          {v.suggestions.map((s, i) => (
+            <div key={i} style={{ marginBottom: 4 }}>
+              <code>{s.from}</code> → <strong>{s.to}</strong>
+              <div style={{ opacity: 0.65, fontSize: 10 }}>{s.rationale}</div>
             </div>
           ))}
+          <button type="button" onClick={() => onApplyFix(v)} style={{ ...panelBtn('rgb(16,185,129)'), marginTop: 6, width: '100%' }}>
+            Aplicar fix · copiar patch
+          </button>
+        </div>
+      ) : (
+        <div style={{ marginTop: 8, opacity: 0.7 }}>
+          Sem sugestão automática — a cor pode vir de CSS global, gradient ou inline style.
         </div>
       )}
     </div>
   );
 }
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginTop: 4 }}>
+      <span style={{ opacity: 0.6 }}>{label}:</span> {children}
+    </div>
+  );
+}
+
+function renderReportMarkdown(a: AuditResult): string {
+  const lines: string[] = [];
+  lines.push(`# Contrast report — ${a.route} · ${a.theme} · ${a.level}`);
+  lines.push(`Generated at ${a.capturedAt} · ${a.violations.length} violações em ${a.scanned} elementos`);
+  lines.push('');
+  lines.push('| Rota | Seletor | Cor atual | Background | Token recomendado | Razão | Texto |');
+  lines.push('| --- | --- | --- | --- | --- | --- | --- |');
+  for (const v of a.violations) {
+    const token = v.suggestions[0]?.to ?? '—';
+    const text = (v.text || '').replace(/\|/g, '\\|').slice(0, 60);
+    lines.push(`| ${a.route} | \`${v.selector}\` | ${v.color} | ${v.background} | **${token}** | ${v.ratio}:1 / ${v.required}:1 | ${text} |`);
+  }
+  return lines.join('\n');
+}
+
+function triggerDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+const th: React.CSSProperties = { padding: '4px 6px', fontWeight: 600 };
+const td: React.CSSProperties = { padding: '6px', verticalAlign: 'top' };
+function safe(s: string) { return s.replace(/[^a-z0-9]+/gi, '_') || 'root'; }
+function shortColor(c: string) { return c.replace(/^rgba?\(/, '').replace(/\)$/, '').replace(/\s/g, ''); }
+
 
 function panelBtn(bg: string): React.CSSProperties {
   return {
