@@ -27,6 +27,10 @@ type AlertRow = { id: string; created_at: string; severity: 'info' | 'warning' |
 type MetricRow = { bucket_start: string; abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number };
 type AuditRow = { id: number; created_at: string; actor_email: string | null; action: string; target: string | null; abbrev: string | null; chapter_from: number | null; chapter_to: number | null; count: number | null; succeeded: number | null; failed: number | null; details: Record<string, unknown> };
 type ChapterRow = { chapter: number; total: number; hits: number; misses: number; stale: number; avg_ms: number; p95_ms: number; max_ms: number; bolls_calls: number; bolls_failures: number };
+type CompareBook = { abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; max_p95: number; bolls_calls: number; bolls_failures: number; hit_rate: number; avg_ms: number; bolls_rate: number };
+type CompareWindow = { since: string; until: string; global: { hits: number; misses: number; stale: number; total: number; hit_rate: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; bolls_rate: number }; books: CompareBook[] };
+type CompareChapter = { chapter: number; hits: number; misses: number; stale: number; total: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; hit_rate: number; bolls_rate: number };
+type CompareResponse = { a: CompareWindow; b: CompareWindow; abbrev: string | null; chapters: { a: CompareChapter[]; b: CompareChapter[] } | null };
 
 const POLL_FAST = 10_000;
 const POLL_SLOW = 30_000;
@@ -69,6 +73,25 @@ export default function BibleCacheAdminPage() {
   // ----- Auditoria -----
   const [auditFilter, setAuditFilter] = useState<string>('__all__');
   const [auditPage, setAuditPage] = useState(0);
+
+  // ----- Comparação -----
+  const nowLocal = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const isoOffset = (h: number) => new Date(Date.now() - h * 3600 * 1000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const [cmpASince, setCmpASince] = useState(isoOffset(48));
+  const [cmpAUntil, setCmpAUntil] = useState(isoOffset(24));
+  const [cmpBSince, setCmpBSince] = useState(isoOffset(24));
+  const [cmpBUntil, setCmpBUntil] = useState(nowLocal());
+  const [cmpAbbrev, setCmpAbbrev] = useState<string>('__none__');
+  const [cmpRun, setCmpRun] = useState(0);
+  const compare = useQuery<CompareResponse>({
+    queryKey: ['bcs-compare', cmpRun],
+    enabled: false,
+    queryFn: () => call('compare', {
+      a: { since: new Date(cmpASince).toISOString(), until: new Date(cmpAUntil).toISOString() },
+      b: { since: new Date(cmpBSince).toISOString(), until: new Date(cmpBUntil).toISOString() },
+      ...(cmpAbbrev !== '__none__' ? { abbrev: cmpAbbrev } : {}),
+    }),
+  });
 
   const stats = useQuery({ queryKey: ['bcs-stats'], enabled: isAdmin, queryFn: () => call('stats'), refetchInterval: live ? POLL_FAST : false });
   const summary = useQuery<Summary>({ queryKey: ['bcs-summary', hours], enabled: isAdmin, queryFn: () => call('metrics_summary', { hours }), refetchInterval: live ? POLL_SLOW : false });
@@ -287,6 +310,7 @@ export default function BibleCacheAdminPage() {
           <TabsTrigger value="ops">Operações</TabsTrigger>
           <TabsTrigger value="entries">Entradas</TabsTrigger>
           <TabsTrigger value="audit">Auditoria</TabsTrigger>
+          <TabsTrigger value="compare">Comparar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="charts" className="space-y-4">
@@ -563,6 +587,89 @@ export default function BibleCacheAdminPage() {
             />
           </Card>
         </TabsContent>
+
+        <TabsContent value="compare" className="space-y-4">
+          <Card className="space-y-3 p-4">
+            <h2 className="text-sm font-semibold">Comparar duas janelas</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2 rounded border border-border/40 p-3">
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Janela A</div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Desde</label>
+                    <Input type="datetime-local" value={cmpASince} onChange={(e) => setCmpASince(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Até</label>
+                    <Input type="datetime-local" value={cmpAUntil} onChange={(e) => setCmpAUntil(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 rounded border border-border/40 p-3">
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Janela B</div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Desde</label>
+                    <Input type="datetime-local" value={cmpBSince} onChange={(e) => setCmpBSince(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Até</label>
+                    <Input type="datetime-local" value={cmpBUntil} onChange={(e) => setCmpBUntil(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-end gap-2">
+              <div>
+                <label className="block text-[11px] text-muted-foreground">Drilldown por capítulo (opcional)</label>
+                <Select value={cmpAbbrev} onValueChange={setCmpAbbrev}>
+                  <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Sem drilldown</SelectItem>
+                    {allBookOptions.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                onClick={() => { setCmpRun((n) => n + 1); setTimeout(() => compare.refetch(), 0); }}
+                disabled={compare.isFetching}
+              >
+                {compare.isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+                Comparar
+              </Button>
+              <span className="text-[11px] text-muted-foreground">
+                Dica: janelas iguais → variação 0. Variação calculada como B − A.
+              </span>
+            </div>
+          </Card>
+
+          {compare.data && (
+            <>
+              <div className="grid gap-3 md:grid-cols-3">
+                <DeltaKpi label="Hit rate" a={compare.data.a.global.hit_rate} b={compare.data.b.global.hit_rate} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+                <DeltaKpi label="p95 (ms)" a={compare.data.a.global.p95_ms} b={compare.data.b.global.p95_ms} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+                <DeltaKpi label="BollsLife rate" a={compare.data.a.global.bolls_rate} b={compare.data.b.global.bolls_rate} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+              </div>
+
+              <Card className="overflow-auto p-4">
+                <h3 className="mb-2 text-sm font-semibold">Variação por livro (B − A)</h3>
+                <CompareBookTable a={compare.data.a.books} b={compare.data.b.books} />
+              </Card>
+
+              {compare.data.chapters && (
+                <Card className="overflow-auto p-4">
+                  <h3 className="mb-2 text-sm font-semibold">Variação por capítulo · {compare.data.abbrev}</h3>
+                  <CompareChapterTable a={compare.data.chapters.a} b={compare.data.chapters.b} />
+                </Card>
+              )}
+            </>
+          )}
+          {compare.error && (
+            <Card className="border-red-500/40 bg-red-50/50 p-3 text-sm text-red-700 dark:bg-red-950/20 dark:text-red-300">
+              {(compare.error as Error).message}
+            </Card>
+          )}
+        </TabsContent>
       </Tabs>
 
       {/* ----- Drilldown dialog ----- */}
@@ -669,4 +776,124 @@ function formatAge(s: number) {
   if (s < 3600) return `${Math.round(s / 60)}min`;
   if (s < 86400) return `${(s / 3600).toFixed(1)}h`;
   return `${(s / 86400).toFixed(1)}d`;
+}
+
+function DeltaKpi({ label, a, b, fmt, higherIsBetter }: { label: string; a: number; b: number; fmt: (v: number) => string; higherIsBetter: boolean }) {
+  const delta = b - a;
+  const improved = higherIsBetter ? delta > 0 : delta < 0;
+  const worsened = higherIsBetter ? delta < 0 : delta > 0;
+  const color = Math.abs(delta) < 1e-9 ? 'text-muted-foreground' : improved ? 'text-emerald-600' : worsened ? 'text-red-600' : '';
+  const arrow = Math.abs(delta) < 1e-9 ? '–' : delta > 0 ? '▲' : '▼';
+  return (
+    <Card className="p-3">
+      <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 flex items-baseline gap-2 text-sm">
+        <span className="text-muted-foreground">A {fmt(a)}</span>
+        <span>→</span>
+        <span className="font-semibold">B {fmt(b)}</span>
+      </div>
+      <div className={`mt-1 text-base font-semibold ${color}`}>{arrow} Δ {fmt(Math.abs(delta))}</div>
+    </Card>
+  );
+}
+
+type CmpBookLike = { abbrev: string; total: number; hit_rate: number; max_p95: number; bolls_rate: number };
+function CompareBookTable({ a, b }: { a: CmpBookLike[]; b: CmpBookLike[] }) {
+  const mapA = new Map(a.map((x) => [x.abbrev, x]));
+  const mapB = new Map(b.map((x) => [x.abbrev, x]));
+  const keys = Array.from(new Set([...mapA.keys(), ...mapB.keys()])).sort();
+  const rows = keys.map((k) => {
+    const ra = mapA.get(k); const rb = mapB.get(k);
+    return {
+      abbrev: k,
+      totalA: ra?.total ?? 0, totalB: rb?.total ?? 0,
+      hrA: ra?.hit_rate ?? 0, hrB: rb?.hit_rate ?? 0,
+      p95A: ra?.max_p95 ?? 0, p95B: rb?.max_p95 ?? 0,
+      bA: ra?.bolls_rate ?? 0, bB: rb?.bolls_rate ?? 0,
+    };
+  }).sort((x, y) => (Math.abs((y.hrB - y.hrA)) - Math.abs((x.hrB - x.hrA))));
+  return (
+    <table className="w-full text-sm">
+      <thead className="text-left text-xs uppercase text-muted-foreground">
+        <tr>
+          <th className="py-2 pr-3">Livro</th>
+          <th className="py-2 pr-3">Calls A→B</th>
+          <th className="py-2 pr-3">Hit rate A→B (Δ)</th>
+          <th className="py-2 pr-3">p95 A→B (Δ ms)</th>
+          <th className="py-2 pr-3">Bolls A→B (Δ)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.abbrev} className="border-t border-border/40">
+            <td className="py-2 pr-3 font-mono">{r.abbrev}</td>
+            <td className="py-2 pr-3 text-xs text-muted-foreground">{r.totalA} → {r.totalB}</td>
+            <DeltaCell a={r.hrA} b={r.hrB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+            <DeltaCell a={r.p95A} b={r.p95B} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+            <DeltaCell a={r.bA} b={r.bB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+          </tr>
+        ))}
+        {rows.length === 0 && <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">Sem dados nas janelas</td></tr>}
+      </tbody>
+    </table>
+  );
+}
+
+type CmpChapterLike = { chapter: number; total: number; hit_rate: number; p95_ms: number; bolls_rate: number };
+function CompareChapterTable({ a, b }: { a: CmpChapterLike[]; b: CmpChapterLike[] }) {
+  const mapA = new Map(a.map((x) => [x.chapter, x]));
+  const mapB = new Map(b.map((x) => [x.chapter, x]));
+  const keys = Array.from(new Set([...mapA.keys(), ...mapB.keys()])).sort((x, y) => x - y);
+  const rows = keys.map((k) => {
+    const ra = mapA.get(k); const rb = mapB.get(k);
+    return {
+      chapter: k,
+      totalA: ra?.total ?? 0, totalB: rb?.total ?? 0,
+      hrA: ra?.hit_rate ?? 0, hrB: rb?.hit_rate ?? 0,
+      p95A: ra?.p95_ms ?? 0, p95B: rb?.p95_ms ?? 0,
+      bA: ra?.bolls_rate ?? 0, bB: rb?.bolls_rate ?? 0,
+    };
+  });
+  return (
+    <div className="max-h-96 overflow-auto">
+      <table className="w-full text-sm">
+        <thead className="sticky top-0 bg-background text-left text-xs uppercase text-muted-foreground">
+          <tr>
+            <th className="py-2 pr-3">Cap.</th>
+            <th className="py-2 pr-3">Calls A→B</th>
+            <th className="py-2 pr-3">Hit rate (Δ)</th>
+            <th className="py-2 pr-3">p95 (Δ ms)</th>
+            <th className="py-2 pr-3">Bolls (Δ)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.chapter} className="border-t border-border/40">
+              <td className="py-2 pr-3 font-mono">{r.chapter}</td>
+              <td className="py-2 pr-3 text-xs text-muted-foreground">{r.totalA} → {r.totalB}</td>
+              <DeltaCell a={r.hrA} b={r.hrB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+              <DeltaCell a={r.p95A} b={r.p95B} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+              <DeltaCell a={r.bA} b={r.bB} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+            </tr>
+          ))}
+          {rows.length === 0 && <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">Sem dados nas janelas</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DeltaCell({ a, b, fmt, higherIsBetter }: { a: number; b: number; fmt: (v: number) => string; higherIsBetter: boolean }) {
+  const delta = b - a;
+  const eps = Math.abs(delta) < 1e-9;
+  const improved = !eps && (higherIsBetter ? delta > 0 : delta < 0);
+  const worsened = !eps && (higherIsBetter ? delta < 0 : delta > 0);
+  const color = eps ? 'text-muted-foreground' : improved ? 'text-emerald-600' : worsened ? 'text-red-600' : '';
+  const arrow = eps ? '–' : delta > 0 ? '▲' : '▼';
+  return (
+    <td className="py-2 pr-3 text-xs">
+      <span className="text-muted-foreground">{fmt(a)} → {fmt(b)}</span>
+      <span className={`ml-2 font-semibold ${color}`}>{arrow} {fmt(Math.abs(delta))}</span>
+    </td>
+  );
 }
