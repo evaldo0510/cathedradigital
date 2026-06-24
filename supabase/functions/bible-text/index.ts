@@ -89,13 +89,14 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
   try {
     const expireDate = new Date();
     expireDate.setHours(expireDate.getHours() + ttlHours);
-    await supabase.from('bible_cache_l2').upsert({
+    const { error } = await supabase.from('bible_cache_l2').upsert({
       cache_key: key,
       content,
       hash,
       version,
       expires_at: expireDate.toISOString(),
-    });
+    }, { onConflict: 'cache_key' });
+    if (error) console.error('Cache L2 upsert error:', error);
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
