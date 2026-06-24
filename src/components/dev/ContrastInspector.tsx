@@ -335,9 +335,39 @@ export default function ContrastInspector() {
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 16 });
   const [settings, setSettingsState] = useState<InspectorSettings>(() => readSettings());
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importStatus, setImportStatus] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
+  const [, forceRerender] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const lastTargetRef = useRef<Element | null>(null);
   const settingsRef = useRef<InspectorSettings>(settings);
   settingsRef.current = settings;
+
+  const handleImportFile = useCallback(async (file: File) => {
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      if (json?.inspector && typeof json.inspector === 'object') {
+        const next: InspectorSettings = {
+          level: json.inspector.level === 'AAA' ? 'AAA' : 'AA',
+          largeMode: ['auto', 'normal', 'large'].includes(json.inspector.largeMode) ? json.inspector.largeMode : 'auto',
+          maxNodesPerSelector:
+            Number.isFinite(json.inspector.maxNodesPerSelector) && json.inspector.maxNodesPerSelector > 0
+              ? Math.min(200, Math.floor(json.inspector.maxNodesPerSelector))
+              : DEFAULT_SETTINGS.maxNodesPerSelector,
+        };
+        setSettingsState(next);
+        writeSettings(next);
+      }
+      const override = normalizeImportedConfig(json);
+      applyConfigOverride(override);
+      persistConfigOverride(override);
+      forceRerender((n) => n + 1);
+      setImportStatus({ kind: 'ok', msg: 'Config aplicada e persistida.' });
+    } catch (e) {
+      setImportStatus({ kind: 'err', msg: `Falha ao importar: ${(e as Error).message}` });
+    }
+  }, []);
+
 
   const updateSettings = useCallback((patch: Partial<InspectorSettings>) => {
     setSettingsState((prev) => {
