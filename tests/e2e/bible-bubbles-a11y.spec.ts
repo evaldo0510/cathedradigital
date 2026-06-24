@@ -67,8 +67,11 @@ test.describe('Bíblia · acessibilidade das bolhas', () => {
 
     await page.screenshot({ path: `${SHOT_DIR}/01-chapter-loaded.png` });
 
-    // ── 1. Cards do Nexus (bolhas de cross-reference) ──
-    const nexusBubbles = page.locator('[data-testid^="nexus-bubbles-"] button');
+    // ── 1. Cards do Nexus (BubbleTag) — auditor escopado, ignora breadcrumb ──
+    // BubbleTag renderiza <motion.button aria-label="Tema: …">; breadcrumbs usam data-bubble-nav.
+    const nexusBubbles = page.locator(
+      '[data-testid^="nexus-bubbles-"] button[aria-label^="Tema:"]:not([data-bubble-nav])'
+    );
     const bubbleCount = await nexusBubbles.count();
 
     if (bubbleCount === 0) {
@@ -76,7 +79,7 @@ test.describe('Bíblia · acessibilidade das bolhas', () => {
         id: 'no-bubbles',
         severity: 'minor',
         rule: 'coverage',
-        description: 'Nenhuma bolha do Nexus encontrada no capítulo amostrado — não foi possível auditar interação. Considere usar um capítulo com cross-references.',
+        description: 'Nenhuma BubbleTag encontrada no capítulo amostrado — não foi possível auditar interação. Considere usar um capítulo com cross-references.',
       });
     } else {
       const firstBubble = nexusBubbles.first();
@@ -86,22 +89,29 @@ test.describe('Bíblia · acessibilidade das bolhas', () => {
           id: 'bubble-aria-label',
           severity: 'serious',
           rule: 'button-name',
-          description: 'Card do Nexus sem aria-label significativo.',
-          selector: '[data-testid^="nexus-bubbles-"] button',
+          description: 'BubbleTag sem aria-label significativo.',
+          selector: 'button[aria-label^="Tema:"]',
         });
       }
 
-      // Tap target ≥ 44×44
-      const box = await firstBubble.boundingBox();
-      if (box && (box.width < 44 || box.height < 44)) {
-        findings.push({
-          id: 'bubble-tap-target',
-          severity: 'moderate',
-          rule: 'target-size',
-          description: `Tap target abaixo de 44x44 (${Math.round(box.width)}x${Math.round(box.height)}px).`,
-          selector: '[data-testid^="nexus-bubbles-"] button',
-          evidence: `${Math.round(box.width)}x${Math.round(box.height)}`,
-        });
+      // CI-grade regression guard: TODA bubble button ≥ 44×44.
+      for (let i = 0; i < bubbleCount; i++) {
+        const b = nexusBubbles.nth(i);
+        const box = await b.boundingBox();
+        if (!box) continue;
+        if (box.width < 44 || box.height < 44) {
+          findings.push({
+            id: 'bubble-tap-target',
+            severity: 'moderate',
+            rule: 'target-size',
+            description: `BubbleTag #${i} abaixo de 44x44 (${Math.round(box.width)}x${Math.round(box.height)}px).`,
+            selector: 'button[aria-label^="Tema:"]',
+            evidence: `${Math.round(box.width)}x${Math.round(box.height)}`,
+          });
+        }
+        // Hard assertion: previne regressão silenciosa em CI.
+        expect.soft(box.width, `BubbleTag #${i} width < 44px`).toBeGreaterThanOrEqual(44);
+        expect.soft(box.height, `BubbleTag #${i} height < 44px`).toBeGreaterThanOrEqual(44);
       }
 
       // Foco via teclado
@@ -112,17 +122,15 @@ test.describe('Bíblia · acessibilidade das bolhas', () => {
           id: 'bubble-focusable',
           severity: 'serious',
           rule: 'focus-order-semantics',
-          description: `Card do Nexus não recebe foco via .focus() (activeElement=${focused}).`,
+          description: `BubbleTag não recebe foco via .focus() (activeElement=${focused}).`,
         });
       }
       await page.screenshot({ path: `${SHOT_DIR}/02-bubble-focused.png` });
 
-      // Ativa com Enter — deve disparar handler (abre painel expandido)
       await firstBubble.press('Enter').catch(() => {});
       await page.waitForTimeout(400);
       await page.screenshot({ path: `${SHOT_DIR}/03-bubble-enter.png` });
 
-      // Esc fecha (se um diálogo abriu)
       await page.keyboard.press('Escape').catch(() => {});
       await page.waitForTimeout(200);
     }
