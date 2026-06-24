@@ -688,6 +688,7 @@ const MagisteriumViewer: React.FC = () => {
           />
         </div>
       )}
+      <MagisteriumDiagnosticPanel />
     </div>
   );
 };
