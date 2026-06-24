@@ -638,8 +638,14 @@ const Bible: React.FC = () => {
       }
 
       if (response?.status === 404) {
-        const errorData = data || {};
-        toast.error(`Atenção: ${errorData.error || 'Texto não encontrado'}`);
+        const errorData: any = data || {};
+        // Mantém o contrato do schema: reason + received_abbrev
+        const title = errorData.error || 'Texto não encontrado';
+        const reason = typeof errorData.reason === 'string' ? errorData.reason : '';
+        const received = errorData.received_abbrev ? ` (abreviação recebida: "${errorData.received_abbrev}")` : '';
+        const description = reason ? `${reason}${received}` : `Não foi possível carregar ${abbr} ${chapter}${received}.`;
+        toast.error(title, { description });
+        setSourceInfo(`Erro 404 — ${reason || 'texto não encontrado'}`);
         setIsLoading(false);
         return;
       }

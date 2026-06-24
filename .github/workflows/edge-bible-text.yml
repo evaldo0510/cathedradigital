@@ -73,8 +73,14 @@ jobs:
           echo "HTTP $http -> $out"
           test "$http" = "404"
 
-      - name: Generate CI summary from reports/edge/*
+      - name: Generate CI summary + trend chart + regression gate
         if: always()
+        env:
+          # Thresholds — qualquer contagem ACIMA destes valores falha o job.
+          BIBLE_TEXT_MAX_UNKNOWN_ABBREV: '1'        # esperamos exatamente 1 (smoke "xx 1")
+          BIBLE_TEXT_MAX_CHAPTER_UNAVAILABLE: '1'   # E2E gn 999 produz 1
+          BIBLE_TEXT_MAX_INVALID_PAYLOAD: '1'       # E2E invalid produz 1
+          BIBLE_TEXT_MAX_OTHER: '0'
         run: deno run --allow-read --allow-write --allow-env scripts/edge-bible-text-summary.ts
 
       - name: Upload edge reports
