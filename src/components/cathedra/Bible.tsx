@@ -26,6 +26,7 @@ import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
 import { BibleReader } from './BibleReader';
+import { VerseNoteSup } from './VerseNoteSup';
 import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '@/constants/language-config';
 
 import { MonthlyRecap } from './MonthlyRecap';
