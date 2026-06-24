@@ -61,3 +61,23 @@ test('404 chapter_unavailable: shape estrita + correlationId preservado', async 
   expect(typeof parsed.book_name).toBe('string');
   expect(parsed.chapter).toBe(999);
 });
+
+test('400 invalid_payload: shape estrita do BibleTextInvalidPayloadSchema + correlationId byte-idêntico', async () => {
+  // Contrato: payload inválido (abbrev vazio) usa BibleTextInvalidPayloadSchema
+  // — apenas `error` e `correlationId`, sem campos extras vazando do sucesso/erro de domínio.
+  const StrictInvalidPayload = (BibleTextInvalidPayloadSchema as unknown as z.ZodObject<z.ZodRawShape>).strict();
+  const cid = `e2e-shape-invalid-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const { status, json } = await callBibleText({ abbrev: '' }, cid);
+
+  expect([400, 422]).toContain(status);
+  const parsed = StrictInvalidPayload.parse(json);
+  expect(parsed.correlationId).toBe(cid);
+  expect(parsed.correlationId.length).toBe(cid.length);
+  expect(typeof parsed.error).toBe('string');
+  expect(parsed.error.length).toBeGreaterThan(0);
+
+  // Nenhum campo do sucesso/erro de domínio pode vazar no 400
+  for (const leak of ['verses', 'book', 'metadata', 'received_abbrev', 'canonical_abbr', 'bollsId', 'book_name', 'chapter', 'reason']) {
+    expect(json, `campo "${leak}" não deveria estar presente em invalid_payload`).not.toHaveProperty(leak);
+  }
+});
