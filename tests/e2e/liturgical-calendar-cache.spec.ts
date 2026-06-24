@@ -195,4 +195,90 @@ test.describe('Calendário litúrgico · cache em camadas', () => {
     const ttl = await page.getByTestId('litcal-cache-ttl').innerText();
     expect(ttl).toMatch(/\d+\s*(d|h|min)/);
   });
+
+  test('rede bloqueada: navegar entre meses já cacheados usa exclusivamente o IndexedDB', async ({ page }) => {
+    // Fase 1 — online: popular o IDB com 2 meses (atual e o seguinte).
+    const { calls } = await mockMonthEndpoint(page);
+    await gotoCalendar(page);
+    await waitForCalls(calls, 1);
+
+    // Avança 1 mês (nth(1) = próximo) → segunda chamada
+    const nextBtn = page.locator('.lg\\:col-span-2 button').nth(1);
+    await nextBtn.click();
+    await waitForCalls(calls, 2);
+    expect(calls.length).toBe(2);
+
+    // Volta ao mês original (ainda online, mas servido por RQ memory → sem nova chamada)
+    const prevBtn = page.locator('.lg\\:col-span-2 button').nth(0);
+    await prevBtn.click();
+    await page.waitForTimeout(400);
+    expect(calls.length).toBe(2);
+
+    // Snapshot: 2 entries devem existir no IndexedDB
+    const entriesBefore = await page.evaluate(async () => {
+      const req = indexedDB.open('cathedra_cache');
+      return await new Promise<number>((resolve, reject) => {
+        req.onsuccess = () => {
+          const tx = req.result.transaction('liturgical-calendar', 'readonly');
+          const all = tx.objectStore('liturgical-calendar').getAll();
+          all.onsuccess = () => resolve((all.result as unknown[]).length);
+          all.onerror = () => reject(all.error);
+        };
+        req.onerror = () => reject(req.error);
+      });
+    });
+    expect(entriesBefore).toBeGreaterThanOrEqual(2);
+
+    // Fase 2 — bloquear TODA a rede da edge function e recarregar.
+    await page.unroute('**/functions/v1/liturgical-calendar');
+    const blockedCalls: string[] = [];
+    await page.route('**/functions/v1/liturgical-calendar', async (route) => {
+      blockedCalls.push(route.request().url());
+      await route.abort('failed');
+    });
+
+    await page.reload();
+    await expect(page.getByTestId('liturgical-calendar-cache-panel')).toBeVisible({ timeout: 15_000 });
+
+    // O grid deve renderizar a partir do IndexedDB
+    const dayButtons = page.locator('.lg\\:col-span-2 .grid.grid-cols-7 button');
+    await expect(dayButtons.first()).toBeVisible({ timeout: 10_000 });
+    expect(await dayButtons.count()).toBeGreaterThan(20);
+
+    // Painel deve estar marcado como cache fresco (servido do IDB)
+    await expect(page.getByTestId('litcal-cache-source')).toHaveText(/Cache fresco/i, { timeout: 5_000 });
+
+    // Navegar entre os meses já cacheados — NENHUMA chamada deve sair (rede bloqueada).
+    const nextBtn2 = page.locator('.lg\\:col-span-2 button').nth(1);
+    const prevBtn2 = page.locator('.lg\\:col-span-2 button').nth(0);
+
+    await nextBtn2.click();
+    await page.waitForTimeout(800);
+    await expect(page.getByTestId('litcal-cache-source')).toHaveText(/Cache fresco/i);
+    expect(await dayButtons.count()).toBeGreaterThan(20);
+
+    await prevBtn2.click();
+    await page.waitForTimeout(800);
+    await expect(page.getByTestId('litcal-cache-source')).toHaveText(/Cache fresco/i);
+    expect(await dayButtons.count()).toBeGreaterThan(20);
+
+    // Asserção dura: zero requisições disparadas com a rede bloqueada.
+    expect(blockedCalls.length).toBe(0);
+
+    // E o IDB continua com as mesmas entries (não foi limpo / regravado por refetch).
+    const entriesAfter = await page.evaluate(async () => {
+      const req = indexedDB.open('cathedra_cache');
+      return await new Promise<number>((resolve, reject) => {
+        req.onsuccess = () => {
+          const tx = req.result.transaction('liturgical-calendar', 'readonly');
+          const all = tx.objectStore('liturgical-calendar').getAll();
+          all.onsuccess = () => resolve((all.result as unknown[]).length);
+          all.onerror = () => reject(all.error);
+        };
+        req.onerror = () => reject(req.error);
+      });
+    });
+    expect(entriesAfter).toBeGreaterThanOrEqual(entriesBefore);
+  });
 });
+
