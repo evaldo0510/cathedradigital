@@ -291,4 +291,132 @@ describe('BibleAbbrValidatePage', () => {
       expect.objectContaining({ description: '14' }),
     );
   });
+
+  it('toast de cópia é persistente (duration: Infinity) com closeButton para canonical_abbr e bollsId', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar canonical_abbr/i }));
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar bollsid/i }));
+    });
+
+    const canonicalCall = toastSuccess.mock.calls.find((c) => c[0] === 'canonical_abbr copiado');
+    const bollsCall = toastSuccess.mock.calls.find((c) => c[0] === 'bollsId copiado');
+    expect(canonicalCall?.[1]).toMatchObject({
+      duration: Infinity,
+      closeButton: true,
+      id: 'bible-abbr-copy:canonical_abbr',
+    });
+    expect(bollsCall?.[1]).toMatchObject({
+      duration: Infinity,
+      closeButton: true,
+      id: 'bible-abbr-copy:bollsId',
+    });
+  });
+
+  it('cliques rápidos no mesmo botão reutilizam o mesmo id de toast (sem duplicatas)', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const btn = screen.getByRole('button', { name: /copiar canonical_abbr/i });
+    await act(async () => { fireEvent.click(btn); });
+    await act(async () => { fireEvent.click(btn); });
+    await act(async () => { fireEvent.click(btn); });
+
+    const successCalls = toastSuccess.mock.calls.filter((c) => c[0] === 'canonical_abbr copiado');
+    expect(successCalls).toHaveLength(3);
+    // Mesmo id em todas as chamadas garante deduplicação no sonner.
+    for (const c of successCalls) {
+      expect(c[1]).toMatchObject({ id: 'bible-abbr-copy:canonical_abbr' });
+    }
+    // dismiss(id) é chamado antes de cada novo toast.
+    expect(toastDismiss).toHaveBeenCalledWith('bible-abbr-copy:canonical_abbr');
+    expect(
+      toastDismiss.mock.calls.filter((c) => c[0] === 'bible-abbr-copy:canonical_abbr').length,
+    ).toBeGreaterThanOrEqual(3);
+  });
+
+  it('fallback de cópia funciona quando navigator.clipboard está indisponível', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined, configurable: true, writable: true,
+    });
+    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(true);
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar canonical_abbr/i }));
+    });
+
+    expect(execSpy).toHaveBeenCalledWith('copy');
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'canonical_abbr copiado',
+      expect.objectContaining({ description: '2Cr', duration: Infinity }),
+    );
+    execSpy.mockRestore();
+  });
+
+  it('fallback de cópia: quando clipboard rejeita (permission denied) e execCommand sucede, copia mesmo assim', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'));
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(true);
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar bollsid/i }));
+    });
+
+    expect(writeText).toHaveBeenCalledWith('14');
+    expect(execSpy).toHaveBeenCalledWith('copy');
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'bollsId copiado',
+      expect.objectContaining({ description: '14' }),
+    );
+    expect(toastError).not.toHaveBeenCalled();
+    execSpy.mockRestore();
+  });
+
+  it('quando clipboard e execCommand falham, mostra toast de erro (sem persistir sucesso)', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined, configurable: true, writable: true,
+    });
+    const execSpy = vi.spyOn(document, 'execCommand').mockReturnValue(false);
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar canonical_abbr/i }));
+    });
+
+    expect(toastError).toHaveBeenCalledWith(
+      'Não foi possível copiar',
+      expect.objectContaining({ id: 'bible-abbr-copy:canonical_abbr' }),
+    );
+    expect(toastSuccess).not.toHaveBeenCalled();
+    execSpy.mockRestore();
+  });
 });
