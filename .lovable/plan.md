@@ -1,33 +1,72 @@
-I will execute a structural stabilization of the Bible component to recover its functional integrity and eliminate English terms, following the "CATHEDRA BIBLE RECOVERY PHASE" mission.
+# QA completa do módulo da Bíblia
 
-### 1. Diagnosis & Evidence Gathering
-- **Language Violations**: Identification of English book names (e.g., "Tobit", "Judith", "Wisdom", "Sirach") appearing in the UI due to legacy caches or incomplete mapping in the `bible-text` Edge Function.
-- **Content Issues**: Verification of "missing content" reports, specifically for books like Abdias (Obadiah) which was identified as having a local fallback.
-- **Duplication**: The `BOOK_NAME_MAP` and `BOOK_PT_MAP` in the Edge Function need to be synchronized with the frontend `BIBLE_DATA` to ensure a single source of truth.
+Objetivo: medir performance, validar acessibilidade das bolhas (popovers de cross-reference), rodar uma suíte E2E e consolidar tudo em um relatório PDF com evidências.
 
-### 2. Stabilization & Correction (Frontend)
-- **Hard-Coded Correction**: Refine the runtime scanner in `Bible.tsx` to include all missing Brazilian Portuguese (PT-BR) book mappings and common UI terms (e.g., "Chapter", "Verse").
-- **Cache Invalidation**: Force a global cache purge by bumping the `cacheSyncVersion` in `Bible.tsx` to match the Edge Function's versioning.
-- **Navigation Stabilizer**: Ensure `selectBook` and `selectChapter` handle compound names and route parameters consistently between desktop and mobile.
-- **Bible ↔ CIC Reset**: Verify the connection logic to prevent involuntary switching between modules.
+## 1. Performance — antes/depois
 
-### 3. Backend & Data API Stabilization (Edge Functions)
-- **`bible-text` Function**:
-    - Update `BOOK_NAME_MAP` to handle all abbreviations used by the frontend.
-    - Enhance `robustTranslate` with more exhaustive mapping.
-    - Fix the "Unexpected end of JSON input" error observed in logs when the external API fails.
-- **`bible-search` Function**:
-    - Replace the mock logic with real database querying or better-simulated results that respect the language allowlist.
+Script Playwright `tests/e2e/bible-performance.spec.ts` que:
 
-### 4. Validation & Quality Assurance
-- **Automated Sweep**: Run the built-in "Deep Scan" auditor in the Diagnostic Panel to navigate through problematic books (Deuterocanonical) and capture evidence.
-- **Mobile Navigation Test**: Use the preview to verify swipe navigation and chapter switching on small screens.
-- **Integrity Report**: Generate the CSV/JSON report as requested to prove zero occurrences of English.
+- Abre a rota da Bíblia em **cold cache** (contexto novo, sem IDB/SW) e em **warm cache** (segundo load).
+- Coleta via `page.evaluate`:
+  - `performance.timing` → TTFB, DOMContentLoaded, Load.
+  - `PerformanceObserver` → LCP, FCP, CLS.
+  - `performance.getEntriesByType('resource')` → nº de requisições, bytes totais, requisições para `functions/v1/bible-text`.
+- Mede tempo de render do primeiro capítulo (entre click no livro e o `[data-testid="bible-verse"]` ficar visível).
+- Salva JSON em `/tmp/bible-perf/{cold,warm}.json` e gera um diff antes/depois (cold = "antes", warm = "depois").
 
-### Technical Details
-- **Files Affected**:
-    - `src/components/cathedra/Bible.tsx` (Scanner, Cache, Diagnostic UI)
-    - `supabase/functions/bible-text/index.ts` (API Mapping, Fallbacks, ETags)
-    - `src/data/bible-books.ts` (Source of Truth for Book Names)
-    - `src/components/cathedra/BibleSearch.tsx` (Search UI Translation)
-- **Version Control**: Bump CACHE_VERSION to `v1.2.2`.
+## 2. Acessibilidade das bolhas
+
+Audita popovers de versículo (cross-reference / Nexus). Script `tests/e2e/bible-bubbles-a11y.spec.ts`:
+
+- Foca o gatilho via `Tab` e abre o popover com `Enter`/`Space`.
+- Verifica: `role="dialog"` ou `aria-haspopup`, `aria-expanded`, `aria-controls`, foco entra no popover, `Esc` fecha e devolve foco ao gatilho.
+- Roda `@axe-core/playwright` escopado ao popover aberto (`color-contrast`, `aria-*`, `button-name`).
+- Verifica tamanho mínimo do tap target (44×44) nos gatilhos.
+- Coleta cada falha com seletor + violação e screenshot do estado.
+
+## 3. Suíte E2E do módulo
+
+`tests/e2e/bible-module-suite.spec.ts` agrupando:
+
+- Render do livro/capítulo padrão (Gn 1) com nº esperado de versículos.
+- Navegação capítulo anterior/próximo (rota muda, conteúdo muda, sem regressão de cache).
+- Busca por referência (`Jo 3:16`) → versículo correto em foco.
+- Abertura de bolha em pelo menos um versículo com cross-ref e validação do conteúdo.
+- Captura screenshot por etapa em `/tmp/bible-e2e/`.
+
+Reutiliza o mock de `functions/v1/bible-text` quando offline para estabilidade.
+
+## 4. Relatório PDF
+
+Script Python `scripts/generate-bible-qa-report.py` que lê os JSONs/screenshots gerados nas etapas 1–3 e produz `/mnt/documents/bible-qa-report.pdf` com:
+
+- Capa + sumário executivo (passed/failed por suíte).
+- Seção 1: tabela de métricas antes/depois (cold vs warm) + delta %.
+- Seção 2: tabela de findings de a11y (severidade, regra, seletor) + screenshots.
+- Seção 3: validação de texto/versículos (contagem por livro amostrado) + status das bolhas.
+- Anexo: logs brutos (resumo) e lista de evidências.
+
+QA visual obrigatório do PDF (pdftoppm + inspeção página a página) antes de entregar.
+
+## 5. Execução e entrega
+
+Ordem de execução no sandbox:
+
+```text
+bunx playwright test tests/e2e/bible-performance.spec.ts
+bunx playwright test tests/e2e/bible-bubbles-a11y.spec.ts
+bunx playwright test tests/e2e/bible-module-suite.spec.ts
+python3 scripts/generate-bible-qa-report.py
+```
+
+Entrega final:
+- PDF em `/mnt/documents/bible-qa-report.pdf` (via `<presentation-artifact>`).
+- Resumo no chat: pass/fail por suíte + 3 principais findings.
+
+## Detalhes técnicos
+
+- Reaproveita helpers existentes (`mockMonthEndpoint` padrão da suíte litcal) adaptados para `bible-text`.
+- Usa `@axe-core/playwright` já presente em outras specs (`bottom-nav-a11y-axe.spec.ts`).
+- Geração do PDF com `reportlab` (Platypus) — sem Unicode sub/superscript.
+- Todas as evidências intermediárias ficam em `/tmp/bible-qa/`; só o PDF vai para `/mnt/documents`.
+- Não altera código de produção; apenas adiciona specs e o script de relatório.
