@@ -46,11 +46,14 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   // 2) Direct table read (now allowed by RLS public read policy)
   try {
     logCatechismDiag({ paragraph, step: 'official_query' });
-    const { data: officialData, error: officialError } = await supabase
+    // Use .limit(1) + array destructuring instead of .maybeSingle()
+    // to avoid spurious 406 responses from PostgREST when 0 rows match.
+    const { data: officialRows, error: officialError } = await supabase
       .from('catechism_official')
       .select('*')
       .eq('paragraph', paragraph)
-      .maybeSingle();
+      .limit(1);
+    const officialData = Array.isArray(officialRows) && officialRows.length > 0 ? officialRows[0] : null;
 
     if (officialError) {
       const classified = classifyCatechismError(officialError);
