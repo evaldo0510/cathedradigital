@@ -77,6 +77,12 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
   const [isClearingExpired, setIsClearingExpired] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [removingKey, setRemovingKey] = useState<string | null>(null);
+  const [confirmingRemoveKey, setConfirmingRemoveKey] = useState<string | null>(null);
+  const [confirmingClearExpired, setConfirmingClearExpired] = useState(false);
+  const [lastSummary, setLastSummary] = useState<
+    | { kind: 'remove' | 'clear-expired'; labels: string[]; at: number }
+    | null
+  >(null);
 
   useEffect(() => {
     let mounted = true;
