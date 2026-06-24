@@ -80,20 +80,23 @@ export async function prefetchEssentialContent() {
     return;
   }
 
-  // 1) Liturgia do dia
+  // 1) Liturgia do dia (respeita o guard `litcal_no_prefetch=1`)
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth() + 1;
-  
+
   const { cacheLiturgy } = await import('./offlineCache');
-  
-  try {
-    const { data } = await supabase.functions.invoke('liturgical-calendar', {
-      body: { action: 'readings', day, month }
-    });
-    if (data) await cacheLiturgy(today.toDateString(), data);
-  } catch (e) {
-    console.warn('Auto-sync failed for liturgy:', e);
+  const { isLiturgicalPrefetchDisabled } = await import('./litcalPrefetchGuard');
+
+  if (!isLiturgicalPrefetchDisabled()) {
+    try {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'readings', day, month }
+      });
+      if (data) await cacheLiturgy(today.toDateString(), data);
+    } catch (e) {
+      console.warn('Auto-sync failed for liturgy:', e);
+    }
   }
 
   // 2) Prefetch next Catechism paragraph if we have a current one

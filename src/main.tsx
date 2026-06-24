@@ -3,9 +3,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { prefetchCoreModules } from "./lib/prefetch";
+import { initLiturgicalPrefetchGuard } from "./lib/litcalPrefetchGuard";
 import { registerSW } from 'virtual:pwa-register';
 import { initSentry } from "./lib/sentry";
 
+initLiturgicalPrefetchGuard();
 initSentry();
 import { telemetry } from "./utils/navigation-telemetry";
 
