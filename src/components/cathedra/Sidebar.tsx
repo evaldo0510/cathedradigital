@@ -269,15 +269,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-1200 outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-300 outline-none h-auto min-h-[40px]
                                   ${isActive
-                                    ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-premium-none'
-                                    : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
+                                    ? 'bg-primary/10 dark:bg-white/10 text-primary shadow-premium-none'
+                                    : 'text-primary/75 dark:text-white/80 hover:bg-primary/5 dark:hover:bg-white/5 hover:text-primary'}`}
                               >
-                                  <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
+                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-90'}`}>
                                     {item.icon}
                                   </span>
-                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
+                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-95'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
                                     {cacheCount}
