@@ -90,6 +90,8 @@ const MagisteriumViewer: React.FC = () => {
     fetchLastRead();
   }, [getLastRead]);
 
+  useEffect(() => { setFailureCount(0); }, [id]);
+
   useEffect(() => {
     const fetchDoc = async () => {
       if (!id) return;
