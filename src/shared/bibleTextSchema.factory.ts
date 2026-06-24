@@ -68,6 +68,7 @@ export function buildBibleTextSchemas(z: any) {
   ]);
 
   return {
+    BibleTextInputSchema,
     BibleVerseSchema,
     BibleTextMetadataSchema,
     BibleTextSuccessSchema,
