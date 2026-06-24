@@ -813,6 +813,24 @@ export default function ContrastInspector() {
           </div>
         </div>
       )}
+
+      {auditOpen && (
+        <AuditPanel
+          audit={audit}
+          onRescan={runAudit}
+          onClose={() => setAuditOpen(false)}
+          onApplyFix={applyFix}
+          onHighlight={(v) => {
+            const el = v.ref.deref();
+            if (!el) return;
+            (el as HTMLElement).scrollIntoView({ block: 'center', behavior: 'smooth' });
+            const prev = (el as HTMLElement).style.outline;
+            (el as HTMLElement).style.outline = '2px solid rgb(168,85,247)';
+            setTimeout(() => { (el as HTMLElement).style.outline = prev; }, 1500);
+          }}
+        />
+      )}
     </>
+
   );
 }
