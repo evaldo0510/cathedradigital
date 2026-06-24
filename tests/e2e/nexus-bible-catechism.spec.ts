@@ -111,3 +111,105 @@ test.describe('Nexus: bolhas, dots e não-sobreposição', () => {
     await expect(page.locator('body')).toContainText(/1324/);
   });
 });
+
+/**
+ * Casos críticos: versículos com MÚLTIPLAS bolhas do Nexus.
+ * Validar que nenhuma bolha sobrepõe outra, nem o texto do versículo,
+ * nem o marcador numérico, nem o ícone de ação — em mobile, tablet e desktop.
+ */
+const MULTI_BUBBLE_VERSES = [
+  // Gênesis: criação, imagem de Deus, queda — ricos em CIC
+  { abbr: 'Gn', chapter: 1, verse: 1 },
+  { abbr: 'Gn', chapter: 1, verse: 26 },
+  { abbr: 'Gn', chapter: 1, verse: 27 },
+  { abbr: 'Gn', chapter: 2, verse: 7 },
+  { abbr: 'Gn', chapter: 2, verse: 24 },
+  { abbr: 'Gn', chapter: 3, verse: 15 },
+  // Mateus: Bem-aventuranças e Pai-Nosso
+  { abbr: 'Mt', chapter: 5, verse: 3 },
+  { abbr: 'Mt', chapter: 5, verse: 8 },
+  { abbr: 'Mt', chapter: 5, verse: 17 },
+  { abbr: 'Mt', chapter: 6, verse: 9 },
+  { abbr: 'Mt', chapter: 6, verse: 10 },
+  { abbr: 'Mt', chapter: 7, verse: 7 },
+  // João: Verbo, Eucaristia, Bom Pastor
+  { abbr: 'Jo', chapter: 1, verse: 1 },
+  { abbr: 'Jo', chapter: 1, verse: 14 },
+  { abbr: 'Jo', chapter: 3, verse: 16 },
+  { abbr: 'Jo', chapter: 6, verse: 35 },
+  { abbr: 'Jo', chapter: 6, verse: 53 },
+  { abbr: 'Jo', chapter: 6, verse: 54 },
+];
+
+test.describe('Nexus: múltiplas bolhas sem sobreposição', () => {
+  for (const vp of VIEWPORTS) {
+    test.describe(`viewport ${vp.name}`, () => {
+      test.use({ viewport: { width: vp.width, height: vp.height } });
+
+      for (const { abbr, chapter, verse } of MULTI_BUBBLE_VERSES) {
+        test(`${abbr} ${chapter}:${verse} — bolhas múltiplas não se sobrepõem`, async ({ page }) => {
+          await openChapter(page, abbr, chapter);
+
+          const container = page.locator(`[data-testid="nexus-bubbles-${verse}"]`);
+          // Skip silenciosamente se este versículo não tiver bolhas nesta build
+          if ((await container.count()) === 0) {
+            test.skip(true, `sem bolhas em ${abbr} ${chapter}:${verse}`);
+            return;
+          }
+          await expect(container).toBeVisible({ timeout: 10_000 });
+
+          const bubbleBoxes = await container.locator('button').evaluateAll((els) =>
+            els.map((e) => {
+              const r = e.getBoundingClientRect();
+              return { left: r.left, right: r.right, top: r.top, bottom: r.bottom };
+            }),
+          );
+
+          // 1) Bolhas entre si — nenhum par deve se sobrepor
+          for (let i = 0; i < bubbleBoxes.length; i++) {
+            for (let j = i + 1; j < bubbleBoxes.length; j++) {
+              const a = bubbleBoxes[i];
+              const b = bubbleBoxes[j];
+              const overlap = rectsOverlap(a as any, b as any);
+              expect(
+                overlap,
+                `bolha #${i} sobrepõe bolha #${j} em ${vp.name} ${abbr} ${chapter}:${verse}`,
+              ).toBe(false);
+            }
+          }
+
+          // 2) Bolhas vs. texto do versículo
+          const textBox = await page
+            .locator(`[data-testid="verse-text-${verse}"]`)
+            .boundingBox();
+          if (textBox) {
+            for (const bb of bubbleBoxes) {
+              expect(
+                rectsOverlap(textBox as any, bb as any),
+                `bolha sobrepõe texto em ${vp.name} ${abbr} ${chapter}:${verse}`,
+              ).toBe(false);
+            }
+          }
+
+          // 3) Bolhas vs. marcador numérico e ícones de ação (se existirem)
+          const markerSelectors = [
+            `[data-testid="verse-number-${verse}"]`,
+            `[data-testid="verse-actions-${verse}"]`,
+          ];
+          for (const sel of markerSelectors) {
+            const loc = page.locator(sel);
+            if ((await loc.count()) === 0) continue;
+            const mb = await loc.first().boundingBox();
+            if (!mb) continue;
+            for (const bb of bubbleBoxes) {
+              expect(
+                rectsOverlap(mb as any, bb as any),
+                `bolha sobrepõe ${sel} em ${vp.name} ${abbr} ${chapter}:${verse}`,
+              ).toBe(false);
+            }
+          }
+        });
+      }
+    });
+  }
+});
