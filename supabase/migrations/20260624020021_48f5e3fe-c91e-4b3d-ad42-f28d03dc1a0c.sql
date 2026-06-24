@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS nexus_high_contrast BOOLEAN NOT NULL DEFAULT false;

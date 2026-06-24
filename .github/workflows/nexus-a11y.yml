@@ -1,0 +1,57 @@
+name: Nexus a11y & contrast
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/e2e/nexus-**.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - '.github/workflows/nexus-a11y.yml'
+  push:
+    branches: [main]
+
+jobs:
+  nexus-a11y:
+    name: Nexus contrast / keyboard / visual diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build
+        run: bun run build
+
+      - name: Run Nexus a11y suite
+        env:
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/nexus-bible-catechism.spec.ts \
+            tests/e2e/nexus-keyboard.spec.ts \
+            tests/e2e/nexus-visual-diff.spec.ts \
+            --reporter=line,html
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-playwright-report
+          path: |
+            playwright-report
+            reports/nexus-visual-diff
+            reports/nexus-evidence
+          retention-days: 14
+          if-no-files-found: ignore

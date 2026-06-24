@@ -1995,6 +1995,7 @@ export type Database = {
           mercado_pago_subscription_id: string | null
           movimento_pastoral: string | null
           name: string
+          nexus_high_contrast: boolean
           notification_settings: Json | null
           paroquia: string | null
           preferred_reminder_time: string | null
@@ -2034,6 +2035,7 @@ export type Database = {
           mercado_pago_subscription_id?: string | null
           movimento_pastoral?: string | null
           name?: string
+          nexus_high_contrast?: boolean
           notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
@@ -2073,6 +2075,7 @@ export type Database = {
           mercado_pago_subscription_id?: string | null
           movimento_pastoral?: string | null
           name?: string
+          nexus_high_contrast?: boolean
           notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
