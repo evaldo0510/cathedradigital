@@ -148,7 +148,11 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
-async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string) {
+interface ReqCtx {
+  bolls?: { ok: boolean; ms: number };
+}
+
+async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string, ctx: ReqCtx) {
   const book = findBookByAbbr(abbrev);
   const bookId = book?.bollsId ?? BOLLS_MAP[abbrev];
   if (!bookId) {
@@ -159,12 +163,14 @@ async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId
   try {
     const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
     const upstreamMs = Date.now() - t0;
+    ctx.bolls = { ok: res.ok, ms: upstreamMs };
     if (!res.ok) {
       metric('bolls_fetch', { ok: false, status: res.status, abbrev, chapter, ms: upstreamMs });
       return null;
     }
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) {
+      ctx.bolls = { ok: false, ms: upstreamMs };
       metric('bolls_fetch', { ok: false, reason: 'empty', abbrev, chapter, ms: upstreamMs });
       return null;
     }
@@ -177,9 +183,35 @@ async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId
         : null,
     }));
   } catch (e) {
+    const upstreamMs = Date.now() - t0;
+    ctx.bolls = { ok: false, ms: upstreamMs };
     metric('bolls_fetch', { ok: false, reason: 'exception', abbrev, chapter, error: String((e as any)?.message || e) });
     return null;
   }
+}
+
+/** Insere um evento cru para a agregação horária. Fire-and-forget. */
+function recordEvent(fields: {
+  abbrev: string; chapter: number; cache: string; source: string | null;
+  status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
+}) {
+  const row = {
+    abbrev: fields.abbrev,
+    chapter: fields.chapter,
+    cache: fields.cache,
+    source: fields.source,
+    status_code: fields.status_code,
+    total_ms: fields.total_ms,
+    bolls_called: !!fields.ctx.bolls,
+    bolls_ok: fields.ctx.bolls?.ok ?? null,
+    bolls_ms: fields.ctx.bolls?.ms ?? null,
+    correlation_id: fields.correlation_id,
+  };
+  waitUntil(
+    supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {
+      if (error) console.warn('[bible-text] metric event insert failed:', error.message);
+    })
+  );
 }
 
 // =========================================================================
@@ -191,6 +223,7 @@ async function revalidate(
   correlationId: string,
   cacheVersion: number,
   ttlHours: number,
+  ctx: ReqCtx,
 ): Promise<{ data: any; source: string } | null> {
   const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
   const resolvedBook = findBookByAbbr(abbrev);
@@ -199,7 +232,7 @@ async function revalidate(
   let result = await fetchFromCathedraDb(abbrev, chapter);
   let source = 'Cathedra (Local)';
   if (!isSovereigntyEnabled || !result) {
-    const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId);
+    const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
     if (fallback) {
       result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
       source = 'BollsLife (Fallback)';
@@ -251,6 +284,7 @@ serve(async (req) => {
   let chapter: number | undefined;
   let client_cache_version: string | number | undefined;
   let warmOnly = false;
+  const ctx: ReqCtx = {};
 
   try {
     const raw = await req.json().catch(() => ({}));
@@ -267,7 +301,9 @@ serve(async (req) => {
         error: `Parâmetros inválidos: ${JSON.stringify(fieldErrors)}`,
         correlationId,
       });
-      metric('request_end', { correlationId, status: 400, reason: 'invalid_payload', ms: Date.now() - t0 });
+      const totalMs = Date.now() - t0;
+      metric('request_end', { correlationId, status: 400, reason: 'invalid_payload', ms: totalMs });
+      // Não registramos evento de métrica sem abbrev/chapter — alimentaria lixo no agregado por livro.
       return new Response(JSON.stringify(invalidBody), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
@@ -286,8 +322,10 @@ serve(async (req) => {
 
     // Modo warm: força revalidação e responde mínimo. Usado pelo script.
     if (warmOnly) {
-      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours);
-      metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: Date.now() - t0 });
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
+      const totalMs = Date.now() - t0;
+      metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
+      recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx });
       return new Response(JSON.stringify({ ok: !!result, cacheKey, tier, source: result?.source ?? null, correlationId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
       });
@@ -297,7 +335,9 @@ serve(async (req) => {
 
     // ---- FRESH ----
     if (lookup.state === 'fresh') {
-      metric('request_end', { correlationId, cache: 'HIT', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
+      const totalMs = Date.now() - t0;
+      metric('request_end', { correlationId, cache: 'HIT', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
+      recordEvent({ abbrev, chapter, cache: 'HIT', source: 'L2', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
       return new Response(JSON.stringify({
         ...lookup.content,
         metadata: { ...lookup.content.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: policy.ttlHours, cache_tier: tier },
@@ -318,9 +358,11 @@ serve(async (req) => {
     if (lookup.state === 'stale') {
       const swrCutoffS = policy.swrHours * 3600;
       if (lookup.ageS <= swrCutoffS + policy.ttlHours * 3600) {
-        // Sempre tenta SWR se conseguimos achar algum conteúdo — corta a percepção de lentidão.
-        metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
-        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours)
+        const totalMs = Date.now() - t0;
+        metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
+        recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+        const bgCtx: ReqCtx = {};
+        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx)
           .then((r) => metric('swr_revalidate', { correlationId, cacheKey, ok: !!r, source: r?.source ?? null })));
         return new Response(JSON.stringify({
           ...lookup.content,
@@ -340,9 +382,11 @@ serve(async (req) => {
     }
 
     // ---- MISS (ou stale fora da janela) → revalidar síncrono ----
-    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours);
+    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
     if (revalidated) {
-      metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: Date.now() - t0 });
+      const totalMs = Date.now() - t0;
+      metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: totalMs });
+      recordEvent({ abbrev, chapter, cache: 'MISS', source: revalidated.source, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
       return new Response(JSON.stringify({
         ...revalidated.data,
         metadata: { ...revalidated.data.metadata, shouldInvalidateL1, cache_tier: tier },
@@ -360,7 +404,9 @@ serve(async (req) => {
 
     // ---- Última defesa: stale antigo (qualquer idade) ----
     if (lookup.state === 'stale') {
-      metric('request_end', { correlationId, cache: 'STALE_LAST_RESORT', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
+      const totalMs = Date.now() - t0;
+      metric('request_end', { correlationId, cache: 'STALE_LAST_RESORT', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
+      recordEvent({ abbrev, chapter, cache: 'STALE_LAST_RESORT', source: 'L2-LAST-RESORT', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
       return new Response(JSON.stringify({
         ...lookup.content,
         metadata: { ...(lookup.content.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true, age_s: lookup.ageS },
@@ -383,7 +429,9 @@ serve(async (req) => {
       chapter,
       correlationId,
     });
-    metric('request_end', { correlationId, status: 404, tier, cacheKey, ms: Date.now() - t0 });
+    const totalMs = Date.now() - t0;
+    metric('request_end', { correlationId, status: 404, tier, cacheKey, ms: totalMs });
+    recordEvent({ abbrev, chapter, cache: 'MISS', source: null, status_code: 404, total_ms: totalMs, correlation_id: correlationId, ctx });
     return new Response(JSON.stringify(errorBody), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },

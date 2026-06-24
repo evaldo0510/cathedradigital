@@ -666,6 +666,45 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_cache_alerts: {
+        Row: {
+          abbrev: string | null
+          bucket_start: string | null
+          created_at: string
+          details: Json
+          id: string
+          kind: string
+          message: string
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+        }
+        Insert: {
+          abbrev?: string | null
+          bucket_start?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          kind: string
+          message: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity: string
+        }
+        Update: {
+          abbrev?: string | null
+          bucket_start?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          kind?: string
+          message?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+        }
+        Relationships: []
+      }
       bible_cache_l2: {
         Row: {
           cache_key: string
@@ -720,6 +759,102 @@ export type Database = {
           last_purged_at?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      bible_cache_metric_events: {
+        Row: {
+          abbrev: string
+          bolls_called: boolean
+          bolls_ms: number | null
+          bolls_ok: boolean | null
+          cache: string
+          chapter: number
+          correlation_id: string | null
+          created_at: string
+          id: number
+          source: string | null
+          status_code: number
+          total_ms: number
+        }
+        Insert: {
+          abbrev: string
+          bolls_called?: boolean
+          bolls_ms?: number | null
+          bolls_ok?: boolean | null
+          cache: string
+          chapter: number
+          correlation_id?: string | null
+          created_at?: string
+          id?: number
+          source?: string | null
+          status_code?: number
+          total_ms: number
+        }
+        Update: {
+          abbrev?: string
+          bolls_called?: boolean
+          bolls_ms?: number | null
+          bolls_ok?: boolean | null
+          cache?: string
+          chapter?: number
+          correlation_id?: string | null
+          created_at?: string
+          id?: number
+          source?: string | null
+          status_code?: number
+          total_ms?: number
+        }
+        Relationships: []
+      }
+      bible_cache_metrics: {
+        Row: {
+          abbrev: string
+          bolls_calls: number
+          bolls_failures: number
+          bolls_sum_ms: number
+          bucket_start: string
+          errors: number
+          hits: number
+          max_ms: number
+          misses: number
+          p95_ms: number
+          stale: number
+          sum_ms: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          abbrev: string
+          bolls_calls?: number
+          bolls_failures?: number
+          bolls_sum_ms?: number
+          bucket_start: string
+          errors?: number
+          hits?: number
+          max_ms?: number
+          misses?: number
+          p95_ms?: number
+          stale?: number
+          sum_ms?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          abbrev?: string
+          bolls_calls?: number
+          bolls_failures?: number
+          bolls_sum_ms?: number
+          bucket_start?: string
+          errors?: number
+          hits?: number
+          max_ms?: number
+          misses?: number
+          p95_ms?: number
+          stale?: number
+          sum_ms?: number
+          total?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3992,6 +4127,10 @@ export type Database = {
       }
     }
     Functions: {
+      aggregate_bible_cache_metrics: {
+        Args: { p_since?: string }
+        Returns: number
+      }
       audit_security_definer_privileges: {
         Args: never
         Returns: {
