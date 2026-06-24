@@ -16,6 +16,9 @@ import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import BibleVersePopover from './BibleVersePopover';
+import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
+
 
 
 interface Tag {
@@ -58,7 +61,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
-  
+  const [debug, setDebug] = useState<NexusDebugInfo>({});
+
   // Navigation stack for context-to-context breadcrumbs
   const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
 
@@ -66,12 +70,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
+    const correlationId = `nexus-${targetTag.slug || targetTag.id}-${Date.now()}`;
     setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
     setContent([]);
     setLogosInsight(null);
-    
+    setDebug({ correlationId, startedAt: startTime, request: { tag: targetTag, profileId } });
+
     try {
       const uniqueResults = await fetchNexusTagContent(targetTag);
       setContent(uniqueResults);
@@ -86,15 +92,25 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
       }
 
-      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
+      const endedAt = performance.now();
+      setMetrics(prev => ({ ...prev, endTime: endedAt, source: 'both' }));
+      setDebug(prev => ({
+        ...prev,
+        endedAt,
+        source: 'fetchNexusTagContent',
+        response: { count: uniqueResults.length, sample: uniqueResults.slice(0, 3) },
+      }));
       setStatus('success');
     } catch (e: any) {
+      const endedAt = performance.now();
       console.error(`[Nexus Diagnostic] Error fetching ${targetTag.label}:`, e);
       setErrorDetails(e.message || 'Erro desconhecido');
-      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
+      setMetrics(prev => ({ ...prev, endTime: endedAt }));
+      setDebug(prev => ({ ...prev, endedAt, error: String(e?.message || e), response: null }));
       setStatus('error');
     }
   };
+
 
   const handlePushTag = (newTag: Tag) => {
     setNavHistory(prev => [...prev, newTag]);
@@ -252,6 +268,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             <p className="text-premium-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
             <p className="text-premium-xs text-muted-foreground italic">{errorDetails}</p>
             <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-spacing-xl rounded-premium-full text-premium-xs uppercase font-black tracking-widest">Tentar Novamente</Button>
+            <NexusDebugPanel info={debug} />
           </div>
         ) : (
 
@@ -314,25 +331,40 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                               ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
                               : isJourney ? `/jornadas/${c.id}` : null;
 
+                            const bibleAbbr: string | undefined = isBible ? c.metadata?.book : undefined;
+                            const bibleChapter: number | undefined = isBible ? Number(c.metadata?.chapter) : undefined;
+                            const bibleVerse: number | undefined = isBible && c.metadata?.verse ? Number(c.metadata.verse) : undefined;
+                            const canPopover = isBible && !!bibleAbbr && Number.isFinite(bibleChapter);
+
                             return (
-                              <motion.div 
-                                key={c.id || i} 
+                              <motion.div
+                                key={c.id || i}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 className="space-y-spacing-2xs group/content p-spacing-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
-                                onClick={() => link && navigate(link)}
+                                onClick={() => !canPopover && link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-spacing-sm group-hover/content:text-foreground transition-colors">
                                   {c.content_text}
                                 </p>
                                 <div className="flex flex-col gap-spacing-xs">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
-                                      {reference}
-                                      {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
-                                    </span>
+                                  <div className="flex items-center justify-between" onClick={(e) => canPopover && e.stopPropagation()}>
+                                    {canPopover ? (
+                                      <BibleVersePopover
+                                        abbr={bibleAbbr!}
+                                        chapter={bibleChapter!}
+                                        verse={bibleVerse}
+                                        label={reference}
+                                      />
+                                    ) : (
+                                      <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
+                                        {reference}
+                                        {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
+                                      </span>
+                                    )}
                                   </div>
+
                                   
                                   {c.metadata?.tags && c.metadata.tags.length > 0 && (
                                     <div className="flex flex-wrap gap-spacing-2xs mt-spacing-2xs">
@@ -414,6 +446,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   >
                     Navegação A-Z
                   </Button>
+                  <NexusDebugPanel info={debug} />
                 </div>
               )}
             </>

@@ -25,12 +25,26 @@ async function sha256(text: string) {
 async function getCacheConfig() {
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
-    return { 
-      enabled: data?.is_enabled || false, 
-      version: data?.metadata?.version || 1 
+    return {
+      enabled: data?.is_enabled || false,
+      version: data?.metadata?.version || 1,
     };
   } catch { return { enabled: true, version: 1 }; }
 }
+
+/** TTL (em horas) lido de app_feature_flags.bible_cache_ttl_hours.metadata.hours — default 168h (7d). */
+async function getCacheTtlHours(): Promise<number> {
+  try {
+    const { data } = await supabase
+      .from('app_feature_flags')
+      .select('metadata')
+      .eq('feature_key', 'bible_cache_ttl_hours')
+      .maybeSingle();
+    const h = Number(data?.metadata?.hours);
+    return Number.isFinite(h) && h > 0 && h <= 24 * 90 ? h : 168;
+  } catch { return 168; }
+}
+
 
 async function getFeatureFlag(key: string): Promise<boolean> {
   try {
@@ -71,19 +85,20 @@ async function getCacheL2Stale(key: string) {
   } catch { return null; }
 }
 
-async function setCacheL2(key: string, content: any, hash: string, version: number) {
+async function setCacheL2(key: string, content: any, hash: string, version: number, ttlHours: number) {
   try {
     const expireDate = new Date();
-    expireDate.setHours(expireDate.getHours() + 168); // 7 dias
+    expireDate.setHours(expireDate.getHours() + ttlHours);
     await supabase.from('bible_cache_l2').upsert({
       cache_key: key,
       content,
       hash,
       version,
-      expires_at: expireDate.toISOString()
+      expires_at: expireDate.toISOString(),
     });
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
+
 
 async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   try {
@@ -155,16 +170,17 @@ serve(async (req) => {
     console.info('[bible-text] start', { correlationId, abbrev, chapter });
 
     const cacheConfig = await getCacheConfig();
+    const ttlHours = await getCacheTtlHours();
     const cacheKey = `${abbrev}:${chapter}`;
     const shouldInvalidateL1 = client_cache_version !== cacheConfig.version;
 
     const cached = await getCacheL2(cacheKey, cacheConfig.version);
     if (cached) {
-      console.info('[bible-text] L2 hit', { correlationId, cacheKey, ms: Date.now() - t0 });
+      console.info('[bible-text] L2 hit', { correlationId, cacheKey, ttlHours, ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...cached,
-        metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+        metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: ttlHours }
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT' } });
     }
 
     const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
@@ -184,14 +200,15 @@ serve(async (req) => {
       const contentHash = await sha256(fullText);
       const responseData = {
         book: result.bookName, chapter, verses: result.verses,
-        metadata: { source, cache_version: CACHE_BASE_VERSION, logic_version: cacheConfig.version, correlationId, contentHash }
+        metadata: { source, cache_version: CACHE_BASE_VERSION, logic_version: cacheConfig.version, correlationId, contentHash, ttl_hours: ttlHours }
       };
-      await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version);
-      console.info('[bible-text] ok', { correlationId, source, verses: result.verses.length, ms: Date.now() - t0 });
+      await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version, ttlHours);
+      console.info('[bible-text] ok', { correlationId, source, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS' }
       });
     }
+
 
     const stale = await getCacheL2Stale(cacheKey);
     if (stale) {
