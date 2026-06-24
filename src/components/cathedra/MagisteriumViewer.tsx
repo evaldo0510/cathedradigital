@@ -92,11 +92,17 @@ const MagisteriumViewer: React.FC = () => {
 
   useEffect(() => { setFailureCount(0); }, [id]);
 
+  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
+  const lastFetchKey = useRef<string | null>(null);
   useEffect(() => {
     const fetchDoc = async () => {
       if (!id) return;
+      const key = `${id}::${retryNonce}`;
+      if (lastFetchKey.current === key) return;
+      lastFetchKey.current = key;
       setLoading(true);
       setError(null);
+
 
       const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       const url = MAGISTERIUM_URLS[id];
