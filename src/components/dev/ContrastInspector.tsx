@@ -69,8 +69,49 @@ function rgbaString({ r, g, b, a }: RGBA) {
   return a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
 }
 
-function rateRatio(r: number, fontSize: number, fontWeight: number) {
-  const isLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+type WcagLevel = 'AA' | 'AAA';
+type LargeMode = 'auto' | 'normal' | 'large';
+
+export type InspectorSettings = {
+  level: WcagLevel;
+  largeMode: LargeMode;
+  /** Persisted preference, mirrored into the exported JSON for the spec to read. */
+  maxNodesPerSelector: number;
+};
+
+const DEFAULT_SETTINGS: InspectorSettings = {
+  level: 'AA',
+  largeMode: 'auto',
+  maxNodesPerSelector: 20,
+};
+
+const SETTINGS_KEY = 'cathedra:contrast-inspector:settings';
+
+function readSettings(): InspectorSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    const parsed = JSON.parse(raw);
+    return {
+      level: parsed.level === 'AAA' ? 'AAA' : 'AA',
+      largeMode: parsed.largeMode === 'normal' || parsed.largeMode === 'large' ? parsed.largeMode : 'auto',
+      maxNodesPerSelector:
+        Number.isFinite(parsed.maxNodesPerSelector) && parsed.maxNodesPerSelector > 0
+          ? Math.min(200, Math.floor(parsed.maxNodesPerSelector))
+          : DEFAULT_SETTINGS.maxNodesPerSelector,
+    };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
+function writeSettings(s: InspectorSettings) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+}
+
+function rateRatio(r: number, fontSize: number, fontWeight: number, settings: InspectorSettings) {
+  const autoLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+  const isLarge = settings.largeMode === 'large' ? true : settings.largeMode === 'normal' ? false : autoLarge;
   const aaMin = isLarge ? 3 : 4.5;
   const aaaMin = isLarge ? 4.5 : 7;
   return {
@@ -79,17 +120,19 @@ function rateRatio(r: number, fontSize: number, fontWeight: number) {
     aaa: r >= aaaMin,
     aaMin,
     aaaMin,
+    required: settings.level === 'AAA' ? aaaMin : aaMin,
+    passes: r >= (settings.level === 'AAA' ? aaaMin : aaMin),
   };
 }
 
-function inspectElement(el: Element) {
+function inspectElement(el: Element, settings: InspectorSettings) {
   const cs = getComputedStyle(el);
   const fg = parseColor(cs.color) ?? { r: 0, g: 0, b: 0, a: 1 };
   const bg = effectiveBackground(el);
   const ratio = contrastRatio(fg, bg);
   const fontSize = parseFloat(cs.fontSize) || 16;
   const fontWeight = parseInt(cs.fontWeight, 10) || 400;
-  const rating = rateRatio(ratio, fontSize, fontWeight);
+  const rating = rateRatio(ratio, fontSize, fontWeight, settings);
   return {
     tag: el.tagName.toLowerCase(),
     classes: tailwindClassesOf(el),
@@ -103,6 +146,7 @@ function inspectElement(el: Element) {
 }
 
 type Inspection = ReturnType<typeof inspectElement>;
+
 
 function exportElement(el: Element) {
   const info = inspectElement(el);
