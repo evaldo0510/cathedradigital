@@ -1390,21 +1390,21 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </button>
                 <button 
                   onClick={() => setShowKnowledgePanel(true)}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                   title="Auditoria Estratégica"
                 >
                   <Icons.Activity className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => navigate('/bible-recovery')}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                   title="Recovery Bíblia"
                 >
                   <Icons.Stethoscope className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => setViewMode('notes')}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                 >
                   <Icons.List className="w-6 h-6" />
                 </button>
@@ -1549,8 +1549,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
             )}>
 
-              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} className="p-2 text-primary/40 active:text-secondary">
-                <Icons.ChevronLeft className="w-6 h-6" />
+              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+                <Icons.ChevronLeft className="w-6 h-6" aria-hidden="true" />
               </button>
               <div className="text-center">
                 <h2 className="text-[11px] font-black uppercase tracking-widest text-primary/80">{selectedBook.name} {selectedChapter}</h2>
@@ -1596,7 +1596,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <Icons.Info className="w-4 h-4 text-secondary/40" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Contexto do Livro</span>
                     </div>
                     <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
                       {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
@@ -1654,9 +1654,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
-                                className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
-                                title="Versículo com citação do Catecismo (CIC)"
+                                role="img"
                                 aria-label="Versículo com citação do Catecismo"
+                                title="Versículo com citação do Catecismo (CIC)"
+                                className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
                               />
                             )}
                             {hasNote && (
@@ -1699,9 +1700,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   e.stopPropagation();
                                   handleOpenAnnotation(v);
                                 }}
-                                className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                                aria-label={`Anotar versículo ${v.number}`}
+                                className="absolute -right-8 top-1 p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
                               >
-                                <Icons.PenLine className="w-3.5 h-3.5" />
+                                <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
                             </p>
 
@@ -1776,7 +1778,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                         e.stopPropagation();
                                         navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
                                       }}
-                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/60 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/80 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
                                     >
                                       {b} {c}:{vNum}
                                     </button>
@@ -1937,7 +1939,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       {expandedConnection.label}
                     </h3>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/60">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
                     {expandedConnection.theological_theme || 'Conexão Teológica'}
                   </span>
                 </div>

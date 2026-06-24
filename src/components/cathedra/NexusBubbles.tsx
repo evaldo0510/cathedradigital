@@ -207,19 +207,24 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           <nav className="flex items-center gap-spacing-xs overflow-x-auto whitespace-nowrap scrollbar-none pb-spacing-md border-b border-border/5">
             <button 
               onClick={() => handlePopTag(0)}
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-spacing-2xs group"
+              aria-label="Voltar à raiz do Nexus"
+              data-bubble-nav="breadcrumb"
+              className="min-h-11 min-w-11 px-spacing-sm text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center justify-center gap-spacing-2xs group"
             >
-              <Icons.Logo className="w-spacing-sm h-spacing-sm opacity-20 group-hover:opacity-100 transition-opacity" />
+              <Icons.Logo className="w-spacing-sm h-spacing-sm opacity-20 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
               Nexus
             </button>
             
             {navHistory.map((hTag, idx) => (
               <React.Fragment key={`${hTag.id}-${idx}`}>
-                <Icons.ChevronRight className="w-spacing-xs h-spacing-xs text-muted-foreground/60 flex-shrink-0" />
+                <Icons.ChevronRight className="w-spacing-xs h-spacing-xs text-muted-foreground/60 flex-shrink-0" aria-hidden="true" />
                 <button 
                   onClick={() => handlePopTag(idx)}
                   disabled={idx === navHistory.length - 1}
-                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-spacing-sm py-spacing-2xs rounded-premium-full border transition-all ${
+                  aria-label={`Ir para ${hTag.label}${idx === navHistory.length - 1 ? ' (atual)' : ''}`}
+                  aria-current={idx === navHistory.length - 1 ? 'page' : undefined}
+                  data-bubble-nav="breadcrumb"
+                  className={`min-h-11 min-w-11 text-[9px] font-black uppercase tracking-[0.3em] px-spacing-sm py-spacing-2xs rounded-premium-full border transition-all flex items-center justify-center ${
                     idx === navHistory.length - 1 
                       ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-premium-md' 
                       : 'text-muted-foreground/60 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
@@ -233,9 +238,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             {navHistory.length > 1 && (
               <button 
                 onClick={() => handlePopTag(navHistory.length - 2)}
-                className="ml-auto text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 hover:text-secondary flex items-center gap-spacing-2xs pl-spacing-md"
+                aria-label="Voltar um nível"
+                data-bubble-nav="breadcrumb"
+                className="ml-auto min-h-11 min-w-11 text-[9px] font-black uppercase tracking-[0.2em] text-secondary/80 hover:text-secondary flex items-center justify-center gap-spacing-2xs pl-spacing-md"
               >
-                <Icons.ArrowDown className="w-spacing-sm h-spacing-sm rotate-90" /> Voltar
+                <Icons.ArrowDown className="w-spacing-sm h-spacing-sm rotate-90" aria-hidden="true" /> Voltar
               </button>
             )}
           </nav>

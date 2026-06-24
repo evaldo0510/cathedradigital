@@ -47,7 +47,7 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
             className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Bíblia • Continuar Lendo</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-secondary/80">Bíblia • Continuar Lendo</span>
               <div className="flex items-center gap-1.5">
                  {lastRead.timestamp && (
                    <span className="text-[8px] text-primary/30 font-bold uppercase">{new Date(lastRead.timestamp).toLocaleDateString()}</span>
