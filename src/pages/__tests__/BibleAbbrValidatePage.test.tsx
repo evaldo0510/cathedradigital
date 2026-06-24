@@ -370,7 +370,7 @@ describe('BibleAbbrValidatePage', () => {
       'canonical_abbr copiado',
       expect.objectContaining({ description: '2Cr', duration: Infinity }),
     );
-    execSpy.mockRestore();
+    delete (document as any).execCommand;
   });
 
   it('fallback de cópia: quando clipboard rejeita (permission denied) e execCommand sucede, copia mesmo assim', async () => {
@@ -395,7 +395,7 @@ describe('BibleAbbrValidatePage', () => {
       expect.objectContaining({ description: '14' }),
     );
     expect(toastError).not.toHaveBeenCalled();
-    execSpy.mockRestore();
+    delete (document as any).execCommand;
   });
 
   it('quando clipboard e execCommand falham, mostra toast de erro (sem persistir sucesso)', async () => {
@@ -417,6 +417,6 @@ describe('BibleAbbrValidatePage', () => {
       expect.objectContaining({ id: 'bible-abbr-copy:canonical_abbr' }),
     );
     expect(toastSuccess).not.toHaveBeenCalled();
-    execSpy.mockRestore();
+    delete (document as any).execCommand;
   });
 });
