@@ -381,17 +381,41 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
                   >
                     {formatRemainingMs(remaining)}
                   </span>
-                  <button
-                    type="button"
-                    data-testid={`litcal-cache-entry-remove-${e.year}-${String(e.month).padStart(2, '0')}`}
-                    disabled={isRemoving}
-                    aria-busy={isRemoving}
-                    aria-label={`Remover ${MONTH_NAMES_SHORT[e.month - 1]}/${e.year} do cache`}
-                    onClick={() => handleRemoveOne(e)}
-                    className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isRemoving ? '…' : 'Remover'}
-                  </button>
+                  {confirmingRemoveKey === e.key ? (
+                    <span
+                      data-testid={`litcal-cache-entry-confirm-${e.year}-${String(e.month).padStart(2, '0')}`}
+                      className="flex items-center gap-spacing-3xs"
+                    >
+                      <button
+                        type="button"
+                        data-testid={`litcal-cache-entry-confirm-yes-${e.year}-${String(e.month).padStart(2, '0')}`}
+                        onClick={() => handleRemoveOne(e)}
+                        className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                      >
+                        Confirmar
+                      </button>
+                      <button
+                        type="button"
+                        data-testid={`litcal-cache-entry-confirm-no-${e.year}-${String(e.month).padStart(2, '0')}`}
+                        onClick={() => setConfirmingRemoveKey(null)}
+                        className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border text-muted-foreground hover:bg-muted transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      data-testid={`litcal-cache-entry-remove-${e.year}-${String(e.month).padStart(2, '0')}`}
+                      disabled={isRemoving}
+                      aria-busy={isRemoving}
+                      aria-label={`Remover ${entryLabel(e)} do cache`}
+                      onClick={() => setConfirmingRemoveKey(e.key)}
+                      className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isRemoving ? '…' : 'Remover'}
+                    </button>
+                  )}
                 </li>
               );
             })}
