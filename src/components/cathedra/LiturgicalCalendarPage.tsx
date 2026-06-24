@@ -357,6 +357,24 @@ const LiturgicalCalendarPage: React.FC = () => {
             </Button>
           </div>
 
+          {/* Refresh row */}
+          <div className="flex justify-end mb-spacing-sm">
+            <Button
+              data-testid="litcal-refresh"
+              disabled={isRefreshing || isFetchingApi}
+              onClick={async () => {
+                setIsRefreshing(true);
+                try { await refreshMonth(); } finally { setIsRefreshing(false); }
+              }}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60"
+              aria-label="Atualizar calendário"
+            >
+              <Icons.ArrowDown className={`w-spacing-xs h-spacing-xs rotate-180 ${isRefreshing || isFetchingApi ? 'animate-spin' : ''}`} />
+              Atualizar calendário
+            </Button>
+          </div>
+
+
           {/* Loading indicator */}
           {isLoadingApi && (
             <div className="flex justify-center mb-spacing-sm">
