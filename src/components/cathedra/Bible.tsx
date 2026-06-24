@@ -1390,21 +1390,21 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </button>
                 <button 
                   onClick={() => setShowKnowledgePanel(true)}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                   title="Auditoria Estratégica"
                 >
                   <Icons.Activity className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => navigate('/bible-recovery')}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                   title="Recovery Bíblia"
                 >
                   <Icons.Stethoscope className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => setViewMode('notes')}
-                  className="p-2 text-secondary/60 active:scale-95 transition-transform"
+                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
                 >
                   <Icons.List className="w-6 h-6" />
                 </button>
@@ -1596,7 +1596,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <Icons.Info className="w-4 h-4 text-secondary/40" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Contexto do Livro</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Contexto do Livro</span>
                     </div>
                     <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
                       {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
@@ -1778,7 +1778,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                         e.stopPropagation();
                                         navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
                                       }}
-                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/60 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/80 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
                                     >
                                       {b} {c}:{vNum}
                                     </button>
@@ -1939,7 +1939,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       {expandedConnection.label}
                     </h3>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/60">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
                     {expandedConnection.theological_theme || 'Conexão Teológica'}
                   </span>
                 </div>

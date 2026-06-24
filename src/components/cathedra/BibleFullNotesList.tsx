@@ -68,7 +68,7 @@ const BibleFullNotesList: React.FC<BibleFullNotesListProps> = ({
             {Object.values(groupedNotes).map((group: any) => (
               <section key={`${group.bookAbbr}-${group.chapter}`} className="space-y-4">
                 <header className="flex items-center gap-4">
-                  <h2 className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
+                  <h2 className="text-[10px] font-black uppercase tracking-widest text-secondary/80">
                     {group.bookName} {group.chapter}
                   </h2>
                   <div className="flex-1 h-px bg-primary/5" />

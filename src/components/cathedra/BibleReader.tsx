@@ -105,7 +105,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         {chapter === 1 && (book.context || book.author || book.themes) && (
           <div className="mt-8 p-6 rounded-3xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
              <div className="flex items-center justify-between">
-               <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Introdução ao Livro</span>
+               <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Introdução ao Livro</span>
                {book.category && <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">{book.category}</span>}
              </div>
              

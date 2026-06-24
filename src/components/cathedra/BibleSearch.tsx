@@ -165,7 +165,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
 
                   <div className="flex items-center gap-2">
                     {/* Garantindo que o nome do livro seja exibido no vernáculo correto */}
-                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary/60">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">
                       {result.bookName
                         .replace(/\bTobit\b/g, 'Tobias')
                         .replace(/\bJudith\b/g, 'Judite')
