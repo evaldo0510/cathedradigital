@@ -95,13 +95,8 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
   // Stable per-label toast id prevents duplicate persistent toasts on rapid clicks.
   const toastId = `bible-abbr-copy:${label}`;
   const valueStr = value === null || value === undefined ? '' : String(value);
-  const ariaLabel = copying
-    ? `Copiando ${label}`
-    : copied
-      ? `${label} copiado: ${valueStr}`
-      : valueStr
-        ? `Copiar ${label} (${valueStr})`
-        : `Copiar ${label}`;
+  const ariaLabel = valueStr ? `Copiar ${label} (${valueStr})` : `Copiar ${label}`;
+
   return (
     <>
       <Button
