@@ -83,7 +83,7 @@ async function getCacheL2Stale(key: string) {
       .from('bible_cache_l2')
       .select('content')
       .eq('cache_key', key)
-      .order('updated_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
     return data?.content;
