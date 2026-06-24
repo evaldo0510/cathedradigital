@@ -175,16 +175,37 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
     }
   };
 
+  const entryLabel = (e: { month: number; year: number }) =>
+    `${MONTH_NAMES_SHORT[e.month - 1]}/${e.year}`;
+
+  const keyToLabel = (key: string): string => {
+    const found = entries.find((e) => e.key === key);
+    if (found) return entryLabel(found);
+    const m = /:(\d{4})-(\d{2})$/.exec(key);
+    return m ? `${MONTH_NAMES_SHORT[Number(m[2]) - 1]}/${m[1]}` : key;
+  };
+
   const handleClearExpired = async () => {
+    // Snapshot dos vencidos *antes* de apagar para alimentar o resumo.
+    const expiredEntries = entries.filter((e) => e.isStale);
+    const expiredLabels = expiredEntries.map(entryLabel);
     setIsClearingExpired(true);
+    setConfirmingClearExpired(false);
     const toastId = toast.loading('Removendo meses vencidos…');
     try {
       const removed = await clearExpiredLiturgicalCalendarEntries();
       removed.forEach((k) => resetLiturgicalCacheStatsForKey(k));
+      const removedLabels = removed.map(keyToLabel);
+      // Prefere a lista vinda do backend; cai no snapshot caso vazia.
+      const finalLabels = removedLabels.length > 0 ? removedLabels : expiredLabels;
       if (removed.length === 0) {
         toast.info('Nenhum mês vencido para remover.', { id: toastId });
       } else {
-        toast.success(`${removed.length} mês(es) vencidos removidos.`, { id: toastId });
+        toast.success(`${removed.length} mês(es) vencidos removidos.`, {
+          id: toastId,
+          description: finalLabels.join(' · '),
+        });
+        setLastSummary({ kind: 'clear-expired', labels: finalLabels, at: Date.now() });
       }
     } catch (err) {
       console.error('Failed to clear expired liturgical entries:', err);
@@ -213,12 +234,17 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
 
   const handleRemoveOne = async (entry: EntryRow) => {
     setRemovingKey(entry.key);
-    const label = `${MONTH_NAMES_SHORT[entry.month - 1]}/${entry.year}`;
+    setConfirmingRemoveKey(null);
+    const label = entryLabel(entry);
     const toastId = toast.loading(`Removendo ${label}…`);
     try {
       await deleteLiturgicalCalendarEntry(entry.key);
       resetLiturgicalCacheStatsForKey(entry.key);
-      toast.success(`${label} removido do cache.`, { id: toastId });
+      toast.success(`${label} removido do cache.`, {
+        id: toastId,
+        description: `1 entrada apagada do IndexedDB`,
+      });
+      setLastSummary({ kind: 'remove', labels: [label], at: Date.now() });
     } catch (err) {
       console.error('Failed to delete liturgical entry:', err);
       toast.error(`Não foi possível remover ${label}.`, { id: toastId });
@@ -226,6 +252,7 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
       setRemovingKey(null);
     }
   };
+
 
   return (
     <div
