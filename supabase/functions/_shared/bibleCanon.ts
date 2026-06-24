@@ -132,13 +132,26 @@ const BY_ABBR_LOWER: Record<string, BibleBook> = Object.fromEntries(
   Object.entries(BY_ABBR).map(([k, v]) => [k.toLowerCase(), v])
 );
 
+/**
+ * Normaliza uma abreviação removendo espaços/pontuação e resolvendo para
+ * a forma canônica do BIBLE_CANON (ex.: "2 Cr" → "2Cr", "1 tm" → "1Tm").
+ * Se não reconhecer, retorna a entrada original trimada — caller decide o erro.
+ */
+export function normalizeAbbr(input: string): string {
+  if (!input) return input;
+  const trimmed = input.trim();
+  const book = findBookByAbbr(trimmed);
+  return book?.abbr ?? trimmed;
+}
+
 export function findBookByAbbr(abbr: string): BibleBook | undefined {
   if (!abbr) return undefined;
-  if (BY_ABBR[abbr]) return BY_ABBR[abbr];
-  const lower = abbr.toLowerCase();
+  const trimmed = abbr.trim();
+  if (BY_ABBR[trimmed]) return BY_ABBR[trimmed];
+  const lower = trimmed.toLowerCase();
   if (BY_ABBR_LOWER[lower]) return BY_ABBR_LOWER[lower];
   // Tolerate spaces/punctuation between leading digit and rest (e.g. "2 Cr", "2.Cr", "2-cr")
-  const compact = lower.replace(/[\s._-]+/g, '');
+  const compact = lower.replace(/[\s._\-]+/g, '');
   return BY_ABBR_LOWER[compact];
 }
 

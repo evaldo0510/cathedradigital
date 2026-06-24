@@ -5,7 +5,7 @@ import {
   BibleTextErrorSchema,
   BibleTextInvalidPayloadSchema,
 } from "../_shared/bibleTextSchema.ts";
-import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr } from "../_shared/bibleCanon.ts";
+import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr, normalizeAbbr } from "../_shared/bibleCanon.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -310,7 +310,7 @@ serve(async (req) => {
       });
     }
 
-    abbrev = parsed.data.abbrev;
+    abbrev = normalizeAbbr(parsed.data.abbrev);
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
