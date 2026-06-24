@@ -56,6 +56,8 @@ test('Bible UI: toast.error mostra reason + received_abbrev em 404', async ({ pa
   await expect(toast).toBeVisible({ timeout: 15000 });
   await expect(toast).toContainText('Abreviação não reconhecida');
   await expect(toast).toContainText('"xx"');
+  // correlationId preservado (proveniente do payload do 404) deve aparecer no toast
+  await expect(toast).toContainText('e2e-frontend-toast');
 
   // Sem erros JS não tratados decorrentes do 404
   expect(consoleErrors, consoleErrors.join('\n')).toEqual([]);
