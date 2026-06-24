@@ -43,6 +43,7 @@ import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import AboveTheFoldTest from './components/cathedra/AboveTheFoldTest';
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
+import ContrastInspector from './components/dev/ContrastInspector';
 
 const queryClient = new QueryClient({
   defaultOptions: {
