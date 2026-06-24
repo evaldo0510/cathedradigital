@@ -16,6 +16,9 @@ import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import BibleVersePopover from './BibleVersePopover';
+import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
+
 
 
 interface Tag {
