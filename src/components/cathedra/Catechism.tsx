@@ -42,6 +42,7 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
 import { CathedraCard } from './CathedraCard';
+import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
