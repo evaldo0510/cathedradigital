@@ -62,26 +62,34 @@ test('bible-text edge: abreviação desconhecida → 404 com mensagem descritiva
   });
 });
 
-test('bible-text edge: payload inválido → 400 com correlationId', async () => {
+test('bible-text edge: payload inválido → 400 com correlationId e error não-vazio', async () => {
   // chapter ausente / abbrev vazio violam o schema de entrada
   const { status, json } = await callBibleText({ abbrev: '' }, 'e2e-invalid');
   expect([400, 422]).toContain(status);
+  // Contrato BibleTextInvalidPayloadSchema: error (string) + correlationId
   expect(typeof json.error).toBe('string');
   expect(json.error.length).toBeGreaterThan(0);
   expect(json.correlationId).toBe('e2e-invalid');
+  // Payload inválido NÃO deve vazar campos não previstos no schema enxuto
+  expect(json).not.toHaveProperty('verses');
 });
 
-test('bible-text edge: capítulo indisponível → 404 com reason específico', async () => {
+test('bible-text edge: capítulo indisponível → 404 com canonical_abbr/bollsId preenchidos', async () => {
   // Gn tem 50 capítulos — pedir 999 força "capítulo não disponível em nenhuma fonte"
   const { status, json } = await callBibleText({ abbrev: 'gn', chapter: 999 }, 'e2e-gn-999');
   expect(status).toBe(404);
   expect(json.error).toBe('Texto não encontrado');
   expect(json.reason).toMatch(/não foi encontrado em nenhuma fonte|não disponível/i);
-  expect(json).toMatchObject({
-    received_abbrev: 'gn',
-    canonical_abbr: 'Gn',
-    bollsId: 1,
-    chapter: 999,
-    correlationId: 'e2e-gn-999',
-  });
+  // Todos os campos obrigatórios do BibleTextErrorSchema devem estar presentes
+  for (const field of ['received_abbrev', 'canonical_abbr', 'book_name', 'bollsId', 'chapter', 'correlationId']) {
+    expect(json).toHaveProperty(field);
+  }
+  // Para chapter_unavailable o livro É reconhecido — canonical_abbr/bollsId NÃO podem ser null
+  expect(json.canonical_abbr).toBe('Gn');
+  expect(json.bollsId).toBe(1);
+  expect(typeof json.book_name).toBe('string');
+  expect(json.book_name.length).toBeGreaterThan(0);
+  expect(json.chapter).toBe(999);
+  expect(json.received_abbrev).toBe('gn');
+  expect(json.correlationId).toBe('e2e-gn-999');
 });
