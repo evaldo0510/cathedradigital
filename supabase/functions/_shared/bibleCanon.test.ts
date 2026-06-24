@@ -27,6 +27,35 @@ Deno.test("bibleCanon: normalizeAbbr de entrada desconhecida não lança e retor
   assertEquals(normalizeAbbr("xyz"), "xyz");
   assertEquals(normalizeAbbr("  zzz  "), "zzz");
   assertEquals(normalizeAbbr(""), "");
+  // só pontuação/whitespace: trim mantém os caracteres, mas não resolve
+  assertEquals(findBookByAbbr("..."), undefined);
+  assertEquals(findBookByAbbr("---"), undefined);
+  assertEquals(findBookByAbbr("   "), undefined);
+  assertEquals(findBookByAbbr("123"), undefined);
+});
+
+Deno.test("bibleCanon: normalizeAbbr cobre variantes amplas (espaços, caixa, pontuação)", () => {
+  const cases: Array<[string, string, number]> = [
+    // espaços extras / tabs / newlines
+    ["  2  Cr  ", "2Cr", 14],
+    ["\t1\tTm\n", "1Tm", 54],
+    // pontuação variada
+    ["1_co", "1Co", 46],
+    ["2,Mc", "2Mc", 73],
+    ["1·rs", "1Rs", 11],
+    // caixa mista
+    ["2cR", "2Cr", 14],
+    ["mT", "Mt", 40],
+    ["SL", "Sl", 19],
+    // aliases legados normalizados
+    ["job", "Jó", 18],
+    ["MAL", "Ml", 39],
+    ["jon", "Jn", 32],
+  ];
+  for (const [input, expectedAbbr, expectedId] of cases) {
+    assertEquals(normalizeAbbr(input), expectedAbbr, `normalizeAbbr("${input}")`);
+    assertEquals(findBookByAbbr(input)?.bollsId, expectedId, `bollsId para "${input}"`);
+  }
 });
 
 /**

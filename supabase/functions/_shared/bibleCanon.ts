@@ -151,7 +151,8 @@ export function findBookByAbbr(abbr: string): BibleBook | undefined {
   const lower = trimmed.toLowerCase();
   if (BY_ABBR_LOWER[lower]) return BY_ABBR_LOWER[lower];
   // Tolerate spaces/punctuation between leading digit and rest (e.g. "2 Cr", "2.Cr", "2-cr")
-  const compact = lower.replace(/[\s._\-]+/g, '');
+  // Tolera qualquer separador não-alfanumérico (espaços, ".", "-", "_", ",", "·", etc.)
+  const compact = lower.replace(/[^\p{L}\p{N}]+/gu, '');
   return BY_ABBR_LOWER[compact];
 }
 
