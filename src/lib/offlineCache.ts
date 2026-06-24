@@ -196,6 +196,89 @@ export async function clearLiturgicalCalendarCache(): Promise<void> {
   }
 }
 
+/** Apaga apenas as entradas cuja idade ultrapassa o TTL. Retorna as chaves removidas. */
+export async function clearExpiredLiturgicalCalendarEntries(
+  ttlMs: number = LITURGICAL_CALENDAR_TTL_DEFAULT,
+): Promise<string[]> {
+  const removed: string[] = [];
+  try {
+    const entries = await listLiturgicalCalendarEntries(ttlMs);
+    const db = await openDB();
+    const tx = db.transaction('liturgical-calendar', 'readwrite');
+    const store = tx.objectStore('liturgical-calendar');
+    for (const e of entries) {
+      if (e.isStale) {
+        store.delete(e.key);
+        removed.push(e.key);
+      }
+    }
+    await new Promise<void>((resolve) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+      tx.onabort = () => resolve();
+    });
+    if (removed.length > 0) {
+      window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
+      window.dispatchEvent(new CustomEvent('cathedra-litcal-cache-updated', { detail: { stat: 'expired-cleared', keys: removed } }));
+    }
+  } catch (e) {
+    console.error('Failed to clear expired liturgical-calendar entries:', e);
+  }
+  return removed;
+}
+
+/** Apaga uma única entrada do calendário litúrgico pelo key (`calendar:lang:YYYY-MM`). */
+export async function deleteLiturgicalCalendarEntry(key: string): Promise<void> {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('liturgical-calendar', 'readwrite');
+    tx.objectStore('liturgical-calendar').delete(key);
+    await new Promise<void>((resolve) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+      tx.onabort = () => resolve();
+    });
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
+    window.dispatchEvent(new CustomEvent('cathedra-litcal-cache-updated', { detail: { stat: 'entry-deleted', key } }));
+  } catch (e) {
+    console.error('Failed to delete liturgical-calendar entry:', e);
+  }
+}
+
+export interface LiturgicalCalendarStorageEstimate {
+  /** Bytes aproximados ocupados pelas entradas do calendário litúrgico (JSON serializado). */
+  bytes: number;
+  entries: number;
+  /** Quota global do storage (navigator.storage.estimate), quando disponível. */
+  quotaBytes: number | null;
+  /** Uso global do storage (todas as origens / stores), quando disponível. */
+  usageBytes: number | null;
+}
+
+/** Estima o tamanho ocupado pelas entradas de `liturgical-calendar` no IndexedDB. */
+export async function estimateLiturgicalCalendarStorage(): Promise<LiturgicalCalendarStorageEstimate> {
+  const entries = await getAllFromStore('liturgical-calendar');
+  let bytes = 0;
+  for (const e of entries) {
+    try {
+      // Aproximação UTF-16 → bytes via Blob para suportar caracteres não-ASCII.
+      bytes += new Blob([JSON.stringify(e)]).size;
+    } catch {
+      bytes += JSON.stringify(e).length;
+    }
+  }
+  let quotaBytes: number | null = null;
+  let usageBytes: number | null = null;
+  try {
+    if (typeof navigator !== 'undefined' && navigator.storage?.estimate) {
+      const est = await navigator.storage.estimate();
+      quotaBytes = typeof est.quota === 'number' ? est.quota : null;
+      usageBytes = typeof est.usage === 'number' ? est.usage : null;
+    }
+  } catch { /* silent */ }
+  return { bytes, entries: entries.length, quotaBytes, usageBytes };
+}
+
 export async function deleteFromStore(storeName: string, key: string): Promise<void> {
 
 
