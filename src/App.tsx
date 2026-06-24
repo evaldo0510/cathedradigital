@@ -502,6 +502,17 @@ const AppLayout: React.FC = () => {
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
               <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
 
+              {/* Aliases para navegação legada (mantém botões da Sidebar/BottomNav/CommandCenter funcionando) */}
+              <Route path="/library" element={<Navigate to="/biblioteca" replace />} />
+              <Route path="/prayer" element={<Navigate to="/oracao" replace />} />
+              <Route path="/via-crucis" element={<Navigate to="/viacrucis" replace />} />
+              <Route path="/journeys" element={<Navigate to="/jornadas" replace />} />
+              <Route path="/notes" element={<Navigate to="/diario" replace />} />
+              <Route path="/telemetry" element={<Navigate to="/admin/telemetry" replace />} />
+              <Route path="/security" element={<Navigate to="/admin/security" replace />} />
+              <Route path="/catechism-explorer" element={<Navigate to="/catechism" replace />} />
+
+
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={
                 <Suspense fallback={<LoadingFallback />}>
