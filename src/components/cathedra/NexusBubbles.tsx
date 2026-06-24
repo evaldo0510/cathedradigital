@@ -330,25 +330,40 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                               ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
                               : isJourney ? `/jornadas/${c.id}` : null;
 
+                            const bibleAbbr: string | undefined = isBible ? c.metadata?.book : undefined;
+                            const bibleChapter: number | undefined = isBible ? Number(c.metadata?.chapter) : undefined;
+                            const bibleVerse: number | undefined = isBible && c.metadata?.verse ? Number(c.metadata.verse) : undefined;
+                            const canPopover = isBible && !!bibleAbbr && Number.isFinite(bibleChapter);
+
                             return (
-                              <motion.div 
-                                key={c.id || i} 
+                              <motion.div
+                                key={c.id || i}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 className="space-y-spacing-2xs group/content p-spacing-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
-                                onClick={() => link && navigate(link)}
+                                onClick={() => !canPopover && link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-spacing-sm group-hover/content:text-foreground transition-colors">
                                   {c.content_text}
                                 </p>
                                 <div className="flex flex-col gap-spacing-xs">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
-                                      {reference}
-                                      {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
-                                    </span>
+                                  <div className="flex items-center justify-between" onClick={(e) => canPopover && e.stopPropagation()}>
+                                    {canPopover ? (
+                                      <BibleVersePopover
+                                        abbr={bibleAbbr!}
+                                        chapter={bibleChapter!}
+                                        verse={bibleVerse}
+                                        label={reference}
+                                      />
+                                    ) : (
+                                      <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
+                                        {reference}
+                                        {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
+                                      </span>
+                                    )}
                                   </div>
+
                                   
                                   {c.metadata?.tags && c.metadata.tags.length > 0 && (
                                     <div className="flex flex-wrap gap-spacing-2xs mt-spacing-2xs">
