@@ -148,8 +148,8 @@ function inspectElement(el: Element, settings: InspectorSettings) {
 type Inspection = ReturnType<typeof inspectElement>;
 
 
-function exportElement(el: Element) {
-  const info = inspectElement(el);
+function exportElement(el: Element, settings: InspectorSettings) {
+  const info = inspectElement(el, settings);
   const payload = {
     capturedAt: new Date().toISOString(),
     url: window.location.href,
