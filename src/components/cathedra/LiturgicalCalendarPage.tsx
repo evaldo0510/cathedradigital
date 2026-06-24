@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Icons } from '@/constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import type { Saint } from '@/data/saints';
 import { useAllSaintsDB } from '@/hooks/useSaints';
+import { useLiturgicalMonth } from '@/hooks/useLiturgicalMonth';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
 import { AnimatePresence } from 'framer-motion';
+
 
 interface LiturgicalDay {
   date: Date;
@@ -215,22 +215,8 @@ const LiturgicalCalendarPage: React.FC = () => {
   const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
   const { data: saintsData = [] } = useAllSaintsDB(500);
+  const { data: apiData = {}, isLoading: isLoadingApi } = useLiturgicalMonth(year, month + 1);
 
-  const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
-    queryKey: ['liturgical-month', year, month],
-    queryFn: async () => {
-      const { data } = await supabase.functions.invoke('liturgical-calendar', {
-        body: { action: 'month', year, month: month + 1, lang: 'la', calendar: 'general-la' }
-      });
-      if (Array.isArray(data)) {
-        const map: Record<string, ApiDayData> = {};
-        data.forEach((d: ApiDayData) => { map[d.date] = d; });
-        return map;
-      }
-      return {};
-    },
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-  });
 
   // Build a set of "MM-DD" keys for days that have a saint
   const saintDaysSet = useMemo(() => {
