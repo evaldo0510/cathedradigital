@@ -59,6 +59,7 @@ const queryClient = new QueryClient({
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
+const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
@@ -418,7 +419,7 @@ const AppLayout: React.FC = () => {
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
-              <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
+              <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
