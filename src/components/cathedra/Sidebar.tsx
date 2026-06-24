@@ -234,7 +234,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-premium-full w-spacing-xl h-spacing-xl text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
+                className="rounded-premium-full w-spacing-xl h-spacing-xl text-primary/70 hover:text-primary hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
                 aria-label="Fechar menu"
               >
                 <Icons.X className="w-spacing-sm h-spacing-sm" />
