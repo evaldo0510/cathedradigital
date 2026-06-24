@@ -894,6 +894,49 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     });
   };
 
+  /**
+   * Glyphs ⓐ-ⓩ (e similares) vêm inline da NAA marcando notas/refs cruzadas.
+   * Em vez de exibi-los crus, substituímos por uma sup numerada clicável que
+   * abre o trecho correspondente do `comment` enviado pelo backend.
+   */
+  const NOTE_GLYPH_RE = /[\u24D0-\u24E9\u2460-\u2473]/g; // ⓐ-ⓩ + ① -⑳
+
+  const parseCommentByGlyph = (comment?: string | null) => {
+    if (!comment) return new Map<string, string>();
+    const map = new Map<string, string>();
+    // Split comment into segments that each start with a glyph.
+    const matches = [...comment.matchAll(/([\u24D0-\u24E9\u2460-\u2473])\s*([\s\S]*?)(?=[\u24D0-\u24E9\u2460-\u2473]|$)/g)];
+    for (const m of matches) {
+      const glyph = m[1];
+      const body = m[2].trim();
+      if (glyph && body) map.set(glyph, body);
+    }
+    return map;
+  };
+
+  const renderVerseWithNotes = (text: string, comment?: string | null) => {
+    const noteMap = parseCommentByGlyph(comment);
+    const pieces = text.split(NOTE_GLYPH_RE);
+    const glyphs = text.match(NOTE_GLYPH_RE) || [];
+
+    const nodes: React.ReactNode[] = [];
+    pieces.forEach((piece, i) => {
+      if (piece) nodes.push(<span key={`t-${i}`}>{wrapWithDictionary(piece)}</span>);
+      const g = glyphs[i];
+      if (g) {
+        nodes.push(
+          <VerseNoteSup
+            key={`n-${i}`}
+            index={i + 1}
+            contentHtml={noteMap.get(g)}
+          />
+        );
+      }
+    });
+    return nodes;
+  };
+
+
   const auditData = useMemo(() => {
     const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
     const connectedBooks = new Set();
