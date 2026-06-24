@@ -1,0 +1,58 @@
+name: Edge bible-text
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/bible-text/**'
+      - 'supabase/functions/_shared/bibleCanon.ts'
+      - 'supabase/functions/_shared/bibleCanon.test.ts'
+      - '.github/workflows/edge-bible-text.yml'
+  push:
+    branches: [main]
+
+jobs:
+  canon-tests:
+    name: bibleCanon unit tests + bible-text smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Run bibleCanon unit tests
+        run: |
+          mkdir -p reports/edge
+          deno test --allow-net --allow-env \
+            supabase/functions/_shared/bibleCanon.test.ts \
+            --reporter=pretty 2>&1 | tee reports/edge/bible-canon-${{ github.run_id }}.log
+
+      - name: Smoke test bible-text "1tm 3"
+        if: env.SUPABASE_URL != '' && env.SUPABASE_ANON_KEY != ''
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          ts=$(date -u +%Y%m%dT%H%M%SZ)
+          out=reports/edge/bible-text-1tm-3-${ts}.json
+          http=$(curl -sS -o "$out" -w "%{http_code}" \
+            -X POST "$SUPABASE_URL/functions/v1/bible-text" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -H "x-correlation-id: ci-${{ github.run_id }}" \
+            -d '{"abbrev":"1tm","chapter":3}')
+          echo "HTTP $http -> $out"
+          test "$http" = "200"
+
+      - name: Upload edge reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-bible-text-trend
+          path: reports/edge
+          retention-days: 90
+          if-no-files-found: ignore
