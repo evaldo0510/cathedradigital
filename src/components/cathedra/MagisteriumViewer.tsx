@@ -144,11 +144,13 @@ const MagisteriumViewer: React.FC = () => {
         });
 
         setContent({ title: data.title || id, text });
+        setFailureCount(0);
       } catch (err: any) {
         console.error('Error fetching document:', err);
         window.dispatchEvent(new CustomEvent('supabase-unreachable'));
         const msg = err?.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.';
         setError(msg);
+        setFailureCount((n) => n + 1);
         logMagisteriumDiag({ docId: id, url, step: 'final_error', message: msg });
         toast.error('Não foi possível carregar o documento.');
       } finally {
