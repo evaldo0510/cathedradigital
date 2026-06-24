@@ -1654,9 +1654,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
-                                className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
-                                title="Versículo com citação do Catecismo (CIC)"
+                                role="img"
                                 aria-label="Versículo com citação do Catecismo"
+                                title="Versículo com citação do Catecismo (CIC)"
+                                className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
                               />
                             )}
                             {hasNote && (
