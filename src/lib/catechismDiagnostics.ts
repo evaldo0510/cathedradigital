@@ -118,6 +118,7 @@ export const logCatechismDiag = (ev: Omit<CatechismDiagEvent, 'ts' | 'route'>) =
 
   buffer.unshift(full);
   if (buffer.length > MAX_BUFFER) buffer.length = MAX_BUFFER;
+  schedulePersistTimeline();
 
   if (isErrorStep(full.step)) {
     persistError(full);
