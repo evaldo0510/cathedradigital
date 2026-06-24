@@ -38,6 +38,8 @@ const sourceLabel: Record<CacheMeta['source'], { label: string; tone: 'ok' | 'wa
 
 const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) => {
   const [stats, setStats] = useState<LiturgicalCacheStats>(getLiturgicalCacheStats());
+  const [isClearing, setIsClearing] = useState(false);
+
 
   useEffect(() => {
     const refresh = () => setStats(getLiturgicalCacheStats());
