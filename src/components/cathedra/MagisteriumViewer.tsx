@@ -24,6 +24,11 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import { NoteEditModal } from './NoteEditModal';
+import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
+import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
+
+const MIN_DOC_LEN = 500;
+
 
 
 
@@ -39,6 +44,7 @@ const MagisteriumViewer: React.FC = () => {
   const [content, setContent] = useState<{ title: string; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryNonce, setRetryNonce] = useState(0);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
@@ -86,12 +92,13 @@ const MagisteriumViewer: React.FC = () => {
       if (!id) return;
       setLoading(true);
       setError(null);
-      
+
       const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       const url = MAGISTERIUM_URLS[id];
       if (!url) {
         setError('Documento não encontrado ou URL não configurada.');
         setLoading(false);
+        logMagisteriumDiag({ docId: id, step: 'final_error', message: 'URL não configurada' });
         return;
       }
 
@@ -109,14 +116,37 @@ const MagisteriumViewer: React.FC = () => {
         if (invokeError) throw invokeError;
         if (!data?.text) throw new Error('Conteúdo não retornado pela função.');
 
-        setContent({
-          title: data.title || id,
-          text: data.text,
+        const meta = (data as { meta?: { step?: string; content_length?: number } })?.meta;
+        const text: string = data.text;
+        const isThin = text.length < MIN_DOC_LEN;
+
+        if (isThin) {
+          logMagisteriumDiag({
+            docId: id,
+            url,
+            step: (meta?.step as any) ?? 'fetch_thin',
+            contentLength: text.length,
+            message: 'Conteúdo abaixo do mínimo legível',
+          });
+          throw new Error(
+            `Documento retornou apenas ${text.length} caracteres — abaixo do mínimo legível (${MIN_DOC_LEN}). Pode ser uma página de redirecionamento do vatican.va.`,
+          );
+        }
+
+        logMagisteriumDiag({
+          docId: id,
+          url,
+          step: (meta?.step as any) ?? 'fetch_ok',
+          contentLength: text.length,
         });
+
+        setContent({ title: data.title || id, text });
       } catch (err: any) {
         console.error('Error fetching document:', err);
         window.dispatchEvent(new CustomEvent('supabase-unreachable'));
-        setError(err.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.');
+        const msg = err?.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.';
+        setError(msg);
+        logMagisteriumDiag({ docId: id, url, step: 'final_error', message: msg });
         toast.error('Não foi possível carregar o documento.');
       } finally {
         setLoading(false);
@@ -124,7 +154,8 @@ const MagisteriumViewer: React.FC = () => {
     };
 
     fetchDoc();
-  }, [id]);
+  }, [id, retryNonce]);
+
 
   // Track visible paragraph for bookmarking
   useEffect(() => {
@@ -351,8 +382,12 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   if (error || !content) {
+    const canonicalUrl = id ? MAGISTERIUM_URLS[id] : undefined;
     return (
-      <div className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg">
+      <div
+        data-testid="magisterium-error-fallback"
+        className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg"
+      >
         <div className="w-spacing-3xl h-spacing-3xl bg-destructive/10 rounded-premium flex items-center justify-center mx-auto">
           <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" />
         </div>
@@ -360,12 +395,37 @@ const MagisteriumViewer: React.FC = () => {
           <h2 className="text-premium-2xl font-serif font-bold">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
         </div>
-        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-premium-full">
-          <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
-        </Button>
+        <div className="flex flex-wrap items-center justify-center gap-spacing-sm">
+          <Button
+            onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
+            variant="default"
+            className="rounded-premium-full"
+            data-testid="magisterium-retry"
+          >
+            <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" />
+            Tentar novamente
+          </Button>
+          {canonicalUrl && (
+            <a
+              href={canonicalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="magisterium-external-fallback"
+              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm hover:bg-primary/5 transition-colors"
+            >
+              <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
+              Abrir no vatican.va
+            </a>
+          )}
+          <Button onClick={() => navigate(-1)} variant="ghost" className="rounded-premium-full">
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+          </Button>
+        </div>
+        <MagisteriumDiagnosticPanel />
       </div>
     );
   }
+
 
   return (
     <div className="w-full pb-spacing-4xl relative overflow-x-hidden">
@@ -628,6 +688,7 @@ const MagisteriumViewer: React.FC = () => {
           />
         </div>
       )}
+      <MagisteriumDiagnosticPanel />
     </div>
   );
 };

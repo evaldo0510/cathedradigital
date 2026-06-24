@@ -3504,24 +3504,33 @@ export type Database = {
       vatican_cache: {
         Row: {
           content: string
+          content_length: number | null
           created_at: string | null
+          fetched_status: string | null
           id: string
+          last_attempt_at: string | null
           title: string
           updated_at: string | null
           url: string
         }
         Insert: {
           content: string
+          content_length?: number | null
           created_at?: string | null
+          fetched_status?: string | null
           id?: string
+          last_attempt_at?: string | null
           title: string
           updated_at?: string | null
           url: string
         }
         Update: {
           content?: string
+          content_length?: number | null
           created_at?: string | null
+          fetched_status?: string | null
           id?: string
+          last_attempt_at?: string | null
           title?: string
           updated_at?: string | null
           url?: string
