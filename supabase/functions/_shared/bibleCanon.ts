@@ -134,7 +134,12 @@ const BY_ABBR_LOWER: Record<string, BibleBook> = Object.fromEntries(
 
 export function findBookByAbbr(abbr: string): BibleBook | undefined {
   if (!abbr) return undefined;
-  return BY_ABBR[abbr] || BY_ABBR_LOWER[abbr.toLowerCase()];
+  if (BY_ABBR[abbr]) return BY_ABBR[abbr];
+  const lower = abbr.toLowerCase();
+  if (BY_ABBR_LOWER[lower]) return BY_ABBR_LOWER[lower];
+  // Tolerate spaces/punctuation between leading digit and rest (e.g. "2 Cr", "2.Cr", "2-cr")
+  const compact = lower.replace(/[\s._-]+/g, '');
+  return BY_ABBR_LOWER[compact];
 }
 
 export function bookNameFromAbbr(abbr: string): string {
