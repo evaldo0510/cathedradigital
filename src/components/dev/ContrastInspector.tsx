@@ -359,30 +359,170 @@ export default function ContrastInspector() {
 
   return (
     <>
-      {/* Always-on launcher chip */}
-      <button
-        type="button"
+      {/* Launcher chip + settings cog */}
+      <div
         data-contrast-inspector="launcher"
-        onClick={() => persistActive(!active)}
-        title="Contrast Inspector (Alt+Shift+C). Alt+Click to export."
         style={{
           position: 'fixed',
           bottom: 12,
           right: 12,
           zIndex: 2147483646,
+          display: 'flex',
+          gap: 6,
+          alignItems: 'center',
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           fontSize: 11,
-          padding: '6px 10px',
-          borderRadius: 999,
-          border: '1px solid rgba(255,255,255,0.15)',
-          background: active ? 'rgb(220, 38, 38)' : 'rgba(15,23,42,0.85)',
-          color: 'white',
-          cursor: 'pointer',
-          boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
         }}
       >
-        {active ? '◉ Inspecting' : '◎ Contrast'}
-      </button>
+        <button
+          type="button"
+          onClick={() => persistActive(!active)}
+          title="Contrast Inspector (Alt+Shift+C). Alt+Click to export."
+          style={{
+            padding: '6px 10px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.15)',
+            background: active ? 'rgb(220, 38, 38)' : 'rgba(15,23,42,0.85)',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+          }}
+        >
+          {active ? `◉ ${settings.level}` : `◎ Contrast · ${settings.level}`}
+        </button>
+        <button
+          type="button"
+          onClick={() => setSettingsOpen((v) => !v)}
+          title="Inspector settings"
+          aria-label="Inspector settings"
+          aria-expanded={settingsOpen}
+          style={{
+            padding: '6px 8px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.15)',
+            background: settingsOpen ? 'rgba(59,130,246,0.95)' : 'rgba(15,23,42,0.85)',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+          }}
+        >
+          ⚙
+        </button>
+      </div>
+
+      {settingsOpen && (
+        <div
+          data-contrast-inspector="settings"
+          role="dialog"
+          aria-label="Contrast inspector settings"
+          style={{
+            position: 'fixed',
+            bottom: 56,
+            right: 12,
+            zIndex: 2147483647,
+            width: 280,
+            background: 'rgba(15,23,42,0.97)',
+            color: 'rgb(241,245,249)',
+            border: '1px solid rgba(148,163,184,0.3)',
+            borderRadius: 12,
+            padding: 12,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 12,
+            lineHeight: 1.5,
+            boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Inspector settings</div>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>WCAG level</span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['AA', 'AAA'] as const).map((lvl) => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => updateSettings({ level: lvl })}
+                  style={{
+                    flex: 1, padding: '6px 8px', borderRadius: 6,
+                    border: '1px solid rgba(148,163,184,0.3)',
+                    background: settings.level === lvl ? 'rgb(59,130,246)' : 'rgba(30,41,59,0.6)',
+                    color: 'white', cursor: 'pointer', fontWeight: 600,
+                  }}
+                >
+                  {lvl}
+                </button>
+              ))}
+            </div>
+          </label>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>Text size mode</span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['auto', 'normal', 'large'] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => updateSettings({ largeMode: m })}
+                  style={{
+                    flex: 1, padding: '6px 4px', borderRadius: 6,
+                    border: '1px solid rgba(148,163,184,0.3)',
+                    background: settings.largeMode === m ? 'rgb(59,130,246)' : 'rgba(30,41,59,0.6)',
+                    color: 'white', cursor: 'pointer', fontWeight: 600, fontSize: 11,
+                  }}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+            <div style={{ opacity: 0.55, fontSize: 10, marginTop: 4 }}>
+              auto = WCAG default (≥24px or ≥18.66px bold = large)
+            </div>
+          </label>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>
+              Max nodes per selector (spec): <strong>{settings.maxNodesPerSelector}</strong>
+            </span>
+            <input
+              type="range"
+              min={1}
+              max={100}
+              step={1}
+              value={settings.maxNodesPerSelector}
+              onChange={(e) => updateSettings({ maxNodesPerSelector: Number(e.target.value) })}
+              style={{ width: '100%' }}
+              aria-label="Max nodes per selector"
+            />
+            <div style={{ opacity: 0.55, fontSize: 10, marginTop: 2 }}>
+              Persisted for the Playwright spec to read via export.
+            </div>
+          </label>
+
+          <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={() => { setSettingsState(DEFAULT_SETTINGS); writeSettings(DEFAULT_SETTINGS); }}
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgba(30,41,59,0.6)', color: 'white',
+              }}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(false)}
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgb(59,130,246)', color: 'white', fontWeight: 600,
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {active && info && (
         <div
