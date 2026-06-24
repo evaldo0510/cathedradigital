@@ -171,7 +171,9 @@ export const getPersistedCatechismErrors = (): CatechismDiagEvent[] => {
 
 export const clearCatechismDiag = () => {
   buffer.length = 0;
+  if (persistTimer) { clearTimeout(persistTimer); persistTimer = null; }
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  try { localStorage.removeItem(TIMELINE_KEY); } catch {}
   try { window.dispatchEvent(new CustomEvent('catechism-diagnostic-cleared')); } catch {}
 };
 
