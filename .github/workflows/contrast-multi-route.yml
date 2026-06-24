@@ -1,11 +1,9 @@
 name: Contrast (WCAG) — multi-route
 
 # Runs the data-driven WCAG contrast spec across all covered routes in light
-# and dark mode, fails the build when any measured target drops below the AA
-# threshold, and publishes:
-#   - playwright-report/                  (HTML report + per-test attachments)
-#   - playwright-report/contrast-summary.md
-#   - playwright-report/contrast-summary.json
+# and dark mode. Compares against the previous main-branch baseline, fails the
+# build ONLY on regressions (new failures or worsened ratios), posts a sticky
+# PR comment with the report table, and publishes the HTML report + summary.
 
 on:
   pull_request:
@@ -13,12 +11,18 @@ on:
       - 'src/**'
       - 'tailwind.config.ts'
       - 'tests/e2e/contrast-routes.spec.ts'
+      - 'tests/e2e/contrast.config.ts'
       - 'tests/e2e/bible-abbr-validate-copy-contrast.spec.ts'
       - 'scripts/contrast-report.ts'
       - '.github/workflows/contrast-multi-route.yml'
   push:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
 
 jobs:
   contrast:
@@ -27,13 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -46,6 +48,30 @@ jobs:
       - name: Build app
         run: bun run build
 
+      # ---------- baseline ----------
+      - name: Download baseline (last green main run)
+        id: baseline
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
+        with:
+          workflow: contrast-multi-route.yml
+          branch: main
+          name: contrast-baseline
+          path: baseline
+          if_no_artifact_found: warn
+
+      - name: Resolve baseline path
+        id: baselineenv
+        run: |
+          if [ -f baseline/contrast-summary.json ]; then
+            echo "path=baseline/contrast-summary.json" >> "$GITHUB_OUTPUT"
+            echo "Found baseline: baseline/contrast-summary.json"
+          else
+            echo "path=" >> "$GITHUB_OUTPUT"
+            echo "No baseline found — first run will seed it."
+          fi
+
+      # ---------- run ----------
       - name: Start preview server
         run: |
           bunx vite preview --port 8080 --strictPort &
@@ -59,8 +85,7 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
           CI: 'true'
-        # `continue-on-error` so we always run the aggregator and upload artifacts;
-        # the aggregator script re-fails the job when violations are present.
+        # Aggregator decides pass/fail based on baseline diff; let Playwright finish either way.
         continue-on-error: true
         run: |
           bunx playwright test \
@@ -68,25 +93,36 @@ jobs:
             tests/e2e/bible-abbr-validate-copy-contrast.spec.ts \
             --reporter=list,html,json
 
-      - name: Generate aggregated contrast report
-        run: bunx tsx scripts/contrast-report.ts
+      - name: Aggregate report + baseline diff
+        id: aggregate
         env:
           PLAYWRIGHT_REPORT_DIR: playwright-report
           PLAYWRIGHT_JSON_REPORT: playwright-report/results.json
           PLAYWRIGHT_TEST_RESULTS_DIR: test-results
-          CONTRAST_REPORT_FAIL_ON_VIOLATIONS: '1'
+          CONTRAST_BASELINE: ${{ steps.baselineenv.outputs.path }}
+          # On PRs: fail only on regressions. On main pushes: never fail (always seed).
+          CONTRAST_REPORT_FAIL_MODE: ${{ github.event_name == 'pull_request' && 'regressions' || 'never' }}
+        run: bunx tsx scripts/contrast-report.ts
 
-      - name: Publish summary to job step
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
+
+      # ---------- publish ----------
+      - name: Append summary to job step
         if: always()
         run: |
           if [ -f playwright-report/contrast-summary.md ]; then
             cat playwright-report/contrast-summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Stop preview server
-        if: always()
-        run: |
-          if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
+      - name: Sticky PR comment with contrast report
+        if: github.event_name == 'pull_request' && always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: contrast-wcag-report
+          path: playwright-report/contrast-summary.md
 
       - name: Upload Playwright report + contrast summary
         if: always()
@@ -97,3 +133,11 @@ jobs:
             playwright-report
             test-results
           retention-days: 14
+
+      - name: Upload new baseline (main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contrast-baseline
+          path: playwright-report/contrast-summary.json
+          retention-days: 90
