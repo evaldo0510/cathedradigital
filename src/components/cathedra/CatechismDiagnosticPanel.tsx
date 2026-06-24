@@ -38,6 +38,55 @@ const SEVERITY: Record<string, 'error' | 'warn' | 'ok'> = {
   final_error: 'error',
 };
 
+const exportDiagReport = (
+  buffer: CatechismDiagEvent[],
+  persisted: CatechismDiagEvent[],
+) => {
+  const lastError =
+    [...buffer, ...persisted].find((ev) =>
+      ['final_error', 'edge_error', 'official_error', 'unauthorized', 'forbidden', 'edge_not_found'].includes(ev.step),
+    ) ?? null;
+
+  const report = {
+    generatedAt: new Date().toISOString(),
+    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    counts: { buffer: buffer.length, persisted: persisted.length },
+    lastError,
+    timeline: buffer,
+    persistedErrors: persisted,
+  };
+
+  try {
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `catechism-diagnostic-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  } catch {
+    /* ignore — best effort */
+  }
+};
+
+  cache_hit: 'ok',
+  official_query: 'ok',
+  official_hit: 'ok',
+  local_hit: 'ok',
+  edge_invoke: 'ok',
+  edge_hit: 'ok',
+  fallback_cached: 'warn',
+  edge_not_found: 'warn',
+  official_error: 'error',
+  edge_error: 'error',
+  unauthorized: 'error',
+  forbidden: 'error',
+  final_error: 'error',
+};
+
 const CatechismDiagnosticPanel: React.FC = () => {
   const location = useLocation();
   const [enabled, setEnabled] = useState<boolean>(() => isCatechismDebugOn());
