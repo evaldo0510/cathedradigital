@@ -106,8 +106,9 @@ const BOLLS_MAP: Record<string, number> = {
   '1Cr': 13, '2Cr': 14, 'Ed': 15, 'Ne': 16, 'Et': 17,
   'Jó': 18, 'Job': 18, 'Sl': 19, 'Pv': 20, 'Ec': 21, 'Ct': 22,
   'Is': 23, 'Jr': 24, 'Lm': 25, 'Ez': 26, 'Dn': 27,
-  'Os': 28, 'Jl': 29, 'Am': 30, 'Ab': 31, 'Jn': 32, 'Mq': 33,
-  'Na': 34, 'Hc': 35, 'Sf': 36, 'Ag': 37, 'Zc': 38, 'Ml': 39,
+  'Os': 28, 'Jl': 29, 'Am': 30, 'Ab': 31, 'Abd': 31, 'Jn': 32, 'Jon': 32, 'Mq': 33, 'Mi': 33,
+  'Na': 34, 'Nm2': 34, 'Hc': 35, 'Hab': 35, 'Hb2': 35, 'Sf': 36, 'Sof': 36, 'Ag': 37, 'Ageu': 37,
+  'Zc': 38, 'Zac': 38, 'Ml': 39, 'Mal': 39,
   // Novo Testamento
   'Mt': 40, 'Mc': 41, 'Lc': 42, 'Jo': 43, 'At': 44,
   'Rm': 45, '1Co': 46, '2Co': 47, 'Gl': 48, 'Ef': 49,
