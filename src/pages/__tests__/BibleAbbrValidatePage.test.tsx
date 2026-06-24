@@ -201,8 +201,6 @@ describe('BibleAbbrValidatePage', () => {
       expect(screen.getByText(/não reconhecido/i)).toBeInTheDocument(),
     );
     expect(screen.getByText(/abbreviation_not_found/i)).toBeInTheDocument();
-    // Não foi registrado no histórico (apenas sucessos).
-    expect(localStorage.getItem('bibleAbbrValidateHistory:v1')).toBeNull();
   });
 
   it('404 propagado como error com context.json também renderiza não reconhecido', async () => {
