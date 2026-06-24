@@ -1077,9 +1077,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
       {/* Diagnostic Trigger (Debug only) */}
       <button 
         onClick={() => setIsDiagnosticOpen(true)}
-        className="fixed top-20 right-4 z-[999] p-2 bg-primary/5 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+        aria-label="Abrir diagnóstico cirúrgico da Bíblia"
+        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-2 bg-primary/5 rounded-full opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
       >
-        <Icons.Activity className="w-4 h-4 text-primary/20" />
+        <Icons.Activity className="w-4 h-4 text-primary/20" aria-hidden="true" />
       </button>
 
       <AnimatePresence>
