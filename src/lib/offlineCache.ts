@@ -98,7 +98,51 @@ export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
   return putInStore('liturgy', dateKey, data);
 }
 
+// ─── Liturgical Calendar (month grid) Cache ───
+// Persists the response of the `liturgical-calendar` edge function with a TTL
+// so the calendar page does not hit the function on every reload.
+
+const LITURGICAL_CALENDAR_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
+
+const liturgicalCalendarKey = (year: number, month: number, calendar = 'general-la', lang = 'la') =>
+  `${calendar}:${lang}:${year}-${String(month).padStart(2, '0')}`;
+
+export async function getCachedLiturgicalMonth(
+  year: number,
+  month: number,
+  opts: { calendar?: string; lang?: string; ttlMs?: number } = {},
+): Promise<{ data: any; cachedAt: number; isStale: boolean } | null> {
+  try {
+    const db = await openDB();
+    const key = liturgicalCalendarKey(year, month, opts.calendar, opts.lang);
+    return new Promise((resolve) => {
+      const tx = db.transaction('liturgical-calendar', 'readonly');
+      const req = tx.objectStore('liturgical-calendar').get(key);
+      req.onsuccess = () => {
+        const entry = req.result as CacheEntry | undefined;
+        if (!entry) return resolve(null);
+        const ttl = opts.ttlMs ?? LITURGICAL_CALENDAR_TTL_MS;
+        const age = Date.now() - (entry.cachedAt ?? 0);
+        resolve({ data: entry.data, cachedAt: entry.cachedAt, isStale: age > ttl });
+      };
+      req.onerror = () => resolve(null);
+    });
+  } catch {
+    return null;
+  }
+}
+
+export async function cacheLiturgicalMonth(
+  year: number,
+  month: number,
+  data: any,
+  opts: { calendar?: string; lang?: string } = {},
+): Promise<void> {
+  return putInStore('liturgical-calendar', liturgicalCalendarKey(year, month, opts.calendar, opts.lang), data);
+}
+
 export async function deleteFromStore(storeName: string, key: string): Promise<void> {
+
   try {
     const db = await openDB();
     const tx = db.transaction(storeName, 'readwrite');
