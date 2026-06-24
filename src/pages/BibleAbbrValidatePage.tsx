@@ -59,9 +59,39 @@ function loadHistory(): string[] {
   }
 }
 
+export async function copyToClipboard(value: string): Promise<boolean> {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      return true;
+    }
+  } catch {
+    /* fall through to legacy path */
+  }
+  try {
+    if (typeof document === 'undefined') return false;
+    const ta = document.createElement('textarea');
+    ta.value = value;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand?.('copy') ?? false;
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 function CopyButton({ value, label }: { value: string | number | null; label: string }) {
   const [copied, setCopied] = useState(false);
   const disabled = value === null || value === undefined || value === '';
+  // Stable per-label toast id prevents duplicate persistent toasts on rapid clicks.
+  const toastId = `bible-abbr-copy:${label}`;
   return (
     <Button
       type="button"
@@ -70,17 +100,22 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
       disabled={disabled}
       onClick={async () => {
         if (disabled) return;
-        try {
-          await navigator.clipboard.writeText(String(value));
+        const str = String(value);
+        const ok = await copyToClipboard(str);
+        if (ok) {
           setCopied(true);
+          // Dismiss any previous persistent toast for this label before showing a new one.
+          toast.dismiss(toastId);
           toast.success(`${label} copiado`, {
-            description: String(value),
+            id: toastId,
+            description: str,
             duration: Infinity,
             closeButton: true,
           });
           setTimeout(() => setCopied(false), 1500);
-        } catch {
-          toast.error('Não foi possível copiar');
+        } else {
+          toast.dismiss(toastId);
+          toast.error('Não foi possível copiar', { id: toastId });
         }
       }}
       aria-label={`Copiar ${label}`}
@@ -91,6 +126,7 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
     </Button>
   );
 }
+
 
 export default function BibleAbbrValidatePage() {
   const [input, setInput] = useState('2 Cr');
