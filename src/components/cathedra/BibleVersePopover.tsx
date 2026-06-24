@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { buildBibleUrl } from '@/lib/bibleUrl';
+import { BOOK_NAME_BY_ABBR } from '@/lib/bibleCanon';
 
 interface BibleVersePopoverProps {
   abbr: string;
@@ -19,24 +20,6 @@ interface BibleVersePopoverProps {
   onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
-// Fallback de nomes completos (PT) caso a edge function não retorne bookName.
-const BOOK_NAME_BY_ABBR: Record<string, string> = {
-  Gn: 'Gênesis', Ex: 'Êxodo', Lv: 'Levítico', Nm: 'Números', Dt: 'Deuteronômio',
-  Js: 'Josué', Jz: 'Juízes', Rt: 'Rute',
-  '1Sm': '1 Samuel', '2Sm': '2 Samuel', '1Rs': '1 Reis', '2Rs': '2 Reis',
-  '1Cr': '1 Crônicas', '2Cr': '2 Crônicas', Ed: 'Esdras', Ne: 'Neemias', Et: 'Ester',
-  Jó: 'Jó', Job: 'Jó', Sl: 'Salmos', Pv: 'Provérbios', Ec: 'Eclesiastes', Ct: 'Cânticos',
-  Is: 'Isaías', Jr: 'Jeremias', Lm: 'Lamentações', Ez: 'Ezequiel', Dn: 'Daniel',
-  Os: 'Oseias', Jl: 'Joel', Am: 'Amós', Ab: 'Abdias', Jn: 'Jonas', Mq: 'Miqueias',
-  Na: 'Naum', Hc: 'Habacuque', Sf: 'Sofonias', Ag: 'Ageu', Zc: 'Zacarias', Ml: 'Malaquias',
-  Mt: 'Mateus', Mc: 'Marcos', Lc: 'Lucas', Jo: 'João', At: 'Atos',
-  Rm: 'Romanos', '1Co': '1 Coríntios', '2Co': '2 Coríntios', Gl: 'Gálatas', Ef: 'Efésios',
-  Fp: 'Filipenses', Cl: 'Colossenses', '1Ts': '1 Tessalonicenses', '2Ts': '2 Tessalonicenses',
-  '1Tm': '1 Timóteo', '2Tm': '2 Timóteo', Tt: 'Tito', Fm: 'Filemom',
-  Hb: 'Hebreus', Tg: 'Tiago', '1Pe': '1 Pedro', '2Pe': '2 Pedro',
-  '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João', Jd: 'Judas', Ap: 'Apocalipse',
-};
-
 const sanitizeBookName = (raw: unknown, abbr: string): string => {
   const value = typeof raw === 'string' ? raw.trim() : '';
   if (value && value.toLowerCase() !== 'undefined' && value.toLowerCase() !== 'null') {
@@ -44,6 +27,7 @@ const sanitizeBookName = (raw: unknown, abbr: string): string => {
   }
   return BOOK_NAME_BY_ABBR[abbr] || abbr;
 };
+
 
 const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
   abbr,
