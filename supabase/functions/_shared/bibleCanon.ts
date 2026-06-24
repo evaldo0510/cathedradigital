@@ -127,18 +127,32 @@ const BY_ABBR: Record<string, BibleBook> = (() => {
   return map;
 })();
 
+/** Lookup case-insensitive (clientes podem enviar "1tm", "1TM" etc.). */
+const BY_ABBR_LOWER: Record<string, BibleBook> = Object.fromEntries(
+  Object.entries(BY_ABBR).map(([k, v]) => [k.toLowerCase(), v])
+);
+
 export function findBookByAbbr(abbr: string): BibleBook | undefined {
   if (!abbr) return undefined;
-  return BY_ABBR[abbr] || BY_ABBR[abbr.charAt(0).toUpperCase() + abbr.slice(1)];
+  return BY_ABBR[abbr] || BY_ABBR_LOWER[abbr.toLowerCase()];
 }
 
 export function bookNameFromAbbr(abbr: string): string {
   return findBookByAbbr(abbr)?.name ?? abbr;
 }
 
-/** Mapa abrev → bollsId (compatível com o uso anterior). */
-export const BOLLS_MAP: Record<string, number> = Object.fromEntries(
-  Object.entries(BY_ABBR).map(([k, v]) => [k, v.bollsId])
+/**
+ * Mapa abrev → bollsId.
+ * Inclui todas as variações canônicas + chaves lowercase para tolerância.
+ */
+export const BOLLS_MAP: Record<string, number> = new Proxy(
+  Object.fromEntries(Object.entries(BY_ABBR).map(([k, v]) => [k, v.bollsId])),
+  {
+    get(target, prop: string) {
+      if (typeof prop !== 'string') return undefined;
+      return target[prop] ?? BY_ABBR_LOWER[prop.toLowerCase()]?.bollsId;
+    },
+  },
 );
 
 /** Mapa abrev → nome PT (compatível com o uso anterior). */
