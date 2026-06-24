@@ -27,6 +27,10 @@ type AlertRow = { id: string; created_at: string; severity: 'info' | 'warning' |
 type MetricRow = { bucket_start: string; abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number };
 type AuditRow = { id: number; created_at: string; actor_email: string | null; action: string; target: string | null; abbrev: string | null; chapter_from: number | null; chapter_to: number | null; count: number | null; succeeded: number | null; failed: number | null; details: Record<string, unknown> };
 type ChapterRow = { chapter: number; total: number; hits: number; misses: number; stale: number; avg_ms: number; p95_ms: number; max_ms: number; bolls_calls: number; bolls_failures: number };
+type CompareBook = { abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; max_p95: number; bolls_calls: number; bolls_failures: number; hit_rate: number; avg_ms: number; bolls_rate: number };
+type CompareWindow = { since: string; until: string; global: { hits: number; misses: number; stale: number; total: number; hit_rate: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; bolls_rate: number }; books: CompareBook[] };
+type CompareChapter = { chapter: number; hits: number; misses: number; stale: number; total: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; hit_rate: number; bolls_rate: number };
+type CompareResponse = { a: CompareWindow; b: CompareWindow; abbrev: string | null; chapters: { a: CompareChapter[]; b: CompareChapter[] } | null };
 
 const POLL_FAST = 10_000;
 const POLL_SLOW = 30_000;
