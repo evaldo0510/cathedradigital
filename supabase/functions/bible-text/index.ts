@@ -5,7 +5,7 @@ import {
   BibleTextErrorSchema,
   BibleTextInvalidPayloadSchema,
 } from "../_shared/bibleTextSchema.ts";
-import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr } from "../_shared/bibleCanon.ts";
+import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr, normalizeAbbr } from "../_shared/bibleCanon.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
