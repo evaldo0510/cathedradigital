@@ -366,8 +366,18 @@ const LiturgicalCalendarPage: React.FC = () => {
               disabled={isRefreshing || isFetchingApi}
               onClick={async () => {
                 setIsRefreshing(true);
-                try { await refreshMonth(); } finally { setIsRefreshing(false); }
+                const monthLabel = `${MONTH_NAMES[month]} ${year}`;
+                try {
+                  await toast.promise(refreshMonth(), {
+                    loading: `Atualizando ${monthLabel}…`,
+                    success: `Calendário de ${monthLabel} atualizado.`,
+                    error: 'Não foi possível atualizar o calendário. Tente novamente.',
+                  });
+                } finally {
+                  setIsRefreshing(false);
+                }
               }}
+
               className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60"
               aria-label="Atualizar calendário"
             >
