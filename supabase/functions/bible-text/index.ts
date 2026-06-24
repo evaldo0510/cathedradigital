@@ -83,7 +83,7 @@ async function getCacheL2Stale(key: string) {
       .from('bible_cache_l2')
       .select('content')
       .eq('cache_key', key)
-      .order('updated_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
     return data?.content;
@@ -210,7 +210,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         ...cached,
         metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: ttlHours }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT' } });
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' } });
     }
 
     const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
@@ -256,7 +256,7 @@ serve(async (req) => {
       await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version, ttlHours);
       console.info('[bible-text] ok', { correlationId, source, abbrev, canonical_abbr: resolvedBook?.abbr, bollsId: resolvedBollsId, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' }
       });
     }
 
