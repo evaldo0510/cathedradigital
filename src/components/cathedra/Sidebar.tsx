@@ -376,8 +376,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       )}
                     </div>
                     <div className="flex-1 min-w-spacing-0">
-                      <p className="text-[10px] font-bold truncate text-primary/70">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[10px] font-bold truncate text-primary">{user.name}</p>
+                      <p className="text-[7px] uppercase text-primary/70 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
