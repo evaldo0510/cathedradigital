@@ -141,6 +141,18 @@ export async function cacheLiturgicalMonth(
   return putInStore('liturgical-calendar', liturgicalCalendarKey(year, month, opts.calendar, opts.lang), data);
 }
 
+export async function clearLiturgicalCalendarCache(): Promise<void> {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('liturgical-calendar', 'readwrite');
+    tx.objectStore('liturgical-calendar').clear();
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
+    window.dispatchEvent(new CustomEvent('cathedra-litcal-cache-updated', { detail: { stat: 'cleared' } }));
+  } catch (e) {
+    console.error('Failed to clear liturgical-calendar cache:', e);
+  }
+
+
 export async function deleteFromStore(storeName: string, key: string): Promise<void> {
 
   try {
