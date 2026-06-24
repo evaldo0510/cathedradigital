@@ -419,4 +419,137 @@ describe('BibleAbbrValidatePage', () => {
     expect(toastSuccess).not.toHaveBeenCalled();
     delete (document as any).execCommand;
   });
+
+  it('estado de loading/disabled enquanto copyToClipboard executa (fluxo async)', async () => {
+    let resolveWrite!: () => void;
+    const writeText = vi.fn(() => new Promise<void>((r) => { resolveWrite = r; }));
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const btn = screen.getByRole('button', { name: /copiar canonical_abbr/i }) as HTMLButtonElement;
+    await act(async () => { fireEvent.click(btn); });
+
+    // Durante a cópia: aria-busy + texto "Copiando…" + disabled
+    await waitFor(() => {
+      expect(btn).toBeDisabled();
+      expect(btn).toHaveAttribute('aria-busy', 'true');
+      expect(btn).toHaveTextContent(/copiando/i);
+    });
+
+    // Cliques adicionais durante o fluxo não disparam writeText extra
+    await act(async () => { fireEvent.click(btn); fireEvent.click(btn); });
+    expect(writeText).toHaveBeenCalledTimes(1);
+
+    await act(async () => { resolveWrite(); });
+    await waitFor(() => {
+      expect(btn).not.toBeDisabled();
+      expect(btn).toHaveTextContent(/copiado/i);
+    });
+  });
+
+  it('a11y: aria-label contém o valor a ser copiado para canonical_abbr e bollsId', async () => {
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    expect(screen.getByRole('button', { name: /copiar canonical_abbr \(2cr\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /copiar bollsid \(14\)/i })).toBeInTheDocument();
+  });
+
+  it('a11y: região aria-live anuncia "copiado" após sucesso para ambos os campos', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const liveCanonical = screen.getByTestId('copy-live-canonical_abbr');
+    const liveBolls = screen.getByTestId('copy-live-bollsId');
+    expect(liveCanonical).toHaveAttribute('aria-live', 'polite');
+    expect(liveBolls).toHaveAttribute('aria-live', 'polite');
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar canonical_abbr/i }));
+    });
+    await waitFor(() => expect(liveCanonical).toHaveTextContent(/canonical_abbr copiado: 2cr/i));
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar bollsid/i }));
+    });
+    await waitFor(() => expect(liveBolls).toHaveTextContent(/bollsid copiado: 14/i));
+  });
+
+  it('feedback "Copiar"→"Copiado" alterna corretamente em ambos os botões', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const canonBtn = screen.getByRole('button', { name: /copiar canonical_abbr/i });
+    const bollsBtn = screen.getByRole('button', { name: /copiar bollsid/i });
+    expect(canonBtn).toHaveTextContent(/copiar/i);
+    expect(bollsBtn).toHaveTextContent(/copiar/i);
+
+    await act(async () => { fireEvent.click(canonBtn); });
+    await waitFor(() => expect(canonBtn).toHaveTextContent(/copiado/i));
+    // O outro botão permanece em "Copiar"
+    expect(bollsBtn).toHaveTextContent(/^copiar$/i);
+
+    await act(async () => { fireEvent.click(bollsBtn); });
+    await waitFor(() => expect(bollsBtn).toHaveTextContent(/copiado/i));
+  });
+
+  it('permissão negada: writeText rejeita, execCommand copia exatamente o valor esperado (canonical_abbr e bollsId)', async () => {
+    const writeText = vi.fn().mockRejectedValue(
+      Object.assign(new Error('Write permission denied.'), { name: 'NotAllowedError' }),
+    );
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    const copiedValues: string[] = [];
+    (document as any).execCommand = vi.fn(() => {
+      // Captura o valor selecionado no textarea de fallback no momento do copy.
+      const active = document.activeElement as HTMLTextAreaElement | null;
+      if (active && 'value' in active) copiedValues.push(active.value);
+      return true;
+    });
+
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar canonical_abbr/i }));
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /copiar bollsid/i }));
+    });
+
+    expect(writeText).toHaveBeenNthCalledWith(1, '2Cr');
+    expect(writeText).toHaveBeenNthCalledWith(2, '14');
+    expect(copiedValues).toEqual(['2Cr', '14']);
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'canonical_abbr copiado',
+      expect.objectContaining({ description: '2Cr' }),
+    );
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'bollsId copiado',
+      expect.objectContaining({ description: '14' }),
+    );
+    delete (document as any).execCommand;
+  });
 });
