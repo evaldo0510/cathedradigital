@@ -15,6 +15,7 @@
 //   - 'export'            → metrics em csv|json no intervalo (hours)
 //   - 'audit'             → trilha de auditoria das ações (limit, action?, since?)
 //   - 'run_aggregator'    → dispara agregação manual
+//   - 'compare'           → compara duas janelas {a:{since,until}, b:{since,until}, abbrev?}
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
