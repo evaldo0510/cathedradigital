@@ -12,6 +12,10 @@ vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
 
+vi.mock('@/contexts/ReadingSettingsContext', () => ({
+  useReadingSettings: () => ({ settings: { fontSize: 16, lineHeight: 1.5, fontFamily: 'sans' } }),
+}));
+
 import BibleAbbrValidatePage from '../BibleAbbrValidatePage';
 
 const ok = (canonical = '2Cr', bollsId = 14) => ({
