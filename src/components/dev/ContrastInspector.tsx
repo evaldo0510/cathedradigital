@@ -23,6 +23,12 @@ import {
   normalizeImportedConfig,
   persistConfigOverride,
 } from '@/lib/contrast-config';
+import {
+  applyTokenFixToElement,
+  scanPageForContrastViolations,
+  type AuditResult,
+  type ContrastViolation,
+} from '@/lib/contrast-audit';
 
 type RGBA = { r: number; g: number; b: number; a: number };
 
