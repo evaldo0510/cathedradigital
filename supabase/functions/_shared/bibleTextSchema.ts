@@ -4,7 +4,7 @@
  * única de verdade e DEVE permanecer byte-idêntica a
  * `src/shared/bibleTextSchema.factory.ts` (validado em CI).
  */
-import { z } from "npm:zod@3.23.8";
+import { z } from "https://esm.sh/zod@3.23.8";
 import { buildBibleTextSchemas, classifyError } from "./bibleTextSchema.factory.ts";
 
 const schemas = buildBibleTextSchemas(z);
