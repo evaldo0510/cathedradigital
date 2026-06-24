@@ -367,6 +367,7 @@ const Catechism: React.FC = memo(() => {
              <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
           </div>
         </div>
+        <CatechismDiagnosticPanel />
       </ContemplativeLayout>
     );
   }
