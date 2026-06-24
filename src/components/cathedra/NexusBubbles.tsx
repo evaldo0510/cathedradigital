@@ -342,7 +342,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="space-y-spacing-2xs group/content p-spacing-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
+                                className="min-h-11 space-y-spacing-2xs group/content p-spacing-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
                                 onClick={() => !canPopover && link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-spacing-sm group-hover/content:text-foreground transition-colors">
