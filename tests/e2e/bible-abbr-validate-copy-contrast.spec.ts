@@ -99,15 +99,16 @@ for (const theme of ['light', 'dark'] as const) {
       await expect(page.getByRole('button', { name: /copiar canonical_abbr/i })).toBeVisible();
       await expect(page.getByRole('button', { name: /copiar bollsid/i })).toBeVisible();
 
+      const measurements: Array<{ name: string; selector: string; result: unknown }> = [];
       const failures: string[] = [];
       for (const t of VALUE_TARGETS) {
         const res = await measureContrast(page, t.selector);
+        measurements.push({ name: t.name, selector: t.selector, result: res });
         if (!res.found) {
           failures.push(`${t.name}: element not found (${t.selector})`);
           continue;
         }
         const min = res.isLarge ? 3 : 4.5;
-        // Round to 2 decimals for readable diagnostics.
         const r = Math.round(res.ratio * 100) / 100;
         if (r < min) {
           failures.push(
@@ -116,16 +117,58 @@ for (const theme of ['light', 'dark'] as const) {
           );
         }
       }
+
+      // Always attach the contrast report so it lands in the Playwright HTML report.
+      await test.info().attach(`contrast-${theme}.json`, {
+        body: JSON.stringify({ theme, url: page.url(), measurements, failures }, null, 2),
+        contentType: 'application/json',
+      });
+
+      // On failure, dump page screenshot + outerHTML of each measured selector for fast triage.
+      if (failures.length) {
+        await test.info().attach(`page-${theme}.png`, {
+          body: await page.screenshot({ fullPage: true }),
+          contentType: 'image/png',
+        });
+        for (const t of VALUE_TARGETS) {
+          const handle = await page.$(t.selector);
+          if (!handle) continue;
+          const html = await handle.evaluate((el) => (el as HTMLElement).outerHTML);
+          const computed = await handle.evaluate((el) => {
+            const cs = getComputedStyle(el as Element);
+            return {
+              color: cs.color,
+              backgroundColor: cs.backgroundColor,
+              fontSize: cs.fontSize,
+              fontWeight: cs.fontWeight,
+              fontFamily: cs.fontFamily,
+              className: (el as HTMLElement).className,
+            };
+          });
+          const png = await handle.screenshot();
+          const safe = t.name.replace(/[^a-z0-9]+/gi, '-');
+          await test.info().attach(`element-${safe}-${theme}.html`, { body: html, contentType: 'text/html' });
+          await test.info().attach(`element-${safe}-${theme}.json`, {
+            body: JSON.stringify(computed, null, 2),
+            contentType: 'application/json',
+          });
+          await test.info().attach(`element-${safe}-${theme}.png`, { body: png, contentType: 'image/png' });
+        }
+      }
+
       expect(failures, failures.join('\n')).toEqual([]);
 
       // Visual snapshot of the result card to lock in the rendered colors.
-      const card = page.locator('text=/Resultado/i').locator('xpath=ancestor::*[contains(@class,"card") or self::*][1]').first();
-      // Fallback: snapshot the surrounding section if the locator above is fragile.
+      const card = page
+        .locator('text=/Resultado/i')
+        .locator('xpath=ancestor::*[contains(@class,"card") or self::*][1]')
+        .first();
       const target = (await card.count()) ? card : page.locator('main, body').first();
       await expect(target).toHaveScreenshot(`copy-components-${theme}.png`, {
         maxDiffPixelRatio: 0.02,
         animations: 'disabled',
       });
+
     });
 
     test(`failure state ("Não foi possível copiar") keeps adequate contrast in ${theme} mode`, async ({ page }) => {
