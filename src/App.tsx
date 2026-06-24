@@ -518,6 +518,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/audit" element={<AuditDashboard />} />
                       <Route path="/integrity" element={<IntegrityReport />} />
                       <Route path="/security-alerts" element={<SecurityAlertsPage />} />
+                      <Route path="/bible-coverage" element={<BibleCoverageAdmin />} />
 
 
                     </Routes>
