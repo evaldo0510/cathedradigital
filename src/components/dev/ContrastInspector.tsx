@@ -255,6 +255,64 @@ function readEnabled(): boolean {
   }
 }
 
+/** Download the active inspector settings + the effective allow/denylist as JSON for versioning. */
+function exportEffectiveConfig(settings: InspectorSettings) {
+  const snapshot = getEffectiveConfigSnapshot(contrastConfig);
+  const payload = {
+    capturedAt: new Date().toISOString(),
+    url: typeof window !== 'undefined' ? window.location.href : null,
+    inspector: settings,
+    contrast: snapshot,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `contrast-config-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  try { navigator.clipboard?.writeText(JSON.stringify(payload, null, 2)); } catch { /* ignore */ }
+}
+
+/** Surfaces the denySelectors + per-route excluded targets so QA can see why a node is missing. */
+function FiltersSection() {
+  const snapshot = useMemo(() => getEffectiveConfigSnapshot(contrastConfig), []);
+  const excluded = snapshot.routes.flatMap((r) =>
+    r.excludedTargets.map((t) => ({ route: r.path, name: t.name, selector: t.selector, reason: t.reason })),
+  );
+  return (
+    <div style={{ marginTop: 4, marginBottom: 8, padding: 8, borderRadius: 6, background: 'rgba(30,41,59,0.5)' }}>
+      <div style={{ fontWeight: 700, opacity: 0.85, marginBottom: 4 }}>Filtros aplicados</div>
+      <div style={{ opacity: 0.7, marginBottom: 2 }}>denySelectors (globais):</div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 6 }}>
+        {snapshot.denySelectors.map((s) => (
+          <code key={s} style={{ padding: '1px 5px', background: 'rgba(148,163,184,0.18)', borderRadius: 4, fontSize: 10 }}>
+            {s}
+          </code>
+        ))}
+      </div>
+      <div style={{ opacity: 0.7, marginBottom: 2 }}>
+        Alvos excluídos por allow/denylist ({excluded.length}):
+      </div>
+      <div style={{ maxHeight: 96, overflow: 'auto', fontSize: 10, lineHeight: 1.4 }}>
+        {excluded.length === 0 ? (
+          <span style={{ opacity: 0.6 }}>— nenhum —</span>
+        ) : (
+          excluded.map((e, i) => (
+            <div key={i} style={{ marginBottom: 2 }}>
+              <span style={{ color: 'rgb(248,113,113)' }}>✕</span> <strong>{e.route}</strong> · {e.name}
+              <span style={{ opacity: 0.6 }}> — {e.reason}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 export default function ContrastInspector() {
   const enabled = readEnabled();
   const [active, setActive] = useState<boolean>(() => {
