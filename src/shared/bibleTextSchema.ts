@@ -26,9 +26,9 @@ export { classifyError };
 export function describeBibleTextError(data: unknown): { title: string; description: string } | null {
   const parsed = BibleTextErrorSchema.safeParse(data);
   if (!parsed.success) return null;
-  const { error, reason, received_abbrev } = parsed.data;
+  const { error, reason, received_abbrev, correlationId } = parsed.data;
   return {
     title: error,
-    description: `${reason} (abreviação recebida: "${received_abbrev}")`,
+    description: `${reason} (abreviação recebida: "${received_abbrev}" · correlationId: ${correlationId})`,
   };
 }
