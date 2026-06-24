@@ -113,14 +113,25 @@ const CatechismDiagnosticPanel: React.FC = () => {
 
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Linha do tempo</div>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-6 text-[10px]"
-              onClick={clearCatechismDiag}
-            >
-              Limpar
-            </Button>
+            <div className="flex items-center gap-spacing-2xs">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={() => exportDiagReport(buffer, persisted)}
+                data-testid="catechism-diagnostic-export"
+              >
+                Exportar JSON
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={clearCatechismDiag}
+              >
+                Limpar
+              </Button>
+            </div>
           </div>
 
           <ScrollArea className="h-[240px] rounded-premium border border-border/40 bg-muted/20">
