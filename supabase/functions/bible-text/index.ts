@@ -114,37 +114,47 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
 }
 
 // Mapa abrev → ID bolls.life (NAA) vem do cânon compartilhado.
-import { BOLLS_MAP, bookNameFromAbbr } from "../_shared/bibleCanon.ts";
+import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr } from "../_shared/bibleCanon.ts";
 
 
-async function fetchFromBollsLife(abbrev: string, chapter: number) {
-    const bookId = BOLLS_MAP[abbrev];
+async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string) {
+    const book = findBookByAbbr(abbrev);
+    const bookId = book?.bollsId ?? BOLLS_MAP[abbrev];
     if (!bookId) {
-        console.warn(`[bible-text] BOLLS_MAP miss for abbrev="${abbrev}"`);
+        console.warn('[bible-text] BOLLS_MAP miss', {
+          correlationId,
+          received_abbrev: abbrev,
+          normalized: abbrev?.toLowerCase?.(),
+          known_examples: ['1Tm', '2Tm', 'Mt', 'Sl'],
+        });
         return null;
     }
+    console.info('[bible-text] bolls resolve', { correlationId, received_abbrev: abbrev, canonical_abbr: book?.abbr ?? null, bollsId: bookId });
     try {
         const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
         if (!res.ok) {
-            console.warn(`[bible-text] BollsLife ${res.status} for ${abbrev} ${chapter}`);
+            console.warn('[bible-text] BollsLife non-OK', { correlationId, abbrev, bookId, chapter, status: res.status });
             return null;
         }
         const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) return null;
+        if (!Array.isArray(data) || data.length === 0) {
+          console.warn('[bible-text] BollsLife empty payload', { correlationId, abbrev, bookId, chapter });
+          return null;
+        }
         return data.map((v: any) => ({
           number: v.verse,
           text: String(v.text || '').replace(/<[^>]+>/g, '').trim(),
           comment: v.comment
             ? String(v.comment)
-                // rewrite bolls relative refs to absolute https links opened in new tab
                 .replace(/<a\s+href=(['"])\/([^'"]+)\1/gi, "<a href=\"https://bolls.life/$2\" target=\"_blank\" rel=\"noopener\"")
             : null,
         }));
     } catch (e) {
-        console.error(`[bible-text] BollsLife fetch error ${abbrev} ${chapter}:`, e);
+        console.error('[bible-text] BollsLife fetch error', { correlationId, abbrev, bookId, chapter, error: String((e as any)?.message || e) });
         return null;
     }
 }
+
 
 serve(async (req) => {
   const correlationId = req.headers.get('x-correlation-id') || crypto.randomUUID();
