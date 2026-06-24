@@ -83,11 +83,29 @@ jobs:
           BIBLE_TEXT_MAX_OTHER: '0'
         run: deno run --allow-read --allow-write --allow-env scripts/edge-bible-text-summary.ts
 
-      - name: Upload edge reports
+      - name: Upload full edge reports (todos os JSONs + trend + SUMMARY)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: edge-bible-text-trend
           path: reports/edge
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Upload trend.json (comparação entre execuções)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-bible-text-trend-json
+          path: reports/edge/trend.json
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Upload SUMMARY.md (resumo + gráfico ASCII)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-bible-text-summary
+          path: reports/edge/SUMMARY.md
           retention-days: 90
           if-no-files-found: ignore
