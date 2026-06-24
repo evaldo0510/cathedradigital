@@ -115,6 +115,18 @@ export const resetLiturgicalCacheStats = () => {
   } catch { /* silent */ }
 };
 
+/** Remove as estatísticas de uma chave específica (chamado ao deletar a entrada). */
+export const resetLiturgicalCacheStatsForKey = (monthKey: string) => {
+  try {
+    const store = readStore();
+    if (store.perKey[monthKey]) {
+      delete store.perKey[monthKey];
+      window.localStorage.setItem(STATS_KEY, JSON.stringify(store));
+      window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { stat: 'reset', monthKey } }));
+    }
+  } catch { /* silent */ }
+};
+
 
 const buildKey = (year: number, month: number, calendar: string, lang: string) =>
   ['liturgical-month', calendar, lang, year, month] as const;
