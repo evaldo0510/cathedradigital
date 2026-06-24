@@ -217,7 +217,9 @@ const LiturgicalCalendarPage: React.FC = () => {
   const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
   const { data: saintsData = [] } = useAllSaintsDB(500);
-  const { data: apiData = {}, isLoading: isLoadingApi } = useLiturgicalMonth(year, month + 1);
+  const { data: apiData = {}, isLoading: isLoadingApi, isFetching: isFetchingApi, refresh: refreshMonth, cacheMeta } = useLiturgicalMonth(year, month + 1);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
 
 
   // Build a set of "MM-DD" keys for days that have a saint
