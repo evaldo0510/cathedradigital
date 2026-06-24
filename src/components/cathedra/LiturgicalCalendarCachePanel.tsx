@@ -2,23 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { clearLiturgicalCalendarCache } from '@/lib/offlineCache';
+import {
+  clearLiturgicalCalendarCache,
+  listLiturgicalCalendarEntries,
+  type LiturgicalCalendarEntryInfo,
+} from '@/lib/offlineCache';
 import {
   CacheMeta,
   getLiturgicalCacheStats,
+  getLiturgicalCacheStatsForKey,
   LiturgicalCacheStats,
   resetLiturgicalCacheStats,
 } from '@/hooks/useLiturgicalMonth';
-
 
 interface Props {
   meta: CacheMeta;
   onAfterClear?: () => void;
 }
 
-const formatRemaining = (meta: CacheMeta): string => {
-  if (meta.cachedAt == null || meta.ageMs == null) return '—';
-  const remaining = meta.ttlMs - meta.ageMs;
+const MONTH_NAMES_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+const formatRemainingMs = (remaining: number): string => {
   if (remaining <= 0) return 'expirado';
   const hours = Math.floor(remaining / 3_600_000);
   const days = Math.floor(hours / 24);
@@ -26,6 +30,11 @@ const formatRemaining = (meta: CacheMeta): string => {
   if (hours > 0) return `${hours}h`;
   const mins = Math.max(1, Math.floor(remaining / 60_000));
   return `${mins}min`;
+};
+
+const formatRemaining = (meta: CacheMeta): string => {
+  if (meta.cachedAt == null || meta.ageMs == null) return '—';
+  return formatRemainingMs(meta.ttlMs - meta.ageMs);
 };
 
 const sourceLabel: Record<CacheMeta['source'], { label: string; tone: 'ok' | 'warn' | 'pending' }> = {
@@ -36,18 +45,34 @@ const sourceLabel: Record<CacheMeta['source'], { label: string; tone: 'ok' | 'wa
   pending: { label: 'Sem cache', tone: 'pending' },
 };
 
+interface EntryRow extends LiturgicalCalendarEntryInfo {
+  stats: LiturgicalCacheStats;
+}
+
 const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) => {
   const [stats, setStats] = useState<LiturgicalCacheStats>(getLiturgicalCacheStats());
+  const [entries, setEntries] = useState<EntryRow[]>([]);
   const [isClearing, setIsClearing] = useState(false);
 
-
   useEffect(() => {
-    const refresh = () => setStats(getLiturgicalCacheStats());
-    window.addEventListener('cathedra-litcal-cache-updated', refresh);
-    const interval = window.setInterval(refresh, 5_000);
+    let mounted = true;
+    const refresh = async () => {
+      const list = await listLiturgicalCalendarEntries();
+      if (!mounted) return;
+      setStats(getLiturgicalCacheStats());
+      setEntries(list.map((e) => ({ ...e, stats: getLiturgicalCacheStatsForKey(e.key) })));
+    };
+    refresh();
+    const handler = () => { void refresh(); };
+    window.addEventListener('cathedra-litcal-cache-updated', handler);
+    window.addEventListener('cathedra_cache_updated', handler);
+    const interval = window.setInterval(refresh, 10_000);
     return () => {
-      window.removeEventListener('cathedra-litcal-cache-updated', refresh);
+      mounted = false;
+      window.removeEventListener('cathedra-litcal-cache-updated', handler);
+      window.removeEventListener('cathedra_cache_updated', handler);
       window.clearInterval(interval);
+
     };
   }, []);
 
