@@ -310,6 +310,7 @@ export default function BibleCacheAdminPage() {
           <TabsTrigger value="ops">Operações</TabsTrigger>
           <TabsTrigger value="entries">Entradas</TabsTrigger>
           <TabsTrigger value="audit">Auditoria</TabsTrigger>
+          <TabsTrigger value="compare">Comparar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="charts" className="space-y-4">
