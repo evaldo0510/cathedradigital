@@ -61,7 +61,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
-  
+  const [debug, setDebug] = useState<NexusDebugInfo>({});
+
   // Navigation stack for context-to-context breadcrumbs
   const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
 
@@ -69,12 +70,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
+    const correlationId = `nexus-${targetTag.slug || targetTag.id}-${Date.now()}`;
     setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
     setContent([]);
     setLogosInsight(null);
-    
+    setDebug({ correlationId, startedAt: startTime, request: { tag: targetTag, profileId } });
+
     try {
       const uniqueResults = await fetchNexusTagContent(targetTag);
       setContent(uniqueResults);
@@ -89,15 +92,25 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
       }
 
-      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
+      const endedAt = performance.now();
+      setMetrics(prev => ({ ...prev, endTime: endedAt, source: 'both' }));
+      setDebug(prev => ({
+        ...prev,
+        endedAt,
+        source: 'fetchNexusTagContent',
+        response: { count: uniqueResults.length, sample: uniqueResults.slice(0, 3) },
+      }));
       setStatus('success');
     } catch (e: any) {
+      const endedAt = performance.now();
       console.error(`[Nexus Diagnostic] Error fetching ${targetTag.label}:`, e);
       setErrorDetails(e.message || 'Erro desconhecido');
-      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
+      setMetrics(prev => ({ ...prev, endTime: endedAt }));
+      setDebug(prev => ({ ...prev, endedAt, error: String(e?.message || e), response: null }));
       setStatus('error');
     }
   };
+
 
   const handlePushTag = (newTag: Tag) => {
     setNavHistory(prev => [...prev, newTag]);
