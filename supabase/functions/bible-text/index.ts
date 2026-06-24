@@ -310,7 +310,7 @@ serve(async (req) => {
       });
     }
 
-    abbrev = parsed.data.abbrev;
+    abbrev = normalizeAbbr(parsed.data.abbrev);
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
