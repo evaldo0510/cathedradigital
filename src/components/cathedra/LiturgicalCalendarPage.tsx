@@ -544,7 +544,10 @@ const LiturgicalCalendarPage: React.FC = () => {
               ))}
             </div>
           </div>
+
+          <LiturgicalCalendarCachePanel meta={cacheMeta} onAfterClear={() => { void refreshMonth(); }} />
         </div>
+
       </div>
 
       <AnimatePresence>
