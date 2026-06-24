@@ -77,6 +77,12 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
   const [isClearingExpired, setIsClearingExpired] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [removingKey, setRemovingKey] = useState<string | null>(null);
+  const [confirmingRemoveKey, setConfirmingRemoveKey] = useState<string | null>(null);
+  const [confirmingClearExpired, setConfirmingClearExpired] = useState(false);
+  const [lastSummary, setLastSummary] = useState<
+    | { kind: 'remove' | 'clear-expired'; labels: string[]; at: number }
+    | null
+  >(null);
 
   useEffect(() => {
     let mounted = true;
@@ -169,16 +175,37 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
     }
   };
 
+  const entryLabel = (e: { month: number; year: number }) =>
+    `${MONTH_NAMES_SHORT[e.month - 1]}/${e.year}`;
+
+  const keyToLabel = (key: string): string => {
+    const found = entries.find((e) => e.key === key);
+    if (found) return entryLabel(found);
+    const m = /:(\d{4})-(\d{2})$/.exec(key);
+    return m ? `${MONTH_NAMES_SHORT[Number(m[2]) - 1]}/${m[1]}` : key;
+  };
+
   const handleClearExpired = async () => {
+    // Snapshot dos vencidos *antes* de apagar para alimentar o resumo.
+    const expiredEntries = entries.filter((e) => e.isStale);
+    const expiredLabels = expiredEntries.map(entryLabel);
     setIsClearingExpired(true);
+    setConfirmingClearExpired(false);
     const toastId = toast.loading('Removendo meses vencidos…');
     try {
       const removed = await clearExpiredLiturgicalCalendarEntries();
       removed.forEach((k) => resetLiturgicalCacheStatsForKey(k));
+      const removedLabels = removed.map(keyToLabel);
+      // Prefere a lista vinda do backend; cai no snapshot caso vazia.
+      const finalLabels = removedLabels.length > 0 ? removedLabels : expiredLabels;
       if (removed.length === 0) {
         toast.info('Nenhum mês vencido para remover.', { id: toastId });
       } else {
-        toast.success(`${removed.length} mês(es) vencidos removidos.`, { id: toastId });
+        toast.success(`${removed.length} mês(es) vencidos removidos.`, {
+          id: toastId,
+          description: finalLabels.join(' · '),
+        });
+        setLastSummary({ kind: 'clear-expired', labels: finalLabels, at: Date.now() });
       }
     } catch (err) {
       console.error('Failed to clear expired liturgical entries:', err);
@@ -207,12 +234,17 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
 
   const handleRemoveOne = async (entry: EntryRow) => {
     setRemovingKey(entry.key);
-    const label = `${MONTH_NAMES_SHORT[entry.month - 1]}/${entry.year}`;
+    setConfirmingRemoveKey(null);
+    const label = entryLabel(entry);
     const toastId = toast.loading(`Removendo ${label}…`);
     try {
       await deleteLiturgicalCalendarEntry(entry.key);
       resetLiturgicalCacheStatsForKey(entry.key);
-      toast.success(`${label} removido do cache.`, { id: toastId });
+      toast.success(`${label} removido do cache.`, {
+        id: toastId,
+        description: `1 entrada apagada do IndexedDB`,
+      });
+      setLastSummary({ kind: 'remove', labels: [label], at: Date.now() });
     } catch (err) {
       console.error('Failed to delete liturgical entry:', err);
       toast.error(`Não foi possível remover ${label}.`, { id: toastId });
@@ -220,6 +252,7 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
       setRemovingKey(null);
     }
   };
+
 
   return (
     <div
@@ -348,17 +381,41 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
                   >
                     {formatRemainingMs(remaining)}
                   </span>
-                  <button
-                    type="button"
-                    data-testid={`litcal-cache-entry-remove-${e.year}-${String(e.month).padStart(2, '0')}`}
-                    disabled={isRemoving}
-                    aria-busy={isRemoving}
-                    aria-label={`Remover ${MONTH_NAMES_SHORT[e.month - 1]}/${e.year} do cache`}
-                    onClick={() => handleRemoveOne(e)}
-                    className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isRemoving ? '…' : 'Remover'}
-                  </button>
+                  {confirmingRemoveKey === e.key ? (
+                    <span
+                      data-testid={`litcal-cache-entry-confirm-${e.year}-${String(e.month).padStart(2, '0')}`}
+                      className="flex items-center gap-spacing-3xs"
+                    >
+                      <button
+                        type="button"
+                        data-testid={`litcal-cache-entry-confirm-yes-${e.year}-${String(e.month).padStart(2, '0')}`}
+                        onClick={() => handleRemoveOne(e)}
+                        className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+                      >
+                        Confirmar
+                      </button>
+                      <button
+                        type="button"
+                        data-testid={`litcal-cache-entry-confirm-no-${e.year}-${String(e.month).padStart(2, '0')}`}
+                        onClick={() => setConfirmingRemoveKey(null)}
+                        className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border text-muted-foreground hover:bg-muted transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      data-testid={`litcal-cache-entry-remove-${e.year}-${String(e.month).padStart(2, '0')}`}
+                      disabled={isRemoving}
+                      aria-busy={isRemoving}
+                      aria-label={`Remover ${entryLabel(e)} do cache`}
+                      onClick={() => setConfirmingRemoveKey(e.key)}
+                      className="text-[10px] font-bold uppercase tracking-wider px-spacing-2xs py-spacing-3xs rounded-premium-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isRemoving ? '…' : 'Remover'}
+                    </button>
+                  )}
                 </li>
               );
             })}
@@ -368,6 +425,34 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
           h = hits · m = misses · s = stale hits
         </p>
       </div>
+
+      {lastSummary && (
+        <div
+          data-testid="litcal-cache-summary"
+          className="rounded-premium border border-primary/30 bg-primary/5 px-spacing-sm py-spacing-xs text-premium-xs"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center justify-between gap-spacing-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+              {lastSummary.kind === 'remove' ? 'Mês removido' : 'Vencidos removidos'}
+              {' '}· {lastSummary.labels.length}
+            </span>
+            <button
+              type="button"
+              data-testid="litcal-cache-summary-dismiss"
+              onClick={() => setLastSummary(null)}
+              className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+              aria-label="Fechar resumo"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="font-mono text-foreground/90 mt-spacing-3xs break-words">
+            {lastSummary.labels.join(' · ')}
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-spacing-xs pt-spacing-xs border-t border-border">
         <Button
@@ -381,18 +466,42 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
           {isExporting ? 'Exportando…' : 'Exportar JSON'}
         </Button>
 
-        <Button
-          data-testid="litcal-cache-clear-expired"
-          disabled={isClearingExpired || expiredCount === 0}
-          aria-busy={isClearingExpired}
-          onClick={handleClearExpired}
-          className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          <Icons.Cross className={`w-spacing-xs h-spacing-xs ${isClearingExpired ? 'animate-spin' : ''}`} />
-          {isClearingExpired
-            ? 'Removendo…'
-            : `Limpar vencidos${expiredCount > 0 ? ` (${expiredCount})` : ''}`}
-        </Button>
+        {confirmingClearExpired ? (
+          <span
+            data-testid="litcal-cache-clear-expired-confirm"
+            role="group"
+            aria-label="Confirmar remoção dos meses vencidos"
+            className="flex items-center gap-spacing-3xs"
+          >
+            <Button
+              data-testid="litcal-cache-clear-expired-confirm-yes"
+              onClick={handleClearExpired}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all"
+            >
+              Confirmar ({expiredCount})
+            </Button>
+            <Button
+              data-testid="litcal-cache-clear-expired-confirm-no"
+              onClick={() => setConfirmingClearExpired(false)}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border text-muted-foreground hover:bg-muted transition-all"
+            >
+              Cancelar
+            </Button>
+          </span>
+        ) : (
+          <Button
+            data-testid="litcal-cache-clear-expired"
+            disabled={isClearingExpired || expiredCount === 0}
+            aria-busy={isClearingExpired}
+            onClick={() => setConfirmingClearExpired(true)}
+            className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Icons.Cross className={`w-spacing-xs h-spacing-xs ${isClearingExpired ? 'animate-spin' : ''}`} />
+            {isClearingExpired
+              ? 'Removendo…'
+              : `Limpar vencidos${expiredCount > 0 ? ` (${expiredCount})` : ''}`}
+          </Button>
+        )}
 
         <Button
           data-testid="litcal-cache-clear"
