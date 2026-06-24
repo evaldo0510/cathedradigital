@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
@@ -8,16 +8,28 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { AlertTriangle, CheckCircle2, Download, Flame, Loader2, RefreshCcw, Trash2 } from 'lucide-react';
+import {
+  AlertTriangle, ArrowDown, ArrowUp, ChevronLeft, ChevronRight,
+  CheckCircle2, Download, Flame, Loader2, RefreshCcw, Trash2, Wifi, WifiOff,
+} from 'lucide-react';
 import { Navigate } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid, Legend } from 'recharts';
+import {
+  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line,
+  CartesianGrid, Legend,
+} from 'recharts';
 
 type ListRow = { cache_key: string; version: number; expires_at: string | null; created_at: string | null; fresh: boolean; age_s: number; hash: string | null };
 type SummaryBook = { abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; max_p95: number; bolls_calls: number; bolls_failures: number; hit_rate: number; avg_ms: number; bolls_rate: number };
-type Summary = { global: { hits: number; misses: number; stale: number; total: number; hit_rate: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; bolls_rate: number }; books: SummaryBook[]; hours: number };
+type Summary = { global: { hits: number; misses: number; stale: number; total: number; hit_rate: number; avg_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number; bolls_rate: number }; books: SummaryBook[] };
 type AlertRow = { id: string; created_at: string; severity: 'info' | 'warning' | 'critical'; kind: string; message: string; details: Record<string, unknown>; bucket_start: string | null; abbrev: string | null; resolved_at: string | null };
 type MetricRow = { bucket_start: string; abbrev: string; hits: number; misses: number; stale: number; total: number; sum_ms: number; p95_ms: number; bolls_calls: number; bolls_failures: number };
+type AuditRow = { id: number; created_at: string; actor_email: string | null; action: string; target: string | null; abbrev: string | null; chapter_from: number | null; chapter_to: number | null; count: number | null; succeeded: number | null; failed: number | null; details: Record<string, unknown> };
+type ChapterRow = { chapter: number; total: number; hits: number; misses: number; stale: number; avg_ms: number; p95_ms: number; max_ms: number; bolls_calls: number; bolls_failures: number };
+
+const POLL_FAST = 10_000;
+const POLL_SLOW = 30_000;
 
 async function call(action: string, payload: Record<string, unknown> = {}) {
   const { data, error } = await supabase.functions.invoke('bible-cache-admin', { body: { action, ...payload } });
@@ -28,34 +40,89 @@ async function call(action: string, payload: Record<string, unknown> = {}) {
 export default function BibleCacheAdminPage() {
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
   const qc = useQueryClient();
+
+  // ----- Filtros globais -----
   const [hours, setHours] = useState(24);
+  const [bookFilter, setBookFilter] = useState<string>('__all__');
+  const [bookSort, setBookSort] = useState<keyof SummaryBook>('total');
+  const [bookSortDir, setBookSortDir] = useState<'asc' | 'desc'>('desc');
+  const [live, setLive] = useState(true);
+  const [realtimeOk, setRealtimeOk] = useState(false);
+
+  // ----- Filtros da aba Entradas -----
   const [prefix, setPrefix] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'fresh' | 'stale'>('all');
+  const [listSort, setListSort] = useState<'created_at' | 'expires_at' | 'cache_key' | 'version'>('created_at');
+  const [listDir, setListDir] = useState<'asc' | 'desc'>('desc');
+  const [page, setPage] = useState(0);
+  const pageSize = 50;
+
+  // ----- Operações em lote -----
   const [warmInput, setWarmInput] = useState('Sl:1, Mt:1, Jo:1');
   const [bulkAbbrev, setBulkAbbrev] = useState('Sl');
   const [bulkFrom, setBulkFrom] = useState(1);
   const [bulkTo, setBulkTo] = useState(50);
 
-  const stats = useQuery({ queryKey: ['bible-cache-stats'], enabled: isAdmin, queryFn: () => call('stats'), refetchInterval: 30_000 });
-  const summary = useQuery<Summary>({ queryKey: ['bible-cache-summary', hours], enabled: isAdmin, queryFn: () => call('metrics_summary', { hours }), refetchInterval: 60_000 });
-  const metrics = useQuery<{ rows: MetricRow[] }>({ queryKey: ['bible-cache-metrics', hours], enabled: isAdmin, queryFn: () => call('metrics', { hours }), refetchInterval: 60_000 });
-  const alerts = useQuery<{ rows: AlertRow[] }>({ queryKey: ['bible-cache-alerts'], enabled: isAdmin, queryFn: () => call('alerts', { only_open: true }), refetchInterval: 30_000 });
-  const list = useQuery<{ rows: ListRow[] }>({ queryKey: ['bible-cache-list', prefix], enabled: isAdmin, queryFn: () => call('list', { limit: 200, prefix: prefix || undefined }) });
+  // ----- Drilldown -----
+  const [drillBook, setDrillBook] = useState<string | null>(null);
 
-  const invalidateAll = () => {
-    qc.invalidateQueries({ queryKey: ['bible-cache-stats'] });
-    qc.invalidateQueries({ queryKey: ['bible-cache-summary'] });
-    qc.invalidateQueries({ queryKey: ['bible-cache-metrics'] });
-    qc.invalidateQueries({ queryKey: ['bible-cache-list'] });
+  // ----- Auditoria -----
+  const [auditFilter, setAuditFilter] = useState<string>('__all__');
+  const [auditPage, setAuditPage] = useState(0);
+
+  const stats = useQuery({ queryKey: ['bcs-stats'], enabled: isAdmin, queryFn: () => call('stats'), refetchInterval: live ? POLL_FAST : false });
+  const summary = useQuery<Summary>({ queryKey: ['bcs-summary', hours], enabled: isAdmin, queryFn: () => call('metrics_summary', { hours }), refetchInterval: live ? POLL_SLOW : false });
+  const metrics = useQuery<{ rows: MetricRow[] }>({ queryKey: ['bcs-metrics', hours, bookFilter], enabled: isAdmin, queryFn: () => call('metrics', { hours, ...(bookFilter !== '__all__' ? { abbrev: bookFilter } : {}) }), refetchInterval: live ? POLL_SLOW : false });
+  const alerts = useQuery<{ rows: AlertRow[] }>({ queryKey: ['bcs-alerts'], enabled: isAdmin, queryFn: () => call('alerts', { only_open: true }), refetchInterval: live ? POLL_FAST : false });
+  const list = useQuery<{ rows: ListRow[]; total: number | null }>({
+    queryKey: ['bcs-list', prefix, statusFilter, listSort, listDir, page],
+    enabled: isAdmin,
+    queryFn: () => call('list', { limit: pageSize, offset: page * pageSize, prefix: prefix || undefined, status: statusFilter, sort: listSort, dir: listDir }),
+  });
+  const auditQ = useQuery<{ rows: AuditRow[]; total: number | null }>({
+    queryKey: ['bcs-audit', auditFilter, auditPage],
+    enabled: isAdmin,
+    queryFn: () => call('audit', { limit: 50, offset: auditPage * 50, ...(auditFilter !== '__all__' ? { action_filter: auditFilter } : {}) }),
+    refetchInterval: live ? POLL_SLOW : false,
+  });
+  const drilldown = useQuery<{ rows: ChapterRow[] }>({
+    queryKey: ['bcs-chapter', drillBook, hours],
+    enabled: isAdmin && !!drillBook,
+    queryFn: () => call('chapter_drilldown', { abbrev: drillBook, hours }),
+  });
+
+  // ----- Realtime: assinatura de bible_cache_alerts -----
+  useEffect(() => {
+    if (!isAdmin) return;
+    const channel = supabase
+      .channel('bible_cache_alerts_live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bible_cache_alerts' }, (payload) => {
+        qc.invalidateQueries({ queryKey: ['bcs-alerts'] });
+        if (payload.eventType === 'INSERT') {
+          const a = payload.new as AlertRow;
+          toast.warning(`Novo alerta: ${a.message}`);
+        }
+      })
+      .subscribe((status) => setRealtimeOk(status === 'SUBSCRIBED'));
+    return () => { supabase.removeChannel(channel); };
+  }, [isAdmin, qc]);
+
+  const invalidateOps = () => {
+    qc.invalidateQueries({ queryKey: ['bcs-stats'] });
+    qc.invalidateQueries({ queryKey: ['bcs-summary'] });
+    qc.invalidateQueries({ queryKey: ['bcs-list'] });
+    qc.invalidateQueries({ queryKey: ['bcs-audit'] });
+    if (drillBook) qc.invalidateQueries({ queryKey: ['bcs-chapter', drillBook, hours] });
   };
 
   const purge = useMutation({
     mutationFn: (vars: { cache_key?: string; prefix?: string }) => call('purge', vars),
-    onSuccess: () => { toast.success('Cache purgado'); invalidateAll(); },
+    onSuccess: () => { toast.success('Cache purgado'); invalidateOps(); },
     onError: (e: any) => toast.error(e?.message || 'Falha ao purgar'),
   });
   const warm = useMutation({
     mutationFn: (items: { abbrev: string; chapter: number }[]) => call('warm', { items }),
-    onSuccess: (r: any) => { toast.success(`Warm: ${r?.succeeded ?? 0}/${r?.total ?? 0}`); invalidateAll(); },
+    onSuccess: (r: any) => { toast.success(`Warm: ${r?.succeeded ?? 0}/${r?.total ?? 0}`); invalidateOps(); },
     onError: (e: any) => toast.error(e?.message || 'Falha no warm'),
   });
   const bulk = useMutation({
@@ -63,18 +130,18 @@ export default function BibleCacheAdminPage() {
     onSuccess: (r: any) => {
       if (r?.op === 'purge') toast.success(`Purgados ${r?.purged_count ?? 0} capítulos`);
       else toast.success(`Warm em lote: ${r?.succeeded ?? 0}/${r?.total ?? 0}`);
-      invalidateAll();
+      invalidateOps();
     },
     onError: (e: any) => toast.error(e?.message || 'Falha no bulk'),
   });
   const resolveAlert = useMutation({
     mutationFn: (id: string) => call('resolve_alert', { id }),
-    onSuccess: () => { toast.success('Alerta resolvido'); qc.invalidateQueries({ queryKey: ['bible-cache-alerts'] }); },
+    onSuccess: () => { toast.success('Alerta resolvido'); qc.invalidateQueries({ queryKey: ['bcs-alerts'] }); qc.invalidateQueries({ queryKey: ['bcs-audit'] }); },
     onError: (e: any) => toast.error(e?.message || 'Falha ao resolver'),
   });
   const runAggregator = useMutation({
     mutationFn: () => call('run_aggregator'),
-    onSuccess: () => { toast.success('Agregação disparada'); invalidateAll(); qc.invalidateQueries({ queryKey: ['bible-cache-alerts'] }); },
+    onSuccess: () => { toast.success('Agregação disparada'); invalidateOps(); qc.invalidateQueries({ queryKey: ['bcs-alerts'] }); },
     onError: (e: any) => toast.error(e?.message || 'Falha ao agregar'),
   });
 
@@ -99,13 +166,23 @@ export default function BibleCacheAdminPage() {
       }));
   }, [metrics.data]);
 
+  const sortedBooks = useMemo(() => {
+    const arr = [...(summary.data?.books ?? [])];
+    const dir = bookSortDir === 'asc' ? 1 : -1;
+    arr.sort((a, b) => {
+      const av = a[bookSort] as number ?? 0; const bv = b[bookSort] as number ?? 0;
+      return av < bv ? -1 * dir : av > bv ? 1 * dir : 0;
+    });
+    return arr;
+  }, [summary.data, bookSort, bookSortDir]);
+
   const downloadExport = async (format: 'csv' | 'json') => {
     try {
-      const { data, error } = await supabase.functions.invoke('bible-cache-admin', {
-        body: { action: 'export', format, hours },
-      });
+      const { data, error } = await supabase.functions.invoke('bible-cache-admin', { body: { action: 'export', format, hours } });
       if (error) throw error;
-      const blob = format === 'json' ? new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }) : new Blob([typeof data === 'string' ? data : ''], { type: 'text/csv' });
+      const blob = format === 'json'
+        ? new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+        : new Blob([typeof data === 'string' ? data : ''], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = `bible-cache-metrics-${hours}h.${format}`; a.click();
@@ -117,31 +194,48 @@ export default function BibleCacheAdminPage() {
   if (!isAdmin) return <Navigate to="/" replace />;
 
   const handleWarm = () => {
-    const items = warmInput.split(',').map((s) => s.trim()).filter(Boolean).map((s) => { const [a, c] = s.split(':').map((p) => p.trim()); return { abbrev: a, chapter: Number(c) }; }).filter((i) => i.abbrev && Number.isFinite(i.chapter));
+    const items = warmInput.split(',').map((s) => s.trim()).filter(Boolean).map((s) => {
+      const [a, c] = s.split(':').map((p) => p.trim());
+      return { abbrev: a, chapter: Number(c) };
+    }).filter((i) => i.abbrev && Number.isFinite(i.chapter));
     if (!items.length) { toast.error('Formato: "Sl:1, Mt:5, Jo:3"'); return; }
     warm.mutate(items);
   };
 
   const g = summary.data?.global;
+  const allBookOptions = (summary.data?.books ?? []).map((b) => b.abbrev);
 
   return (
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Cache da Bíblia (L2)</h1>
-          <p className="text-sm text-muted-foreground">Métricas, alertas, entradas e operações em lote.</p>
+          <p className="text-sm text-muted-foreground">Métricas, alertas, drilldown por capítulo e auditoria.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Select value={String(hours)} onValueChange={(v) => setHours(Number(v))}>
-            <SelectTrigger className="h-9 w-32"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-9 w-36"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="1">Última 1h</SelectItem>
               <SelectItem value="6">Últimas 6h</SelectItem>
               <SelectItem value="24">Últimas 24h</SelectItem>
-              <SelectItem value="72">Últimos 3d</SelectItem>
-              <SelectItem value="168">Últimos 7d</SelectItem>
+              <SelectItem value="72">Últimos 3 dias</SelectItem>
+              <SelectItem value="168">Últimos 7 dias</SelectItem>
+              <SelectItem value="336">Últimos 14 dias</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={bookFilter} onValueChange={setBookFilter}>
+            <SelectTrigger className="h-9 w-36"><SelectValue placeholder="Livro" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Todos os livros</SelectItem>
+              {allBookOptions.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button size="sm" variant={live ? 'default' : 'outline'} onClick={() => setLive((v) => !v)} title={live ? 'Live ON' : 'Live OFF'}>
+            {live ? <Wifi className="mr-2 h-4 w-4" /> : <WifiOff className="mr-2 h-4 w-4" />}
+            {live ? 'Live' : 'Pausado'}
+            {live && realtimeOk && <span className="ml-2 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />}
+          </Button>
           <Button size="sm" variant="outline" onClick={() => runAggregator.mutate()} disabled={runAggregator.isPending}>
             {runAggregator.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
             Agregar agora
@@ -149,7 +243,6 @@ export default function BibleCacheAdminPage() {
         </div>
       </header>
 
-      {/* Alertas abertos */}
       {(alerts.data?.rows?.length ?? 0) > 0 && (
         <Card className="space-y-2 border-amber-500/40 bg-amber-50/50 p-4 dark:bg-amber-950/20">
           <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
@@ -158,22 +251,26 @@ export default function BibleCacheAdminPage() {
           </div>
           <ul className="space-y-1.5">
             {alerts.data!.rows.map((a) => (
-              <li key={a.id} className="flex items-center justify-between gap-3 rounded border border-amber-500/20 bg-background/60 px-3 py-2 text-sm">
+              <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 rounded border border-amber-500/20 bg-background/60 px-3 py-2 text-sm">
                 <div className="flex items-center gap-2">
                   <Badge variant={a.severity === 'critical' ? 'destructive' : 'secondary'} className="uppercase">{a.severity}</Badge>
                   <span className="font-mono text-xs text-muted-foreground">{a.kind}</span>
                   <span>{a.message}</span>
                 </div>
-                <Button size="sm" variant="ghost" onClick={() => resolveAlert.mutate(a.id)}>
-                  <CheckCircle2 className="mr-1 h-4 w-4" /> Resolver
-                </Button>
+                <div className="flex gap-1">
+                  {a.abbrev && (
+                    <Button size="sm" variant="ghost" onClick={() => setDrillBook(a.abbrev!)}>Drilldown</Button>
+                  )}
+                  <Button size="sm" variant="ghost" onClick={() => resolveAlert.mutate(a.id)}>
+                    <CheckCircle2 className="mr-1 h-4 w-4" /> Resolver
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>
         </Card>
       )}
 
-      {/* KPIs */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
         <Kpi label="Cache total" value={stats.data?.total} />
         <Kpi label="Frescos" value={stats.data?.fresh} tone="ok" />
@@ -189,12 +286,13 @@ export default function BibleCacheAdminPage() {
           <TabsTrigger value="books">Por livro</TabsTrigger>
           <TabsTrigger value="ops">Operações</TabsTrigger>
           <TabsTrigger value="entries">Entradas</TabsTrigger>
+          <TabsTrigger value="audit">Auditoria</TabsTrigger>
         </TabsList>
 
         <TabsContent value="charts" className="space-y-4">
           <Card className="p-4">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Hits / Miss / Stale (por hora)</h2>
+              <h2 className="text-sm font-semibold">Hits / Miss / Stale {bookFilter !== '__all__' ? `· ${bookFilter}` : ''}</h2>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={() => downloadExport('csv')}><Download className="mr-1 h-4 w-4" />CSV</Button>
                 <Button size="sm" variant="outline" onClick={() => downloadExport('json')}><Download className="mr-1 h-4 w-4" />JSON</Button>
@@ -237,6 +335,26 @@ export default function BibleCacheAdminPage() {
 
         <TabsContent value="books">
           <Card className="overflow-auto p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Ordenar por</span>
+              <Select value={bookSort} onValueChange={(v) => setBookSort(v as keyof SummaryBook)}>
+                <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="total">Total</SelectItem>
+                  <SelectItem value="hits">Hits</SelectItem>
+                  <SelectItem value="misses">Misses</SelectItem>
+                  <SelectItem value="stale">Stale</SelectItem>
+                  <SelectItem value="hit_rate">Hit rate</SelectItem>
+                  <SelectItem value="avg_ms">avg (ms)</SelectItem>
+                  <SelectItem value="max_p95">p95 (ms)</SelectItem>
+                  <SelectItem value="bolls_rate">Bolls rate</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button size="sm" variant="outline" onClick={() => setBookSortDir((d) => d === 'asc' ? 'desc' : 'asc')}>
+                {bookSortDir === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+              </Button>
+              <span className="ml-auto text-xs text-muted-foreground">Clique no livro para abrir o drilldown</span>
+            </div>
             <table className="w-full text-sm">
               <thead className="text-left text-xs uppercase text-muted-foreground">
                 <tr>
@@ -252,8 +370,12 @@ export default function BibleCacheAdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {(summary.data?.books ?? []).map((b) => (
-                  <tr key={b.abbrev} className="border-t border-border/40">
+                {sortedBooks.map((b) => (
+                  <tr
+                    key={b.abbrev}
+                    className="cursor-pointer border-t border-border/40 hover:bg-muted/40"
+                    onClick={() => setDrillBook(b.abbrev)}
+                  >
                     <td className="py-2 pr-3 font-mono">{b.abbrev}</td>
                     <td className="py-2 pr-3">{b.total}</td>
                     <td className="py-2 pr-3">{b.hits}</td>
@@ -265,7 +387,7 @@ export default function BibleCacheAdminPage() {
                     <td className={`py-2 pr-3 ${b.bolls_rate > 0.3 ? 'text-amber-600' : ''}`}>{(b.bolls_rate * 100).toFixed(1)}%</td>
                   </tr>
                 ))}
-                {(summary.data?.books?.length ?? 0) === 0 && (
+                {sortedBooks.length === 0 && (
                   <tr><td colSpan={9} className="py-6 text-center text-muted-foreground">Sem dados na janela</td></tr>
                 )}
               </tbody>
@@ -308,16 +430,36 @@ export default function BibleCacheAdminPage() {
                 <Trash2 className="mr-2 h-4 w-4" /> Purgar intervalo
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">Limite: até 200 capítulos por chamada. Warm chama BollsLife sequencialmente.</p>
+            <p className="text-xs text-muted-foreground">Limite: até 200 capítulos por chamada. Toda execução é registrada na aba Auditoria.</p>
           </Card>
         </TabsContent>
 
         <TabsContent value="entries">
           <Card className="space-y-3 p-4">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-semibold">Entradas no cache</h2>
-              <div className="flex gap-2">
-                <Input placeholder="Filtrar por prefixo (ex.: Sl:)" value={prefix} onChange={(e) => setPrefix(e.target.value)} className="h-8 w-64 text-sm" />
+              <div className="ml-auto flex flex-wrap gap-2">
+                <Input placeholder="Prefixo (ex.: Sl:)" value={prefix} onChange={(e) => { setPrefix(e.target.value); setPage(0); }} className="h-8 w-48 text-sm" />
+                <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setPage(0); }}>
+                  <SelectTrigger className="h-8 w-32"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="fresh">Frescos</SelectItem>
+                    <SelectItem value="stale">Stale</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={listSort} onValueChange={(v) => setListSort(v as any)}>
+                  <SelectTrigger className="h-8 w-36"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="created_at">Criado em</SelectItem>
+                    <SelectItem value="expires_at">Expira em</SelectItem>
+                    <SelectItem value="cache_key">Chave</SelectItem>
+                    <SelectItem value="version">Versão</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button size="sm" variant="outline" onClick={() => setListDir((d) => d === 'asc' ? 'desc' : 'asc')}>
+                  {listDir === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+                </Button>
                 <Button size="sm" variant="outline" onClick={() => list.refetch()}><RefreshCcw className="h-4 w-4" /></Button>
                 {prefix && <Button size="sm" variant="destructive" onClick={() => purge.mutate({ prefix })} disabled={purge.isPending}>Purgar prefixo</Button>}
               </div>
@@ -348,9 +490,151 @@ export default function BibleCacheAdminPage() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+              page={page} pageSize={pageSize} total={list.data?.total ?? null}
+              loaded={list.data?.rows?.length ?? 0}
+              onPrev={() => setPage((p) => Math.max(0, p - 1))}
+              onNext={() => setPage((p) => p + 1)}
+            />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="audit">
+          <Card className="space-y-3 p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-sm font-semibold">Trilha de auditoria</h2>
+              <Select value={auditFilter} onValueChange={(v) => { setAuditFilter(v); setAuditPage(0); }}>
+                <SelectTrigger className="ml-auto h-8 w-44"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">Todas as ações</SelectItem>
+                  <SelectItem value="purge">purge</SelectItem>
+                  <SelectItem value="warm">warm</SelectItem>
+                  <SelectItem value="bulk_range">bulk_range</SelectItem>
+                  <SelectItem value="resolve_alert">resolve_alert</SelectItem>
+                  <SelectItem value="run_aggregator">run_aggregator</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button size="sm" variant="outline" onClick={() => auditQ.refetch()}><RefreshCcw className="h-4 w-4" /></Button>
+            </div>
+            <div className="overflow-auto">
+              <table className="w-full text-sm">
+                <thead className="text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="py-2 pr-3">Quando</th>
+                    <th className="py-2 pr-3">Usuário</th>
+                    <th className="py-2 pr-3">Ação</th>
+                    <th className="py-2 pr-3">Alvo</th>
+                    <th className="py-2 pr-3">Intervalo</th>
+                    <th className="py-2 pr-3">Qtd</th>
+                    <th className="py-2 pr-3">Ok/Falha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {auditQ.isLoading && <tr><td colSpan={7} className="py-6 text-center"><Loader2 className="inline h-4 w-4 animate-spin" /></td></tr>}
+                  {!auditQ.isLoading && (auditQ.data?.rows ?? []).length === 0 && <tr><td colSpan={7} className="py-6 text-center text-muted-foreground">Sem registros</td></tr>}
+                  {(auditQ.data?.rows ?? []).map((r) => (
+                    <tr key={r.id} className="border-t border-border/40 align-top">
+                      <td className="py-2 pr-3 text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString()}</td>
+                      <td className="py-2 pr-3 text-xs">{r.actor_email ?? '—'}</td>
+                      <td className="py-2 pr-3"><Badge variant="outline" className="font-mono">{r.action}</Badge></td>
+                      <td className="py-2 pr-3 font-mono text-xs">{r.target ?? '—'}</td>
+                      <td className="py-2 pr-3 text-xs">
+                        {r.abbrev && (r.chapter_from != null && r.chapter_to != null) ? `${r.abbrev} ${r.chapter_from}–${r.chapter_to}` : '—'}
+                      </td>
+                      <td className="py-2 pr-3">{r.count ?? '—'}</td>
+                      <td className="py-2 pr-3 text-xs">
+                        {r.succeeded != null && (
+                          <span>
+                            <span className="text-emerald-600">{r.succeeded}</span>
+                            {r.failed != null && <> / <span className="text-red-600">{r.failed}</span></>}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              page={auditPage} pageSize={50} total={auditQ.data?.total ?? null}
+              loaded={auditQ.data?.rows?.length ?? 0}
+              onPrev={() => setAuditPage((p) => Math.max(0, p - 1))}
+              onNext={() => setAuditPage((p) => p + 1)}
+            />
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* ----- Drilldown dialog ----- */}
+      <Dialog open={!!drillBook} onOpenChange={(open) => { if (!open) setDrillBook(null); }}>
+        <DialogContent className="max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>Drilldown · {drillBook} <span className="text-xs font-normal text-muted-foreground">· últimas {hours}h</span></DialogTitle>
+          </DialogHeader>
+          {drilldown.isLoading && <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin" /></div>}
+          {!drilldown.isLoading && (drilldown.data?.rows?.length ?? 0) === 0 && (
+            <div className="py-8 text-center text-sm text-muted-foreground">Sem eventos para "{drillBook}" nesta janela.</div>
+          )}
+          {(drilldown.data?.rows?.length ?? 0) > 0 && (
+            <div className="space-y-3">
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={drilldown.data!.rows}>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" />
+                    <XAxis dataKey="chapter" className="text-xs" />
+                    <YAxis className="text-xs" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="p95_ms" fill="#ef4444" name="p95 (ms)" />
+                    <Bar dataKey="avg_ms" fill="hsl(var(--primary))" name="avg (ms)" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="max-h-80 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 bg-background text-left text-xs uppercase text-muted-foreground">
+                    <tr>
+                      <th className="py-2 pr-3">Cap.</th>
+                      <th className="py-2 pr-3">Chamadas</th>
+                      <th className="py-2 pr-3">Hit</th>
+                      <th className="py-2 pr-3">Miss</th>
+                      <th className="py-2 pr-3">Stale</th>
+                      <th className="py-2 pr-3">avg (ms)</th>
+                      <th className="py-2 pr-3">p95 (ms)</th>
+                      <th className="py-2 pr-3">max (ms)</th>
+                      <th className="py-2 pr-3">Bolls calls</th>
+                      <th className="py-2 pr-3">Bolls falhas</th>
+                      <th className="py-2 pr-3" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {drilldown.data!.rows.map((r) => (
+                      <tr key={r.chapter} className="border-t border-border/40">
+                        <td className="py-2 pr-3 font-mono">{r.chapter}</td>
+                        <td className="py-2 pr-3">{Number(r.total)}</td>
+                        <td className="py-2 pr-3">{Number(r.hits)}</td>
+                        <td className="py-2 pr-3">{Number(r.misses)}</td>
+                        <td className="py-2 pr-3">{Number(r.stale)}</td>
+                        <td className="py-2 pr-3">{Number(r.avg_ms)}</td>
+                        <td className={`py-2 pr-3 ${r.p95_ms > 4000 ? 'text-amber-600' : ''}`}>{r.p95_ms}</td>
+                        <td className="py-2 pr-3">{r.max_ms}</td>
+                        <td className="py-2 pr-3">{Number(r.bolls_calls)}</td>
+                        <td className={`py-2 pr-3 ${Number(r.bolls_failures) > 0 ? 'text-red-600' : ''}`}>{Number(r.bolls_failures)}</td>
+                        <td className="py-2 pr-3 text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => warm.mutate([{ abbrev: drillBook!, chapter: r.chapter }])}><Flame className="h-4 w-4" /></Button>
+                            <Button size="sm" variant="ghost" onClick={() => purge.mutate({ cache_key: `${drillBook}:${r.chapter}` })}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -362,6 +646,21 @@ function Kpi({ label, value, tone = 'default' }: { label: string; value: any; to
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className={`mt-1 text-2xl font-semibold ${color}`}>{value ?? '—'}</div>
     </Card>
+  );
+}
+
+function Pagination({ page, pageSize, total, loaded, onPrev, onNext }: { page: number; pageSize: number; total: number | null; loaded: number; onPrev: () => void; onNext: () => void }) {
+  const from = total === 0 ? 0 : page * pageSize + 1;
+  const to = page * pageSize + loaded;
+  const hasNext = total != null ? to < total : loaded === pageSize;
+  return (
+    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
+      <span>{total != null ? `${from}–${to} de ${total}` : `Página ${page + 1}`}</span>
+      <div className="flex gap-1">
+        <Button size="sm" variant="outline" disabled={page === 0} onClick={onPrev}><ChevronLeft className="h-4 w-4" /></Button>
+        <Button size="sm" variant="outline" disabled={!hasNext} onClick={onNext}><ChevronRight className="h-4 w-4" /></Button>
+      </div>
+    </div>
   );
 }
 
