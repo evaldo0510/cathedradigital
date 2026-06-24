@@ -587,6 +587,89 @@ export default function BibleCacheAdminPage() {
             />
           </Card>
         </TabsContent>
+
+        <TabsContent value="compare" className="space-y-4">
+          <Card className="space-y-3 p-4">
+            <h2 className="text-sm font-semibold">Comparar duas janelas</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2 rounded border border-border/40 p-3">
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Janela A</div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Desde</label>
+                    <Input type="datetime-local" value={cmpASince} onChange={(e) => setCmpASince(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Até</label>
+                    <Input type="datetime-local" value={cmpAUntil} onChange={(e) => setCmpAUntil(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 rounded border border-border/40 p-3">
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Janela B</div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Desde</label>
+                    <Input type="datetime-local" value={cmpBSince} onChange={(e) => setCmpBSince(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                  <div className="flex-1 min-w-[180px]">
+                    <label className="block text-[11px] text-muted-foreground">Até</label>
+                    <Input type="datetime-local" value={cmpBUntil} onChange={(e) => setCmpBUntil(e.target.value)} className="h-8 text-xs" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-end gap-2">
+              <div>
+                <label className="block text-[11px] text-muted-foreground">Drilldown por capítulo (opcional)</label>
+                <Select value={cmpAbbrev} onValueChange={setCmpAbbrev}>
+                  <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Sem drilldown</SelectItem>
+                    {allBookOptions.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                onClick={() => { setCmpRun((n) => n + 1); setTimeout(() => compare.refetch(), 0); }}
+                disabled={compare.isFetching}
+              >
+                {compare.isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+                Comparar
+              </Button>
+              <span className="text-[11px] text-muted-foreground">
+                Dica: janelas iguais → variação 0. Variação calculada como B − A.
+              </span>
+            </div>
+          </Card>
+
+          {compare.data && (
+            <>
+              <div className="grid gap-3 md:grid-cols-3">
+                <DeltaKpi label="Hit rate" a={compare.data.a.global.hit_rate} b={compare.data.b.global.hit_rate} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter />
+                <DeltaKpi label="p95 (ms)" a={compare.data.a.global.p95_ms} b={compare.data.b.global.p95_ms} fmt={(v) => String(Math.round(v))} higherIsBetter={false} />
+                <DeltaKpi label="BollsLife rate" a={compare.data.a.global.bolls_rate} b={compare.data.b.global.bolls_rate} fmt={(v) => `${(v * 100).toFixed(1)}%`} higherIsBetter={false} />
+              </div>
+
+              <Card className="overflow-auto p-4">
+                <h3 className="mb-2 text-sm font-semibold">Variação por livro (B − A)</h3>
+                <CompareBookTable a={compare.data.a.books} b={compare.data.b.books} />
+              </Card>
+
+              {compare.data.chapters && (
+                <Card className="overflow-auto p-4">
+                  <h3 className="mb-2 text-sm font-semibold">Variação por capítulo · {compare.data.abbrev}</h3>
+                  <CompareChapterTable a={compare.data.chapters.a} b={compare.data.chapters.b} />
+                </Card>
+              )}
+            </>
+          )}
+          {compare.error && (
+            <Card className="border-red-500/40 bg-red-50/50 p-3 text-sm text-red-700 dark:bg-red-950/20 dark:text-red-300">
+              {(compare.error as Error).message}
+            </Card>
+          )}
+        </TabsContent>
       </Tabs>
 
       {/* ----- Drilldown dialog ----- */}
