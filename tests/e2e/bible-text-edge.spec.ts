@@ -61,3 +61,27 @@ test('bible-text edge: abreviação desconhecida → 404 com mensagem descritiva
     correlationId: 'e2e-xx-1',
   });
 });
+
+test('bible-text edge: payload inválido → 400 com correlationId', async () => {
+  // chapter ausente / abbrev vazio violam o schema de entrada
+  const { status, json } = await callBibleText({ abbrev: '' }, 'e2e-invalid');
+  expect([400, 422]).toContain(status);
+  expect(typeof json.error).toBe('string');
+  expect(json.error.length).toBeGreaterThan(0);
+  expect(json.correlationId).toBe('e2e-invalid');
+});
+
+test('bible-text edge: capítulo indisponível → 404 com reason específico', async () => {
+  // Gn tem 50 capítulos — pedir 999 força "capítulo não disponível em nenhuma fonte"
+  const { status, json } = await callBibleText({ abbrev: 'gn', chapter: 999 }, 'e2e-gn-999');
+  expect(status).toBe(404);
+  expect(json.error).toBe('Texto não encontrado');
+  expect(json.reason).toMatch(/não foi encontrado em nenhuma fonte|não disponível/i);
+  expect(json).toMatchObject({
+    received_abbrev: 'gn',
+    canonical_abbr: 'Gn',
+    bollsId: 1,
+    chapter: 999,
+    correlationId: 'e2e-gn-999',
+  });
+});
