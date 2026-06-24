@@ -172,4 +172,113 @@ describe('BibleAbbrValidatePage', () => {
       expect.objectContaining({ body: { abbrev: '2 Cr' } }),
     );
   });
+
+  it('404 / resolved:false: exibe badge "não reconhecido" e razão', async () => {
+    invokeMock.mockResolvedValue({
+      data: {
+        input: 'xyz',
+        normalized: 'xyz',
+        canonical_abbr: null,
+        book_name: null,
+        bollsId: null,
+        testament: null,
+        deuterocanonical: null,
+        resolved: false,
+        reason: 'abbreviation_not_found',
+      },
+      error: null,
+    });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BibleAbbrValidatePage />);
+    const input = screen.getByLabelText(/abreviação/i);
+    await user.clear(input);
+    await user.type(input, 'xyz');
+    await flushDebounce();
+
+    await waitFor(() =>
+      expect(screen.getByText(/não reconhecido/i)).toBeInTheDocument(),
+    );
+    expect(screen.getByText(/abbreviation_not_found/i)).toBeInTheDocument();
+    // Não foi registrado no histórico (apenas sucessos).
+    expect(localStorage.getItem('bibleAbbrValidateHistory:v1')).toBeNull();
+  });
+
+  it('404 propagado como error com context.json também renderiza não reconhecido', async () => {
+    const notFoundBody = {
+      input: 'zzz',
+      normalized: 'zzz',
+      canonical_abbr: null,
+      book_name: null,
+      bollsId: null,
+      testament: null,
+      deuterocanonical: null,
+      resolved: false,
+      reason: 'abbreviation_not_found',
+    };
+    const err = Object.assign(new Error('Function returned 404'), {
+      context: { json: async () => notFoundBody },
+    });
+    invokeMock.mockResolvedValue({ data: null, error: err });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BibleAbbrValidatePage />);
+    const input = screen.getByLabelText(/abreviação/i);
+    await user.clear(input);
+    await user.type(input, 'zzz');
+    await flushDebounce();
+
+    await waitFor(() =>
+      expect(screen.getByText(/não reconhecido/i)).toBeInTheDocument(),
+    );
+    expect(screen.getByText(/abbreviation_not_found/i)).toBeInTheDocument();
+  });
+
+  it('botão copiar canonical_abbr: copia valor e mostra feedback "Copiado" + toast', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const copyBtn = screen.getByRole('button', { name: /copiar canonical_abbr/i });
+    await user.click(copyBtn);
+
+    expect(writeText).toHaveBeenCalledWith('2Cr');
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /copiar canonical_abbr/i })).toHaveTextContent(/copiado/i),
+    );
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'canonical_abbr copiado',
+      expect.objectContaining({ description: '2Cr' }),
+    );
+  });
+
+  it('botão copiar bollsId: copia número como string e mostra feedback', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const copyBtn = screen.getByRole('button', { name: /copiar bollsid/i });
+    await user.click(copyBtn);
+
+    expect(writeText).toHaveBeenCalledWith('14');
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /copiar bollsid/i })).toHaveTextContent(/copiado/i),
+    );
+    expect(toastSuccess).toHaveBeenCalledWith(
+      'bollsId copiado',
+      expect.objectContaining({ description: '14' }),
+    );
+  });
 });
