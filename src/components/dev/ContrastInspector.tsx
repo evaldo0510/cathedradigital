@@ -499,7 +499,20 @@ export default function ContrastInspector() {
             </div>
           </label>
 
+          <FiltersSection />
+
           <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={() => exportEffectiveConfig(settings)}
+              title="Download level, text size mode, maxNodes and effective allowlist/denylist"
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgb(16,185,129)', color: 'white', fontWeight: 600,
+              }}
+            >
+              Export config
+            </button>
             <button
               type="button"
               onClick={() => { setSettingsState(DEFAULT_SETTINGS); writeSettings(DEFAULT_SETTINGS); }}
@@ -523,6 +536,7 @@ export default function ContrastInspector() {
           </div>
         </div>
       )}
+
 
 
       {active && info && (
