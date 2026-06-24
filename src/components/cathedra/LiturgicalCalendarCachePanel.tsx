@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { clearLiturgicalCalendarCache } from '@/lib/offlineCache';
@@ -8,6 +9,7 @@ import {
   LiturgicalCacheStats,
   resetLiturgicalCacheStats,
 } from '@/hooks/useLiturgicalMonth';
+
 
 interface Props {
   meta: CacheMeta;
@@ -36,6 +38,8 @@ const sourceLabel: Record<CacheMeta['source'], { label: string; tone: 'ok' | 'wa
 
 const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) => {
   const [stats, setStats] = useState<LiturgicalCacheStats>(getLiturgicalCacheStats());
+  const [isClearing, setIsClearing] = useState(false);
+
 
   useEffect(() => {
     const refresh = () => setStats(getLiturgicalCacheStats());
@@ -107,18 +111,31 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
       <div className="flex gap-spacing-xs pt-spacing-xs border-t border-border">
         <Button
           data-testid="litcal-cache-clear"
+          disabled={isClearing}
+          aria-busy={isClearing}
           onClick={async () => {
-            await clearLiturgicalCalendarCache();
-            resetLiturgicalCacheStats();
-            setStats(getLiturgicalCacheStats());
-            onAfterClear?.();
+            setIsClearing(true);
+            const toastId = toast.loading('Limpando cache do calendário…');
+            try {
+              await clearLiturgicalCalendarCache();
+              resetLiturgicalCacheStats();
+              setStats(getLiturgicalCacheStats());
+              toast.success('Cache do calendário limpo.', { id: toastId });
+              onAfterClear?.();
+            } catch (err) {
+              console.error('Failed to clear liturgical cache:', err);
+              toast.error('Não foi possível limpar o cache.', { id: toastId });
+            } finally {
+              setIsClearing(false);
+            }
           }}
-          className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs"
+          className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <Icons.Cross className="w-spacing-xs h-spacing-xs" />
-          Limpar cache
+          <Icons.Cross className={`w-spacing-xs h-spacing-xs ${isClearing ? 'animate-spin' : ''}`} />
+          {isClearing ? 'Limpando…' : 'Limpar cache'}
         </Button>
       </div>
+
     </div>
   );
 };
