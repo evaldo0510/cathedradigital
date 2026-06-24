@@ -170,9 +170,19 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
         ) : (
           <Copy className="h-3.5 w-3.5" aria-hidden />
         )}
-        <span className="text-xs">
+        <span
+          className={
+            'text-xs ' +
+            (failed
+              ? 'text-destructive-foreground'
+              : copied
+                ? 'text-primary'
+                : 'text-foreground')
+          }
+        >
           {copying ? 'Copiando…' : failed ? 'Não foi possível copiar' : copied ? 'Copiado' : 'Copiar'}
         </span>
+
       </Button>
       <span
         role="status"
