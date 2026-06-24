@@ -10,8 +10,13 @@ vi.mock('@/integrations/supabase/client', () => ({
 
 const toastSuccess = vi.fn();
 const toastError = vi.fn();
+const toastDismiss = vi.fn();
 vi.mock('sonner', () => ({
-  toast: { success: (...a: unknown[]) => toastSuccess(...a), error: (...a: unknown[]) => toastError(...a) },
+  toast: {
+    success: (...a: unknown[]) => toastSuccess(...a),
+    error: (...a: unknown[]) => toastError(...a),
+    dismiss: (...a: unknown[]) => toastDismiss(...a),
+  },
 }));
 
 vi.mock('@/contexts/ReadingSettingsContext', () => ({
