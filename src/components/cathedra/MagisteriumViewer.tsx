@@ -382,8 +382,12 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   if (error || !content) {
+    const canonicalUrl = id ? MAGISTERIUM_URLS[id] : undefined;
     return (
-      <div className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg">
+      <div
+        data-testid="magisterium-error-fallback"
+        className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-3xl text-center space-y-spacing-lg"
+      >
         <div className="w-spacing-3xl h-spacing-3xl bg-destructive/10 rounded-premium flex items-center justify-center mx-auto">
           <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" />
         </div>
@@ -391,12 +395,37 @@ const MagisteriumViewer: React.FC = () => {
           <h2 className="text-premium-2xl font-serif font-bold">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
         </div>
-        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-premium-full">
-          <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
-        </Button>
+        <div className="flex flex-wrap items-center justify-center gap-spacing-sm">
+          <Button
+            onClick={() => { setError(null); setRetryNonce((n) => n + 1); }}
+            variant="default"
+            className="rounded-premium-full"
+            data-testid="magisterium-retry"
+          >
+            <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs" />
+            Tentar novamente
+          </Button>
+          {canonicalUrl && (
+            <a
+              href={canonicalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="magisterium-external-fallback"
+              className="inline-flex items-center gap-spacing-xs rounded-premium-full border border-primary/30 px-spacing-lg py-spacing-sm text-sm hover:bg-primary/5 transition-colors"
+            >
+              <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
+              Abrir no vatican.va
+            </a>
+          )}
+          <Button onClick={() => navigate(-1)} variant="ghost" className="rounded-premium-full">
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
+          </Button>
+        </div>
+        <MagisteriumDiagnosticPanel />
       </div>
     );
   }
+
 
   return (
     <div className="w-full pb-spacing-4xl relative overflow-x-hidden">
