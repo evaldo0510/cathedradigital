@@ -1972,6 +1972,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_update_rate: {
+        Row: {
+          count: number
+          updated_at: string
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          count?: number
+          updated_at?: string
+          user_id: string
+          window_start?: string
+        }
+        Update: {
+          count?: number
+          updated_at?: string
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
