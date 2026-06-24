@@ -640,13 +640,15 @@ const Bible: React.FC = () => {
 
       if (response?.status === 404) {
         const errorData: any = data || {};
-        // Mantém o contrato do schema: reason + received_abbrev
-        const title = errorData.error || 'Texto não encontrado';
-        const reason = typeof errorData.reason === 'string' ? errorData.reason : '';
-        const received = errorData.received_abbrev ? ` (abreviação recebida: "${errorData.received_abbrev}")` : '';
-        const description = reason ? `${reason}${received}` : `Não foi possível carregar ${abbr} ${chapter}${received}.`;
-        toast.error(title, { description });
-        setSourceInfo(`Erro 404 — ${reason || 'texto não encontrado'}`);
+        // Contrato compartilhado: usa o helper do schema p/ extrair reason + received_abbrev
+        const described = describeBibleTextError(errorData);
+        const title = described?.title ?? errorData.error ?? 'Texto não encontrado';
+        const description = described?.description
+          ?? (typeof errorData.reason === 'string'
+              ? errorData.reason
+              : `Não foi possível carregar ${abbr} ${chapter}.`);
+        toast.error(title, { description, id: `bible-text-404-${abbr}-${chapter}` });
+        setSourceInfo(`Erro 404 — ${typeof errorData.reason === 'string' ? errorData.reason : 'texto não encontrado'}`);
         setIsLoading(false);
         return;
       }
