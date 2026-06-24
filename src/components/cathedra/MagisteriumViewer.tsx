@@ -45,6 +45,9 @@ const MagisteriumViewer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryNonce, setRetryNonce] = useState(0);
+  const [failureCount, setFailureCount] = useState(0);
+  const MAX_RETRIES = 3;
+  const unrecoverable = failureCount >= MAX_RETRIES;
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
