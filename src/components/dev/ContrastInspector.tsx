@@ -536,7 +536,26 @@ export default function ContrastInspector() {
         >
           ⚙
         </button>
+        <button
+          type="button"
+          onClick={openAudit}
+          title="Auditar contraste da página inteira"
+          aria-label="Auditar contraste"
+          aria-expanded={auditOpen}
+          style={{
+            padding: '6px 10px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.15)',
+            background: auditOpen ? 'rgba(168,85,247,0.95)' : 'rgba(15,23,42,0.85)',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+          }}
+        >
+          ⚠ Audit{audit ? ` · ${audit.violations.length}` : ''}
+        </button>
       </div>
+
 
       {settingsOpen && (
         <div
