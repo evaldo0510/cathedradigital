@@ -131,15 +131,17 @@ async function fetchMonth(
   lang: string,
   { force = false, silent = false }: FetchOpts = {},
 ): Promise<LiturgicalMonthMap> {
+  const monthKey = liturgicalCalendarKey(year, month, calendar, lang);
+
   // 1) IndexedDB primeiro (a menos que force=true)
   const cached = await getCachedLiturgicalMonth(year, month, { calendar, lang });
   if (!force && cached && !cached.isStale && cached.data) {
-    if (!silent) bumpStat('hits');
+    if (!silent) bumpStat('hits', monthKey);
     return cached.data as LiturgicalMonthMap;
   }
 
-  if (!force && cached?.isStale && !silent) bumpStat('staleHits');
-  else if (!silent) bumpStat('misses');
+  if (!force && cached?.isStale && !silent) bumpStat('staleHits', monthKey);
+  else if (!silent) bumpStat('misses', monthKey);
 
   // 2) Edge function
   try {
@@ -154,15 +156,16 @@ async function fetchMonth(
     }
     void cacheLiturgicalMonth(year, month, map, { calendar, lang });
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { year, month, source: 'network' } }));
+      window.dispatchEvent(new CustomEvent(CACHE_UPDATED_EVENT, { detail: { year, month, source: 'network', monthKey } }));
     }
     return map;
   } catch (err) {
-    if (!silent) bumpStat('networkErrors');
+    if (!silent) bumpStat('networkErrors', monthKey);
     if (cached?.data) return cached.data as LiturgicalMonthMap; // fallback offline
     throw err;
   }
 }
+
 
 async function ensureMonth(
   queryClient: QueryClient,
