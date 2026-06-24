@@ -114,6 +114,40 @@ const seriesChapter = trend.map((t) => t.counts.chapter_unavailable ?? 0);
 const seriesInvalid = trend.map((t) => t.counts.invalid_payload ?? 0);
 const seriesOther = trend.map((t) => t.counts.other ?? 0);
 
+// -------- SVG chart (publicado como artifact junto do SUMMARY.md) --------
+function buildSvg(): string {
+  const W = 720, H = 280, PAD = 36;
+  const N = trend.length || 1;
+  const series: Array<{ name: string; color: string; data: number[] }> = [
+    { name: "unknown_abbrev", color: "#C8A96A", data: seriesUnknown },
+    { name: "chapter_unavailable", color: "#0B1F3A", data: seriesChapter },
+    { name: "invalid_payload", color: "#a23b3b", data: seriesInvalid },
+    { name: "other", color: "#6b7280", data: seriesOther },
+  ];
+  const maxY = Math.max(1, ...series.flatMap((s) => s.data));
+  const xStep = (W - PAD * 2) / Math.max(1, N - 1);
+  const yScale = (v: number) => H - PAD - (v / maxY) * (H - PAD * 2);
+  const xPos = (i: number) => PAD + i * xStep;
+  const paths = series.map((s) => {
+    const d = s.data.length === 0
+      ? ""
+      : s.data.map((v, i) => `${i === 0 ? "M" : "L"}${xPos(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(" ");
+    return `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2"/>`;
+  }).join("");
+  const legend = series.map((s, i) =>
+    `<g transform="translate(${PAD + i * 160},${H - 10})"><rect width="10" height="10" fill="${s.color}"/><text x="14" y="9" font-size="11" font-family="sans-serif">${s.name}</text></g>`
+  ).join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="${PAD}" y="20" font-family="sans-serif" font-size="13" fill="#0B1F3A">bible-text — erros por tipo (últimas ${N} runs, máx=${maxY})</text>
+  <line x1="${PAD}" y1="${H - PAD}" x2="${W - PAD}" y2="${H - PAD}" stroke="#999"/>
+  <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H - PAD}" stroke="#999"/>
+  ${paths}
+  ${legend}
+</svg>`;
+}
+await Deno.writeTextFile(`${REPORT_DIR}/trend-chart.svg`, buildSvg());
+
 // -------- Regression check --------
 const limits = {
   unknown_abbrev: Number(Deno.env.get("BIBLE_TEXT_MAX_UNKNOWN_ABBREV") ?? 0),
@@ -142,6 +176,8 @@ const md = `## Edge \`bible-text\` — resumo da execução
 | Outros | ${errorCounts.other} | ${limits.other} | ${errorCounts.other > limits.other ? "🚨 REGRESSÃO" : "✅"} |
 
 **Artifacts da run:** ${artifactLink}
+
+> Gráfico SVG: \`reports/edge/trend-chart.svg\` (publicado como artifact \`edge-bible-text-chart-svg\`).
 
 ### Tendência (histórico acumulado em \`reports/edge/trend.json\`)
 

@@ -109,3 +109,12 @@ jobs:
           path: reports/edge/SUMMARY.md
           retention-days: 90
           if-no-files-found: ignore
+
+      - name: Upload trend-chart.svg (gráfico de tendência)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-bible-text-chart-svg
+          path: reports/edge/trend-chart.svg
+          retention-days: 90
+          if-no-files-found: ignore
