@@ -151,9 +151,10 @@ export async function clearLiturgicalCalendarCache(): Promise<void> {
   } catch (e) {
     console.error('Failed to clear liturgical-calendar cache:', e);
   }
-
+}
 
 export async function deleteFromStore(storeName: string, key: string): Promise<void> {
+
 
   try {
     const db = await openDB();
