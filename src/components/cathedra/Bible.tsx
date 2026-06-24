@@ -1691,7 +1691,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                 settings.contrast === 'high' && "text-primary font-bold"
                               )}
                             >
-                              {wrapWithDictionary(v.text)}
+                              {renderVerseWithNotes(v.text, v.comment)}
                               
                               <button 
                                 onClick={(e) => {
