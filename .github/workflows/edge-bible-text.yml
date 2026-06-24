@@ -6,15 +6,19 @@ on:
       - 'supabase/functions/bible-text/**'
       - 'supabase/functions/_shared/bibleCanon.ts'
       - 'supabase/functions/_shared/bibleCanon.test.ts'
+      - 'supabase/functions/_shared/bibleTextSchema.ts'
+      - 'supabase/functions/_shared/bibleTextSchema.test.ts'
+      - 'scripts/edge-bible-text-summary.ts'
+      - 'tests/e2e/bible-text-edge.spec.ts'
       - '.github/workflows/edge-bible-text.yml'
   push:
     branches: [main]
 
 jobs:
   canon-tests:
-    name: bibleCanon unit tests + bible-text smoke
+    name: bibleCanon + schema unit tests + smoke
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
 
@@ -23,14 +27,17 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Run bibleCanon unit tests
+      - name: Prepare reports dir
+        run: mkdir -p reports/edge
+
+      - name: Run Deno unit tests (canon + schema)
         run: |
-          mkdir -p reports/edge
           deno test --allow-net --allow-env \
             supabase/functions/_shared/bibleCanon.test.ts \
-            --reporter=pretty 2>&1 | tee reports/edge/bible-canon-${{ github.run_id }}.log
+            supabase/functions/_shared/bibleTextSchema.test.ts \
+            --reporter=pretty 2>&1 | tee reports/edge/deno-${{ github.run_id }}.log
 
-      - name: Smoke test bible-text "1tm 3"
+      - name: Smoke "1tm 3" (expect 200)
         if: env.SUPABASE_URL != '' && env.SUPABASE_ANON_KEY != ''
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -43,10 +50,32 @@ jobs:
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Content-Type: application/json" \
-            -H "x-correlation-id: ci-${{ github.run_id }}" \
+            -H "x-correlation-id: ci-${{ github.run_id }}-ok" \
             -d '{"abbrev":"1tm","chapter":3}')
           echo "HTTP $http -> $out"
           test "$http" = "200"
+
+      - name: Smoke "xx 1" (expect 404 descritivo)
+        if: env.SUPABASE_URL != '' && env.SUPABASE_ANON_KEY != ''
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          ts=$(date -u +%Y%m%dT%H%M%SZ)
+          out=reports/edge/bible-text-xx-1-${ts}.json
+          http=$(curl -sS -o "$out" -w "%{http_code}" \
+            -X POST "$SUPABASE_URL/functions/v1/bible-text" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -H "x-correlation-id: ci-${{ github.run_id }}-404" \
+            -d '{"abbrev":"xx","chapter":1}')
+          echo "HTTP $http -> $out"
+          test "$http" = "404"
+
+      - name: Generate CI summary from reports/edge/*
+        if: always()
+        run: deno run --allow-read --allow-write --allow-env scripts/edge-bible-text-summary.ts
 
       - name: Upload edge reports
         if: always()
