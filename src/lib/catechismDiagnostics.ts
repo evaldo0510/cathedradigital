@@ -37,9 +37,40 @@ export interface CatechismDiagEvent {
 }
 
 const STORAGE_KEY = 'cathedra_catechism_diag';
+const TIMELINE_KEY = 'cathedra_catechism_diag_timeline';
 const MAX_PERSISTED = 50;
 const MAX_BUFFER = 200;
-const buffer: CatechismDiagEvent[] = [];
+const PERSIST_DEBOUNCE_MS = 400;
+
+/** Reidrata a timeline persistida no boot do módulo (só em browser). */
+const rehydrateBuffer = (): CatechismDiagEvent[] => {
+  try {
+    if (typeof window === 'undefined') return [];
+    const raw = window.localStorage.getItem(TIMELINE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.slice(0, MAX_BUFFER);
+  } catch {
+    return [];
+  }
+};
+
+const buffer: CatechismDiagEvent[] = rehydrateBuffer();
+
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
+const schedulePersistTimeline = () => {
+  if (typeof window === 'undefined') return;
+  if (persistTimer) return; // já agendado
+  persistTimer = setTimeout(() => {
+    persistTimer = null;
+    try {
+      window.localStorage.setItem(TIMELINE_KEY, JSON.stringify(buffer.slice(0, MAX_BUFFER)));
+    } catch {
+      /* quota / privacy mode — silencioso */
+    }
+  }, PERSIST_DEBOUNCE_MS);
+};
 
 const isDebug = (): boolean => {
   try {
@@ -87,6 +118,7 @@ export const logCatechismDiag = (ev: Omit<CatechismDiagEvent, 'ts' | 'route'>) =
 
   buffer.unshift(full);
   if (buffer.length > MAX_BUFFER) buffer.length = MAX_BUFFER;
+  schedulePersistTimeline();
 
   if (isErrorStep(full.step)) {
     persistError(full);
@@ -139,7 +171,9 @@ export const getPersistedCatechismErrors = (): CatechismDiagEvent[] => {
 
 export const clearCatechismDiag = () => {
   buffer.length = 0;
+  if (persistTimer) { clearTimeout(persistTimer); persistTimer = null; }
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  try { localStorage.removeItem(TIMELINE_KEY); } catch {}
   try { window.dispatchEvent(new CustomEvent('catechism-diagnostic-cleared')); } catch {}
 };
 
