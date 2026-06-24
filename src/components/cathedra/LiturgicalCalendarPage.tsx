@@ -8,7 +8,9 @@ import { useAllSaintsDB } from '@/hooks/useSaints';
 import { useLiturgicalMonth } from '@/hooks/useLiturgicalMonth';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
+import LiturgicalCalendarCachePanel from './LiturgicalCalendarCachePanel';
 import { AnimatePresence } from 'framer-motion';
+
 
 
 interface LiturgicalDay {
@@ -215,7 +217,9 @@ const LiturgicalCalendarPage: React.FC = () => {
   const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
   const { data: saintsData = [] } = useAllSaintsDB(500);
-  const { data: apiData = {}, isLoading: isLoadingApi } = useLiturgicalMonth(year, month + 1);
+  const { data: apiData = {}, isLoading: isLoadingApi, isFetching: isFetchingApi, refresh: refreshMonth, cacheMeta } = useLiturgicalMonth(year, month + 1);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
 
 
   // Build a set of "MM-DD" keys for days that have a saint
@@ -352,6 +356,24 @@ const LiturgicalCalendarPage: React.FC = () => {
               <Icons.ArrowDown className="w-spacing-md h-spacing-md -rotate-90 text-foreground" />
             </Button>
           </div>
+
+          {/* Refresh row */}
+          <div className="flex justify-end mb-spacing-sm">
+            <Button
+              data-testid="litcal-refresh"
+              disabled={isRefreshing || isFetchingApi}
+              onClick={async () => {
+                setIsRefreshing(true);
+                try { await refreshMonth(); } finally { setIsRefreshing(false); }
+              }}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60"
+              aria-label="Atualizar calendário"
+            >
+              <Icons.ArrowDown className={`w-spacing-xs h-spacing-xs rotate-180 ${isRefreshing || isFetchingApi ? 'animate-spin' : ''}`} />
+              Atualizar calendário
+            </Button>
+          </div>
+
 
           {/* Loading indicator */}
           {isLoadingApi && (
@@ -522,7 +544,10 @@ const LiturgicalCalendarPage: React.FC = () => {
               ))}
             </div>
           </div>
+
+          <LiturgicalCalendarCachePanel meta={cacheMeta} onAfterClear={() => { void refreshMonth(); }} />
         </div>
+
       </div>
 
       <AnimatePresence>
