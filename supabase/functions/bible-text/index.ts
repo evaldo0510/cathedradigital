@@ -256,7 +256,7 @@ serve(async (req) => {
       await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version, ttlHours);
       console.info('[bible-text] ok', { correlationId, source, abbrev, canonical_abbr: resolvedBook?.abbr, bollsId: resolvedBollsId, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' }
       });
     }
 
