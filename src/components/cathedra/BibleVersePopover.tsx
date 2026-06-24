@@ -19,6 +19,32 @@ interface BibleVersePopoverProps {
   onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
+// Fallback de nomes completos (PT) caso a edge function não retorne bookName.
+const BOOK_NAME_BY_ABBR: Record<string, string> = {
+  Gn: 'Gênesis', Ex: 'Êxodo', Lv: 'Levítico', Nm: 'Números', Dt: 'Deuteronômio',
+  Js: 'Josué', Jz: 'Juízes', Rt: 'Rute',
+  '1Sm': '1 Samuel', '2Sm': '2 Samuel', '1Rs': '1 Reis', '2Rs': '2 Reis',
+  '1Cr': '1 Crônicas', '2Cr': '2 Crônicas', Ed: 'Esdras', Ne: 'Neemias', Et: 'Ester',
+  Jó: 'Jó', Job: 'Jó', Sl: 'Salmos', Pv: 'Provérbios', Ec: 'Eclesiastes', Ct: 'Cânticos',
+  Is: 'Isaías', Jr: 'Jeremias', Lm: 'Lamentações', Ez: 'Ezequiel', Dn: 'Daniel',
+  Os: 'Oseias', Jl: 'Joel', Am: 'Amós', Ab: 'Abdias', Jn: 'Jonas', Mq: 'Miqueias',
+  Na: 'Naum', Hc: 'Habacuque', Sf: 'Sofonias', Ag: 'Ageu', Zc: 'Zacarias', Ml: 'Malaquias',
+  Mt: 'Mateus', Mc: 'Marcos', Lc: 'Lucas', Jo: 'João', At: 'Atos',
+  Rm: 'Romanos', '1Co': '1 Coríntios', '2Co': '2 Coríntios', Gl: 'Gálatas', Ef: 'Efésios',
+  Fp: 'Filipenses', Cl: 'Colossenses', '1Ts': '1 Tessalonicenses', '2Ts': '2 Tessalonicenses',
+  '1Tm': '1 Timóteo', '2Tm': '2 Timóteo', Tt: 'Tito', Fm: 'Filemom',
+  Hb: 'Hebreus', Tg: 'Tiago', '1Pe': '1 Pedro', '2Pe': '2 Pedro',
+  '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João', Jd: 'Judas', Ap: 'Apocalipse',
+};
+
+const sanitizeBookName = (raw: unknown, abbr: string): string => {
+  const value = typeof raw === 'string' ? raw.trim() : '';
+  if (value && value.toLowerCase() !== 'undefined' && value.toLowerCase() !== 'null') {
+    return value;
+  }
+  return BOOK_NAME_BY_ABBR[abbr] || abbr;
+};
+
 const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
   abbr,
   chapter,
@@ -30,6 +56,11 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
+  const [bookName, setBookName] = useState<string>(() => sanitizeBookName(undefined, abbr));
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const safeLabel = (label && label !== 'undefined') ? label : `${sanitizeBookName(undefined, abbr)} ${chapter}${verse ? `,${verse}` : ''}`;
+  const headerTitle = `${bookName} ${chapter}${verse ? `,${verse}` : ''} (NAA)`;
 
   const handleNavigate = () => {
     if (onNavigate) {
@@ -42,27 +73,51 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
   const fetchVerses = async () => {
     if (fetched) return;
     setLoading(true);
+    setErrorMsg(null);
+    const correlationId = `bvp-${abbr}-${chapter}-${Date.now()}`;
     try {
+      console.info('[BibleVersePopover] invoke bible-text', { abbrev: abbr, chapter, verse, correlationId });
       const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { abbrev: abbr, chapter },
+        headers: { 'x-correlation-id': correlationId },
       });
-      if (!error && data?.verses) {
-        if (verse) {
-          // Show the specific verse and a couple around it for context
-          const idx = data.verses.findIndex((v: any) => v.number === verse);
-          const start = Math.max(0, idx - 1);
-          const end = Math.min(data.verses.length, idx + 3);
-          setVerses(data.verses.slice(start, end));
-        } else {
-          // Show first 5 verses as preview
-          setVerses(data.verses.slice(0, 5));
-        }
+      if (error) {
+        console.warn('[BibleVersePopover] edge error', { correlationId, error });
+        setErrorMsg('Não foi possível carregar este trecho agora.');
       }
-    } catch {
-      setVerses([{ number: 0, text: 'Erro ao carregar versículo.' }]);
+      const incoming = Array.isArray(data?.verses) ? data.verses : [];
+      setBookName(sanitizeBookName(data?.book, abbr));
+
+      if (incoming.length === 0) {
+        console.warn('[BibleVersePopover] empty verses payload', { correlationId, data });
+        setErrorMsg(prev => prev || 'Texto indisponível para esta passagem.');
+      } else if (verse) {
+        const idx = incoming.findIndex((v: any) => Number(v.number) === Number(verse));
+        if (idx === -1) {
+          // Versículo não encontrado: mostra os primeiros como contexto sem deixar "undefined"
+          setVerses(incoming.slice(0, 3));
+        } else {
+          const start = Math.max(0, idx - 1);
+          const end = Math.min(incoming.length, idx + 3);
+          setVerses(incoming.slice(start, end));
+        }
+      } else {
+        setVerses(incoming.slice(0, 5));
+      }
+    } catch (e) {
+      console.error('[BibleVersePopover] fetch crashed', { correlationId, error: e });
+      setErrorMsg('Erro ao carregar versículo.');
+      setVerses([]);
+    } finally {
+      setLoading(false);
+      setFetched(true);
     }
-    setLoading(false);
-    setFetched(true);
+  };
+
+  const renderVerseText = (text: unknown): string => {
+    if (typeof text !== 'string' || !text.trim()) return '…';
+    if (text.toLowerCase() === 'undefined') return '…';
+    return text;
   };
 
   return (
@@ -71,7 +126,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
         <Button
           className="px-spacing-xs py-spacing-2xs rounded-premium-full bg-card border border-border text-premium-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
-          {label}
+          {safeLabel}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -83,7 +138,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
           <div className="flex items-center gap-spacing-xs">
             <Icons.Book className="w-spacing-sm h-spacing-sm text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-wider text-primary">
-              {label}
+              {headerTitle}
             </span>
           </div>
           <Button
@@ -107,7 +162,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
               {verses.map(v => (
                 <p key={v.number} className="text-premium-xs leading-relaxed text-foreground/90">
                   <sup className="text-primary font-bold mr-spacing-2xs">{v.number}</sup>
-                  {v.text}
+                  {renderVerseText(v.text)}
                 </p>
               ))}
               {!verse && (
@@ -118,7 +173,9 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
             </>
           )}
           {!loading && fetched && verses.length === 0 && (
-            <p className="text-premium-xs text-muted-foreground italic">Texto não disponível.</p>
+            <p className="text-premium-xs text-muted-foreground italic">
+              {errorMsg || 'Texto não disponível.'}
+            </p>
           )}
         </div>
       </PopoverContent>
