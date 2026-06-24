@@ -6,6 +6,7 @@ import {
   getCachedLiturgicalMonth,
   liturgicalCalendarKey,
 } from '@/lib/offlineCache';
+import { isLiturgicalPrefetchDisabled } from '@/lib/litcalPrefetchGuard';
 
 
 /**
@@ -186,6 +187,8 @@ async function ensureMonth(
   calendar: string,
   lang: string,
 ) {
+  // Safety net: nunca prefetch quando o guard global está ativo.
+  if (isLiturgicalPrefetchDisabled()) return;
   await queryClient.prefetchQuery({
     queryKey: buildKey(year, month, calendar, lang),
     queryFn: () => fetchMonth(year, month, calendar, lang, { silent: true }),
@@ -250,8 +253,7 @@ export function useLiturgicalMonth(year: number, month: number, options: Options
   const { calendar = 'general-la', lang = 'la', prefetchAdjacent = true } = options;
   const queryClient = useQueryClient();
 
-  const disablePrefetchByURL = typeof window !== 'undefined'
-    && new URLSearchParams(window.location.search).get('litcal_no_prefetch') === '1';
+  const disablePrefetchByURL = isLiturgicalPrefetchDisabled();
 
   const query = useQuery<LiturgicalMonthMap>({
     queryKey: buildKey(year, month, calendar, lang),

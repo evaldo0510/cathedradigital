@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { useSaintsToday } from '@/hooks/useSaints';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
+import { isLiturgicalPrefetchDisabled } from '@/lib/litcalPrefetchGuard';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import ContemplativeLayout from './ContemplativeLayout';
@@ -22,6 +23,7 @@ const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
 function usePrefetchLiturgyCache() {
   useEffect(() => {
+    if (isLiturgicalPrefetchDisabled()) return;
     const prefetch = async () => {
       const now = new Date();
       for (let i = 1; i <= 6; i++) {
