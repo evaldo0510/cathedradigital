@@ -569,10 +569,13 @@ export default function ContrastInspector() {
             )}
           </div>
           <div>
-            <span style={{ opacity: 0.65 }}>min AA:</span> {info.aaMin}:1 ·{' '}
-            <span style={{ opacity: 0.65 }}>min AAA:</span> {info.aaaMin}:1
-            {info.isLarge && <span style={{ opacity: 0.65 }}> · large text</span>}
+            <span style={{ opacity: 0.65 }}>level:</span> <strong>{settings.level}</strong> ·{' '}
+            <span style={{ opacity: 0.65 }}>required:</span> {info.required}:1 ·{' '}
+            <span style={{ opacity: 0.65 }}>AA:</span> {info.aaMin}:1 ·{' '}
+            <span style={{ opacity: 0.65 }}>AAA:</span> {info.aaaMin}:1
+            {info.isLarge && <span style={{ opacity: 0.65 }}> · large</span>}
           </div>
+
           <div style={{ marginTop: 4 }}>
             <span style={{ opacity: 0.65 }}>font:</span> {Math.round(info.fontSize)}px / {info.fontWeight}
           </div>
