@@ -4,7 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   cacheLiturgicalMonth,
   getCachedLiturgicalMonth,
+  liturgicalCalendarKey,
 } from '@/lib/offlineCache';
+
 
 /**
  * Cache em camadas para o calendário litúrgico:
