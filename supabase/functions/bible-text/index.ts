@@ -149,25 +149,39 @@ async function fetchFromBollsLife(abbrev: string, chapter: number) {
 
 serve(async (req) => {
   const correlationId = req.headers.get('x-correlation-id') || crypto.randomUUID();
+  const t0 = Date.now();
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
+  let abbrev: string | undefined;
+  let chapter: number | undefined;
   try {
-    const { abbrev, chapter, client_cache_version } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    abbrev = body?.abbrev;
+    chapter = Number(body?.chapter);
+    const client_cache_version = body?.client_cache_version;
+
+    // Validação defensiva: protege contra payloads malformados (não joga 500).
+    if (!abbrev || typeof abbrev !== 'string' || !Number.isFinite(chapter) || chapter <= 0) {
+      console.warn('[bible-text] invalid payload', { correlationId, abbrev, chapter });
+      return new Response(JSON.stringify({
+        error: 'Parâmetros inválidos: informe { abbrev: string, chapter: number > 0 }',
+        correlationId,
+      }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+    }
+
+    console.info('[bible-text] start', { correlationId, abbrev, chapter });
+
     const cacheConfig = await getCacheConfig();
     const cacheKey = `${abbrev}:${chapter}`;
-    
-    // Invalidação L1 sugerida para o cliente
     const shouldInvalidateL1 = client_cache_version !== cacheConfig.version;
 
-    // 1. L2 Cache Lookup com check de versão
     const cached = await getCacheL2(cacheKey, cacheConfig.version);
     if (cached) {
-      return new Response(JSON.stringify({ 
-        ...cached, 
-        metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version } 
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId }
-      });
+      console.info('[bible-text] L2 hit', { correlationId, cacheKey, ms: Date.now() - t0 });
+      return new Response(JSON.stringify({
+        ...cached,
+        metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version }
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
     }
 
     const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
@@ -175,11 +189,11 @@ serve(async (req) => {
     let source = 'Cathedra (Local)';
 
     if (!isSovereigntyEnabled || !result) {
-        const fallback = await fetchFromBollsLife(abbrev, chapter);
-        if (fallback) {
-            result = { verses: fallback, bookName: abbrev };
-            source = 'BollsLife (Fallback)';
-        }
+      const fallback = await fetchFromBollsLife(abbrev, chapter);
+      if (fallback) {
+        result = { verses: fallback, bookName: abbrev };
+        source = 'BollsLife (Fallback)';
+      }
     }
 
     if (result) {
@@ -189,24 +203,28 @@ serve(async (req) => {
         book: result.bookName, chapter, verses: result.verses,
         metadata: { source, cache_version: CACHE_BASE_VERSION, logic_version: cacheConfig.version, correlationId, contentHash }
       };
-
       await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version);
-
-      return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } 
+      console.info('[bible-text] ok', { correlationId, source, verses: result.verses.length, ms: Date.now() - t0 });
+      return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId }
       });
     }
 
-    // Stale fallback: serve último snapshot conhecido em vez de invalidar
     const stale = await getCacheL2Stale(cacheKey);
     if (stale) {
+      console.warn('[bible-text] stale fallback', { correlationId, cacheKey, ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...stale,
         metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true }
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
     }
 
-    return new Response(JSON.stringify({ error: 'Texto não encontrado', correlationId }), { status: 404, headers: corsHeaders });
+    console.error('[bible-text] not found', { correlationId, abbrev, chapter, ms: Date.now() - t0 });
+    return new Response(JSON.stringify({ error: 'Texto não encontrado', correlationId }), {
+      status: 404,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
+    });
+
 
   } catch (error: any) {
     // Última linha de defesa: tentar stale em qualquer erro inesperado
