@@ -38,4 +38,28 @@ describe('Security: RLS Policies Validation', () => {
     // But we check that the update didn't happen (verified by RLS)
     expect(error).toBeDefined();
   });
+
+  describe('profiles.nexus_high_contrast — isolamento por usuário', () => {
+    it('usuário anônimo não enxerga nexus_high_contrast de ninguém', async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, nexus_high_contrast')
+        .limit(5);
+      // RLS: SELECT exige auth.uid() = id → anônimo recebe lista vazia (sem erro)
+      expect(error).toBeNull();
+      expect((data ?? []).length).toBe(0);
+    });
+
+    it('usuário anônimo não pode atualizar nexus_high_contrast de outro usuário', async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ nexus_high_contrast: true })
+        .eq('id', '00000000-0000-0000-0000-000000000000')
+        .select();
+      // RLS bloqueia: ou erro explícito, ou 0 linhas afetadas
+      const blocked = !!error || !data || data.length === 0;
+      expect(blocked).toBe(true);
+    });
+  });
 });
+
