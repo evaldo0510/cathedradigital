@@ -85,19 +85,20 @@ async function getCacheL2Stale(key: string) {
   } catch { return null; }
 }
 
-async function setCacheL2(key: string, content: any, hash: string, version: number) {
+async function setCacheL2(key: string, content: any, hash: string, version: number, ttlHours: number) {
   try {
     const expireDate = new Date();
-    expireDate.setHours(expireDate.getHours() + 168); // 7 dias
+    expireDate.setHours(expireDate.getHours() + ttlHours);
     await supabase.from('bible_cache_l2').upsert({
       cache_key: key,
       content,
       hash,
       version,
-      expires_at: expireDate.toISOString()
+      expires_at: expireDate.toISOString(),
     });
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
+
 
 async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   try {
