@@ -1647,11 +1647,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
-                                    catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-700', stripe: 'bg-blue-500', kicker: 'Catecismo' },
-                                    bible: { icon: <Icons.BookOpen className="w-3 h-3" />, tone: 'text-emerald-700', stripe: 'bg-emerald-500', kicker: 'Escritura' },
-                                    document: { icon: <Icons.ScrollText className="w-3 h-3" />, tone: 'text-purple-700', stripe: 'bg-purple-500', kicker: 'Magistério' },
-                                    theology: { icon: <Icons.Sparkles className="w-3 h-3" />, tone: 'text-secondary', stripe: 'bg-secondary', kicker: 'Nexus' },
-                                    cross_ref: { icon: <Icons.Link className="w-3 h-3" />, tone: 'text-amber-700', stripe: 'bg-amber-500', kicker: 'Referência' },
+                                    catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-800', stripe: 'bg-blue-600', kicker: 'Catecismo' },
+                                    bible: { icon: <Icons.BookOpen className="w-3 h-3" />, tone: 'text-emerald-800', stripe: 'bg-emerald-600', kicker: 'Escritura' },
+                                    document: { icon: <Icons.ScrollText className="w-3 h-3" />, tone: 'text-purple-800', stripe: 'bg-purple-600', kicker: 'Magistério' },
+                                    theology: { icon: <Icons.Sparkles className="w-3 h-3" />, tone: 'text-primary', stripe: 'bg-secondary', kicker: 'Nexus' },
+                                    cross_ref: { icon: <Icons.Link className="w-3 h-3" />, tone: 'text-amber-800', stripe: 'bg-amber-600', kicker: 'Referência' },
                                   };
                                   const meta = typeMeta[conn.type] || typeMeta.theology;
                                   return (
@@ -1660,9 +1660,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       initial={{ opacity: 0, y: 4 }}
                                       animate={{ opacity: 1, y: 0 }}
                                       transition={{ delay: idx * 0.03 }}
+                                      aria-label={`${meta.kicker}: ${conn.label}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        // Telemetria: clique em bolha do Nexus
                                         console.info('[Nexus] click', {
                                           book: selectedBook.abbr,
                                           chapter: selectedChapter,
@@ -1678,17 +1678,17 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                         } catch {}
                                         setExpandedConnection(conn);
                                       }}
-                                      className="group relative overflow-hidden rounded-md border border-primary/10 bg-white hover:border-secondary/40 hover:bg-secondary/[0.03] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98]"
+                                      className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
                                     >
                                       <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
                                       <div className="pl-2.5 pr-2 py-1.5 flex flex-col gap-0.5">
                                         <div className="flex items-center gap-1.5">
                                           <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
-                                          <span className={cn("text-[8px] font-black uppercase tracking-[0.12em] opacity-70", meta.tone)}>
+                                          <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
                                             {meta.kicker}
                                           </span>
                                         </div>
-                                        <span className="text-[11px] font-bold text-primary leading-tight truncate">
+                                        <span className="text-[11px] font-bold text-primary dark:text-foreground leading-tight truncate">
                                           {conn.label}
                                         </span>
                                       </div>
