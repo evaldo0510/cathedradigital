@@ -834,3 +834,159 @@ export default function ContrastInspector() {
 
   );
 }
+
+/** Floating audit panel — lists all WCAG violations on the current route+theme. */
+function AuditPanel({
+  audit,
+  onRescan,
+  onClose,
+  onApplyFix,
+  onHighlight,
+}: {
+  audit: AuditResult | null;
+  onRescan: () => void;
+  onClose: () => void;
+  onApplyFix: (v: ContrastViolation) => void;
+  onHighlight: (v: ContrastViolation) => void;
+}) {
+  const exportAudit = () => {
+    if (!audit) return;
+    const payload = {
+      ...audit,
+      violations: audit.violations.map(({ ref: _ref, ...rest }) => rest),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const safeRoute = audit.route.replace(/[^a-z0-9]+/gi, '_') || 'root';
+    a.href = url;
+    a.download = `contrast-audit-${safeRoute}-${audit.theme}-${audit.level}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div
+      data-contrast-inspector="audit"
+      role="dialog"
+      aria-label="Auditoria de contraste"
+      style={{
+        position: 'fixed',
+        top: 12,
+        right: 12,
+        zIndex: 2147483647,
+        width: 460,
+        maxHeight: '85vh',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'rgba(15,23,42,0.97)',
+        color: 'rgb(241,245,249)',
+        border: '1px solid rgba(148,163,184,0.3)',
+        borderRadius: 12,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+        fontSize: 11,
+        lineHeight: 1.45,
+      }}
+    >
+      <header style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>
+        <strong style={{ flex: 1 }}>
+          Audit{audit ? ` · ${audit.route} · ${audit.theme} · ${audit.level}` : ''}
+        </strong>
+        <button type="button" onClick={onRescan} style={panelBtn('rgb(59,130,246)')}>Rescan</button>
+        <button type="button" onClick={exportAudit} style={panelBtn('rgb(16,185,129)')}>Export</button>
+        <button type="button" onClick={onClose} style={panelBtn('rgba(30,41,59,0.6)')} aria-label="Fechar auditoria">✕</button>
+      </header>
+
+      {!audit ? (
+        <div style={{ padding: 16, opacity: 0.7 }}>Escaneando…</div>
+      ) : audit.violations.length === 0 ? (
+        <div style={{ padding: 16 }}>
+          ✅ Nenhuma violação em <strong>{audit.scanned}</strong> elementos de texto.
+        </div>
+      ) : (
+        <div style={{ overflow: 'auto', padding: '6px 8px' }}>
+          <div style={{ opacity: 0.7, margin: '4px 6px 8px' }}>
+            {audit.violations.length} violações em {audit.scanned} elementos · clique numa linha para destacar
+          </div>
+          {audit.violations.map((v) => (
+            <div
+              key={v.id}
+              style={{
+                padding: 8,
+                marginBottom: 6,
+                borderRadius: 8,
+                background: 'rgba(30,41,59,0.6)',
+                border: '1px solid rgba(220,38,38,0.35)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <button
+                  type="button"
+                  onClick={() => onHighlight(v)}
+                  style={{ ...panelBtn('rgba(148,163,184,0.2)'), flex: 1, textAlign: 'left' }}
+                  title="Rolar até o elemento e destacar"
+                >
+                  <strong>{v.selector}</strong>
+                  <span style={{ opacity: 0.7 }}> — {v.text || '(sem texto)'}</span>
+                </button>
+                <span style={{ padding: '2px 6px', borderRadius: 4, background: 'rgb(220,38,38)', color: 'white', fontWeight: 700 }}>
+                  {v.ratio}:1 / {v.required}
+                </span>
+              </div>
+              <div style={{ marginTop: 4, opacity: 0.75 }}>
+                <span style={{ opacity: 0.6 }}>fg/bg:</span> {v.color} → {v.background}
+                {v.isLarge ? ' · large' : ''}
+              </div>
+              <div style={{ marginTop: 4 }}>
+                <span style={{ opacity: 0.6 }}>classes:</span>{' '}
+                <code style={{ background: 'rgba(148,163,184,0.18)', padding: '0 4px', borderRadius: 3 }}>
+                  {v.classes || '—'}
+                </code>
+              </div>
+              {v.suggestions.length > 0 ? (
+                <div style={{ marginTop: 6, padding: 6, borderRadius: 6, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)' }}>
+                  <div style={{ opacity: 0.8, marginBottom: 4 }}>Sugestões de token semântico:</div>
+                  {v.suggestions.map((s, i) => (
+                    <div key={i}>
+                      <code>{s.from}</code> → <strong>{s.to}</strong>
+                      <div style={{ opacity: 0.65, fontSize: 10 }}>{s.rationale}</div>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => onApplyFix(v)}
+                    style={{ ...panelBtn('rgb(16,185,129)'), marginTop: 6, width: '100%' }}
+                  >
+                    Aplicar fix · copiar patch
+                  </button>
+                </div>
+              ) : (
+                <div style={{ marginTop: 6, opacity: 0.6 }}>
+                  Sem sugestão automática — revise o componente manualmente (cor pode vir de CSS, gradient ou inline style).
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function panelBtn(bg: string): React.CSSProperties {
+  return {
+    padding: '4px 8px',
+    borderRadius: 6,
+    border: '1px solid rgba(148,163,184,0.3)',
+    background: bg,
+    color: 'white',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    fontSize: 11,
+    fontWeight: 600,
+  };
+}
+
