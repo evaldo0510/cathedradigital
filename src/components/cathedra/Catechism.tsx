@@ -446,6 +446,7 @@ const Catechism: React.FC = memo(() => {
           ))}
         </div>
       </div>
+      <CatechismDiagnosticPanel />
     </ContemplativeLayout>
   );
 });
