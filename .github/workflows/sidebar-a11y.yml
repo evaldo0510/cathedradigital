@@ -1,0 +1,68 @@
+name: Sidebar a11y & console
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/cathedra/Sidebar.tsx'
+      - 'src/components/cathedra/BottomNav.tsx'
+      - 'src/App.tsx'
+      - 'tests/e2e/sidebar-quick.spec.ts'
+      - 'tests/e2e/utils/console-rules.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - '.github/workflows/sidebar-a11y.yml'
+  push:
+    branches: [main]
+
+jobs:
+  sidebar-a11y:
+    name: Sidebar axe + console trend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build
+        run: bun run build
+
+      - name: Run sidebar a11y suite
+        env:
+          CI: 'true'
+        run: |
+          bunx playwright test tests/e2e/sidebar-quick.spec.ts \
+            --project=chromium \
+            --reporter=line,html,json
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sidebar-playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload a11y + console trend reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sidebar-a11y-trend
+          path: |
+            reports/a11y
+            reports/console
+          retention-days: 90
+          if-no-files-found: ignore
