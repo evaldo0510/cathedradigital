@@ -1699,9 +1699,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   e.stopPropagation();
                                   handleOpenAnnotation(v);
                                 }}
-                                className="absolute -right-8 top-1 p-2 text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
+                                aria-label={`Anotar versículo ${v.number}`}
+                                className="absolute -right-8 top-1 p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
                               >
-                                <Icons.PenLine className="w-3.5 h-3.5" />
+                                <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
                             </p>
 
