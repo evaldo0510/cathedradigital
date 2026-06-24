@@ -234,7 +234,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-premium-full w-spacing-xl h-spacing-xl text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
+                className="rounded-premium-full w-spacing-xl h-spacing-xl text-primary/70 hover:text-primary hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
                 aria-label="Fechar menu"
               >
                 <Icons.X className="w-spacing-sm h-spacing-sm" />
@@ -246,8 +246,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
                     <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-premium transition-all">
-                      <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/30 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
-                      <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/10 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1} />
+                      <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/70 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
+                      <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/50 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -269,15 +269,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-1200 outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-300 outline-none h-auto min-h-[40px]
                                   ${isActive
-                                    ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-premium-none'
-                                    : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
+                                    ? 'bg-primary/10 dark:bg-white/10 text-primary shadow-premium-none'
+                                    : 'text-primary/75 dark:text-white/80 hover:bg-primary/5 dark:hover:bg-white/5 hover:text-primary'}`}
                               >
-                                  <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
+                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-90'}`}>
                                     {item.icon}
                                   </span>
-                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
+                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-95'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
                                     {cacheCount}
@@ -356,9 +356,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 </div>
 
                 <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
-                  <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
-                  <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
-                  <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/20 hover:text-primary/60 transition-colors" aria-label="Fale conosco no Whatsapp"><Icons.Whatsapp size={14} /></a>
+                  <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
+                  <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
+                  <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Fale conosco no Whatsapp"><Icons.Whatsapp size={14} /></a>
                 </div>
               </div>
 
@@ -376,8 +376,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       )}
                     </div>
                     <div className="flex-1 min-w-spacing-0">
-                      <p className="text-[10px] font-bold truncate text-primary/70">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[10px] font-bold truncate text-primary">{user.name}</p>
+                      <p className="text-[7px] uppercase text-primary/70 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
@@ -394,7 +394,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-spacing-xl w-spacing-xl rounded-premium-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
+                      className="h-spacing-xl w-spacing-xl rounded-premium-lg text-primary/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <Icons.LogOut className="w-spacing-sm h-spacing-sm" />
                     </Button>
