@@ -177,6 +177,8 @@ const md = `## Edge \`bible-text\` — resumo da execução
 
 **Artifacts da run:** ${artifactLink}
 
+> Gráfico SVG: \`reports/edge/trend-chart.svg\` (publicado como artifact \`edge-bible-text-chart-svg\`).
+
 ### Tendência (histórico acumulado em \`reports/edge/trend.json\`)
 
 ${chart(seriesUnknown, "unknown_abbrev")}
