@@ -174,7 +174,7 @@ serve(async (req) => {
     if (!isSovereigntyEnabled || !result) {
       const fallback = await fetchFromBollsLife(abbrev, chapter);
       if (fallback) {
-        result = { verses: fallback, bookName: abbrev };
+        result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
         source = 'BollsLife (Fallback)';
       }
     }
