@@ -8,7 +8,9 @@ import { useAllSaintsDB } from '@/hooks/useSaints';
 import { useLiturgicalMonth } from '@/hooks/useLiturgicalMonth';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
+import LiturgicalCalendarCachePanel from './LiturgicalCalendarCachePanel';
 import { AnimatePresence } from 'framer-motion';
+
 
 
 interface LiturgicalDay {
