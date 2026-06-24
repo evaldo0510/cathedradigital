@@ -134,7 +134,7 @@ export function findBookByAbbr(abbr: string): BibleBook | undefined {
   const cap = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
   if (BY_ABBR[cap]) return BY_ABBR[cap];
   // Tolerate spaces/punctuation (e.g. "2 Cr", "2.Cr", "2-cr") with case-insensitive fallback.
-  const compact = trimmed.toLowerCase().replace(/[\s._\-]+/g, '');
+  const compact = trimmed.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
   for (const [k, v] of Object.entries(BY_ABBR)) {
     if (k.toLowerCase() === compact) return v;
   }
