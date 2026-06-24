@@ -59,13 +59,13 @@ type Measurement = {
   classes?: string;
 };
 
-async function measureAll(page: Page, selector: string): Promise<Measurement[]> {
+async function measureAll(page: Page, selector: string, maxNodes: number): Promise<Measurement[]> {
   return page.evaluate(
-    ({ sel, helpers }) => {
+    ({ sel, helpers, max }) => {
       // eslint-disable-next-line no-eval
       eval(helpers);
       const out: Measurement[] = [];
-      const nodes = Array.from(document.querySelectorAll(sel)).slice(0, 20);
+      const nodes = Array.from(document.querySelectorAll(sel)).slice(0, max);
       for (const el of nodes) {
         const cs = getComputedStyle(el as Element);
         // @ts-expect-error injected
@@ -93,7 +93,7 @@ async function measureAll(page: Page, selector: string): Promise<Measurement[]> 
       if (out.length === 0) return [{ found: false }] as Measurement[];
       return out;
     },
-    { sel: selector, helpers: CONTRAST_HELPERS },
+    { sel: selector, helpers: CONTRAST_HELPERS, max: maxNodes },
   );
 }
 
