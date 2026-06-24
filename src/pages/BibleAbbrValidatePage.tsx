@@ -90,24 +90,38 @@ export async function copyToClipboard(value: string): Promise<boolean> {
 function CopyButton({ value, label }: { value: string | number | null; label: string }) {
   const [copied, setCopied] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [announcement, setAnnouncement] = useState('');
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const disabled = value === null || value === undefined || value === '';
   // Stable per-label toast id prevents duplicate persistent toasts on rapid clicks.
   const toastId = `bible-abbr-copy:${label}`;
   const valueStr = value === null || value === undefined ? '' : String(value);
   const ariaLabel = valueStr ? `Copiar ${label} (${valueStr})` : `Copiar ${label}`;
 
+  // Return focus to this copy button when the persistent toast is dismissed.
+  const restoreFocus = useCallback(() => {
+    // Defer so sonner finishes its own focus cleanup before we steal it back.
+    setTimeout(() => {
+      const btn = buttonRef.current;
+      if (btn && !btn.disabled) btn.focus();
+    }, 0);
+  }, []);
+
   return (
     <>
       <Button
+        ref={buttonRef}
         type="button"
         size="sm"
-        variant="ghost"
+        variant={failed ? 'destructive' : 'ghost'}
         disabled={disabled || copying}
         aria-busy={copying || undefined}
+        data-copy-state={copying ? 'copying' : copied ? 'copied' : failed ? 'error' : 'idle'}
         onClick={async () => {
           if (disabled || copying) return;
           setCopying(true);
+          setFailed(false);
           const str = String(value);
           try {
             const ok = await copyToClipboard(str);
@@ -120,13 +134,25 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
                 description: str,
                 duration: Infinity,
                 closeButton: true,
+                onDismiss: restoreFocus,
+                onAutoClose: restoreFocus,
               });
               setAnnouncement(`${label} copiado: ${str}`);
               setTimeout(() => setCopied(false), 1500);
             } else {
+              setFailed(true);
               toast.dismiss(toastId);
-              toast.error('Não foi possível copiar', { id: toastId });
-              setAnnouncement(`Falha ao copiar ${label}`);
+              toast.error('Não foi possível copiar', {
+                id: toastId,
+                description: `Falha ao copiar ${label}. Verifique as permissões da área de transferência.`,
+                duration: Infinity,
+                closeButton: true,
+                onDismiss: restoreFocus,
+                onAutoClose: restoreFocus,
+              });
+              setAnnouncement(`Não foi possível copiar ${label}`);
+              // Auto-clear the error visual after a short window; button stays enabled.
+              setTimeout(() => setFailed(false), 4000);
             }
           } finally {
             setCopying(false);
@@ -137,12 +163,16 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
       >
         {copying ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+        ) : failed ? (
+          <AlertTriangle className="h-3.5 w-3.5" aria-hidden />
         ) : copied ? (
           <Check className="h-3.5 w-3.5 text-primary" aria-hidden />
         ) : (
           <Copy className="h-3.5 w-3.5" aria-hidden />
         )}
-        <span className="text-xs">{copying ? 'Copiando…' : copied ? 'Copiado' : 'Copiar'}</span>
+        <span className="text-xs">
+          {copying ? 'Copiando…' : failed ? 'Não foi possível copiar' : copied ? 'Copiado' : 'Copiar'}
+        </span>
       </Button>
       <span
         role="status"
@@ -156,6 +186,7 @@ function CopyButton({ value, label }: { value: string | number | null; label: st
     </>
   );
 }
+
 
 
 export default function BibleAbbrValidatePage() {

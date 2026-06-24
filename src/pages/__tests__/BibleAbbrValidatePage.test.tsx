@@ -552,4 +552,100 @@ describe('BibleAbbrValidatePage', () => {
     );
     delete (document as any).execCommand;
   });
+
+  it('falha total: botão exibe estado de erro "Não foi possível copiar", reativa e dispara toast persistente de erro', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined, configurable: true, writable: true,
+    });
+    (document as any).execCommand = vi.fn().mockReturnValue(false);
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const btn = screen.getByRole('button', { name: /copiar canonical_abbr/i }) as HTMLButtonElement;
+    await act(async () => { fireEvent.click(btn); });
+
+    await waitFor(() => expect(btn).not.toBeDisabled());
+    expect(btn).toHaveTextContent(/não foi possível copiar/i);
+    expect(btn).toHaveAttribute('data-copy-state', 'error');
+
+    expect(toastError).toHaveBeenCalledWith(
+      'Não foi possível copiar',
+      expect.objectContaining({
+        id: 'bible-abbr-copy:canonical_abbr',
+        duration: Infinity,
+        closeButton: true,
+      }),
+    );
+    expect(screen.getByTestId('copy-live-canonical_abbr'))
+      .toHaveTextContent(/não foi possível copiar canonical_abbr/i);
+
+    await act(async () => { fireEvent.click(btn); });
+    expect((document as any).execCommand).toHaveBeenCalledTimes(2);
+
+    delete (document as any).execCommand;
+  });
+
+  it('a11y/foco: ao fechar o toast persistente (onDismiss), o foco volta ao botão que disparou a cópia', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText }, configurable: true, writable: true,
+    });
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const bollsBtn = screen.getByRole('button', { name: /copiar bollsid/i }) as HTMLButtonElement;
+    bollsBtn.focus();
+    await act(async () => { fireEvent.click(bollsBtn); });
+
+    const elsewhere = screen.getByLabelText(/abreviação/i) as HTMLInputElement;
+    elsewhere.focus();
+    expect(document.activeElement).toBe(elsewhere);
+
+    const successCall = toastSuccess.mock.calls.find((c) => c[0] === 'bollsId copiado');
+    const opts = successCall![1] as { onDismiss?: () => void };
+    expect(typeof opts.onDismiss).toBe('function');
+
+    await act(async () => {
+      opts.onDismiss!();
+      await vi.advanceTimersByTimeAsync(10);
+    });
+
+    expect(document.activeElement).toBe(bollsBtn);
+  });
+
+  it('a11y/foco: o foco também é restaurado quando o toast de erro persistente é fechado', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined, configurable: true, writable: true,
+    });
+    (document as any).execCommand = vi.fn().mockReturnValue(false);
+    invokeMock.mockResolvedValue(ok('2Cr', 14));
+    render(<BibleAbbrValidatePage />);
+    await flushDebounce();
+    await waitFor(() => expect(screen.getByText(/resolvido/i)).toBeInTheDocument());
+
+    const canonBtn = screen.getByRole('button', { name: /copiar canonical_abbr/i }) as HTMLButtonElement;
+    canonBtn.focus();
+    await act(async () => { fireEvent.click(canonBtn); });
+    await waitFor(() => expect(canonBtn).toHaveTextContent(/não foi possível copiar/i));
+
+    const elsewhere = screen.getByLabelText(/abreviação/i) as HTMLInputElement;
+    elsewhere.focus();
+    expect(document.activeElement).toBe(elsewhere);
+
+    const errCall = toastError.mock.calls.find((c) => c[0] === 'Não foi possível copiar');
+    const opts = errCall![1] as { onDismiss?: () => void };
+    expect(typeof opts.onDismiss).toBe('function');
+
+    await act(async () => {
+      opts.onDismiss!();
+      await vi.advanceTimersByTimeAsync(10);
+    });
+
+    expect(document.activeElement).toBe(canonBtn);
+    delete (document as any).execCommand;
+  });
 });
