@@ -191,19 +191,140 @@ function renderMarkdown(payloads: ContrastPayload[], report: Report, reportDir: 
   return lines.join('\n');
 }
 
+// ---------- baseline diff ----------
+type FailureKey = string;
+function keyOf(f: ContrastPayload['failures'][number]): FailureKey {
+  return `${f.route}|${f.theme}|${f.target}|${(f.text || '').trim().slice(0, 40)}`;
+}
+type Delta = {
+  regressions: Array<{ key: FailureKey; current: number; previous: number | null; required: number; route: string; theme: string; target: string; text: string }>;
+  fixed: Array<{ key: FailureKey; previous: number; required: number; route: string; theme: string; target: string; text: string }>;
+  worsened: Array<{ key: FailureKey; current: number; previous: number; delta: number; route: string; theme: string; target: string; text: string }>;
+  improved: Array<{ key: FailureKey; current: number; previous: number; delta: number; route: string; theme: string; target: string; text: string }>;
+};
+
+function diffAgainstBaseline(
+  current: ContrastPayload[],
+  baseline: ContrastPayload[] | null,
+): Delta {
+  const delta: Delta = { regressions: [], fixed: [], worsened: [], improved: [] };
+  if (!baseline) {
+    // No baseline → every current failure counts as a regression (first run).
+    for (const p of current) {
+      for (const f of p.failures || []) {
+        delta.regressions.push({
+          key: keyOf(f), current: f.ratio, previous: null, required: f.required,
+          route: f.route, theme: f.theme, target: f.target, text: f.text,
+        });
+      }
+    }
+    return delta;
+  }
+  const baseMap = new Map<FailureKey, ContrastPayload['failures'][number]>();
+  for (const p of baseline) for (const f of p.failures || []) baseMap.set(keyOf(f), f);
+  const curMap = new Map<FailureKey, ContrastPayload['failures'][number]>();
+  for (const p of current) for (const f of p.failures || []) curMap.set(keyOf(f), f);
+
+  for (const [k, f] of curMap) {
+    const prev = baseMap.get(k);
+    if (!prev) {
+      delta.regressions.push({
+        key: k, current: f.ratio, previous: null, required: f.required,
+        route: f.route, theme: f.theme, target: f.target, text: f.text,
+      });
+    } else if (f.ratio < prev.ratio - 0.01) {
+      delta.worsened.push({
+        key: k, current: f.ratio, previous: prev.ratio, delta: Math.round((f.ratio - prev.ratio) * 100) / 100,
+        route: f.route, theme: f.theme, target: f.target, text: f.text,
+      });
+    } else if (f.ratio > prev.ratio + 0.01) {
+      delta.improved.push({
+        key: k, current: f.ratio, previous: prev.ratio, delta: Math.round((f.ratio - prev.ratio) * 100) / 100,
+        route: f.route, theme: f.theme, target: f.target, text: f.text,
+      });
+    }
+  }
+  for (const [k, prev] of baseMap) {
+    if (!curMap.has(k)) {
+      delta.fixed.push({
+        key: k, previous: prev.ratio, required: prev.required,
+        route: prev.route, theme: prev.theme, target: prev.target, text: prev.text,
+      });
+    }
+  }
+  return delta;
+}
+
+function renderDeltaSection(delta: Delta, hasBaseline: boolean): string {
+  const lines: string[] = [];
+  lines.push('## Baseline comparison');
+  lines.push('');
+  if (!hasBaseline) {
+    lines.push('_No baseline found — every current failure is treated as a regression for this run._');
+    lines.push('');
+    return lines.join('\n');
+  }
+  lines.push(
+    `- New regressions: **${delta.regressions.length}** · Worsened: **${delta.worsened.length}** · Fixed: **${delta.fixed.length}** · Improved: **${delta.improved.length}**`,
+  );
+  lines.push('');
+  if (delta.regressions.length) {
+    lines.push('### ❌ New regressions');
+    lines.push('| Route | Theme | Target | Ratio | Required | Text |');
+    lines.push('| --- | --- | --- | --- | --- | --- |');
+    for (const r of delta.regressions) {
+      lines.push(`| ${r.route} | ${r.theme} | ${r.target} | **${r.current}:1** | ${r.required}:1 | ${(r.text || '').replace(/\|/g, '\\|').slice(0, 60)} |`);
+    }
+    lines.push('');
+  }
+  if (delta.worsened.length) {
+    lines.push('### ⚠️ Worsened (still above threshold or already failing)');
+    lines.push('| Route | Theme | Target | Was | Now | Δ |');
+    lines.push('| --- | --- | --- | --- | --- | --- |');
+    for (const r of delta.worsened) lines.push(`| ${r.route} | ${r.theme} | ${r.target} | ${r.previous}:1 | ${r.current}:1 | ${r.delta} |`);
+    lines.push('');
+  }
+  if (delta.fixed.length) {
+    lines.push('### ✅ Fixed since baseline');
+    lines.push('| Route | Theme | Target | Was |');
+    lines.push('| --- | --- | --- | --- |');
+    for (const r of delta.fixed) lines.push(`| ${r.route} | ${r.theme} | ${r.target} | ${r.previous}:1 |`);
+    lines.push('');
+  }
+  return lines.join('\n');
+}
+
+function loadBaseline(path: string): ContrastPayload[] | null {
+  if (!path || !existsSync(path)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(path, 'utf8'));
+    return raw.payloads ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// ---------- main ----------
 function main() {
   const reportDir = process.env.PLAYWRIGHT_REPORT_DIR || 'playwright-report';
   const jsonPath = process.env.PLAYWRIGHT_JSON_REPORT || join(reportDir, 'results.json');
   const fallbackDir = process.env.PLAYWRIGHT_TEST_RESULTS_DIR || 'test-results';
+  const baselinePath = process.env.CONTRAST_BASELINE || '';
+  const failMode = (process.env.CONTRAST_REPORT_FAIL_MODE ?? 'regressions').toLowerCase(); // 'regressions' | 'any' | 'never'
 
   const payloads = collectPayloads(jsonPath, fallbackDir);
   const report = loadReport(jsonPath);
+  const baseline = loadBaseline(baselinePath);
+  const delta = diffAgainstBaseline(payloads, baseline);
 
   if (!existsSync(reportDir)) mkdirSync(reportDir, { recursive: true });
 
   const summaryJson = {
     generatedAt: new Date().toISOString(),
+    baselineUsed: Boolean(baseline),
+    baselinePath: baseline ? baselinePath : null,
     payloads,
+    delta,
     totals: {
       routes: new Set(payloads.map((p) => p.route)).size,
       themes: [...new Set(payloads.map((p) => p.theme))],
@@ -212,19 +333,27 @@ function main() {
         0,
       ),
       failures: payloads.reduce((acc, p) => acc + (p.failures?.length || 0), 0),
+      regressions: delta.regressions.length,
+      worsened: delta.worsened.length,
+      fixed: delta.fixed.length,
     },
   };
   writeFileSync(join(reportDir, 'contrast-summary.json'), JSON.stringify(summaryJson, null, 2));
-  writeFileSync(join(reportDir, 'contrast-summary.md'), renderMarkdown(payloads, report, reportDir));
+
+  const md = renderDeltaSection(delta, Boolean(baseline)) + '\n' + renderMarkdown(payloads, report, reportDir);
+  writeFileSync(join(reportDir, 'contrast-summary.md'), md);
+
   console.log(
-    `[contrast-report] ${summaryJson.totals.failures} failure(s) across ${summaryJson.totals.routes} route(s); wrote ${join(reportDir, 'contrast-summary.md')}`,
+    `[contrast-report] failures=${summaryJson.totals.failures} regressions=${delta.regressions.length} worsened=${delta.worsened.length} fixed=${delta.fixed.length} baseline=${Boolean(baseline)}`,
   );
 
-  if ((process.env.CONTRAST_REPORT_FAIL_ON_VIOLATIONS ?? '1') !== '0' && summaryJson.totals.failures > 0) {
-    process.exitCode = 1;
-  }
+  const shouldFail =
+    failMode === 'any' ? summaryJson.totals.failures > 0
+    : failMode === 'never' ? false
+    : delta.regressions.length > 0 || delta.worsened.length > 0; // 'regressions'
+  if (shouldFail) process.exitCode = 1;
 }
 
 main();
-// Silence unused-import lint when dirname is not used in some forks.
 void dirname;
+

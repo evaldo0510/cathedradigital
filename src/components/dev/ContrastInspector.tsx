@@ -69,8 +69,49 @@ function rgbaString({ r, g, b, a }: RGBA) {
   return a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
 }
 
-function rateRatio(r: number, fontSize: number, fontWeight: number) {
-  const isLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+type WcagLevel = 'AA' | 'AAA';
+type LargeMode = 'auto' | 'normal' | 'large';
+
+export type InspectorSettings = {
+  level: WcagLevel;
+  largeMode: LargeMode;
+  /** Persisted preference, mirrored into the exported JSON for the spec to read. */
+  maxNodesPerSelector: number;
+};
+
+const DEFAULT_SETTINGS: InspectorSettings = {
+  level: 'AA',
+  largeMode: 'auto',
+  maxNodesPerSelector: 20,
+};
+
+const SETTINGS_KEY = 'cathedra:contrast-inspector:settings';
+
+function readSettings(): InspectorSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    const parsed = JSON.parse(raw);
+    return {
+      level: parsed.level === 'AAA' ? 'AAA' : 'AA',
+      largeMode: parsed.largeMode === 'normal' || parsed.largeMode === 'large' ? parsed.largeMode : 'auto',
+      maxNodesPerSelector:
+        Number.isFinite(parsed.maxNodesPerSelector) && parsed.maxNodesPerSelector > 0
+          ? Math.min(200, Math.floor(parsed.maxNodesPerSelector))
+          : DEFAULT_SETTINGS.maxNodesPerSelector,
+    };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
+function writeSettings(s: InspectorSettings) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+}
+
+function rateRatio(r: number, fontSize: number, fontWeight: number, settings: InspectorSettings) {
+  const autoLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+  const isLarge = settings.largeMode === 'large' ? true : settings.largeMode === 'normal' ? false : autoLarge;
   const aaMin = isLarge ? 3 : 4.5;
   const aaaMin = isLarge ? 4.5 : 7;
   return {
@@ -79,17 +120,19 @@ function rateRatio(r: number, fontSize: number, fontWeight: number) {
     aaa: r >= aaaMin,
     aaMin,
     aaaMin,
+    required: settings.level === 'AAA' ? aaaMin : aaMin,
+    passes: r >= (settings.level === 'AAA' ? aaaMin : aaMin),
   };
 }
 
-function inspectElement(el: Element) {
+function inspectElement(el: Element, settings: InspectorSettings) {
   const cs = getComputedStyle(el);
   const fg = parseColor(cs.color) ?? { r: 0, g: 0, b: 0, a: 1 };
   const bg = effectiveBackground(el);
   const ratio = contrastRatio(fg, bg);
   const fontSize = parseFloat(cs.fontSize) || 16;
   const fontWeight = parseInt(cs.fontWeight, 10) || 400;
-  const rating = rateRatio(ratio, fontSize, fontWeight);
+  const rating = rateRatio(ratio, fontSize, fontWeight, settings);
   return {
     tag: el.tagName.toLowerCase(),
     classes: tailwindClassesOf(el),
@@ -104,8 +147,9 @@ function inspectElement(el: Element) {
 
 type Inspection = ReturnType<typeof inspectElement>;
 
-function exportElement(el: Element) {
-  const info = inspectElement(el);
+
+function exportElement(el: Element, settings: InspectorSettings) {
+  const info = inspectElement(el, settings);
   const payload = {
     capturedAt: new Date().toISOString(),
     url: window.location.href,
@@ -223,7 +267,19 @@ export default function ContrastInspector() {
 
   const [info, setInfo] = useState<Inspection | null>(null);
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 16 });
+  const [settings, setSettingsState] = useState<InspectorSettings>(() => readSettings());
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const lastTargetRef = useRef<Element | null>(null);
+  const settingsRef = useRef<InspectorSettings>(settings);
+  settingsRef.current = settings;
+
+  const updateSettings = useCallback((patch: Partial<InspectorSettings>) => {
+    setSettingsState((prev) => {
+      const next = { ...prev, ...patch };
+      writeSettings(next);
+      return next;
+    });
+  }, []);
 
   const persistActive = useCallback((next: boolean) => {
     setActive(next);
@@ -234,6 +290,11 @@ export default function ContrastInspector() {
     }
   }, []);
 
+  // Re-evaluate the last hovered element whenever settings change so badges update.
+  useEffect(() => {
+    if (lastTargetRef.current) setInfo(inspectElement(lastTargetRef.current, settings));
+  }, [settings]);
+
   // Hotkey toggle: Alt+Shift+C
   useEffect(() => {
     if (!enabled) return;
@@ -242,13 +303,14 @@ export default function ContrastInspector() {
         e.preventDefault();
         persistActive(!active);
       }
-      if (e.key === 'Escape' && active) {
+      if (e.key === 'Escape' && (active || settingsOpen)) {
+        setSettingsOpen(false);
         persistActive(false);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [enabled, active, persistActive]);
+  }, [enabled, active, settingsOpen, persistActive]);
 
   // Hover tracking + Alt+Click export
   useEffect(() => {
@@ -257,7 +319,7 @@ export default function ContrastInspector() {
       const t = e.target as Element | null;
       if (!t || (t as HTMLElement).closest?.('[data-contrast-inspector]')) return;
       lastTargetRef.current = t;
-      setInfo(inspectElement(t));
+      setInfo(inspectElement(t, settingsRef.current));
       const pad = 16;
       const panelW = 360;
       const panelH = 260;
@@ -273,7 +335,7 @@ export default function ContrastInspector() {
       if (!t || (t as HTMLElement).closest?.('[data-contrast-inspector]')) return;
       e.preventDefault();
       e.stopPropagation();
-      exportElement(t);
+      exportElement(t, settingsRef.current);
     };
     window.addEventListener('mousemove', onMove, true);
     window.addEventListener('click', onClick, true);
@@ -283,40 +345,184 @@ export default function ContrastInspector() {
     };
   }, [enabled, active]);
 
+
   const badge = useMemo(() => {
     if (!info) return null;
-    const tone = info.aaa ? 'aaa' : info.aa ? 'aa' : 'fail';
+    // Pass/fail honors the user-chosen WCAG level; we still surface AAA when reached.
+    const passes = settings.level === 'AAA' ? info.aaa : info.aa;
+    const tone = info.aaa ? 'aaa' : passes ? 'aa' : 'fail';
     return { tone, text: tone === 'aaa' ? 'AAA' : tone === 'aa' ? 'AA' : 'FAIL' };
-  }, [info]);
+  }, [info, settings.level]);
+
 
   if (!enabled) return null;
 
   return (
     <>
-      {/* Always-on launcher chip */}
-      <button
-        type="button"
+      {/* Launcher chip + settings cog */}
+      <div
         data-contrast-inspector="launcher"
-        onClick={() => persistActive(!active)}
-        title="Contrast Inspector (Alt+Shift+C). Alt+Click to export."
         style={{
           position: 'fixed',
           bottom: 12,
           right: 12,
           zIndex: 2147483646,
+          display: 'flex',
+          gap: 6,
+          alignItems: 'center',
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           fontSize: 11,
-          padding: '6px 10px',
-          borderRadius: 999,
-          border: '1px solid rgba(255,255,255,0.15)',
-          background: active ? 'rgb(220, 38, 38)' : 'rgba(15,23,42,0.85)',
-          color: 'white',
-          cursor: 'pointer',
-          boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
         }}
       >
-        {active ? '◉ Inspecting' : '◎ Contrast'}
-      </button>
+        <button
+          type="button"
+          onClick={() => persistActive(!active)}
+          title="Contrast Inspector (Alt+Shift+C). Alt+Click to export."
+          style={{
+            padding: '6px 10px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.15)',
+            background: active ? 'rgb(220, 38, 38)' : 'rgba(15,23,42,0.85)',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+          }}
+        >
+          {active ? `◉ ${settings.level}` : `◎ Contrast · ${settings.level}`}
+        </button>
+        <button
+          type="button"
+          onClick={() => setSettingsOpen((v) => !v)}
+          title="Inspector settings"
+          aria-label="Inspector settings"
+          aria-expanded={settingsOpen}
+          style={{
+            padding: '6px 8px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.15)',
+            background: settingsOpen ? 'rgba(59,130,246,0.95)' : 'rgba(15,23,42,0.85)',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+          }}
+        >
+          ⚙
+        </button>
+      </div>
+
+      {settingsOpen && (
+        <div
+          data-contrast-inspector="settings"
+          role="dialog"
+          aria-label="Contrast inspector settings"
+          style={{
+            position: 'fixed',
+            bottom: 56,
+            right: 12,
+            zIndex: 2147483647,
+            width: 280,
+            background: 'rgba(15,23,42,0.97)',
+            color: 'rgb(241,245,249)',
+            border: '1px solid rgba(148,163,184,0.3)',
+            borderRadius: 12,
+            padding: 12,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 12,
+            lineHeight: 1.5,
+            boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Inspector settings</div>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>WCAG level</span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['AA', 'AAA'] as const).map((lvl) => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => updateSettings({ level: lvl })}
+                  style={{
+                    flex: 1, padding: '6px 8px', borderRadius: 6,
+                    border: '1px solid rgba(148,163,184,0.3)',
+                    background: settings.level === lvl ? 'rgb(59,130,246)' : 'rgba(30,41,59,0.6)',
+                    color: 'white', cursor: 'pointer', fontWeight: 600,
+                  }}
+                >
+                  {lvl}
+                </button>
+              ))}
+            </div>
+          </label>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>Text size mode</span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['auto', 'normal', 'large'] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => updateSettings({ largeMode: m })}
+                  style={{
+                    flex: 1, padding: '6px 4px', borderRadius: 6,
+                    border: '1px solid rgba(148,163,184,0.3)',
+                    background: settings.largeMode === m ? 'rgb(59,130,246)' : 'rgba(30,41,59,0.6)',
+                    color: 'white', cursor: 'pointer', fontWeight: 600, fontSize: 11,
+                  }}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+            <div style={{ opacity: 0.55, fontSize: 10, marginTop: 4 }}>
+              auto = WCAG default (≥24px or ≥18.66px bold = large)
+            </div>
+          </label>
+
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <span style={{ opacity: 0.7, display: 'block', marginBottom: 4 }}>
+              Max nodes per selector (spec): <strong>{settings.maxNodesPerSelector}</strong>
+            </span>
+            <input
+              type="range"
+              min={1}
+              max={100}
+              step={1}
+              value={settings.maxNodesPerSelector}
+              onChange={(e) => updateSettings({ maxNodesPerSelector: Number(e.target.value) })}
+              style={{ width: '100%' }}
+              aria-label="Max nodes per selector"
+            />
+            <div style={{ opacity: 0.55, fontSize: 10, marginTop: 2 }}>
+              Persisted for the Playwright spec to read via export.
+            </div>
+          </label>
+
+          <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={() => { setSettingsState(DEFAULT_SETTINGS); writeSettings(DEFAULT_SETTINGS); }}
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgba(30,41,59,0.6)', color: 'white',
+              }}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(false)}
+              style={{
+                flex: 1, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                border: '1px solid rgba(148,163,184,0.3)', background: 'rgb(59,130,246)', color: 'white', fontWeight: 600,
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {active && info && (
         <div
@@ -363,10 +569,13 @@ export default function ContrastInspector() {
             )}
           </div>
           <div>
-            <span style={{ opacity: 0.65 }}>min AA:</span> {info.aaMin}:1 ·{' '}
-            <span style={{ opacity: 0.65 }}>min AAA:</span> {info.aaaMin}:1
-            {info.isLarge && <span style={{ opacity: 0.65 }}> · large text</span>}
+            <span style={{ opacity: 0.65 }}>level:</span> <strong>{settings.level}</strong> ·{' '}
+            <span style={{ opacity: 0.65 }}>required:</span> {info.required}:1 ·{' '}
+            <span style={{ opacity: 0.65 }}>AA:</span> {info.aaMin}:1 ·{' '}
+            <span style={{ opacity: 0.65 }}>AAA:</span> {info.aaaMin}:1
+            {info.isLarge && <span style={{ opacity: 0.65 }}> · large</span>}
           </div>
+
           <div style={{ marginTop: 4 }}>
             <span style={{ opacity: 0.65 }}>font:</span> {Math.round(info.fontSize)}px / {info.fontWeight}
           </div>

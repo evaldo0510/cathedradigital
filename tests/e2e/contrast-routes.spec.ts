@@ -59,13 +59,13 @@ type Measurement = {
   classes?: string;
 };
 
-async function measureAll(page: Page, selector: string): Promise<Measurement[]> {
+async function measureAll(page: Page, selector: string, maxNodes: number): Promise<Measurement[]> {
   return page.evaluate(
-    ({ sel, helpers }) => {
+    ({ sel, helpers, max }) => {
       // eslint-disable-next-line no-eval
       eval(helpers);
       const out: Measurement[] = [];
-      const nodes = Array.from(document.querySelectorAll(sel)).slice(0, 20);
+      const nodes = Array.from(document.querySelectorAll(sel)).slice(0, max);
       for (const el of nodes) {
         const cs = getComputedStyle(el as Element);
         // @ts-expect-error injected
@@ -93,7 +93,7 @@ async function measureAll(page: Page, selector: string): Promise<Measurement[]> 
       if (out.length === 0) return [{ found: false }] as Measurement[];
       return out;
     },
-    { sel: selector, helpers: CONTRAST_HELPERS },
+    { sel: selector, helpers: CONTRAST_HELPERS, max: maxNodes },
   );
 }
 
@@ -108,33 +108,10 @@ async function setTheme(page: Page, theme: 'light' | 'dark') {
   await page.waitForTimeout(120);
 }
 
-// ---------- coverage matrix ----------
-type Target = { name: string; selector: string };
-type RouteSpec = { path: string; ready: RegExp | null; targets: Target[] };
+// ---------- coverage matrix (resolved from contrast.config.ts) ----------
+import { contrastConfig, effectiveSelector, resolveRoutes } from './contrast.config';
 
-const COMMON_TARGETS: Target[] = [
-  { name: 'h1', selector: 'main h1, h1' },
-  { name: 'h2', selector: 'main h2, h2' },
-  { name: 'paragraph', selector: 'main p, p' },
-  { name: 'link', selector: 'main a, nav a' },
-  { name: 'primary-button', selector: 'button:not([disabled])' },
-  { name: 'muted-text', selector: '.text-muted-foreground' },
-];
-
-const ROUTES: RouteSpec[] = [
-  { path: '/', ready: null, targets: COMMON_TARGETS },
-  { path: '/bible-abbr-validate', ready: /resolvido|aguardando entrada/i, targets: [
-    ...COMMON_TARGETS,
-    { name: 'canonical_abbr value', selector: 'dd:has(button[aria-label*="canonical_abbr"]) span.font-mono' },
-    { name: 'bollsId value', selector: 'dd:has(button[aria-label*="bollsId"]) span.font-mono' },
-    { name: 'copy button label', selector: 'button[aria-label*="canonical_abbr"] span, button[aria-label*="bollsId"] span' },
-  ] },
-  { path: '/glossary', ready: null, targets: COMMON_TARGETS },
-  { path: '/hoje', ready: null, targets: COMMON_TARGETS },
-  { path: '/temas', ready: null, targets: COMMON_TARGETS },
-  { path: '/santos', ready: null, targets: COMMON_TARGETS },
-  { path: '/encyclopedia', ready: null, targets: COMMON_TARGETS },
-];
+const ROUTES = resolveRoutes();
 
 // ---------- artifact helpers ----------
 type FailureRow = {
@@ -191,7 +168,6 @@ for (const theme of ['light', 'dark'] as const) {
       if (route.ready) {
         await expect(page.getByText(route.ready).first()).toBeVisible({ timeout: 15000 });
       } else {
-        // Best-effort: wait for the page to render some content.
         await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
       }
 
@@ -199,8 +175,9 @@ for (const theme of ['light', 'dark'] as const) {
       const failures: FailureRow[] = [];
 
       for (const t of route.targets) {
-        const rows = await measureAll(page, t.selector);
-        measurements.push({ target: t.name, selector: t.selector, rows });
+        const sel = effectiveSelector(t);
+        const rows = await measureAll(page, sel, contrastConfig.maxNodesPerSelector);
+        measurements.push({ target: t.name, selector: sel, rows });
         for (const m of rows) {
           if (!m.found || m.ratio === undefined) continue;
           const required = m.isLarge ? 3 : 4.5;
@@ -209,7 +186,7 @@ for (const theme of ['light', 'dark'] as const) {
               route: route.path,
               theme,
               target: t.name,
-              selector: t.selector,
+              selector: sel,
               ratio: m.ratio,
               required,
               text: m.text ?? '',
@@ -228,11 +205,12 @@ for (const theme of ['light', 'dark'] as const) {
 
       await attachFailureDiagnostics(info, page, failures, theme, route.path);
 
-      // Soft assertion: route-level summary; the CI report aggregates per-failure detail.
       expect(
         failures,
         failures.map((f) => `${f.target} ${f.ratio}:1 < ${f.required}:1 — "${f.text}"`).join('\n'),
       ).toEqual([]);
     });
   }
+}
+
 }
