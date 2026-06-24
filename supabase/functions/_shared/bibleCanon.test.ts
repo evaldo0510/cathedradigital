@@ -1,5 +1,33 @@
 import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { BIBLE_CANON, BOLLS_MAP, findBookByAbbr, bookNameFromAbbr } from "./bibleCanon.ts";
+import { BIBLE_CANON, BOLLS_MAP, findBookByAbbr, bookNameFromAbbr, normalizeAbbr } from "./bibleCanon.ts";
+
+Deno.test("bibleCanon: normalizeAbbr tolera espaços/pontuação e devolve forma canônica", () => {
+  const cases: Array<[string, string, number]> = [
+    ["2 Cr", "2Cr", 14],
+    ["2.Cr", "2Cr", 14],
+    ["2-cr", "2Cr", 14],
+    ["1 tm", "1Tm", 54],
+    ["1 TM", "1Tm", 54],
+    ["1.tm", "1Tm", 54],
+    ["1 Rs", "1Rs", 11],
+    ["2 sm", "2Sm", 10],
+    ["2 mc", "2Mc", 73],
+    ["1Tm", "1Tm", 54],
+    ["Mt", "Mt", 40],
+  ];
+  for (const [input, expectedAbbr, expectedId] of cases) {
+    assertEquals(normalizeAbbr(input), expectedAbbr, `normalizeAbbr("${input}")`);
+    const book = findBookByAbbr(input);
+    assertExists(book, `findBookByAbbr("${input}") deveria resolver`);
+    assertEquals(book!.bollsId, expectedId, `bollsId divergente para "${input}"`);
+  }
+});
+
+Deno.test("bibleCanon: normalizeAbbr de entrada desconhecida não lança e retorna trim", () => {
+  assertEquals(normalizeAbbr("xyz"), "xyz");
+  assertEquals(normalizeAbbr("  zzz  "), "zzz");
+  assertEquals(normalizeAbbr(""), "");
+});
 
 /**
  * Garante resolução case-insensitive para TODAS as abreviações canônicas:
