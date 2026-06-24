@@ -132,7 +132,15 @@ async function fetchFromBollsLife(abbrev: string, chapter: number) {
         }
         const data = await res.json();
         if (!Array.isArray(data) || data.length === 0) return null;
-        return data.map((v: any) => ({ number: v.verse, text: String(v.text || '').replace(/<[^>]+>/g, '').trim() }));
+        return data.map((v: any) => ({
+          number: v.verse,
+          text: String(v.text || '').replace(/<[^>]+>/g, '').trim(),
+          comment: v.comment
+            ? String(v.comment)
+                // rewrite bolls relative refs to absolute https links opened in new tab
+                .replace(/<a\s+href=(['"])\/([^'"]+)\1/gi, "<a href=\"https://bolls.life/$2\" target=\"_blank\" rel=\"noopener\"")
+            : null,
+        }));
     } catch (e) {
         console.error(`[bible-text] BollsLife fetch error ${abbrev} ${chapter}:`, e);
         return null;
