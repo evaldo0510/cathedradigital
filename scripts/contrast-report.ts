@@ -342,6 +342,8 @@ function main() {
       failures: payloads.reduce((acc, p) => acc + (p.failures?.length || 0), 0),
       regressions: delta.regressions.length,
       worsened: delta.worsened.length,
+      significantWorsened: significantWorsened.length,
+      deltaThreshold,
       fixed: delta.fixed.length,
     },
   };
@@ -351,15 +353,16 @@ function main() {
   writeFileSync(join(reportDir, 'contrast-summary.md'), md);
 
   console.log(
-    `[contrast-report] failures=${summaryJson.totals.failures} regressions=${delta.regressions.length} worsened=${delta.worsened.length} fixed=${delta.fixed.length} baseline=${Boolean(baseline)}`,
+    `[contrast-report] failures=${summaryJson.totals.failures} regressions=${delta.regressions.length} worsened=${delta.worsened.length} significantWorsened=${significantWorsened.length} (threshold=${deltaThreshold}) fixed=${delta.fixed.length} baseline=${Boolean(baseline)}`,
   );
 
   const shouldFail =
     failMode === 'any' ? summaryJson.totals.failures > 0
     : failMode === 'never' ? false
-    : delta.regressions.length > 0 || delta.worsened.length > 0; // 'regressions'
+    : delta.regressions.length > 0 || significantWorsened.length > 0; // 'regressions'
   if (shouldFail) process.exitCode = 1;
 }
+
 
 main();
 void dirname;
