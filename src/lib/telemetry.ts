@@ -42,7 +42,7 @@ class Telemetry {
         .from('telemetry_settings')
         .select('value')
         .eq('key', 'thresholds')
-        .single();
+        .maybeSingle();
       
       if (!error && data?.value) {
         this.thresholds = data.value as ThresholdConfig;
