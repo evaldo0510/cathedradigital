@@ -348,9 +348,12 @@ export default function ContrastInspector() {
 
   const badge = useMemo(() => {
     if (!info) return null;
-    const tone = info.aaa ? 'aaa' : info.aa ? 'aa' : 'fail';
+    // Pass/fail honors the user-chosen WCAG level; we still surface AAA when reached.
+    const passes = settings.level === 'AAA' ? info.aaa : info.aa;
+    const tone = info.aaa ? 'aaa' : passes ? 'aa' : 'fail';
     return { tone, text: tone === 'aaa' ? 'AAA' : tone === 'aa' ? 'AA' : 'FAIL' };
-  }, [info]);
+  }, [info, settings.level]);
+
 
   if (!enabled) return null;
 
