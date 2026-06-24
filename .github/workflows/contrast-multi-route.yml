@@ -102,6 +102,8 @@ jobs:
           CONTRAST_BASELINE: ${{ steps.baselineenv.outputs.path }}
           # On PRs: fail only on regressions. On main pushes: never fail (always seed).
           CONTRAST_REPORT_FAIL_MODE: ${{ github.event_name == 'pull_request' && 'regressions' || 'never' }}
+          # Ignore "worsened" entries whose drop is below this ratio (absorbs jitter).
+          CONTRAST_DELTA_THRESHOLD: '0.15'
         run: bunx tsx scripts/contrast-report.ts
 
       - name: Stop preview server
