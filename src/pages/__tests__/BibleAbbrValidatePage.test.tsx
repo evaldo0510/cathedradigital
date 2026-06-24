@@ -45,6 +45,7 @@ describe('BibleAbbrValidatePage', () => {
     invokeMock.mockReset();
     toastSuccess.mockReset();
     toastError.mockReset();
+    toastDismiss.mockReset();
     localStorage.clear();
   });
 
