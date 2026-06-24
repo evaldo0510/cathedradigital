@@ -1510,7 +1510,23 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               <div className="text-center">
                 <h2 className="text-[11px] font-black uppercase tracking-widest text-primary/80">{selectedBook.name} {selectedChapter}</h2>
               </div>
-              <ReadingSettingsPopover />
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={toggleHighContrast}
+                  aria-pressed={highContrast}
+                  aria-label={highContrast ? 'Desativar alto contraste das bolhas do Nexus' : 'Ativar alto contraste das bolhas do Nexus'}
+                  title="Alto contraste do Nexus"
+                  data-testid="nexus-contrast-toggle"
+                  className={cn(
+                    'p-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
+                    highContrast ? 'text-secondary bg-secondary/15' : 'text-primary/50 hover:text-primary',
+                  )}
+                >
+                  <Icons.Contrast className="w-5 h-5" />
+                </button>
+                <ReadingSettingsPopover />
+              </div>
             </header>
 
             <motion.div 
