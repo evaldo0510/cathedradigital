@@ -25,12 +25,26 @@ async function sha256(text: string) {
 async function getCacheConfig() {
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
-    return { 
-      enabled: data?.is_enabled || false, 
-      version: data?.metadata?.version || 1 
+    return {
+      enabled: data?.is_enabled || false,
+      version: data?.metadata?.version || 1,
     };
   } catch { return { enabled: true, version: 1 }; }
 }
+
+/** TTL (em horas) lido de app_feature_flags.bible_cache_ttl_hours.metadata.hours — default 168h (7d). */
+async function getCacheTtlHours(): Promise<number> {
+  try {
+    const { data } = await supabase
+      .from('app_feature_flags')
+      .select('metadata')
+      .eq('feature_key', 'bible_cache_ttl_hours')
+      .maybeSingle();
+    const h = Number(data?.metadata?.hours);
+    return Number.isFinite(h) && h > 0 && h <= 24 * 90 ? h : 168;
+  } catch { return 168; }
+}
+
 
 async function getFeatureFlag(key: string): Promise<boolean> {
   try {
