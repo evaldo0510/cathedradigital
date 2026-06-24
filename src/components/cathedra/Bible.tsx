@@ -789,7 +789,7 @@ const Bible: React.FC = () => {
 
     } catch (error: any) {
       // Local fallback for Abdias or connection issues
-      if (abbr === 'Ab') {
+      if (abbr === 'Ab' || abbr === 'Abd') {
          const obadiahText = [
             { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
             { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
