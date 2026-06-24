@@ -1549,8 +1549,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
             )}>
 
-              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} className="p-2 text-primary/40 active:text-secondary">
-                <Icons.ChevronLeft className="w-6 h-6" />
+              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+                <Icons.ChevronLeft className="w-6 h-6" aria-hidden="true" />
               </button>
               <div className="text-center">
                 <h2 className="text-[11px] font-black uppercase tracking-widest text-primary/80">{selectedBook.name} {selectedChapter}</h2>
