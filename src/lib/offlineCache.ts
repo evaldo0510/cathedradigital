@@ -3,7 +3,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 const DB_NAME = 'cathedra_cache';
-const DB_VERSION = 2; // Incremented for recovery validation
+const DB_VERSION = 3; // v3: adds liturgical-calendar store
 
 export interface CacheEntry {
   key: string;
@@ -26,11 +26,15 @@ function openDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains('liturgy')) {
         db.createObjectStore('liturgy', { keyPath: 'key' });
       }
+      if (!db.objectStoreNames.contains('liturgical-calendar')) {
+        db.createObjectStore('liturgical-calendar', { keyPath: 'key' });
+      }
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
 }
+
 
 async function getFromStore(storeName: string, key: string): Promise<any | null> {
   try {
