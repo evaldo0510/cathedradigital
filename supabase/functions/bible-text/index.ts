@@ -195,11 +195,22 @@ serve(async (req) => {
     }
 
     const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
+    const resolvedBook = findBookByAbbr(abbrev);
+    const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
+    console.info('[bible-text] resolve', {
+      correlationId,
+      received_abbrev: abbrev,
+      canonical_abbr: resolvedBook?.abbr ?? null,
+      book_name: resolvedBook?.name ?? null,
+      bollsId: resolvedBollsId,
+      sovereignty: isSovereigntyEnabled,
+    });
+
     let result = await fetchFromCathedraDb(abbrev, chapter);
     let source = 'Cathedra (Local)';
 
     if (!isSovereigntyEnabled || !result) {
-      const fallback = await fetchFromBollsLife(abbrev, chapter);
+      const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId);
       if (fallback) {
         result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
         source = 'BollsLife (Fallback)';
@@ -211,10 +222,20 @@ serve(async (req) => {
       const contentHash = await sha256(fullText);
       const responseData = {
         book: result.bookName, chapter, verses: result.verses,
-        metadata: { source, cache_version: CACHE_BASE_VERSION, logic_version: cacheConfig.version, correlationId, contentHash, ttl_hours: ttlHours }
+        metadata: {
+          source,
+          cache_version: CACHE_BASE_VERSION,
+          logic_version: cacheConfig.version,
+          correlationId,
+          contentHash,
+          ttl_hours: ttlHours,
+          received_abbrev: abbrev,
+          canonical_abbr: resolvedBook?.abbr ?? null,
+          bollsId: resolvedBollsId,
+        }
       };
       await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version, ttlHours);
-      console.info('[bible-text] ok', { correlationId, source, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
+      console.info('[bible-text] ok', { correlationId, source, abbrev, canonical_abbr: resolvedBook?.abbr, bollsId: resolvedBollsId, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS' }
       });
@@ -223,18 +244,31 @@ serve(async (req) => {
 
     const stale = await getCacheL2Stale(cacheKey);
     if (stale) {
-      console.warn('[bible-text] stale fallback', { correlationId, cacheKey, ms: Date.now() - t0 });
+      console.warn('[bible-text] stale fallback', { correlationId, cacheKey, abbrev, ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...stale,
-        metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true }
+        metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true, received_abbrev: abbrev }
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
     }
 
-    console.error('[bible-text] not found', { correlationId, abbrev, chapter, ms: Date.now() - t0 });
-    return new Response(JSON.stringify({ error: 'Texto não encontrado', correlationId }), {
+    console.error('[bible-text] not found', { correlationId, abbrev, canonical_abbr: resolvedBook?.abbr ?? null, bollsId: resolvedBollsId, chapter, ms: Date.now() - t0 });
+    const reason = !resolvedBollsId
+      ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON em supabase/functions/_shared/bibleCanon.ts.`
+      : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" (bollsId=${resolvedBollsId}) não foi encontrado em nenhuma fonte (Cathedra, BollsLife, cache stale).`;
+    return new Response(JSON.stringify({
+      error: 'Texto não encontrado',
+      reason,
+      received_abbrev: abbrev,
+      canonical_abbr: resolvedBook?.abbr ?? null,
+      book_name: resolvedBook?.name ?? null,
+      bollsId: resolvedBollsId,
+      chapter,
+      correlationId,
+    }), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
     });
+
 
 
   } catch (error: any) {
