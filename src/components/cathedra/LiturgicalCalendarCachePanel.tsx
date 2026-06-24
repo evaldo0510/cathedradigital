@@ -133,6 +133,61 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
         </div>
       </dl>
 
+      <div data-testid="litcal-cache-entries" className="space-y-spacing-2xs">
+        <div className="flex items-center justify-between">
+          <h4 className="text-muted-foreground uppercase tracking-wider text-[10px] font-bold">
+            Meses em cache
+          </h4>
+          <span className="text-muted-foreground text-[10px] font-mono">{entries.length}</span>
+        </div>
+        {entries.length === 0 ? (
+          <p className="text-premium-xs text-muted-foreground italic">Nenhum mês armazenado ainda.</p>
+        ) : (
+          <ul className="max-h-spacing-4xl overflow-auto rounded-premium border border-border/60 divide-y divide-border/60">
+            {entries.map((e) => {
+              const remaining = e.ttlMs - e.ageMs;
+              const total = e.stats.hits + e.stats.misses + e.stats.staleHits;
+              return (
+                <li
+                  key={e.key}
+                  data-testid={`litcal-cache-entry-${e.year}-${String(e.month).padStart(2, '0')}`}
+                  className="flex items-center justify-between gap-spacing-xs px-spacing-xs py-spacing-2xs text-premium-xs"
+                >
+                  <span className="font-mono font-bold text-foreground min-w-[64px]">
+                    {MONTH_NAMES_SHORT[e.month - 1]}/{e.year}
+                  </span>
+                  <span className="font-mono text-foreground/80 flex-1 text-center">
+                    <span className="text-primary">{e.stats.hits}h</span>
+                    <span className="text-muted-foreground/60"> · </span>
+                    <span className="text-amber-600 dark:text-amber-400">{e.stats.misses}m</span>
+                    {e.stats.staleHits > 0 && (
+                      <>
+                        <span className="text-muted-foreground/60"> · </span>
+                        <span className="text-muted-foreground">{e.stats.staleHits}s</span>
+                      </>
+                    )}
+                    {total === 0 && <span className="text-muted-foreground/60">—</span>}
+                  </span>
+                  <span
+                    className={`font-mono text-[10px] uppercase tracking-wider ${
+                      e.isStale ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'
+                    }`}
+                    title={`Cacheado em ${new Date(e.cachedAt).toLocaleString('pt-BR')}`}
+                  >
+                    {formatRemainingMs(remaining)}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <p className="text-[10px] text-muted-foreground/70 italic">
+          h = hits · m = misses · s = stale hits
+        </p>
+      </div>
+
+
+
       <div className="flex gap-spacing-xs pt-spacing-xs border-t border-border">
         <Button
           data-testid="litcal-cache-clear"
