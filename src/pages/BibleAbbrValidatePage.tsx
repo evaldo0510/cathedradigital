@@ -89,41 +89,76 @@ export async function copyToClipboard(value: string): Promise<boolean> {
 
 function CopyButton({ value, label }: { value: string | number | null; label: string }) {
   const [copied, setCopied] = useState(false);
+  const [copying, setCopying] = useState(false);
+  const [announcement, setAnnouncement] = useState('');
   const disabled = value === null || value === undefined || value === '';
   // Stable per-label toast id prevents duplicate persistent toasts on rapid clicks.
   const toastId = `bible-abbr-copy:${label}`;
+  const valueStr = value === null || value === undefined ? '' : String(value);
+  const ariaLabel = copying
+    ? `Copiando ${label}`
+    : copied
+      ? `${label} copiado: ${valueStr}`
+      : valueStr
+        ? `Copiar ${label} (${valueStr})`
+        : `Copiar ${label}`;
   return (
-    <Button
-      type="button"
-      size="sm"
-      variant="ghost"
-      disabled={disabled}
-      onClick={async () => {
-        if (disabled) return;
-        const str = String(value);
-        const ok = await copyToClipboard(str);
-        if (ok) {
-          setCopied(true);
-          // Dismiss any previous persistent toast for this label before showing a new one.
-          toast.dismiss(toastId);
-          toast.success(`${label} copiado`, {
-            id: toastId,
-            description: str,
-            duration: Infinity,
-            closeButton: true,
-          });
-          setTimeout(() => setCopied(false), 1500);
-        } else {
-          toast.dismiss(toastId);
-          toast.error('Não foi possível copiar', { id: toastId });
-        }
-      }}
-      aria-label={`Copiar ${label}`}
-      className="h-7 px-2 gap-1"
-    >
-      {copied ? <Check className="h-3.5 w-3.5 text-primary" aria-hidden /> : <Copy className="h-3.5 w-3.5" aria-hidden />}
-      <span className="text-xs">{copied ? 'Copiado' : 'Copiar'}</span>
-    </Button>
+    <>
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        disabled={disabled || copying}
+        aria-busy={copying || undefined}
+        onClick={async () => {
+          if (disabled || copying) return;
+          setCopying(true);
+          const str = String(value);
+          try {
+            const ok = await copyToClipboard(str);
+            if (ok) {
+              setCopied(true);
+              // Dismiss any previous persistent toast for this label before showing a new one.
+              toast.dismiss(toastId);
+              toast.success(`${label} copiado`, {
+                id: toastId,
+                description: str,
+                duration: Infinity,
+                closeButton: true,
+              });
+              setAnnouncement(`${label} copiado: ${str}`);
+              setTimeout(() => setCopied(false), 1500);
+            } else {
+              toast.dismiss(toastId);
+              toast.error('Não foi possível copiar', { id: toastId });
+              setAnnouncement(`Falha ao copiar ${label}`);
+            }
+          } finally {
+            setCopying(false);
+          }
+        }}
+        aria-label={ariaLabel}
+        className="h-7 px-2 gap-1"
+      >
+        {copying ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+        ) : copied ? (
+          <Check className="h-3.5 w-3.5 text-primary" aria-hidden />
+        ) : (
+          <Copy className="h-3.5 w-3.5" aria-hidden />
+        )}
+        <span className="text-xs">{copying ? 'Copiando…' : copied ? 'Copiado' : 'Copiar'}</span>
+      </Button>
+      <span
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        data-testid={`copy-live-${label}`}
+      >
+        {announcement}
+      </span>
+    </>
   );
 }
 
