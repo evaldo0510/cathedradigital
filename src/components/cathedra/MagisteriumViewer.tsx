@@ -92,12 +92,13 @@ const MagisteriumViewer: React.FC = () => {
       if (!id) return;
       setLoading(true);
       setError(null);
-      
+
       const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       const url = MAGISTERIUM_URLS[id];
       if (!url) {
         setError('Documento não encontrado ou URL não configurada.');
         setLoading(false);
+        logMagisteriumDiag({ docId: id, step: 'final_error', message: 'URL não configurada' });
         return;
       }
 
@@ -115,14 +116,37 @@ const MagisteriumViewer: React.FC = () => {
         if (invokeError) throw invokeError;
         if (!data?.text) throw new Error('Conteúdo não retornado pela função.');
 
-        setContent({
-          title: data.title || id,
-          text: data.text,
+        const meta = (data as { meta?: { step?: string; content_length?: number } })?.meta;
+        const text: string = data.text;
+        const isThin = text.length < MIN_DOC_LEN;
+
+        if (isThin) {
+          logMagisteriumDiag({
+            docId: id,
+            url,
+            step: (meta?.step as any) ?? 'fetch_thin',
+            contentLength: text.length,
+            message: 'Conteúdo abaixo do mínimo legível',
+          });
+          throw new Error(
+            `Documento retornou apenas ${text.length} caracteres — abaixo do mínimo legível (${MIN_DOC_LEN}). Pode ser uma página de redirecionamento do vatican.va.`,
+          );
+        }
+
+        logMagisteriumDiag({
+          docId: id,
+          url,
+          step: (meta?.step as any) ?? 'fetch_ok',
+          contentLength: text.length,
         });
+
+        setContent({ title: data.title || id, text });
       } catch (err: any) {
         console.error('Error fetching document:', err);
         window.dispatchEvent(new CustomEvent('supabase-unreachable'));
-        setError(err.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.');
+        const msg = err?.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.';
+        setError(msg);
+        logMagisteriumDiag({ docId: id, url, step: 'final_error', message: msg });
         toast.error('Não foi possível carregar o documento.');
       } finally {
         setLoading(false);
@@ -130,7 +154,8 @@ const MagisteriumViewer: React.FC = () => {
     };
 
     fetchDoc();
-  }, [id]);
+  }, [id, retryNonce]);
+
 
   // Track visible paragraph for bookmarking
   useEffect(() => {
