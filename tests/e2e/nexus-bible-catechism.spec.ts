@@ -342,3 +342,94 @@ test.describe('Nexus: acessibilidade das bolhas', () => {
     });
   }
 });
+
+/**
+ * Contraste das bolhas do Nexus em estados interativos.
+ * Valida hover e active mantendo WCAG AA (≥ 3:1 para UI).
+ * Mensagem amigável quando violar.
+ */
+async function measureContrast(page: Page, selector: string) {
+  const handle = await page.locator(selector).first().elementHandle();
+  if (!handle) return null;
+  return handle.evaluate((el) => {
+    const cs = getComputedStyle(el as HTMLElement);
+    let node: HTMLElement | null = el as HTMLElement;
+    let bgColor = cs.backgroundColor;
+    while (node && (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent')) {
+      node = node.parentElement;
+      if (!node) break;
+      bgColor = getComputedStyle(node).backgroundColor;
+    }
+    return { fg: cs.color, bg: bgColor || 'rgb(255,255,255)' };
+  });
+}
+
+test.describe('Nexus: contraste em hover, active e foco', () => {
+  for (const vp of VIEWPORTS) {
+    test.describe(`viewport ${vp.name}`, () => {
+      test.use({ viewport: { width: vp.width, height: vp.height } });
+
+      for (const { abbr, chapter, verse } of KNOWN_REFERENCES) {
+        test(`${abbr} ${chapter}:${verse} — WCAG AA em hover/active/focus`, async ({ page }) => {
+          await openChapter(page, abbr, chapter);
+          const sel = `[data-testid="nexus-bubbles-${verse}"] button`;
+          const btn = page.locator(sel).first();
+          await expect(btn).toBeVisible();
+
+          const fail = (state: string, ratio: number) =>
+            `⚠️  Contraste insuficiente (${ratio.toFixed(2)}:1) no estado "${state}" da bolha do Nexus em ${vp.name} ${abbr} ${chapter}:${verse}. Mínimo WCAG AA = 3:1. Ajuste tokens em src/index.css.`;
+
+          // hover
+          await btn.hover();
+          const hov = await measureContrast(page, sel);
+          if (hov) {
+            const fgH = parseColor(hov.fg)!;
+            const bgH = parseColor(hov.bg)!;
+            const r = contrastRatio(fgH, bgH);
+            expect(r, fail('hover', r)).toBeGreaterThanOrEqual(3);
+          }
+
+          // active (mouse down)
+          await btn.dispatchEvent('mousedown');
+          const act = await measureContrast(page, sel);
+          if (act) {
+            const fgA = parseColor(act.fg)!;
+            const bgA = parseColor(act.bg)!;
+            const r = contrastRatio(fgA, bgA);
+            expect(r, fail('active', r)).toBeGreaterThanOrEqual(3);
+          }
+          await btn.dispatchEvent('mouseup');
+
+          // focus-visible
+          await btn.focus();
+          const foc = await measureContrast(page, sel);
+          if (foc) {
+            const fgF = parseColor(foc.fg)!;
+            const bgF = parseColor(foc.bg)!;
+            const r = contrastRatio(fgF, bgF);
+            expect(r, fail('focus', r)).toBeGreaterThanOrEqual(3);
+          }
+        });
+      }
+    });
+  }
+});
+
+/**
+ * Toggle de alto contraste do Nexus — persistência e aplicação.
+ */
+test.describe('Nexus: alto contraste persistente', () => {
+  test('toggle aplica data-attr e persiste após reload', async ({ page }) => {
+    await openChapter(page, 'Gn', 1);
+    const toggle = page.getByTestId('nexus-contrast-toggle');
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-nexus-contrast', 'high');
+    await page.reload();
+    await page.waitForSelector('[data-testid^="verse-text-"]');
+    await expect(page.locator('html')).toHaveAttribute('data-nexus-contrast', 'high');
+    // limpar
+    await page.getByTestId('nexus-contrast-toggle').click();
+  });
+});
+
