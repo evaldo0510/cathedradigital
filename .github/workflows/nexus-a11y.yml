@@ -41,7 +41,9 @@ jobs:
           bunx playwright test \
             tests/e2e/nexus-bible-catechism.spec.ts \
             tests/e2e/nexus-keyboard.spec.ts \
+            tests/e2e/nexus-keyboard-high-contrast.spec.ts \
             tests/e2e/nexus-visual-diff.spec.ts \
+            tests/e2e/nexus-axe.spec.ts \
             --reporter=line,html
 
       - name: Upload Playwright report
