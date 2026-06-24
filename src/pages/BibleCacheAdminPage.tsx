@@ -74,6 +74,25 @@ export default function BibleCacheAdminPage() {
   const [auditFilter, setAuditFilter] = useState<string>('__all__');
   const [auditPage, setAuditPage] = useState(0);
 
+  // ----- Comparação -----
+  const nowLocal = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const isoOffset = (h: number) => new Date(Date.now() - h * 3600 * 1000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const [cmpASince, setCmpASince] = useState(isoOffset(48));
+  const [cmpAUntil, setCmpAUntil] = useState(isoOffset(24));
+  const [cmpBSince, setCmpBSince] = useState(isoOffset(24));
+  const [cmpBUntil, setCmpBUntil] = useState(nowLocal());
+  const [cmpAbbrev, setCmpAbbrev] = useState<string>('__none__');
+  const [cmpRun, setCmpRun] = useState(0);
+  const compare = useQuery<CompareResponse>({
+    queryKey: ['bcs-compare', cmpRun],
+    enabled: false,
+    queryFn: () => call('compare', {
+      a: { since: new Date(cmpASince).toISOString(), until: new Date(cmpAUntil).toISOString() },
+      b: { since: new Date(cmpBSince).toISOString(), until: new Date(cmpBUntil).toISOString() },
+      ...(cmpAbbrev !== '__none__' ? { abbrev: cmpAbbrev } : {}),
+    }),
+  });
+
   const stats = useQuery({ queryKey: ['bcs-stats'], enabled: isAdmin, queryFn: () => call('stats'), refetchInterval: live ? POLL_FAST : false });
   const summary = useQuery<Summary>({ queryKey: ['bcs-summary', hours], enabled: isAdmin, queryFn: () => call('metrics_summary', { hours }), refetchInterval: live ? POLL_SLOW : false });
   const metrics = useQuery<{ rows: MetricRow[] }>({ queryKey: ['bcs-metrics', hours, bookFilter], enabled: isAdmin, queryFn: () => call('metrics', { hours, ...(bookFilter !== '__all__' ? { abbrev: bookFilter } : {}) }), refetchInterval: live ? POLL_SLOW : false });
