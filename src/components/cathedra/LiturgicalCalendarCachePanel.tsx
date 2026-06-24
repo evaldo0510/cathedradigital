@@ -426,6 +426,34 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
         </p>
       </div>
 
+      {lastSummary && (
+        <div
+          data-testid="litcal-cache-summary"
+          className="rounded-premium border border-primary/30 bg-primary/5 px-spacing-sm py-spacing-xs text-premium-xs"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center justify-between gap-spacing-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+              {lastSummary.kind === 'remove' ? 'Mês removido' : 'Vencidos removidos'}
+              {' '}· {lastSummary.labels.length}
+            </span>
+            <button
+              type="button"
+              data-testid="litcal-cache-summary-dismiss"
+              onClick={() => setLastSummary(null)}
+              className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+              aria-label="Fechar resumo"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="font-mono text-foreground/90 mt-spacing-3xs break-words">
+            {lastSummary.labels.join(' · ')}
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-spacing-xs pt-spacing-xs border-t border-border">
         <Button
           data-testid="litcal-cache-export"
@@ -438,18 +466,42 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
           {isExporting ? 'Exportando…' : 'Exportar JSON'}
         </Button>
 
-        <Button
-          data-testid="litcal-cache-clear-expired"
-          disabled={isClearingExpired || expiredCount === 0}
-          aria-busy={isClearingExpired}
-          onClick={handleClearExpired}
-          className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          <Icons.Cross className={`w-spacing-xs h-spacing-xs ${isClearingExpired ? 'animate-spin' : ''}`} />
-          {isClearingExpired
-            ? 'Removendo…'
-            : `Limpar vencidos${expiredCount > 0 ? ` (${expiredCount})` : ''}`}
-        </Button>
+        {confirmingClearExpired ? (
+          <span
+            data-testid="litcal-cache-clear-expired-confirm"
+            role="group"
+            aria-label="Confirmar remoção dos meses vencidos"
+            className="flex items-center gap-spacing-3xs"
+          >
+            <Button
+              data-testid="litcal-cache-clear-expired-confirm-yes"
+              onClick={handleClearExpired}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all"
+            >
+              Confirmar ({expiredCount})
+            </Button>
+            <Button
+              data-testid="litcal-cache-clear-expired-confirm-no"
+              onClick={() => setConfirmingClearExpired(false)}
+              className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border text-muted-foreground hover:bg-muted transition-all"
+            >
+              Cancelar
+            </Button>
+          </span>
+        ) : (
+          <Button
+            data-testid="litcal-cache-clear-expired"
+            disabled={isClearingExpired || expiredCount === 0}
+            aria-busy={isClearingExpired}
+            onClick={() => setConfirmingClearExpired(true)}
+            className="text-premium-xs font-bold uppercase tracking-wider px-spacing-sm py-spacing-2xs rounded-premium-full border border-border hover:bg-muted transition-all flex items-center gap-spacing-2xs disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Icons.Cross className={`w-spacing-xs h-spacing-xs ${isClearingExpired ? 'animate-spin' : ''}`} />
+            {isClearingExpired
+              ? 'Removendo…'
+              : `Limpar vencidos${expiredCount > 0 ? ` (${expiredCount})` : ''}`}
+          </Button>
+        )}
 
         <Button
           data-testid="litcal-cache-clear"
