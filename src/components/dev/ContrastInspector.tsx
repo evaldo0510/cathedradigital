@@ -179,8 +179,39 @@ function collectKeyStyles(el: Element): Record<string, string> {
 
 const STORAGE_KEY = 'cathedra:contrast-inspector:on';
 
+/**
+ * The inspector is available in every build, but only renders UI when *enabled*:
+ *   - automatically in `vite dev` (import.meta.env.DEV)
+ *   - opt-in elsewhere via `?contrast=1` query param (sticky in localStorage)
+ *   - opt-in via `localStorage.setItem('cathedra:contrast-inspector:enabled','1')`
+ *
+ * Once enabled, Alt+Shift+C toggles the hover overlay on/off; the launcher
+ * chip is always visible while enabled.
+ */
+const ENABLED_KEY = 'cathedra:contrast-inspector:enabled';
+
+function readEnabled(): boolean {
+  if (import.meta.env.DEV) return true;
+  if (typeof window === 'undefined') return false;
+  try {
+    const url = new URL(window.location.href);
+    const q = url.searchParams.get('contrast');
+    if (q === '1' || q === 'true') {
+      localStorage.setItem(ENABLED_KEY, '1');
+      return true;
+    }
+    if (q === '0' || q === 'false') {
+      localStorage.setItem(ENABLED_KEY, '0');
+      return false;
+    }
+    return localStorage.getItem(ENABLED_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export default function ContrastInspector() {
-  const enabled = import.meta.env.DEV;
+  const enabled = readEnabled();
   const [active, setActive] = useState<boolean>(() => {
     if (!enabled) return false;
     try {
@@ -189,6 +220,7 @@ export default function ContrastInspector() {
       return false;
     }
   });
+
   const [info, setInfo] = useState<Inspection | null>(null);
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 16 });
   const lastTargetRef = useRef<Element | null>(null);

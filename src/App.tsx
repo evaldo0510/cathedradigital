@@ -614,7 +614,7 @@ const App: React.FC = () => {
     <AppProviders>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <AppLayout />
-      {import.meta.env.DEV && <ContrastInspector />}
+      <ContrastInspector />
     </AppProviders>
   );
 };
