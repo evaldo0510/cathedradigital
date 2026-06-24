@@ -104,8 +104,51 @@ export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
 
 const LITURGICAL_CALENDAR_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 
-const liturgicalCalendarKey = (year: number, month: number, calendar = 'general-la', lang = 'la') =>
+export const liturgicalCalendarKey = (year: number, month: number, calendar = 'general-la', lang = 'la') =>
   `${calendar}:${lang}:${year}-${String(month).padStart(2, '0')}`;
+
+export interface LiturgicalCalendarEntryInfo {
+  key: string;
+  year: number;
+  month: number;
+  calendar: string;
+  lang: string;
+  cachedAt: number;
+  ageMs: number;
+  ttlMs: number;
+  isStale: boolean;
+}
+
+const LITURGICAL_CALENDAR_TTL_DEFAULT = 1000 * 60 * 60 * 24 * 7;
+
+export async function listLiturgicalCalendarEntries(
+  ttlMs: number = LITURGICAL_CALENDAR_TTL_DEFAULT,
+): Promise<LiturgicalCalendarEntryInfo[]> {
+  const entries = await getAllFromStore('liturgical-calendar');
+  const now = Date.now();
+  return entries
+    .map((e) => {
+      // key formato: `${calendar}:${lang}:${YYYY}-${MM}`
+      const m = /^(.+):([^:]+):(\d{4})-(\d{2})$/.exec(e.key);
+      if (!m) return null;
+      const cachedAt = e.cachedAt ?? 0;
+      const ageMs = now - cachedAt;
+      return {
+        key: e.key,
+        calendar: m[1],
+        lang: m[2],
+        year: Number(m[3]),
+        month: Number(m[4]),
+        cachedAt,
+        ageMs,
+        ttlMs,
+        isStale: ageMs > ttlMs,
+      } satisfies LiturgicalCalendarEntryInfo;
+    })
+    .filter((x): x is LiturgicalCalendarEntryInfo => x !== null)
+    .sort((a, b) => (a.year - b.year) || (a.month - b.month));
+}
+
 
 export async function getCachedLiturgicalMonth(
   year: number,
