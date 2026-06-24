@@ -103,7 +103,36 @@ antes do `JSON.stringify` — uma resposta sem qualquer campo causa 500 com `cor
 }
 ```
 
+#### Exemplo — livro reconhecido, capítulo válido mas fonte indisponível (com `correlationId` do cliente)
+
+```json
+{
+  "error": "Texto não encontrado",
+  "reason": "Capítulo 1 de Apocalipse não foi encontrado em nenhuma fonte",
+  "received_abbrev": "ap",
+  "canonical_abbr": "Ap",
+  "book_name": "Apocalipse",
+  "bollsId": 66,
+  "chapter": 1,
+  "correlationId": "client-req-20260624-7f3a"
+}
+```
+
+#### Exemplo mínimo (apenas os 8 campos obrigatórios, sem extras)
+
+A resposta 404 NUNCA contém `verses`, `book` ou `metadata` — esses pertencem ao schema de sucesso.
+Qualquer cliente pode validar via `BibleTextErrorSchema.parse(json)` (exportado em
+`src/shared/bibleTextSchema.ts`):
+
+```ts
+import { BibleTextErrorSchema } from "@/shared/bibleTextSchema";
+const err = BibleTextErrorSchema.parse(json); // lança ZodError se faltar campo
+// err.correlationId === request headers["x-correlation-id"]
+```
+
 ---
+
+
 
 ## Classificação de erros no CI
 
