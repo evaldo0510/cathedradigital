@@ -342,9 +342,35 @@ export default function ContrastInspector() {
   const [settings, setSettingsState] = useState<InspectorSettings>(() => readSettings());
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [importStatus, setImportStatus] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
+  const [auditOpen, setAuditOpen] = useState(false);
+  const [audit, setAudit] = useState<AuditResult | null>(null);
   const [, forceRerender] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const lastTargetRef = useRef<Element | null>(null);
+  const settingsRef = useRef<InspectorSettings>(settings);
+  settingsRef.current = settings;
+
+  const runAudit = useCallback(() => {
+    setAudit(scanPageForContrastViolations({ level: settings.level, largeMode: settings.largeMode }));
+  }, [settings.level, settings.largeMode]);
+
+  const openAudit = useCallback(() => {
+    setAuditOpen(true);
+    setAudit(scanPageForContrastViolations({ level: settings.level, largeMode: settings.largeMode }));
+  }, [settings.level, settings.largeMode]);
+
+  const applyFix = useCallback((v: ContrastViolation) => {
+    const el = v.ref.deref();
+    if (!el) return;
+    const { before, after } = applyTokenFixToElement(el, v.suggestions);
+    try {
+      navigator.clipboard?.writeText(
+        `// ${v.selector} — substituir className\n- ${before}\n+ ${after}\n`,
+      );
+    } catch { /* ignore */ }
+    runAudit();
+  }, [runAudit]);
+
   const settingsRef = useRef<InspectorSettings>(settings);
   settingsRef.current = settings;
 
