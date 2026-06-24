@@ -14,6 +14,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn, getElementSelector } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { describeBibleTextError } from '@/shared/bibleTextSchema';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import BibleDictionaryPopover from './BibleDictionaryPopover';
 import ReadingSettingsPopover from './ReadingSettingsPopover';
