@@ -5,19 +5,54 @@ import {
   BibleTextErrorSchema,
   BibleTextInvalidPayloadSchema,
 } from "../_shared/bibleTextSchema.ts";
+import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr } from "../_shared/bibleCanon.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, if-none-match, x-correlation-id',
-  'Access-Control-Expose-Headers': 'ETag, x-correlation-id',
+  'Access-Control-Expose-Headers': 'ETag, x-correlation-id, x-cache, x-cache-age-s, x-source',
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const CACHE_BASE_VERSION = "v2.3.0"; 
+const CACHE_BASE_VERSION = "v2.4.0";
 
+// =========================================================================
+// Estratégia de cache por tipo de livro
+// =========================================================================
+// "hot" — alta releitura (Salmos, Evangelhos, Provérbios) → TTL 30d, SWR 7d
+// "core" — protocanônicos restantes → TTL 14d, SWR 3d
+// "deutero" — deuterocanônicos / fontes mais voláteis → TTL 7d, SWR 1d
+type CacheTier = 'hot' | 'core' | 'deutero';
+
+const HOT_ABBRS = new Set(['Sl', 'Pv', 'Mt', 'Mc', 'Lc', 'Jo']);
+
+function tierFor(abbrev: string): CacheTier {
+  const book = findBookByAbbr(abbrev);
+  if (book?.deuterocanonical) return 'deutero';
+  if (HOT_ABBRS.has(book?.abbr ?? abbrev)) return 'hot';
+  return 'core';
+}
+
+function cachePolicy(tier: CacheTier) {
+  // ttlHours = janela "fresca" no servidor; swrHours = janela onde servimos stale
+  // enquanto revalidamos. browserMaxAge < ttl para forçar revalidação periódica.
+  switch (tier) {
+    case 'hot':
+      return { ttlHours: 720, swrHours: 168, browserMaxAge: 21600, browserSwr: 604800 };
+    case 'core':
+      return { ttlHours: 336, swrHours: 72,  browserMaxAge: 7200,  browserSwr: 259200 };
+    case 'deutero':
+    default:
+      return { ttlHours: 168, swrHours: 24,  browserMaxAge: 3600,  browserSwr: 86400 };
+  }
+}
+
+// =========================================================================
+// Utilitários
+// =========================================================================
 async function sha256(text: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(text);
@@ -37,20 +72,6 @@ async function getCacheConfig() {
   } catch { return { enabled: true, version: 1 }; }
 }
 
-/** TTL (em horas) lido de app_feature_flags.bible_cache_ttl_hours.metadata.hours — default 168h (7d). */
-async function getCacheTtlHours(): Promise<number> {
-  try {
-    const { data } = await supabase
-      .from('app_feature_flags')
-      .select('metadata')
-      .eq('feature_key', 'bible_cache_ttl_hours')
-      .maybeSingle();
-    const h = Number(data?.metadata?.hours);
-    return Number.isFinite(h) && h > 0 && h <= 24 * 90 ? h : 168;
-  } catch { return 168; }
-}
-
-
 async function getFeatureFlag(key: string): Promise<boolean> {
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled').eq('feature_key', key).single();
@@ -58,36 +79,36 @@ async function getFeatureFlag(key: string): Promise<boolean> {
   } catch { return false; }
 }
 
-async function getCacheL2(key: string, currentVersion: number) {
-  try {
-    const { data } = await supabase
-      .from('bible_cache_l2')
-      .select('content')
-      .eq('cache_key', key)
-      .eq('version', currentVersion)
-      .gt('expires_at', new Date().toISOString())
-      .maybeSingle();
-    return data?.content;
-  } catch { return null; }
-}
+// =========================================================================
+// L2 cache com SWR: lê a linha sem filtrar por expires_at e classifica
+// como fresh | stale | miss.
+// =========================================================================
+type L2Lookup =
+  | { state: 'fresh'; content: any; ageS: number; expiresAt: string }
+  | { state: 'stale'; content: any; ageS: number; expiresAt: string | null }
+  | { state: 'miss' };
 
-/**
- * Fallback de cache: retorna o snapshot mais recente do capítulo
- * IGNORANDO versão e expiração. Usado apenas quando todas as fontes
- * vivas falham, para evitar invalidação agressiva e manter 100% PT
- * sem travar a interface.
- */
-async function getCacheL2Stale(key: string) {
+async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Lookup> {
   try {
     const { data } = await supabase
       .from('bible_cache_l2')
-      .select('content')
+      .select('content, expires_at, version, created_at')
       .eq('cache_key', key)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
-    return data?.content;
-  } catch { return null; }
+    if (!data?.content) return { state: 'miss' };
+    const expires = data.expires_at ? new Date(data.expires_at).getTime() : 0;
+    const now = Date.now();
+    const createdAt = data.created_at ? new Date(data.created_at).getTime() : now;
+    const ageS = Math.max(0, Math.round((now - createdAt) / 1000));
+    if (data.version === currentVersion && expires > now) {
+      return { state: 'fresh', content: data.content, ageS, expiresAt: data.expires_at };
+    }
+    return { state: 'stale', content: data.content, ageS, expiresAt: data.expires_at };
+  } catch {
+    return { state: 'miss' };
+  }
 }
 
 async function setCacheL2(key: string, content: any, hash: string, version: number, ttlHours: number) {
@@ -105,7 +126,16 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
+// =========================================================================
+// Métricas estruturadas (legíveis pelos logs do dashboard)
+// =========================================================================
+function metric(event: string, fields: Record<string, unknown>) {
+  console.info(JSON.stringify({ t: 'metric', event, ts: Date.now(), ...fields }));
+}
 
+// =========================================================================
+// Fontes
+// =========================================================================
 async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   try {
     const { data: book } = await supabase.from('bible_books').select('id, name').eq('abbrev', abbrev).single();
@@ -118,65 +148,116 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
-// Mapa abrev → ID bolls.life (NAA) vem do cânon compartilhado.
-import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr } from "../_shared/bibleCanon.ts";
-
-
 async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string) {
-    const book = findBookByAbbr(abbrev);
-    const bookId = book?.bollsId ?? BOLLS_MAP[abbrev];
-    if (!bookId) {
-        console.warn('[bible-text] BOLLS_MAP miss', {
-          correlationId,
-          received_abbrev: abbrev,
-          normalized: abbrev?.toLowerCase?.(),
-          known_examples: ['1Tm', '2Tm', 'Mt', 'Sl'],
-        });
-        return null;
+  const book = findBookByAbbr(abbrev);
+  const bookId = book?.bollsId ?? BOLLS_MAP[abbrev];
+  if (!bookId) {
+    console.warn('[bible-text] BOLLS_MAP miss', { correlationId, received_abbrev: abbrev });
+    return null;
+  }
+  const t0 = Date.now();
+  try {
+    const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
+    const upstreamMs = Date.now() - t0;
+    if (!res.ok) {
+      metric('bolls_fetch', { ok: false, status: res.status, abbrev, chapter, ms: upstreamMs });
+      return null;
     }
-    console.info('[bible-text] bolls resolve', { correlationId, received_abbrev: abbrev, canonical_abbr: book?.abbr ?? null, bollsId: bookId });
-    try {
-        const res = await fetch(`https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`);
-        if (!res.ok) {
-            console.warn('[bible-text] BollsLife non-OK', { correlationId, abbrev, bookId, chapter, status: res.status });
-            return null;
-        }
-        const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) {
-          console.warn('[bible-text] BollsLife empty payload', { correlationId, abbrev, bookId, chapter });
-          return null;
-        }
-        return data.map((v: any) => ({
-          number: v.verse,
-          text: String(v.text || '').replace(/<[^>]+>/g, '').trim(),
-          comment: v.comment
-            ? String(v.comment)
-                .replace(/<a\s+href=(['"])\/([^'"]+)\1/gi, "<a href=\"https://bolls.life/$2\" target=\"_blank\" rel=\"noopener\"")
-            : null,
-        }));
-    } catch (e) {
-        console.error('[bible-text] BollsLife fetch error', { correlationId, abbrev, bookId, chapter, error: String((e as any)?.message || e) });
-        return null;
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      metric('bolls_fetch', { ok: false, reason: 'empty', abbrev, chapter, ms: upstreamMs });
+      return null;
     }
+    metric('bolls_fetch', { ok: true, abbrev, chapter, ms: upstreamMs, verses: data.length });
+    return data.map((v: any) => ({
+      number: v.verse,
+      text: String(v.text || '').replace(/<[^>]+>/g, '').trim(),
+      comment: v.comment
+        ? String(v.comment).replace(/<a\s+href=(['"])\/([^'"]+)\1/gi, "<a href=\"https://bolls.life/$2\" target=\"_blank\" rel=\"noopener\"")
+        : null,
+    }));
+  } catch (e) {
+    metric('bolls_fetch', { ok: false, reason: 'exception', abbrev, chapter, error: String((e as any)?.message || e) });
+    return null;
+  }
 }
 
+// =========================================================================
+// Pipeline de revalidação (compartilhado entre request normal e SWR background)
+// =========================================================================
+async function revalidate(
+  abbrev: string,
+  chapter: number,
+  correlationId: string,
+  cacheVersion: number,
+  ttlHours: number,
+): Promise<{ data: any; source: string } | null> {
+  const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
+  const resolvedBook = findBookByAbbr(abbrev);
+  const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
+  let result = await fetchFromCathedraDb(abbrev, chapter);
+  let source = 'Cathedra (Local)';
+  if (!isSovereigntyEnabled || !result) {
+    const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId);
+    if (fallback) {
+      result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
+      source = 'BollsLife (Fallback)';
+    }
+  }
+  if (!result) return null;
+
+  const fullText = result.verses.map((v: any) => v.text).join(' ');
+  const contentHash = await sha256(fullText);
+  const responseData = {
+    book: result.bookName, chapter, verses: result.verses,
+    metadata: {
+      source,
+      cache_version: CACHE_BASE_VERSION,
+      logic_version: cacheVersion,
+      correlationId,
+      contentHash,
+      ttl_hours: ttlHours,
+      received_abbrev: abbrev,
+      canonical_abbr: resolvedBook?.abbr ?? null,
+      bollsId: resolvedBollsId,
+    },
+  };
+  await setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours);
+  return { data: responseData, source };
+}
+
+function waitUntil(promise: Promise<unknown>) {
+  // EdgeRuntime.waitUntil mantém a tarefa viva após a resposta ser enviada.
+  // @ts-ignore EdgeRuntime é injetado pelo runtime do Supabase Functions.
+  const er = (globalThis as any).EdgeRuntime;
+  if (er && typeof er.waitUntil === 'function') {
+    try { er.waitUntil(promise); return; } catch { /* fallthrough */ }
+  }
+  // Fallback: silencia a promise para não vazar unhandled rejection.
+  promise.catch((e) => console.error('[bible-text] background revalidate error:', e));
+}
+
+// =========================================================================
+// Handler
+// =========================================================================
 serve(async (req) => {
   const correlationId = req.headers.get('x-correlation-id') || crypto.randomUUID();
   const t0 = Date.now();
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
+  // Endpoint interno: aquecimento pelo script (POST com {warm:true}).
   let abbrev: string | undefined;
   let chapter: number | undefined;
   let client_cache_version: string | number | undefined;
+  let warmOnly = false;
+
   try {
     const raw = await req.json().catch(() => ({}));
-    // Normaliza chapter para number antes do parse (clientes podem mandar string).
+    warmOnly = raw?.warm === true;
     const candidate = {
       ...(typeof raw === 'object' && raw ? raw : {}),
-      chapter: raw?.chapter === undefined || raw?.chapter === null
-        ? raw?.chapter
-        : Number(raw?.chapter),
+      chapter: raw?.chapter === undefined || raw?.chapter === null ? raw?.chapter : Number(raw?.chapter),
     };
 
     const parsed = BibleTextInputSchema.safeParse(candidate);
@@ -186,7 +267,7 @@ serve(async (req) => {
         error: `Parâmetros inválidos: ${JSON.stringify(fieldErrors)}`,
         correlationId,
       });
-      console.warn('[bible-text] invalid payload', { correlationId, fieldErrors, raw });
+      metric('request_end', { correlationId, status: 400, reason: 'invalid_payload', ms: Date.now() - t0 });
       return new Response(JSON.stringify(invalidBody), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
@@ -197,85 +278,101 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    console.info('[bible-text] start', { correlationId, abbrev, chapter });
-
     const cacheConfig = await getCacheConfig();
-    const ttlHours = await getCacheTtlHours();
+    const tier = tierFor(abbrev);
+    const policy = cachePolicy(tier);
     const cacheKey = `${abbrev}:${chapter}`;
     const shouldInvalidateL1 = client_cache_version !== cacheConfig.version;
 
-    const cached = await getCacheL2(cacheKey, cacheConfig.version);
-    if (cached) {
-      console.info('[bible-text] L2 hit', { correlationId, cacheKey, ttlHours, ms: Date.now() - t0 });
-      return new Response(JSON.stringify({
-        ...cached,
-        metadata: { ...cached.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: ttlHours }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'HIT', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' } });
-    }
-
-    const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
-    const resolvedBook = findBookByAbbr(abbrev);
-    const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
-    console.info('[bible-text] resolve', {
-      correlationId,
-      received_abbrev: abbrev,
-      canonical_abbr: resolvedBook?.abbr ?? null,
-      book_name: resolvedBook?.name ?? null,
-      bollsId: resolvedBollsId,
-      sovereignty: isSovereigntyEnabled,
-    });
-
-    let result = await fetchFromCathedraDb(abbrev, chapter);
-    let source = 'Cathedra (Local)';
-
-    if (!isSovereigntyEnabled || !result) {
-      const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId);
-      if (fallback) {
-        result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
-        source = 'BollsLife (Fallback)';
-      }
-    }
-
-    if (result) {
-      const fullText = result.verses.map(v => v.text).join(' ');
-      const contentHash = await sha256(fullText);
-      const responseData = {
-        book: result.bookName, chapter, verses: result.verses,
-        metadata: {
-          source,
-          cache_version: CACHE_BASE_VERSION,
-          logic_version: cacheConfig.version,
-          correlationId,
-          contentHash,
-          ttl_hours: ttlHours,
-          received_abbrev: abbrev,
-          canonical_abbr: resolvedBook?.abbr ?? null,
-          bollsId: resolvedBollsId,
-        }
-      };
-      await setCacheL2(cacheKey, responseData, contentHash, cacheConfig.version, ttlHours);
-      console.info('[bible-text] ok', { correlationId, source, abbrev, canonical_abbr: resolvedBook?.abbr, bollsId: resolvedBollsId, verses: result.verses.length, ttlHours, ms: Date.now() - t0 });
-      return new Response(JSON.stringify({ ...responseData, metadata: { ...responseData.metadata, shouldInvalidateL1 } }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'MISS', 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' }
+    // Modo warm: força revalidação e responde mínimo. Usado pelo script.
+    if (warmOnly) {
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours);
+      metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: Date.now() - t0 });
+      return new Response(JSON.stringify({ ok: !!result, cacheKey, tier, source: result?.source ?? null, correlationId }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
       });
     }
 
+    const lookup = await lookupCacheL2(cacheKey, cacheConfig.version);
 
-    const stale = await getCacheL2Stale(cacheKey);
-    if (stale) {
-      console.warn('[bible-text] stale fallback', { correlationId, cacheKey, abbrev, ms: Date.now() - t0 });
+    // ---- FRESH ----
+    if (lookup.state === 'fresh') {
+      metric('request_end', { correlationId, cache: 'HIT', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
       return new Response(JSON.stringify({
-        ...stale,
-        metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true, received_abbrev: abbrev }
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+        ...lookup.content,
+        metadata: { ...lookup.content.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: policy.ttlHours, cache_tier: tier },
+      }), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+          'x-correlation-id': correlationId,
+          'x-cache': 'HIT',
+          'x-cache-age-s': String(lookup.ageS),
+          'x-source': 'L2',
+          'Cache-Control': `public, max-age=${policy.browserMaxAge}, stale-while-revalidate=${policy.browserSwr}`,
+        },
+      });
     }
 
-    console.error('[bible-text] not found', { correlationId, abbrev, canonical_abbr: resolvedBook?.abbr ?? null, bollsId: resolvedBollsId, chapter, ms: Date.now() - t0 });
+    // ---- STALE dentro da janela SWR: serve stale, revalida em background ----
+    if (lookup.state === 'stale') {
+      const swrCutoffS = policy.swrHours * 3600;
+      if (lookup.ageS <= swrCutoffS + policy.ttlHours * 3600) {
+        // Sempre tenta SWR se conseguimos achar algum conteúdo — corta a percepção de lentidão.
+        metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
+        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours)
+          .then((r) => metric('swr_revalidate', { correlationId, cacheKey, ok: !!r, source: r?.source ?? null })));
+        return new Response(JSON.stringify({
+          ...lookup.content,
+          metadata: { ...(lookup.content.metadata || {}), source: 'L2 SWR', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: policy.ttlHours, cache_tier: tier, stale: true, age_s: lookup.ageS },
+        }), {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+            'x-correlation-id': correlationId,
+            'x-cache': 'STALE',
+            'x-cache-age-s': String(lookup.ageS),
+            'x-source': 'L2-SWR',
+            'Cache-Control': `public, max-age=0, stale-while-revalidate=${policy.browserSwr}`,
+          },
+        });
+      }
+    }
+
+    // ---- MISS (ou stale fora da janela) → revalidar síncrono ----
+    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours);
+    if (revalidated) {
+      metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: Date.now() - t0 });
+      return new Response(JSON.stringify({
+        ...revalidated.data,
+        metadata: { ...revalidated.data.metadata, shouldInvalidateL1, cache_tier: tier },
+      }), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+          'x-correlation-id': correlationId,
+          'x-cache': 'MISS',
+          'x-source': revalidated.source,
+          'Cache-Control': `public, max-age=${policy.browserMaxAge}, stale-while-revalidate=${policy.browserSwr}`,
+        },
+      });
+    }
+
+    // ---- Última defesa: stale antigo (qualquer idade) ----
+    if (lookup.state === 'stale') {
+      metric('request_end', { correlationId, cache: 'STALE_LAST_RESORT', tier, cacheKey, ageS: lookup.ageS, ms: Date.now() - t0 });
+      return new Response(JSON.stringify({
+        ...lookup.content,
+        metadata: { ...(lookup.content.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true, age_s: lookup.ageS },
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'STALE', 'x-source': 'L2-LAST-RESORT' } });
+    }
+
+    // ---- 404 ----
+    const resolvedBook = findBookByAbbr(abbrev);
+    const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
     const reason = !resolvedBollsId
       ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON em supabase/functions/_shared/bibleCanon.ts.`
       : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" (bollsId=${resolvedBollsId}) não foi encontrado em nenhuma fonte (Cathedra, BollsLife, cache stale).`;
-    // Contrato: BibleTextErrorSchema valida que TODOS os campos obrigatórios estão presentes
-    // antes de devolver. Se algo divergir, cai no catch e responde 500 com correlationId.
     const errorBody = BibleTextErrorSchema.parse({
       error: 'Texto não encontrado',
       reason,
@@ -286,24 +383,21 @@ serve(async (req) => {
       chapter,
       correlationId,
     });
+    metric('request_end', { correlationId, status: 404, tier, cacheKey, ms: Date.now() - t0 });
     return new Response(JSON.stringify(errorBody), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
     });
-
-
-
   } catch (error: any) {
     console.error('[bible-text] unexpected error', { correlationId, abbrev, chapter, error: String(error?.message || error) });
-    // Última linha de defesa: tentar stale em qualquer erro inesperado
     try {
       if (abbrev && chapter) {
-        const stale = await getCacheL2Stale(`${abbrev}:${chapter}`);
-        if (stale) {
+        const fallback = await lookupCacheL2(`${abbrev}:${chapter}`, -1);
+        if (fallback.state !== 'miss') {
           return new Response(JSON.stringify({
-            ...stale,
-            metadata: { ...(stale.metadata || {}), source: 'L2 Stale (Error Recovery)', correlationId, shouldInvalidateL1: false, stale: true }
-          }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId } });
+            ...fallback.content,
+            metadata: { ...(fallback.content.metadata || {}), source: 'L2 Stale (Error Recovery)', correlationId, shouldInvalidateL1: false, stale: true },
+          }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'STALE', 'x-source': 'L2-ERROR-RECOVERY' } });
         }
       }
     } catch {}
