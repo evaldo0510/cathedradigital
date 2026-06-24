@@ -204,7 +204,9 @@ export function scanPageForContrastViolations(settings: AuditSettings): AuditRes
       required,
       isLarge,
       suggestions: suggestTokenReplacements(classes),
-      ref: new WeakRef(el),
+      ref: (typeof (globalThis as { WeakRef?: unknown }).WeakRef === 'function'
+        ? new (globalThis as unknown as { WeakRef: new (t: Element) => { deref(): Element | undefined } }).WeakRef(el)
+        : { deref: () => el }),
     });
   }
   return {
