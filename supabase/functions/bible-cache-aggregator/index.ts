@@ -113,22 +113,25 @@ serve(async (req) => {
     }
 
 
-    // 4) Dedupe: se já existe alerta aberto do mesmo kind+bucket+abbrev, não duplica
+    // 4) Dedupe: se já existe alerta aberto do mesmo kind+metric_kind+bucket+abbrev, não duplica
     let inserted = 0;
     for (const a of newAlerts) {
-      const { data: existing } = await supabase
+      let q = supabase
         .from('bible_cache_alerts')
         .select('id')
         .eq('kind', a.kind)
         .eq('bucket_start', a.bucket_start)
         .eq('abbrev', a.abbrev)
-        .is('resolved_at', null)
-        .maybeSingle();
+        .is('resolved_at', null);
+      // metric_kind diferencia regressão sql_ms vs total_ms para o mesmo bucket
+      q = a.metric_kind ? q.eq('metric_kind', a.metric_kind) : q.is('metric_kind', null);
+      const { data: existing } = await q.maybeSingle();
       if (existing) continue;
       const { error: insErr } = await supabase.from('bible_cache_alerts').insert(a);
       if (!insErr) inserted++;
       else console.warn('[bible-cache-aggregator] alert insert failed:', insErr.message);
     }
+
 
     const took = Date.now() - t0;
     console.info(JSON.stringify({ t: 'aggregator_run', ts: Date.now(), agg_count: aggCount, alerts_evaluated: newAlerts.length, alerts_inserted: inserted, ms: took }));
