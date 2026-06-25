@@ -126,20 +126,24 @@ type L2Lookup =
   | { state: 'stale'; content: any; ageS: number; expiresAt: string | null }
   | { state: 'miss' };
 
-async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
+async function fetchCacheL2Row(key: string, ctx?: ReqCtx): Promise<L2Row | null> {
   // L1 hit (fresh ou stale-mas-dentro-da-janela-SWR): evita round-trip ao Postgres.
   // Se stale, dispara revalidação em background para a próxima leitura ser fresh.
   const cached = l1Get<L2Row>(`l2:${key}`);
   if (cached) {
     if (cached.stale) {
+      if (ctx) ctx.l1Phase = 'stale';
       // Marca como fresh imediatamente para evitar múltiplos refreshes paralelos
       // entre o disparo e a conclusão do fetch em background.
       l1Set<L2Row>(`l2:${key}`, cached.value, L1_TTL_MS_L2, L1_SWR_MS_L2);
       waitUntil(refreshL2InBackground(key));
+    } else {
+      if (ctx) ctx.l1Phase = 'fresh';
     }
     return cached.value;
   }
   // MISS (ou hard-expired): coalesce N requests paralelos em UMA query ao L2.
+  if (ctx) ctx.l1Phase = 'miss';
   try {
     const { value: row, coalesced } = await sfFetch.run<L2Row | null>(`l2:${key}`, async () => {
       const { data } = await supabase
@@ -160,6 +164,7 @@ async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
     return null;
   }
 }
+
 
 /** Refresh em background do L1: lê do L2 sem afetar o request corrente. */
 async function refreshL2InBackground(key: string) {
@@ -259,9 +264,12 @@ interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
   /** Breakdown por query — preservado para diagnóstico. */
   sqlEntries: SqlEntry[];
+  /** Resultado do L1 para este request: 'fresh' | 'stale' | 'miss' | 'bypass'. */
+  l1Phase?: 'fresh' | 'stale' | 'miss' | 'bypass';
 }
 
 function newCtx(): ReqCtx { return { sqlEntries: [] }; }
+
 
 /** Mede uma chamada async e registra início/duração para cálculo wall-clock. */
 async function timedSql<T>(ctx: ReqCtx, label: string, fn: () => Promise<T>): Promise<T> {
@@ -428,7 +436,9 @@ function recordEvent(fields: {
     edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
     sql_breakdown: breakdown,
+    l1_phase: fields.ctx.l1Phase ?? null,
   };
+
   // Breakdown estruturado nos logs para diagnóstico imediato.
   metric('sql_breakdown', {
     correlation_id: fields.correlation_id,
@@ -566,7 +576,7 @@ serve(async (req) => {
     const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
       timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
       timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
-      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey)),
+      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey, ctx)),
     ]);
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
