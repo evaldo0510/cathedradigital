@@ -574,7 +574,7 @@ serve(async (req) => {
     const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
       timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
       timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
-      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey)),
+      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey, ctx)),
     ]);
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
