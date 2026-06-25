@@ -1019,6 +1019,20 @@ export default function BiblePerfBreakdown() {
                 })}
               </TableBody>
             </Table>
+            <div className="flex items-center justify-between text-xs pt-2">
+              <span className="text-muted-foreground">
+                Exibindo {pagedWarmHistory.length} de {filteredWarmHistory.length}
+              </span>
+              <div className="flex gap-1">
+                <Button size="sm" variant="outline" disabled={whPage === 0} onClick={() => setWhPage((p) => Math.max(0, p - 1))}>
+                  Anterior
+                </Button>
+                <Button size="sm" variant="outline" disabled={whPage + 1 >= whTotalPages} onClick={() => setWhPage((p) => Math.min(whTotalPages - 1, p + 1))}>
+                  Próxima
+                </Button>
+              </div>
+            </div>
+            </>
           )}
         </CardContent>
       </Card>
