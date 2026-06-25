@@ -10,6 +10,7 @@
 // em verses.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { resolveExternalChapter, checkVerseCount } from '../_shared/bibleChapterNormalize.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
