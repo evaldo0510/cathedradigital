@@ -150,6 +150,18 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
 
 interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
+  /** Soma dos tempos gastos em queries Supabase (ms). */
+  sqlMs?: number;
+}
+
+/** Mede uma chamada async e soma o tempo em ctx.sqlMs. */
+async function timedSql<T>(ctx: ReqCtx, fn: () => Promise<T>): Promise<T> {
+  const t0 = Date.now();
+  try {
+    return await fn();
+  } finally {
+    ctx.sqlMs = (ctx.sqlMs ?? 0) + (Date.now() - t0);
+  }
 }
 
 async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string, ctx: ReqCtx) {
