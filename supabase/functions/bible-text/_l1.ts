@@ -54,3 +54,39 @@ export function createL1Cache(opts: CreateL1Options = {}): L1Cache {
     size() { return store.size; },
   };
 }
+
+// =========================================================================
+// Single-flight (request coalescing): garante que N chamadas paralelas para
+// a mesma chave compartilhem UMA única promessa, evitando rajadas de fetch
+// ao L2/Postgres quando o L1 está vazio ou atravessa fresh→stale.
+// =========================================================================
+export interface SingleFlight {
+  run<T>(key: string, fn: () => Promise<T>): Promise<{ value: T; coalesced: boolean }>;
+  inFlight(key: string): boolean;
+  size(): number;
+}
+
+export function createSingleFlight(): SingleFlight {
+  const map = new Map<string, Promise<unknown>>();
+  return {
+    inFlight(key) { return map.has(key); },
+    size() { return map.size; },
+    async run<T>(key: string, fn: () => Promise<T>) {
+      const existing = map.get(key) as Promise<T> | undefined;
+      if (existing) {
+        const value = await existing;
+        return { value, coalesced: true };
+      }
+      const p = (async () => fn())();
+      map.set(key, p);
+      try {
+        const value = await p;
+        return { value, coalesced: false };
+      } finally {
+        // Remove só se ainda for a mesma promessa (não pisa em uma nova já iniciada).
+        if (map.get(key) === p) map.delete(key);
+      }
+    },
+  };
+}
+
