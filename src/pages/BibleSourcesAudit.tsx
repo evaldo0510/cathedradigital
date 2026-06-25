@@ -244,6 +244,50 @@ export default function BibleSourcesAudit() {
     return { days, sources, daily };
   }, [entries]);
 
+  // Spike detection: compare last N days vs prior N days per source
+  const spikeAlerts = useMemo(() => {
+    const days = slaTimeline.days;
+    if (days.length < 2) return [] as { source: string; metric: 'unavailable' | 'latency'; recent: number; prior: number; delta: number }[];
+    const N = Math.max(1, spikeWindowDays);
+    const recentDays = days.slice(-N);
+    const priorDays = days.slice(-2 * N, -N);
+    const agg = (ds: string[]) => {
+      const out = new Map<string, { total: number; unavailable: number; sumMs: number; samples: number }>();
+      for (const d of ds) {
+        const inner = slaTimeline.daily.get(d);
+        if (!inner) continue;
+        for (const [src, b] of inner) {
+          const x = out.get(src) ?? { total: 0, unavailable: 0, sumMs: 0, samples: 0 };
+          x.total += b.total; x.unavailable += b.unavailable; x.sumMs += b.sumMs; x.samples += b.samples;
+          out.set(src, x);
+        }
+      }
+      return out;
+    };
+    const recent = agg(recentDays);
+    const prior = agg(priorDays);
+    const alerts: { source: string; metric: 'unavailable' | 'latency'; recent: number; prior: number; delta: number }[] = [];
+    for (const [src, r] of recent) {
+      const p = prior.get(src);
+      if (!p) continue;
+      const rRate = r.total > 0 ? (r.unavailable / r.total) * 100 : 0;
+      const pRate = p.total > 0 ? (p.unavailable / p.total) * 100 : 0;
+      const rateDelta = rRate - pRate;
+      if (rateDelta >= spikeUnavailPct) {
+        alerts.push({ source: src, metric: 'unavailable', recent: rRate, prior: pRate, delta: rateDelta });
+      }
+      const rAvg = r.samples > 0 ? r.sumMs / r.samples : 0;
+      const pAvg = p.samples > 0 ? p.sumMs / p.samples : 0;
+      if (pAvg > 0) {
+        const pct = ((rAvg - pAvg) / pAvg) * 100;
+        if (pct >= spikeLatencyPct) {
+          alerts.push({ source: src, metric: 'latency', recent: rAvg, prior: pAvg, delta: pct });
+        }
+      }
+    }
+    return alerts;
+  }, [slaTimeline, spikeWindowDays, spikeUnavailPct, spikeLatencyPct]);
+
   const escapeCsv = (s: any) => {
     const v = String(s ?? '');
     return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
