@@ -20,6 +20,9 @@ interface MetricRow {
   cache: string | null;
   total_ms: number | null;
   bolls_ms: number | null;
+  sql_ms: number | null;
+  edge_ms: number | null;
+  render_ms: number | null;
   source: string | null;
   created_at: string;
 }
@@ -30,7 +33,10 @@ interface BookBreakdown {
   samples: number;
   avgTotal: number;
   avgUpstream: number;
-  avgInternal: number;
+  avgSql: number;
+  avgEdge: number;
+  avgRender: number;
+  renderSamples: number;
   p95Total: number;
 }
 
