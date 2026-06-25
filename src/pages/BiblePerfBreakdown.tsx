@@ -283,24 +283,68 @@ export default function BiblePerfBreakdown() {
     };
   }, [targetBooks, settings, slowBooks]);
 
+  const loadWarmHistory = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_action_logs')
+      .select('id, user_id, action, metadata, created_at')
+      .in('action', ['warmup.dry_run', 'warmup.execute'])
+      .order('created_at', { ascending: false })
+      .limit(30);
+    if (error) { /* silent: pode não ser admin */ return; }
+    setWarmHistory(data ?? []);
+  };
+
+  useEffect(() => { loadWarmHistory(); }, []);
+
   const runOnDemandWarm = async (dry: boolean) => {
     setWarmRunning(true);
     setWarmLogs([]); setWarmSummary(null);
     const isCustomList = simTier !== 'all';
-    const { data, error } = await supabase.functions.invoke('bible-auto-warm-slow', {
-      body: {
-        threshold_ms: settings.warmThresholdMs,
-        concurrency: settings.warmConcurrency,
-        max_chapters_per_book: settings.warmMaxPerBook,
-        dry_run: dry,
-        verbose: true,
-        books: isCustomList ? targetBooks : undefined,
-      },
-    });
+    const params = {
+      threshold_ms: settings.warmThresholdMs,
+      concurrency: settings.warmConcurrency,
+      max_chapters_per_book: settings.warmMaxPerBook,
+      dry_run: dry,
+      verbose: true,
+      books: isCustomList ? targetBooks : undefined,
+    };
+    const startedAt = Date.now();
+    const { data, error } = await supabase.functions.invoke('bible-auto-warm-slow', { body: params });
     setWarmRunning(false);
     if (error) { toast.error(error.message); return; }
     setWarmSummary(data);
     setWarmLogs((data?.logs ?? data?.sample ?? []) as any[]);
+
+    // Aggregate per-book results from verbose logs
+    const perBook: Record<string, { ok: number; fail: number; total_ms: number; count: number }> = {};
+    for (const l of (data?.logs ?? []) as any[]) {
+      const b = perBook[l.abbrev] ?? { ok: 0, fail: 0, total_ms: 0, count: 0 };
+      if (l.ok) b.ok++; else b.fail++;
+      b.total_ms += Number(l.ms) || 0;
+      b.count++;
+      perBook[l.abbrev] = b;
+    }
+
+    // Log to audit trail
+    const { data: { user } } = await supabase.auth.getUser();
+    await supabase.from('bible_audit_action_logs').insert({
+      user_id: user?.id,
+      action: dry ? 'warmup.dry_run' : 'warmup.execute',
+      entity_type: 'bible-auto-warm-slow',
+      entity_id: simTier === 'custom' ? customBooks : simTier,
+      metadata: {
+        tier: simTier,
+        params: { ...params, books: params.books ?? null },
+        target_books: targetBooks,
+        queued: data?.queued ?? 0,
+        estimated_duration_ms: data?.estimated_duration_ms ?? null,
+        executed: data?.executed ?? null,
+        elapsed_client_ms: Date.now() - startedAt,
+        per_book: perBook,
+      },
+    });
+    loadWarmHistory();
+
     toast.success(dry
       ? `Dry-run: ${data?.queued ?? 0} capítulos · ~${Math.round((data?.estimated_duration_ms ?? 0) / 1000)}s`
       : `Executado: ${data?.executed?.ok ?? 0} ok / ${data?.executed?.fail ?? 0} fail em ${data?.executed?.ms ?? 0}ms`);
