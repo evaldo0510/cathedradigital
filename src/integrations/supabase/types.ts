@@ -882,6 +882,7 @@ export type Database = {
           created_at: string
           edge_ms: number | null
           id: number
+          l1_phase: string | null
           render_ms: number | null
           source: string | null
           sql_breakdown: Json | null
@@ -900,6 +901,7 @@ export type Database = {
           created_at?: string
           edge_ms?: number | null
           id?: number
+          l1_phase?: string | null
           render_ms?: number | null
           source?: string | null
           sql_breakdown?: Json | null
@@ -918,6 +920,7 @@ export type Database = {
           created_at?: string
           edge_ms?: number | null
           id?: number
+          l1_phase?: string | null
           render_ms?: number | null
           source?: string | null
           sql_breakdown?: Json | null
@@ -936,6 +939,12 @@ export type Database = {
           bucket_start: string
           errors: number
           hits: number
+          l1_fresh: number
+          l1_invalidate: number
+          l1_miss: number
+          l1_single_flight: number
+          l1_stale: number
+          l1_swr_refresh: number
           max_ms: number
           misses: number
           p95_ms: number
@@ -956,6 +965,12 @@ export type Database = {
           bucket_start: string
           errors?: number
           hits?: number
+          l1_fresh?: number
+          l1_invalidate?: number
+          l1_miss?: number
+          l1_single_flight?: number
+          l1_stale?: number
+          l1_swr_refresh?: number
           max_ms?: number
           misses?: number
           p95_ms?: number
@@ -976,6 +991,12 @@ export type Database = {
           bucket_start?: string
           errors?: number
           hits?: number
+          l1_fresh?: number
+          l1_invalidate?: number
+          l1_miss?: number
+          l1_single_flight?: number
+          l1_stale?: number
+          l1_swr_refresh?: number
           max_ms?: number
           misses?: number
           p95_ms?: number
