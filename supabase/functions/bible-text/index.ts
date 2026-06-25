@@ -306,6 +306,15 @@ async function revalidate(
       source = 'BollsLife (Fallback)';
     }
   }
+  // Segunda fonte pública: bibliacatolica.com.br (Ave-Maria) — usada quando
+  // bolls.life retorna vazio para deuterocanônicos / capítulos PT-cat.
+  if (!result) {
+    const ave = await fetchFromBibliaCatolica(abbrev, chapter, correlationId);
+    if (ave && ave.length > 0) {
+      result = { verses: ave, bookName: bookNameFromAbbr(abbrev) };
+      source = 'BibliaCatolica (Ave-Maria)';
+    }
+  }
   if (!result) return null;
 
   const fullText = result.verses.map((v: any) => v.text).join(' ');
@@ -481,28 +490,33 @@ serve(async (req) => {
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-cache': 'STALE', 'x-source': 'L2-LAST-RESORT' } });
     }
 
-    // ---- 404 ----
+    // ---- Conteúdo indisponível na fonte: responde 200 com unavailable=true
+    // ----  para não gerar 404 na UI e quebrar a navegação. O front desabilita
+    // ----  esses capítulos via BIBLE_MISSING_CHAPTERS, mas defendemos aqui também.
     const resolvedBook = findBookByAbbr(abbrev);
     const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
     const reason = !resolvedBollsId
-      ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON em supabase/functions/_shared/bibleCanon.ts.`
-      : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" (bollsId=${resolvedBollsId}) não foi encontrado em nenhuma fonte (Cathedra, BollsLife, cache stale).`;
-    const errorBody = BibleTextErrorSchema.parse({
-      error: 'Texto não encontrado',
-      reason,
-      received_abbrev: abbrev,
-      canonical_abbr: resolvedBook?.abbr ?? null,
-      book_name: resolvedBook?.name ?? null,
-      bollsId: resolvedBollsId,
-      chapter,
-      correlationId,
-    });
+      ? `Abreviação não reconhecida: "${abbrev}". Verifique BIBLE_CANON.`
+      : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" indisponível nas fontes públicas (bolls.life, bibliacatolica.com.br). Importe via scripts/import-bible-dump.ts.`;
     const totalMs = Date.now() - t0;
-    metric('request_end', { correlationId, status: 404, tier, cacheKey, ms: totalMs });
-    recordEvent({ abbrev, chapter, cache: 'MISS', source: null, status_code: 404, total_ms: totalMs, correlation_id: correlationId, ctx });
-    return new Response(JSON.stringify(errorBody), {
-      status: 404,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
+    metric('request_end', { correlationId, status: 200, reason: 'unavailable', tier, cacheKey, ms: totalMs });
+    recordEvent({ abbrev, chapter, cache: 'MISS', source: null, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+    return new Response(JSON.stringify({
+      book: resolvedBook?.name ?? abbrev,
+      chapter,
+      verses: [],
+      unavailable: true,
+      metadata: {
+        source: 'unavailable',
+        reason,
+        received_abbrev: abbrev,
+        canonical_abbr: resolvedBook?.abbr ?? null,
+        bollsId: resolvedBollsId,
+        correlationId,
+      },
+    }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId, 'x-source': 'unavailable' },
     });
   } catch (error: any) {
     console.error('[bible-text] unexpected error', { correlationId, abbrev, chapter, error: String(error?.message || error) });
