@@ -1,0 +1,75 @@
+name: Bible Cache Warm on Version Bump
+
+# Dispara warm-bible-cache.ts automaticamente quando CACHE_BASE_VERSION
+# muda em supabase/functions/bible-text/index.ts.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/bible-text/index.ts'
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: 'Tier para warm (hot | core | deutero | all)'
+        required: false
+        default: 'hot'
+      books:
+        description: 'CSV de abbrs (opcional, sobrescreve tier)'
+        required: false
+        default: 'Gn,Ex,Lv,Nm,Dt,Js,Mt,Mc,Lc,Jo,Sl'
+
+jobs:
+  detect-bump:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.diff.outputs.changed }}
+      version: ${{ steps.diff.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+
+      - name: Detect CACHE_BASE_VERSION change
+        id: diff
+        run: |
+          CURRENT=$(grep -oP 'CACHE_BASE_VERSION\s*=\s*"[^"]+"' supabase/functions/bible-text/index.ts | head -1)
+          echo "current=$CURRENT"
+          # Compare with previous commit
+          PREV=$(git show HEAD~1:supabase/functions/bible-text/index.ts 2>/dev/null | grep -oP 'CACHE_BASE_VERSION\s*=\s*"[^"]+"' | head -1 || echo "")
+          echo "previous=$PREV"
+          if [ "$CURRENT" != "$PREV" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT" >> $GITHUB_OUTPUT
+            echo "::notice::CACHE_BASE_VERSION bump detected: $PREV → $CURRENT"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "::notice::No version change."
+          fi
+
+  warm-cache:
+    needs: detect-bump
+    if: needs.detect-bump.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with: { deno-version: v1.x }
+
+      - name: Warm priority books
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          WARM_BOOKS: ${{ github.event.inputs.books || 'Gn,Ex,Lv,Nm,Dt,Js,Mt,Mc,Lc,Jo,Sl' }}
+          WARM_TIER: ${{ github.event.inputs.tier || 'all' }}
+          WARM_CONCURRENCY: '6'
+        run: |
+          echo "Warming after version bump: ${{ needs.detect-bump.outputs.version }}"
+          deno run --allow-net --allow-env --allow-read scripts/warm-bible-cache.ts | tee warm.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: warm-cache-log
+          path: warm.log
+          retention-days: 14
