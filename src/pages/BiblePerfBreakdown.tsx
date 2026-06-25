@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ReferenceDot,
 } from 'recharts';
+import SqlBreakdownSection from '@/components/bible-perf/SqlBreakdownSection';
 
 interface MetricRow {
   abbrev: string;
