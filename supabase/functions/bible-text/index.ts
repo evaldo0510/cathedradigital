@@ -55,35 +55,19 @@ function cachePolicy(tier: CacheTier) {
 // Conteúdo L2: fresh por 5min, depois stale por mais 5min (serve valor antigo
 // e dispara refresh em background via waitUntil). Hard-expire = 10min.
 // Configs/flags: TTL curto (30s) sem SWR — propagam invalidações rápido.
+// Implementação extraída em ./_l1.ts para permitir testes unitários.
 // =========================================================================
-const L1_TTL_MS_L2 = 300_000;         // 5min "fresh" para conteúdo L2
-const L1_SWR_MS_L2 = 300_000;         // +5min de janela SWR (hard expire = 10min)
-const L1_TTL_MS_CONFIG = 30_000;      // 30s para feature flags / config
-const L1_MAX_ENTRIES = 500;
+import {
+  createL1Cache,
+  L1_TTL_MS_L2,
+  L1_SWR_MS_L2,
+  L1_TTL_MS_CONFIG,
+} from './_l1.ts';
 
-type L1Entry<T> = { value: T; freshUntil: number; hardExpiresAt: number };
-const l1Cache = new Map<string, L1Entry<unknown>>();
-
-/** Retorna {value, stale} se houver entrada não-expirada (mesmo stale). */
-function l1Get<T>(key: string): { value: T; stale: boolean } | undefined {
-  const e = l1Cache.get(key) as L1Entry<T> | undefined;
-  if (!e) return undefined;
-  const now = Date.now();
-  if (e.hardExpiresAt < now) { l1Cache.delete(key); return undefined; }
-  return { value: e.value, stale: now > e.freshUntil };
-}
-function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) {
-  const now = Date.now();
-  l1Cache.set(key, { value, freshUntil: now + ttlMs, hardExpiresAt: now + ttlMs + swrMs });
-  if (l1Cache.size > L1_MAX_ENTRIES) {
-    for (const [k, v] of l1Cache) if (v.hardExpiresAt < now) l1Cache.delete(k);
-    if (l1Cache.size > L1_MAX_ENTRIES) {
-      const firstKey = l1Cache.keys().next().value;
-      if (firstKey !== undefined) l1Cache.delete(firstKey);
-    }
-  }
-}
-function l1Invalidate(key: string) { l1Cache.delete(key); }
+const _l1 = createL1Cache();
+function l1Get<T>(key: string) { return _l1.get<T>(key); }
+function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) { _l1.set(key, value, ttlMs, swrMs); }
+function l1Invalidate(key: string) { _l1.invalidate(key); }
 
 
 // =========================================================================
