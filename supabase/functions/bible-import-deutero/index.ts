@@ -71,8 +71,22 @@ Deno.serve(async (req) => {
   for (const t of targets) {
     const entry: any = { abbrev: t.abbrev, chapter: t.chapter };
     try {
-      const verses = await scrape(t.slug, t.chapter);
+      // Normaliza numeração: aplica overrides confirmados quando a fonte
+      // pública renumera (caso atual: nenhum override; identidade 1:1).
+      const rule = resolveExternalChapter('bibliacatolica', t.abbrev, t.chapter);
+      const effectiveSlug = t.slug ?? rule.slug;
+      const effectiveChapter = rule.externalChapter;
+      entry.normalization = {
+        slug: effectiveSlug,
+        externalChapter: effectiveChapter,
+        ...(rule.reason ? { reason: rule.reason } : {}),
+      };
+
+      const verses = await scrape(effectiveSlug, effectiveChapter);
       entry.scraped = verses.length;
+      const countCheck = checkVerseCount(rule, verses.length);
+      if (countCheck.warning) entry.warning = countCheck.warning;
+
       if (verses.length === 0) {
         entry.status = 'no_content';
         results.push(entry);
