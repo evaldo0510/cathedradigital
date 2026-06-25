@@ -167,7 +167,7 @@ export default function BiblePerfBreakdown() {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
     const { data, error } = await supabase
       .from('bible_cache_metric_events')
-      .select('abbrev, chapter, cache, total_ms, bolls_ms, source, created_at')
+      .select('abbrev, chapter, cache, total_ms, bolls_ms, sql_ms, edge_ms, render_ms, source, created_at')
       .gte('created_at', since)
       .order('created_at', { ascending: false })
       .limit(5000);
