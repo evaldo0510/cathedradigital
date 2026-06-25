@@ -275,6 +275,11 @@ function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
 }) {
+  const sqlMs = fields.ctx.sqlMs ?? 0;
+  const bollsMs = fields.ctx.bolls?.ms ?? 0;
+  // edge_ms = tempo gasto na função excluindo SQL e rede upstream.
+  // Pode ser pequeno em cache HIT, maior em MISS (parsing, serialização).
+  const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const row = {
     abbrev: fields.abbrev,
     chapter: fields.chapter,
@@ -285,6 +290,8 @@ function recordEvent(fields: {
     bolls_called: !!fields.ctx.bolls,
     bolls_ok: fields.ctx.bolls?.ok ?? null,
     bolls_ms: fields.ctx.bolls?.ms ?? null,
+    sql_ms: sqlMs,
+    edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
   };
   waitUntil(
