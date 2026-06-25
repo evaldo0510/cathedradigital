@@ -125,12 +125,16 @@ async function getFeatureFlag(key: string): Promise<boolean> {
 // L2 cache com SWR: lê a linha sem filtrar por expires_at e classifica
 // como fresh | stale | miss.
 // =========================================================================
+type L2Row = { content: any; expires_at: string | null; version: number; created_at: string | null };
 type L2Lookup =
   | { state: 'fresh'; content: any; ageS: number; expiresAt: string }
   | { state: 'stale'; content: any; ageS: number; expiresAt: string | null }
   | { state: 'miss' };
 
-async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Lookup> {
+async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
+  // L1 hit: pula o round-trip ao Postgres.
+  const cached = l1Get<L2Row>(`l2:${key}`);
+  if (cached) return cached;
   try {
     const { data } = await supabase
       .from('bible_cache_l2')
@@ -139,18 +143,30 @@ async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Loo
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (!data?.content) return { state: 'miss' };
-    const expires = data.expires_at ? new Date(data.expires_at).getTime() : 0;
-    const now = Date.now();
-    const createdAt = data.created_at ? new Date(data.created_at).getTime() : now;
-    const ageS = Math.max(0, Math.round((now - createdAt) / 1000));
-    if (data.version === currentVersion && expires > now) {
-      return { state: 'fresh', content: data.content, ageS, expiresAt: data.expires_at };
-    }
-    return { state: 'stale', content: data.content, ageS, expiresAt: data.expires_at };
+    if (!data?.content) return null;
+    const row = data as L2Row;
+    l1Set(`l2:${key}`, row, L1_TTL_MS_L2);
+    return row;
   } catch {
-    return { state: 'miss' };
+    return null;
   }
+}
+
+function classifyL2(row: L2Row | null, currentVersion: number): L2Lookup {
+  if (!row) return { state: 'miss' };
+  const expires = row.expires_at ? new Date(row.expires_at).getTime() : 0;
+  const now = Date.now();
+  const createdAt = row.created_at ? new Date(row.created_at).getTime() : now;
+  const ageS = Math.max(0, Math.round((now - createdAt) / 1000));
+  if (row.version === currentVersion && expires > now) {
+    return { state: 'fresh', content: row.content, ageS, expiresAt: row.expires_at as string };
+  }
+  return { state: 'stale', content: row.content, ageS, expiresAt: row.expires_at };
+}
+
+/** Compatibilidade: usado por handlers de exceção. */
+async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Lookup> {
+  return classifyL2(await fetchCacheL2Row(key), currentVersion);
 }
 
 async function setCacheL2(key: string, content: any, hash: string, version: number, ttlHours: number) {
@@ -165,6 +181,13 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
       expires_at: expireDate.toISOString(),
     }, { onConflict: 'cache_key' });
     if (error) console.error('Cache L2 upsert error:', error);
+    // Write-through: atualiza L1 para os próximos requests da mesma instância.
+    l1Set<L2Row>(`l2:${key}`, {
+      content,
+      expires_at: expireDate.toISOString(),
+      version,
+      created_at: new Date().toISOString(),
+    }, L1_TTL_MS_L2);
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
@@ -190,21 +213,48 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
+interface SqlEntry { label: string; startedAt: number; ms: number; }
+
 interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
-  /** Soma dos tempos gastos em queries Supabase (ms). */
-  sqlMs?: number;
+  /** Breakdown por query — preservado para diagnóstico. */
+  sqlEntries: SqlEntry[];
 }
 
-/** Mede uma chamada async e soma o tempo em ctx.sqlMs. */
-async function timedSql<T>(ctx: ReqCtx, fn: () => Promise<T>): Promise<T> {
-  const t0 = Date.now();
+function newCtx(): ReqCtx { return { sqlEntries: [] }; }
+
+/** Mede uma chamada async e registra início/duração para cálculo wall-clock. */
+async function timedSql<T>(ctx: ReqCtx, label: string, fn: () => Promise<T>): Promise<T> {
+  const startedAt = Date.now();
   try {
     return await fn();
   } finally {
-    ctx.sqlMs = (ctx.sqlMs ?? 0) + (Date.now() - t0);
+    ctx.sqlEntries.push({ label, startedAt, ms: Date.now() - startedAt });
   }
 }
+
+/**
+ * Soma wall-clock real do tempo gasto em SQL.
+ * Funde intervalos sobrepostos (queries paralelas via Promise.all contam 1x),
+ * evitando casos em que sql_ms > total_ms.
+ */
+function computeSqlMs(entries: SqlEntry[]): number {
+  if (entries.length === 0) return 0;
+  const intervals = entries
+    .map(e => [e.startedAt, e.startedAt + e.ms] as [number, number])
+    .sort((a, b) => a[0] - b[0]);
+  let total = 0;
+  let curStart = intervals[0][0];
+  let curEnd = intervals[0][1];
+  for (let i = 1; i < intervals.length; i++) {
+    const [s, e] = intervals[i];
+    if (s <= curEnd) curEnd = Math.max(curEnd, e);
+    else { total += curEnd - curStart; curStart = s; curEnd = e; }
+  }
+  total += curEnd - curStart;
+  return total;
+}
+
 
 async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string, ctx: ReqCtx) {
   const book = findBookByAbbr(abbrev);
