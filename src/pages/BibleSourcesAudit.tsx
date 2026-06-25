@@ -116,6 +116,75 @@ export default function BibleSourcesAudit() {
     return counts;
   }, [latestBySource]);
 
+  // SLA por fonte: agrupa eventos por source com total, unavailable, avg latency.
+  const sourceSla = useMemo(() => {
+    const buckets = new Map<string, { total: number; unavailable: number; sumMs: number; samples: number; errors: number }>();
+    for (const e of entries) {
+      const src = (e.source ?? 'unknown') as string;
+      const b = buckets.get(src) ?? { total: 0, unavailable: 0, sumMs: 0, samples: 0, errors: 0 };
+      b.total++;
+      if (src === 'unavailable' || e.status_code >= 400) b.unavailable++;
+      if (e.status_code >= 500) b.errors++;
+      const ms = (e as any).total_ms;
+      if (typeof ms === 'number' && ms > 0) { b.sumMs += ms; b.samples++; }
+      buckets.set(src, b);
+    }
+    return [...buckets.entries()].map(([source, b]) => ({
+      source,
+      total: b.total,
+      unavailable: b.unavailable,
+      errors: b.errors,
+      unavailableRate: b.total > 0 ? b.unavailable / b.total : 0,
+      avgMs: b.samples > 0 ? Math.round(b.sumMs / b.samples) : null,
+    })).sort((a, b) => b.total - a.total);
+  }, [entries]);
+
+  const exportCsv = () => {
+    const rows: string[][] = [[
+      'alert_id', 'created_at', 'severity', 'book', 'chapter', 'source', 'root_cause', 'attempts', 'last_seen', 'message',
+    ]];
+    for (const a of alerts) {
+      const d: any = a.details ?? {};
+      const newP = Array.isArray(d.new_problems) ? d.new_problems : [];
+      const recP = Array.isArray(d.recurrent_problems) ? d.recurrent_problems : [];
+      const items = [...newP, ...recP];
+      if (items.length === 0) {
+        rows.push([a.id, a.created_at, a.severity, '', '', '', '', '', '', a.message ?? '']);
+        continue;
+      }
+      for (const p of items) {
+        const cause = Array.isArray(p.failed_sources) && p.failed_sources.length > 0
+          ? `failed:${p.failed_sources.join('|')}`
+          : 'unknown';
+        rows.push([
+          a.id,
+          a.created_at,
+          a.severity,
+          String(p.abbrev ?? ''),
+          String(p.chapter ?? ''),
+          Array.isArray(p.failed_sources) ? p.failed_sources.join('|') : '',
+          cause,
+          String(p.occurrences ?? ''),
+          String(p.last_seen ?? ''),
+          (a.message ?? '').replace(/[\r\n]+/g, ' '),
+        ]);
+      }
+    }
+    const csv = rows.map(r => r.map(c => {
+      const s = String(c ?? '');
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bible-availability-alerts-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast.success(`CSV exportado (${rows.length - 1} linhas)`);
+  };
+
+
   const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
     setImporting(true);
     try {
