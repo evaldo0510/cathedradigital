@@ -140,6 +140,10 @@ export default function BiblePerfBreakdown() {
 
   const [warmHistory, setWarmHistory] = useState<any[]>([]);
   const [expandedRun, setExpandedRun] = useState<string | null>(null);
+  const [whSearch, setWhSearch] = useState('');
+  const [whTypeFilter, setWhTypeFilter] = useState<'all' | 'warmup.dry_run' | 'warmup.execute'>('all');
+  const [whPage, setWhPage] = useState(0);
+  const WH_PAGE_SIZE = 10;
 
   const [retentionCfg, setRetentionCfg] = useState<{ retention_days: number; auto_cleanup_enabled: boolean; updated_at?: string } | null>(null);
   const [retentionEditDays, setRetentionEditDays] = useState<number>(90);
