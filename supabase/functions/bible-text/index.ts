@@ -17,7 +17,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const CACHE_BASE_VERSION = "v2.4.1";
+const CACHE_BASE_VERSION = "v2.5.0";
 
 // =========================================================================
 // Estratégia de cache por tipo de livro
@@ -186,6 +186,74 @@ async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId
     const upstreamMs = Date.now() - t0;
     ctx.bolls = { ok: false, ms: upstreamMs };
     metric('bolls_fetch', { ok: false, reason: 'exception', abbrev, chapter, error: String((e as any)?.message || e) });
+    return null;
+  }
+}
+
+// ---- Fallback: bibliacatolica.com.br (Ave-Maria) ----
+// Usado quando bolls.life devolve vazio/erro para deuterocanônicos PT-cat.
+const BIBLIACATOLICA_SLUG: Record<string, string> = {
+  Gn: 'genesis', Ex: 'exodo', Lv: 'levitico', Nm: 'numeros', Dt: 'deuteronomio',
+  Js: 'josue', Jz: 'juizes', Rt: 'rute',
+  '1Sm': 'i-samuel', '2Sm': 'ii-samuel', '1Rs': 'i-reis', '2Rs': 'ii-reis',
+  '1Cr': 'i-cronicas', '2Cr': 'ii-cronicas', Ed: 'esdras', Ne: 'neemias',
+  Tb: 'tobias', Jdt: 'judite', Et: 'ester',
+  '1Mc': 'i-macabeus', '2Mc': 'ii-macabeus',
+  'Jó': 'jo', Sl: 'salmos', Pv: 'proverbios', Ec: 'eclesiastes', Ct: 'canticos',
+  Sb: 'sabedoria', Eclo: 'eclesiastico',
+  Is: 'isaias', Jr: 'jeremias', Lm: 'lamentacoes', Br: 'baruc', Ez: 'ezequiel', Dn: 'daniel',
+  Os: 'oseias', Jl: 'joel', Am: 'amos', Ab: 'abdias', Jn: 'jonas', Mq: 'miqueias',
+  Na: 'naum', Hc: 'habacuc', Sf: 'sofonias', Ag: 'ageu', Zc: 'zacarias', Ml: 'malaquias',
+  Mt: 'sao-mateus', Mc: 'sao-marcos', Lc: 'sao-lucas', Jo: 'sao-joao',
+  At: 'atos-dos-apostolos', Rm: 'romanos', '1Co': 'i-corintios', '2Co': 'ii-corintios',
+  Gl: 'galatas', Ef: 'efesios', Fp: 'filipenses', Cl: 'colossenses',
+  '1Ts': 'i-tessalonicenses', '2Ts': 'ii-tessalonicenses',
+  '1Tm': 'i-timoteo', '2Tm': 'ii-timoteo', Tt: 'tito', Fm: 'filemon',
+  Hb: 'hebreus', Tg: 'tiago',
+  '1Pe': 'i-pedro', '2Pe': 'ii-pedro', '1Jo': 'i-joao', '2Jo': 'ii-joao', '3Jo': 'iii-joao',
+  Jd: 'judas', Ap: 'apocalipse',
+};
+
+async function fetchFromBibliaCatolica(abbrev: string, chapter: number, correlationId: string) {
+  const slug = BIBLIACATOLICA_SLUG[abbrev];
+  if (!slug) {
+    console.warn('[bible-text] bibliacatolica slug miss', { correlationId, abbrev });
+    return null;
+  }
+  const url = `https://www.bibliacatolica.com.br/biblia-ave-maria/${slug}/${chapter}/`;
+  const t0 = Date.now();
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CathedraBot/1.0; +https://cathedradigital.com.br)' },
+    });
+    const ms = Date.now() - t0;
+    if (!res.ok) {
+      metric('bibliacatolica_fetch', { ok: false, status: res.status, abbrev, chapter, ms });
+      return null;
+    }
+    const html = await res.text();
+    // Estrutura: cada versículo vem em <p>, com <strong>N.</strong> seguido do texto.
+    const verses: { number: number; text: string; comment: null }[] = [];
+    const re = /<strong[^>]*>\s*(\d+)\.?\s*<\/strong>\s*([\s\S]*?)<\/p>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html)) !== null) {
+      const n = parseInt(m[1], 10);
+      const text = m[2]
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&[a-z]+;/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (n && text && text.length > 3) verses.push({ number: n, text, comment: null });
+    }
+    if (verses.length === 0) {
+      metric('bibliacatolica_fetch', { ok: false, reason: 'empty_parse', abbrev, chapter, ms });
+      return null;
+    }
+    metric('bibliacatolica_fetch', { ok: true, abbrev, chapter, ms, verses: verses.length });
+    return verses;
+  } catch (e) {
+    metric('bibliacatolica_fetch', { ok: false, reason: 'exception', abbrev, chapter, error: String((e as any)?.message || e) });
     return null;
   }
 }
