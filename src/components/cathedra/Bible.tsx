@@ -648,14 +648,15 @@ const Bible: React.FC = () => {
       })
       .finally(() => biblePerf.mark(runId, 'text:end'));
 
-    const connectionsPromise = supabase
-      .from('bible_connections')
-      .select('*')
-      .like('verse_id', `${abbr}-${chapter}-%`)
-      .then((res) => {
-        biblePerf.mark(runId, 'connections:end');
-        return res;
-      });
+    const connectionsPromise = Promise.resolve(
+      supabase
+        .from('bible_connections')
+        .select('*')
+        .like('verse_id', `${abbr}-${chapter}-%`)
+    ).then((res) => {
+      biblePerf.mark(runId, 'connections:end');
+      return res;
+    });
 
     // Hidrata conexões assim que chegarem, sem bloquear o render do texto
     connectionsPromise
@@ -688,6 +689,7 @@ const Bible: React.FC = () => {
       .finally(() => {
         setConnectionsLoading(false);
       });
+
 
     try {
       const { data, error, response } = await textPromise;
