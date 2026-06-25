@@ -410,7 +410,7 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    const cacheConfig = await getCacheConfig();
+    const cacheConfig = await timedSql(ctx, () => getCacheConfig());
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
     const cacheKey = `${abbrev}:${chapter}`;
