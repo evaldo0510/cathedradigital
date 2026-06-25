@@ -59,6 +59,7 @@ function cachePolicy(tier: CacheTier) {
 // =========================================================================
 import {
   createL1Cache,
+  createSingleFlight,
   L1_TTL_MS_L2,
   L1_SWR_MS_L2,
   L1_TTL_MS_CONFIG,
@@ -68,6 +69,11 @@ const _l1 = createL1Cache();
 function l1Get<T>(key: string) { return _l1.get<T>(key); }
 function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) { _l1.set(key, value, ttlMs, swrMs); }
 function l1Invalidate(key: string) { _l1.invalidate(key); }
+
+// Single-flight separado por fase para que um refresh em background não
+// bloqueie um MISS legítimo (chaves diferentes), e vice-versa.
+const sfFetch = createSingleFlight();
+const sfRefresh = createSingleFlight();
 
 
 // =========================================================================
