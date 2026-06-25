@@ -389,6 +389,45 @@ export default function BibleSourcesAudit() {
         ))}
       </div>
 
+      {/* SLA por fonte */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Globe2 className="w-4 h-4" /> SLA por fonte (últimos {entries.length} eventos)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Fonte</TableHead>
+                <TableHead className="text-right">Eventos</TableHead>
+                <TableHead className="text-right">Unavailable</TableHead>
+                <TableHead className="text-right">Taxa</TableHead>
+                <TableHead className="text-right">Latência média</TableHead>
+                <TableHead className="text-right">Erros 5xx</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sourceSla.map(r => {
+                const pct = (r.unavailableRate * 100).toFixed(1);
+                const bad = r.unavailableRate >= 0.1;
+                return (
+                  <TableRow key={r.source}>
+                    <TableCell>{sourceBadge(r.source as any)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.total}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.unavailable}</TableCell>
+                    <TableCell className={`text-right tabular-nums text-xs font-semibold ${bad ? 'text-red-600' : 'text-emerald-600'}`}>{pct}%</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.avgMs != null ? `${r.avgMs}ms` : '—'}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.errors}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
       {/* Indisponíveis ao vivo */}
       <Card>
         <CardHeader>
