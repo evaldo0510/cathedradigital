@@ -51,6 +51,38 @@ function cachePolicy(tier: CacheTier) {
 }
 
 // =========================================================================
+// Cache L1 in-memory (por instância de Edge) — TTL curto evita round-trip
+// repetido contra o Postgres quando o mesmo capítulo/flag/config é lido em
+// rajada. Invalida-se sozinho por TTL e em setCacheL2 (write-through).
+// =========================================================================
+const L1_TTL_MS_L2 = 60_000;          // 60s para conteúdo de capítulo
+const L1_TTL_MS_CONFIG = 30_000;      // 30s para feature flags / config
+const L1_MAX_ENTRIES = 500;
+
+type L1Entry<T> = { value: T; expiresAt: number };
+const l1Cache = new Map<string, L1Entry<unknown>>();
+
+function l1Get<T>(key: string): T | undefined {
+  const e = l1Cache.get(key) as L1Entry<T> | undefined;
+  if (!e) return undefined;
+  if (e.expiresAt < Date.now()) { l1Cache.delete(key); return undefined; }
+  return e.value;
+}
+function l1Set<T>(key: string, value: T, ttlMs: number) {
+  l1Cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+  if (l1Cache.size > L1_MAX_ENTRIES) {
+    const now = Date.now();
+    for (const [k, v] of l1Cache) if (v.expiresAt < now) l1Cache.delete(k);
+    // Se ainda passa do limite (todas válidas), descarta a entrada mais antiga.
+    if (l1Cache.size > L1_MAX_ENTRIES) {
+      const firstKey = l1Cache.keys().next().value;
+      if (firstKey !== undefined) l1Cache.delete(firstKey);
+    }
+  }
+}
+function l1Invalidate(key: string) { l1Cache.delete(key); }
+
+// =========================================================================
 // Utilitários
 // =========================================================================
 async function sha256(text: string) {
@@ -63,21 +95,31 @@ async function sha256(text: string) {
 }
 
 async function getCacheConfig() {
+  const cached = l1Get<{ enabled: boolean; version: number }>('cfg:cache');
+  if (cached) return cached;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
-    return {
+    const value = {
       enabled: data?.is_enabled || false,
       version: data?.metadata?.version || 1,
     };
+    l1Set('cfg:cache', value, L1_TTL_MS_CONFIG);
+    return value;
   } catch { return { enabled: true, version: 1 }; }
 }
 
 async function getFeatureFlag(key: string): Promise<boolean> {
+  const cacheKey = `flag:${key}`;
+  const cached = l1Get<boolean>(cacheKey);
+  if (cached !== undefined) return cached;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled').eq('feature_key', key).single();
-    return data?.is_enabled || false;
+    const value = data?.is_enabled || false;
+    l1Set(cacheKey, value, L1_TTL_MS_CONFIG);
+    return value;
   } catch { return false; }
 }
+
 
 // =========================================================================
 // L2 cache com SWR: lê a linha sem filtrar por expires_at e classifica
