@@ -1670,6 +1670,19 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     </p>
                   </motion.div>
 
+                  {/* Hidratação de conexões — não bloqueia leitura */}
+                  {connectionsLoading && verses.length > 0 && (
+                    <div
+                      className="flex items-center gap-2 -mt-4 mb-4 text-[10px] font-black uppercase tracking-widest text-secondary/60"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/60 animate-pulse" />
+                      <span>Carregando referências cruzadas…</span>
+                      <span className="flex-1 h-px bg-secondary/10" />
+                    </div>
+                  )}
+
                   <div className="space-y-8">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-20 text-center space-y-6 bg-primary/[0.02] rounded-3xl border border-primary/5 p-8">
