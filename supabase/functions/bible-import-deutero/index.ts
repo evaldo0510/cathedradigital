@@ -18,11 +18,11 @@ const corsHeaders = {
 };
 
 const DEFAULT_TARGETS = [
-  { abbrev: 'Tb', chapter: 14, name: 'Tobias', testament: 'old', slug: 'tobias', chaptersCount: 14 },
-  { abbrev: 'Jdt', chapter: 16, name: 'Judite', testament: 'old', slug: 'judite', chaptersCount: 16 },
-  { abbrev: 'Dn', chapter: 13, name: 'Daniel', testament: 'old', slug: 'daniel', chaptersCount: 14 },
-  { abbrev: 'Dn', chapter: 14, name: 'Daniel', testament: 'old', slug: 'daniel', chaptersCount: 14 },
-  { abbrev: 'Sl', chapter: 151, name: 'Salmos', testament: 'old', slug: 'salmos', chaptersCount: 151 },
+  { abbrev: 'Tb', chapter: 14, name: 'Tobias', testament: 'antigo', slug: 'tobias', chaptersCount: 14 },
+  { abbrev: 'Jdt', chapter: 16, name: 'Judite', testament: 'antigo', slug: 'judite', chaptersCount: 16 },
+  { abbrev: 'Dn', chapter: 13, name: 'Daniel', testament: 'antigo', slug: 'daniel', chaptersCount: 14 },
+  { abbrev: 'Dn', chapter: 14, name: 'Daniel', testament: 'antigo', slug: 'daniel', chaptersCount: 14 },
+  { abbrev: 'Sl', chapter: 151, name: 'Salmos', testament: 'antigo', slug: 'salmos', chaptersCount: 151 },
 ];
 
 async function scrape(slug: string, chapter: number): Promise<{ number: number; text: string }[]> {
