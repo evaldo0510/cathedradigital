@@ -436,7 +436,9 @@ function recordEvent(fields: {
     edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
     sql_breakdown: breakdown,
+    l1_phase: fields.ctx.l1Phase ?? null,
   };
+
   // Breakdown estruturado nos logs para diagnóstico imediato.
   metric('sql_breakdown', {
     correlation_id: fields.correlation_id,
