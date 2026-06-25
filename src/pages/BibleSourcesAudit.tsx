@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { BIBLE_MISSING_CHAPTERS, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2 } from 'lucide-react';
+import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
@@ -19,6 +21,15 @@ interface SourceEntry {
   created_at: string;
 }
 
+interface AlertRow {
+  id: string;
+  severity: string;
+  message: string;
+  details: any;
+  is_resolved: boolean | null;
+  created_at: string;
+}
+
 function sourceBadge(s: SourceTag) {
   if (!s) return <Badge variant="outline">—</Badge>;
   if (s.startsWith('Cathedra')) return <Badge className="bg-emerald-100 text-emerald-800"><Database className="w-3 h-3 mr-1" />Banco (dump)</Badge>;
@@ -28,25 +39,36 @@ function sourceBadge(s: SourceTag) {
   return <Badge variant="outline">{s}</Badge>;
 }
 
+const RETRY_INTERVAL_MS = 5 * 60 * 1000; // 5 min
+const RETRY_COOLDOWN_MS = 2 * 60 * 1000;  // 2 min entre retries do mesmo capítulo
+
 export default function BibleSourcesAudit() {
   const [entries, setEntries] = useState<SourceEntry[]>([]);
+  const [alerts, setAlerts] = useState<AlertRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [autoRetry, setAutoRetry] = useState(false);
+  const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
+  const lastRetryAt = useRef<Map<string, number>>(new Map());
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('bible_cache_metric_events')
-      .select('abbrev, chapter, source, cache, status_code, created_at')
-      .order('created_at', { ascending: false })
-      .limit(1000);
-    setEntries((data ?? []) as SourceEntry[]);
+    const [m, a] = await Promise.all([
+      supabase.from('bible_cache_metric_events')
+        .select('abbrev, chapter, source, cache, status_code, created_at')
+        .order('created_at', { ascending: false }).limit(1000),
+      supabase.from('bible_audit_alerts')
+        .select('id, severity, message, details, is_resolved, created_at')
+        .order('created_at', { ascending: false }).limit(20),
+    ]);
+    setEntries((m.data ?? []) as SourceEntry[]);
+    setAlerts((a.data ?? []) as AlertRow[]);
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
 
-  // Última fonte usada por (abbrev, chapter)
   const latestBySource = useMemo(() => {
     const map = new Map<string, SourceEntry>();
     for (const e of entries) {
@@ -54,6 +76,22 @@ export default function BibleSourcesAudit() {
       if (!map.has(key)) map.set(key, e);
     }
     return map;
+  }, [entries]);
+
+  const unavailableChapters = useMemo(() => {
+    const seen = new Set<string>();
+    const out: SourceEntry[] = [];
+    for (const e of entries) {
+      const key = `${e.abbrev}:${e.chapter}`;
+      if (seen.has(key)) continue;
+      if (e.source === 'unavailable' || e.status_code >= 400) {
+        seen.add(key);
+        out.push(e);
+      } else {
+        seen.add(key); // primeira ocorrência foi sucesso, ignora
+      }
+    }
+    return out;
   }, [entries]);
 
   const missingList = useMemo(() => {
@@ -73,16 +111,16 @@ export default function BibleSourcesAudit() {
     return counts;
   }, [latestBySource]);
 
-  const runImport = async () => {
+  const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
     setImporting(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-import-deutero', {
-        body: { dryRun: false },
+        body: { dryRun: false, ...(targets ? { targets } : {}) },
       });
       if (error) throw error;
-      toast.success(`Importação concluída: ${data?.imported ?? 0}/${data?.total ?? 0} capítulos.`);
-      console.log('[bible-import-deutero]', data);
+      toast.success(`Importação: ${data?.imported ?? 0}/${data?.total ?? 0}.`);
       await load();
+      return data;
     } catch (e: any) {
       toast.error(`Falha no import: ${e?.message ?? e}`);
     } finally {
@@ -90,24 +128,134 @@ export default function BibleSourcesAudit() {
     }
   };
 
+  const runReport = async () => {
+    setReporting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-availability-report', {
+        body: { hours: 24 },
+      });
+      if (error) throw error;
+      toast.success(`Relatório: ${data?.report?.problem_chapters ?? 0} problemas, ${data?.report?.new_problem_chapters ?? 0} novos.`);
+      await load();
+    } catch (e: any) {
+      toast.error(`Falha no relatório: ${e?.message ?? e}`);
+    } finally {
+      setReporting(false);
+    }
+  };
+
+  // Re-tenta um capítulo: primeiro re-chama bible-text (que tenta bolls→bibliacatolica),
+  // se ainda vier unavailable, escala para bible-import-deutero com target específico.
+  const retryChapter = async (abbrev: string, chapter: number) => {
+    const key = `${abbrev}:${chapter}`;
+    const now = Date.now();
+    const last = lastRetryAt.current.get(key) ?? 0;
+    if (now - last < RETRY_COOLDOWN_MS) return { outcome: 'cooldown' };
+    lastRetryAt.current.set(key, now);
+
+    try {
+      const { data } = await supabase.functions.invoke('bible-text', {
+        body: { abbrev, chapter, force_revalidate: true },
+      });
+      if (data?.unavailable) {
+        const imp = await supabase.functions.invoke('bible-import-deutero', {
+          body: { dryRun: false, targets: [{ abbrev, chapter }] },
+        });
+        const result = imp.data?.results?.[0];
+        return { outcome: result?.status === 'imported' ? `imported (${result.verses}v)` : `failed: ${result?.error ?? result?.status ?? 'unknown'}` };
+      }
+      return { outcome: `resolved via ${data?.metadata?.source ?? 'unknown'}` };
+    } catch (e: any) {
+      return { outcome: `error: ${e?.message ?? e}` };
+    }
+  };
+
+  // Auto-retry loop
+  useEffect(() => {
+    if (!autoRetry) return;
+    let cancelled = false;
+    const tick = async () => {
+      if (cancelled) return;
+      if (unavailableChapters.length === 0) return;
+      const log: typeof retryLog = [];
+      for (const c of unavailableChapters.slice(0, 5)) {
+        const r = await retryChapter(c.abbrev, c.chapter);
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+      }
+      if (!cancelled) {
+        setRetryLog(prev => [...log, ...prev].slice(0, 30));
+        await load();
+      }
+    };
+    tick();
+    const id = setInterval(tick, RETRY_INTERVAL_MS);
+    return () => { cancelled = true; clearInterval(id); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRetry, unavailableChapters.length]);
+
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-display font-bold">Auditoria de Fontes da Bíblia</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Capítulos marcados como indisponíveis e origem usada na última requisição.
+            Origem usada por capítulo, alertas de indisponibilidade e auto-retry.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={runImport} disabled={importing} size="sm">
-            {importing ? 'Importando…' : 'Importar capítulos faltantes'}
+        <div className="flex gap-2 items-center flex-wrap">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border bg-card">
+            <Repeat className="w-4 h-4 text-muted-foreground" />
+            <Label htmlFor="auto-retry" className="text-xs">Auto-retry (5min)</Label>
+            <Switch id="auto-retry" checked={autoRetry} onCheckedChange={setAutoRetry} />
+          </div>
+          <Button onClick={runReport} disabled={reporting} size="sm" variant="secondary">
+            <FileText className="w-4 h-4 mr-2" />{reporting ? 'Gerando…' : 'Gerar relatório'}
+          </Button>
+          <Button onClick={() => runImport()} disabled={importing} size="sm">
+            {importing ? 'Importando…' : 'Importar faltantes'}
           </Button>
           <Button onClick={load} variant="outline" size="sm" disabled={loading}>
             <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} /> Atualizar
           </Button>
         </div>
       </div>
+
+      {/* Alertas recentes */}
+      {alerts.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500" /> Alertas recentes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Quando</TableHead>
+                  <TableHead>Severidade</TableHead>
+                  <TableHead>Mensagem</TableHead>
+                  <TableHead className="text-right">Novos / Recorrentes</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {alerts.map(a => (
+                  <TableRow key={a.id}>
+                    <TableCell className="text-xs font-mono">{new Date(a.created_at).toLocaleString()}</TableCell>
+                    <TableCell>
+                      <Badge variant={a.severity === 'critical' ? 'destructive' : 'secondary'}>{a.severity}</Badge>
+                    </TableCell>
+                    <TableCell className="text-xs">{a.message}</TableCell>
+                    <TableCell className="text-right text-xs tabular-nums">
+                      {a.details?.new_problem_chapters ?? 0} / {a.details?.recurrent_problem_chapters ?? 0}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Sumário de fontes */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -119,78 +267,101 @@ export default function BibleSourcesAudit() {
         ))}
       </div>
 
-      {/* Capítulos marcados indisponíveis */}
+      {/* Indisponíveis ao vivo */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-500" /> Capítulos indisponíveis (lista hardcoded)
+            <AlertTriangle className="w-4 h-4 text-red-500" /> Capítulos servidos como unavailable ({unavailableChapters.length})
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted-foreground mb-4">{MISSING_CHAPTER_REASON}</p>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Capítulo</TableHead>
-                <TableHead>Última fonte registrada</TableHead>
-                <TableHead>Último cache</TableHead>
-                <TableHead className="text-right">Última atualização</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {missingList.map(({ abbrev, chapter }) => {
-                const entry = latestBySource.get(`${abbrev}:${chapter}`);
-                const resolved = entry && entry.source && entry.source !== 'unavailable';
-                return (
-                  <TableRow key={`${abbrev}:${chapter}`}>
-                    <TableCell className="font-mono text-xs">{abbrev} {chapter}</TableCell>
-                    <TableCell>{sourceBadge(entry?.source ?? null)}</TableCell>
-                    <TableCell><Badge variant="outline" className="text-xs">{entry?.cache ?? '—'}</Badge></TableCell>
-                    <TableCell className="text-right text-xs font-mono">
-                      {entry ? new Date(entry.created_at).toLocaleString() : '—'}
-                    </TableCell>
-                    <TableCell>
-                      {resolved
-                        ? <span className="text-emerald-600 flex items-center gap-1 text-xs"><CheckCircle2 className="w-3 h-3" />resolvido</span>
-                        : <span className="text-amber-600 text-xs">pendente</span>}
+          {unavailableChapters.length === 0 ? (
+            <p className="text-sm text-emerald-700 py-4 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" /> Nenhum capítulo indisponível nas últimas requisições registradas.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Capítulo</TableHead>
+                  <TableHead>Última fonte</TableHead>
+                  <TableHead>Quando</TableHead>
+                  <TableHead className="text-right">Ação</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {unavailableChapters.map((e) => (
+                  <TableRow key={`${e.abbrev}:${e.chapter}`}>
+                    <TableCell className="font-mono text-xs">{e.abbrev} {e.chapter}</TableCell>
+                    <TableCell>{sourceBadge(e.source)}</TableCell>
+                    <TableCell className="text-xs font-mono">{new Date(e.created_at).toLocaleString()}</TableCell>
+                    <TableCell className="text-right">
+                      <Button size="sm" variant="outline" onClick={async () => {
+                        const r = await retryChapter(e.abbrev, e.chapter);
+                        toast.message(`${e.abbrev} ${e.chapter}: ${r.outcome}`);
+                        setRetryLog(prev => [{ ts: new Date().toISOString(), target: `${e.abbrev} ${e.chapter}`, outcome: r.outcome }, ...prev].slice(0, 30));
+                        await load();
+                      }}>
+                        <Repeat className="w-3 h-3 mr-1" /> Re-tentar
+                      </Button>
                     </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
-      {/* Últimos 50 capítulos servidos */}
-      <Card>
-        <CardHeader><CardTitle className="text-sm">Origem nas últimas 50 requisições</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Quando</TableHead>
-                <TableHead>Capítulo</TableHead>
-                <TableHead>Fonte</TableHead>
-                <TableHead>Cache</TableHead>
-                <TableHead className="text-right">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {entries.slice(0, 50).map((e, i) => (
-                <TableRow key={i}>
-                  <TableCell className="text-xs font-mono">{new Date(e.created_at).toLocaleTimeString()}</TableCell>
-                  <TableCell className="font-mono text-xs">{e.abbrev} {e.chapter}</TableCell>
-                  <TableCell>{sourceBadge(e.source)}</TableCell>
-                  <TableCell><Badge variant="outline" className="text-xs">{e.cache}</Badge></TableCell>
-                  <TableCell className="text-right text-xs tabular-nums">{e.status_code}</TableCell>
-                </TableRow>
+      {/* Log de auto-retry */}
+      {retryLog.length > 0 && (
+        <Card>
+          <CardHeader><CardTitle className="text-sm">Log de tentativas ({retryLog.length})</CardTitle></CardHeader>
+          <CardContent>
+            <div className="font-mono text-xs space-y-1 max-h-48 overflow-y-auto">
+              {retryLog.map((r, i) => (
+                <div key={i}><span className="text-muted-foreground">{new Date(r.ts).toLocaleTimeString()}</span> · <span className="font-semibold">{r.target}</span> → {r.outcome}</div>
               ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Lista hardcoded de gaps conhecidos */}
+      {missingList.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500" /> Gaps conhecidos (hardcoded)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-4">{MISSING_CHAPTER_REASON}</p>
+            <Table>
+              <TableHeader>
+                <TableRow><TableHead>Capítulo</TableHead><TableHead>Última fonte</TableHead><TableHead>Status</TableHead></TableRow>
+              </TableHeader>
+              <TableBody>
+                {missingList.map(({ abbrev, chapter }) => {
+                  const entry = latestBySource.get(`${abbrev}:${chapter}`);
+                  const resolved = entry && entry.source && entry.source !== 'unavailable';
+                  return (
+                    <TableRow key={`${abbrev}:${chapter}`}>
+                      <TableCell className="font-mono text-xs">{abbrev} {chapter}</TableCell>
+                      <TableCell>{sourceBadge(entry?.source ?? null)}</TableCell>
+                      <TableCell>
+                        {resolved
+                          ? <span className="text-emerald-600 flex items-center gap-1 text-xs"><CheckCircle2 className="w-3 h-3" />resolvido</span>
+                          : <span className="text-amber-600 text-xs">pendente</span>}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
