@@ -140,6 +140,10 @@ export default function BiblePerfBreakdown() {
 
   const [warmHistory, setWarmHistory] = useState<any[]>([]);
   const [expandedRun, setExpandedRun] = useState<string | null>(null);
+  const [whSearch, setWhSearch] = useState('');
+  const [whTypeFilter, setWhTypeFilter] = useState<'all' | 'warmup.dry_run' | 'warmup.execute'>('all');
+  const [whPage, setWhPage] = useState(0);
+  const WH_PAGE_SIZE = 10;
 
   const [retentionCfg, setRetentionCfg] = useState<{ retention_days: number; auto_cleanup_enabled: boolean; updated_at?: string } | null>(null);
   const [retentionEditDays, setRetentionEditDays] = useState<number>(90);
@@ -296,7 +300,7 @@ export default function BiblePerfBreakdown() {
       .select('id, user_id, action, metadata, created_at')
       .in('action', ['warmup.dry_run', 'warmup.execute'])
       .order('created_at', { ascending: false })
-      .limit(30);
+      .limit(200);
     if (error) { /* silent: pode não ser admin */ return; }
     setWarmHistory(data ?? []);
   };
@@ -464,6 +468,82 @@ export default function BiblePerfBreakdown() {
     const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgInternal, b.avgUpstream || 0, 'client-only', b.avgTotal, b.p95Total]);
     downloadCsv(`bible-perf-breakdown-${new Date().toISOString().slice(0, 10)}.csv`, [header, ...data]);
   };
+
+  const filteredWarmHistory = useMemo(() => {
+    const q = whSearch.trim().toLowerCase();
+    return warmHistory.filter((r) => {
+      if (whTypeFilter !== 'all' && r.action !== whTypeFilter) return false;
+      if (!q) return true;
+      const m = r.metadata ?? {};
+      const hay = [
+        r.action,
+        m.tier,
+        m.entity_id,
+        String(r.user_id ?? ''),
+        ...(m.target_books ?? []),
+        ...(Object.keys(m.per_book ?? {})),
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [warmHistory, whSearch, whTypeFilter]);
+
+  const pagedWarmHistory = useMemo(
+    () => filteredWarmHistory.slice(whPage * WH_PAGE_SIZE, (whPage + 1) * WH_PAGE_SIZE),
+    [filteredWarmHistory, whPage],
+  );
+  const whTotalPages = Math.max(1, Math.ceil(filteredWarmHistory.length / WH_PAGE_SIZE));
+  useEffect(() => { if (whPage >= whTotalPages) setWhPage(0); }, [whTotalPages, whPage]);
+
+  // Tendência: estim vs real e taxa de falha (apenas execuções reais)
+  const warmTrend = useMemo(() => {
+    return warmHistory
+      .filter((r) => r.action === 'warmup.execute' && r.metadata?.executed)
+      .slice(0, 30)
+      .reverse()
+      .map((r) => {
+        const exec = r.metadata.executed;
+        const total = (exec.ok ?? 0) + (exec.fail ?? 0);
+        return {
+          ts: new Date(r.created_at).toLocaleString([], { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+          estim_s: r.metadata.estimated_duration_ms ? Math.round(r.metadata.estimated_duration_ms / 100) / 10 : 0,
+          real_s: exec.ms ? Math.round(exec.ms / 100) / 10 : 0,
+          fail_pct: total ? Math.round((exec.fail / total) * 1000) / 10 : 0,
+        };
+      });
+  }, [warmHistory]);
+
+  // Alertas: warmup com falha ou cleanup com erro, últimos 7 dias
+  const failureAlerts = useMemo(() => {
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const items: Array<{ kind: 'warmup' | 'cleanup'; when: string; message: string; detail?: string }> = [];
+    for (const r of warmHistory) {
+      const t = new Date(r.created_at).getTime();
+      if (t < cutoff) continue;
+      const exec = r.metadata?.executed;
+      if (exec && Number(exec.fail) > 0) {
+        items.push({
+          kind: 'warmup',
+          when: r.created_at,
+          message: `Warmup (${r.metadata?.tier ?? '—'}) terminou com ${exec.fail} falha(s) de ${(exec.ok ?? 0) + exec.fail}`,
+          detail: `concorrência=${r.metadata?.params?.concurrency} · capítulos=${r.metadata?.queued}`,
+        });
+      }
+    }
+    for (const r of cleanupRuns) {
+      const t = new Date(r.created_at).getTime();
+      if (t < cutoff) continue;
+      if (r.status === 'error') {
+        items.push({
+          kind: 'cleanup',
+          when: r.created_at,
+          message: `Limpeza (${r.triggered_by}) falhou`,
+          detail: r.error ?? 'sem mensagem de erro',
+        });
+      }
+    }
+    return items.sort((a, b) => new Date(b.when).getTime() - new Date(a.when).getTime());
+  }, [warmHistory, cleanupRuns]);
+
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -768,6 +848,59 @@ export default function BiblePerfBreakdown() {
         </CardContent>
       </Card>
 
+      {/* Alertas de falha (warmup / cleanup) */}
+      {failureAlerts.length > 0 && (
+        <Card className="border-red-300">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2 text-red-700">
+              <AlertTriangle className="w-4 h-4" /> Falhas recentes (últimos 7 dias) · {failureAlerts.length}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {failureAlerts.slice(0, 10).map((a, i) => (
+              <div key={i} className="text-xs border-l-4 border-red-500 bg-red-50/60 px-3 py-2 rounded-r">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="font-semibold">
+                    <Badge variant="destructive" className="mr-2 uppercase">{a.kind}</Badge>
+                    {a.message}
+                  </span>
+                  <span className="text-muted-foreground whitespace-nowrap">{new Date(a.when).toLocaleString()}</span>
+                </div>
+                {a.detail && <div className="text-[11px] text-muted-foreground mt-1 font-mono break-all">{a.detail}</div>}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tendência: estim vs real e taxa de falha */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <LineChartIcon className="w-4 h-4" /> Tendência de warmup (estimado vs real · taxa de falha)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {warmTrend.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Sem execuções reais registradas ainda.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={warmTrend}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="ts" tick={{ fontSize: 10 }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} label={{ value: 's', angle: -90, position: 'insideLeft', fontSize: 10 }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} label={{ value: '% fail', angle: 90, position: 'insideRight', fontSize: 10 }} />
+                <Tooltip />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="estim_s" name="Estimado (s)" stroke="#8b5cf6" strokeDasharray="4 2" dot={false} />
+                <Line yAxisId="left" type="monotone" dataKey="real_s" name="Real (s)" stroke="hsl(var(--primary))" dot={false} />
+                <Line yAxisId="right" type="monotone" dataKey="fail_pct" name="Falha (%)" stroke="hsl(var(--destructive))" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Audit log de warmup */}
       <Card>
         <CardHeader>
@@ -778,10 +911,32 @@ export default function BiblePerfBreakdown() {
             </Button>
           </CardTitle>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
-          {warmHistory.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-2">Nenhuma execução registrada (apenas admins visualizam).</p>
+        <CardContent className="overflow-x-auto space-y-3">
+          <div className="flex items-end gap-2 flex-wrap">
+            <div className="space-y-1 flex-1 min-w-[200px]">
+              <Label className="text-xs">Buscar</Label>
+              <Input value={whSearch} onChange={(e) => { setWhSearch(e.target.value); setWhPage(0); }}
+                     placeholder="tier, livro, user_id…" className="h-8 text-xs" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Tipo</Label>
+              <select value={whTypeFilter}
+                      onChange={(e) => { setWhTypeFilter(e.target.value as any); setWhPage(0); }}
+                      className="h-8 rounded-md border bg-background px-2 text-xs">
+                <option value="all">Todos</option>
+                <option value="warmup.execute">Real</option>
+                <option value="warmup.dry_run">Dry-run</option>
+              </select>
+            </div>
+            <div className="text-xs text-muted-foreground ml-auto">
+              {filteredWarmHistory.length} resultado(s) · página {whPage + 1}/{whTotalPages}
+            </div>
+          </div>
+
+          {filteredWarmHistory.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Nenhuma execução encontrada.</p>
           ) : (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -797,7 +952,7 @@ export default function BiblePerfBreakdown() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {warmHistory.map((r) => {
+                {pagedWarmHistory.map((r) => {
                   const m = r.metadata ?? {};
                   const p = m.params ?? {};
                   const exec = m.executed;
@@ -864,6 +1019,20 @@ export default function BiblePerfBreakdown() {
                 })}
               </TableBody>
             </Table>
+            <div className="flex items-center justify-between text-xs pt-2">
+              <span className="text-muted-foreground">
+                Exibindo {pagedWarmHistory.length} de {filteredWarmHistory.length}
+              </span>
+              <div className="flex gap-1">
+                <Button size="sm" variant="outline" disabled={whPage === 0} onClick={() => setWhPage((p) => Math.max(0, p - 1))}>
+                  Anterior
+                </Button>
+                <Button size="sm" variant="outline" disabled={whPage + 1 >= whTotalPages} onClick={() => setWhPage((p) => Math.min(whTotalPages - 1, p + 1))}>
+                  Próxima
+                </Button>
+              </div>
+            </div>
+            </>
           )}
         </CardContent>
       </Card>
