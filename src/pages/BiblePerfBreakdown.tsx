@@ -248,31 +248,39 @@ export default function BiblePerfBreakdown() {
   useEffect(() => { loadHistory(); /* eslint-disable-next-line */ }, [historyBook, historyDays]);
 
   const breakdown = useMemo<BookBreakdown[]>(() => {
-    const map = new Map<string, { total: number[]; upstream: number[] }>();
+    const map = new Map<string, {
+      total: number[]; upstream: number[]; sql: number[]; edge: number[]; render: number[];
+    }>();
     for (const r of rows) {
       const total = r.total_ms;
       if (typeof total !== 'number') continue;
       const cache = r.cache ?? 'UNKNOWN';
       const key = `${r.abbrev}|${cache}`;
-      const b = map.get(key) ?? { total: [], upstream: [] };
+      const b = map.get(key) ?? { total: [], upstream: [], sql: [], edge: [], render: [] };
       b.total.push(total);
       b.upstream.push(typeof r.bolls_ms === 'number' && r.bolls_ms > 0 ? r.bolls_ms : 0);
+      if (typeof r.sql_ms === 'number') b.sql.push(r.sql_ms);
+      if (typeof r.edge_ms === 'number') b.edge.push(r.edge_ms);
+      if (typeof r.render_ms === 'number') b.render.push(r.render_ms);
       map.set(key, b);
     }
+    const avg = (arr: number[]) => arr.length ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : 0;
     return [...map.entries()].map(([key, b]) => {
       const [abbrev, cache] = key.split('|');
-      const avgTotal = Math.round(b.total.reduce((s, v) => s + v, 0) / b.total.length);
-      const avgUpstream = Math.round(b.upstream.reduce((s, v) => s + v, 0) / b.upstream.length);
       return {
         abbrev, cache,
         samples: b.total.length,
-        avgTotal,
-        avgUpstream,
-        avgInternal: Math.max(0, avgTotal - avgUpstream),
+        avgTotal: avg(b.total),
+        avgUpstream: avg(b.upstream),
+        avgSql: avg(b.sql),
+        avgEdge: avg(b.edge),
+        avgRender: avg(b.render),
+        renderSamples: b.render.length,
         p95Total: percentile(b.total, 95),
       };
     }).sort((a, b) => b.avgTotal - a.avgTotal);
   }, [rows]);
+
 
   const slowBooks = useMemo(() =>
     breakdown
