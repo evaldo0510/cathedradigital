@@ -574,8 +574,9 @@ serve(async (req) => {
         const totalMs = Date.now() - t0;
         metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
         recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
-        const bgCtx: ReqCtx = {};
-        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx)
+        const bgCtx: ReqCtx = newCtx();
+        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx, sovereigntyEnabled)
+
           .then((r) => metric('swr_revalidate', { correlationId, cacheKey, ok: !!r, source: r?.source ?? null })));
         return new Response(JSON.stringify({
           ...lookup.content,
