@@ -138,6 +138,9 @@ export default function BiblePerfBreakdown() {
   const [historyDays, setHistoryDays] = useState<number>(14);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
 
+  const [warmHistory, setWarmHistory] = useState<any[]>([]);
+  const [expandedRun, setExpandedRun] = useState<string | null>(null);
+
   useEffect(() => {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   }, [settings]);
