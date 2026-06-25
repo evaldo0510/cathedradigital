@@ -51,6 +51,38 @@ function cachePolicy(tier: CacheTier) {
 }
 
 // =========================================================================
+// Cache L1 in-memory (por instância de Edge) — TTL curto evita round-trip
+// repetido contra o Postgres quando o mesmo capítulo/flag/config é lido em
+// rajada. Invalida-se sozinho por TTL e em setCacheL2 (write-through).
+// =========================================================================
+const L1_TTL_MS_L2 = 60_000;          // 60s para conteúdo de capítulo
+const L1_TTL_MS_CONFIG = 30_000;      // 30s para feature flags / config
+const L1_MAX_ENTRIES = 500;
+
+type L1Entry<T> = { value: T; expiresAt: number };
+const l1Cache = new Map<string, L1Entry<unknown>>();
+
+function l1Get<T>(key: string): T | undefined {
+  const e = l1Cache.get(key) as L1Entry<T> | undefined;
+  if (!e) return undefined;
+  if (e.expiresAt < Date.now()) { l1Cache.delete(key); return undefined; }
+  return e.value;
+}
+function l1Set<T>(key: string, value: T, ttlMs: number) {
+  l1Cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+  if (l1Cache.size > L1_MAX_ENTRIES) {
+    const now = Date.now();
+    for (const [k, v] of l1Cache) if (v.expiresAt < now) l1Cache.delete(k);
+    // Se ainda passa do limite (todas válidas), descarta a entrada mais antiga.
+    if (l1Cache.size > L1_MAX_ENTRIES) {
+      const firstKey = l1Cache.keys().next().value;
+      if (firstKey !== undefined) l1Cache.delete(firstKey);
+    }
+  }
+}
+function l1Invalidate(key: string) { l1Cache.delete(key); }
+
+// =========================================================================
 // Utilitários
 // =========================================================================
 async function sha256(text: string) {
@@ -63,32 +95,46 @@ async function sha256(text: string) {
 }
 
 async function getCacheConfig() {
+  const cached = l1Get<{ enabled: boolean; version: number }>('cfg:cache');
+  if (cached) return cached;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
-    return {
+    const value = {
       enabled: data?.is_enabled || false,
       version: data?.metadata?.version || 1,
     };
+    l1Set('cfg:cache', value, L1_TTL_MS_CONFIG);
+    return value;
   } catch { return { enabled: true, version: 1 }; }
 }
 
 async function getFeatureFlag(key: string): Promise<boolean> {
+  const cacheKey = `flag:${key}`;
+  const cached = l1Get<boolean>(cacheKey);
+  if (cached !== undefined) return cached;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled').eq('feature_key', key).single();
-    return data?.is_enabled || false;
+    const value = data?.is_enabled || false;
+    l1Set(cacheKey, value, L1_TTL_MS_CONFIG);
+    return value;
   } catch { return false; }
 }
+
 
 // =========================================================================
 // L2 cache com SWR: lê a linha sem filtrar por expires_at e classifica
 // como fresh | stale | miss.
 // =========================================================================
+type L2Row = { content: any; expires_at: string | null; version: number; created_at: string | null };
 type L2Lookup =
   | { state: 'fresh'; content: any; ageS: number; expiresAt: string }
   | { state: 'stale'; content: any; ageS: number; expiresAt: string | null }
   | { state: 'miss' };
 
-async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Lookup> {
+async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
+  // L1 hit: pula o round-trip ao Postgres.
+  const cached = l1Get<L2Row>(`l2:${key}`);
+  if (cached) return cached;
   try {
     const { data } = await supabase
       .from('bible_cache_l2')
@@ -97,18 +143,30 @@ async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Loo
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (!data?.content) return { state: 'miss' };
-    const expires = data.expires_at ? new Date(data.expires_at).getTime() : 0;
-    const now = Date.now();
-    const createdAt = data.created_at ? new Date(data.created_at).getTime() : now;
-    const ageS = Math.max(0, Math.round((now - createdAt) / 1000));
-    if (data.version === currentVersion && expires > now) {
-      return { state: 'fresh', content: data.content, ageS, expiresAt: data.expires_at };
-    }
-    return { state: 'stale', content: data.content, ageS, expiresAt: data.expires_at };
+    if (!data?.content) return null;
+    const row = data as L2Row;
+    l1Set(`l2:${key}`, row, L1_TTL_MS_L2);
+    return row;
   } catch {
-    return { state: 'miss' };
+    return null;
   }
+}
+
+function classifyL2(row: L2Row | null, currentVersion: number): L2Lookup {
+  if (!row) return { state: 'miss' };
+  const expires = row.expires_at ? new Date(row.expires_at).getTime() : 0;
+  const now = Date.now();
+  const createdAt = row.created_at ? new Date(row.created_at).getTime() : now;
+  const ageS = Math.max(0, Math.round((now - createdAt) / 1000));
+  if (row.version === currentVersion && expires > now) {
+    return { state: 'fresh', content: row.content, ageS, expiresAt: row.expires_at as string };
+  }
+  return { state: 'stale', content: row.content, ageS, expiresAt: row.expires_at };
+}
+
+/** Compatibilidade: usado por handlers de exceção. */
+async function lookupCacheL2(key: string, currentVersion: number): Promise<L2Lookup> {
+  return classifyL2(await fetchCacheL2Row(key), currentVersion);
 }
 
 async function setCacheL2(key: string, content: any, hash: string, version: number, ttlHours: number) {
@@ -123,6 +181,13 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
       expires_at: expireDate.toISOString(),
     }, { onConflict: 'cache_key' });
     if (error) console.error('Cache L2 upsert error:', error);
+    // Write-through: atualiza L1 para os próximos requests da mesma instância.
+    l1Set<L2Row>(`l2:${key}`, {
+      content,
+      expires_at: expireDate.toISOString(),
+      version,
+      created_at: new Date().toISOString(),
+    }, L1_TTL_MS_L2);
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
@@ -148,21 +213,48 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
   } catch { return null; }
 }
 
+interface SqlEntry { label: string; startedAt: number; ms: number; }
+
 interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
-  /** Soma dos tempos gastos em queries Supabase (ms). */
-  sqlMs?: number;
+  /** Breakdown por query — preservado para diagnóstico. */
+  sqlEntries: SqlEntry[];
 }
 
-/** Mede uma chamada async e soma o tempo em ctx.sqlMs. */
-async function timedSql<T>(ctx: ReqCtx, fn: () => Promise<T>): Promise<T> {
-  const t0 = Date.now();
+function newCtx(): ReqCtx { return { sqlEntries: [] }; }
+
+/** Mede uma chamada async e registra início/duração para cálculo wall-clock. */
+async function timedSql<T>(ctx: ReqCtx, label: string, fn: () => Promise<T>): Promise<T> {
+  const startedAt = Date.now();
   try {
     return await fn();
   } finally {
-    ctx.sqlMs = (ctx.sqlMs ?? 0) + (Date.now() - t0);
+    ctx.sqlEntries.push({ label, startedAt, ms: Date.now() - startedAt });
   }
 }
+
+/**
+ * Soma wall-clock real do tempo gasto em SQL.
+ * Funde intervalos sobrepostos (queries paralelas via Promise.all contam 1x),
+ * evitando casos em que sql_ms > total_ms.
+ */
+function computeSqlMs(entries: SqlEntry[]): number {
+  if (entries.length === 0) return 0;
+  const intervals = entries
+    .map(e => [e.startedAt, e.startedAt + e.ms] as [number, number])
+    .sort((a, b) => a[0] - b[0]);
+  let total = 0;
+  let curStart = intervals[0][0];
+  let curEnd = intervals[0][1];
+  for (let i = 1; i < intervals.length; i++) {
+    const [s, e] = intervals[i];
+    if (s <= curEnd) curEnd = Math.max(curEnd, e);
+    else { total += curEnd - curStart; curStart = s; curEnd = e; }
+  }
+  total += curEnd - curStart;
+  return total;
+}
+
 
 async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string, ctx: ReqCtx) {
   const book = findBookByAbbr(abbrev);
@@ -275,10 +367,11 @@ function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
 }) {
-  const sqlMs = fields.ctx.sqlMs ?? 0;
+  const sqlMs = computeSqlMs(fields.ctx.sqlEntries);
   const bollsMs = fields.ctx.bolls?.ms ?? 0;
-  // edge_ms = tempo gasto na função excluindo SQL e rede upstream.
-  // Pode ser pequeno em cache HIT, maior em MISS (parsing, serialização).
+  // edge_ms = tempo total - wall-clock SQL - upstream. Como agora sqlMs é
+  // wall-clock (intervalos fundidos), edge_ms nunca fica negativo nem distorce
+  // quando há queries paralelas (Promise.all).
   const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const row = {
     abbrev: fields.abbrev,
@@ -294,6 +387,14 @@ function recordEvent(fields: {
     edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
   };
+  // Breakdown estruturado nos logs para diagnóstico (sem schema novo).
+  metric('sql_breakdown', {
+    correlation_id: fields.correlation_id,
+    abbrev: fields.abbrev,
+    chapter: fields.chapter,
+    sql_ms: sqlMs,
+    entries: fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms })),
+  });
   waitUntil(
     supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {
       if (error) console.warn('[bible-text] metric event insert failed:', error.message);
@@ -311,12 +412,17 @@ async function revalidate(
   cacheVersion: number,
   ttlHours: number,
   ctx: ReqCtx,
+  sovereigntyEnabledHint?: boolean,
 ): Promise<{ data: any; source: string } | null> {
-  const isSovereigntyEnabled = await timedSql(ctx, () => getFeatureFlag('bible_sovereignty_enabled'));
+  const isSovereigntyEnabled = sovereigntyEnabledHint !== undefined
+    ? sovereigntyEnabledHint
+    : await timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled'));
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
-  let result = await timedSql(ctx, () => fetchFromCathedraDb(abbrev, chapter));
+
+
+  let result = await timedSql(ctx, 'fetchFromCathedraDb', () => fetchFromCathedraDb(abbrev, chapter));
   let source = 'Cathedra (Local)';
   if (!isSovereigntyEnabled || !result) {
     const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
@@ -352,7 +458,7 @@ async function revalidate(
       bollsId: resolvedBollsId,
     },
   };
-  await timedSql(ctx, () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
+  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
   return { data: responseData, source };
 }
 
@@ -380,7 +486,7 @@ serve(async (req) => {
   let chapter: number | undefined;
   let client_cache_version: string | number | undefined;
   let warmOnly = false;
-  const ctx: ReqCtx = {};
+  const ctx: ReqCtx = newCtx();
 
   try {
     const raw = await req.json().catch(() => ({}));
@@ -410,15 +516,23 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    const cacheConfig = await timedSql(ctx, () => getCacheConfig());
+    // Paraleliza as 3 queries de leitura: config, feature flag e L2 row.
+    // Antes eram 3 round-trips sequenciais (~80-150ms cada). Agora rodam em
+    // paralelo via Promise.all e o L1 in-memory absorve hits subsequentes.
+    // L2 row é buscado e classificado depois, com a version vinda do config.
+    const cacheKey = `${abbrev}:${chapter}`;
+    const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
+      timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
+      timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
+      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey)),
+    ]);
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
-    const cacheKey = `${abbrev}:${chapter}`;
     const shouldInvalidateL1 = client_cache_version !== cacheConfig.version;
 
     // Modo warm: força revalidação e responde mínimo. Usado pelo script.
     if (warmOnly) {
-      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
       recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx });
@@ -427,7 +541,8 @@ serve(async (req) => {
       });
     }
 
-    const lookup = await timedSql(ctx, () => lookupCacheL2(cacheKey, cacheConfig.version));
+    const lookup = classifyL2(l2Row, cacheConfig.version);
+
 
     // ---- FRESH ----
     if (lookup.state === 'fresh') {
@@ -457,8 +572,9 @@ serve(async (req) => {
         const totalMs = Date.now() - t0;
         metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
         recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
-        const bgCtx: ReqCtx = {};
-        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx)
+        const bgCtx: ReqCtx = newCtx();
+        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx, sovereigntyEnabled)
+
           .then((r) => metric('swr_revalidate', { correlationId, cacheKey, ok: !!r, source: r?.source ?? null })));
         return new Response(JSON.stringify({
           ...lookup.content,
@@ -478,7 +594,7 @@ serve(async (req) => {
     }
 
     // ---- MISS (ou stale fora da janela) → revalidar síncrono ----
-    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
+    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
     if (revalidated) {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: totalMs });
