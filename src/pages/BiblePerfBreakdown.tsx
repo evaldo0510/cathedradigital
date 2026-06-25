@@ -586,6 +586,8 @@ export default function BiblePerfBreakdown() {
         </div>
       </div>
 
+      <SqlBreakdownSection />
+
       {/* Configurações persistentes */}
       <Card>
         <CardHeader>
