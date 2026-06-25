@@ -259,9 +259,12 @@ interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
   /** Breakdown por query — preservado para diagnóstico. */
   sqlEntries: SqlEntry[];
+  /** Resultado do L1 para este request: 'fresh' | 'stale' | 'miss' | 'bypass'. */
+  l1Phase?: 'fresh' | 'stale' | 'miss' | 'bypass';
 }
 
 function newCtx(): ReqCtx { return { sqlEntries: [] }; }
+
 
 /** Mede uma chamada async e registra início/duração para cálculo wall-clock. */
 async function timedSql<T>(ctx: ReqCtx, label: string, fn: () => Promise<T>): Promise<T> {
