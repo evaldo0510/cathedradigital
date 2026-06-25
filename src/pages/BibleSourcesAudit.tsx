@@ -94,10 +94,38 @@ export default function BibleSourcesAudit() {
   const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
-  // Batch retry controls (live-tunable)
-  const [batchConcurrency, setBatchConcurrency] = useState(2);
-  const [batchMaxPerRun, setBatchMaxPerRun] = useState(25);
-  const [batchCooldownMs, setBatchCooldownMs] = useState(2 * 60 * 1000);
+  // Batch retry controls (persisted in localStorage)
+  const LS_KEY = 'bibleSourcesAudit.batchConfig.v1';
+  const loadCfg = () => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {};
+  };
+  const initialCfg = loadCfg();
+  const [batchConcurrency, setBatchConcurrency] = useState<number>(initialCfg.batchConcurrency ?? 2);
+  const [batchMaxPerRun, setBatchMaxPerRun] = useState<number>(initialCfg.batchMaxPerRun ?? 25);
+  const [batchCooldownMs, setBatchCooldownMs] = useState<number>(initialCfg.batchCooldownMs ?? 2 * 60 * 1000);
+  const [avgRetryMs, setAvgRetryMs] = useState<number>(initialCfg.avgRetryMs ?? 1500);
+
+  // Spike alert thresholds (persisted)
+  const [spikeUnavailPct, setSpikeUnavailPct] = useState<number>(initialCfg.spikeUnavailPct ?? 15);
+  const [spikeLatencyPct, setSpikeLatencyPct] = useState<number>(initialCfg.spikeLatencyPct ?? 50);
+  const [spikeWindowDays, setSpikeWindowDays] = useState<number>(initialCfg.spikeWindowDays ?? 3);
+
+  // Persist whenever any config changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        batchConcurrency, batchMaxPerRun, batchCooldownMs, avgRetryMs,
+        spikeUnavailPct, spikeLatencyPct, spikeWindowDays,
+      }));
+    } catch {}
+  }, [batchConcurrency, batchMaxPerRun, batchCooldownMs, avgRetryMs, spikeUnavailPct, spikeLatencyPct, spikeWindowDays]);
+
+  // Source filter for unavailable CSV export
+  const [csvSourceFilter, setCsvSourceFilter] = useState<string>('all');
 
   // Date range filters (created_at / last_seen)
   const today = new Date();
