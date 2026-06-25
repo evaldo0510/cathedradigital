@@ -23,7 +23,10 @@ const DEFAULTS = {
   bollsRate: 0.30,
   p95Ms: 4000,
   minCalls: 10,
+  regressionFactor: 1.5, // observed_p95 >= baseline_p95 * factor → alerta
+  regressionFloorMs: 100, // ignora baselines minúsculos (ruído)
 };
+
 
 async function readFlag(key: string, fallback: number): Promise<number> {
   try {
