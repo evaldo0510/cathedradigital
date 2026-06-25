@@ -224,7 +224,8 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
       expires_at: expireDate.toISOString(),
       version,
       created_at: new Date().toISOString(),
-    }, L1_TTL_MS_L2);
+    }, L1_TTL_MS_L2, L1_SWR_MS_L2);
+
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
