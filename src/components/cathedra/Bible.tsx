@@ -36,6 +36,7 @@ import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { useHighContrast } from '@/hooks/useHighContrast';
+import biblePerf from '@/lib/biblePerf';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = parseInt(paragraphId);
@@ -115,6 +116,7 @@ const Bible: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
   const [sourceInfo, setSourceInfo] = useState<string>('Nenhuma');
   const [invalidationStats, setInvalidationStats] = useState({ legacy: 0, expired: 0 });
   const [cacheSyncVersion, setCacheSyncVersion] = useState(8); // Bumped to v8 for AI Translation stabilization
@@ -597,50 +599,113 @@ const Bible: React.FC = () => {
   }, [activeVerse, selectedBook, selectedChapter]);
 
   const fetchVerses = async (abbr: string, chapter: number) => {
+    const runId = `${abbr}-${chapter}-${Date.now()}`;
+    biblePerf.start(runId, abbr, chapter);
+
     setIsLoading(true);
     setSourceInfo('Buscando...');
-    
-    // 1. Check L1 Cache
+
+    // 1. Check L1 Cache (síncrono)
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
     const cached = localStorage.getItem(offlineKey);
-    
+    biblePerf.mark(runId, 'cache:check');
+
     if (cached) {
       try {
         const cachedData = JSON.parse(cached);
         const isLegacy = !cachedData.v || cachedData.v < cacheSyncVersion || (cachedData.book && /Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees|Obadiah|Psalms|Genesis|Chapter/i.test(cachedData.book));
         const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7;
-        
+
         if (!isLegacy && !isExpired) {
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo(`Cache Local (v${cacheSyncVersion})`);
+          biblePerf.mark(runId, 'render');
+          biblePerf.end(runId, {
+            cacheHit: true,
+            status: 'ok',
+            source: 'L1 cache',
+            versesCount: cachedData.verses?.length ?? 0,
+          });
           return;
         } else {
           localStorage.removeItem(offlineKey);
         }
-      } catch(e) {
+      } catch (e) {
         localStorage.removeItem(offlineKey);
       }
     }
 
-    try {
-      setSourceInfo('Buscando na Nuvem...');
-      
-      const { data, error, response } = await supabase.functions.invoke('bible-text', {
-        body: { abbrev: abbr, chapter, client_cache_version: cacheSyncVersion }
+    // 2. PARALELO: busca texto + conexões (não dependem entre si)
+    biblePerf.mark(runId, 'text:start');
+    biblePerf.mark(runId, 'connections:start');
+    setConnectionsLoading(true);
+    setSourceInfo('Buscando na Nuvem...');
+
+    const textPromise = supabase.functions
+      .invoke('bible-text', {
+        body: { abbrev: abbr, chapter, client_cache_version: cacheSyncVersion },
+      })
+      .finally(() => biblePerf.mark(runId, 'text:end'));
+
+    const connectionsPromise = Promise.resolve(
+      supabase
+        .from('bible_connections')
+        .select('*')
+        .like('verse_id', `${abbr}-${chapter}-%`)
+    ).then((res) => {
+      biblePerf.mark(runId, 'connections:end');
+      return res;
+    });
+
+    // Hidrata conexões assim que chegarem, sem bloquear o render do texto
+    connectionsPromise
+      .then(({ data: dbConnections }) => {
+        if (dbConnections && dbConnections.length > 0) {
+          setDynamicConnections((prev) => {
+            const newConns: Record<string, any[]> = { ...prev };
+            dbConnections.forEach((conn: any) => {
+              const key = conn.verse_id;
+              if (!newConns[key]) newConns[key] = [];
+              if (!newConns[key].some((c) => c.id === conn.reference_id)) {
+                newConns[key].push({
+                  type: conn.category as any,
+                  label: conn.reference_title,
+                  color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
+                  id: conn.reference_id || conn.id,
+                  summary: conn.summary || '',
+                  theological_theme: conn.theological_theme,
+                  relevance_level: conn.relevance_level,
+                });
+              }
+            });
+            return newConns;
+          });
+        }
+      })
+      .catch(() => {
+        // silenciar — conexões são best-effort
+      })
+      .finally(() => {
+        setConnectionsLoading(false);
       });
+
+
+    try {
+      const { data, error, response } = await textPromise;
 
       if (response?.status === 304) {
         const cachedRes = JSON.parse(localStorage.getItem(offlineKey) || '{}');
-        setVerses(cachedRes.verses.map((v: any) => ({ ...v, chapter })));
+        setVerses((cachedRes.verses || []).map((v: any) => ({ ...v, chapter })));
         setIsLoading(false);
         setSourceInfo('Sincronizado (ETag 304)');
+        biblePerf.mark(runId, 'render');
+        biblePerf.end(runId, { status: '304', source: '304 + L1', versesCount: cachedRes.verses?.length ?? 0 });
         return;
       }
 
       if (response?.status === 404) {
         const errorData: any = data || {};
-        // Contrato compartilhado: usa o helper do schema p/ extrair reason + received_abbrev
         const described = describeBibleTextError(errorData);
         const title = described?.title ?? errorData.error ?? 'Texto não encontrado';
         const description = described?.description
@@ -650,55 +715,26 @@ const Bible: React.FC = () => {
         toast.error(title, { description, id: `bible-text-404-${abbr}-${chapter}` });
         setSourceInfo(`Erro 404 — ${typeof errorData.reason === 'string' ? errorData.reason : 'texto não encontrado'}`);
         setIsLoading(false);
+        biblePerf.end(runId, { status: '404', source: '404' });
         return;
       }
 
       if (error) throw error;
-      
+
       const serverEtag = response?.headers.get('ETag');
       if (serverEtag) localStorage.setItem(`etag_${abbr}_${chapter}`, serverEtag);
 
-
-      
       const loadedVerses = data.verses || [];
-      
-      // 2. Fetch Real Bible Connections for this chapter
-      const { data: dbConnections } = await supabase
-        .from('bible_connections')
-        .select('*')
-        .like('verse_id', `${abbr}-${chapter}-%`);
 
-      // Update Dynamic Connections
-      if (dbConnections && dbConnections.length > 0) {
-        const newConns: Record<string, any[]> = { ...dynamicConnections };
-        dbConnections.forEach(conn => {
-          const key = conn.verse_id;
-          if (!newConns[key]) newConns[key] = [];
-          
-          if (!newConns[key].some(c => c.id === conn.reference_id)) {
-            newConns[key].push({
-              type: conn.category as any,
-              label: conn.reference_title,
-              color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
-              id: conn.reference_id || conn.id,
-              summary: conn.summary || '',
-              theological_theme: conn.theological_theme,
-              relevance_level: conn.relevance_level
-            });
-          }
-        });
-        setDynamicConnections(newConns);
-      }
-      
       // Auto-scan validation with PNG screenshots and detailed JSON reporting
       if (viewMode === 'reading' && isScanning) {
         const forbiddenEnRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')}|Tobit|Judith|Wisdom|Sirach|Baruch|Maccabees)\\b`, 'i');
         const found = loadedVerses.filter((v: any) => forbiddenEnRegex.test(v.text));
-        
+
         if (found.length > 0) {
           const container = document.querySelector('.bible-content-container') as HTMLElement;
           const visualSnippet = container?.innerHTML.substring(0, 500) || 'Não disponível';
-          
+
           const captureScreenshot = async () => {
             let screenshotData = '';
             if (container) {
@@ -706,7 +742,7 @@ const Bible: React.FC = () => {
                 const canvas = await html2canvas(container, {
                   scale: 1,
                   useCORS: true,
-                  logging: false
+                  logging: false,
                 });
                 screenshotData = canvas.toDataURL('image/png');
               } catch (e) {
@@ -714,7 +750,7 @@ const Bible: React.FC = () => {
               }
             }
 
-            setScanResults(prev => [
+            setScanResults((prev) => [
               ...prev,
               ...found.map((f: any) => ({
                 id: `evid_${crypto.randomUUID().substring(0, 8)}`,
@@ -722,25 +758,27 @@ const Bible: React.FC = () => {
                 ch: chapter,
                 v: f.number,
                 text: f.text,
-                type: sourceInfo || 'API/Edge Function',
+                type: 'language_violation',
                 screenshot: screenshotData,
                 htmlSnippet: visualSnippet,
-                title: selectedBook?.chapterTitles?.[chapter] || 'Sem título',
+                title: `Inglês detectado em ${data.book || abbr} ${chapter}:${f.number}`,
                 file: 'src/components/cathedra/Bible.tsx',
-                timestamp: new Date().toISOString()
-              }))
+                timestamp: new Date().toISOString(),
+              })),
             ]);
           };
           captureScreenshot();
         }
       }
 
+      // RENDER do texto imediatamente — conexões hidratam depois sem bloquear
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
+      biblePerf.mark(runId, 'render');
       const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
       setSourceInfo(sourceLabel);
-      
+
       // Update Diagnostic Logs
-      setDiagnosticLogs(prev => [
+      setDiagnosticLogs((prev) => [
         {
           sessionId,
           timestamp: new Date().toISOString(),
@@ -749,45 +787,33 @@ const Bible: React.FC = () => {
           chapter,
           source: sourceLabel,
           verses: loadedVerses.length,
-          file: 'src/components/cathedra/Bible.tsx'
+          file: 'src/components/cathedra/Bible.tsx',
         },
-        ...prev.slice(0, 99)
+        ...prev.slice(0, 99),
       ]);
-      
+
       if (loadedVerses.length > 0) {
-        localStorage.setItem(offlineKey, JSON.stringify({ 
-          verses: loadedVerses, 
+        localStorage.setItem(offlineKey, JSON.stringify({
+          verses: loadedVerses,
           timestamp: Date.now(),
           v: cacheSyncVersion,
-          book: data.book || abbr
+          book: data.book || abbr,
         }));
       } else {
         toast.warning('Capítulo sem conteúdo no momento.');
       }
 
-
-      
-      // Save progress automatically
-      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const book = allBooks.find(b => b.abbr === abbr);
-      if (book) saveReadingProgress(book.abbr, chapter);
-      
       // Scroll to verse if specified
       const verse = searchParams.get('v');
       if (verse) {
         setTimeout(() => {
           const element = document.getElementById(`verse-${verse}`);
           if (element) {
-            // Calculate offset for sticky header
-            const headerHeight = 56; // 14 * 4
+            const headerHeight = 56;
             const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
             const offsetPosition = elementPosition - headerHeight - 20;
 
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
             element.classList.add('bg-secondary/20', 'scale-[1.02]');
             setTimeout(() => element.classList.remove('bg-secondary/20', 'scale-[1.02]'), 3000);
           }
@@ -796,26 +822,58 @@ const Bible: React.FC = () => {
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
 
-
+      // Save progress — DEFERIDO para não bloquear interações pós-render
+      const allBooks = Object.values(BIBLE_DATA).flat().flatMap((cat) => cat.books);
+      const book = allBooks.find((b) => b.abbr === abbr);
+      if (book) {
+        const finish = () => {
+          biblePerf.mark(runId, 'progress:start');
+          try {
+            saveReadingProgress(book.abbr, chapter);
+          } finally {
+            biblePerf.mark(runId, 'progress:end');
+            biblePerf.end(runId, {
+              status: loadedVerses.length ? 'ok' : 'empty',
+              source: data.source || 'Edge',
+              versesCount: loadedVerses.length,
+            });
+          }
+        };
+        if (typeof (window as any).requestIdleCallback === 'function') {
+          (window as any).requestIdleCallback(finish, { timeout: 1000 });
+        } else {
+          setTimeout(finish, 0);
+        }
+      } else {
+        biblePerf.end(runId, {
+          status: loadedVerses.length ? 'ok' : 'empty',
+          source: data.source || 'Edge',
+          versesCount: loadedVerses.length,
+        });
+      }
     } catch (error: any) {
       // Local fallback for Abdias or connection issues
       if (abbr === 'Ab' || abbr === 'Abd') {
-         const obadiahText = [
-            { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
-            { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
-            { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" }
-         ];
-         setVerses(obadiahText.map(v => ({ ...v, chapter: 1 })));
-         setIsLoading(false);
-         setSourceInfo('Fallback Local (Abdias)');
-         return;
+        const obadiahText = [
+          { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
+          { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
+          { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" },
+        ];
+        setVerses(obadiahText.map((v) => ({ ...v, chapter: 1 })));
+        setIsLoading(false);
+        setSourceInfo('Fallback Local (Abdias)');
+        biblePerf.mark(runId, 'render');
+        biblePerf.end(runId, { status: 'ok', source: 'fallback:Ab', versesCount: 3 });
+        return;
       }
       setSourceInfo('Erro no Carregamento');
       toast.error('Erro ao carregar texto sagrado');
+      biblePerf.end(runId, { status: 'error', source: 'error' });
     } finally {
       setIsLoading(false);
     }
   };
+
 
 
   const selectBook = (book: BibleBook) => {
@@ -1611,6 +1669,19 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
                     </p>
                   </motion.div>
+
+                  {/* Hidratação de conexões — não bloqueia leitura */}
+                  {connectionsLoading && verses.length > 0 && (
+                    <div
+                      className="flex items-center gap-2 -mt-4 mb-4 text-[10px] font-black uppercase tracking-widest text-secondary/60"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/60 animate-pulse" />
+                      <span>Carregando referências cruzadas…</span>
+                      <span className="flex-1 h-px bg-secondary/10" />
+                    </div>
+                  )}
 
                   <div className="space-y-8">
                     {verses.length === 0 && !isLoading ? (
