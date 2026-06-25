@@ -79,9 +79,9 @@ Deno.serve(async (req) => {
   }
 
   // 2. Build task list (priority first, then slow books, dedup)
-  const queue: Array<{ abbrev: string; chapter: number; reason: 'priority' | 'slow' }> = [];
+  const queue: Array<{ abbrev: string; chapter: number; reason: 'priority' | 'slow' | 'manual' }> = [];
   const seen = new Set<string>();
-  const enqueue = (abbr: string, reason: 'priority' | 'slow') => {
+  const enqueue = (abbr: string, reason: 'priority' | 'slow' | 'manual') => {
     const total = CHAPTERS[abbr] ?? 0;
     const cap = Math.min(maxPerBook, total);
     for (let c = 1; c <= cap; c++) {
@@ -91,22 +91,30 @@ Deno.serve(async (req) => {
       queue.push({ abbrev: abbr, chapter: c, reason });
     }
   };
-  for (const abbr of Object.keys(ALWAYS_PRIORITY)) enqueue(abbr, 'priority');
-  for (const abbr of slowBooks) enqueue(abbr, 'slow');
+
+  if (explicitBooks && explicitBooks.length > 0) {
+    // modo on-demand: usa apenas os livros pedidos
+    for (const abbr of explicitBooks) enqueue(abbr, 'manual');
+  } else {
+    for (const abbr of Object.keys(ALWAYS_PRIORITY)) enqueue(abbr, 'priority');
+    for (const abbr of slowBooks) enqueue(abbr, 'slow');
+  }
 
   const summary = {
     threshold_ms: threshold,
     hours,
     concurrency,
     max_chapters_per_book: maxPerBook,
-    priority_books: Object.keys(ALWAYS_PRIORITY),
+    priority_books: explicitBooks ? [] : Object.keys(ALWAYS_PRIORITY),
     slow_books: slowBooks,
+    explicit_books: explicitBooks ?? [],
     queued: queue.length,
+    estimated_duration_ms: Math.ceil(queue.length / concurrency) * 450,
     dry_run: dry,
   };
 
   if (dry) {
-    return new Response(JSON.stringify({ ...summary, sample: queue.slice(0, 30) }),
+    return new Response(JSON.stringify({ ...summary, sample: queue.slice(0, 50), queue: verbose ? queue : undefined }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 
@@ -115,22 +123,28 @@ Deno.serve(async (req) => {
   const apikey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   let ok = 0, fail = 0, idx = 0;
   const t0 = Date.now();
+  const logs: Array<{ abbrev: string; chapter: number; status: number; ms: number; ok: boolean; reason: string }> = [];
   await Promise.all(Array.from({ length: concurrency }, async () => {
     while (idx < queue.length) {
       const task = queue[idx++];
+      const ts = Date.now();
+      let status = 0;
       try {
         const r = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', apikey, Authorization: `Bearer ${apikey}` },
           body: JSON.stringify({ abbrev: task.abbrev, chapter: task.chapter, force_revalidate: true }),
         });
+        status = r.status;
         await r.text();
         if (r.ok) ok++; else fail++;
       } catch { fail++; }
+      if (verbose) logs.push({ abbrev: task.abbrev, chapter: task.chapter, status, ms: Date.now() - ts, ok: status >= 200 && status < 400, reason: task.reason });
     }
   }));
 
   return new Response(JSON.stringify({
     ...summary, executed: { ok, fail, ms: Date.now() - t0 },
+    logs: verbose ? logs : undefined,
   }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 });
