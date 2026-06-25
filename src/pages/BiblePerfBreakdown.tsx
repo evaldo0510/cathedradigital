@@ -6,8 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw, Activity, FlaskConical, Flame, AlertTriangle } from 'lucide-react';
+import {
+  RefreshCw, Activity, FlaskConical, Flame, AlertTriangle, Download, Check, Settings as SettingsIcon, LineChart as LineChartIcon,
+} from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ReferenceDot,
+} from 'recharts';
 
 interface MetricRow {
   abbrev: string;
@@ -25,11 +30,10 @@ interface BookBreakdown {
   samples: number;
   avgTotal: number;
   avgUpstream: number;
-  avgInternal: number; // total - upstream (SQL + edge compute)
+  avgInternal: number;
   p95Total: number;
 }
 
-// Espelha CHAPTERS de scripts/warm-bible-cache.ts
 const CHAPTERS: Record<string, number> = {
   Gn: 50, Ex: 40, Lv: 27, Nm: 36, Dt: 34, Js: 24, Jz: 21, Rt: 4,
   '1Sm': 31, '2Sm': 24, '1Rs': 22, '2Rs': 25, '1Cr': 29, '2Cr': 36,
@@ -48,22 +52,95 @@ const TIERS = {
   deutero: ['Tb', 'Jdt', 'Sb', 'Eclo', 'Br', '1Mc', '2Mc'],
 };
 
+const SETTINGS_KEY = 'bible.perfSettings.v1';
+
+interface PerfSettings {
+  regressionDays: number;
+  regressionThresholdMs: number;
+  regressionMinSamples: number;
+  warmThresholdMs: number;
+  warmConcurrency: number;
+  warmMaxPerBook: number;
+  warmAvgMsEstimate: number;
+}
+
+const DEFAULT_SETTINGS: PerfSettings = {
+  regressionDays: 3,
+  regressionThresholdMs: 800,
+  regressionMinSamples: 20,
+  warmThresholdMs: 800,
+  warmConcurrency: 4,
+  warmMaxPerBook: 10,
+  warmAvgMsEstimate: 450,
+};
+
+function loadSettings(): PerfSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch { return DEFAULT_SETTINGS; }
+}
+
 function percentile(values: number[], p: number): number {
   if (!values.length) return 0;
   const s = [...values].sort((a, b) => a - b);
   return Math.round(s[Math.min(s.length - 1, Math.floor((p / 100) * s.length))]);
 }
 
+function downloadCsv(filename: string, rows: (string | number)[][]) {
+  const csv = rows
+    .map((r) => r.map((c) => {
+      const s = String(c ?? '');
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }).join(','))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+interface AlertRow {
+  id: string;
+  severity: string;
+  message: string;
+  details: any;
+  is_resolved: boolean;
+  created_at: string;
+}
+
+interface HistoryPoint {
+  day: string;
+  avg: number;
+  p95: number;
+  total: number;
+  hits: number;
+  misses: number;
+  hadAlert?: boolean;
+}
+
 export default function BiblePerfBreakdown() {
   const [rows, setRows] = useState<MetricRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [hours, setHours] = useState(24);
+  const [settings, setSettings] = useState<PerfSettings>(loadSettings);
+  const [simTier, setSimTier] = useState<'hot' | 'pentateuch' | 'deutero' | 'all' | 'custom'>('pentateuch');
+  const [customBooks, setCustomBooks] = useState<string>('Lv,Nm');
 
-  // Warm simulation controls
-  const [simAvgMs, setSimAvgMs] = useState(450);
-  const [simConcurrency, setSimConcurrency] = useState(4);
-  const [simTier, setSimTier] = useState<'hot' | 'pentateuch' | 'deutero' | 'all'>('pentateuch');
-  const [simThresholdMs, setSimThresholdMs] = useState(800);
+  const [alerts, setAlerts] = useState<AlertRow[]>([]);
+  const [warmLogs, setWarmLogs] = useState<any[]>([]);
+  const [warmSummary, setWarmSummary] = useState<any | null>(null);
+  const [warmRunning, setWarmRunning] = useState(false);
+
+  const [historyBook, setHistoryBook] = useState<string>('Lv');
+  const [historyDays, setHistoryDays] = useState<number>(14);
+  const [history, setHistory] = useState<HistoryPoint[]>([]);
+
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }, [settings]);
 
   const load = async () => {
     setLoading(true);
@@ -79,11 +156,79 @@ export default function BiblePerfBreakdown() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [hours]);
+  const loadAlerts = async () => {
+    const { data, error } = await supabase
+      .from('bible_audit_alerts')
+      .select('id, severity, message, details, is_resolved, created_at')
+      .ilike('message', 'Regressão de latência%')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (error) { toast.error(error.message); return; }
+    setAlerts((data ?? []) as AlertRow[]);
+  };
 
-  // Breakdown por livro × cache version (cache = HIT/MISS/STALE = proxy de "versão")
+  const loadHistory = async () => {
+    const sinceDate = new Date(Date.now() - historyDays * 24 * 60 * 60 * 1000);
+    const since = sinceDate.toISOString();
+    const { data: metrics, error } = await supabase
+      .from('bible_cache_metrics')
+      .select('bucket_start, abbrev, hits, misses, total, sum_ms, p95_ms')
+      .eq('abbrev', historyBook)
+      .gte('bucket_start', since)
+      .order('bucket_start', { ascending: true });
+    if (error) { toast.error(error.message); return; }
+
+    const perDay = new Map<string, { sum: number; total: number; p95: number; hits: number; misses: number }>();
+    for (const m of metrics ?? []) {
+      const day = (m.bucket_start as string).slice(0, 10);
+      const agg = perDay.get(day) ?? { sum: 0, total: 0, p95: 0, hits: 0, misses: 0 };
+      agg.sum += Number(m.sum_ms ?? 0);
+      agg.total += Number(m.total ?? 0);
+      agg.p95 = Math.max(agg.p95, Number(m.p95_ms ?? 0));
+      agg.hits += Number(m.hits ?? 0);
+      agg.misses += Number(m.misses ?? 0);
+      perDay.set(day, agg);
+    }
+
+    const { data: alertRows } = await supabase
+      .from('bible_audit_alerts')
+      .select('created_at, details')
+      .ilike('message', 'Regressão de latência%')
+      .gte('created_at', since);
+    const alertDays = new Set<string>();
+    for (const a of alertRows ?? []) {
+      const regressed = (a.details as any)?.regressed as any[] | undefined;
+      if (regressed?.some((r) => r.abbrev === historyBook)) {
+        alertDays.add((a.created_at as string).slice(0, 10));
+      }
+    }
+
+    const points: HistoryPoint[] = [...perDay.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([day, v]) => ({
+        day,
+        avg: v.total ? Math.round(v.sum / v.total) : 0,
+        p95: v.p95,
+        total: v.total,
+        hits: v.hits,
+        misses: v.misses,
+        hadAlert: alertDays.has(day),
+      }));
+
+    // moving average (3-day)
+    const withMA = points.map((p, i) => {
+      const slice = points.slice(Math.max(0, i - 2), i + 1);
+      const ma = Math.round(slice.reduce((s, x) => s + x.avg, 0) / slice.length);
+      return { ...p, ma } as HistoryPoint & { ma: number };
+    });
+    setHistory(withMA);
+  };
+
+  useEffect(() => { load(); loadAlerts(); /* eslint-disable-next-line */ }, [hours]);
+  useEffect(() => { loadHistory(); /* eslint-disable-next-line */ }, [historyBook, historyDays]);
+
   const breakdown = useMemo<BookBreakdown[]>(() => {
-    const map = new Map<string, { total: number[]; upstream: number[]; }>();
+    const map = new Map<string, { total: number[]; upstream: number[] }>();
     for (const r of rows) {
       const total = r.total_ms;
       if (typeof total !== 'number') continue;
@@ -111,49 +256,83 @@ export default function BiblePerfBreakdown() {
 
   const slowBooks = useMemo(() =>
     breakdown
-      .filter(b => b.cache !== 'HIT' || b.avgTotal > simThresholdMs)
-      .filter((b, i, arr) => arr.findIndex(x => x.abbrev === b.abbrev) === i)
-      .filter(b => b.avgTotal > simThresholdMs)
-      .map(b => b.abbrev),
-    [breakdown, simThresholdMs]);
+      .filter((b) => b.avgTotal > settings.warmThresholdMs)
+      .map((b) => b.abbrev)
+      .filter((v, i, a) => a.indexOf(v) === i),
+    [breakdown, settings.warmThresholdMs]);
+
+  const targetBooks = useMemo<string[]>(() => {
+    if (simTier === 'all') return Object.keys(CHAPTERS);
+    if (simTier === 'custom') {
+      return customBooks.split(',').map((s) => s.trim()).filter((s) => CHAPTERS[s]);
+    }
+    return (TIERS as any)[simTier] as string[];
+  }, [simTier, customBooks]);
 
   const simulation = useMemo(() => {
-    const books =
-      simTier === 'all'
-        ? Object.keys(CHAPTERS)
-        : (TIERS as any)[simTier] as string[];
-    const totalChapters = books.reduce((s, b) => s + (CHAPTERS[b] ?? 0), 0);
-    const wallMs = Math.ceil(totalChapters / Math.max(1, simConcurrency)) * simAvgMs;
+    const totalChapters = targetBooks.reduce((s, b) => s + Math.min(settings.warmMaxPerBook, CHAPTERS[b] ?? 0), 0);
+    const wallMs = Math.ceil(totalChapters / Math.max(1, settings.warmConcurrency)) * settings.warmAvgMsEstimate;
     const secs = Math.round(wallMs / 1000);
     return {
-      books, totalChapters,
+      totalChapters,
       durationLabel: `${Math.floor(secs / 60)}m${secs % 60}s`,
-      estimatedRequests: totalChapters,
-      writeCost: totalChapters, // 1 invocation per chapter
-      impactedSlowBooks: books.filter(b => slowBooks.includes(b)),
+      impactedSlowBooks: targetBooks.filter((b) => slowBooks.includes(b)),
     };
-  }, [simTier, simAvgMs, simConcurrency, slowBooks]);
+  }, [targetBooks, settings, slowBooks]);
 
-  const runRegressionCheck = async () => {
-    const { data, error } = await supabase.functions.invoke('bible-latency-regression-alert', {
-      body: { days: 3, threshold_ms: simThresholdMs, dry_run: true },
+  const runOnDemandWarm = async (dry: boolean) => {
+    setWarmRunning(true);
+    setWarmLogs([]); setWarmSummary(null);
+    const isCustomList = simTier !== 'all';
+    const { data, error } = await supabase.functions.invoke('bible-auto-warm-slow', {
+      body: {
+        threshold_ms: settings.warmThresholdMs,
+        concurrency: settings.warmConcurrency,
+        max_chapters_per_book: settings.warmMaxPerBook,
+        dry_run: dry,
+        verbose: true,
+        books: isCustomList ? targetBooks : undefined,
+      },
     });
+    setWarmRunning(false);
     if (error) { toast.error(error.message); return; }
-    toast.message(`Regressão (dry-run): ${data?.regressed_count ?? 0} livro(s)`, {
-      description: (data?.regressed ?? []).slice(0, 5).map((r: any) => `${r.abbrev} ${r.window_avg}ms`).join(' · ') || 'nenhum acima do limiar',
-    });
+    setWarmSummary(data);
+    setWarmLogs((data?.logs ?? data?.sample ?? []) as any[]);
+    toast.success(dry
+      ? `Dry-run: ${data?.queued ?? 0} capítulos · ~${Math.round((data?.estimated_duration_ms ?? 0) / 1000)}s`
+      : `Executado: ${data?.executed?.ok ?? 0} ok / ${data?.executed?.fail ?? 0} fail em ${data?.executed?.ms ?? 0}ms`);
   };
 
-  const runAutoWarm = async (dry: boolean) => {
-    const { data, error } = await supabase.functions.invoke('bible-auto-warm-slow', {
-      body: { threshold_ms: simThresholdMs, concurrency: simConcurrency, max_chapters_per_book: 10, dry_run: dry },
+  const runRegressionCheck = async (dry: boolean) => {
+    const { data, error } = await supabase.functions.invoke('bible-latency-regression-alert', {
+      body: {
+        days: settings.regressionDays,
+        threshold_ms: settings.regressionThresholdMs,
+        min_samples: settings.regressionMinSamples,
+        dry_run: dry,
+      },
     });
     if (error) { toast.error(error.message); return; }
-    toast.success(
-      dry
-        ? `Simulação warm: ${data?.queued ?? 0} capítulos · prioridade=${(data?.priority_books ?? []).join(',')} · lentos=${(data?.slow_books ?? []).join(',') || '—'}`
-        : `Warm executado: ${data?.executed?.ok ?? 0} ok / ${data?.executed?.fail ?? 0} fail em ${data?.executed?.ms ?? 0}ms`,
-    );
+    toast.message(`Regressão (${dry ? 'dry-run' : 'gravado'}): ${data?.regressed_count ?? 0} livro(s)`, {
+      description: (data?.regressed ?? []).slice(0, 5).map((r: any) => `${r.abbrev} ${r.window_avg}ms`).join(' · ') || 'nenhum acima do limiar',
+    });
+    if (!dry) loadAlerts();
+  };
+
+  const resolveAlert = async (id: string) => {
+    const { error } = await supabase
+      .from('bible_audit_alerts')
+      .update({ is_resolved: true, resolved_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) { toast.error(error.message); return; }
+    toast.success('Alerta resolvido');
+    loadAlerts();
+  };
+
+  const exportBreakdownCsv = () => {
+    const header = ['abbrev', 'cache', 'samples', 'avg_internal_sql_edge_ms', 'avg_upstream_network_ms', 'render_ms', 'avg_total_ms', 'p95_total_ms'];
+    const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgInternal, b.avgUpstream || 0, 'client-only', b.avgTotal, b.p95Total]);
+    downloadCsv(`bible-perf-breakdown-${new Date().toISOString().slice(0, 10)}.csv`, [header, ...data]);
   };
 
   return (
@@ -162,64 +341,116 @@ export default function BiblePerfBreakdown() {
         <div>
           <h1 className="text-3xl font-display font-bold">Breakdown de Performance da Bíblia</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Por livro × versão de cache (HIT/MISS/STALE). Tempo SQL+Edge derivado de <code>total_ms − bolls_ms</code>.
+            Por livro × versão de cache (HIT/MISS/STALE). SQL+Edge = <code>total_ms − bolls_ms</code>.
           </p>
         </div>
         <div className="flex items-end gap-2">
           <div className="space-y-1">
             <Label htmlFor="hours" className="text-xs">Janela (horas)</Label>
             <Input id="hours" type="number" min={1} max={168} value={hours}
-                   onChange={e => setHours(Math.max(1, Math.min(168, Number(e.target.value) || 24)))}
+                   onChange={(e) => setHours(Math.max(1, Math.min(168, Number(e.target.value) || 24)))}
                    className="w-24" />
           </div>
           <Button onClick={load} variant="outline" size="sm" disabled={loading}>
             <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} /> Atualizar
           </Button>
+          <Button onClick={exportBreakdownCsv} variant="outline" size="sm">
+            <Download className="mr-2 h-4 w-4" /> Exportar CSV
+          </Button>
         </div>
       </div>
 
-      {/* Simulação do cron de warmup */}
+      {/* Configurações persistentes */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <FlaskConical className="w-4 h-4" /> Simulação do cron de warmup
+            <SettingsIcon className="w-4 h-4" /> Configurações (persistidas localmente)
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-1">
-              <Label className="text-xs">Tier</Label>
-              <select value={simTier} onChange={e => setSimTier(e.target.value as any)}
+              <Label className="text-xs">Regressão: janela (dias)</Label>
+              <Input type="number" min={1} max={30} value={settings.regressionDays}
+                     onChange={(e) => setSettings({ ...settings, regressionDays: Math.max(1, Math.min(30, Number(e.target.value) || 3)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Regressão: limiar (ms)</Label>
+              <Input type="number" min={100} max={5000} step={50} value={settings.regressionThresholdMs}
+                     onChange={(e) => setSettings({ ...settings, regressionThresholdMs: Math.max(100, Math.min(5000, Number(e.target.value) || 800)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Regressão: amostras mín.</Label>
+              <Input type="number" min={1} max={1000} value={settings.regressionMinSamples}
+                     onChange={(e) => setSettings({ ...settings, regressionMinSamples: Math.max(1, Math.min(1000, Number(e.target.value) || 20)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Warm: limiar (ms)</Label>
+              <Input type="number" min={100} max={5000} step={50} value={settings.warmThresholdMs}
+                     onChange={(e) => setSettings({ ...settings, warmThresholdMs: Math.max(100, Math.min(5000, Number(e.target.value) || 800)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Warm: concorrência</Label>
+              <Input type="number" min={1} max={16} value={settings.warmConcurrency}
+                     onChange={(e) => setSettings({ ...settings, warmConcurrency: Math.max(1, Math.min(16, Number(e.target.value) || 4)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Warm: máx. capítulos/livro</Label>
+              <Input type="number" min={1} max={150} value={settings.warmMaxPerBook}
+                     onChange={(e) => setSettings({ ...settings, warmMaxPerBook: Math.max(1, Math.min(150, Number(e.target.value) || 10)) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Warm: ms/capítulo (estim.)</Label>
+              <Input type="number" min={100} max={10000} step={50} value={settings.warmAvgMsEstimate}
+                     onChange={(e) => setSettings({ ...settings, warmAvgMsEstimate: Math.max(100, Math.min(10000, Number(e.target.value) || 450)) })} />
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" size="sm" onClick={() => setSettings(DEFAULT_SETTINGS)}>
+                Resetar padrão
+              </Button>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Aplicado nas chamadas a <code>bible-auto-warm-slow</code> e <code>bible-latency-regression-alert</code>. Salvo em <code>localStorage</code>.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Warmup on-demand */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <FlaskConical className="w-4 h-4" /> Warmup sob demanda
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <Label className="text-xs">Alvo</Label>
+              <select value={simTier} onChange={(e) => setSimTier(e.target.value as any)}
                       className="w-full h-9 rounded-md border bg-background px-3 text-sm">
-                <option value="pentateuch">Pentateuco + Js (6 livros)</option>
+                <option value="pentateuch">Pentateuco + Js</option>
                 <option value="hot">Hot (Sl, Pv, evangelhos)</option>
                 <option value="deutero">Deuterocanônicos</option>
                 <option value="all">Todos os 73 livros</option>
+                <option value="custom">Lista customizada</option>
               </select>
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Concorrência</Label>
-              <Input type="number" min={1} max={16} value={simConcurrency}
-                     onChange={e => setSimConcurrency(Math.max(1, Math.min(16, Number(e.target.value) || 1)))} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Tempo médio/capítulo (ms)</Label>
-              <Input type="number" min={100} max={10000} step={50} value={simAvgMs}
-                     onChange={e => setSimAvgMs(Math.max(100, Math.min(10000, Number(e.target.value) || 450)))} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Limiar de lentidão (ms)</Label>
-              <Input type="number" min={100} max={5000} step={50} value={simThresholdMs}
-                     onChange={e => setSimThresholdMs(Math.max(100, Math.min(5000, Number(e.target.value) || 800)))} />
-            </div>
+            {simTier === 'custom' && (
+              <div className="space-y-1 md:col-span-2">
+                <Label className="text-xs">Livros (separados por vírgula)</Label>
+                <Input value={customBooks} onChange={(e) => setCustomBooks(e.target.value)} placeholder="Lv,Nm,Dt" />
+              </div>
+            )}
           </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div className="p-3 rounded border bg-card">
               <div className="text-xs text-muted-foreground">Livros</div>
-              <div className="text-lg font-semibold">{simulation.books.length}</div>
+              <div className="text-lg font-semibold">{targetBooks.length}</div>
             </div>
             <div className="p-3 rounded border bg-card">
-              <div className="text-xs text-muted-foreground">Capítulos</div>
+              <div className="text-xs text-muted-foreground">Capítulos (cap)</div>
               <div className="text-lg font-semibold">{simulation.totalChapters}</div>
             </div>
             <div className="p-3 rounded border bg-card">
@@ -227,22 +458,129 @@ export default function BiblePerfBreakdown() {
               <div className="text-lg font-semibold">{simulation.durationLabel}</div>
             </div>
             <div className="p-3 rounded border bg-card">
-              <div className="text-xs text-muted-foreground">Livros lentos atingidos</div>
+              <div className="text-xs text-muted-foreground">Livros lentos no alvo</div>
               <div className="text-lg font-semibold">{simulation.impactedSlowBooks.length}</div>
               <div className="text-[10px] text-muted-foreground truncate">{simulation.impactedSlowBooks.join(', ') || '—'}</div>
             </div>
           </div>
+
           <div className="flex gap-2 flex-wrap">
-            <Button size="sm" variant="outline" onClick={() => runAutoWarm(true)}>
-              <FlaskConical className="w-4 h-4 mr-2" /> Dry-run no servidor
+            <Button size="sm" variant="outline" onClick={() => runOnDemandWarm(true)} disabled={warmRunning}>
+              <FlaskConical className="w-4 h-4 mr-2" /> Dry-run
             </Button>
-            <Button size="sm" onClick={() => runAutoWarm(false)}>
-              <Flame className="w-4 h-4 mr-2" /> Executar warmup seletivo
+            <Button size="sm" onClick={() => runOnDemandWarm(false)} disabled={warmRunning}>
+              <Flame className="w-4 h-4 mr-2" /> Executar
             </Button>
-            <Button size="sm" variant="outline" onClick={runRegressionCheck}>
-              <AlertTriangle className="w-4 h-4 mr-2" /> Checar regressão (3d × {simThresholdMs}ms)
+            <Button size="sm" variant="outline" onClick={() => runRegressionCheck(true)}>
+              <AlertTriangle className="w-4 h-4 mr-2" /> Checar regressão (dry)
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => runRegressionCheck(false)}>
+              <AlertTriangle className="w-4 h-4 mr-2" /> Checar e gravar alerta
             </Button>
           </div>
+
+          {warmSummary && (
+            <div className="text-xs text-muted-foreground border rounded p-2 bg-muted/30">
+              <span className="font-mono">queued={warmSummary.queued}</span>{' · '}
+              <span>concorrência={warmSummary.concurrency}</span>{' · '}
+              {warmSummary.executed
+                ? <>executado: <span className="text-emerald-700 font-semibold">{warmSummary.executed.ok}</span> ok / <span className="text-red-600 font-semibold">{warmSummary.executed.fail}</span> fail em {warmSummary.executed.ms}ms</>
+                : <>estimativa: ~{Math.round((warmSummary.estimated_duration_ms ?? 0) / 1000)}s</>}
+            </div>
+          )}
+
+          {warmLogs.length > 0 && (
+            <div className="max-h-64 overflow-auto border rounded">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-xs">Livro</TableHead>
+                    <TableHead className="text-xs">Cap</TableHead>
+                    <TableHead className="text-xs">Motivo</TableHead>
+                    <TableHead className="text-xs text-right">Status</TableHead>
+                    <TableHead className="text-xs text-right">ms</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {warmLogs.slice(0, 200).map((l, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="font-mono text-xs">{l.abbrev}</TableCell>
+                      <TableCell className="text-xs">{l.chapter}</TableCell>
+                      <TableCell className="text-xs">{l.reason}</TableCell>
+                      <TableCell className={`text-right text-xs font-semibold ${l.ok === false ? 'text-red-600' : 'text-emerald-700'}`}>{l.status ?? '—'}</TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">{l.ms ?? '—'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Alertas de regressão */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center justify-between">
+            <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Alertas de regressão de latência</span>
+            <Button size="sm" variant="ghost" onClick={loadAlerts}>
+              <RefreshCw className="w-3 h-3 mr-1" /> Recarregar
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {alerts.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Nenhum alerta encontrado.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs">Severidade</TableHead>
+                  <TableHead className="text-xs">Quando</TableHead>
+                  <TableHead className="text-xs">Razão</TableHead>
+                  <TableHead className="text-xs">Livros</TableHead>
+                  <TableHead className="text-xs">Status</TableHead>
+                  <TableHead className="text-xs text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {alerts.map((a) => {
+                  const regressed = (a.details?.regressed ?? []) as any[];
+                  const top = regressed.slice(0, 4).map((r) => `${r.abbrev} ${r.window_avg}ms`).join(' · ');
+                  return (
+                    <TableRow key={a.id} className={a.is_resolved ? 'opacity-60' : ''}>
+                      <TableCell>
+                        <Badge variant={a.severity === 'critical' ? 'destructive' : 'secondary'}>{a.severity}</Badge>
+                      </TableCell>
+                      <TableCell className="text-xs">{new Date(a.created_at).toLocaleString()}</TableCell>
+                      <TableCell className="text-xs max-w-md">{a.message}</TableCell>
+                      <TableCell className="text-xs">
+                        <span className="font-mono">{top}</span>
+                        {regressed.length > 4 && <span className="text-muted-foreground"> +{regressed.length - 4}</span>}
+                      </TableCell>
+                      <TableCell>
+                        {a.is_resolved
+                          ? <Badge variant="outline" className="text-emerald-700 border-emerald-300">resolvido</Badge>
+                          : <Badge variant="outline">aberto</Badge>}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {regressed[0]?.abbrev && (
+                          <Button size="sm" variant="ghost" onClick={() => { setHistoryBook(regressed[0].abbrev); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
+                            Detalhar
+                          </Button>
+                        )}
+                        {!a.is_resolved && (
+                          <Button size="sm" variant="outline" onClick={() => resolveAlert(a.id)}>
+                            <Check className="w-3 h-3 mr-1" /> Resolver
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
@@ -250,7 +588,7 @@ export default function BiblePerfBreakdown() {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Activity className="w-4 h-4" /> Breakdown de tempo por livro × versão de cache
+            <Activity className="w-4 h-4" /> Breakdown por livro × versão de cache
           </CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
@@ -263,8 +601,8 @@ export default function BiblePerfBreakdown() {
                   <TableHead>Livro</TableHead>
                   <TableHead>Cache</TableHead>
                   <TableHead className="text-right">Amostras</TableHead>
-                  <TableHead className="text-right">SQL+Edge (ms)</TableHead>
-                  <TableHead className="text-right">Upstream/Rede (ms)</TableHead>
+                  <TableHead className="text-right">SQL+Edge</TableHead>
+                  <TableHead className="text-right">Upstream</TableHead>
                   <TableHead className="text-right">Render</TableHead>
                   <TableHead className="text-right">Total médio</TableHead>
                   <TableHead className="text-right">p95</TableHead>
@@ -272,20 +610,16 @@ export default function BiblePerfBreakdown() {
               </TableHeader>
               <TableBody>
                 {breakdown.map((b, i) => {
-                  const slow = b.avgTotal > simThresholdMs;
+                  const slow = b.avgTotal > settings.warmThresholdMs;
                   return (
                     <TableRow key={i} className={slow ? 'bg-red-50/40' : ''}>
                       <TableCell className="font-mono text-xs">{b.abbrev}</TableCell>
-                      <TableCell>
-                        <Badge variant={b.cache === 'HIT' ? 'secondary' : 'outline'}>{b.cache}</Badge>
-                      </TableCell>
+                      <TableCell><Badge variant={b.cache === 'HIT' ? 'secondary' : 'outline'}>{b.cache}</Badge></TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.samples}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.avgInternal}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.avgUpstream || '—'}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs text-muted-foreground">client-only</TableCell>
-                      <TableCell className={`text-right tabular-nums text-xs font-semibold ${slow ? 'text-red-600' : 'text-emerald-700'}`}>
-                        {b.avgTotal}
-                      </TableCell>
+                      <TableCell className={`text-right tabular-nums text-xs font-semibold ${slow ? 'text-red-600' : 'text-emerald-700'}`}>{b.avgTotal}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.p95Total}</TableCell>
                     </TableRow>
                   );
@@ -293,8 +627,52 @@ export default function BiblePerfBreakdown() {
               </TableBody>
             </Table>
           )}
-          <p className="text-[11px] text-muted-foreground mt-3">
-            Render time não é medido no servidor — instrumentado no cliente via <code>biblePerf</code> (ver <a className="underline" href="/bible-perf">/bible-perf</a>).
+        </CardContent>
+      </Card>
+
+      {/* Histórico */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center justify-between">
+            <span className="flex items-center gap-2"><LineChartIcon className="w-4 h-4" /> Histórico por livro (média móvel 3d + p95)</span>
+            <div className="flex items-end gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs">Livro</Label>
+                <select value={historyBook} onChange={(e) => setHistoryBook(e.target.value)}
+                        className="h-8 rounded-md border bg-background px-2 text-xs">
+                  {Object.keys(CHAPTERS).map((b) => <option key={b} value={b}>{b}</option>)}
+                </select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Dias</Label>
+                <Input type="number" min={3} max={60} value={historyDays} className="w-20 h-8"
+                       onChange={(e) => setHistoryDays(Math.max(3, Math.min(60, Number(e.target.value) || 14)))} />
+              </div>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {history.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-4">Sem dados agregados para este livro/janela.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={320}>
+              <LineChart data={history}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="avg" name="Média (ms)" stroke="hsl(var(--primary))" dot={false} />
+                <Line type="monotone" dataKey="p95" name="p95 (ms)" stroke="hsl(var(--destructive))" strokeDasharray="4 2" dot={false} />
+                <Line type="monotone" dataKey="ma" name="MM 3d (ms)" stroke="#8b5cf6" dot={false} />
+                {history.filter((h) => h.hadAlert).map((h, i) => (
+                  <ReferenceDot key={i} x={h.day} y={h.p95} r={6} fill="hsl(var(--destructive))" stroke="white" />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+          <p className="text-[11px] text-muted-foreground mt-2">
+            Pontos vermelhos marcam dias em que <code>bible-latency-regression-alert</code> abriu alerta para o livro.
           </p>
         </CardContent>
       </Card>
