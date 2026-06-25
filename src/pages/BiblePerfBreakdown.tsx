@@ -141,6 +141,13 @@ export default function BiblePerfBreakdown() {
   const [warmHistory, setWarmHistory] = useState<any[]>([]);
   const [expandedRun, setExpandedRun] = useState<string | null>(null);
 
+  const [retentionCfg, setRetentionCfg] = useState<{ retention_days: number; auto_cleanup_enabled: boolean; updated_at?: string } | null>(null);
+  const [retentionEditDays, setRetentionEditDays] = useState<number>(90);
+  const [retentionEditAuto, setRetentionEditAuto] = useState<boolean>(true);
+  const [retentionStats, setRetentionStats] = useState<{ total: number; oldest?: string; eligible: number } | null>(null);
+  const [cleanupRuns, setCleanupRuns] = useState<any[]>([]);
+  const [cleanupBusy, setCleanupBusy] = useState(false);
+
   useEffect(() => {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   }, [settings]);
