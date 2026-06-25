@@ -137,9 +137,18 @@ type L2Lookup =
   | { state: 'miss' };
 
 async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
-  // L1 hit: pula o round-trip ao Postgres.
+  // L1 hit (fresh ou stale-mas-dentro-da-janela-SWR): evita round-trip ao Postgres.
+  // Se stale, dispara revalidação em background para a próxima leitura ser fresh.
   const cached = l1Get<L2Row>(`l2:${key}`);
-  if (cached) return cached;
+  if (cached) {
+    if (cached.stale) {
+      // Marca como fresh imediatamente para evitar múltiplos refreshes paralelos
+      // entre o disparo e a conclusão do fetch em background.
+      l1Set<L2Row>(`l2:${key}`, cached.value, L1_TTL_MS_L2, L1_SWR_MS_L2);
+      waitUntil(refreshL2InBackground(key));
+    }
+    return cached.value;
+  }
   try {
     const { data } = await supabase
       .from('bible_cache_l2')
@@ -150,12 +159,35 @@ async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
       .maybeSingle();
     if (!data?.content) return null;
     const row = data as L2Row;
-    l1Set(`l2:${key}`, row, L1_TTL_MS_L2);
+    l1Set(`l2:${key}`, row, L1_TTL_MS_L2, L1_SWR_MS_L2);
     return row;
   } catch {
     return null;
   }
 }
+
+/** Refresh em background do L1: lê do L2 sem afetar o request corrente. */
+async function refreshL2InBackground(key: string) {
+  try {
+    const { data } = await supabase
+      .from('bible_cache_l2')
+      .select('content, expires_at, version, created_at')
+      .eq('cache_key', key)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (data?.content) {
+      l1Set<L2Row>(`l2:${key}`, data as L2Row, L1_TTL_MS_L2, L1_SWR_MS_L2);
+      metric('l1_swr_refresh', { key, ok: true });
+    } else {
+      l1Invalidate(`l2:${key}`);
+      metric('l1_swr_refresh', { key, ok: false, reason: 'empty' });
+    }
+  } catch (e) {
+    metric('l1_swr_refresh', { key, ok: false, error: String((e as any)?.message || e) });
+  }
+}
+
 
 function classifyL2(row: L2Row | null, currentVersion: number): L2Lookup {
   if (!row) return { state: 'miss' };
