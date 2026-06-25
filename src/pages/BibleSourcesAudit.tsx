@@ -517,11 +517,27 @@ export default function BibleSourcesAudit() {
           <Button onClick={exportAlertsCsv} disabled={alerts.length === 0} size="sm" variant="secondary">
             <Download className="w-4 h-4 mr-2" />CSV alertas
           </Button>
-          <Button onClick={exportUnavailableCsv} disabled={unavailableChapters.length === 0} size="sm" variant="secondary">
-            <Download className="w-4 h-4 mr-2" />CSV indisponíveis
-          </Button>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-lg border bg-card">
+            <Label className="text-xs text-muted-foreground">CSV fonte:</Label>
+            <Select value={csvSourceFilter} onValueChange={setCsvSourceFilter}>
+              <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="bolls">bolls.life</SelectItem>
+                <SelectItem value="biblia">BibliaCatolica</SelectItem>
+                <SelectItem value="dump">dump (Cathedra)</SelectItem>
+                <SelectItem value="unavailable">unavailable</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={exportUnavailableCsv} disabled={unavailableChapters.length === 0} size="sm" variant="secondary">
+              <Download className="w-4 h-4 mr-2" />CSV indisponíveis
+            </Button>
+          </div>
           <Button onClick={runReconcile} disabled={reconciling} size="sm" variant="secondary">
             <Wand2 className="w-4 h-4 mr-2" />{reconciling ? 'Reconciliando…' : 'Reclassificar'}
+          </Button>
+          <Button onClick={simulateBatchRetry} disabled={unavailableChapters.length === 0} size="sm" variant="outline">
+            <FlaskConical className="w-4 h-4 mr-2" />Simular lote
           </Button>
           <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
             <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, batchMaxPerRun)})`}
