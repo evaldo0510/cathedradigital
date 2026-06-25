@@ -52,6 +52,8 @@ export default function BibleSourcesAudit() {
   const [importing, setImporting] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [autoRetry, setAutoRetry] = useState(false);
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [reconciling, setReconciling] = useState(false);
   const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
