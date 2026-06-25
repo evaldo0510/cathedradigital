@@ -51,29 +51,32 @@ function cachePolicy(tier: CacheTier) {
 }
 
 // =========================================================================
-// Cache L1 in-memory (por instância de Edge) — TTL curto evita round-trip
-// repetido contra o Postgres quando o mesmo capítulo/flag/config é lido em
-// rajada. Invalida-se sozinho por TTL e em setCacheL2 (write-through).
+// Cache L1 in-memory (por instância de Edge) com SWR.
+// Conteúdo L2: fresh por 5min, depois stale por mais 5min (serve valor antigo
+// e dispara refresh em background via waitUntil). Hard-expire = 10min.
+// Configs/flags: TTL curto (30s) sem SWR — propagam invalidações rápido.
 // =========================================================================
-const L1_TTL_MS_L2 = 60_000;          // 60s para conteúdo de capítulo
+const L1_TTL_MS_L2 = 300_000;         // 5min "fresh" para conteúdo L2
+const L1_SWR_MS_L2 = 300_000;         // +5min de janela SWR (hard expire = 10min)
 const L1_TTL_MS_CONFIG = 30_000;      // 30s para feature flags / config
 const L1_MAX_ENTRIES = 500;
 
-type L1Entry<T> = { value: T; expiresAt: number };
+type L1Entry<T> = { value: T; freshUntil: number; hardExpiresAt: number };
 const l1Cache = new Map<string, L1Entry<unknown>>();
 
-function l1Get<T>(key: string): T | undefined {
+/** Retorna {value, stale} se houver entrada não-expirada (mesmo stale). */
+function l1Get<T>(key: string): { value: T; stale: boolean } | undefined {
   const e = l1Cache.get(key) as L1Entry<T> | undefined;
   if (!e) return undefined;
-  if (e.expiresAt < Date.now()) { l1Cache.delete(key); return undefined; }
-  return e.value;
+  const now = Date.now();
+  if (e.hardExpiresAt < now) { l1Cache.delete(key); return undefined; }
+  return { value: e.value, stale: now > e.freshUntil };
 }
-function l1Set<T>(key: string, value: T, ttlMs: number) {
-  l1Cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) {
+  const now = Date.now();
+  l1Cache.set(key, { value, freshUntil: now + ttlMs, hardExpiresAt: now + ttlMs + swrMs });
   if (l1Cache.size > L1_MAX_ENTRIES) {
-    const now = Date.now();
-    for (const [k, v] of l1Cache) if (v.expiresAt < now) l1Cache.delete(k);
-    // Se ainda passa do limite (todas válidas), descarta a entrada mais antiga.
+    for (const [k, v] of l1Cache) if (v.hardExpiresAt < now) l1Cache.delete(k);
     if (l1Cache.size > L1_MAX_ENTRIES) {
       const firstKey = l1Cache.keys().next().value;
       if (firstKey !== undefined) l1Cache.delete(firstKey);
@@ -81,6 +84,7 @@ function l1Set<T>(key: string, value: T, ttlMs: number) {
   }
 }
 function l1Invalidate(key: string) { l1Cache.delete(key); }
+
 
 // =========================================================================
 // Utilitários
