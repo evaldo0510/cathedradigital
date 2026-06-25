@@ -538,6 +538,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/bible-coverage" element={<BibleCoverageAdmin />} />
                       <Route path="/bible-cache" element={<BibleCacheAdminPage />} />
                       <Route path="/bible-abbr-validate" element={<BibleAbbrValidatePage />} />
+                      <Route path="/bible-perf" element={<BiblePerfDashboard />} />
+                      <Route path="/bible-sources" element={<BibleSourcesAudit />} />
 
 
                     </Routes>
