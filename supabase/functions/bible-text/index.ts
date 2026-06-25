@@ -411,6 +411,7 @@ function recordEvent(fields: {
   // wall-clock (intervalos fundidos), edge_ms nunca fica negativo nem distorce
   // quando há queries paralelas (Promise.all).
   const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
+  const breakdown = fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms }));
   const row = {
     abbrev: fields.abbrev,
     chapter: fields.chapter,
@@ -424,14 +425,15 @@ function recordEvent(fields: {
     sql_ms: sqlMs,
     edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
+    sql_breakdown: breakdown,
   };
-  // Breakdown estruturado nos logs para diagnóstico (sem schema novo).
+  // Breakdown estruturado nos logs para diagnóstico imediato.
   metric('sql_breakdown', {
     correlation_id: fields.correlation_id,
     abbrev: fields.abbrev,
     chapter: fields.chapter,
     sql_ms: sqlMs,
-    entries: fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms })),
+    entries: breakdown,
   });
   waitUntil(
     supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {

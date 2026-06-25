@@ -1,0 +1,1 @@
+ALTER TABLE public.bible_cache_metric_events ADD COLUMN IF NOT EXISTS sql_breakdown jsonb;

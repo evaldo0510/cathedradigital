@@ -884,6 +884,7 @@ export type Database = {
           id: number
           render_ms: number | null
           source: string | null
+          sql_breakdown: Json | null
           sql_ms: number | null
           status_code: number
           total_ms: number
@@ -901,6 +902,7 @@ export type Database = {
           id?: number
           render_ms?: number | null
           source?: string | null
+          sql_breakdown?: Json | null
           sql_ms?: number | null
           status_code?: number
           total_ms: number
@@ -918,6 +920,7 @@ export type Database = {
           id?: number
           render_ms?: number | null
           source?: string | null
+          sql_breakdown?: Json | null
           sql_ms?: number | null
           status_code?: number
           total_ms?: number
