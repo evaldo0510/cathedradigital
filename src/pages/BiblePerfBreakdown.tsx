@@ -478,10 +478,11 @@ export default function BiblePerfBreakdown() {
   };
 
   const exportBreakdownCsv = () => {
-    const header = ['abbrev', 'cache', 'samples', 'avg_internal_sql_edge_ms', 'avg_upstream_network_ms', 'render_ms', 'avg_total_ms', 'p95_total_ms'];
-    const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgInternal, b.avgUpstream || 0, 'client-only', b.avgTotal, b.p95Total]);
+    const header = ['abbrev', 'cache', 'samples', 'avg_sql_ms', 'avg_edge_ms', 'avg_upstream_network_ms', 'avg_render_ms', 'render_samples', 'avg_total_ms', 'p95_total_ms'];
+    const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgSql, b.avgEdge, b.avgUpstream || 0, b.avgRender || 0, b.renderSamples, b.avgTotal, b.p95Total]);
     downloadCsv(`bible-perf-breakdown-${new Date().toISOString().slice(0, 10)}.csv`, [header, ...data]);
   };
+
 
   const filteredWarmHistory = useMemo(() => {
     const q = whSearch.trim().toLowerCase();
