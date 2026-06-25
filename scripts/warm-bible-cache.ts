@@ -49,7 +49,7 @@ const CHAPTERS: Record<string, number> = {
   Gl: 6, Ef: 6, Fp: 4, Cl: 4, "1Ts": 5, "2Ts": 3, "1Tm": 6, "2Tm": 4,
   Tt: 3, Fm: 1, Hb: 13, Tg: 5, "1Pe": 5, "2Pe": 3, "1Jo": 5, "2Jo": 1, "3Jo": 1, Jd: 1, Ap: 22,
   // Deuterocanônicos
-  Tb: 14, Jt: 16, Sb: 19, Eclo: 51, Br: 6, "1Mc": 16, "2Mc": 15,
+  Tb: 14, Jdt: 16, Sb: 19, Eclo: 51, Br: 6, "1Mc": 16, "2Mc": 15,
 };
 
 type Task = { abbrev: string; chapter: number; tier: string };
