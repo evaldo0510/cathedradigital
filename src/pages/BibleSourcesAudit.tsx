@@ -324,6 +324,15 @@ export default function BibleSourcesAudit() {
           <Button onClick={runReport} disabled={reporting} size="sm" variant="secondary">
             <FileText className="w-4 h-4 mr-2" />{reporting ? 'Gerando…' : 'Gerar relatório'}
           </Button>
+          <Button onClick={exportCsv} disabled={alerts.length === 0} size="sm" variant="secondary">
+            <Download className="w-4 h-4 mr-2" />Exportar CSV
+          </Button>
+          <Button onClick={runReconcile} disabled={reconciling} size="sm" variant="secondary">
+            <Wand2 className="w-4 h-4 mr-2" />{reconciling ? 'Reconciliando…' : 'Reclassificar alertas'}
+          </Button>
+          <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
+            <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, BATCH_MAX_PER_RUN)})`}
+          </Button>
           <Button onClick={() => runImport()} disabled={importing} size="sm">
             {importing ? 'Importando…' : 'Importar faltantes'}
           </Button>
