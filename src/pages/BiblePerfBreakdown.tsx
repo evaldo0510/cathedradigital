@@ -622,6 +622,103 @@ export default function BiblePerfBreakdown() {
         </CardContent>
       </Card>
 
+      {/* Retenção & limpeza dos logs de auditoria */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center justify-between">
+            <span className="flex items-center gap-2"><SettingsIcon className="w-4 h-4" /> Retenção & limpeza de bible_audit_action_logs</span>
+            <Button size="sm" variant="ghost" onClick={loadRetention}>
+              <RefreshCw className="w-3 h-3 mr-1" /> Recarregar
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div className="p-3 rounded border bg-card">
+              <div className="text-xs text-muted-foreground">Volume total</div>
+              <div className="text-lg font-semibold tabular-nums">{retentionStats?.total ?? '—'}</div>
+            </div>
+            <div className="p-3 rounded border bg-card">
+              <div className="text-xs text-muted-foreground">Elegíveis p/ remoção</div>
+              <div className="text-lg font-semibold tabular-nums text-red-600">{retentionStats?.eligible ?? '—'}</div>
+            </div>
+            <div className="p-3 rounded border bg-card">
+              <div className="text-xs text-muted-foreground">Registro mais antigo</div>
+              <div className="text-sm font-semibold">{retentionStats?.oldest ? new Date(retentionStats.oldest).toLocaleDateString() : '—'}</div>
+            </div>
+            <div className="p-3 rounded border bg-card">
+              <div className="text-xs text-muted-foreground">Auto-limpeza</div>
+              <div className="text-sm font-semibold">
+                {retentionCfg?.auto_cleanup_enabled
+                  ? <Badge variant="secondary">ativa (03:15 UTC)</Badge>
+                  : <Badge variant="outline">desativada</Badge>}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <Label className="text-xs">Retenção (dias)</Label>
+              <Input type="number" min={1} max={3650} value={retentionEditDays}
+                     onChange={(e) => setRetentionEditDays(Math.max(1, Math.min(3650, Number(e.target.value) || 90)))} />
+            </div>
+            <div className="space-y-1 flex flex-col">
+              <Label className="text-xs">Auto-limpeza diária</Label>
+              <label className="inline-flex items-center gap-2 h-9 text-sm">
+                <input type="checkbox" checked={retentionEditAuto}
+                       onChange={(e) => setRetentionEditAuto(e.target.checked)} />
+                Executar via cron às 03:15 UTC
+              </label>
+            </div>
+            <div className="flex items-end gap-2">
+              <Button size="sm" onClick={saveRetention}>Salvar configuração</Button>
+              <Button size="sm" variant="outline" onClick={runCleanupNow} disabled={cleanupBusy}>
+                {cleanupBusy ? 'Executando…' : 'Executar limpeza agora'}
+              </Button>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs text-muted-foreground mb-2">Últimas execuções do job</div>
+            {cleanupRuns.length === 0 ? (
+              <p className="text-xs text-muted-foreground">Nenhuma execução registrada ainda.</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-xs">Quando</TableHead>
+                    <TableHead className="text-xs">Gatilho</TableHead>
+                    <TableHead className="text-xs text-right">Retenção</TableHead>
+                    <TableHead className="text-xs text-right">Removidas</TableHead>
+                    <TableHead className="text-xs text-right">Duração</TableHead>
+                    <TableHead className="text-xs">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cleanupRuns.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell className="text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleString()}</TableCell>
+                      <TableCell className="text-xs">
+                        <Badge variant={r.triggered_by === 'manual' ? 'default' : 'secondary'}>{r.triggered_by}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">{r.retention_days}d</TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">{r.rows_deleted}</TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">{r.duration_ms}ms</TableCell>
+                      <TableCell className="text-xs">
+                        <Badge variant={r.status === 'ok' ? 'secondary' : r.status === 'error' ? 'destructive' : 'outline'}>
+                          {r.status}
+                        </Badge>
+                        {r.error && <div className="text-[10px] text-red-600 max-w-xs truncate">{r.error}</div>}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Audit log de warmup */}
       <Card>
         <CardHeader>
