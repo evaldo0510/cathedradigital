@@ -267,6 +267,45 @@ export default function BibleSourcesAudit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRetry, unavailableChapters.length]);
 
+  // Batch retry with controlled concurrency + per-chapter cooldown (already enforced in retryChapter).
+  const runBatchRetry = async () => {
+    if (batchRunning) return;
+    const queue = unavailableChapters.slice(0, BATCH_MAX_PER_RUN);
+    if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
+    setBatchRunning(true);
+    const log: typeof retryLog = [];
+    let idx = 0;
+    const workers = Array.from({ length: BATCH_CONCURRENCY }, async () => {
+      while (idx < queue.length) {
+        const c = queue[idx++];
+        const r = await retryChapter(c.abbrev, c.chapter);
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+      }
+    });
+    await Promise.all(workers);
+    setRetryLog(prev => [...log, ...prev].slice(0, 60));
+    const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
+    toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`);
+    await load();
+    setBatchRunning(false);
+  };
+
+  const runReconcile = async () => {
+    setReconciling(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-alerts-reconcile', { body: {} });
+      if (error) throw error;
+      const s = data?.stats ?? {};
+      toast.success(`Reconciliado: ${s.chapters_resolved ?? 0} resolvidos, ${s.alerts_resolved ?? 0} alertas fechados, ${s.legacy_events_purged ?? 0} eventos purgados.`);
+      await load();
+    } catch (e: any) {
+      toast.error(`Falha no reconcile: ${e?.message ?? e}`);
+    } finally {
+      setReconciling(false);
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
