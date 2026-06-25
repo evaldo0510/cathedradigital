@@ -367,10 +367,11 @@ function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
 }) {
-  const sqlMs = fields.ctx.sqlMs ?? 0;
+  const sqlMs = computeSqlMs(fields.ctx.sqlEntries);
   const bollsMs = fields.ctx.bolls?.ms ?? 0;
-  // edge_ms = tempo gasto na função excluindo SQL e rede upstream.
-  // Pode ser pequeno em cache HIT, maior em MISS (parsing, serialização).
+  // edge_ms = tempo total - wall-clock SQL - upstream. Como agora sqlMs é
+  // wall-clock (intervalos fundidos), edge_ms nunca fica negativo nem distorce
+  // quando há queries paralelas (Promise.all).
   const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const row = {
     abbrev: fields.abbrev,
@@ -386,6 +387,14 @@ function recordEvent(fields: {
     edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
   };
+  // Breakdown estruturado nos logs para diagnóstico (sem schema novo).
+  metric('sql_breakdown', {
+    correlation_id: fields.correlation_id,
+    abbrev: fields.abbrev,
+    chapter: fields.chapter,
+    sql_ms: sqlMs,
+    entries: fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms })),
+  });
   waitUntil(
     supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {
       if (error) console.warn('[bible-text] metric event insert failed:', error.message);
@@ -403,8 +412,15 @@ async function revalidate(
   cacheVersion: number,
   ttlHours: number,
   ctx: ReqCtx,
+  sovereigntyEnabledHint?: boolean,
 ): Promise<{ data: any; source: string } | null> {
-  const isSovereigntyEnabled = await timedSql(ctx, () => getFeatureFlag('bible_sovereignty_enabled'));
+  const isSovereigntyEnabled = sovereigntyEnabledHint !== undefined
+    ? sovereigntyEnabledHint
+    : await timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled'));
+  const resolvedBook = findBookByAbbr(abbrev);
+  const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
+
+
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
