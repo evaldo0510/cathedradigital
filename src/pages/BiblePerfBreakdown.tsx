@@ -565,6 +565,106 @@ export default function BiblePerfBreakdown() {
         </CardContent>
       </Card>
 
+      {/* Audit log de warmup */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center justify-between">
+            <span className="flex items-center gap-2"><Activity className="w-4 h-4" /> Histórico de execuções de warmup</span>
+            <Button size="sm" variant="ghost" onClick={loadWarmHistory}>
+              <RefreshCw className="w-3 h-3 mr-1" /> Recarregar
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          {warmHistory.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Nenhuma execução registrada (apenas admins visualizam).</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs">Quando</TableHead>
+                  <TableHead className="text-xs">Tipo</TableHead>
+                  <TableHead className="text-xs">Usuário</TableHead>
+                  <TableHead className="text-xs">Alvo</TableHead>
+                  <TableHead className="text-xs text-right">Capítulos</TableHead>
+                  <TableHead className="text-xs text-right">Estim.</TableHead>
+                  <TableHead className="text-xs text-right">Real</TableHead>
+                  <TableHead className="text-xs text-right">ok/fail</TableHead>
+                  <TableHead className="text-xs text-right">Por livro</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {warmHistory.map((r) => {
+                  const m = r.metadata ?? {};
+                  const p = m.params ?? {};
+                  const exec = m.executed;
+                  const perBook = (m.per_book ?? {}) as Record<string, { ok: number; fail: number; total_ms: number; count: number }>;
+                  const expanded = expandedRun === r.id;
+                  return (
+                    <React.Fragment key={r.id}>
+                      <TableRow>
+                        <TableCell className="text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Badge variant={r.action === 'warmup.execute' ? 'default' : 'secondary'}>
+                            {r.action === 'warmup.execute' ? 'real' : 'dry-run'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs font-mono">{r.user_id ? String(r.user_id).slice(0, 8) : '—'}</TableCell>
+                        <TableCell className="text-xs">
+                          <div className="font-medium">{m.tier ?? '—'}</div>
+                          <div className="text-[10px] text-muted-foreground truncate max-w-[200px]">
+                            c={p.concurrency} · max/livro={p.max_chapters_per_book} · thr={p.threshold_ms}ms
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">{m.queued ?? '—'}</TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">
+                          {m.estimated_duration_ms != null ? `${Math.round(m.estimated_duration_ms / 1000)}s` : '—'}
+                        </TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">
+                          {exec?.ms != null ? `${Math.round(exec.ms / 1000)}s` : '—'}
+                        </TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">
+                          {exec
+                            ? <><span className="text-emerald-700">{exec.ok}</span>/<span className="text-red-600">{exec.fail}</span></>
+                            : '—'}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {Object.keys(perBook).length > 0 && (
+                            <Button size="sm" variant="ghost" onClick={() => setExpandedRun(expanded ? null : r.id)}>
+                              {expanded ? 'Ocultar' : `Ver (${Object.keys(perBook).length})`}
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                      {expanded && (
+                        <TableRow>
+                          <TableCell colSpan={9} className="bg-muted/30">
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
+                              {Object.entries(perBook).map(([abbr, s]) => (
+                                <div key={abbr} className="text-xs border rounded p-2 bg-card">
+                                  <div className="font-mono font-semibold">{abbr}</div>
+                                  <div className="text-[10px] text-muted-foreground">
+                                    <span className="text-emerald-700">{s.ok}</span> ok ·{' '}
+                                    <span className="text-red-600">{s.fail}</span> fail
+                                  </div>
+                                  <div className="text-[10px] text-muted-foreground">
+                                    média {s.count ? Math.round(s.total_ms / s.count) : 0}ms
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Alertas de regressão */}
       <Card>
         <CardHeader>
