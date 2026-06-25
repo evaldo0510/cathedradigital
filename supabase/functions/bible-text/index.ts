@@ -460,7 +460,7 @@ async function revalidate(
       bollsId: resolvedBollsId,
     },
   };
-  await timedSql(ctx, () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
+  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
   return { data: responseData, source };
 }
 
