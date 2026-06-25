@@ -488,7 +488,7 @@ serve(async (req) => {
   let chapter: number | undefined;
   let client_cache_version: string | number | undefined;
   let warmOnly = false;
-  const ctx: ReqCtx = {};
+  const ctx: ReqCtx = newCtx();
 
   try {
     const raw = await req.json().catch(() => ({}));
