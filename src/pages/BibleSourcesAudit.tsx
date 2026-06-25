@@ -8,7 +8,8 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
@@ -93,10 +94,38 @@ export default function BibleSourcesAudit() {
   const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
-  // Batch retry controls (live-tunable)
-  const [batchConcurrency, setBatchConcurrency] = useState(2);
-  const [batchMaxPerRun, setBatchMaxPerRun] = useState(25);
-  const [batchCooldownMs, setBatchCooldownMs] = useState(2 * 60 * 1000);
+  // Batch retry controls (persisted in localStorage)
+  const LS_KEY = 'bibleSourcesAudit.batchConfig.v1';
+  const loadCfg = () => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {};
+  };
+  const initialCfg = loadCfg();
+  const [batchConcurrency, setBatchConcurrency] = useState<number>(initialCfg.batchConcurrency ?? 2);
+  const [batchMaxPerRun, setBatchMaxPerRun] = useState<number>(initialCfg.batchMaxPerRun ?? 25);
+  const [batchCooldownMs, setBatchCooldownMs] = useState<number>(initialCfg.batchCooldownMs ?? 2 * 60 * 1000);
+  const [avgRetryMs, setAvgRetryMs] = useState<number>(initialCfg.avgRetryMs ?? 1500);
+
+  // Spike alert thresholds (persisted)
+  const [spikeUnavailPct, setSpikeUnavailPct] = useState<number>(initialCfg.spikeUnavailPct ?? 15);
+  const [spikeLatencyPct, setSpikeLatencyPct] = useState<number>(initialCfg.spikeLatencyPct ?? 50);
+  const [spikeWindowDays, setSpikeWindowDays] = useState<number>(initialCfg.spikeWindowDays ?? 3);
+
+  // Persist whenever any config changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        batchConcurrency, batchMaxPerRun, batchCooldownMs, avgRetryMs,
+        spikeUnavailPct, spikeLatencyPct, spikeWindowDays,
+      }));
+    } catch {}
+  }, [batchConcurrency, batchMaxPerRun, batchCooldownMs, avgRetryMs, spikeUnavailPct, spikeLatencyPct, spikeWindowDays]);
+
+  // Source filter for unavailable CSV export
+  const [csvSourceFilter, setCsvSourceFilter] = useState<string>('all');
 
   // Date range filters (created_at / last_seen)
   const today = new Date();
@@ -215,6 +244,50 @@ export default function BibleSourcesAudit() {
     return { days, sources, daily };
   }, [entries]);
 
+  // Spike detection: compare last N days vs prior N days per source
+  const spikeAlerts = useMemo(() => {
+    const days = slaTimeline.days;
+    if (days.length < 2) return [] as { source: string; metric: 'unavailable' | 'latency'; recent: number; prior: number; delta: number }[];
+    const N = Math.max(1, spikeWindowDays);
+    const recentDays = days.slice(-N);
+    const priorDays = days.slice(-2 * N, -N);
+    const agg = (ds: string[]) => {
+      const out = new Map<string, { total: number; unavailable: number; sumMs: number; samples: number }>();
+      for (const d of ds) {
+        const inner = slaTimeline.daily.get(d);
+        if (!inner) continue;
+        for (const [src, b] of inner) {
+          const x = out.get(src) ?? { total: 0, unavailable: 0, sumMs: 0, samples: 0 };
+          x.total += b.total; x.unavailable += b.unavailable; x.sumMs += b.sumMs; x.samples += b.samples;
+          out.set(src, x);
+        }
+      }
+      return out;
+    };
+    const recent = agg(recentDays);
+    const prior = agg(priorDays);
+    const alerts: { source: string; metric: 'unavailable' | 'latency'; recent: number; prior: number; delta: number }[] = [];
+    for (const [src, r] of recent) {
+      const p = prior.get(src);
+      if (!p) continue;
+      const rRate = r.total > 0 ? (r.unavailable / r.total) * 100 : 0;
+      const pRate = p.total > 0 ? (p.unavailable / p.total) * 100 : 0;
+      const rateDelta = rRate - pRate;
+      if (rateDelta >= spikeUnavailPct) {
+        alerts.push({ source: src, metric: 'unavailable', recent: rRate, prior: pRate, delta: rateDelta });
+      }
+      const rAvg = r.samples > 0 ? r.sumMs / r.samples : 0;
+      const pAvg = p.samples > 0 ? p.sumMs / p.samples : 0;
+      if (pAvg > 0) {
+        const pct = ((rAvg - pAvg) / pAvg) * 100;
+        if (pct >= spikeLatencyPct) {
+          alerts.push({ source: src, metric: 'latency', recent: rAvg, prior: pAvg, delta: pct });
+        }
+      }
+    }
+    return alerts;
+  }, [slaTimeline, spikeWindowDays, spikeUnavailPct, spikeLatencyPct]);
+
   const escapeCsv = (s: any) => {
     const v = String(s ?? '');
     return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
@@ -256,12 +329,23 @@ export default function BibleSourcesAudit() {
     toast.success(`CSV de alertas exportado (${rows.length - 1} linhas)`);
   };
 
+  const filterMatchesSource = (e: SourceEntry, filter: string) => {
+    if (filter === 'all') return true;
+    const s = (e.source ?? '') as string;
+    if (filter === 'bolls') return s.startsWith('BollsLife');
+    if (filter === 'biblia') return s.startsWith('BibliaCatolica');
+    if (filter === 'dump') return s.startsWith('Cathedra');
+    if (filter === 'unavailable') return s === 'unavailable';
+    return true;
+  };
+
   const exportUnavailableCsv = () => {
+    const filtered = unavailableChapters.filter(e => filterMatchesSource(e, csvSourceFilter));
     const rows: string[][] = [[
       'book', 'chapter', 'last_source', 'root_cause', 'status_code',
       'attempts_in_range', 'last_seen', 'bolls', 'biblia', 'dump',
     ]];
-    for (const e of unavailableChapters) {
+    for (const e of filtered) {
       const chain = deriveFallbackChain(e);
       const key = `${e.abbrev}:${e.chapter}`;
       rows.push([
@@ -272,8 +356,9 @@ export default function BibleSourcesAudit() {
         chain.bolls, chain.biblia, chain.dump,
       ]);
     }
-    downloadCsv(rows, `bible-unavailable-${dateFrom}_to_${dateTo}.csv`);
-    toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas)`);
+    const suffix = csvSourceFilter === 'all' ? '' : `-${csvSourceFilter}`;
+    downloadCsv(rows, `bible-unavailable${suffix}-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas, fonte=${csvSourceFilter})`);
   };
 
   const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
@@ -375,6 +460,27 @@ export default function BibleSourcesAudit() {
     setBatchRunning(false);
   };
 
+  const simulateBatchRetry = () => {
+    const queue = unavailableChapters.slice(0, batchMaxPerRun);
+    if (queue.length === 0) { toast.info('Nada a simular: nenhum capítulo indisponível no período.'); return; }
+    const now = Date.now();
+    const eligible = queue.filter(c => {
+      const last = lastRetryAt.current.get(`${c.abbrev}:${c.chapter}`) ?? 0;
+      return now - last >= batchCooldownMs;
+    });
+    const inCooldown = queue.length - eligible.length;
+    const workers = Math.max(1, batchConcurrency);
+    // Round-robin estimate: ceil(N/workers) * avgRetryMs
+    const wavesMs = Math.ceil(eligible.length / workers) * avgRetryMs;
+    const secs = Math.round(wavesMs / 1000);
+    const minutes = Math.floor(secs / 60);
+    const remSec = secs % 60;
+    toast.message('Simulação de re-tentar lote', {
+      description: `Fila: ${queue.length} · Elegíveis: ${eligible.length} · Em cooldown: ${inCooldown} · Workers: ${workers} · Previsão: ~${minutes}m${remSec}s (avg ${avgRetryMs}ms/cap)`,
+      duration: 8000,
+    });
+  };
+
   const runReconcile = async () => {
     setReconciling(true);
     try {
@@ -411,11 +517,27 @@ export default function BibleSourcesAudit() {
           <Button onClick={exportAlertsCsv} disabled={alerts.length === 0} size="sm" variant="secondary">
             <Download className="w-4 h-4 mr-2" />CSV alertas
           </Button>
-          <Button onClick={exportUnavailableCsv} disabled={unavailableChapters.length === 0} size="sm" variant="secondary">
-            <Download className="w-4 h-4 mr-2" />CSV indisponíveis
-          </Button>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-lg border bg-card">
+            <Label className="text-xs text-muted-foreground">CSV fonte:</Label>
+            <Select value={csvSourceFilter} onValueChange={setCsvSourceFilter}>
+              <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="bolls">bolls.life</SelectItem>
+                <SelectItem value="biblia">BibliaCatolica</SelectItem>
+                <SelectItem value="dump">dump (Cathedra)</SelectItem>
+                <SelectItem value="unavailable">unavailable</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={exportUnavailableCsv} disabled={unavailableChapters.length === 0} size="sm" variant="secondary">
+              <Download className="w-4 h-4 mr-2" />CSV indisponíveis
+            </Button>
+          </div>
           <Button onClick={runReconcile} disabled={reconciling} size="sm" variant="secondary">
             <Wand2 className="w-4 h-4 mr-2" />{reconciling ? 'Reconciliando…' : 'Reclassificar'}
+          </Button>
+          <Button onClick={simulateBatchRetry} disabled={unavailableChapters.length === 0} size="sm" variant="outline">
+            <FlaskConical className="w-4 h-4 mr-2" />Simular lote
           </Button>
           <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
             <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, batchMaxPerRun)})`}
@@ -454,7 +576,7 @@ export default function BibleSourcesAudit() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
-            <Sliders className="w-4 h-4" /> Re-tentar em lote — controles temporários
+            <Sliders className="w-4 h-4" /> Re-tentar em lote & detecção de spikes — persistido localmente
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -473,11 +595,72 @@ export default function BibleSourcesAudit() {
             <Input id="b-cool" type="number" min={0} max={3600} value={Math.round(batchCooldownMs / 1000)}
                    onChange={e => setBatchCooldownMs(Math.max(0, Math.min(3600, Number(e.target.value) || 0)) * 1000)} />
           </div>
+          <div className="space-y-1">
+            <Label htmlFor="b-avg" className="text-xs">Tempo médio estimado por capítulo (ms, simulação)</Label>
+            <Input id="b-avg" type="number" min={100} max={60000} step={100} value={avgRetryMs}
+                   onChange={e => setAvgRetryMs(Math.max(100, Math.min(60000, Number(e.target.value) || 1500)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-unav" className="text-xs">Spike — Δ taxa unavailable (pontos %)</Label>
+            <Input id="sp-unav" type="number" min={1} max={100} value={spikeUnavailPct}
+                   onChange={e => setSpikeUnavailPct(Math.max(1, Math.min(100, Number(e.target.value) || 15)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-lat" className="text-xs">Spike — Δ latência média (%)</Label>
+            <Input id="sp-lat" type="number" min={1} max={500} value={spikeLatencyPct}
+                   onChange={e => setSpikeLatencyPct(Math.max(1, Math.min(500, Number(e.target.value) || 50)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-win" className="text-xs">Janela do spike (X dias recentes vs prévios)</Label>
+            <Input id="sp-win" type="number" min={1} max={14} value={spikeWindowDays}
+                   onChange={e => setSpikeWindowDays(Math.max(1, Math.min(14, Number(e.target.value) || 3)))} />
+          </div>
           <p className="md:col-span-3 text-xs text-muted-foreground">
-            Ajustes vivem nesta sessão. Recarregar a página restaura os padrões (2 / 25 / 120s).
+            Ajustes persistem em localStorage (chave <code>{LS_KEY}</code>) e sobrevivem a reload.
           </p>
         </CardContent>
       </Card>
+
+      {/* Alertas de spike automáticos */}
+      {spikeAlerts.length > 0 && (
+        <Card className="border-red-300 bg-red-50/30">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2 text-red-700">
+              <TrendingUp className="w-4 h-4" /> Spike detectado ({spikeAlerts.length}) — últimos {spikeWindowDays}d vs prévios
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Fonte</TableHead>
+                  <TableHead>Métrica</TableHead>
+                  <TableHead className="text-right">Prévio</TableHead>
+                  <TableHead className="text-right">Recente</TableHead>
+                  <TableHead className="text-right">Δ</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {spikeAlerts.map((s, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{sourceBadge(s.source as any)}</TableCell>
+                    <TableCell className="text-xs">{s.metric === 'unavailable' ? 'taxa unavailable' : 'latência média'}</TableCell>
+                    <TableCell className="text-right text-xs tabular-nums">
+                      {s.metric === 'unavailable' ? `${s.prior.toFixed(1)}%` : `${Math.round(s.prior)}ms`}
+                    </TableCell>
+                    <TableCell className="text-right text-xs tabular-nums">
+                      {s.metric === 'unavailable' ? `${s.recent.toFixed(1)}%` : `${Math.round(s.recent)}ms`}
+                    </TableCell>
+                    <TableCell className="text-right text-xs tabular-nums font-semibold text-red-700">
+                      {s.metric === 'unavailable' ? `+${s.delta.toFixed(1)}pp` : `+${s.delta.toFixed(0)}%`}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Alertas recentes */}
       {alerts.length > 0 && (
