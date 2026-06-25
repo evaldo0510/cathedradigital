@@ -777,36 +777,51 @@ export type Database = {
       bible_cache_alerts: {
         Row: {
           abbrev: string | null
+          baseline_p95_ms: number | null
           bucket_start: string | null
+          correlation_id: string | null
           created_at: string
           details: Json
           id: string
           kind: string
+          l1_phase: string | null
           message: string
+          metric_kind: string | null
+          observed_p95_ms: number | null
           resolved_at: string | null
           resolved_by: string | null
           severity: string
         }
         Insert: {
           abbrev?: string | null
+          baseline_p95_ms?: number | null
           bucket_start?: string | null
+          correlation_id?: string | null
           created_at?: string
           details?: Json
           id?: string
           kind: string
+          l1_phase?: string | null
           message: string
+          metric_kind?: string | null
+          observed_p95_ms?: number | null
           resolved_at?: string | null
           resolved_by?: string | null
           severity: string
         }
         Update: {
           abbrev?: string | null
+          baseline_p95_ms?: number | null
           bucket_start?: string | null
+          correlation_id?: string | null
           created_at?: string
           details?: Json
           id?: string
           kind?: string
+          l1_phase?: string | null
           message?: string
+          metric_kind?: string | null
+          observed_p95_ms?: number | null
           resolved_at?: string | null
           resolved_by?: string | null
           severity?: string
@@ -4292,6 +4307,19 @@ export type Database = {
           issue_type: string
           schema_name: string
           severity: string
+        }[]
+      }
+      bible_cache_baseline_p95: {
+        Args: { p_abbrev: string; p_metric: string }
+        Returns: number
+      }
+      bible_cache_worst_offender: {
+        Args: { p_abbrev: string; p_bucket_start: string; p_metric: string }
+        Returns: {
+          cache: string
+          correlation_id: string
+          l1_phase: string
+          value_ms: number
         }[]
       }
       bible_chapter_drilldown: {
