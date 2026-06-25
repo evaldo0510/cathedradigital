@@ -116,6 +116,17 @@ const ABBR_ALIASES: Record<string, string> = {
   Ageu: 'Ag',
   Zac: 'Zc',
   Mal: 'Ml',
+  // Aliases UI ↔ canon — `src/data/bible-books.ts` usa formas curtas/longas
+  // diferentes do canon. Cobre as 9 abbrs que estavam 404 no audit.
+  Esd: 'Ed',
+  Est: 'Et',
+  Pr: 'Pv',
+  Ecl: 'Ec',
+  '1Cor': '1Co',
+  '2Cor': '2Co',
+  Fl: 'Fp',
+  '1Pd': '1Pe',
+  '2Pd': '2Pe',
 };
 
 const BY_ABBR: Record<string, BibleBook> = (() => {
