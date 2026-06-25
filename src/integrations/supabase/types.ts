@@ -4313,6 +4313,38 @@ export type Database = {
         Args: { p_abbrev: string; p_metric: string }
         Returns: number
       }
+      bible_cache_timeseries: {
+        Args: {
+          p_abbrev?: string
+          p_since_hours?: number
+          p_window_minutes?: number
+        }
+        Returns: {
+          abbrev: string
+          bucket_start: string
+          cache_hit_rate: number
+          edge_avg_ms: number
+          edge_max_ms: number
+          edge_p50_ms: number
+          edge_p95_ms: number
+          hits: number
+          invalidation_rate: number
+          l1_bypass: number
+          l1_fresh: number
+          l1_miss: number
+          l1_stale: number
+          misses: number
+          sql_avg_ms: number
+          sql_p95_ms: number
+          stale: number
+          total: number
+          total_avg_ms: number
+          total_max_ms: number
+          total_p50_ms: number
+          total_p95_ms: number
+          worst_correlation_ids: string[]
+        }[]
+      }
       bible_cache_worst_offender: {
         Args: { p_abbrev: string; p_bucket_start: string; p_metric: string }
         Returns: {
