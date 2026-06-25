@@ -100,7 +100,7 @@ async function sha256(text: string) {
 
 async function getCacheConfig() {
   const cached = l1Get<{ enabled: boolean; version: number }>('cfg:cache');
-  if (cached) return cached;
+  if (cached) return cached.value;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
     const value = {
@@ -115,7 +115,7 @@ async function getCacheConfig() {
 async function getFeatureFlag(key: string): Promise<boolean> {
   const cacheKey = `flag:${key}`;
   const cached = l1Get<boolean>(cacheKey);
-  if (cached !== undefined) return cached;
+  if (cached) return cached.value;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled').eq('feature_key', key).single();
     const value = data?.is_enabled || false;
@@ -123,6 +123,7 @@ async function getFeatureFlag(key: string): Promise<boolean> {
     return value;
   } catch { return false; }
 }
+
 
 
 // =========================================================================
