@@ -36,6 +36,8 @@ interface Body {
   max_chapters_per_book?: number;
   hours?: number;
   dry_run?: boolean;
+  books?: string[];          // restringe a um subconjunto específico
+  verbose?: boolean;         // retorna log por capítulo
 }
 
 Deno.serve(async (req) => {
@@ -48,6 +50,10 @@ Deno.serve(async (req) => {
   const maxPerBook = Math.max(1, Math.min(50, body.max_chapters_per_book ?? 10));
   const hours = Math.max(1, Math.min(72, body.hours ?? 24));
   const dry = !!body.dry_run;
+  const verbose = !!body.verbose;
+  const explicitBooks = Array.isArray(body.books)
+    ? body.books.filter((b) => typeof b === 'string' && CHAPTERS[b])
+    : null;
 
   const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
   const supabase = createClient(SUPABASE_URL, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
