@@ -416,6 +416,27 @@ export default function BibleSourcesAudit() {
     setBatchRunning(false);
   };
 
+  const simulateBatchRetry = () => {
+    const queue = unavailableChapters.slice(0, batchMaxPerRun);
+    if (queue.length === 0) { toast.info('Nada a simular: nenhum capítulo indisponível no período.'); return; }
+    const now = Date.now();
+    const eligible = queue.filter(c => {
+      const last = lastRetryAt.current.get(`${c.abbrev}:${c.chapter}`) ?? 0;
+      return now - last >= batchCooldownMs;
+    });
+    const inCooldown = queue.length - eligible.length;
+    const workers = Math.max(1, batchConcurrency);
+    // Round-robin estimate: ceil(N/workers) * avgRetryMs
+    const wavesMs = Math.ceil(eligible.length / workers) * avgRetryMs;
+    const secs = Math.round(wavesMs / 1000);
+    const minutes = Math.floor(secs / 60);
+    const remSec = secs % 60;
+    toast.message('Simulação de re-tentar lote', {
+      description: `Fila: ${queue.length} · Elegíveis: ${eligible.length} · Em cooldown: ${inCooldown} · Workers: ${workers} · Previsão: ~${minutes}m${remSec}s (avg ${avgRetryMs}ms/cap)`,
+      duration: 8000,
+    });
+  };
+
   const runReconcile = async () => {
     setReconciling(true);
     try {
