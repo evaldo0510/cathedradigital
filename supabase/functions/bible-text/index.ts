@@ -421,8 +421,6 @@ async function revalidate(
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
 
-  const resolvedBook = findBookByAbbr(abbrev);
-  const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
   let result = await timedSql(ctx, 'fetchFromCathedraDb', () => fetchFromCathedraDb(abbrev, chapter));
   let source = 'Cathedra (Local)';
