@@ -42,7 +42,72 @@ async function readFlag(key: string, fallback: number): Promise<number> {
   }
 }
 
+/**
+ * Compara o p95 observado de `metric` (sql_ms ou total_ms) na janela do bucket
+ * contra o baseline histórico do livro (últimos 7 dias, excluindo a última hora).
+ * Retorna um payload de alerta se observado >= baseline * factor (e baseline >= floor),
+ * já enriquecido com correlation_id + l1_phase + cache do pior request da janela.
+ */
+async function evaluateRegression(
+  abbrev: string,
+  bucketStart: string,
+  metric: 'sql_ms' | 'total_ms',
+  factor: number,
+  floorMs: number,
+): Promise<any | null> {
+  const { data: observedP95Row, error: e1 } = await supabase.rpc('bible_cache_baseline_p95', {
+    p_abbrev: abbrev,
+    p_metric: metric,
+  });
+  // baseline_p95 vem como número escalar via RPC
+  const baseline = Number(observedP95Row ?? 0);
+  if (!Number.isFinite(baseline) || baseline < floorMs) return null;
+  if (e1) { console.warn('[bible-cache-aggregator] baseline rpc failed:', e1.message); return null; }
+
+  // p95 observado: calcula direto dos eventos da janela
+  const end = new Date(new Date(bucketStart).getTime() + 60 * 60 * 1000).toISOString();
+  const { data: rows, error: e2 } = await supabase
+    .from('bible_cache_metric_events')
+    .select(`${metric}`)
+    .eq('abbrev', abbrev)
+    .gte('created_at', bucketStart)
+    .lt('created_at', end)
+    .not(metric, 'is', null);
+  if (e2 || !rows?.length) return null;
+  const values = rows.map((r: any) => Number(r[metric])).filter(Number.isFinite).sort((a, b) => a - b);
+  if (values.length < 5) return null; // ruído: poucas amostras
+  const observedP95 = values[Math.min(values.length - 1, Math.floor(0.95 * values.length))];
+  if (observedP95 < baseline * factor) return null;
+
+  // Worst offender: correlation_id + l1_phase do pior request da janela
+  const { data: worst } = await supabase.rpc('bible_cache_worst_offender', {
+    p_abbrev: abbrev,
+    p_bucket_start: bucketStart,
+    p_metric: metric,
+  });
+  const w = Array.isArray(worst) ? worst[0] : null;
+
+  return {
+    severity: observedP95 >= baseline * factor * 1.5 ? 'critical' : 'warning',
+    kind: `${metric}_regression`,
+    metric_kind: metric,
+    observed_p95_ms: Math.round(observedP95),
+    baseline_p95_ms: Math.round(baseline),
+    correlation_id: w?.correlation_id ?? null,
+    l1_phase: w?.l1_phase ?? null,
+    message: `${metric} de "${abbrev}" regrediu: p95=${Math.round(observedP95)}ms vs baseline ${Math.round(baseline)}ms (×${(observedP95 / baseline).toFixed(2)})`,
+    details: {
+      metric, observed_p95_ms: Math.round(observedP95), baseline_p95_ms: Math.round(baseline),
+      factor, floor_ms: floorMs, samples: values.length,
+      worst: w ? { correlation_id: w.correlation_id, l1_phase: w.l1_phase, value_ms: w.value_ms, cache: w.cache } : null,
+    },
+    bucket_start: bucketStart,
+    abbrev,
+  };
+}
+
 serve(async (req) => {
+
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
   const t0 = Date.now();
 
