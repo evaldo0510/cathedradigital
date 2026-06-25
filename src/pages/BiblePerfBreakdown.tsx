@@ -296,7 +296,7 @@ export default function BiblePerfBreakdown() {
       .select('id, user_id, action, metadata, created_at')
       .in('action', ['warmup.dry_run', 'warmup.execute'])
       .order('created_at', { ascending: false })
-      .limit(30);
+      .limit(200);
     if (error) { /* silent: pode não ser admin */ return; }
     setWarmHistory(data ?? []);
   };
