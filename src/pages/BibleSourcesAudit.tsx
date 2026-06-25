@@ -576,7 +576,7 @@ export default function BibleSourcesAudit() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
-            <Sliders className="w-4 h-4" /> Re-tentar em lote — controles temporários
+            <Sliders className="w-4 h-4" /> Re-tentar em lote & detecção de spikes — persistido localmente
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -595,11 +595,72 @@ export default function BibleSourcesAudit() {
             <Input id="b-cool" type="number" min={0} max={3600} value={Math.round(batchCooldownMs / 1000)}
                    onChange={e => setBatchCooldownMs(Math.max(0, Math.min(3600, Number(e.target.value) || 0)) * 1000)} />
           </div>
+          <div className="space-y-1">
+            <Label htmlFor="b-avg" className="text-xs">Tempo médio estimado por capítulo (ms, simulação)</Label>
+            <Input id="b-avg" type="number" min={100} max={60000} step={100} value={avgRetryMs}
+                   onChange={e => setAvgRetryMs(Math.max(100, Math.min(60000, Number(e.target.value) || 1500)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-unav" className="text-xs">Spike — Δ taxa unavailable (pontos %)</Label>
+            <Input id="sp-unav" type="number" min={1} max={100} value={spikeUnavailPct}
+                   onChange={e => setSpikeUnavailPct(Math.max(1, Math.min(100, Number(e.target.value) || 15)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-lat" className="text-xs">Spike — Δ latência média (%)</Label>
+            <Input id="sp-lat" type="number" min={1} max={500} value={spikeLatencyPct}
+                   onChange={e => setSpikeLatencyPct(Math.max(1, Math.min(500, Number(e.target.value) || 50)))} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sp-win" className="text-xs">Janela do spike (X dias recentes vs prévios)</Label>
+            <Input id="sp-win" type="number" min={1} max={14} value={spikeWindowDays}
+                   onChange={e => setSpikeWindowDays(Math.max(1, Math.min(14, Number(e.target.value) || 3)))} />
+          </div>
           <p className="md:col-span-3 text-xs text-muted-foreground">
-            Ajustes vivem nesta sessão. Recarregar a página restaura os padrões (2 / 25 / 120s).
+            Ajustes persistem em localStorage (chave <code>{LS_KEY}</code>) e sobrevivem a reload.
           </p>
         </CardContent>
       </Card>
+
+      {/* Alertas de spike automáticos */}
+      {spikeAlerts.length > 0 && (
+        <Card className="border-red-300 bg-red-50/30">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2 text-red-700">
+              <TrendingUp className="w-4 h-4" /> Spike detectado ({spikeAlerts.length}) — últimos {spikeWindowDays}d vs prévios
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Fonte</TableHead>
+                  <TableHead>Métrica</TableHead>
+                  <TableHead className="text-right">Prévio</TableHead>
+                  <TableHead className="text-right">Recente</TableHead>
+                  <TableHead className="text-right">Δ</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {spikeAlerts.map((s, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{sourceBadge(s.source as any)}</TableCell>
+                    <TableCell className="text-xs">{s.metric === 'unavailable' ? 'taxa unavailable' : 'latência média'}</TableCell>
+                    <TableCell className="text-right text-xs tabular-nums">
+                      {s.metric === 'unavailable' ? `${s.prior.toFixed(1)}%` : `${Math.round(s.prior)}ms`}
+                    </TableCell>
+                    <TableCell className="text-right text-xs tabular-nums">
+                      {s.metric === 'unavailable' ? `${s.recent.toFixed(1)}%` : `${Math.round(s.recent)}ms`}
+                    </TableCell>
+                    <TableCell className="text-right text-xs tabular-nums font-semibold text-red-700">
+                      {s.metric === 'unavailable' ? `+${s.delta.toFixed(1)}pp` : `+${s.delta.toFixed(0)}%`}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Alertas recentes */}
       {alerts.length > 0 && (
