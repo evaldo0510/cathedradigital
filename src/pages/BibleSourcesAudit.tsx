@@ -7,8 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText } from 'lucide-react';
+import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers } from 'lucide-react';
 import { toast } from 'sonner';
+
+const BATCH_CONCURRENCY = 2;
+const BATCH_MAX_PER_RUN = 25;
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
 
@@ -49,6 +52,8 @@ export default function BibleSourcesAudit() {
   const [importing, setImporting] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [autoRetry, setAutoRetry] = useState(false);
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [reconciling, setReconciling] = useState(false);
   const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
@@ -110,6 +115,75 @@ export default function BibleSourcesAudit() {
     }
     return counts;
   }, [latestBySource]);
+
+  // SLA por fonte: agrupa eventos por source com total, unavailable, avg latency.
+  const sourceSla = useMemo(() => {
+    const buckets = new Map<string, { total: number; unavailable: number; sumMs: number; samples: number; errors: number }>();
+    for (const e of entries) {
+      const src = (e.source ?? 'unknown') as string;
+      const b = buckets.get(src) ?? { total: 0, unavailable: 0, sumMs: 0, samples: 0, errors: 0 };
+      b.total++;
+      if (src === 'unavailable' || e.status_code >= 400) b.unavailable++;
+      if (e.status_code >= 500) b.errors++;
+      const ms = (e as any).total_ms;
+      if (typeof ms === 'number' && ms > 0) { b.sumMs += ms; b.samples++; }
+      buckets.set(src, b);
+    }
+    return [...buckets.entries()].map(([source, b]) => ({
+      source,
+      total: b.total,
+      unavailable: b.unavailable,
+      errors: b.errors,
+      unavailableRate: b.total > 0 ? b.unavailable / b.total : 0,
+      avgMs: b.samples > 0 ? Math.round(b.sumMs / b.samples) : null,
+    })).sort((a, b) => b.total - a.total);
+  }, [entries]);
+
+  const exportCsv = () => {
+    const rows: string[][] = [[
+      'alert_id', 'created_at', 'severity', 'book', 'chapter', 'source', 'root_cause', 'attempts', 'last_seen', 'message',
+    ]];
+    for (const a of alerts) {
+      const d: any = a.details ?? {};
+      const newP = Array.isArray(d.new_problems) ? d.new_problems : [];
+      const recP = Array.isArray(d.recurrent_problems) ? d.recurrent_problems : [];
+      const items = [...newP, ...recP];
+      if (items.length === 0) {
+        rows.push([a.id, a.created_at, a.severity, '', '', '', '', '', '', a.message ?? '']);
+        continue;
+      }
+      for (const p of items) {
+        const cause = Array.isArray(p.failed_sources) && p.failed_sources.length > 0
+          ? `failed:${p.failed_sources.join('|')}`
+          : 'unknown';
+        rows.push([
+          a.id,
+          a.created_at,
+          a.severity,
+          String(p.abbrev ?? ''),
+          String(p.chapter ?? ''),
+          Array.isArray(p.failed_sources) ? p.failed_sources.join('|') : '',
+          cause,
+          String(p.occurrences ?? ''),
+          String(p.last_seen ?? ''),
+          (a.message ?? '').replace(/[\r\n]+/g, ' '),
+        ]);
+      }
+    }
+    const csv = rows.map(r => r.map(c => {
+      const s = String(c ?? '');
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bible-availability-alerts-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast.success(`CSV exportado (${rows.length - 1} linhas)`);
+  };
+
 
   const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
     setImporting(true);
@@ -193,6 +267,45 @@ export default function BibleSourcesAudit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRetry, unavailableChapters.length]);
 
+  // Batch retry with controlled concurrency + per-chapter cooldown (already enforced in retryChapter).
+  const runBatchRetry = async () => {
+    if (batchRunning) return;
+    const queue = unavailableChapters.slice(0, BATCH_MAX_PER_RUN);
+    if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
+    setBatchRunning(true);
+    const log: typeof retryLog = [];
+    let idx = 0;
+    const workers = Array.from({ length: BATCH_CONCURRENCY }, async () => {
+      while (idx < queue.length) {
+        const c = queue[idx++];
+        const r = await retryChapter(c.abbrev, c.chapter);
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+      }
+    });
+    await Promise.all(workers);
+    setRetryLog(prev => [...log, ...prev].slice(0, 60));
+    const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
+    toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`);
+    await load();
+    setBatchRunning(false);
+  };
+
+  const runReconcile = async () => {
+    setReconciling(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-alerts-reconcile', { body: {} });
+      if (error) throw error;
+      const s = data?.stats ?? {};
+      toast.success(`Reconciliado: ${s.chapters_resolved ?? 0} resolvidos, ${s.alerts_resolved ?? 0} alertas fechados, ${s.legacy_events_purged ?? 0} eventos purgados.`);
+      await load();
+    } catch (e: any) {
+      toast.error(`Falha no reconcile: ${e?.message ?? e}`);
+    } finally {
+      setReconciling(false);
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
@@ -210,6 +323,15 @@ export default function BibleSourcesAudit() {
           </div>
           <Button onClick={runReport} disabled={reporting} size="sm" variant="secondary">
             <FileText className="w-4 h-4 mr-2" />{reporting ? 'Gerando…' : 'Gerar relatório'}
+          </Button>
+          <Button onClick={exportCsv} disabled={alerts.length === 0} size="sm" variant="secondary">
+            <Download className="w-4 h-4 mr-2" />Exportar CSV
+          </Button>
+          <Button onClick={runReconcile} disabled={reconciling} size="sm" variant="secondary">
+            <Wand2 className="w-4 h-4 mr-2" />{reconciling ? 'Reconciliando…' : 'Reclassificar alertas'}
+          </Button>
+          <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
+            <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, BATCH_MAX_PER_RUN)})`}
           </Button>
           <Button onClick={() => runImport()} disabled={importing} size="sm">
             {importing ? 'Importando…' : 'Importar faltantes'}
@@ -266,6 +388,45 @@ export default function BibleSourcesAudit() {
           </Card>
         ))}
       </div>
+
+      {/* SLA por fonte */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Globe2 className="w-4 h-4" /> SLA por fonte (últimos {entries.length} eventos)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Fonte</TableHead>
+                <TableHead className="text-right">Eventos</TableHead>
+                <TableHead className="text-right">Unavailable</TableHead>
+                <TableHead className="text-right">Taxa</TableHead>
+                <TableHead className="text-right">Latência média</TableHead>
+                <TableHead className="text-right">Erros 5xx</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sourceSla.map(r => {
+                const pct = (r.unavailableRate * 100).toFixed(1);
+                const bad = r.unavailableRate >= 0.1;
+                return (
+                  <TableRow key={r.source}>
+                    <TableCell>{sourceBadge(r.source as any)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.total}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.unavailable}</TableCell>
+                    <TableCell className={`text-right tabular-nums text-xs font-semibold ${bad ? 'text-red-600' : 'text-emerald-600'}`}>{pct}%</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.avgMs != null ? `${r.avgMs}ms` : '—'}</TableCell>
+                    <TableCell className="text-right tabular-nums text-xs">{r.errors}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       {/* Indisponíveis ao vivo */}
       <Card>
