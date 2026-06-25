@@ -312,11 +312,11 @@ async function revalidate(
   ttlHours: number,
   ctx: ReqCtx,
 ): Promise<{ data: any; source: string } | null> {
-  const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
+  const isSovereigntyEnabled = await timedSql(ctx, () => getFeatureFlag('bible_sovereignty_enabled'));
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
-  let result = await fetchFromCathedraDb(abbrev, chapter);
+  let result = await timedSql(ctx, () => fetchFromCathedraDb(abbrev, chapter));
   let source = 'Cathedra (Local)';
   if (!isSovereigntyEnabled || !result) {
     const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
