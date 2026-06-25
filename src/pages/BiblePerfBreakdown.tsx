@@ -1135,7 +1135,8 @@ export default function BiblePerfBreakdown() {
                   <TableHead>Livro</TableHead>
                   <TableHead>Cache</TableHead>
                   <TableHead className="text-right">Amostras</TableHead>
-                  <TableHead className="text-right">SQL+Edge</TableHead>
+                  <TableHead className="text-right">SQL</TableHead>
+                  <TableHead className="text-right">Edge</TableHead>
                   <TableHead className="text-right">Upstream</TableHead>
                   <TableHead className="text-right">Render</TableHead>
                   <TableHead className="text-right">Total médio</TableHead>
@@ -1150,9 +1151,12 @@ export default function BiblePerfBreakdown() {
                       <TableCell className="font-mono text-xs">{b.abbrev}</TableCell>
                       <TableCell><Badge variant={b.cache === 'HIT' ? 'secondary' : 'outline'}>{b.cache}</Badge></TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.samples}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs">{b.avgInternal}</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs">{b.avgSql || '—'}</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs">{b.avgEdge || '—'}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.avgUpstream || '—'}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs text-muted-foreground">client-only</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs" title={`${b.renderSamples} amostras`}>
+                        {b.avgRender ? b.avgRender : <span className="text-muted-foreground">—</span>}
+                      </TableCell>
                       <TableCell className={`text-right tabular-nums text-xs font-semibold ${slow ? 'text-red-600' : 'text-emerald-700'}`}>{b.avgTotal}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.p95Total}</TableCell>
                     </TableRow>
