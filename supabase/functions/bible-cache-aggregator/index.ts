@@ -59,11 +59,14 @@ serve(async (req) => {
     }
 
     // 2) Carrega thresholds
-    const [bollsRateMax, p95Max, minCalls] = await Promise.all([
+    const [bollsRateMax, p95Max, minCalls, regressionFactor, regressionFloorMs] = await Promise.all([
       readFlag('bible_cache_alert_bolls_rate', DEFAULTS.bollsRate),
       readFlag('bible_cache_alert_p95_ms', DEFAULTS.p95Ms),
       readFlag('bible_cache_alert_min_calls', DEFAULTS.minCalls),
+      readFlag('bible_cache_alert_regression_factor', DEFAULTS.regressionFactor),
+      readFlag('bible_cache_alert_regression_floor_ms', DEFAULTS.regressionFloorMs),
     ]);
+
 
     // 3) Pega o bucket mais recente (hora corrente) por livro
     const sinceIso = new Date(Date.now() - 60 * 60 * 1000).toISOString();
