@@ -337,16 +337,42 @@ export default function BiblePerfBreakdown() {
     loadRetention();
   };
 
+  const [dryRunResult, setDryRunResult] = useState<{ days: number; eligible: number; total: number; oldest?: string } | null>(null);
+
+  const runCleanupDryRun = async () => {
+    setCleanupBusy(true);
+    const days = retentionEditDays;
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    const [{ count: total }, { count: eligible }, { data: oldest, error: oldestErr }] = await Promise.all([
+      supabase.from('bible_audit_action_logs').select('*', { count: 'exact', head: true }),
+      supabase.from('bible_audit_action_logs').select('*', { count: 'exact', head: true }).lt('created_at', cutoff),
+      supabase.from('bible_audit_action_logs').select('created_at').lt('created_at', cutoff).order('created_at', { ascending: false }).limit(1),
+    ]);
+    setCleanupBusy(false);
+    if (oldestErr) { toast.error(oldestErr.message); return; }
+    setDryRunResult({
+      days,
+      total: total ?? 0,
+      eligible: eligible ?? 0,
+      oldest: oldest?.[0]?.created_at as string | undefined,
+    });
+    toast.message(`Dry-run: ${eligible ?? 0} de ${total ?? 0} registro(s) seriam removidos (retenção ${days}d)`, {
+      description: 'Nenhuma linha foi apagada.',
+    });
+  };
+
   const runCleanupNow = async () => {
+    if (!window.confirm(`Confirma remoção definitiva dos registros com mais de ${retentionEditDays} dias?`)) return;
     setCleanupBusy(true);
     const { data, error } = await supabase.rpc('cleanup_bible_audit_action_logs', {
       p_triggered_by: 'manual',
-      p_override_days: null,
+      p_override_days: retentionEditDays,
     });
     setCleanupBusy(false);
     if (error) { toast.error(error.message); return; }
     const r = Array.isArray(data) ? data[0] : data;
     toast.success(`Limpeza executada: ${r?.rows_deleted ?? 0} linha(s) removida(s) (retenção ${r?.retention_days}d)`);
+    setDryRunResult(null);
     loadRetention();
     loadWarmHistory();
   };
