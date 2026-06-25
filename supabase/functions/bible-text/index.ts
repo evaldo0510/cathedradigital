@@ -596,7 +596,7 @@ serve(async (req) => {
     }
 
     // ---- MISS (ou stale fora da janela) → revalidar síncrono ----
-    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
+    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
     if (revalidated) {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: totalMs });
