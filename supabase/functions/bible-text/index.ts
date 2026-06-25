@@ -518,15 +518,23 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    const cacheConfig = await timedSql(ctx, () => getCacheConfig());
+    // Paraleliza as 3 queries de leitura: config, feature flag e L2 row.
+    // Antes eram 3 round-trips sequenciais (~80-150ms cada). Agora rodam em
+    // paralelo via Promise.all e o L1 in-memory absorve hits subsequentes.
+    // L2 row é buscado e classificado depois, com a version vinda do config.
+    const cacheKey = `${abbrev}:${chapter}`;
+    const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
+      timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
+      timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
+      timedSql(ctx, 'fetchCacheL2Row', () => fetchCacheL2Row(cacheKey)),
+    ]);
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
-    const cacheKey = `${abbrev}:${chapter}`;
     const shouldInvalidateL1 = client_cache_version !== cacheConfig.version;
 
     // Modo warm: força revalidação e responde mínimo. Usado pelo script.
     if (warmOnly) {
-      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx);
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
       recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx });
@@ -535,7 +543,8 @@ serve(async (req) => {
       });
     }
 
-    const lookup = await timedSql(ctx, () => lookupCacheL2(cacheKey, cacheConfig.version));
+    const lookup = classifyL2(l2Row, cacheConfig.version);
+
 
     // ---- FRESH ----
     if (lookup.state === 'fresh') {
