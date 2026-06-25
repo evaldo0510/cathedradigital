@@ -266,6 +266,66 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_audit_log_cleanup_runs: {
+        Row: {
+          created_at: string
+          duration_ms: number
+          error: string | null
+          id: string
+          retention_days: number
+          rows_deleted: number
+          status: string
+          triggered_by: string
+          triggered_user: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number
+          error?: string | null
+          id?: string
+          retention_days: number
+          rows_deleted?: number
+          status?: string
+          triggered_by?: string
+          triggered_user?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number
+          error?: string | null
+          id?: string
+          retention_days?: number
+          rows_deleted?: number
+          status?: string
+          triggered_by?: string
+          triggered_user?: string | null
+        }
+        Relationships: []
+      }
+      bible_audit_log_retention_config: {
+        Row: {
+          auto_cleanup_enabled: boolean
+          id: boolean
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_cleanup_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_cleanup_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       bible_audit_notification_versions: {
         Row: {
           channel: string | null
@@ -4205,6 +4265,14 @@ export type Database = {
         }[]
       }
       check_daily_reminders: { Args: never; Returns: undefined }
+      cleanup_bible_audit_action_logs: {
+        Args: { p_override_days?: number; p_triggered_by?: string }
+        Returns: {
+          retention_days: number
+          rows_deleted: number
+          status: string
+        }[]
+      }
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
