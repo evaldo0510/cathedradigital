@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       if (!book) {
         const ins = await supabase
           .from('bible_books')
-          .insert({ abbrev: t.abbrev, name: t.name, testament: t.testament })
+          .insert({ abbrev: t.abbrev, name: t.name, testament: t.testament, chapters_count: t.chaptersCount ?? t.chapter })
           .select('id').single();
         if (ins.error) throw new Error(`book insert: ${ins.error.message}`);
         book = ins.data;
