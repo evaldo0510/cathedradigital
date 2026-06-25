@@ -59,6 +59,7 @@ function cachePolicy(tier: CacheTier) {
 // =========================================================================
 import {
   createL1Cache,
+  createSingleFlight,
   L1_TTL_MS_L2,
   L1_SWR_MS_L2,
   L1_TTL_MS_CONFIG,
@@ -68,6 +69,11 @@ const _l1 = createL1Cache();
 function l1Get<T>(key: string) { return _l1.get<T>(key); }
 function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) { _l1.set(key, value, ttlMs, swrMs); }
 function l1Invalidate(key: string) { _l1.invalidate(key); }
+
+// Single-flight separado por fase para que um refresh em background não
+// bloqueie um MISS legítimo (chaves diferentes), e vice-versa.
+const sfFetch = createSingleFlight();
+const sfRefresh = createSingleFlight();
 
 
 // =========================================================================
@@ -133,17 +139,22 @@ async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
     }
     return cached.value;
   }
+  // MISS (ou hard-expired): coalesce N requests paralelos em UMA query ao L2.
   try {
-    const { data } = await supabase
-      .from('bible_cache_l2')
-      .select('content, expires_at, version, created_at')
-      .eq('cache_key', key)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (!data?.content) return null;
-    const row = data as L2Row;
-    l1Set(`l2:${key}`, row, L1_TTL_MS_L2, L1_SWR_MS_L2);
+    const { value: row, coalesced } = await sfFetch.run<L2Row | null>(`l2:${key}`, async () => {
+      const { data } = await supabase
+        .from('bible_cache_l2')
+        .select('content, expires_at, version, created_at')
+        .eq('cache_key', key)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (!data?.content) return null;
+      const r = data as L2Row;
+      l1Set(`l2:${key}`, r, L1_TTL_MS_L2, L1_SWR_MS_L2);
+      return r;
+    });
+    if (coalesced) metric('l1_single_flight_coalesced', { key, phase: 'fetch' });
     return row;
   } catch {
     return null;
@@ -152,21 +163,28 @@ async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
 
 /** Refresh em background do L1: lê do L2 sem afetar o request corrente. */
 async function refreshL2InBackground(key: string) {
+  // Coalesce múltiplos disparos de SWR para a mesma chave (1 refresh por janela).
+  if (sfRefresh.inFlight(`l2:${key}`)) {
+    metric('l1_single_flight_coalesced', { key, phase: 'refresh' });
+    return;
+  }
   try {
-    const { data } = await supabase
-      .from('bible_cache_l2')
-      .select('content, expires_at, version, created_at')
-      .eq('cache_key', key)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (data?.content) {
-      l1Set<L2Row>(`l2:${key}`, data as L2Row, L1_TTL_MS_L2, L1_SWR_MS_L2);
-      metric('l1_swr_refresh', { key, ok: true });
-    } else {
-      l1Invalidate(`l2:${key}`);
-      metric('l1_swr_refresh', { key, ok: false, reason: 'empty' });
-    }
+    await sfRefresh.run<void>(`l2:${key}`, async () => {
+      const { data } = await supabase
+        .from('bible_cache_l2')
+        .select('content, expires_at, version, created_at')
+        .eq('cache_key', key)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (data?.content) {
+        l1Set<L2Row>(`l2:${key}`, data as L2Row, L1_TTL_MS_L2, L1_SWR_MS_L2);
+        metric('l1_swr_refresh', { key, ok: true });
+      } else {
+        l1Invalidate(`l2:${key}`);
+        metric('l1_swr_refresh', { key, ok: false, reason: 'empty' });
+      }
+    });
   } catch (e) {
     metric('l1_swr_refresh', { key, ok: false, error: String((e as any)?.message || e) });
   }
