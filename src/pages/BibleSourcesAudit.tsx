@@ -285,12 +285,23 @@ export default function BibleSourcesAudit() {
     toast.success(`CSV de alertas exportado (${rows.length - 1} linhas)`);
   };
 
+  const filterMatchesSource = (e: SourceEntry, filter: string) => {
+    if (filter === 'all') return true;
+    const s = (e.source ?? '') as string;
+    if (filter === 'bolls') return s.startsWith('BollsLife');
+    if (filter === 'biblia') return s.startsWith('BibliaCatolica');
+    if (filter === 'dump') return s.startsWith('Cathedra');
+    if (filter === 'unavailable') return s === 'unavailable';
+    return true;
+  };
+
   const exportUnavailableCsv = () => {
+    const filtered = unavailableChapters.filter(e => filterMatchesSource(e, csvSourceFilter));
     const rows: string[][] = [[
       'book', 'chapter', 'last_source', 'root_cause', 'status_code',
       'attempts_in_range', 'last_seen', 'bolls', 'biblia', 'dump',
     ]];
-    for (const e of unavailableChapters) {
+    for (const e of filtered) {
       const chain = deriveFallbackChain(e);
       const key = `${e.abbrev}:${e.chapter}`;
       rows.push([
@@ -301,8 +312,9 @@ export default function BibleSourcesAudit() {
         chain.bolls, chain.biblia, chain.dump,
       ]);
     }
-    downloadCsv(rows, `bible-unavailable-${dateFrom}_to_${dateTo}.csv`);
-    toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas)`);
+    const suffix = csvSourceFilter === 'all' ? '' : `-${csvSourceFilter}`;
+    downloadCsv(rows, `bible-unavailable${suffix}-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas, fonte=${csvSourceFilter})`);
   };
 
   const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
