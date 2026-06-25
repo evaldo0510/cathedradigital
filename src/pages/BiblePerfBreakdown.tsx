@@ -20,6 +20,9 @@ interface MetricRow {
   cache: string | null;
   total_ms: number | null;
   bolls_ms: number | null;
+  sql_ms: number | null;
+  edge_ms: number | null;
+  render_ms: number | null;
   source: string | null;
   created_at: string;
 }
@@ -30,7 +33,10 @@ interface BookBreakdown {
   samples: number;
   avgTotal: number;
   avgUpstream: number;
-  avgInternal: number;
+  avgSql: number;
+  avgEdge: number;
+  avgRender: number;
+  renderSamples: number;
   p95Total: number;
 }
 
@@ -161,7 +167,7 @@ export default function BiblePerfBreakdown() {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
     const { data, error } = await supabase
       .from('bible_cache_metric_events')
-      .select('abbrev, chapter, cache, total_ms, bolls_ms, source, created_at')
+      .select('abbrev, chapter, cache, total_ms, bolls_ms, sql_ms, edge_ms, render_ms, source, created_at')
       .gte('created_at', since)
       .order('created_at', { ascending: false })
       .limit(5000);
@@ -242,31 +248,39 @@ export default function BiblePerfBreakdown() {
   useEffect(() => { loadHistory(); /* eslint-disable-next-line */ }, [historyBook, historyDays]);
 
   const breakdown = useMemo<BookBreakdown[]>(() => {
-    const map = new Map<string, { total: number[]; upstream: number[] }>();
+    const map = new Map<string, {
+      total: number[]; upstream: number[]; sql: number[]; edge: number[]; render: number[];
+    }>();
     for (const r of rows) {
       const total = r.total_ms;
       if (typeof total !== 'number') continue;
       const cache = r.cache ?? 'UNKNOWN';
       const key = `${r.abbrev}|${cache}`;
-      const b = map.get(key) ?? { total: [], upstream: [] };
+      const b = map.get(key) ?? { total: [], upstream: [], sql: [], edge: [], render: [] };
       b.total.push(total);
       b.upstream.push(typeof r.bolls_ms === 'number' && r.bolls_ms > 0 ? r.bolls_ms : 0);
+      if (typeof r.sql_ms === 'number') b.sql.push(r.sql_ms);
+      if (typeof r.edge_ms === 'number') b.edge.push(r.edge_ms);
+      if (typeof r.render_ms === 'number') b.render.push(r.render_ms);
       map.set(key, b);
     }
+    const avg = (arr: number[]) => arr.length ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : 0;
     return [...map.entries()].map(([key, b]) => {
       const [abbrev, cache] = key.split('|');
-      const avgTotal = Math.round(b.total.reduce((s, v) => s + v, 0) / b.total.length);
-      const avgUpstream = Math.round(b.upstream.reduce((s, v) => s + v, 0) / b.upstream.length);
       return {
         abbrev, cache,
         samples: b.total.length,
-        avgTotal,
-        avgUpstream,
-        avgInternal: Math.max(0, avgTotal - avgUpstream),
+        avgTotal: avg(b.total),
+        avgUpstream: avg(b.upstream),
+        avgSql: avg(b.sql),
+        avgEdge: avg(b.edge),
+        avgRender: avg(b.render),
+        renderSamples: b.render.length,
         p95Total: percentile(b.total, 95),
       };
     }).sort((a, b) => b.avgTotal - a.avgTotal);
   }, [rows]);
+
 
   const slowBooks = useMemo(() =>
     breakdown
@@ -464,10 +478,11 @@ export default function BiblePerfBreakdown() {
   };
 
   const exportBreakdownCsv = () => {
-    const header = ['abbrev', 'cache', 'samples', 'avg_internal_sql_edge_ms', 'avg_upstream_network_ms', 'render_ms', 'avg_total_ms', 'p95_total_ms'];
-    const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgInternal, b.avgUpstream || 0, 'client-only', b.avgTotal, b.p95Total]);
+    const header = ['abbrev', 'cache', 'samples', 'avg_sql_ms', 'avg_edge_ms', 'avg_upstream_network_ms', 'avg_render_ms', 'render_samples', 'avg_total_ms', 'p95_total_ms'];
+    const data = breakdown.map((b) => [b.abbrev, b.cache, b.samples, b.avgSql, b.avgEdge, b.avgUpstream || 0, b.avgRender || 0, b.renderSamples, b.avgTotal, b.p95Total]);
     downloadCsv(`bible-perf-breakdown-${new Date().toISOString().slice(0, 10)}.csv`, [header, ...data]);
   };
+
 
   const filteredWarmHistory = useMemo(() => {
     const q = whSearch.trim().toLowerCase();
@@ -1120,7 +1135,8 @@ export default function BiblePerfBreakdown() {
                   <TableHead>Livro</TableHead>
                   <TableHead>Cache</TableHead>
                   <TableHead className="text-right">Amostras</TableHead>
-                  <TableHead className="text-right">SQL+Edge</TableHead>
+                  <TableHead className="text-right">SQL</TableHead>
+                  <TableHead className="text-right">Edge</TableHead>
                   <TableHead className="text-right">Upstream</TableHead>
                   <TableHead className="text-right">Render</TableHead>
                   <TableHead className="text-right">Total médio</TableHead>
@@ -1135,9 +1151,12 @@ export default function BiblePerfBreakdown() {
                       <TableCell className="font-mono text-xs">{b.abbrev}</TableCell>
                       <TableCell><Badge variant={b.cache === 'HIT' ? 'secondary' : 'outline'}>{b.cache}</Badge></TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.samples}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs">{b.avgInternal}</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs">{b.avgSql || '—'}</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs">{b.avgEdge || '—'}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.avgUpstream || '—'}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs text-muted-foreground">client-only</TableCell>
+                      <TableCell className="text-right tabular-nums text-xs" title={`${b.renderSamples} amostras`}>
+                        {b.avgRender ? b.avgRender : <span className="text-muted-foreground">—</span>}
+                      </TableCell>
                       <TableCell className={`text-right tabular-nums text-xs font-semibold ${slow ? 'text-red-600' : 'text-emerald-700'}`}>{b.avgTotal}</TableCell>
                       <TableCell className="text-right tabular-nums text-xs">{b.p95Total}</TableCell>
                     </TableRow>

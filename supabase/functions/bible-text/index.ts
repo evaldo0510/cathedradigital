@@ -150,6 +150,18 @@ async function fetchFromCathedraDb(abbrev: string, chapter: number) {
 
 interface ReqCtx {
   bolls?: { ok: boolean; ms: number };
+  /** Soma dos tempos gastos em queries Supabase (ms). */
+  sqlMs?: number;
+}
+
+/** Mede uma chamada async e soma o tempo em ctx.sqlMs. */
+async function timedSql<T>(ctx: ReqCtx, fn: () => Promise<T>): Promise<T> {
+  const t0 = Date.now();
+  try {
+    return await fn();
+  } finally {
+    ctx.sqlMs = (ctx.sqlMs ?? 0) + (Date.now() - t0);
+  }
 }
 
 async function fetchFromBollsLife(abbrev: string, chapter: number, correlationId: string, ctx: ReqCtx) {
@@ -263,6 +275,11 @@ function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
 }) {
+  const sqlMs = fields.ctx.sqlMs ?? 0;
+  const bollsMs = fields.ctx.bolls?.ms ?? 0;
+  // edge_ms = tempo gasto na função excluindo SQL e rede upstream.
+  // Pode ser pequeno em cache HIT, maior em MISS (parsing, serialização).
+  const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const row = {
     abbrev: fields.abbrev,
     chapter: fields.chapter,
@@ -273,6 +290,8 @@ function recordEvent(fields: {
     bolls_called: !!fields.ctx.bolls,
     bolls_ok: fields.ctx.bolls?.ok ?? null,
     bolls_ms: fields.ctx.bolls?.ms ?? null,
+    sql_ms: sqlMs,
+    edge_ms: edgeMs,
     correlation_id: fields.correlation_id,
   };
   waitUntil(
@@ -293,11 +312,11 @@ async function revalidate(
   ttlHours: number,
   ctx: ReqCtx,
 ): Promise<{ data: any; source: string } | null> {
-  const isSovereigntyEnabled = await getFeatureFlag('bible_sovereignty_enabled');
+  const isSovereigntyEnabled = await timedSql(ctx, () => getFeatureFlag('bible_sovereignty_enabled'));
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
-  let result = await fetchFromCathedraDb(abbrev, chapter);
+  let result = await timedSql(ctx, () => fetchFromCathedraDb(abbrev, chapter));
   let source = 'Cathedra (Local)';
   if (!isSovereigntyEnabled || !result) {
     const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
@@ -333,7 +352,7 @@ async function revalidate(
       bollsId: resolvedBollsId,
     },
   };
-  await setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours);
+  await timedSql(ctx, () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
   return { data: responseData, source };
 }
 
@@ -391,7 +410,7 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    const cacheConfig = await getCacheConfig();
+    const cacheConfig = await timedSql(ctx, () => getCacheConfig());
     const tier = tierFor(abbrev);
     const policy = cachePolicy(tier);
     const cacheKey = `${abbrev}:${chapter}`;
@@ -408,7 +427,7 @@ serve(async (req) => {
       });
     }
 
-    const lookup = await lookupCacheL2(cacheKey, cacheConfig.version);
+    const lookup = await timedSql(ctx, () => lookupCacheL2(cacheKey, cacheConfig.version));
 
     // ---- FRESH ----
     if (lookup.state === 'fresh') {

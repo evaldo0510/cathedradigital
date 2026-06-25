@@ -880,8 +880,11 @@ export type Database = {
           chapter: number
           correlation_id: string | null
           created_at: string
+          edge_ms: number | null
           id: number
+          render_ms: number | null
           source: string | null
+          sql_ms: number | null
           status_code: number
           total_ms: number
         }
@@ -894,8 +897,11 @@ export type Database = {
           chapter: number
           correlation_id?: string | null
           created_at?: string
+          edge_ms?: number | null
           id?: number
+          render_ms?: number | null
           source?: string | null
+          sql_ms?: number | null
           status_code?: number
           total_ms: number
         }
@@ -908,8 +914,11 @@ export type Database = {
           chapter?: number
           correlation_id?: string | null
           created_at?: string
+          edge_ms?: number | null
           id?: number
+          render_ms?: number | null
           source?: string | null
+          sql_ms?: number | null
           status_code?: number
           total_ms?: number
         }
@@ -927,8 +936,12 @@ export type Database = {
           max_ms: number
           misses: number
           p95_ms: number
+          render_samples: number
           stale: number
+          sum_edge_ms: number
           sum_ms: number
+          sum_render_ms: number
+          sum_sql_ms: number
           total: number
           updated_at: string
         }
@@ -943,8 +956,12 @@ export type Database = {
           max_ms?: number
           misses?: number
           p95_ms?: number
+          render_samples?: number
           stale?: number
+          sum_edge_ms?: number
           sum_ms?: number
+          sum_render_ms?: number
+          sum_sql_ms?: number
           total?: number
           updated_at?: string
         }
@@ -959,8 +976,12 @@ export type Database = {
           max_ms?: number
           misses?: number
           p95_ms?: number
+          render_samples?: number
           stale?: number
+          sum_edge_ms?: number
           sum_ms?: number
+          sum_render_ms?: number
+          sum_sql_ms?: number
           total?: number
           updated_at?: string
         }
