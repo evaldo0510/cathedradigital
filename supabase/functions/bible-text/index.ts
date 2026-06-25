@@ -51,29 +51,32 @@ function cachePolicy(tier: CacheTier) {
 }
 
 // =========================================================================
-// Cache L1 in-memory (por instância de Edge) — TTL curto evita round-trip
-// repetido contra o Postgres quando o mesmo capítulo/flag/config é lido em
-// rajada. Invalida-se sozinho por TTL e em setCacheL2 (write-through).
+// Cache L1 in-memory (por instância de Edge) com SWR.
+// Conteúdo L2: fresh por 5min, depois stale por mais 5min (serve valor antigo
+// e dispara refresh em background via waitUntil). Hard-expire = 10min.
+// Configs/flags: TTL curto (30s) sem SWR — propagam invalidações rápido.
 // =========================================================================
-const L1_TTL_MS_L2 = 60_000;          // 60s para conteúdo de capítulo
+const L1_TTL_MS_L2 = 300_000;         // 5min "fresh" para conteúdo L2
+const L1_SWR_MS_L2 = 300_000;         // +5min de janela SWR (hard expire = 10min)
 const L1_TTL_MS_CONFIG = 30_000;      // 30s para feature flags / config
 const L1_MAX_ENTRIES = 500;
 
-type L1Entry<T> = { value: T; expiresAt: number };
+type L1Entry<T> = { value: T; freshUntil: number; hardExpiresAt: number };
 const l1Cache = new Map<string, L1Entry<unknown>>();
 
-function l1Get<T>(key: string): T | undefined {
+/** Retorna {value, stale} se houver entrada não-expirada (mesmo stale). */
+function l1Get<T>(key: string): { value: T; stale: boolean } | undefined {
   const e = l1Cache.get(key) as L1Entry<T> | undefined;
   if (!e) return undefined;
-  if (e.expiresAt < Date.now()) { l1Cache.delete(key); return undefined; }
-  return e.value;
+  const now = Date.now();
+  if (e.hardExpiresAt < now) { l1Cache.delete(key); return undefined; }
+  return { value: e.value, stale: now > e.freshUntil };
 }
-function l1Set<T>(key: string, value: T, ttlMs: number) {
-  l1Cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+function l1Set<T>(key: string, value: T, ttlMs: number, swrMs = 0) {
+  const now = Date.now();
+  l1Cache.set(key, { value, freshUntil: now + ttlMs, hardExpiresAt: now + ttlMs + swrMs });
   if (l1Cache.size > L1_MAX_ENTRIES) {
-    const now = Date.now();
-    for (const [k, v] of l1Cache) if (v.expiresAt < now) l1Cache.delete(k);
-    // Se ainda passa do limite (todas válidas), descarta a entrada mais antiga.
+    for (const [k, v] of l1Cache) if (v.hardExpiresAt < now) l1Cache.delete(k);
     if (l1Cache.size > L1_MAX_ENTRIES) {
       const firstKey = l1Cache.keys().next().value;
       if (firstKey !== undefined) l1Cache.delete(firstKey);
@@ -81,6 +84,7 @@ function l1Set<T>(key: string, value: T, ttlMs: number) {
   }
 }
 function l1Invalidate(key: string) { l1Cache.delete(key); }
+
 
 // =========================================================================
 // Utilitários
@@ -96,7 +100,7 @@ async function sha256(text: string) {
 
 async function getCacheConfig() {
   const cached = l1Get<{ enabled: boolean; version: number }>('cfg:cache');
-  if (cached) return cached;
+  if (cached) return cached.value;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled, metadata').eq('feature_key', 'bible_cache_global_version').single();
     const value = {
@@ -111,7 +115,7 @@ async function getCacheConfig() {
 async function getFeatureFlag(key: string): Promise<boolean> {
   const cacheKey = `flag:${key}`;
   const cached = l1Get<boolean>(cacheKey);
-  if (cached !== undefined) return cached;
+  if (cached) return cached.value;
   try {
     const { data } = await supabase.from('app_feature_flags').select('is_enabled').eq('feature_key', key).single();
     const value = data?.is_enabled || false;
@@ -119,6 +123,7 @@ async function getFeatureFlag(key: string): Promise<boolean> {
     return value;
   } catch { return false; }
 }
+
 
 
 // =========================================================================
@@ -132,9 +137,18 @@ type L2Lookup =
   | { state: 'miss' };
 
 async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
-  // L1 hit: pula o round-trip ao Postgres.
+  // L1 hit (fresh ou stale-mas-dentro-da-janela-SWR): evita round-trip ao Postgres.
+  // Se stale, dispara revalidação em background para a próxima leitura ser fresh.
   const cached = l1Get<L2Row>(`l2:${key}`);
-  if (cached) return cached;
+  if (cached) {
+    if (cached.stale) {
+      // Marca como fresh imediatamente para evitar múltiplos refreshes paralelos
+      // entre o disparo e a conclusão do fetch em background.
+      l1Set<L2Row>(`l2:${key}`, cached.value, L1_TTL_MS_L2, L1_SWR_MS_L2);
+      waitUntil(refreshL2InBackground(key));
+    }
+    return cached.value;
+  }
   try {
     const { data } = await supabase
       .from('bible_cache_l2')
@@ -145,12 +159,35 @@ async function fetchCacheL2Row(key: string): Promise<L2Row | null> {
       .maybeSingle();
     if (!data?.content) return null;
     const row = data as L2Row;
-    l1Set(`l2:${key}`, row, L1_TTL_MS_L2);
+    l1Set(`l2:${key}`, row, L1_TTL_MS_L2, L1_SWR_MS_L2);
     return row;
   } catch {
     return null;
   }
 }
+
+/** Refresh em background do L1: lê do L2 sem afetar o request corrente. */
+async function refreshL2InBackground(key: string) {
+  try {
+    const { data } = await supabase
+      .from('bible_cache_l2')
+      .select('content, expires_at, version, created_at')
+      .eq('cache_key', key)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (data?.content) {
+      l1Set<L2Row>(`l2:${key}`, data as L2Row, L1_TTL_MS_L2, L1_SWR_MS_L2);
+      metric('l1_swr_refresh', { key, ok: true });
+    } else {
+      l1Invalidate(`l2:${key}`);
+      metric('l1_swr_refresh', { key, ok: false, reason: 'empty' });
+    }
+  } catch (e) {
+    metric('l1_swr_refresh', { key, ok: false, error: String((e as any)?.message || e) });
+  }
+}
+
 
 function classifyL2(row: L2Row | null, currentVersion: number): L2Lookup {
   if (!row) return { state: 'miss' };
@@ -187,7 +224,8 @@ async function setCacheL2(key: string, content: any, hash: string, version: numb
       expires_at: expireDate.toISOString(),
       version,
       created_at: new Date().toISOString(),
-    }, L1_TTL_MS_L2);
+    }, L1_TTL_MS_L2, L1_SWR_MS_L2);
+
   } catch (e) { console.error('Cache L2 Error:', e); }
 }
 
