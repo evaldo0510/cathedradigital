@@ -36,6 +36,7 @@ import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { useHighContrast } from '@/hooks/useHighContrast';
+import biblePerf from '@/lib/biblePerf';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = parseInt(paragraphId);
