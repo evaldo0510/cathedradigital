@@ -301,7 +301,57 @@ export default function BiblePerfBreakdown() {
     setWarmHistory(data ?? []);
   };
 
-  useEffect(() => { loadWarmHistory(); }, []);
+  const loadRetention = async () => {
+    const [{ data: cfg }, { data: runs }] = await Promise.all([
+      supabase.from('bible_audit_log_retention_config').select('retention_days, auto_cleanup_enabled, updated_at').eq('id', true).maybeSingle(),
+      supabase.from('bible_audit_log_cleanup_runs').select('id, triggered_by, retention_days, rows_deleted, duration_ms, status, error, created_at').order('created_at', { ascending: false }).limit(20),
+    ]);
+    if (cfg) {
+      setRetentionCfg(cfg as any);
+      setRetentionEditDays(cfg.retention_days as number);
+      setRetentionEditAuto(cfg.auto_cleanup_enabled as boolean);
+    }
+    setCleanupRuns(runs ?? []);
+
+    const days = (cfg?.retention_days as number) ?? 90;
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    const [{ count: total }, { count: eligible }, { data: oldest }] = await Promise.all([
+      supabase.from('bible_audit_action_logs').select('*', { count: 'exact', head: true }),
+      supabase.from('bible_audit_action_logs').select('*', { count: 'exact', head: true }).lt('created_at', cutoff),
+      supabase.from('bible_audit_action_logs').select('created_at').order('created_at', { ascending: true }).limit(1),
+    ]);
+    setRetentionStats({
+      total: total ?? 0,
+      eligible: eligible ?? 0,
+      oldest: oldest?.[0]?.created_at as string | undefined,
+    });
+  };
+
+  const saveRetention = async () => {
+    const { error } = await supabase
+      .from('bible_audit_log_retention_config')
+      .update({ retention_days: retentionEditDays, auto_cleanup_enabled: retentionEditAuto, updated_at: new Date().toISOString() })
+      .eq('id', true);
+    if (error) { toast.error(error.message); return; }
+    toast.success('Configuração de retenção atualizada');
+    loadRetention();
+  };
+
+  const runCleanupNow = async () => {
+    setCleanupBusy(true);
+    const { data, error } = await supabase.rpc('cleanup_bible_audit_action_logs', {
+      p_triggered_by: 'manual',
+      p_override_days: null,
+    });
+    setCleanupBusy(false);
+    if (error) { toast.error(error.message); return; }
+    const r = Array.isArray(data) ? data[0] : data;
+    toast.success(`Limpeza executada: ${r?.rows_deleted ?? 0} linha(s) removida(s) (retenção ${r?.retention_days}d)`);
+    loadRetention();
+    loadWarmHistory();
+  };
+
+  useEffect(() => { loadWarmHistory(); loadRetention(); }, []);
 
   const runOnDemandWarm = async (dry: boolean) => {
     setWarmRunning(true);
