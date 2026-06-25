@@ -104,7 +104,14 @@ serve(async (req) => {
           abbrev: b.abbrev,
         });
       }
+
+      // Regressão de p95 contra baseline histórico, por métrica (sql_ms e total_ms)
+      for (const metric of ['sql_ms', 'total_ms'] as const) {
+        const reg = await evaluateRegression(b.abbrev, b.bucket_start, metric, regressionFactor, regressionFloorMs);
+        if (reg) newAlerts.push(reg);
+      }
     }
+
 
     // 4) Dedupe: se já existe alerta aberto do mesmo kind+bucket+abbrev, não duplica
     let inserted = 0;
