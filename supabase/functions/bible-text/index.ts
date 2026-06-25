@@ -427,7 +427,7 @@ serve(async (req) => {
       });
     }
 
-    const lookup = await lookupCacheL2(cacheKey, cacheConfig.version);
+    const lookup = await timedSql(ctx, () => lookupCacheL2(cacheKey, cacheConfig.version));
 
     // ---- FRESH ----
     if (lookup.state === 'fresh') {
