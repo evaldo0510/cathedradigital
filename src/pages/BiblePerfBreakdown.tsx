@@ -469,6 +469,82 @@ export default function BiblePerfBreakdown() {
     downloadCsv(`bible-perf-breakdown-${new Date().toISOString().slice(0, 10)}.csv`, [header, ...data]);
   };
 
+  const filteredWarmHistory = useMemo(() => {
+    const q = whSearch.trim().toLowerCase();
+    return warmHistory.filter((r) => {
+      if (whTypeFilter !== 'all' && r.action !== whTypeFilter) return false;
+      if (!q) return true;
+      const m = r.metadata ?? {};
+      const hay = [
+        r.action,
+        m.tier,
+        m.entity_id,
+        String(r.user_id ?? ''),
+        ...(m.target_books ?? []),
+        ...(Object.keys(m.per_book ?? {})),
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [warmHistory, whSearch, whTypeFilter]);
+
+  const pagedWarmHistory = useMemo(
+    () => filteredWarmHistory.slice(whPage * WH_PAGE_SIZE, (whPage + 1) * WH_PAGE_SIZE),
+    [filteredWarmHistory, whPage],
+  );
+  const whTotalPages = Math.max(1, Math.ceil(filteredWarmHistory.length / WH_PAGE_SIZE));
+  useEffect(() => { if (whPage >= whTotalPages) setWhPage(0); }, [whTotalPages, whPage]);
+
+  // Tendência: estim vs real e taxa de falha (apenas execuções reais)
+  const warmTrend = useMemo(() => {
+    return warmHistory
+      .filter((r) => r.action === 'warmup.execute' && r.metadata?.executed)
+      .slice(0, 30)
+      .reverse()
+      .map((r) => {
+        const exec = r.metadata.executed;
+        const total = (exec.ok ?? 0) + (exec.fail ?? 0);
+        return {
+          ts: new Date(r.created_at).toLocaleString([], { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+          estim_s: r.metadata.estimated_duration_ms ? Math.round(r.metadata.estimated_duration_ms / 100) / 10 : 0,
+          real_s: exec.ms ? Math.round(exec.ms / 100) / 10 : 0,
+          fail_pct: total ? Math.round((exec.fail / total) * 1000) / 10 : 0,
+        };
+      });
+  }, [warmHistory]);
+
+  // Alertas: warmup com falha ou cleanup com erro, últimos 7 dias
+  const failureAlerts = useMemo(() => {
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const items: Array<{ kind: 'warmup' | 'cleanup'; when: string; message: string; detail?: string }> = [];
+    for (const r of warmHistory) {
+      const t = new Date(r.created_at).getTime();
+      if (t < cutoff) continue;
+      const exec = r.metadata?.executed;
+      if (exec && Number(exec.fail) > 0) {
+        items.push({
+          kind: 'warmup',
+          when: r.created_at,
+          message: `Warmup (${r.metadata?.tier ?? '—'}) terminou com ${exec.fail} falha(s) de ${(exec.ok ?? 0) + exec.fail}`,
+          detail: `concorrência=${r.metadata?.params?.concurrency} · capítulos=${r.metadata?.queued}`,
+        });
+      }
+    }
+    for (const r of cleanupRuns) {
+      const t = new Date(r.created_at).getTime();
+      if (t < cutoff) continue;
+      if (r.status === 'error') {
+        items.push({
+          kind: 'cleanup',
+          when: r.created_at,
+          message: `Limpeza (${r.triggered_by}) falhou`,
+          detail: r.error ?? 'sem mensagem de erro',
+        });
+      }
+    }
+    return items.sort((a, b) => new Date(b.when).getTime() - new Date(a.when).getTime());
+  }, [warmHistory, cleanupRuns]);
+
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
