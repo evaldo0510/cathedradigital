@@ -1562,32 +1562,46 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             </header>
 
             <div className="grid grid-cols-4 gap-3">
-              {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => (
+              {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => {
+                const missing = isChapterMissing(selectedBook.abbr, ch);
+                return (
                 <button 
                   key={ch}
-                  onClick={() => selectChapter(ch)}
+                  onClick={() => { if (!missing) selectChapter(ch); }}
+                  disabled={missing}
+                  aria-disabled={missing}
+                  title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
-                    selectedChapter === ch
-                      ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
-                      : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                        ? "bg-secondary/5 border-secondary/20"
-                        : "bg-white border-primary/5 hover:border-secondary/30"
+                    missing
+                      ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
+                      : selectedChapter === ch
+                        ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
+                        : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
+                          ? "bg-secondary/5 border-secondary/20"
+                          : "bg-white border-primary/5 hover:border-secondary/30"
                   )}
 
                 >
                   <span className={cn(
                     "text-lg font-display transition-colors",
-                    selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                    missing
+                      ? "text-primary/40 line-through decoration-primary/30"
+                      : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
                   )}>{ch}</span>
                   <div className="flex items-center gap-1 mt-1">
-                    {selectedBook.chapterTitles?.[ch] && (
+                    {missing && (
+                      <span className="text-[9px] uppercase tracking-wider text-primary/40">
+                        sem fonte
+                      </span>
+                    )}
+                    {!missing && selectedBook.chapterTitles?.[ch] && (
                       <div className={cn(
                         "w-1 h-1 rounded-full",
                         selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
                       )} />
                     )}
-                    {cicCitationMap.chapters.has(ch) && (
+                    {!missing && cicCitationMap.chapters.has(ch) && (
                       <div
                         className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
                         title="Contém citação do Catecismo (CIC)"
@@ -1596,7 +1610,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     )}
                   </div>
                 </button>
-              ))}
+                );
+              })}
 
             </div>
           </motion.div>
