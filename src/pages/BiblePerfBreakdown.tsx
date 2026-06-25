@@ -848,6 +848,59 @@ export default function BiblePerfBreakdown() {
         </CardContent>
       </Card>
 
+      {/* Alertas de falha (warmup / cleanup) */}
+      {failureAlerts.length > 0 && (
+        <Card className="border-red-300">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2 text-red-700">
+              <AlertTriangle className="w-4 h-4" /> Falhas recentes (últimos 7 dias) · {failureAlerts.length}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {failureAlerts.slice(0, 10).map((a, i) => (
+              <div key={i} className="text-xs border-l-4 border-red-500 bg-red-50/60 px-3 py-2 rounded-r">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="font-semibold">
+                    <Badge variant="destructive" className="mr-2 uppercase">{a.kind}</Badge>
+                    {a.message}
+                  </span>
+                  <span className="text-muted-foreground whitespace-nowrap">{new Date(a.when).toLocaleString()}</span>
+                </div>
+                {a.detail && <div className="text-[11px] text-muted-foreground mt-1 font-mono break-all">{a.detail}</div>}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tendência: estim vs real e taxa de falha */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
+            <LineChartIcon className="w-4 h-4" /> Tendência de warmup (estimado vs real · taxa de falha)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {warmTrend.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Sem execuções reais registradas ainda.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={warmTrend}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="ts" tick={{ fontSize: 10 }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} label={{ value: 's', angle: -90, position: 'insideLeft', fontSize: 10 }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} label={{ value: '% fail', angle: 90, position: 'insideRight', fontSize: 10 }} />
+                <Tooltip />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="estim_s" name="Estimado (s)" stroke="#8b5cf6" strokeDasharray="4 2" dot={false} />
+                <Line yAxisId="left" type="monotone" dataKey="real_s" name="Real (s)" stroke="hsl(var(--primary))" dot={false} />
+                <Line yAxisId="right" type="monotone" dataKey="fail_pct" name="Falha (%)" stroke="hsl(var(--destructive))" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Audit log de warmup */}
       <Card>
         <CardHeader>
@@ -858,10 +911,32 @@ export default function BiblePerfBreakdown() {
             </Button>
           </CardTitle>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
-          {warmHistory.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-2">Nenhuma execução registrada (apenas admins visualizam).</p>
+        <CardContent className="overflow-x-auto space-y-3">
+          <div className="flex items-end gap-2 flex-wrap">
+            <div className="space-y-1 flex-1 min-w-[200px]">
+              <Label className="text-xs">Buscar</Label>
+              <Input value={whSearch} onChange={(e) => { setWhSearch(e.target.value); setWhPage(0); }}
+                     placeholder="tier, livro, user_id…" className="h-8 text-xs" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Tipo</Label>
+              <select value={whTypeFilter}
+                      onChange={(e) => { setWhTypeFilter(e.target.value as any); setWhPage(0); }}
+                      className="h-8 rounded-md border bg-background px-2 text-xs">
+                <option value="all">Todos</option>
+                <option value="warmup.execute">Real</option>
+                <option value="warmup.dry_run">Dry-run</option>
+              </select>
+            </div>
+            <div className="text-xs text-muted-foreground ml-auto">
+              {filteredWarmHistory.length} resultado(s) · página {whPage + 1}/{whTotalPages}
+            </div>
+          </div>
+
+          {filteredWarmHistory.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Nenhuma execução encontrada.</p>
           ) : (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -877,7 +952,7 @@ export default function BiblePerfBreakdown() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {warmHistory.map((r) => {
+                {pagedWarmHistory.map((r) => {
                   const m = r.metadata ?? {};
                   const p = m.params ?? {};
                   const exec = m.executed;
