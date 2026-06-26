@@ -81,10 +81,44 @@ const CatechismContent: React.FC<{
     const err: any = error;
     const code: string = err?.code ?? 'unknown';
     const status = err?.status;
+
+    // Fallback suave para parágrafos ainda não disponíveis no banco oficial.
+    // Mantém o ritmo de leitura e evita "bolhas vazias" com alerta destrutivo.
+    if (code === 'not_found') {
+      return (
+        <div
+          role="note"
+          aria-live="polite"
+          data-testid={`catechism-placeholder-${paragraph}`}
+          className="reader-text bg-muted/30 border border-dashed border-primary/15 rounded-premium p-spacing-md font-serif text-premium-sm italic text-muted-foreground space-y-spacing-xs"
+        >
+          <div className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/50">
+            <Icons.Catechism className="w-spacing-sm h-spacing-sm" />
+            Texto em preparação
+          </div>
+          <p>
+            O parágrafo §{paragraph} ainda não foi importado para o banco oficial em português.
+            Estamos preparando o texto soberano para que esteja disponível em breve.
+          </p>
+          <div className="pt-spacing-xs">
+            <Button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              variant="ghost"
+              size="sm"
+              data-testid={`catechism-retry-${paragraph}`}
+              className="text-primary/60 hover:text-primary"
+            >
+              {isFetching ? 'Verificando…' : 'Verificar novamente'}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     const title =
       code === 'unauthorized' ? `Sessão expirada — faça login para ler §${paragraph}.` :
       code === 'forbidden'    ? `Sem permissão para acessar §${paragraph}.` :
-      code === 'not_found'    ? `Parágrafo §${paragraph} ainda não está disponível no banco oficial.` :
       code === 'network'      ? `Sem conexão para carregar §${paragraph}.` :
                                 `Ops! Não conseguimos carregar §${paragraph}.`;
     return (
