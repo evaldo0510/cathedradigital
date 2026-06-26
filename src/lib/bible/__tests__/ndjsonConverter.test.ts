@@ -44,8 +44,8 @@ describe("ndjsonConverter — resolveAbbr (canonicalização)", () => {
   });
 
   it("aceita variações com espaços e pontuação", () => {
-    expect(resolveAbbr(" 1 Cor ")).toBe("1Cor");
-    expect(resolveAbbr("1.cor")).toBe("1Cor");
+    expect(resolveAbbr(" 1 Cor ")).toBe("1Co");
+    expect(resolveAbbr("1.cor")).toBe("1Co");
     expect(resolveAbbr("1pedro")).toBe("1Pd");
   });
 
