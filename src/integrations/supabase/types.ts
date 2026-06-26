@@ -1269,6 +1269,7 @@ export type Database = {
       }
       bible_import_jobs: {
         Row: {
+          audit_log: Json
           created_at: string
           created_by: string | null
           current_book: string | null
@@ -1285,6 +1286,7 @@ export type Database = {
           verification: Json | null
         }
         Insert: {
+          audit_log?: Json
           created_at?: string
           created_by?: string | null
           current_book?: string | null
@@ -1301,6 +1303,7 @@ export type Database = {
           verification?: Json | null
         }
         Update: {
+          audit_log?: Json
           created_at?: string
           created_by?: string | null
           current_book?: string | null
@@ -4644,6 +4647,10 @@ export type Database = {
           run_id: string
           status: string
         }[]
+      }
+      bible_source_sprint1_passed: {
+        Args: { p_source_id: string }
+        Returns: boolean
       }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
