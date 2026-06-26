@@ -856,16 +856,38 @@ ${entry.outerHTML}
     console.log(`%c[Inspector] ${active ? "ATIVO" : "off"}`, "color:#C8A96A");
   }
 
+  function isTypingTarget(t: EventTarget | null): boolean {
+    const el = t as HTMLElement | null;
+    if (!el) return false;
+    const tag = el.tagName;
+    return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (el as HTMLElement).isContentEditable;
+  }
+
   window.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "I" || e.key === "i")) {
-      e.preventDefault(); toggle();
+      e.preventDefault(); toggle(); return;
     }
-    if (e.key === "Escape" && active) toggle();
-    if (active && (e.key === "l" || e.key === "L") && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      locked = !locked;
-      if (!locked) { lockedEntry = null; lockedEl = null; }
+    if (e.key === "Escape" && active) { toggle(); return; }
+    if (!active) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (isTypingTarget(e.target)) return;
+    const k = e.key.toLowerCase();
+    const lastEntry = logs[logs.length - 1];
+    if (k === "l" || k === "f") {
+      // L (legado) ou F = alternar Fixar usando última seleção
+      e.preventDefault();
+      if (locked) { locked = false; lockedEntry = null; lockedEl = null; }
+      else if (lastEntry) { locked = true; lockedEntry = lastEntry; /* lockedEl: tenta resolver */
+        try { lockedEl = document.querySelector(lastEntry.selector); } catch { lockedEl = null; } }
       persist();
       if (lockedEntry && lockedEl) renderPanel(lockedEntry, lockedEl);
+    } else if (k === "c") {
+      e.preventDefault();
+      toggleCompareMode();
+    } else if (k === "p") {
+      if (!lastEntry) return;
+      e.preventDefault();
+      copyPackage(lastEntry);
     }
   });
   window.addEventListener("mousemove", onMove, true);
