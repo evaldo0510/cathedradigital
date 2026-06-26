@@ -67,23 +67,21 @@ function parseLine(raw: string, lineNo: number): VerseRow | { error: string } {
   return { abbr, chapter, verse, text };
 }
 
-async function streamLines(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<AsyncGenerator<string>> {
-  return (async function* () {
-    const decoder = new TextDecoder();
-    let buf = "";
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      buf += decoder.decode(value, { stream: true });
-      let idx;
-      while ((idx = buf.indexOf("\n")) >= 0) {
-        const line = buf.slice(0, idx).replace(/\r$/, "");
-        buf = buf.slice(idx + 1);
-        if (line.trim()) yield line;
-      }
+async function* streamLines(reader: ReadableStreamDefaultReader<Uint8Array>): AsyncGenerator<string> {
+  const decoder = new TextDecoder();
+  let buf = "";
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    let idx;
+    while ((idx = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, idx).replace(/\r$/, "");
+      buf = buf.slice(idx + 1);
+      if (line.trim()) yield line;
     }
-    if (buf.trim()) yield buf;
-  })();
+  }
+  if (buf.trim()) yield buf;
 }
 
 Deno.serve(async (req) => {
