@@ -43,6 +43,8 @@ import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
 import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
+import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
+import CatechismPendingPanel from './CatechismPendingPanel';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
