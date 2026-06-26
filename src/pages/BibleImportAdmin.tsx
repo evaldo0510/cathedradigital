@@ -612,6 +612,16 @@ export default function BibleImportAdmin() {
         </CardContent>
       </Card>
 
+      {(submitting || steps.some((s) => s.status !== "pending") || logs.length > 0) && (
+        <ImportProgressPanel
+          steps={steps}
+          logs={logs}
+          running={submitting}
+          activeJobId={activeJobId}
+          onClear={() => { resetRun(); setRunActive(false); }}
+        />
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Fontes cadastradas</CardTitle>
