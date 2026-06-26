@@ -539,6 +539,16 @@ export function initDevInspector() {
         <table style="width:100%;margin-top:4px;border-collapse:collapse">${stylesRows}</table>
       </div>
 
+      <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">CSS Variables (var(--…))</div>
+        ${entry.cssVars.length ? entry.cssVars.map((v) => `
+          <div style="margin-top:4px;padding:5px 7px;background:rgba(255,255,255,0.04);border-left:2px solid #3b82f6;border-radius:0 4px 4px 0;font-size:11px">
+            <div><code style="color:#93c5fd">${escapeHtml(v.name)}</code> → <span style="color:#C8A96A">${escapeHtml(v.resolved || "(vazio)")}</span></div>
+            <div style="opacity:.65;font-size:10px">usada em: ${v.usedIn.map(escapeHtml).join(", ")}</div>
+            <div style="opacity:.65;font-size:10px">origem: <code>${escapeHtml(v.fromSelector || "?")}</code> @ ${escapeHtml(v.fromOrigin || "?")} (${escapeHtml(v.fromElement || "?")})</div>
+          </div>`).join("") : '<div style="opacity:.5;font-size:11px">Nenhuma var(--…) usada pelas regras vencedoras.</div>'}
+      </div>
+
+
       <div style="margin-top:10px">
         <div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Cascata CSS · filtros</div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
