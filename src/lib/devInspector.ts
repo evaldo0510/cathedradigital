@@ -1,24 +1,24 @@
 /**
  * Dev-only DOM inspector.
- * Toggle with Ctrl/Cmd + Shift + I. ESC to exit.
+ * Toggle with Ctrl/Cmd + Shift + I. ESC to exit. L to fixar.
  */
 
-type FiberSource = { fileName?: string; lineNumber?: number; columnNumber?: number };
-type MatchedRule = {
+export type FiberSource = { fileName?: string; lineNumber?: number; columnNumber?: number };
+export type MatchedRule = {
   selector: string;
   specificity: [number, number, number];
   origin: string;
-  originKind: "inline" | "style-tag" | "stylesheet";
+  originKind: "inline" | "style-tag" | "stylesheet" | "shadow";
   selectorKind: "id" | "class" | "tag" | "mixed";
   cssText: string;
   declarations: Record<string, string>;
 };
-type Conflict = {
+export type Conflict = {
   prop: string;
   winner: MatchedRule;
   losers: MatchedRule[];
 };
-type LogEntry = {
+export type LogEntry = {
   ts: string;
   route: string;
   component: string | null;
@@ -32,14 +32,49 @@ type LogEntry = {
   matchedRules: MatchedRule[];
   conflicts: Conflict[];
   outerHTML: string;
+  inShadow: boolean;
 };
-type Filters = {
-  origin: "all" | "inline" | "style-tag" | "stylesheet";
+export type Filters = {
+  origin: "all" | "inline" | "style-tag" | "stylesheet" | "shadow";
   selectorKind: "all" | "id" | "class" | "tag" | "mixed";
-  file: string; // "all" or filename
+  file: string;
+};
+export type SessionState = {
+  logs: LogEntry[];
+  filters: Filters;
+  locked: boolean;
 };
 
-const STORAGE_KEY = "cathedra_inspector_session_v1";
+export const STORAGE_KEY = "cathedra_inspector_session_v1";
+
+export const DEFAULT_FILTERS: Filters = { origin: "all", selectorKind: "all", file: "all" };
+
+export function loadSession(storage: Storage = localStorage): SessionState {
+  const fallback: SessionState = { logs: [], filters: { ...DEFAULT_FILTERS }, locked: false };
+  try {
+    const raw = storage.getItem(STORAGE_KEY);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return {
+      logs: Array.isArray(parsed.logs) ? parsed.logs : [],
+      filters: { ...DEFAULT_FILTERS, ...(parsed.filters || {}) },
+      locked: !!parsed.locked,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+export function saveSession(state: SessionState, storage: Storage = localStorage): void {
+  try {
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ logs: state.logs.slice(-50), filters: state.filters, locked: state.locked }),
+    );
+  } catch {
+    /* noop */
+  }
+}
 
 function getFiberFromNode(node: Element): any | null {
   const key = Object.keys(node).find(
@@ -87,16 +122,32 @@ function cssSelector(el: Element): string {
   return parts.join(" > ");
 }
 
-function domPath(el: Element): string {
+/**
+ * DOM path with Shadow DOM awareness — when we cross a ShadowRoot boundary we
+ * mark it as `::shadow` and continue from the shadow host.
+ */
+export function domPath(el: Element): string {
   const parts: string[] = [];
-  let cur: Element | null = el;
-  while (cur && cur.nodeType === 1 && parts.length < 10) {
-    let s = cur.tagName.toLowerCase();
-    if (cur.id) s += `#${cur.id}`;
-    else if (cur.className && typeof cur.className === "string")
-      s += "." + cur.className.trim().split(/\s+/).slice(0, 2).join(".");
+  let cur: Node | null = el;
+  let safety = 0;
+  while (cur && cur.nodeType === 1 && safety++ < 20) {
+    const e = cur as Element;
+    let s = e.tagName.toLowerCase();
+    if (e.id) s += `#${e.id}`;
+    else if (e.className && typeof e.className === "string")
+      s += "." + e.className.trim().split(/\s+/).slice(0, 2).join(".");
     parts.unshift(s);
-    cur = cur.parentElement;
+    if (e.parentElement) {
+      cur = e.parentElement;
+    } else {
+      const root = e.getRootNode();
+      if (root instanceof ShadowRoot) {
+        parts.unshift("::shadow");
+        cur = root.host;
+      } else {
+        cur = null;
+      }
+    }
   }
   return parts.join(" > ");
 }
@@ -131,7 +182,8 @@ function classifySelector(sel: string): "id" | "class" | "tag" | "mixed" {
   return "tag";
 }
 
-function ruleOrigin(sheet: CSSStyleSheet): { label: string; kind: "style-tag" | "stylesheet" } {
+function ruleOrigin(sheet: CSSStyleSheet, fromShadow: boolean): { label: string; kind: MatchedRule["originKind"] } {
+  if (fromShadow) return { label: "shadow-root", kind: "shadow" };
   if (sheet.href) {
     try { return { label: new URL(sheet.href).pathname.split("/").pop() || sheet.href, kind: "stylesheet" }; }
     catch { return { label: sheet.href, kind: "stylesheet" }; }
@@ -151,14 +203,26 @@ function parseDeclarations(cssText: string): Record<string, string> {
   return out;
 }
 
+function collectSheetsFor(el: Element): Array<{ sheet: CSSStyleSheet; fromShadow: boolean }> {
+  const sheets: Array<{ sheet: CSSStyleSheet; fromShadow: boolean }> = [];
+  for (const s of Array.from(document.styleSheets) as CSSStyleSheet[]) sheets.push({ sheet: s, fromShadow: false });
+  const root = el.getRootNode();
+  if (root instanceof ShadowRoot) {
+    for (const s of Array.from(root.styleSheets) as CSSStyleSheet[]) sheets.push({ sheet: s, fromShadow: true });
+    // adoptedStyleSheets (Constructable)
+    const adopted = (root as any).adoptedStyleSheets as CSSStyleSheet[] | undefined;
+    if (Array.isArray(adopted)) for (const s of adopted) sheets.push({ sheet: s, fromShadow: true });
+  }
+  return sheets;
+}
+
 function getMatchedRules(el: Element): MatchedRule[] {
   const out: MatchedRule[] = [];
-  // inline style first
   const inline = (el as HTMLElement).style?.cssText;
   if (inline) {
     out.push({
-      selector: "style=\"...\"",
-      specificity: [1, 0, 0, 0] as any,
+      selector: 'style="..."',
+      specificity: [1, 0, 0],
       origin: "inline",
       originKind: "inline",
       selectorKind: "id",
@@ -166,12 +230,11 @@ function getMatchedRules(el: Element): MatchedRule[] {
       declarations: parseDeclarations(inline),
     });
   }
-  const sheets = Array.from(document.styleSheets) as CSSStyleSheet[];
-  for (const sheet of sheets) {
+  for (const { sheet, fromShadow } of collectSheetsFor(el)) {
     let rules: CSSRuleList | null = null;
     try { rules = sheet.cssRules; } catch { continue; }
     if (!rules) continue;
-    walkRules(rules, sheet, el, out);
+    walkRules(rules, sheet, el, out, fromShadow);
     if (out.length > 300) break;
   }
   out.sort((a, b) => {
@@ -181,8 +244,8 @@ function getMatchedRules(el: Element): MatchedRule[] {
   return out.slice(0, 80);
 }
 
-function walkRules(rules: CSSRuleList, sheet: CSSStyleSheet, el: Element, out: MatchedRule[]) {
-  const origin = ruleOrigin(sheet);
+function walkRules(rules: CSSRuleList, sheet: CSSStyleSheet, el: Element, out: MatchedRule[], fromShadow: boolean) {
+  const origin = ruleOrigin(sheet, fromShadow);
   for (const rule of Array.from(rules)) {
     if (rule instanceof CSSStyleRule) {
       const selectorText = rule.selectorText;
@@ -204,7 +267,7 @@ function walkRules(rules: CSSRuleList, sheet: CSSStyleSheet, el: Element, out: M
         } catch { /* invalid selector */ }
       }
     } else if ((rule as CSSGroupingRule).cssRules) {
-      walkRules((rule as CSSGroupingRule).cssRules, sheet, el, out);
+      walkRules((rule as CSSGroupingRule).cssRules, sheet, el, out, fromShadow);
     }
   }
 }
@@ -229,19 +292,22 @@ function getViewportInfo() {
   return { w, h, dpr: window.devicePixelRatio || 1, breakpoint: bp };
 }
 
+/** Pierces shadow boundaries using composedPath() to find deepest element under the pointer. */
+function elementFromEvent(e: MouseEvent): Element | null {
+  const path = (e.composedPath?.() ?? []) as EventTarget[];
+  for (const t of path) {
+    if (t instanceof Element) return t;
+  }
+  return document.elementFromPoint(e.clientX, e.clientY);
+}
+
 export function initDevInspector() {
   if (typeof window === "undefined") return;
 
-  // Restore previous session
-  let saved: { logs: LogEntry[]; filters: Filters; locked: boolean } = { logs: [], filters: { origin: "all", selectorKind: "all", file: "all" }, locked: false };
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) saved = { ...saved, ...JSON.parse(raw) };
-  } catch { /* noop */ }
-
-  const logs: LogEntry[] = Array.isArray(saved.logs) ? saved.logs : [];
-  const filters: Filters = saved.filters || { origin: "all", selectorKind: "all", file: "all" };
-  let locked = !!saved.locked;
+  const saved = loadSession();
+  const logs: LogEntry[] = saved.logs;
+  const filters: Filters = saved.filters;
+  let locked = saved.locked;
   let lockedEntry: LogEntry | null = logs.length && locked ? logs[logs.length - 1] : null;
   let lockedEl: Element | null = null;
 
@@ -250,10 +316,12 @@ export function initDevInspector() {
   let hoverLabel: HTMLDivElement | null = null;
   let panel: HTMLDivElement | null = null;
 
-  function persist() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ logs: logs.slice(-50), filters, locked })); }
-    catch { /* noop */ }
-  }
+  // Compare mode
+  let compareMode = false;
+  let compareA: { entry: LogEntry; el: Element } | null = null;
+  let compareB: { entry: LogEntry; el: Element } | null = null;
+
+  function persist() { saveSession({ logs, filters, locked }); }
 
   function ensureOverlay() {
     if (highlight) return;
@@ -288,9 +356,11 @@ export function initDevInspector() {
     highlight!.style.top = `${r.top}px`;
     highlight!.style.width = `${r.width}px`;
     highlight!.style.height = `${r.height}px`;
-    highlight!.style.borderColor = locked ? "#ef4444" : "#C8A96A";
+    highlight!.style.borderColor = locked ? "#ef4444" : compareMode ? "#3b82f6" : "#C8A96A";
     hoverLabel!.style.display = "block";
-    hoverLabel!.textContent = `${locked ? "🔒 " : ""}${el.tagName.toLowerCase()} · ${Math.round(r.width)}×${Math.round(r.height)}`;
+    const tag = el.tagName.toLowerCase();
+    const prefix = locked ? "🔒 " : compareMode ? `⇄ ${compareA ? "B" : "A"} · ` : "";
+    hoverLabel!.textContent = `${prefix}${tag} · ${Math.round(r.width)}×${Math.round(r.height)}`;
     const top = r.top - 22 < 4 ? r.bottom + 4 : r.top - 22;
     hoverLabel!.style.left = `${Math.max(4, r.left)}px`;
     hoverLabel!.style.top = `${top}px`;
@@ -299,7 +369,7 @@ export function initDevInspector() {
   function onMove(e: MouseEvent) {
     if (!active) return;
     if (locked && lockedEl) { moveHighlight(lockedEl); return; }
-    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const el = elementFromEvent(e);
     if (!el || el === highlight || el === hoverLabel || (panel && panel.contains(el))) return;
     moveHighlight(el);
   }
@@ -326,6 +396,7 @@ export function initDevInspector() {
       matchedRules,
       conflicts: detectConflicts(matchedRules),
       outerHTML: el.outerHTML.slice(0, 50000),
+      inShadow: el.getRootNode() instanceof ShadowRoot,
     };
   }
 
@@ -338,20 +409,23 @@ export function initDevInspector() {
     });
   }
 
+  function ensurePanel() {
+    if (panel) return;
+    panel = document.createElement("div");
+    Object.assign(panel.style, {
+      position: "fixed", right: "12px", top: "12px", width: "440px",
+      maxHeight: "calc(100vh - 24px)", overflow: "auto", zIndex: "2147483647",
+      background: "#0B1F3A", color: "#fff",
+      font: "12px/1.45 ui-monospace,SFMono-Regular,monospace",
+      padding: "12px 14px", borderRadius: "8px",
+      boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+      border: "1px solid rgba(200,169,106,0.4)",
+    } as CSSStyleDeclaration);
+    document.body.appendChild(panel);
+  }
+
   function renderPanel(entry: LogEntry, el: Element) {
-    if (!panel) {
-      panel = document.createElement("div");
-      Object.assign(panel.style, {
-        position: "fixed", right: "12px", top: "12px", width: "420px",
-        maxHeight: "calc(100vh - 24px)", overflow: "auto", zIndex: "2147483647",
-        background: "#0B1F3A", color: "#fff",
-        font: "12px/1.45 ui-monospace,SFMono-Regular,monospace",
-        padding: "12px 14px", borderRadius: "8px",
-        boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
-        border: "1px solid rgba(200,169,106,0.4)",
-      } as CSSStyleDeclaration);
-      document.body.appendChild(panel);
-    }
+    ensurePanel();
     const filteredRules = applyFilters(entry.matchedRules);
     const files = Array.from(new Set(entry.matchedRules.map((r) => r.origin)));
     const stylesRows = Object.entries(entry.styles)
@@ -379,15 +453,19 @@ export function initDevInspector() {
       : '<div style="opacity:.5;font-size:11px">Nenhuma regra com os filtros atuais.</div>';
 
     const vp = entry.viewport;
-    const sel = (val: string, opts: string[]) => `<select data-filter style="background:#0B1F3A;color:#fff;border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:2px 4px;font:10px ui-monospace,monospace">${opts.map((o) => `<option ${o === val ? "selected" : ""} value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("")}</select>`;
+    const sel = (val: string, opts: string[], key: string) =>
+      `<select data-filter="${key}" style="background:#0B1F3A;color:#fff;border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:2px 4px;font:10px ui-monospace,monospace">${opts.map((o) => `<option ${o === val ? "selected" : ""} value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("")}</select>`;
 
-    panel.innerHTML = `
+    panel!.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px">
-        <strong style="color:#C8A96A;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Inspector ${locked ? "🔒" : ""}</strong>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <strong style="color:#C8A96A;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Inspector ${locked ? "🔒" : ""}${entry.inShadow ? " · shadow" : ""}</strong>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
           <button data-act="lock" style="${btn()}">${locked ? "Desafixar" : "Fixar"}</button>
+          <button data-act="compare" style="${btn()}">${compareMode ? "Sair cmp" : "Comparar"}</button>
+          <button data-act="package" style="${btn(true)}">📎 Pacote</button>
           <button data-act="copy" style="${btn()}">Copiar</button>
           <button data-act="html" style="${btn()}">HTML</button>
+          <button data-act="winners" style="${btn()}">Winners</button>
           <button data-act="export" style="${btn()}">NDJSON</button>
           <button data-act="clear" style="${btn()}">Limpar</button>
           <button data-act="close" style="${btn()}">×</button>
@@ -408,16 +486,16 @@ export function initDevInspector() {
       <div style="margin-top:10px">
         <div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Cascata CSS · filtros</div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
-          <label style="font-size:10px;opacity:.7">origem ${sel(filters.origin, ["all","inline","style-tag","stylesheet"]).replace("data-filter", 'data-filter="origin"')}</label>
-          <label style="font-size:10px;opacity:.7">tipo ${sel(filters.selectorKind, ["all","id","class","tag","mixed"]).replace("data-filter", 'data-filter="selectorKind"')}</label>
-          <label style="font-size:10px;opacity:.7">arquivo ${sel(filters.file, ["all", ...files]).replace("data-filter", 'data-filter="file"')}</label>
+          <label style="font-size:10px;opacity:.7">origem ${sel(filters.origin, ["all","inline","style-tag","stylesheet","shadow"], "origin")}</label>
+          <label style="font-size:10px;opacity:.7">tipo ${sel(filters.selectorKind, ["all","id","class","tag","mixed"], "selectorKind")}</label>
+          <label style="font-size:10px;opacity:.7">arquivo ${sel(filters.file, ["all", ...files], "file")}</label>
         </div>
         ${cascadeRows}
       </div>
       <div style="margin-top:10px;opacity:.5;font-size:10px">logs: ${logs.length} · sessão salva em localStorage</div>
     `;
 
-    panel.querySelectorAll("[data-filter]").forEach((s) => {
+    panel!.querySelectorAll("[data-filter]").forEach((s) => {
       s.addEventListener("change", (e) => {
         const t = e.target as HTMLSelectElement;
         const key = t.getAttribute("data-filter") as keyof Filters;
@@ -426,11 +504,14 @@ export function initDevInspector() {
         renderPanel(entry, el);
       });
     });
-    panel.querySelector('[data-act="close"]')?.addEventListener("click", () => { panel?.remove(); panel = null; });
-    panel.querySelector('[data-act="copy"]')?.addEventListener("click", () => copyEntry(entry));
-    panel.querySelector('[data-act="export"]')?.addEventListener("click", exportNDJSON);
-    panel.querySelector('[data-act="html"]')?.addEventListener("click", () => downloadHTML(entry));
-    panel.querySelector('[data-act="lock"]')?.addEventListener("click", () => {
+    panel!.querySelector('[data-act="close"]')?.addEventListener("click", () => { panel?.remove(); panel = null; });
+    panel!.querySelector('[data-act="copy"]')?.addEventListener("click", () => copyEntry(entry));
+    panel!.querySelector('[data-act="package"]')?.addEventListener("click", () => copyPackage(entry));
+    panel!.querySelector('[data-act="export"]')?.addEventListener("click", exportNDJSON);
+    panel!.querySelector('[data-act="html"]')?.addEventListener("click", () => downloadHTML(entry));
+    panel!.querySelector('[data-act="winners"]')?.addEventListener("click", () => downloadWinners(entry));
+    panel!.querySelector('[data-act="compare"]')?.addEventListener("click", () => toggleCompareMode());
+    panel!.querySelector('[data-act="lock"]')?.addEventListener("click", () => {
       locked = !locked;
       lockedEntry = locked ? entry : null;
       lockedEl = locked ? el : null;
@@ -438,31 +519,125 @@ export function initDevInspector() {
       renderPanel(entry, el);
       moveHighlight(el);
     });
-    panel.querySelector('[data-act="clear"]')?.addEventListener("click", () => {
+    panel!.querySelector('[data-act="clear"]')?.addEventListener("click", () => {
       logs.length = 0; locked = false; lockedEntry = null; lockedEl = null;
       persist(); panel?.remove(); panel = null; hideHover();
     });
   }
 
-  function btn() {
-    return "background:rgba(200,169,106,0.15);color:#fff;border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:3px 8px;font:11px ui-monospace,monospace;cursor:pointer";
+  function renderComparePanel() {
+    ensurePanel();
+    if (!compareA || !compareB) {
+      panel!.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong style="color:#3b82f6;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Comparar — selecione ${compareA ? "B" : "A"}</strong>
+          <button data-act="cancel-cmp" style="${btn()}">Cancelar</button>
+        </div>
+        <div style="font-size:11px;opacity:.7">Clique em ${compareA ? "outro" : "um"} elemento para definir <strong>${compareA ? "B" : "A"}</strong>.${compareA ? `<br/>A: ${escapeHtml(compareA.entry.selector)}` : ""}</div>
+      `;
+      panel!.querySelector('[data-act="cancel-cmp"]')?.addEventListener("click", () => exitCompareMode());
+      return;
+    }
+    const a = compareA.entry, b = compareB.entry;
+    const winners = (e: LogEntry) => {
+      const seen = new Set<string>();
+      return e.matchedRules.filter((r) => {
+        const k = Object.keys(r.declarations).find((p) => !seen.has(p));
+        if (k) { Object.keys(r.declarations).forEach((p) => seen.add(p)); return true; }
+        return false;
+      }).slice(0, 10);
+    };
+    const renderSide = (e: LogEntry, label: string) => `
+      <div style="flex:1;min-width:0">
+        <div style="color:#3b82f6;font-size:11px;text-transform:uppercase;letter-spacing:.1em">${label}</div>
+        <div style="font-size:11px;word-break:break-all">${escapeHtml(e.selector)}</div>
+        <div style="opacity:.6;font-size:10px;margin-top:2px">${e.size.w}×${e.size.h}px${e.inShadow ? " · shadow" : ""}</div>
+        <div style="margin-top:6px">
+          ${winners(e).map((r) => `
+            <div style="margin-top:4px;padding:4px 6px;border-left:2px solid #C8A96A;background:rgba(255,255,255,0.04);font-size:11px">
+              <div style="color:#C8A96A;word-break:break-all">${escapeHtml(r.selector)}</div>
+              <div style="opacity:.8;word-break:break-all">${escapeHtml(r.cssText)}</div>
+              <div style="opacity:.5;font-size:10px">${escapeHtml(r.origin)} · spec ${r.specificity.join(",")}</div>
+            </div>`).join("")}
+        </div>
+      </div>`;
+    const diffRows = ["font-family","font-size","font-weight","line-height","letter-spacing","color","padding","margin","text-transform"].map((k) => {
+      const va = a.styles[k] ?? "—", vb = b.styles[k] ?? "—";
+      const diff = va !== vb;
+      return `<tr style="${diff ? "background:rgba(239,68,68,0.10)" : ""}"><td style="opacity:.6;padding:2px 6px">${k}</td><td style="padding:2px 6px">${escapeHtml(va)}</td><td style="padding:2px 6px">${escapeHtml(vb)}</td></tr>`;
+    }).join("");
+    const dW = b.size.w - a.size.w, dH = b.size.h - a.size.h;
+    panel!.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px">
+        <strong style="color:#3b82f6;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Comparar A ⇄ B</strong>
+        <div style="display:flex;gap:4px">
+          <button data-act="cmp-reset" style="${btn()}">Resetar</button>
+          <button data-act="cmp-exit" style="${btn()}">Sair</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">${renderSide(a, "A")}${renderSide(b, "B")}</div>
+      <div style="margin-top:10px;padding:6px 8px;background:rgba(59,130,246,0.10);border-radius:4px;font-size:11px">
+        Caixa: A ${a.size.w}×${a.size.h} · B ${b.size.w}×${b.size.h} · Δ ${dW >= 0 ? "+" : ""}${dW}w · ${dH >= 0 ? "+" : ""}${dH}h
+      </div>
+      <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Diferenças de estilo</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th></th><th style="text-align:left;color:#3b82f6">A</th><th style="text-align:left;color:#3b82f6">B</th></tr></thead><tbody>${diffRows}</tbody></table>
+      </div>
+    `;
+    panel!.querySelector('[data-act="cmp-exit"]')?.addEventListener("click", () => exitCompareMode());
+    panel!.querySelector('[data-act="cmp-reset"]')?.addEventListener("click", () => { compareA = null; compareB = null; renderComparePanel(); });
+  }
+
+  function toggleCompareMode() {
+    compareMode = !compareMode;
+    compareA = null; compareB = null;
+    if (compareMode) renderComparePanel();
+    else if (lockedEntry && lockedEl) renderPanel(lockedEntry, lockedEl);
+  }
+  function exitCompareMode() {
+    compareMode = false; compareA = null; compareB = null;
+    panel?.remove(); panel = null;
+  }
+
+  function btn(primary = false) {
+    return `background:${primary ? "#C8A96A" : "rgba(200,169,106,0.15)"};color:${primary ? "#0B1F3A" : "#fff"};border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:3px 8px;font:11px ui-monospace,monospace;cursor:pointer`;
   }
 
   function escapeHtml(s: string) {
     return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
   }
 
+  async function copyToClipboard(text: string, okMsg = "Copiado ✓") {
+    try { await navigator.clipboard.writeText(text); flashPanel(okMsg); }
+    catch { flashPanel("Falha ao copiar"); }
+  }
+
   async function copyEntry(entry: LogEntry) {
-    const text = [
+    await copyToClipboard([
       `Component: ${entry.component ?? "(unknown)"}`,
       `Source:    ${entry.source ?? "(unavailable)"}`,
       `Route:     ${entry.route}`,
       `Selector:  ${entry.selector}`,
       `DOM path:  ${entry.domPath}`,
-    ].join("\n");
-    try { await navigator.clipboard.writeText(text); flashPanel("Copiado ✓"); }
-    catch { flashPanel("Falha ao copiar"); }
+    ].join("\n"));
   }
+
+  /** "Pacote" = bloco markdown pronto para ticket/issue. */
+  function buildPackage(entry: LogEntry): string {
+    return [
+      "### Inspector capture",
+      "",
+      `- **Timestamp:** ${entry.ts}`,
+      `- **Rota:** \`${entry.route}\``,
+      `- **Componente:** ${entry.component ?? "(desconhecido)"}`,
+      `- **Arquivo:linha:** \`${entry.source ?? "(indisponível)"}\``,
+      `- **Selector:** \`${entry.selector}\``,
+      `- **DOM path:** \`${entry.domPath}\``,
+      `- **Viewport:** ${entry.viewport.w}×${entry.viewport.h} · ${entry.viewport.breakpoint} · dpr ${entry.viewport.dpr}`,
+      `- **Box:** ${entry.size.w}×${entry.size.h}px${entry.inShadow ? " · em Shadow DOM" : ""}`,
+      "",
+    ].join("\n");
+  }
+  async function copyPackage(entry: LogEntry) { await copyToClipboard(buildPackage(entry), "Pacote copiado ✓"); }
 
   function flashPanel(msg: string) {
     if (!panel) return;
@@ -480,7 +655,7 @@ export function initDevInspector() {
   function exportNDJSON() {
     if (!logs.length) { flashPanel("Sem logs"); return; }
     const blob = new Blob(logs.map((l) => JSON.stringify(l) + "\n"), { type: "application/x-ndjson" });
-    triggerDownload(blob, `inspector-${new Date().toISOString().replace(/[:.]/g, "-")}.ndjson`);
+    triggerDownload(blob, `inspector-${stamp()}.ndjson`);
   }
 
   function downloadHTML(entry: LogEntry) {
@@ -496,9 +671,25 @@ export function initDevInspector() {
 -->
 ${entry.outerHTML}
 </body></html>`;
-    const blob = new Blob([doc], { type: "text/html" });
-    triggerDownload(blob, `inspector-${new Date().toISOString().replace(/[:.]/g, "-")}.html`);
+    triggerDownload(new Blob([doc], { type: "text/html" }), `inspector-${stamp()}.html`);
   }
+
+  /** Resumo das regras vencedoras para font-size, line-height, padding, font-family. */
+  function downloadWinners(entry: LogEntry) {
+    const target = ["font-size", "line-height", "padding", "padding-top", "padding-right", "padding-bottom", "padding-left", "font-family"];
+    const winners: Array<{ prop: string; value: string; selector: string; origin: string; cssText: string }> = [];
+    for (const prop of target) {
+      const r = entry.matchedRules.find((m) => prop in m.declarations);
+      if (r) winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, cssText: r.cssText });
+    }
+    const payload = {
+      ts: entry.ts, route: entry.route, selector: entry.selector, domPath: entry.domPath,
+      source: entry.source, component: entry.component, computed: entry.styles, winners,
+    };
+    triggerDownload(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }), `inspector-winners-${stamp()}.json`);
+  }
+
+  function stamp() { return new Date().toISOString().replace(/[:.]/g, "-"); }
 
   function triggerDownload(blob: Blob, name: string) {
     const url = URL.createObjectURL(blob);
@@ -512,12 +703,23 @@ ${entry.outerHTML}
     if (panel && panel.contains(e.target as Node)) return;
     e.preventDefault();
     e.stopPropagation();
+    const el = elementFromEvent(e);
+    if (!el) return;
+
+    if (compareMode) {
+      const entry = buildEntry(el);
+      if (!compareA) compareA = { entry, el };
+      else if (!compareB) compareB = { entry, el };
+      else { compareA = { entry, el }; compareB = null; }
+      moveHighlight(el);
+      renderComparePanel();
+      return;
+    }
+
     if (locked && lockedEntry && lockedEl) {
       renderPanel(lockedEntry, lockedEl);
       return;
     }
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    if (!el) return;
     const entry = buildEntry(el);
     logs.push(entry);
     persist();
@@ -547,12 +749,11 @@ ${entry.outerHTML}
     dock.append(dockToggleBtn, exportBtn);
     document.body.appendChild(dock);
 
-    // Restore locked entry panel automatically
     if (locked && lockedEntry) {
       try {
         const el = document.querySelector(lockedEntry.selector);
         if (el) { lockedEl = el; moveHighlight(el); renderPanel(lockedEntry, el); active = true; document.body.style.cursor = "crosshair"; updateDockState(); }
-      } catch { /* ignore invalid selector */ }
+      } catch { /* ignore */ }
     }
   }
 
@@ -566,7 +767,7 @@ ${entry.outerHTML}
     active = !active;
     document.body.style.cursor = active ? "crosshair" : "";
     updateDockState();
-    if (!active) { hideHover(); panel?.remove(); panel = null; }
+    if (!active) { hideHover(); panel?.remove(); panel = null; compareMode = false; compareA = null; compareB = null; }
     // eslint-disable-next-line no-console
     console.log(`%c[Inspector] ${active ? "ATIVO" : "off"}`, "color:#C8A96A");
   }
@@ -576,7 +777,6 @@ ${entry.outerHTML}
       e.preventDefault(); toggle();
     }
     if (e.key === "Escape" && active) toggle();
-    // L to toggle lock when active
     if (active && (e.key === "l" || e.key === "L") && !e.ctrlKey && !e.metaKey && !e.altKey) {
       locked = !locked;
       if (!locked) { lockedEntry = null; lockedEl = null; }
@@ -593,7 +793,12 @@ ${entry.outerHTML}
     renderDock();
   }
 
-  (window as any).__cathedraInspector = { toggle, logs, exportNDJSON, filters, get locked() { return locked; } };
+  (window as any).__cathedraInspector = {
+    toggle, logs, exportNDJSON, filters,
+    get locked() { return locked; },
+    get compareMode() { return compareMode; },
+    buildPackage,
+  };
   // eslint-disable-next-line no-console
-  console.log("%c[Inspector] pronto — botão no canto, Ctrl/Cmd+Shift+I para alternar, L para fixar", "color:#C8A96A");
+  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I para alternar, L para fixar, Comparar p/ A⇄B", "color:#C8A96A");
 }
