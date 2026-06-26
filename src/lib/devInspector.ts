@@ -607,6 +607,24 @@ export function initDevInspector() {
         renderPanel(entry, el);
       });
     });
+    panel!.querySelectorAll("[data-winners-cat]").forEach((b) => {
+      b.addEventListener("click", () => {
+        winnersCategory = (b as HTMLElement).getAttribute("data-winners-cat") as WinnerCat;
+        renderPanel(entry, el);
+      });
+    });
+    const qInput = panel!.querySelector("[data-winners-q]") as HTMLInputElement | null;
+    if (qInput) {
+      qInput.addEventListener("input", (e) => {
+        winnersQuery = (e.target as HTMLInputElement).value;
+        // re-render preserving focus
+        const pos = qInput.selectionStart ?? winnersQuery.length;
+        renderPanel(entry, el);
+        const re = panel!.querySelector("[data-winners-q]") as HTMLInputElement | null;
+        if (re) { re.focus(); try { re.setSelectionRange(pos, pos); } catch { /* noop */ } }
+      });
+    }
+
     panel!.querySelector('[data-act="close"]')?.addEventListener("click", () => { panel?.remove(); panel = null; });
     panel!.querySelector('[data-act="copy"]')?.addEventListener("click", () => copyEntry(entry));
     panel!.querySelector('[data-act="package"]')?.addEventListener("click", () => copyPackage(entry));
