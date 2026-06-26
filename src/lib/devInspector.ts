@@ -163,10 +163,55 @@ export function domPath(el: Element): string {
 
 function pickStyles(el: Element): Record<string, string> {
   const cs = window.getComputedStyle(el);
-  const keys = ["font-family","font-size","font-weight","line-height","letter-spacing","color","padding","margin","text-transform"];
+  const keys = ["font-family","font-size","font-weight","line-height","letter-spacing","color","padding","margin","text-transform","border-top-width","border-top-style","border-top-color"];
   const out: Record<string, string> = {};
   for (const k of keys) out[k] = cs.getPropertyValue(k).trim();
   return out;
+}
+
+/** Scans matched-rule cssText for var(--x) refs and walks ancestors to find the declarer. */
+export function extractCssVars(el: Element, rules: MatchedRule[]): CssVarUsage[] {
+  const usage = new Map<string, Set<string>>(); // varName -> set of props using it
+  const re = /var\(\s*(--[\w-]+)/g;
+  for (const r of rules) {
+    for (const [prop, val] of Object.entries(r.declarations)) {
+      let m: RegExpExecArray | null;
+      const local = new RegExp(re.source, "g");
+      while ((m = local.exec(val))) {
+        if (!usage.has(m[1])) usage.set(m[1], new Set());
+        usage.get(m[1])!.add(prop);
+      }
+    }
+  }
+  if (!usage.size) return [];
+  const out: CssVarUsage[] = [];
+  for (const [name, props] of usage) {
+    const resolved = window.getComputedStyle(el).getPropertyValue(name).trim();
+    let fromSelector: string | null = null;
+    let fromOrigin: string | null = null;
+    let fromElement: string | null = null;
+    // Walk ancestors (including el) looking for a matched rule that declares the var
+    let cur: Element | null = el;
+    outer: while (cur) {
+      const ruleSet = getMatchedRules(cur);
+      for (const r of ruleSet) {
+        if (name in r.declarations) {
+          fromSelector = r.selector;
+          fromOrigin = r.origin;
+          fromElement = cur.tagName.toLowerCase() + (cur.id ? `#${cur.id}` : cur.className && typeof cur.className === "string" ? "." + cur.className.trim().split(/\s+/)[0] : "");
+          break outer;
+        }
+      }
+      cur = cur.parentElement;
+    }
+    if (!fromSelector) {
+      // Fallback: :root via documentElement computed style
+      const rootVal = window.getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      if (rootVal) { fromSelector = ":root"; fromOrigin = "computed"; fromElement = "html"; }
+    }
+    out.push({ name, resolved, usedIn: Array.from(props), fromSelector, fromOrigin, fromElement });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function specificity(selector: string): [number, number, number] {
