@@ -198,6 +198,30 @@ async function runDiagnostic(
       }
     }
 
+    // Detecção de inglês no banco (cross-book, single SQL)
+    try {
+      const { data: engRows, error: engErr } = await admin.rpc('bible_detect_english_verses', { p_min_hits: 2, p_abbrev: null });
+      if (engErr) throw engErr;
+      // Agrega por (abbrev, chapter)
+      const byChapter = new Map<string, { abbrev: string; book_name: string; chapter: number; count: number; sample: string }>();
+      for (const r of (engRows ?? []) as Array<{ abbrev: string; book_name: string; chapter_number: number; sample: string }>) {
+        const key = `${r.abbrev}::${r.chapter_number}`;
+        const cur = byChapter.get(key);
+        if (cur) cur.count += 1;
+        else byChapter.set(key, { abbrev: r.abbrev, book_name: r.book_name, chapter: r.chapter_number, count: 1, sample: r.sample });
+      }
+      for (const v of byChapter.values()) {
+        findings.push({
+          abbrev: v.abbrev, book_name: v.book_name, chapter: v.chapter,
+          finding_type: 'english_contamination', severity: 'error',
+          message: `Capítulo ${v.chapter}: ${v.count} versículo(s) com palavras em inglês detectadas`,
+          metadata: { english_verse_count: v.count, sample: v.sample.slice(0, 160) },
+        });
+      }
+    } catch (e) {
+      console.error('[bible-canon-diagnose] english scan failed:', (e as Error).message);
+    }
+
     // Persistir findings em lote
     if (findings.length > 0) {
       const payload = findings.map(f => ({ ...f, metadata: f.metadata ?? {}, run_id: runId }));
@@ -208,6 +232,7 @@ async function runDiagnostic(
         if (error) throw error;
       }
     }
+
 
     const duration = Date.now() - startAt;
     const status = findings.some(f => f.severity === 'critical' || f.severity === 'error') ? 'warning' : 'ok';
