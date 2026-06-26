@@ -892,18 +892,23 @@ export type Database = {
           bolls_ms: number | null
           bolls_ok: boolean | null
           cache: string
+          cache_level: string | null
           chapter: number
+          cold_start: boolean | null
           correlation_id: string | null
           created_at: string
           edge_ms: number | null
           id: number
+          instance_id: string | null
           l1_phase: string | null
           render_ms: number | null
+          request_source: string | null
           source: string | null
           sql_breakdown: Json | null
           sql_ms: number | null
           status_code: number
           total_ms: number
+          total_wall_clock_ms: number | null
         }
         Insert: {
           abbrev: string
@@ -911,18 +916,23 @@ export type Database = {
           bolls_ms?: number | null
           bolls_ok?: boolean | null
           cache: string
+          cache_level?: string | null
           chapter: number
+          cold_start?: boolean | null
           correlation_id?: string | null
           created_at?: string
           edge_ms?: number | null
           id?: number
+          instance_id?: string | null
           l1_phase?: string | null
           render_ms?: number | null
+          request_source?: string | null
           source?: string | null
           sql_breakdown?: Json | null
           sql_ms?: number | null
           status_code?: number
           total_ms: number
+          total_wall_clock_ms?: number | null
         }
         Update: {
           abbrev?: string
@@ -930,18 +940,23 @@ export type Database = {
           bolls_ms?: number | null
           bolls_ok?: boolean | null
           cache?: string
+          cache_level?: string | null
           chapter?: number
+          cold_start?: boolean | null
           correlation_id?: string | null
           created_at?: string
           edge_ms?: number | null
           id?: number
+          instance_id?: string | null
           l1_phase?: string | null
           render_ms?: number | null
+          request_source?: string | null
           source?: string | null
           sql_breakdown?: Json | null
           sql_ms?: number | null
           status_code?: number
           total_ms?: number
+          total_wall_clock_ms?: number | null
         }
         Relationships: []
       }
