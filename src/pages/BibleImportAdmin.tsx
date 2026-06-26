@@ -739,3 +739,136 @@ function Stat({ label, value, tone = "default" }: { label: string; value: string
     </div>
   );
 }
+
+function fmtTime(ts: number): string {
+  const d = new Date(ts);
+  return d.toLocaleTimeString("pt-BR", { hour12: false }) + "." + String(d.getMilliseconds()).padStart(3, "0");
+}
+function fmtDuration(start?: number, end?: number): string {
+  if (!start) return "—";
+  const ms = (end ?? Date.now()) - start;
+  if (ms < 1000) return `${ms} ms`;
+  return `${(ms / 1000).toFixed(1)} s`;
+}
+
+function StepIcon({ status }: { status: StepStatus }) {
+  if (status === "running") return <Loader2 className="h-4 w-4 animate-spin text-blue-600" />;
+  if (status === "done") return <CheckCircle2 className="h-4 w-4 text-emerald-600" />;
+  if (status === "skipped") return <Circle className="h-4 w-4 text-muted-foreground" />;
+  if (status === "error") return <XCircle className="h-4 w-4 text-destructive" />;
+  return <Circle className="h-4 w-4 text-muted-foreground/50" />;
+}
+
+function ImportProgressPanel({
+  steps, logs, running, activeJobId, onClear,
+}: {
+  steps: StepState[]; logs: LogEntry[]; running: boolean;
+  activeJobId: string | null; onClear: () => void;
+}) {
+  const totalSteps = steps.length;
+  const finished = steps.filter((s) => s.status === "done" || s.status === "skipped").length;
+  const hasError = steps.some((s) => s.status === "error");
+  const pct = Math.round((finished / totalSteps) * 100);
+
+  const copyLogs = () => {
+    const txt = logs.map((l) => `[${fmtTime(l.ts)}] ${l.level.toUpperCase()}${l.step ? ` (${l.step})` : ""}: ${l.message}`).join("\n");
+    navigator.clipboard.writeText(txt).then(
+      () => toast.success("Logs copiados"),
+      () => toast.error("Falha ao copiar"),
+    );
+  };
+  const downloadLogs = () => {
+    const txt = logs.map((l) => JSON.stringify(l)).join("\n");
+    downloadBlob(`bible-import-logs-${Date.now()}.ndjson`, txt, "application/x-ndjson");
+  };
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            Progresso da importação
+            {running
+              ? <Badge className="bg-blue-600">em execução</Badge>
+              : hasError
+                ? <Badge variant="destructive">com erro</Badge>
+                : finished === totalSteps
+                  ? <Badge className="bg-emerald-600">concluído</Badge>
+                  : <Badge variant="outline">parcial</Badge>}
+          </CardTitle>
+          <CardDescription>
+            {finished}/{totalSteps} etapas · {pct}% concluído
+            {activeJobId && <> · job <code className="text-xs">{activeJobId}</code></>}
+          </CardDescription>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button type="button" size="sm" variant="outline" onClick={copyLogs} disabled={logs.length === 0}>
+            <ClipboardCopy className="h-3 w-3 mr-1" /> Copiar logs
+          </Button>
+          <Button type="button" size="sm" variant="outline" onClick={downloadLogs} disabled={logs.length === 0}>
+            <Download className="h-3 w-3 mr-1" /> Baixar
+          </Button>
+          <Button type="button" size="sm" variant="ghost" onClick={onClear} disabled={running}>
+            Limpar
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Progress value={pct} className="h-2" />
+
+        <ol className="space-y-2">
+          {steps.map((s, i) => (
+            <li key={s.key} className="flex items-start gap-3 rounded-md border p-3 bg-card">
+              <div className="pt-0.5"><StepIcon status={s.status} /></div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium text-sm">
+                    {i + 1}. {s.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {s.status === "running" || s.status === "done" || s.status === "error"
+                      ? fmtDuration(s.startedAt, s.finishedAt)
+                      : s.status === "skipped" ? "pulado" : "aguardando"}
+                  </span>
+                </div>
+                {s.detail && (
+                  <p className={`text-xs mt-1 break-words ${
+                    s.status === "error" ? "text-destructive" :
+                    s.status === "skipped" ? "text-muted-foreground" : "text-muted-foreground"
+                  }`}>
+                    {s.detail}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <details open={hasError || !running}>
+          <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+            Logs ({logs.length})
+          </summary>
+          <div className="mt-2 max-h-72 overflow-auto rounded-md border bg-muted/30 font-mono text-xs">
+            {logs.length === 0 ? (
+              <p className="p-3 text-muted-foreground">Sem registros ainda.</p>
+            ) : (
+              <ul>
+                {logs.map((l, i) => (
+                  <li key={i} className={`px-3 py-1 border-b last:border-0 flex gap-2 ${
+                    l.level === "error" ? "text-destructive" :
+                    l.level === "warn" ? "text-amber-700" :
+                    l.level === "success" ? "text-emerald-700" : "text-foreground"
+                  }`}>
+                    <span className="text-muted-foreground shrink-0">{fmtTime(l.ts)}</span>
+                    {l.step && <span className="text-muted-foreground shrink-0">[{l.step}]</span>}
+                    <span className="break-words">{l.message}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </details>
+      </CardContent>
+    </Card>
+  );
+}
