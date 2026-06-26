@@ -348,8 +348,19 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     const map = new Map<number, ParaState>();
     inRange.forEach(p => map.set(p, results[p] ?? { paragraph: p, status: 'pending', attempts: 0 }));
     Object.values(results).forEach(r => { if (!map.has(r.paragraph)) map.set(r.paragraph, r); });
-    return Array.from(map.values()).sort((a, b) => a.paragraph - b.paragraph);
+    let rows = Array.from(map.values()).sort((a, b) => a.paragraph - b.paragraph);
+    if (exportFilter !== 'all') {
+      rows = rows.filter(r => r.status === exportFilter);
+    }
+    return rows;
   };
+
+  const errorRows = useMemo(
+    () => Object.values(results)
+      .filter(r => r.status === 'error' || (r.status === 'backoff' && r.errorCode))
+      .sort((a, b) => a.paragraph - b.paragraph),
+    [results],
+  );
 
   const exportJSON = () => {
     const payload = {
