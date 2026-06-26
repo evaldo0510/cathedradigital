@@ -453,6 +453,9 @@ export default function BibleCacheTimeseriesDashboard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <BibleCacheBenchmarkCompare />
     </div>
+
   );
 }
