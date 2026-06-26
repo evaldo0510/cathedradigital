@@ -4607,6 +4607,17 @@ export type Database = {
           total: number
         }[]
       }
+      bible_read_gate_status: {
+        Args: never
+        Returns: {
+          blocked: boolean
+          blocking_findings: number
+          last_run_at: string
+          reason: string
+          run_id: string
+          status: string
+        }[]
+      }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
         Args: { p_override_days?: number; p_triggered_by?: string }
