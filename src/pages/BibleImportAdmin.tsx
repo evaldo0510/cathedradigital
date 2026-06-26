@@ -59,6 +59,19 @@ type FormState = typeof INITIAL_FORM;
 
 const RAW_EXTS = /\.(json|jsonl|ndjson|csv|tsv)$/i;
 const PREVIEW_LIMIT_BYTES = 5 * 1024 * 1024; // 5 MB lidos no browser para preview
+const LOGS_STORAGE_KEY = "bible_import_admin_last_run_v1";
+
+type StepKey = "upload" | "conversion" | "persistence" | "verification";
+type StepStatus = "pending" | "running" | "done" | "skipped" | "error";
+interface StepState { key: StepKey; label: string; status: StepStatus; detail?: string; startedAt?: number; finishedAt?: number }
+interface LogEntry { ts: number; level: "info" | "success" | "warn" | "error"; step?: StepKey; message: string }
+
+const INITIAL_STEPS: StepState[] = [
+  { key: "upload", label: "Upload do arquivo", status: "pending" },
+  { key: "conversion", label: "Conversão para NDJSON canônico", status: "pending" },
+  { key: "persistence", label: "Persistência (importação)", status: "pending" },
+  { key: "verification", label: "Verificação do gate de cobertura", status: "pending" },
+];
 
 function sourceStatusBadge(s: SourceStatus) {
   const map: Record<SourceStatus, string> = {
