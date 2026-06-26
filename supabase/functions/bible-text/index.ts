@@ -437,6 +437,7 @@ async function fetchFromBibliaCatolica(abbrev: string, chapter: number, correlat
 function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
+  cold_start?: boolean; request_source?: string; total_wall_clock_ms?: number;
 }) {
   const sqlMs = computeSqlMs(fields.ctx.sqlEntries);
   const bollsMs = fields.ctx.bolls?.ms ?? 0;
@@ -445,6 +446,7 @@ function recordEvent(fields: {
   // quando há queries paralelas (Promise.all).
   const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const breakdown = fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms }));
+  const cacheLevel = deriveCacheLevel(fields.cache, fields.source, fields.ctx.l1Phase);
   const row = {
     abbrev: fields.abbrev,
     chapter: fields.chapter,
@@ -460,6 +462,12 @@ function recordEvent(fields: {
     correlation_id: fields.correlation_id,
     sql_breakdown: breakdown,
     l1_phase: fields.ctx.l1Phase ?? null,
+    // PR-B2 — observabilidade técnica
+    cold_start: fields.cold_start ?? false,
+    cache_level: cacheLevel,
+    total_wall_clock_ms: fields.total_wall_clock_ms ?? fields.total_ms,
+    instance_id: INSTANCE_ID,
+    request_source: fields.request_source ?? 'web',
   };
 
   // Breakdown estruturado nos logs para diagnóstico imediato.
@@ -469,6 +477,10 @@ function recordEvent(fields: {
     chapter: fields.chapter,
     sql_ms: sqlMs,
     entries: breakdown,
+    cache_level: cacheLevel,
+    cold_start: row.cold_start,
+    instance_id: INSTANCE_ID,
+    request_source: row.request_source,
   });
   waitUntil(
     supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {
