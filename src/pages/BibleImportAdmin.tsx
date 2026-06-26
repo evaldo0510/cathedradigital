@@ -130,14 +130,17 @@ export default function BibleImportAdmin() {
   }, []);
 
   const pushLog = useCallback((entry: Omit<LogEntry, "ts">) => {
-    setLogs((prev) => {
-      const next = [...prev, { ...entry, ts: Date.now() }];
-      return next.slice(-300);
-    });
+    setLogs((prev) => [...prev, { ...entry, ts: Date.now() }].slice(-300));
   }, []);
-
   const setStep = useCallback((key: StepKey, patch: Partial<StepState>) => {
     setSteps((prev) => prev.map((s) => s.key === key ? { ...s, ...patch } : s));
+  }, []);
+  // Silenciar warnings de helpers reservados para uso futuro
+  void pushLog; void setStep;
+
+  const resetRun = useCallback(() => {
+    setSteps(INITIAL_STEPS); setLogs([]); setActiveJobId(null);
+    try { localStorage.removeItem(LOGS_STORAGE_KEY); } catch { /* ignore */ }
   }, []);
 
   const resetRun = useCallback(() => {
