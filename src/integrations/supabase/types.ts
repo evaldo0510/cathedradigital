@@ -1267,6 +1267,65 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_import_jobs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_book: string | null
+          error: string | null
+          finished_at: string | null
+          id: string
+          message: string | null
+          progress: number
+          source_id: string
+          started_at: string | null
+          status: string
+          total: number
+          updated_at: string
+          verification: Json | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_book?: string | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          progress?: number
+          source_id: string
+          started_at?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          verification?: Json | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_book?: string | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          progress?: number
+          source_id?: string
+          started_at?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          verification?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_import_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "bible_translation_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_integrity_reports: {
         Row: {
           book_id: string | null
@@ -1316,6 +1375,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      bible_translation_sources: {
+        Row: {
+          attribution: string
+          books_count: number
+          chapters_count: number
+          code: string
+          created_at: string
+          created_by: string | null
+          file_url: string | null
+          id: string
+          imported_at: string | null
+          is_primary: boolean
+          language: string
+          license: string
+          name: string
+          notes: string | null
+          source_url: string | null
+          status: string
+          translation: string
+          updated_at: string
+          verses_count: number
+        }
+        Insert: {
+          attribution: string
+          books_count?: number
+          chapters_count?: number
+          code: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          imported_at?: string | null
+          is_primary?: boolean
+          language?: string
+          license: string
+          name: string
+          notes?: string | null
+          source_url?: string | null
+          status?: string
+          translation: string
+          updated_at?: string
+          verses_count?: number
+        }
+        Update: {
+          attribution?: string
+          books_count?: number
+          chapters_count?: number
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          imported_at?: string | null
+          is_primary?: boolean
+          language?: string
+          license?: string
+          name?: string
+          notes?: string | null
+          source_url?: string | null
+          status?: string
+          translation?: string
+          updated_at?: string
+          verses_count?: number
+        }
+        Relationships: []
       }
       bible_verses: {
         Row: {
