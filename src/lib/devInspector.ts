@@ -706,6 +706,66 @@ export function initDevInspector() {
     return `background:${primary ? "#C8A96A" : "rgba(200,169,106,0.15)"};color:${primary ? "#0B1F3A" : "#fff"};border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:3px 8px;font:11px ui-monospace,monospace;cursor:pointer`;
   }
 
+  function kbd() {
+    return "display:inline-block;background:#0B1F3A;color:#C8A96A;border:1px solid rgba(200,169,106,0.5);border-radius:3px;padding:0 4px;font:10px ui-monospace,monospace;line-height:1.4";
+  }
+
+  function chip(active: boolean) {
+    return `background:${active ? "#C8A96A" : "transparent"};color:${active ? "#0B1F3A" : "#fff"};border:1px solid rgba(200,169,106,0.4);border-radius:99px;padding:2px 8px;font:10px ui-monospace,monospace;cursor:pointer`;
+  }
+
+  function renderWinnersBlock(entry: LogEntry): string {
+    const winners = computeWinners(entry.matchedRules);
+    const q = winnersQuery.trim().toLowerCase();
+    const cats: Array<{ k: WinnerCat; label: string }> = [
+      { k: "all", label: "Todas" },
+      { k: "typography", label: "Tipografia" },
+      { k: "cssvars", label: "CSS Variables" },
+      { k: "color", label: "Cor" },
+      { k: "border", label: "Border" },
+    ];
+    const chips = cats.map((c) => `<button data-winners-cat="${c.k}" style="${chip(winnersCategory === c.k)}">${c.label}</button>`).join("");
+
+    let body = "";
+    if (winnersCategory === "cssvars") {
+      const vars = entry.cssVars.filter((v) => !q || v.name.toLowerCase().includes(q) || (v.resolved || "").toLowerCase().includes(q));
+      body = vars.length
+        ? vars.map((v) => `
+          <div style="margin-top:4px;padding:5px 7px;background:rgba(255,255,255,0.04);border-left:2px solid #3b82f6;border-radius:0 4px 4px 0;font-size:11px">
+            <div><code style="color:#93c5fd">${escapeHtml(v.name)}</code> → <span style="color:#C8A96A">${escapeHtml(v.resolved || "(vazio)")}</span></div>
+            <div style="opacity:.65;font-size:10px">origem: <code>${escapeHtml(v.fromSelector || "?")}</code> @ ${escapeHtml(v.fromOrigin || "?")}</div>
+          </div>`).join("")
+        : '<div style="opacity:.5;font-size:11px;margin-top:6px">Nenhuma var(--…) corresponde.</div>';
+    } else {
+      const list = winners.filter((w) => {
+        if (winnersCategory !== "all" && w.cat !== winnersCategory) return false;
+        if (q && !w.prop.toLowerCase().includes(q) && !w.value.toLowerCase().includes(q) && !w.selector.toLowerCase().includes(q)) return false;
+        return true;
+      });
+      body = list.length
+        ? `<table style="width:100%;margin-top:4px;border-collapse:collapse;font-size:11px">
+            ${list.map((w) => `
+              <tr style="border-top:1px solid rgba(255,255,255,0.06)">
+                <td style="padding:3px 4px;color:#93c5fd;white-space:nowrap"><code>${escapeHtml(w.prop)}</code></td>
+                <td style="padding:3px 4px;color:#C8A96A;word-break:break-all">${escapeHtml(w.value)}</td>
+                <td style="padding:3px 4px;opacity:.7;word-break:break-all"><code>${escapeHtml(w.selector)}</code></td>
+              </tr>`).join("")}
+          </table>`
+        : '<div style="opacity:.5;font-size:11px;margin-top:6px">Nenhuma regra vencedora corresponde.</div>';
+    }
+
+    return `
+      <div style="margin-top:10px">
+        <div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Regras vencedoras</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+          <input data-winners-q value="${escapeHtml(winnersQuery)}" placeholder="buscar prop, valor ou seletor…" style="flex:1;min-width:160px;background:#0B1F3A;color:#fff;border:1px solid rgba(200,169,106,0.4);border-radius:4px;padding:3px 6px;font:11px ui-monospace,monospace" />
+          ${chips}
+        </div>
+        ${body}
+      </div>`;
+  }
+
+
   function escapeHtml(s: string) {
     return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
   }
