@@ -411,7 +411,7 @@ export default function BibleCacheTimeseriesDashboard() {
           <DialogHeader>
             <DialogTitle className="text-base">{drillTitle}</DialogTitle>
             <DialogDescription className="text-xs">
-              Top {drillRows.length} requests mais lentos da janela selecionada, com correlation_id e l1_phase.
+              Top {drillRows.length} requests mais lentos. Colunas PR-B2 (cold, nível, instância, fonte, wall-clock) só visíveis para admin.
             </DialogDescription>
           </DialogHeader>
           <div className="overflow-auto flex-1 -mx-6 px-6">
@@ -426,40 +426,65 @@ export default function BibleCacheTimeseriesDashboard() {
                     <TableHead className="text-xs">Hora</TableHead>
                     <TableHead className="text-xs">Livro / cap</TableHead>
                     <TableHead className="text-xs">Cache</TableHead>
+                    <TableHead className="text-xs">Nível</TableHead>
                     <TableHead className="text-xs">L1 phase</TableHead>
+                    <TableHead className="text-xs">Cold</TableHead>
+                    <TableHead className="text-xs">Origem</TableHead>
                     <TableHead className="text-right text-xs">total</TableHead>
+                    <TableHead className="text-right text-xs">wall</TableHead>
                     <TableHead className="text-right text-xs">edge</TableHead>
                     <TableHead className="text-right text-xs">sql</TableHead>
                     <TableHead className="text-right text-xs">bolls</TableHead>
-                    <TableHead className="text-xs">correlation_id</TableHead>
+                    <TableHead className="text-xs">instance / corr_id</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {drillRows.map((r, i) => (
-                    <TableRow key={`${r.correlation_id ?? i}-${r.created_at}`}>
-                      <TableCell className="font-mono text-xs">{new Date(r.created_at).toLocaleTimeString('pt-BR')}</TableCell>
-                      <TableCell className="text-xs">{r.abbrev} {r.chapter ?? ''}</TableCell>
-                      <TableCell className="text-xs">{r.cache ?? '—'}</TableCell>
-                      <TableCell>
-                        <span className={`inline-block px-2 py-0.5 rounded border text-[10px] uppercase tracking-wider ${l1PhaseColor(r.l1_phase)}`}>
-                          {r.l1_phase ?? '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right tabular-nums text-xs font-semibold">{r.total_ms ?? '—'}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs">{r.edge_ms ?? '—'}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs">{r.sql_ms ?? '—'}</TableCell>
-                      <TableCell className="text-right tabular-nums text-xs">{r.bolls_ms ?? '—'}</TableCell>
-                      <TableCell className="font-mono text-[10px] text-muted-foreground max-w-[180px] truncate" title={r.correlation_id ?? ''}>
-                        {r.correlation_id ?? '—'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {drillRows.map((r, i) => {
+                    const levelCls =
+                      r.cache_level === 'L1' ? 'border-emerald-500/40 text-emerald-700 dark:text-emerald-300' :
+                      r.cache_level === 'L2' ? 'border-sky-500/40 text-sky-700 dark:text-sky-300' :
+                      r.cache_level === 'DB' ? 'border-amber-500/40 text-amber-700 dark:text-amber-300' :
+                      r.cache_level === 'UNAVAILABLE' ? 'border-rose-500/40 text-rose-700 dark:text-rose-300' :
+                      'border-muted text-muted-foreground';
+                    const breakdownTitle = (r.sql_breakdown ?? [])
+                      .map(b => `${b.label}: ${b.ms}ms`).join('\n') || 'sem breakdown';
+                    return (
+                      <TableRow key={`${r.correlation_id ?? i}-${r.created_at}`}>
+                        <TableCell className="font-mono text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleTimeString('pt-BR')}</TableCell>
+                        <TableCell className="text-xs whitespace-nowrap">{r.abbrev} {r.chapter ?? ''}</TableCell>
+                        <TableCell className="text-xs">{r.cache ?? '—'}</TableCell>
+                        <TableCell>
+                          <span className={`inline-block px-1.5 py-0.5 rounded border text-[10px] font-semibold ${levelCls}`}>
+                            {r.cache_level ?? '—'}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span className={`inline-block px-2 py-0.5 rounded border text-[10px] uppercase tracking-wider ${l1PhaseColor(r.l1_phase)}`}>
+                            {r.l1_phase ?? '—'}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {r.cold_start ? <Badge variant="outline" className="text-[10px] border-amber-500/40 text-amber-700 dark:text-amber-300">cold</Badge> : <span className="text-muted-foreground">—</span>}
+                        </TableCell>
+                        <TableCell className="text-[10px] font-mono text-muted-foreground">{r.request_source ?? '—'}</TableCell>
+                        <TableCell className="text-right tabular-nums text-xs font-semibold">{r.total_ms ?? '—'}</TableCell>
+                        <TableCell className="text-right tabular-nums text-[10px] text-muted-foreground">{r.total_wall_clock_ms ?? '—'}</TableCell>
+                        <TableCell className="text-right tabular-nums text-xs">{r.edge_ms ?? '—'}</TableCell>
+                        <TableCell className="text-right tabular-nums text-xs cursor-help" title={breakdownTitle}>{r.sql_ms ?? '—'}</TableCell>
+                        <TableCell className="text-right tabular-nums text-xs">{r.bolls_ms ?? '—'}</TableCell>
+                        <TableCell className="font-mono text-[10px] text-muted-foreground max-w-[200px] truncate" title={`instance: ${r.instance_id ?? '—'}\ncorr: ${r.correlation_id ?? '—'}`}>
+                          {r.instance_id ? r.instance_id.slice(0, 8) : '—'} / {r.correlation_id ? r.correlation_id.slice(0, 8) : '—'}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             )}
           </div>
         </DialogContent>
       </Dialog>
+
 
       <BibleCacheBenchmarkCompare />
     </div>
