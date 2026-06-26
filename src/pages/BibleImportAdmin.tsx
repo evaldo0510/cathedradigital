@@ -107,7 +107,43 @@ export default function BibleImportAdmin() {
   const [preview, setPreview] = useState<DumpPreview | null>(null);
   const [previewing, setPreviewing] = useState(false);
   const [previewTruncated, setPreviewTruncated] = useState(false);
+  const [steps, setSteps] = useState<StepState[]>(INITIAL_STEPS);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [runActive, setRunActive] = useState(false);
+  const [activeJobId, setActiveJobId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Restaura último run do localStorage para consulta
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(LOGS_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { steps: StepState[]; logs: LogEntry[]; jobId: string | null };
+      if (parsed?.steps && parsed?.logs) {
+        setSteps(parsed.steps); setLogs(parsed.logs); setActiveJobId(parsed.jobId ?? null);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  const persistRun = useCallback((s: StepState[], l: LogEntry[], jobId: string | null) => {
+    try { localStorage.setItem(LOGS_STORAGE_KEY, JSON.stringify({ steps: s, logs: l, jobId })); } catch { /* ignore */ }
+  }, []);
+
+  const pushLog = useCallback((entry: Omit<LogEntry, "ts">) => {
+    setLogs((prev) => {
+      const next = [...prev, { ...entry, ts: Date.now() }];
+      return next.slice(-300);
+    });
+  }, []);
+
+  const setStep = useCallback((key: StepKey, patch: Partial<StepState>) => {
+    setSteps((prev) => prev.map((s) => s.key === key ? { ...s, ...patch } : s));
+  }, []);
+
+  const resetRun = useCallback(() => {
+    setSteps(INITIAL_STEPS); setLogs([]); setActiveJobId(null);
+    try { localStorage.removeItem(LOGS_STORAGE_KEY); } catch { /* ignore */ }
+  }, []);
 
   const loadAll = useCallback(async () => {
     const [{ data: src, error: srcErr }, { data: jb, error: jbErr }] = await Promise.all([
