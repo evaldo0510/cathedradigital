@@ -304,8 +304,19 @@ serve(async (req) => {
       return json({ action, ...result });
     }
 
+    // ----- coverage ----- (matriz 73 livros: status, capítulos, versículos, inglês)
+    if (action === 'coverage') {
+      const { data, error } = await admin.rpc('bible_canonical_coverage');
+      if (error) return json({ error: error.message }, 500);
+      const rows = (data ?? []) as Array<{ status: string }>;
+      const summary: Record<string, number> = {};
+      for (const r of rows) summary[r.status] = (summary[r.status] ?? 0) + 1;
+      return json({ action, total_books: rows.length, summary, rows });
+    }
+
     // ----- list_runs -----
     if (action === 'list_runs') {
+
       const limit = Math.max(1, Math.min(50, Number(params.limit ?? 20) | 0));
       const { data, error } = await admin
         .from('bible_diagnostic_runs')
