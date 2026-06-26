@@ -54,6 +54,13 @@ interface DrilldownRow {
   bolls_ms: number | null;
   bolls_ok: boolean | null;
   status_code: number | null;
+  // PR-B2 — observabilidade técnica
+  cold_start: boolean | null;
+  cache_level: 'L1' | 'L2' | 'DB' | 'UNAVAILABLE' | null;
+  total_wall_clock_ms: number | null;
+  instance_id: string | null;
+  request_source: string | null;
+  sql_breakdown: Array<{ label: string; ms: number }> | null;
 }
 
 const WINDOW_OPTIONS = [
