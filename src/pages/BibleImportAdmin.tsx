@@ -252,8 +252,40 @@ export default function BibleImportAdmin() {
     const err = validate();
     if (err) { toast.error(err); return; }
     setSubmitting(true);
+
+    // Inicializa run (steps + logs)
+    const fresh: StepState[] = INITIAL_STEPS.map((s) => ({ ...s }));
+    setSteps(fresh); setLogs([]); setActiveJobId(null); setRunActive(true);
+    let localSteps = fresh; let localLogs: LogEntry[] = [];
+    const log = (entry: Omit<LogEntry, "ts">) => {
+      const next = { ...entry, ts: Date.now() };
+      localLogs = [...localLogs, next].slice(-300);
+      setLogs(localLogs);
+    };
+    const mark = (key: StepKey, patch: Partial<StepState>) => {
+      localSteps = localSteps.map((s) => s.key === key ? { ...s, ...patch } : s);
+      setSteps(localSteps);
+    };
+    const start = (key: StepKey, detail?: string) => {
+      mark(key, { status: "running", detail, startedAt: Date.now() });
+      log({ level: "info", step: key, message: detail ?? `Iniciando: ${key}` });
+    };
+    const done = (key: StepKey, detail?: string, level: "success" | "warn" = "success") => {
+      mark(key, { status: level === "warn" ? "done" : "done", detail, finishedAt: Date.now() });
+      log({ level, step: key, message: detail ?? `Concluído: ${key}` });
+    };
+    const skip = (key: StepKey, reason: string) => {
+      mark(key, { status: "skipped", detail: reason, finishedAt: Date.now() });
+      log({ level: "info", step: key, message: `Pulado: ${reason}` });
+    };
+    const fail = (key: StepKey, message: string) => {
+      mark(key, { status: "error", detail: message, finishedAt: Date.now() });
+      log({ level: "error", step: key, message });
+    };
+
+    let currentStep: StepKey = "upload";
     try {
-      // 1. Cria fonte
+      log({ level: "info", message: `Criando fonte ${form.code.trim()}…` });
       const { data: src, error: srcErr } = await supabase
         .from("bible_translation_sources")
         .insert({
@@ -268,10 +300,13 @@ export default function BibleImportAdmin() {
         }).select("id").single();
       if (srcErr || !src) throw new Error(srcErr?.message ?? "falha ao criar fonte");
       const sourceId = src.id as string;
+      log({ level: "success", message: `Fonte criada (id=${sourceId})` });
 
-      // 2. Upload (se arquivo)
+      // 1) Upload
+      currentStep = "upload";
       let filePath: string | undefined;
       if (file) {
+        start("upload", `Enviando ${file.name} (${(file.size / 1024).toFixed(0)} KB)`);
         const prefix = rawMode ? "raw" : "ndjson";
         const path = `${sourceId}/${prefix}-${Date.now()}-${file.name}`;
         const { error: upErr } = await supabase.storage.from("bible-dumps")
@@ -280,13 +315,17 @@ export default function BibleImportAdmin() {
         filePath = path;
         await supabase.from("bible_translation_sources")
           .update({ file_url: `storage://bible-dumps/${path}` }).eq("id", sourceId);
+        done("upload", `Upload OK → ${path}`);
+      } else {
+        skip("upload", `URL HTTPS direta (${form.file_url.trim()})`);
       }
 
-      // 3. Se for dump bruto → converte no servidor
+      // 2) Conversão (apenas se dump bruto)
+      currentStep = "conversion";
       let importPath = filePath;
       if (file && rawMode && filePath) {
-        toast.info("Convertendo dump bruto para NDJSON canônico…");
         const fmt = detectFormat(file.name);
+        start("conversion", `Convertendo dump bruto (${fmt}) no servidor…`);
         const { data: cv, error: cvErr } = await supabase.functions.invoke("bible-convert-dump", {
           body: { source_id: sourceId, file_path: filePath, format: fmt },
         });
@@ -294,22 +333,71 @@ export default function BibleImportAdmin() {
         const cvData = cv as { converted_path?: string; rejected_path?: string | null; stats?: Record<string, number> };
         if (!cvData?.converted_path) throw new Error("conversão não retornou arquivo");
         importPath = cvData.converted_path;
-        toast.success(`Conversão OK — ${cvData.stats?.valid_verses ?? 0} versos, ${cvData.stats?.rejected_count ?? 0} rejeitados`);
+        const v = cvData.stats?.valid_verses ?? 0;
+        const r = cvData.stats?.rejected_count ?? 0;
+        done("conversion", `${v.toLocaleString("pt-BR")} versos válidos · ${r} rejeitados`,
+          r > 0 ? "warn" : "success");
+      } else {
+        skip("conversion", file ? "NDJSON canônico — conversão desnecessária" : "Sem arquivo local");
       }
 
-      // 4. Dispara import
+      // 3) Persistência (import)
+      currentStep = "persistence";
+      start("persistence", "Disparando bible-import-ndjson…");
       const { data: invokeData, error: invokeErr } = await supabase.functions.invoke("bible-import-ndjson", {
         body: importPath
           ? { source_id: sourceId, file_path: importPath }
           : { source_id: sourceId, file_url: form.file_url.trim() },
       });
       if (invokeErr) throw new Error(`import: ${invokeErr.message}`);
-      toast.success(`Importação iniciada (job ${(invokeData as { job_id?: string })?.job_id ?? "?"})`);
+      const result = invokeData as {
+        job_id?: string; books?: number; chapters?: number; verses?: number;
+        rejected_count?: number;
+        verification?: { passed?: boolean; total_findings?: number; skipped?: boolean; blocking?: Record<string, number> };
+      };
+      const jobId = result?.job_id ?? null;
+      setActiveJobId(jobId);
+      done("persistence",
+        `Job ${jobId ?? "?"} · ${result?.books ?? 0} livros / ${result?.chapters ?? 0} caps / ${(result?.verses ?? 0).toLocaleString("pt-BR")} versos`
+          + (result?.rejected_count ? ` (${result.rejected_count} rejeitados)` : ""));
+
+      // 4) Verificação de cobertura
+      currentStep = "verification";
+      if (result?.verification?.skipped) {
+        skip("verification", "Verificação desabilitada (skip_verify=true)");
+      } else if (result?.verification) {
+        const v = result.verification;
+        if (v.passed) {
+          done("verification", `Gate liberado · 0 achados bloqueantes`);
+        } else {
+          const total = v.total_findings ?? 0;
+          const blockSummary = v.blocking
+            ? Object.entries(v.blocking).map(([k, n]) => `${k}=${n}`).join(", ")
+            : "sem detalhes";
+          mark("verification", {
+            status: "error",
+            detail: `Gate bloqueado — ${total} achado(s): ${blockSummary}`,
+            finishedAt: Date.now(),
+          });
+          log({ level: "warn", step: "verification",
+            message: `Cobertura insuficiente: ${total} achados (${blockSummary})` });
+        }
+      } else {
+        skip("verification", "Função não retornou bloco de verification");
+      }
+
+      toast.success(`Importação concluída (job ${jobId ?? "?"})`);
+      persistRun(localSteps, localLogs, jobId);
       resetForm();
       await loadAll();
     } catch (e) {
-      toast.error((e as Error).message);
-    } finally { setSubmitting(false); }
+      const msg = (e as Error).message;
+      fail(currentStep, msg);
+      toast.error(msg);
+      persistRun(localSteps, localLogs, activeJobId);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function retryImport(s: TranslationSource) {
