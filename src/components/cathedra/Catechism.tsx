@@ -72,8 +72,12 @@ const CatechismContent: React.FC<{
   }, [isError, error, data, paragraph, markPending, clearPending]);
 
   const handleRetry = useCallback(async () => {
-    const MAX_RETRIES = 3;
-    const BASE_MS = 600;
+    const readNum = (k: string, fb: number, min: number, max: number) => {
+      const v = Number(localStorage.getItem(k));
+      return Number.isFinite(v) && v >= min && v <= max ? v : fb;
+    };
+    const MAX_RETRIES = readNum('cathedra.catechism.verifyMaxRetries', 3, 0, 6);
+    const BASE_MS = readNum('cathedra.catechism.verifyBaseBackoffMs', 600, 100, 5000);
     let attempt = 0;
     let lastResult: any = null;
     while (attempt <= MAX_RETRIES) {
