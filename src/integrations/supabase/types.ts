@@ -4592,6 +4592,21 @@ export type Database = {
           value_ms: number
         }[]
       }
+      bible_canonical_coverage: {
+        Args: never
+        Returns: {
+          abbrev: string
+          canonical_type: string
+          chapters_present: number
+          coverage_pct: number
+          english_verse_count: number
+          expected_chapters: number
+          name: string
+          status: string
+          testament: string
+          verses_total: number
+        }[]
+      }
       bible_chapter_drilldown: {
         Args: { p_abbrev: string; p_hours?: number }
         Returns: {
@@ -4605,6 +4620,18 @@ export type Database = {
           p95_ms: number
           stale: number
           total: number
+        }[]
+      }
+      bible_detect_english_verses: {
+        Args: { p_abbrev?: string; p_min_hits?: number }
+        Returns: {
+          abbrev: string
+          book_id: string
+          book_name: string
+          chapter_number: number
+          hit_count: number
+          sample: string
+          verse_number: number
         }[]
       }
       bible_read_gate_status: {
