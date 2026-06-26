@@ -11,6 +11,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { resolveExternalChapter, checkVerseCount } from '../_shared/bibleChapterNormalize.ts';
+import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -139,8 +140,24 @@ Deno.serve(async (req) => {
   }
 
   const imported = results.filter((r) => r.status === 'imported').length;
+
+  // Pós-verificação automática (skip_verify=true desliga; fail_on_blocking=true devolve 422)
+  const skipVerify = body?.skip_verify === true;
+  const failOnBlocking = body?.fail_on_blocking === true;
+  const verification = skipVerify
+    ? { ran: false, passed: true, skipped: true }
+    : await runPostRunVerify({
+        trigger: 'import',
+        metadata: {
+          imported,
+          total: results.length,
+          abbrevs: Array.from(new Set(results.map((r) => r.abbrev))),
+        },
+      });
+
+  const status = !skipVerify && failOnBlocking && verification && 'passed' in verification && !verification.passed ? 422 : 200;
   return new Response(
-    JSON.stringify({ ok: true, imported, total: results.length, results }, null, 2),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    JSON.stringify({ ok: status === 200, imported, total: results.length, results, verification }, null, 2),
+    { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 });
