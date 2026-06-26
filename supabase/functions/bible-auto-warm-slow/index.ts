@@ -11,6 +11,7 @@
  */
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 
 const ALWAYS_PRIORITY: Record<string, number> = {
   // Lv primeiro, restante do Pentateuco em seguida
@@ -38,6 +39,8 @@ interface Body {
   dry_run?: boolean;
   books?: string[];          // restringe a um subconjunto específico
   verbose?: boolean;         // retorna log por capítulo
+  skip_verify?: boolean;     // desliga a pós-verificação automática
+  fail_on_blocking?: boolean; // devolve 422 se achados críticos persistirem
 }
 
 Deno.serve(async (req) => {
@@ -143,8 +146,20 @@ Deno.serve(async (req) => {
     }
   }));
 
+  // Pós-verificação automática (skip em dry_run; opt-out via skip_verify; gate via fail_on_blocking)
+  const skipVerify = (body as { skip_verify?: boolean }).skip_verify === true;
+  const failOnBlocking = (body as { fail_on_blocking?: boolean }).fail_on_blocking === true;
+  const verification = skipVerify
+    ? { ran: false, passed: true, skipped: true as const }
+    : await runPostRunVerify({
+        trigger: 'warmup',
+        metadata: { executed: { ok, fail, ms: Date.now() - t0 }, queued: queue.length },
+      });
+
+  const status = !skipVerify && failOnBlocking && 'passed' in verification && !verification.passed ? 422 : 200;
   return new Response(JSON.stringify({
     ...summary, executed: { ok, fail, ms: Date.now() - t0 },
     logs: verbose ? logs : undefined,
-  }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    verification,
+  }), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 });

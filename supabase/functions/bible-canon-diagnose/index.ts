@@ -200,7 +200,7 @@ async function runDiagnostic(
 
     // Persistir findings em lote
     if (findings.length > 0) {
-      const payload = findings.map(f => ({ ...f, run_id: runId }));
+      const payload = findings.map(f => ({ ...f, metadata: f.metadata ?? {}, run_id: runId }));
       const chunkSize = 200;
       for (let i = 0; i < payload.length; i += chunkSize) {
         const chunk = payload.slice(i, i + chunkSize);
