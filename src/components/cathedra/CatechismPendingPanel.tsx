@@ -513,7 +513,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
         <div className="space-y-spacing-2xs" data-testid="catechism-verify-progress">
           <div className="flex items-center justify-between text-premium-xs font-display tracking-[0.1em] uppercase text-primary/60">
             <span>
-              {isRunning ? 'Verificando…' : runStatus === 'cancelled' ? 'Cancelada' : runStatus === 'completed' ? 'Concluída' : 'Última execução'}
+              {paused ? 'Pausada' : isRunning ? 'Verificando…' : runStatus === 'cancelled' ? 'Cancelada' : runStatus === 'completed' ? 'Concluída' : 'Última execução'}
             </span>
             <span>{progress.done}/{progress.total} · {pct}%</span>
           </div>
