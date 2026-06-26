@@ -23,7 +23,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import {
   Loader2, Upload, Link as LinkIcon, FileText, ShieldCheck, ShieldAlert,
-  Download, AlertTriangle, Wand2, CheckCircle2,
+  Download, AlertTriangle, Wand2, CheckCircle2, Circle, XCircle, ClipboardCopy,
 } from "lucide-react";
 import {
   previewDump, rejectedToNDJSON, detectFormat, type DumpPreview,
