@@ -424,9 +424,41 @@ export function initDevInspector() {
     console.log("[Inspector]", entry);
   }
 
+  let dockToggleBtn: HTMLButtonElement | null = null;
+  function renderDock() {
+    const dock = document.createElement("div");
+    Object.assign(dock.style, {
+      position: "fixed",
+      bottom: "12px",
+      right: "12px",
+      zIndex: "2147483647",
+      display: "flex",
+      gap: "6px",
+      padding: "6px",
+      background: "#0B1F3A",
+      borderRadius: "999px",
+      boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+      border: "1px solid rgba(200,169,106,0.4)",
+    } as CSSStyleDeclaration);
+    dockToggleBtn = document.createElement("button");
+    dockToggleBtn.style.cssText = btn() + ";border-radius:999px;padding:4px 10px";
+    dockToggleBtn.textContent = "🔍 Inspect";
+    dockToggleBtn.onclick = () => toggle();
+    const exportBtn = document.createElement("button");
+    exportBtn.style.cssText = btn() + ";border-radius:999px;padding:4px 10px";
+    exportBtn.textContent = "⬇ NDJSON";
+    exportBtn.onclick = exportNDJSON;
+    dock.append(dockToggleBtn, exportBtn);
+    document.body.appendChild(dock);
+  }
+
   function toggle() {
     active = !active;
     document.body.style.cursor = active ? "crosshair" : "";
+    if (dockToggleBtn) {
+      dockToggleBtn.style.background = active ? "#C8A96A" : "rgba(200,169,106,0.15)";
+      dockToggleBtn.style.color = active ? "#0B1F3A" : "#fff";
+    }
     if (!active) {
       hideHover();
       panel?.remove();
@@ -446,7 +478,13 @@ export function initDevInspector() {
   window.addEventListener("mousemove", onMove, true);
   window.addEventListener("click", onClick, true);
 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderDock);
+  } else {
+    renderDock();
+  }
+
   (window as any).__cathedraInspector = { toggle, logs, exportNDJSON };
   // eslint-disable-next-line no-console
-  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I", "color:#C8A96A");
+  console.log("%c[Inspector] pronto — botão no canto ou Ctrl/Cmd+Shift+I", "color:#C8A96A");
 }
