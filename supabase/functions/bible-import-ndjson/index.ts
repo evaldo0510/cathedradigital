@@ -224,16 +224,17 @@ Deno.serve(async (req) => {
     const lines = streamLines(reader);
     let lineNo = 0;
     let currentBookKey = "";
+    const rejectedAll: Array<{ lineNumber: number; reason: string }> = [];
     for await (const raw of lines) {
       lineNo++;
       const parsed = parseLine(raw, lineNo);
       if ("error" in parsed) {
         if (stats.errors.length < 50) stats.errors.push(parsed.error);
+        if (rejectedAll.length < 5000) rejectedAll.push({ lineNumber: lineNo, reason: parsed.error });
         continue;
       }
       stats.lines++;
       const key = `${parsed.abbr}:${parsed.chapter}`;
-      // Quando troca de livro, faz flush do anterior
       if (currentBookKey && currentBookKey.split(":")[0] !== parsed.abbr) {
         for (const k of [...versesByChapter.keys()]) await flushVerses(k);
         await updateProgress(parsed.abbr, true);
@@ -247,7 +248,6 @@ Deno.serve(async (req) => {
     }
     for (const k of [...versesByChapter.keys()]) await flushVerses(k);
 
-    // Atualiza chapters_count real por livro
     for (const [abbr, st] of stats.byBook.entries()) {
       await admin.from("bible_books").update({ chapters_count: st.ch.size }).eq("abbr", abbr);
     }
@@ -258,17 +258,33 @@ Deno.serve(async (req) => {
       verses_count: stats.verses, imported_at: new Date().toISOString(),
     }).eq("id", source.id);
 
-    // 6) Verificação de cobertura
+    // Persiste rejeitados em storage para auditoria/download
+    let rejectedPath: string | null = null;
+    if (rejectedAll.length > 0) {
+      rejectedPath = `${source.id}/import-rejected-${jobId}.ndjson`;
+      const blob = new Blob(
+        [rejectedAll.map((r) => JSON.stringify(r)).join("\n") + "\n"],
+        { type: "application/x-ndjson" },
+      );
+      const { error: upErr } = await admin.storage.from("bible-dumps")
+        .upload(rejectedPath, blob, { contentType: "application/x-ndjson", upsert: true });
+      if (upErr) rejectedPath = null;
+    }
+
     const verification = body.skip_verify
-      ? { ran: false, passed: true, skipped: true }
-      : await runPostRunVerify({
-          trigger: "import",
-          metadata: { source_id: source.id, books: stats.byBook.size, verses: stats.verses },
-        });
+      ? { ran: false, passed: true, skipped: true, rejected_path: rejectedPath, rejected_count: rejectedAll.length }
+      : {
+          ...(await runPostRunVerify({
+            trigger: "import",
+            metadata: { source_id: source.id, books: stats.byBook.size, verses: stats.verses },
+          })),
+          rejected_path: rejectedPath,
+          rejected_count: rejectedAll.length,
+        };
 
     await admin.from("bible_import_jobs").update({
       status: "succeeded", progress: stats.byBook.size, total: stats.byBook.size,
-      message: `Importação concluída: ${stats.verses} versos em ${stats.byBook.size} livros`,
+      message: `Importação concluída: ${stats.verses} versos em ${stats.byBook.size} livros${rejectedAll.length ? ` (${rejectedAll.length} rejeitados)` : ""}`,
       verification, finished_at: new Date().toISOString(),
     }).eq("id", jobId);
 
@@ -276,6 +292,7 @@ Deno.serve(async (req) => {
       ok: true, job_id: jobId,
       books: stats.byBook.size, chapters: distinctChapters, verses: stats.verses,
       lines_read: stats.lines, parse_errors: stats.errors,
+      rejected_path: rejectedPath, rejected_count: rejectedAll.length,
       verification,
     });
   } catch (e) {

@@ -1,18 +1,13 @@
 /**
- * /admin/bible-import — Tela para cadastrar fontes de tradução bíblica
- * e disparar importação de dumps NDJSON canônicos.
+ * /admin/bible-import — Cadastra fontes de tradução e dispara importação.
  *
- * Formato esperado do dump (uma linha por versículo):
- *   {"abbr":"Gn","chapter":1,"verse":1,"text":"No princípio..."}
+ * Recursos:
+ *   - Preview client-side (contagem por livro/capítulo/versículo) antes do upload
+ *   - Modo "dump bruto" → roda `bible-convert-dump` no servidor antes do import
+ *   - Download dos versículos rejeitados (preview ou pós-import)
+ *   - Polling do job em execução + verificação pós-import de cobertura
  *
- * Fluxo:
- *   1. Admin preenche metadados (tradução, licença, atribuição, URL-fonte)
- *      e aponta um arquivo .ndjson (upload privado em `bible-dumps`) ou URL.
- *   2. Salvamos a fonte em `bible_translation_sources` (status=draft).
- *   3. Disparamos `bible-import-ndjson` que cria um job em
- *      `bible_import_jobs` e processa o arquivo com upserts idempotentes.
- *   4. A tela faz polling do job atual e mostra progresso + verificação
- *      pós-import (cobertura dos 73 livros).
+ * Formato canônico esperado: {"abbr":"Gn","chapter":1,"verse":1,"text":"..."}
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,96 +21,79 @@ import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Loader2, Upload, Link as LinkIcon, FileText, ShieldCheck, ShieldAlert } from "lucide-react";
+import {
+  Loader2, Upload, Link as LinkIcon, FileText, ShieldCheck, ShieldAlert,
+  Download, AlertTriangle, Wand2, CheckCircle2,
+} from "lucide-react";
+import {
+  previewDump, rejectedToNDJSON, detectFormat, type DumpPreview,
+} from "@/lib/bible/ndjsonConverter";
 
 type SourceStatus = "draft" | "importing" | "ready" | "failed" | "archived";
 type JobStatus = "queued" | "running" | "succeeded" | "failed" | "cancelled";
 
 interface TranslationSource {
-  id: string;
-  code: string;
-  name: string;
-  language: string;
-  translation: string;
-  license: string;
-  attribution: string;
-  source_url: string | null;
-  file_url: string | null;
-  notes: string | null;
-  is_primary: boolean;
-  status: SourceStatus;
-  books_count: number;
-  chapters_count: number;
-  verses_count: number;
-  imported_at: string | null;
-  created_at: string;
+  id: string; code: string; name: string; language: string; translation: string;
+  license: string; attribution: string; source_url: string | null; file_url: string | null;
+  notes: string | null; is_primary: boolean; status: SourceStatus;
+  books_count: number; chapters_count: number; verses_count: number;
+  imported_at: string | null; created_at: string;
 }
 
 interface ImportJob {
-  id: string;
-  source_id: string;
-  status: JobStatus;
-  progress: number;
-  total: number;
-  current_book: string | null;
-  message: string | null;
-  error: string | null;
+  id: string; source_id: string; status: JobStatus; progress: number; total: number;
+  current_book: string | null; message: string | null; error: string | null;
   verification: {
-    passed?: boolean;
-    blocking?: Record<string, number>;
-    total_findings?: number;
-    run_id?: string | null;
-    skipped?: boolean;
+    passed?: boolean; blocking?: Record<string, number>; total_findings?: number;
+    run_id?: string | null; skipped?: boolean;
+    rejected_path?: string | null; rejected_count?: number;
   } | null;
-  started_at: string | null;
-  finished_at: string | null;
-  created_at: string;
+  started_at: string | null; finished_at: string | null; created_at: string;
 }
 
 const INITIAL_FORM = {
-  code: "",
-  name: "",
-  language: "pt-BR",
-  translation: "",
-  license: "",
-  attribution: "",
-  source_url: "",
-  notes: "",
-  is_primary: false,
-  file_url: "",
+  code: "", name: "", language: "pt-BR", translation: "", license: "",
+  attribution: "", source_url: "", notes: "", is_primary: false, file_url: "",
 };
-
 type FormState = typeof INITIAL_FORM;
+
+const RAW_EXTS = /\.(json|jsonl|ndjson|csv|tsv)$/i;
+const PREVIEW_LIMIT_BYTES = 5 * 1024 * 1024; // 5 MB lidos no browser para preview
 
 function sourceStatusBadge(s: SourceStatus) {
   const map: Record<SourceStatus, string> = {
-    draft: "bg-muted text-foreground",
-    importing: "bg-blue-600",
-    ready: "bg-emerald-600",
-    failed: "bg-destructive",
-    archived: "bg-zinc-500",
+    draft: "bg-muted text-foreground", importing: "bg-blue-600",
+    ready: "bg-emerald-600", failed: "bg-destructive", archived: "bg-zinc-500",
+  };
+  return <Badge className={map[s]}>{s}</Badge>;
+}
+function jobStatusBadge(s: JobStatus) {
+  const map: Record<JobStatus, string> = {
+    queued: "bg-muted text-foreground", running: "bg-blue-600",
+    succeeded: "bg-emerald-600", failed: "bg-destructive", cancelled: "bg-zinc-500",
   };
   return <Badge className={map[s]}>{s}</Badge>;
 }
 
-function jobStatusBadge(s: JobStatus) {
-  const map: Record<JobStatus, string> = {
-    queued: "bg-muted text-foreground",
-    running: "bg-blue-600",
-    succeeded: "bg-emerald-600",
-    failed: "bg-destructive",
-    cancelled: "bg-zinc-500",
-  };
-  return <Badge className={map[s]}>{s}</Badge>;
+function downloadBlob(filename: string, content: string, mime = "application/x-ndjson") {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
 export default function BibleImportAdmin() {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [file, setFile] = useState<File | null>(null);
+  const [rawMode, setRawMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sources, setSources] = useState<TranslationSource[]>([]);
   const [jobs, setJobs] = useState<ImportJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [preview, setPreview] = useState<DumpPreview | null>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const [previewTruncated, setPreviewTruncated] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadAll = useCallback(async () => {
@@ -132,8 +110,10 @@ export default function BibleImportAdmin() {
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
-  // Polling enquanto houver job em execução
-  const hasRunning = useMemo(() => jobs.some((j) => j.status === "running" || j.status === "queued"), [jobs]);
+  const hasRunning = useMemo(
+    () => jobs.some((j) => j.status === "running" || j.status === "queued"),
+    [jobs],
+  );
   useEffect(() => {
     if (!hasRunning) return;
     const id = setInterval(loadAll, 2000);
@@ -143,20 +123,77 @@ export default function BibleImportAdmin() {
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
-
   function resetForm() {
-    setForm(INITIAL_FORM);
-    setFile(null);
+    setForm(INITIAL_FORM); setFile(null); setRawMode(false);
+    setPreview(null); setPreviewTruncated(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  // --------- Preview client-side automático ao selecionar arquivo ---------
+  const runPreview = useCallback(async (f: File) => {
+    if (!RAW_EXTS.test(f.name)) {
+      setPreview(null);
+      return;
+    }
+    setPreviewing(true); setPreviewTruncated(false);
+    try {
+      let text: string;
+      if (f.size > PREVIEW_LIMIT_BYTES) {
+        // Lê apenas os primeiros bytes para estimativa
+        const slice = f.slice(0, PREVIEW_LIMIT_BYTES);
+        text = await slice.text();
+        // Trunca para evitar parse de linha quebrada no final
+        const lastNl = text.lastIndexOf("\n");
+        if (lastNl > 0) text = text.slice(0, lastNl);
+        setPreviewTruncated(true);
+      } else {
+        text = await f.text();
+      }
+      const p = previewDump(text, f.name);
+      setPreview(p);
+    } catch (e) {
+      toast.error(`Falha no preview: ${(e as Error).message}`);
+      setPreview(null);
+    } finally { setPreviewing(false); }
+  }, []);
+
+  useEffect(() => {
+    if (!file) { setPreview(null); setPreviewTruncated(false); return; }
+    runPreview(file);
+  }, [file, runPreview]);
+
+  function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0] ?? null;
+    setFile(f);
+    if (f && !/\.ndjson$|\.jsonl$/i.test(f.name) && RAW_EXTS.test(f.name)) {
+      setRawMode(true); // auto-ativa modo bruto quando não é NDJSON
+    }
+  }
+
+  function downloadRejectedFromPreview() {
+    if (!preview || preview.rejected.length === 0) return;
+    downloadBlob(`preview-rejected-${file?.name ?? "dump"}.ndjson`, rejectedToNDJSON(preview.rejected));
+  }
+
+  async function downloadRejectedFromJob(job: ImportJob) {
+    const path = job.verification?.rejected_path;
+    if (!path) { toast.error("Job sem arquivo de rejeitados."); return; }
+    const { data, error } = await supabase.storage.from("bible-dumps")
+      .createSignedUrl(path, 300);
+    if (error || !data?.signedUrl) { toast.error(`URL: ${error?.message ?? "falhou"}`); return; }
+    window.open(data.signedUrl, "_blank", "noopener");
   }
 
   function validate(): string | null {
     const required: Array<keyof FormState> = ["code", "name", "translation", "license", "attribution"];
     for (const k of required) if (!String(form[k]).trim()) return `Campo obrigatório: ${k}`;
-    if (!file && !form.file_url.trim()) return "Envie um arquivo .ndjson ou informe uma URL HTTPS";
+    if (!file && !form.file_url.trim()) return "Envie um arquivo ou informe uma URL HTTPS";
     if (form.file_url && !/^https:\/\//i.test(form.file_url)) return "file_url deve ser HTTPS";
-    if (file && !/\.ndjson(\.gz)?$|\.jsonl$/i.test(file.name)) {
-      return "Arquivo deve ser .ndjson ou .jsonl";
+    if (file && !RAW_EXTS.test(file.name)) {
+      return "Arquivo deve ser .ndjson, .jsonl, .json, .csv ou .tsv";
+    }
+    if (preview && preview.validVerses === 0 && file) {
+      return "Preview não encontrou versos válidos — verifique formato.";
     }
     return null;
   }
@@ -167,45 +204,54 @@ export default function BibleImportAdmin() {
     if (err) { toast.error(err); return; }
     setSubmitting(true);
     try {
-      // 1. Cria a fonte
+      // 1. Cria fonte
       const { data: src, error: srcErr } = await supabase
         .from("bible_translation_sources")
         .insert({
-          code: form.code.trim(),
-          name: form.name.trim(),
+          code: form.code.trim(), name: form.name.trim(),
           language: form.language.trim() || "pt-BR",
           translation: form.translation.trim(),
-          license: form.license.trim(),
-          attribution: form.attribution.trim(),
+          license: form.license.trim(), attribution: form.attribution.trim(),
           source_url: form.source_url.trim() || null,
           file_url: file ? null : form.file_url.trim() || null,
-          notes: form.notes.trim() || null,
-          is_primary: form.is_primary,
+          notes: form.notes.trim() || null, is_primary: form.is_primary,
           status: "draft",
-        })
-        .select("id")
-        .single();
+        }).select("id").single();
       if (srcErr || !src) throw new Error(srcErr?.message ?? "falha ao criar fonte");
       const sourceId = src.id as string;
 
-      // 2. Upload se arquivo
+      // 2. Upload (se arquivo)
       let filePath: string | undefined;
       if (file) {
-        const path = `${sourceId}/${Date.now()}-${file.name}`;
-        const { error: upErr } = await supabase.storage.from("bible-dumps").upload(path, file, {
-          contentType: "application/x-ndjson",
-          upsert: false,
-        });
+        const prefix = rawMode ? "raw" : "ndjson";
+        const path = `${sourceId}/${prefix}-${Date.now()}-${file.name}`;
+        const { error: upErr } = await supabase.storage.from("bible-dumps")
+          .upload(path, file, { contentType: "application/octet-stream", upsert: false });
         if (upErr) throw new Error(`upload: ${upErr.message}`);
         filePath = path;
         await supabase.from("bible_translation_sources")
           .update({ file_url: `storage://bible-dumps/${path}` }).eq("id", sourceId);
       }
 
-      // 3. Dispara import
+      // 3. Se for dump bruto → converte no servidor
+      let importPath = filePath;
+      if (file && rawMode && filePath) {
+        toast.info("Convertendo dump bruto para NDJSON canônico…");
+        const fmt = detectFormat(file.name);
+        const { data: cv, error: cvErr } = await supabase.functions.invoke("bible-convert-dump", {
+          body: { source_id: sourceId, file_path: filePath, format: fmt },
+        });
+        if (cvErr) throw new Error(`conversão: ${cvErr.message}`);
+        const cvData = cv as { converted_path?: string; rejected_path?: string | null; stats?: Record<string, number> };
+        if (!cvData?.converted_path) throw new Error("conversão não retornou arquivo");
+        importPath = cvData.converted_path;
+        toast.success(`Conversão OK — ${cvData.stats?.valid_verses ?? 0} versos, ${cvData.stats?.rejected_count ?? 0} rejeitados`);
+      }
+
+      // 4. Dispara import
       const { data: invokeData, error: invokeErr } = await supabase.functions.invoke("bible-import-ndjson", {
-        body: filePath
-          ? { source_id: sourceId, file_path: filePath }
+        body: importPath
+          ? { source_id: sourceId, file_path: importPath }
           : { source_id: sourceId, file_url: form.file_url.trim() },
       });
       if (invokeErr) throw new Error(`import: ${invokeErr.message}`);
@@ -214,9 +260,7 @@ export default function BibleImportAdmin() {
       await loadAll();
     } catch (e) {
       toast.error((e as Error).message);
-    } finally {
-      setSubmitting(false);
-    }
+    } finally { setSubmitting(false); }
   }
 
   async function retryImport(s: TranslationSource) {
@@ -240,11 +284,11 @@ export default function BibleImportAdmin() {
   return (
     <div className="container mx-auto py-8 space-y-6 max-w-6xl">
       <header>
-        <h1 className="text-3xl font-semibold">Importação de Bíblia (NDJSON)</h1>
+        <h1 className="text-3xl font-semibold">Importação de Bíblia</h1>
         <p className="text-muted-foreground mt-1">
-          Importa traduções completas a partir de dumps no formato canônico
-          <code className="mx-1 px-1 py-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>
-          (uma linha por versículo). Acesso restrito a administradores.
+          Importa traduções a partir de dumps NDJSON canônicos
+          (<code className="mx-1 px-1 py-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>)
+          ou dumps brutos (JSON/CSV/TSV) que são convertidos no servidor.
         </p>
       </header>
 
@@ -252,8 +296,7 @@ export default function BibleImportAdmin() {
         <CardHeader>
           <CardTitle>Nova fonte de tradução</CardTitle>
           <CardDescription>
-            Registre os metadados de licença e atribuição antes de importar. Esses campos são
-            obrigatórios — não importamos texto bíblico sem licença declarada.
+            Metadados de licença e atribuição são obrigatórios — não importamos texto sem licença declarada.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -291,8 +334,7 @@ export default function BibleImportAdmin() {
             <div className="space-y-1 md:col-span-2">
               <Label htmlFor="source_url">URL-fonte (referência da licença)</Label>
               <Input id="source_url" type="url" value={form.source_url}
-                onChange={(e) => update("source_url", e.target.value)}
-                placeholder="https://..." />
+                onChange={(e) => update("source_url", e.target.value)} placeholder="https://..." />
             </div>
             <div className="space-y-1 md:col-span-2">
               <Label htmlFor="notes">Notas</Label>
@@ -301,21 +343,29 @@ export default function BibleImportAdmin() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="file">Arquivo NDJSON</Label>
-              <Input id="file" type="file" accept=".ndjson,.jsonl" ref={fileInputRef}
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+              <Label htmlFor="file">Arquivo (NDJSON, JSON, CSV ou TSV)</Label>
+              <Input id="file" type="file" accept=".ndjson,.jsonl,.json,.csv,.tsv" ref={fileInputRef}
+                onChange={onFileChange} />
               {file && (
                 <p className="text-xs text-muted-foreground">
                   <FileText className="inline h-3 w-3 mr-1" />
-                  {file.name} ({(file.size / 1024).toFixed(0)} KB)
+                  {file.name} ({(file.size / 1024).toFixed(0)} KB · {detectFormat(file.name)})
                 </p>
               )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="file_url">… ou URL HTTPS</Label>
+              <Label htmlFor="file_url">… ou URL HTTPS (NDJSON)</Label>
               <Input id="file_url" type="url" value={form.file_url}
                 onChange={(e) => update("file_url", e.target.value)}
                 placeholder="https://exemplo.com/dump.ndjson" disabled={!!file} />
+            </div>
+
+            <div className="flex items-center gap-2 md:col-span-2 p-3 rounded-md border bg-muted/30">
+              <Wand2 className="h-4 w-4 text-muted-foreground" />
+              <Switch id="raw_mode" checked={rawMode} onCheckedChange={setRawMode} disabled={!file} />
+              <Label htmlFor="raw_mode" className="cursor-pointer flex-1">
+                Meu arquivo é bruto (JSON/CSV/TSV) — converter no servidor para NDJSON canônico
+              </Label>
             </div>
 
             <div className="flex items-center gap-2 md:col-span-2">
@@ -326,13 +376,98 @@ export default function BibleImportAdmin() {
               </Label>
             </div>
 
+            {/* Preview client-side */}
+            {file && (
+              <div className="md:col-span-2 rounded-md border bg-card">
+                <div className="px-4 py-3 border-b flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium text-sm">Preview do dump</span>
+                    {previewing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+                  </div>
+                  {preview && preview.rejected.length > 0 && (
+                    <Button type="button" size="sm" variant="outline" onClick={downloadRejectedFromPreview}>
+                      <Download className="h-3 w-3 mr-1" />
+                      Baixar {preview.rejected.length} rejeitados
+                    </Button>
+                  )}
+                </div>
+                <div className="p-4 space-y-3">
+                  {previewTruncated && (
+                    <p className="text-xs text-amber-600 flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" />
+                      Arquivo grande — preview limitado aos primeiros 5 MB. As contagens são parciais.
+                    </p>
+                  )}
+                  {preview ? (
+                    <>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <Stat label="Versos válidos" value={preview.validVerses.toLocaleString("pt-BR")} />
+                        <Stat label="Rejeitados" value={preview.rejectedCount.toLocaleString("pt-BR")}
+                          tone={preview.rejectedCount > 0 ? "warn" : "ok"} />
+                        <Stat label="Livros únicos" value={`${preview.uniqueBooks}/73`}
+                          tone={preview.uniqueBooks === 73 ? "ok" : preview.uniqueBooks === 0 ? "bad" : "warn"} />
+                        <Stat label="Capítulos" value={preview.uniqueChapters.toLocaleString("pt-BR")} />
+                      </div>
+                      {preview.warnings.length > 0 && (
+                        <ul className="text-xs text-amber-700 space-y-1">
+                          {preview.warnings.map((w, i) => (
+                            <li key={i} className="flex gap-1 items-start">
+                              <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" /> <span>{w}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {preview.byBook.length > 0 && (
+                        <details className="text-xs">
+                          <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                            Ver contagem por livro ({preview.byBook.length})
+                          </summary>
+                          <div className="mt-2 max-h-48 overflow-auto border rounded">
+                            <table className="w-full text-xs">
+                              <thead className="bg-muted/50 sticky top-0">
+                                <tr><th className="text-left px-2 py-1">Abbr</th>
+                                  <th className="text-right px-2 py-1">Capítulos</th>
+                                  <th className="text-right px-2 py-1">Versos</th></tr>
+                              </thead>
+                              <tbody>
+                                {preview.byBook.map((b) => (
+                                  <tr key={b.abbr} className="border-t">
+                                    <td className="px-2 py-1 font-mono">{b.abbr}</td>
+                                    <td className="px-2 py-1 text-right">{b.chapters}</td>
+                                    <td className="px-2 py-1 text-right">{b.verses}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </details>
+                      )}
+                      {preview.missingCanonBooks.length > 0 && !previewTruncated && (
+                        <details className="text-xs">
+                          <summary className="cursor-pointer text-amber-700 hover:text-amber-900">
+                            {preview.missingCanonBooks.length} livro(s) do canon ausentes
+                          </summary>
+                          <p className="mt-1 font-mono text-muted-foreground">
+                            {preview.missingCanonBooks.join(", ")}
+                          </p>
+                        </details>
+                      )}
+                    </>
+                  ) : !previewing ? (
+                    <p className="text-xs text-muted-foreground">Aguardando preview…</p>
+                  ) : null}
+                </div>
+              </div>
+            )}
+
             <div className="md:col-span-2 flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={resetForm} disabled={submitting}>
                 Limpar
               </Button>
-              <Button type="submit" disabled={submitting}>
+              <Button type="submit" disabled={submitting || previewing}>
                 {submitting
-                  ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Importando…</>
+                  ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processando…</>
                   : <><Upload className="h-4 w-4 mr-2" /> Salvar e importar</>}
               </Button>
             </div>
@@ -349,7 +484,9 @@ export default function BibleImportAdmin() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Carregando…</div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
+            </div>
           ) : sources.length === 0 ? (
             <p className="text-sm text-muted-foreground">Nenhuma fonte cadastrada.</p>
           ) : (
@@ -384,7 +521,7 @@ export default function BibleImportAdmin() {
                       <TableCell className="text-xs">
                         {s.books_count} / {s.chapters_count} / {s.verses_count.toLocaleString("pt-BR")}
                       </TableCell>
-                      <TableCell className="text-xs min-w-[180px]">
+                      <TableCell className="text-xs min-w-[200px]">
                         {job ? (
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
@@ -407,6 +544,14 @@ export default function BibleImportAdmin() {
                                   : <><ShieldAlert className="h-3 w-3 text-destructive" />
                                       {job.verification.total_findings ?? 0} achados</>}
                               </div>
+                            )}
+                            {job.verification?.rejected_path && (job.verification?.rejected_count ?? 0) > 0 && (
+                              <Button type="button" size="sm" variant="ghost"
+                                className="h-6 px-2 text-xs"
+                                onClick={() => downloadRejectedFromJob(job)}>
+                                <Download className="h-3 w-3 mr-1" />
+                                Baixar {job.verification.rejected_count} rejeitados
+                              </Button>
                             )}
                           </div>
                         ) : <span className="text-muted-foreground">—</span>}
@@ -431,6 +576,19 @@ export default function BibleImportAdmin() {
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function Stat({ label, value, tone = "default" }: { label: string; value: string; tone?: "default" | "ok" | "warn" | "bad" }) {
+  const cls =
+    tone === "ok" ? "text-emerald-600" :
+    tone === "warn" ? "text-amber-600" :
+    tone === "bad" ? "text-destructive" : "text-foreground";
+  return (
+    <div className="rounded-md border bg-background px-3 py-2">
+      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className={`text-lg font-semibold tabular-nums ${cls}`}>{value}</div>
     </div>
   );
 }
