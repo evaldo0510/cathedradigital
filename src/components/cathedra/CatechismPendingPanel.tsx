@@ -116,7 +116,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     }));
   };
 
-  const fetchWithBackoff = async (p: number): Promise<{ ok: true } | { ok: false; err: any; attempts: number }> => {
+  const fetchWithBackoff = async (p: number): Promise<{ ok: boolean; err?: any; attempts: number }> => {
     let attempts = 0;
     let lastErr: any = null;
     while (attempts <= MAX_BACKOFF_RETRIES) {
