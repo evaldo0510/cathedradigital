@@ -529,23 +529,31 @@ async function revalidate(
   }
   if (!result) return null;
 
+  // ESTRATÉGIA DE FALLBACK (S1 — soberania):
+  // - Cathedra (Local) → TTL completo (cache durável).
+  // - Bolls/BibliaCatolica → provisional, TTL 24h, invalidado quando o dump
+  //   oficial popular o banco (próximo revalidate puxa Cathedra primeiro).
+  const isProvisional = source !== 'Cathedra (Local)';
+  const effectiveTtlHours = isProvisional ? Math.min(ttlHours, 24) : ttlHours;
+
   const fullText = result.verses.map((v: any) => v.text).join(' ');
   const contentHash = await sha256(fullText);
   const responseData = {
     book: result.bookName, chapter, verses: result.verses,
     metadata: {
       source,
+      provisional: isProvisional,
       cache_version: CACHE_BASE_VERSION,
       logic_version: cacheVersion,
       correlationId,
       contentHash,
-      ttl_hours: ttlHours,
+      ttl_hours: effectiveTtlHours,
       received_abbrev: abbrev,
       canonical_abbr: resolvedBook?.abbr ?? null,
       bollsId: resolvedBollsId,
     },
   };
-  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, ttlHours));
+  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, effectiveTtlHours));
   return { data: responseData, source };
 }
 
