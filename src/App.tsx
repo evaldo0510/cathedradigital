@@ -126,6 +126,7 @@ const BibleCacheAdminPage = lazy(() => import('./pages/BibleCacheAdminPage'));
 const BiblePerfDashboard = lazy(() => import('./pages/BiblePerfDashboard'));
 const BibleCacheTimeseriesDashboard = lazy(() => import('./components/cathedra/BibleCacheTimeseriesDashboard'));
 const BiblePerfBreakdown = lazy(() => import('./pages/BiblePerfBreakdown'));
+const BibleDiagnosticRuns = lazy(() => import('./pages/BibleDiagnosticRuns'));
 const BibleSourcesAudit = lazy(() => import('./pages/BibleSourcesAudit'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
@@ -545,7 +546,8 @@ const AppLayout: React.FC = () => {
                      <Route path="/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
                      <Route path="/admin/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
                      <Route path="/bible-sources" element={<BibleSourcesAudit />} />
-                     <Route path="/admin/bible-sources" element={<BibleSourcesAudit />} />
+                      <Route path="/admin/bible-sources" element={<BibleSourcesAudit />} />
+                      <Route path="/admin/bible-diagnostic-runs" element={<BibleDiagnosticRuns />} />
 
 
 
