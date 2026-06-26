@@ -116,6 +116,82 @@ function pickStyles(el: Element): Record<string, string> {
   return out;
 }
 
+function specificity(selector: string): [number, number, number] {
+  // strip pseudo-element ::before/::after etc (count later) and split by comma is caller's job
+  const s = selector.replace(/\/\*.*?\*\//g, "").trim();
+  const ids = (s.match(/#[\w-]+/g) || []).length;
+  const classes = (s.match(/\.[\w-]+/g) || []).length;
+  const attrs = (s.match(/\[[^\]]+\]/g) || []).length;
+  const pseudoClasses = (s.match(/:(?!:)[\w-]+(\([^)]*\))?/g) || []).length;
+  const pseudoElements = (s.match(/::[\w-]+/g) || []).length;
+  const tags = (s.match(/(^|[\s>+~])([a-zA-Z][\w-]*)/g) || []).length;
+  return [ids, classes + attrs + pseudoClasses, tags + pseudoElements];
+}
+
+function ruleOrigin(sheet: CSSStyleSheet): string {
+  if (sheet.href) {
+    try {
+      return new URL(sheet.href).pathname.split("/").pop() || sheet.href;
+    } catch {
+      return sheet.href;
+    }
+  }
+  return sheet.ownerNode?.nodeName === "STYLE" ? "<style>" : "inline";
+}
+
+function getMatchedRules(el: Element): MatchedRule[] {
+  const out: MatchedRule[] = [];
+  const sheets = Array.from(document.styleSheets) as CSSStyleSheet[];
+  for (const sheet of sheets) {
+    let rules: CSSRuleList | null = null;
+    try {
+      rules = sheet.cssRules;
+    } catch {
+      continue; // CORS-locked sheet
+    }
+    if (!rules) continue;
+    walkRules(rules, sheet, el, out);
+    if (out.length > 200) break;
+  }
+  out.sort((a, b) => {
+    for (let i = 0; i < 3; i++) if (b.specificity[i] !== a.specificity[i]) return b.specificity[i] - a.specificity[i];
+    return 0;
+  });
+  return out.slice(0, 60);
+}
+
+function walkRules(rules: CSSRuleList, sheet: CSSStyleSheet, el: Element, out: MatchedRule[]) {
+  for (const rule of Array.from(rules)) {
+    if (rule instanceof CSSStyleRule) {
+      const selectorText = rule.selectorText;
+      for (const sel of selectorText.split(",").map((s) => s.trim())) {
+        const cleaned = sel.replace(/::[\w-]+$/, "").trim() || "*";
+        try {
+          if (el.matches(cleaned)) {
+            out.push({
+              selector: sel,
+              specificity: specificity(sel),
+              origin: ruleOrigin(sheet),
+              cssText: rule.style.cssText,
+            });
+            break;
+          }
+        } catch {
+          /* invalid selector */
+        }
+      }
+    } else if ((rule as CSSGroupingRule).cssRules) {
+      walkRules((rule as CSSGroupingRule).cssRules, sheet, el, out);
+    }
+  }
+}
+
+function getViewportInfo() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const bp = w < 640 ? "xs" : w < 768 ? "sm" : w < 1024 ? "md" : w < 1280 ? "lg" : w < 1536 ? "xl" : "2xl";
+  return { w, h, dpr: window.devicePixelRatio || 1, breakpoint: bp };
+
 export function initDevInspector() {
   if (typeof window === "undefined") return;
 
