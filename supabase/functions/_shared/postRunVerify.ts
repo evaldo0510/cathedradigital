@@ -151,14 +151,16 @@ export async function runPostRunVerify(ctx: PostRunVerifyContext): Promise<PostR
     for (const row of (data ?? []) as Array<{ finding_type: BlockingFindingType }>) {
       blocking[row.finding_type] = (blocking[row.finding_type] ?? 0) + 1;
     }
-    const passed = Object.values(blocking).every((n) => n === 0);
+    const diagnosePassed = Object.values(blocking).every((n) => n === 0);
+    const sprint1 = await evaluateSprint1Gate(admin);
     const result: PostRunVerifyResult = {
       ran: true,
-      passed,
+      passed: diagnosePassed && (sprint1?.passed ?? true),
       run_id: runId,
       duration_ms: Date.now() - t0,
       total_findings: totalFindings,
       blocking,
+      sprint1,
     };
 
     // Best-effort log (não bloqueia resposta em caso de erro RLS/insert)
