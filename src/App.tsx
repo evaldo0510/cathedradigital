@@ -31,6 +31,7 @@ import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+import BibleReadGate from './components/cathedra/BibleReadGate';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
@@ -422,7 +423,7 @@ const AppLayout: React.FC = () => {
 
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
-              <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
+              <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
