@@ -9,8 +9,8 @@ import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr, normalizeAbbr } from "../_
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, if-none-match, x-correlation-id',
-  'Access-Control-Expose-Headers': 'ETag, x-correlation-id, x-cache, x-cache-age-s, x-source',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, if-none-match, x-correlation-id, x-request-source',
+  'Access-Control-Expose-Headers': 'ETag, x-correlation-id, x-cache, x-cache-age-s, x-source, x-instance-id, x-cold-start, x-cache-level',
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -18,6 +18,29 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const CACHE_BASE_VERSION = "v2.5.0";
+
+// =========================================================================
+// PR-B2 — Identidade do isolate e cold-start (sem dependências externas).
+// INSTANCE_ID é gerado uma única vez no boot deste isolate da Edge.
+// `isolateColdStart` vira false após o primeiro request servido por este isolate.
+// =========================================================================
+const INSTANCE_ID = crypto.randomUUID();
+let isolateColdStart = true;
+
+const ALLOWED_REQUEST_SOURCES = new Set(['web', 'mobile', 'warm', 'admin', 'audit', 'cron', 'test']);
+function sanitizeRequestSource(raw: string | null | undefined): string {
+  if (!raw) return 'web';
+  const v = raw.trim().toLowerCase().slice(0, 32);
+  return ALLOWED_REQUEST_SOURCES.has(v) ? v : 'web';
+}
+
+/** Deriva o nível efetivo de cache que respondeu o request. */
+function deriveCacheLevel(cache: string, source: string | null, l1Phase: string | null | undefined): 'L1' | 'L2' | 'DB' | 'UNAVAILABLE' {
+  if (l1Phase === 'fresh' || l1Phase === 'stale') return 'L1';
+  if (cache === 'HIT' || cache === 'STALE' || cache === 'STALE_LAST_RESORT' || cache === 'WARM') return 'L2';
+  if (cache === 'MISS' && source) return 'DB';
+  return 'UNAVAILABLE';
+}
 
 // =========================================================================
 // Estratégia de cache por tipo de livro
