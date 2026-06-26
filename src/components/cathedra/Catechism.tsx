@@ -72,9 +72,21 @@ const CatechismContent: React.FC<{
   }, [isError, error, data, paragraph, markPending, clearPending]);
 
   const handleRetry = useCallback(async () => {
-    const result = await refetch();
-    if (result.error) {
-      const err: any = result.error;
+    const MAX_RETRIES = 3;
+    const BASE_MS = 600;
+    let attempt = 0;
+    let lastResult: any = null;
+    while (attempt <= MAX_RETRIES) {
+      attempt += 1;
+      lastResult = await refetch();
+      if (!lastResult.error) break;
+      const code = (lastResult.error as any)?.code ?? 'unknown';
+      const transient = code === 'network' || code === 'unknown';
+      if (!transient || attempt > MAX_RETRIES) break;
+      await new Promise(r => setTimeout(r, BASE_MS * Math.pow(2, attempt - 1)));
+    }
+    if (lastResult?.error) {
+      const err: any = lastResult.error;
       const code = err?.code ?? 'unknown';
       const reason =
         code === 'not_found' ? 'não encontrado no banco oficial' :
@@ -82,11 +94,10 @@ const CatechismContent: React.FC<{
         code === 'unauthorized' ? 'sessão expirada' :
         code === 'forbidden' ? 'sem permissão' :
         'erro desconhecido';
-      const failureCount = (result as any)?.failureCount ?? 1;
       toast.error(`§${paragraph} — ${reason}`, {
-        description: `Tentativa ${failureCount}${err?.status ? ` · HTTP ${err.status}` : ''}${err?.message ? ` · ${err.message}` : ''}`,
+        description: `Tentativa ${attempt}${err?.status ? ` · HTTP ${err.status}` : ''}${err?.message ? ` · ${err.message}` : ''}`,
       });
-    } else if (result.data) {
+    } else if (lastResult?.data) {
       toast.success(`§${paragraph} carregado com sucesso.`);
     }
   }, [refetch, paragraph]);
