@@ -15,6 +15,12 @@
  */
 
 type FiberSource = { fileName?: string; lineNumber?: number; columnNumber?: number };
+type MatchedRule = {
+  selector: string;
+  specificity: [number, number, number];
+  origin: string;
+  cssText: string;
+};
 type LogEntry = {
   ts: string;
   route: string;
@@ -24,7 +30,9 @@ type LogEntry = {
   domPath: string;
   classes: string;
   size: { w: number; h: number };
+  viewport: { w: number; h: number; dpr: number; breakpoint: string };
   styles: Record<string, string>;
+  matchedRules: MatchedRule[];
 };
 
 function getFiberFromNode(node: Element): any | null {
