@@ -1139,6 +1139,104 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_diagnostic_findings: {
+        Row: {
+          abbrev: string
+          book_name: string
+          chapter: number | null
+          created_at: string
+          finding_type: string
+          id: string
+          message: string
+          metadata: Json
+          run_id: string
+          severity: string
+        }
+        Insert: {
+          abbrev: string
+          book_name: string
+          chapter?: number | null
+          created_at?: string
+          finding_type: string
+          id?: string
+          message: string
+          metadata?: Json
+          run_id: string
+          severity?: string
+        }
+        Update: {
+          abbrev?: string
+          book_name?: string
+          chapter?: number | null
+          created_at?: string
+          finding_type?: string
+          id?: string
+          message?: string
+          metadata?: Json
+          run_id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_diagnostic_findings_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "bible_diagnostic_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_diagnostic_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          metadata: Json
+          started_at: string
+          status: string
+          total_books_checked: number
+          total_chapters_checked: number
+          total_findings: number
+          triggered_by: string
+          triggered_user: string | null
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          metadata?: Json
+          started_at?: string
+          status?: string
+          total_books_checked?: number
+          total_chapters_checked?: number
+          total_findings?: number
+          triggered_by?: string
+          triggered_user?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          metadata?: Json
+          started_at?: string
+          status?: string
+          total_books_checked?: number
+          total_chapters_checked?: number
+          total_findings?: number
+          triggered_by?: string
+          triggered_user?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bible_favorites: {
         Row: {
           book_abbr: string
