@@ -906,5 +906,5 @@ ${entry.outerHTML}
     buildPackage,
   };
   // eslint-disable-next-line no-console
-  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I para alternar, L para fixar, Comparar p/ A⇄B", "color:#C8A96A");
+  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I alterna · F fixar · C comparar · P pacote · Esc sai", "color:#C8A96A");
 }
