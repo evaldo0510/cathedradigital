@@ -9,6 +9,10 @@ import { initSentry } from "./lib/sentry";
 
 initLiturgicalPrefetchGuard();
 initSentry();
+
+if (import.meta.env.DEV) {
+  import("./lib/devInspector").then((m) => m.initDevInspector());
+}
 import { telemetry } from "./utils/navigation-telemetry";
 
 // Iniciar telemetria
