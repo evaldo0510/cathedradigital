@@ -43,6 +43,8 @@ import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
 import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
+import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
+import CatechismPendingPanel from './CatechismPendingPanel';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
@@ -54,11 +56,36 @@ const CatechismContent: React.FC<{
   const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
-
+  const { markPending, clearPending } = useCatechismPending();
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
   }, [paragraph, prefetch, isVisible]);
+
+  // Sincroniza este parágrafo com o painel de pendências da seção.
+  useEffect(() => {
+    if (isError && (error as any)?.code === 'not_found') {
+      markPending(paragraph);
+    } else if (data) {
+      clearPending(paragraph);
+    }
+  }, [isError, error, data, paragraph, markPending, clearPending]);
+
+  const handleRetry = useCallback(async () => {
+    const result = await refetch();
+    if (result.error) {
+      const code = (result.error as any)?.code;
+      if (code === 'not_found') {
+        toast.error(`§${paragraph} ainda não está disponível no banco oficial.`);
+      } else {
+        toast.error(`Falha ao reconsultar §${paragraph}.`, {
+          description: (result.error as any)?.message,
+        });
+      }
+    } else if (result.data) {
+      toast.success(`§${paragraph} carregado com sucesso.`);
+    }
+  }, [refetch, paragraph]);
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
@@ -77,13 +104,16 @@ const CatechismContent: React.FC<{
     return <CatechismParagraphSkeleton paragraph={paragraph} />;
   }
 
+  // Refetch em andamento após erro: mostra skeleton em vez de bolha vazia.
+  if (isError && isFetching) {
+    return <CatechismParagraphSkeleton paragraph={paragraph} />;
+  }
+
   if (isError) {
     const err: any = error;
     const code: string = err?.code ?? 'unknown';
     const status = err?.status;
 
-    // Fallback suave para parágrafos ainda não disponíveis no banco oficial.
-    // Mantém o ritmo de leitura e evita "bolhas vazias" com alerta destrutivo.
     if (code === 'not_found') {
       return (
         <div
@@ -102,7 +132,7 @@ const CatechismContent: React.FC<{
           </p>
           <div className="pt-spacing-xs">
             <Button
-              onClick={() => refetch()}
+              onClick={handleRetry}
               disabled={isFetching}
               variant="ghost"
               size="sm"
@@ -139,7 +169,7 @@ const CatechismContent: React.FC<{
         )}
         <div className="flex items-center gap-spacing-xs pt-spacing-xs">
           <Button
-            onClick={() => refetch()}
+            onClick={handleRetry}
             disabled={isFetching}
             variant="outline"
             size="sm"
@@ -366,43 +396,51 @@ const Catechism: React.FC = memo(() => {
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
-      <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
-        <div className="w-full" data-testid={`secao-${selectedSection.id}-conteudo`}>
-          {/* Unified Reading Navigation */}
-          <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
-             <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
-             <div className="flex items-center gap-spacing-lg">
-                <Button 
-                  disabled={selectedSection.id <= 1}
-                  onClick={() => {
-                    const prev = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
-                    if (prev) { setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0,0); }
-                  }}
-                  variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
-                <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
-                <Button 
-                  disabled={selectedSection.id >= 10}
-                  onClick={() => {
-                    const next = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
-                    if (next) { setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0,0); }
-                  }}
-                  variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Próxima</Button>
-             </div>
-             <ReadingControlPanel />
-          </div>
+      <CatechismPendingProvider>
+        <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
+          <div className="w-full" data-testid={`secao-${selectedSection.id}-conteudo`}>
+            {/* Unified Reading Navigation */}
+            <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
+               <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
+               <div className="flex items-center gap-spacing-lg">
+                  <Button 
+                    disabled={selectedSection.id <= 1}
+                    onClick={() => {
+                      const prev = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                      if (prev) { setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0,0); }
+                    }}
+                    variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
+                  <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
+                  <Button 
+                    disabled={selectedSection.id >= 10}
+                    onClick={() => {
+                      const next = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                      if (next) { setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0,0); }
+                    }}
+                    variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Próxima</Button>
+               </div>
+               <ReadingControlPanel />
+            </div>
 
-          <div className="space-y-spacing-xl md:space-y-spacing-3xl">
-            {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
-              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
-            ))}
-          </div>
+            <CatechismPendingPanel
+              startPara={startPara}
+              endPara={endPara}
+              onJumpTo={(p) => document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+            />
 
-          <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
-             <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
+            <div className="space-y-spacing-xl md:space-y-spacing-3xl">
+              {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
+                <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
+              ))}
+            </div>
+
+            <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
+               <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
+            </div>
           </div>
-        </div>
-        <CatechismDiagnosticPanel />
-      </ContemplativeLayout>
+          <CatechismDiagnosticPanel />
+        </ContemplativeLayout>
+      </CatechismPendingProvider>
     );
   }
 
