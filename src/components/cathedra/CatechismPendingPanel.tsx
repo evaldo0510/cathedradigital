@@ -1,10 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Icons } from '../../constants';
 import { useCatechismPending } from '@/contexts/CatechismPendingContext';
 import { fetchCatechismParagraph, CatechismFetchError } from '@/hooks/useCatechismParagraph';
@@ -85,6 +90,9 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [results, setResults] = useState<Record<number, ParaState>>({});
   const [runStatus, setRunStatus] = useState<'idle' | 'running' | 'cancelled' | 'completed'>('idle');
+  const [paused, setPaused] = useState(false);
+  const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
+  const [exportFilter, setExportFilter] = useState<'all' | 'pending' | 'backoff' | 'error'>('all');
   const [now, setNow] = useState(() => Date.now());
 
   const [concurrency, setConcurrency] = useState<number>(() => readNum(CONCURRENCY_KEY, 4, 1, 8));
@@ -92,6 +100,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
   const [baseBackoffMs, setBaseBackoffMs] = useState<number>(() => readNum(BASE_BACKOFF_KEY, 600, 100, 5000));
 
   const cancelRef = useRef({ cancelled: false });
+  const pausedRef = useRef(false);
   const autoResumedRef = useRef(false);
   const sessionKey = `cathedra.catechism.verifyRun.${startPara}-${endPara}`;
 
@@ -105,20 +114,27 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     autoResumedRef.current = false;
     try {
       const raw = sessionStorage.getItem(sessionKey);
-      if (!raw) { setProgress({ done: 0, total: 0 }); setResults({}); setRunStatus('idle'); return; }
+      if (!raw) {
+        setProgress({ done: 0, total: 0 }); setResults({}); setRunStatus('idle');
+        setPaused(false); pausedRef.current = false;
+        return;
+      }
       const saved = JSON.parse(raw);
       setProgress(saved.progress ?? { done: 0, total: 0 });
       setResults(saved.results ?? {});
       setRunStatus(saved.runStatus ?? 'idle');
+      const wasPaused = Boolean(saved.paused);
+      setPaused(wasPaused);
+      pausedRef.current = wasPaused;
     } catch {}
   }, [sessionKey]);
 
   // Persiste estado a cada mudança.
   useEffect(() => {
     try {
-      sessionStorage.setItem(sessionKey, JSON.stringify({ progress, results, runStatus }));
+      sessionStorage.setItem(sessionKey, JSON.stringify({ progress, results, runStatus, paused }));
     } catch {}
-  }, [sessionKey, progress, results, runStatus]);
+  }, [sessionKey, progress, results, runStatus, paused]);
 
   // Tick global apenas quando há countdown ativo.
   useEffect(() => {
@@ -187,6 +203,12 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     return { ok: false, err: lastErr, attempts };
   };
 
+  const waitWhilePaused = async () => {
+    while (pausedRef.current && !cancelRef.current.cancelled) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+  };
+
   const runWorkers = async (queue: number[], cfg: { maxRetries: number; baseBackoffMs: number; concurrency: number }) => {
     const total = queue.length;
     let recovered = 0;
@@ -204,6 +226,10 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           }
           idx = queue.length;
           break;
+        }
+        if (pausedRef.current) {
+          await waitWhilePaused();
+          if (cancelRef.current.cancelled) continue;
         }
         const p = queue[idx++];
         const attemptIdx = idx;
@@ -261,16 +287,43 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
 
   const verifyAll = () => startRun(inRange, { resume: false });
 
-  const handleCancel = () => {
-    if (!isRunning) return;
+  const confirmCancel = () => {
     cancelRef.current.cancelled = true;
+    pausedRef.current = false;
+    setPaused(false);
     setRunStatus('cancelled');
+    setConfirmCancelOpen(false);
   };
 
-  // Retomada automática após refresh: apenas se runStatus === 'running' (não cancelado/concluído).
+  const handlePause = () => {
+    if (!isRunning) return;
+    pausedRef.current = true;
+    setPaused(true);
+    toast.message('Execução pausada.', { description: 'Workers em andamento concluirão o item atual.' });
+  };
+
+  const handleResume = () => {
+    pausedRef.current = false;
+    setPaused(false);
+    if (!isRunning && runStatus === 'running') {
+      // Pausa estava ativa entre refresh: retomar com o que restar.
+      const processed = new Set(
+        Object.values(results)
+          .filter(r => r.status === 'recovered' || r.status === 'error')
+          .map(r => r.paragraph),
+      );
+      const remaining = inRange.filter(p => !processed.has(p));
+      if (remaining.length > 0) startRun(remaining, { resume: true });
+    } else {
+      toast.message('Execução retomada.');
+    }
+  };
+
+  // Retomada automática após refresh: só se 'running' E não pausado/cancelado/concluído.
   useEffect(() => {
     if (autoResumedRef.current) return;
     if (runStatus !== 'running') return;
+    if (paused) return;
     if (isRunning) return;
     if (inRange.length === 0) return;
     autoResumedRef.current = true;
@@ -287,7 +340,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     toast.message('Retomando verificação…', { description: `${remaining.length} parágrafo(s) restantes.` });
     startRun(remaining, { resume: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runStatus, inRange.length]);
+  }, [runStatus, paused, inRange.length]);
 
   if (inRange.length === 0 && Object.keys(results).length === 0) return null;
 
@@ -295,8 +348,19 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     const map = new Map<number, ParaState>();
     inRange.forEach(p => map.set(p, results[p] ?? { paragraph: p, status: 'pending', attempts: 0 }));
     Object.values(results).forEach(r => { if (!map.has(r.paragraph)) map.set(r.paragraph, r); });
-    return Array.from(map.values()).sort((a, b) => a.paragraph - b.paragraph);
+    let rows = Array.from(map.values()).sort((a, b) => a.paragraph - b.paragraph);
+    if (exportFilter !== 'all') {
+      rows = rows.filter(r => r.status === exportFilter);
+    }
+    return rows;
   };
+
+  const errorRows = useMemo(
+    () => Object.values(results)
+      .filter(r => r.status === 'error' || (r.status === 'backoff' && r.errorCode))
+      .sort((a, b) => a.paragraph - b.paragraph),
+    [results],
+  );
 
   const exportJSON = () => {
     const payload = {
@@ -349,10 +413,31 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           </p>
         </div>
         <div className="flex items-center gap-spacing-2xs flex-wrap">
+          <Select value={exportFilter} onValueChange={(v: any) => setExportFilter(v)}>
+            <SelectTrigger
+              aria-label="Filtro da exportação"
+              className="h-8 w-spacing-5xl text-premium-xs"
+              data-testid="catechism-export-filter"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="pending">Pendentes</SelectItem>
+              <SelectItem value="backoff">Em backoff</SelectItem>
+              <SelectItem value="error">Com erro</SelectItem>
+            </SelectContent>
+          </Select>
           <Button onClick={exportCSV} disabled={!hasExportable} variant="ghost" size="sm" data-testid="catechism-export-csv">CSV</Button>
           <Button onClick={exportJSON} disabled={!hasExportable} variant="ghost" size="sm" data-testid="catechism-export-json">JSON</Button>
-          {isRunning ? (
-            <Button onClick={handleCancel} variant="outline" size="sm" data-testid="catechism-verify-cancel">Cancelar</Button>
+          {isRunning && !paused && (
+            <Button onClick={handlePause} variant="outline" size="sm" data-testid="catechism-verify-pause">Pausar</Button>
+          )}
+          {(isRunning && paused) || (runStatus === 'running' && paused && !isRunning) ? (
+            <Button onClick={handleResume} variant="outline" size="sm" data-testid="catechism-verify-resume">Retomar</Button>
+          ) : null}
+          {(isRunning || (runStatus === 'running' && paused)) ? (
+            <Button onClick={() => setConfirmCancelOpen(true)} variant="outline" size="sm" data-testid="catechism-verify-cancel">Cancelar</Button>
           ) : (
             <Button onClick={verifyAll} variant="outline" size="sm" data-testid="catechism-verify-all" disabled={inRange.length === 0}>
               Verificar todos ({inRange.length})
@@ -360,6 +445,25 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           )}
         </div>
       </div>
+
+      <AlertDialog open={confirmCancelOpen} onOpenChange={setConfirmCancelOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancelar verificação em lote?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Os workers em andamento concluirão o item atual e os parágrafos restantes serão marcados
+              como “cancelados”. A retomada automática após refresh ficará bloqueada — só uma nova
+              execução manual irá processá-los novamente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="catechism-cancel-modal-keep">Continuar verificando</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCancel} data-testid="catechism-cancel-modal-confirm">
+              Cancelar mesmo assim
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="grid gap-spacing-sm sm:grid-cols-3" data-testid="catechism-verify-config">
         <div className="flex items-center gap-spacing-xs">
@@ -409,7 +513,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
         <div className="space-y-spacing-2xs" data-testid="catechism-verify-progress">
           <div className="flex items-center justify-between text-premium-xs font-display tracking-[0.1em] uppercase text-primary/60">
             <span>
-              {isRunning ? 'Verificando…' : runStatus === 'cancelled' ? 'Cancelada' : runStatus === 'completed' ? 'Concluída' : 'Última execução'}
+              {paused ? 'Pausada' : isRunning ? 'Verificando…' : runStatus === 'cancelled' ? 'Cancelada' : runStatus === 'completed' ? 'Concluída' : 'Última execução'}
             </span>
             <span>{progress.done}/{progress.total} · {pct}%</span>
           </div>
@@ -448,6 +552,50 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           );
         })}
       </ul>
+
+      {errorRows.length > 0 && (
+        <details className="mt-spacing-xs" data-testid="catechism-error-details">
+          <summary className="cursor-pointer text-premium-xs font-display tracking-[0.1em] uppercase text-primary/60 hover:text-primary">
+            Falhas com detalhe ({errorRows.length})
+          </summary>
+          <div className="mt-spacing-xs overflow-x-auto">
+            <table className="w-full text-premium-xs font-mono">
+              <thead>
+                <tr className="text-left text-muted-foreground border-b border-primary/10">
+                  <th className="py-spacing-2xs pr-spacing-sm">§</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Tentativas</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Última</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">HTTP</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Código</th>
+                  <th className="py-spacing-2xs">Mensagem</th>
+                </tr>
+              </thead>
+              <tbody>
+                {errorRows.map(r => (
+                  <tr key={r.paragraph} className="border-b border-primary/5 align-top">
+                    <td className="py-spacing-2xs pr-spacing-sm">
+                      <button
+                        type="button"
+                        onClick={() => onJumpTo?.(r.paragraph)}
+                        className="text-primary/80 hover:text-primary underline-offset-2 hover:underline"
+                      >
+                        §{r.paragraph}
+                      </button>
+                    </td>
+                    <td className="py-spacing-2xs pr-spacing-sm tabular-nums">{r.attempts}</td>
+                    <td className="py-spacing-2xs pr-spacing-sm text-muted-foreground">
+                      {r.lastAttemptAt ? new Date(r.lastAttemptAt).toLocaleTimeString() : '—'}
+                    </td>
+                    <td className="py-spacing-2xs pr-spacing-sm tabular-nums">{r.httpStatus ?? '—'}</td>
+                    <td className="py-spacing-2xs pr-spacing-sm">{r.errorCode ?? '—'}</td>
+                    <td className="py-spacing-2xs text-destructive/80 break-all">{r.errorMessage ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
     </aside>
   );
 };
