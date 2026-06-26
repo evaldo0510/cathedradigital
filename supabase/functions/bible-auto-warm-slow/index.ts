@@ -11,6 +11,7 @@
  */
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 
 const ALWAYS_PRIORITY: Record<string, number> = {
   // Lv primeiro, restante do Pentateuco em seguida
@@ -38,6 +39,8 @@ interface Body {
   dry_run?: boolean;
   books?: string[];          // restringe a um subconjunto específico
   verbose?: boolean;         // retorna log por capítulo
+  skip_verify?: boolean;     // desliga a pós-verificação automática
+  fail_on_blocking?: boolean; // devolve 422 se achados críticos persistirem
 }
 
 Deno.serve(async (req) => {
