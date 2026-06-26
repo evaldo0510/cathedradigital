@@ -103,7 +103,7 @@ serve(async (req) => {
 
       let q = admin
         .from("bible_cache_metric_events")
-        .select("created_at, abbrev, chapter, cache, l1_phase, correlation_id, total_ms, sql_ms, edge_ms, bolls_ms, bolls_ok, status_code")
+        .select("created_at, abbrev, chapter, cache, l1_phase, correlation_id, total_ms, sql_ms, edge_ms, bolls_ms, bolls_ok, status_code, cold_start, cache_level, total_wall_clock_ms, instance_id, request_source, sql_breakdown")
         .gte("created_at", start.toISOString())
         .lt("created_at", end.toISOString())
         .order("total_ms", { ascending: false, nullsFirst: false })

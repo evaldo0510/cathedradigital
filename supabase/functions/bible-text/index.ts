@@ -9,8 +9,8 @@ import { BOLLS_MAP, bookNameFromAbbr, findBookByAbbr, normalizeAbbr } from "../_
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, if-none-match, x-correlation-id',
-  'Access-Control-Expose-Headers': 'ETag, x-correlation-id, x-cache, x-cache-age-s, x-source',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, if-none-match, x-correlation-id, x-request-source',
+  'Access-Control-Expose-Headers': 'ETag, x-correlation-id, x-cache, x-cache-age-s, x-source, x-instance-id, x-cold-start, x-cache-level',
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -18,6 +18,29 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const CACHE_BASE_VERSION = "v2.5.0";
+
+// =========================================================================
+// PR-B2 — Identidade do isolate e cold-start (sem dependências externas).
+// INSTANCE_ID é gerado uma única vez no boot deste isolate da Edge.
+// `isolateColdStart` vira false após o primeiro request servido por este isolate.
+// =========================================================================
+const INSTANCE_ID = crypto.randomUUID();
+let isolateColdStart = true;
+
+const ALLOWED_REQUEST_SOURCES = new Set(['web', 'mobile', 'warm', 'admin', 'audit', 'cron', 'test']);
+function sanitizeRequestSource(raw: string | null | undefined): string {
+  if (!raw) return 'web';
+  const v = raw.trim().toLowerCase().slice(0, 32);
+  return ALLOWED_REQUEST_SOURCES.has(v) ? v : 'web';
+}
+
+/** Deriva o nível efetivo de cache que respondeu o request. */
+function deriveCacheLevel(cache: string, source: string | null, l1Phase: string | null | undefined): 'L1' | 'L2' | 'DB' | 'UNAVAILABLE' {
+  if (l1Phase === 'fresh' || l1Phase === 'stale') return 'L1';
+  if (cache === 'HIT' || cache === 'STALE' || cache === 'STALE_LAST_RESORT' || cache === 'WARM') return 'L2';
+  if (cache === 'MISS' && source) return 'DB';
+  return 'UNAVAILABLE';
+}
 
 // =========================================================================
 // Estratégia de cache por tipo de livro
@@ -414,6 +437,7 @@ async function fetchFromBibliaCatolica(abbrev: string, chapter: number, correlat
 function recordEvent(fields: {
   abbrev: string; chapter: number; cache: string; source: string | null;
   status_code: number; total_ms: number; correlation_id: string; ctx: ReqCtx;
+  cold_start?: boolean; request_source?: string; total_wall_clock_ms?: number;
 }) {
   const sqlMs = computeSqlMs(fields.ctx.sqlEntries);
   const bollsMs = fields.ctx.bolls?.ms ?? 0;
@@ -422,6 +446,7 @@ function recordEvent(fields: {
   // quando há queries paralelas (Promise.all).
   const edgeMs = Math.max(0, fields.total_ms - sqlMs - bollsMs);
   const breakdown = fields.ctx.sqlEntries.map(e => ({ label: e.label, ms: e.ms }));
+  const cacheLevel = deriveCacheLevel(fields.cache, fields.source, fields.ctx.l1Phase);
   const row = {
     abbrev: fields.abbrev,
     chapter: fields.chapter,
@@ -437,6 +462,12 @@ function recordEvent(fields: {
     correlation_id: fields.correlation_id,
     sql_breakdown: breakdown,
     l1_phase: fields.ctx.l1Phase ?? null,
+    // PR-B2 — observabilidade técnica
+    cold_start: fields.cold_start ?? false,
+    cache_level: cacheLevel,
+    total_wall_clock_ms: fields.total_wall_clock_ms ?? fields.total_ms,
+    instance_id: INSTANCE_ID,
+    request_source: fields.request_source ?? 'web',
   };
 
   // Breakdown estruturado nos logs para diagnóstico imediato.
@@ -446,6 +477,10 @@ function recordEvent(fields: {
     chapter: fields.chapter,
     sql_ms: sqlMs,
     entries: breakdown,
+    cache_level: cacheLevel,
+    cold_start: row.cold_start,
+    instance_id: INSTANCE_ID,
+    request_source: row.request_source,
   });
   waitUntil(
     supabase.from('bible_cache_metric_events').insert(row).then(({ error }) => {
@@ -533,6 +568,11 @@ serve(async (req) => {
   const t0 = Date.now();
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
+  // PR-B2: captura cold-start desta request e marca isolate como aquecido.
+  const wasCold = isolateColdStart;
+  isolateColdStart = false;
+  const requestSource = sanitizeRequestSource(req.headers.get('x-request-source'));
+
   // Endpoint interno: aquecimento pelo script (POST com {warm:true}).
   let abbrev: string | undefined;
   let chapter: number | undefined;
@@ -587,7 +627,7 @@ serve(async (req) => {
       const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
-      recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx });
+      recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: 'warm', total_wall_clock_ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ok: !!result, cacheKey, tier, source: result?.source ?? null, correlationId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
       });
@@ -600,7 +640,7 @@ serve(async (req) => {
     if (lookup.state === 'fresh') {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'HIT', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
-      recordEvent({ abbrev, chapter, cache: 'HIT', source: 'L2', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+      recordEvent({ abbrev, chapter, cache: 'HIT', source: 'L2', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...lookup.content,
         metadata: { ...lookup.content.metadata, source: 'L2 Cache', correlationId, shouldInvalidateL1, current_version: cacheConfig.version, ttl_hours: policy.ttlHours, cache_tier: tier },
@@ -623,7 +663,7 @@ serve(async (req) => {
       if (lookup.ageS <= swrCutoffS + policy.ttlHours * 3600) {
         const totalMs = Date.now() - t0;
         metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
-        recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+        recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
         const bgCtx: ReqCtx = newCtx();
         waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx, sovereigntyEnabled)
 
@@ -650,7 +690,7 @@ serve(async (req) => {
     if (revalidated) {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: totalMs });
-      recordEvent({ abbrev, chapter, cache: 'MISS', source: revalidated.source, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+      recordEvent({ abbrev, chapter, cache: 'MISS', source: revalidated.source, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...revalidated.data,
         metadata: { ...revalidated.data.metadata, shouldInvalidateL1, cache_tier: tier },
@@ -670,7 +710,7 @@ serve(async (req) => {
     if (lookup.state === 'stale') {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'STALE_LAST_RESORT', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
-      recordEvent({ abbrev, chapter, cache: 'STALE_LAST_RESORT', source: 'L2-LAST-RESORT', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+      recordEvent({ abbrev, chapter, cache: 'STALE_LAST_RESORT', source: 'L2-LAST-RESORT', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
       return new Response(JSON.stringify({
         ...lookup.content,
         metadata: { ...(lookup.content.metadata || {}), source: 'L2 Stale (Fallback)', correlationId, shouldInvalidateL1: false, stale: true, age_s: lookup.ageS },
@@ -687,7 +727,7 @@ serve(async (req) => {
       : `Capítulo ${chapter} de "${resolvedBook?.name ?? abbrev}" indisponível nas fontes públicas (bolls.life, bibliacatolica.com.br). Importe via scripts/import-bible-dump.ts.`;
     const totalMs = Date.now() - t0;
     metric('request_end', { correlationId, status: 200, reason: 'unavailable', tier, cacheKey, ms: totalMs });
-    recordEvent({ abbrev, chapter, cache: 'MISS', source: null, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx });
+    recordEvent({ abbrev, chapter, cache: 'MISS', source: null, status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
     return new Response(JSON.stringify({
       book: resolvedBook?.name ?? abbrev,
       chapter,
