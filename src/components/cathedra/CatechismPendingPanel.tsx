@@ -184,13 +184,14 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           const p = inRange[idx++];
           const attemptIdx = idx;
           const res = await fetchWithBackoff(p);
-          if (res.ok) {
+          if (res.ok === true) {
             recovered += 1;
           } else {
             stillMissing += 1;
-            const code = res.err instanceof CatechismFetchError ? res.err.code : 'unknown';
+            const errAny: any = res.err;
+            const code = errAny instanceof CatechismFetchError ? errAny.code : 'unknown';
             toast.error(`§${p} — ${reasonLabel(code)}`, {
-              description: `Tentativa ${attemptIdx}/${total} · ${res.attempts} tentativa(s) na rede${res.err?.status ? ` · HTTP ${res.err.status}` : ''}`,
+              description: `Tentativa ${attemptIdx}/${total} · ${res.attempts} tentativa(s) na rede${errAny?.status ? ` · HTTP ${errAny.status}` : ''}`,
             });
           }
           setProgress(prev => ({ done: prev.done + 1, total }));
