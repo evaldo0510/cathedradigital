@@ -375,6 +375,32 @@ export function initDevInspector() {
   let compareA: { entry: LogEntry; el: Element } | null = null;
   let compareB: { entry: LogEntry; el: Element } | null = null;
 
+  // Winners panel UI state (search + category)
+  type WinnerCat = "all" | "typography" | "cssvars" | "color" | "border";
+  let winnersQuery = "";
+  let winnersCategory: WinnerCat = "all";
+
+  function categoryOf(prop: string): Exclude<WinnerCat, "all" | "cssvars"> | "other" {
+    if (/^(font|line-height|letter-spacing|text-|white-space|word-|writing-)/.test(prop)) return "typography";
+    if (/(^color$|background|fill|stroke|caret-color|accent-color)/.test(prop)) return "color";
+    if (/^(border|outline|box-shadow|border-radius)/.test(prop)) return "border";
+    return "other";
+  }
+
+  function computeWinners(rules: MatchedRule[]) {
+    const seen = new Set<string>();
+    const winners: Array<{ prop: string; value: string; selector: string; origin: string; cat: ReturnType<typeof categoryOf> }> = [];
+    for (const r of rules) {
+      for (const prop of Object.keys(r.declarations)) {
+        if (seen.has(prop)) continue;
+        seen.add(prop);
+        winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, cat: categoryOf(prop) });
+      }
+    }
+    return winners;
+  }
+
+
   function persist() { saveSession({ logs, filters, locked }); }
 
   function ensureOverlay() {
