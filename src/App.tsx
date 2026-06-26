@@ -31,6 +31,7 @@ import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+import BibleReadGate from './components/cathedra/BibleReadGate';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
