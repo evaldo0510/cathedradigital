@@ -741,19 +741,36 @@ ${entry.outerHTML}
     triggerDownload(new Blob([doc], { type: "text/html" }), `inspector-${stamp()}.html`);
   }
 
-  /** Resumo das regras vencedoras para font-size, line-height, padding, font-family. */
+  /** Resumo das regras vencedoras para tipografia, cor, peso e bordas — inclui var() resolvidas e source. */
   function downloadWinners(entry: LogEntry) {
-    const target = ["font-size", "line-height", "padding", "padding-top", "padding-right", "padding-bottom", "padding-left", "font-family"];
-    const winners: Array<{ prop: string; value: string; selector: string; origin: string; cssText: string }> = [];
+    const target = [
+      "font-size","line-height","font-family","font-weight","color",
+      "padding","padding-top","padding-right","padding-bottom","padding-left",
+      "border","border-width","border-style","border-color",
+      "border-top","border-top-width","border-top-style","border-top-color",
+      "border-right","border-right-width","border-right-style","border-right-color",
+      "border-bottom","border-bottom-width","border-bottom-style","border-bottom-color",
+      "border-left","border-left-width","border-left-style","border-left-color",
+    ];
+    const winners: Array<{ prop: string; value: string; selector: string; origin: string; source: string | null; cssText: string }> = [];
     for (const prop of target) {
       const r = entry.matchedRules.find((m) => prop in m.declarations);
-      if (r) winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, cssText: r.cssText });
+      if (r) winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, source: entry.source, cssText: r.cssText });
     }
     const payload = {
       ts: entry.ts, route: entry.route, selector: entry.selector, domPath: entry.domPath,
-      source: entry.source, component: entry.component, computed: entry.styles, winners,
+      source: entry.source, component: entry.component, computed: entry.styles,
+      cssVars: entry.cssVars, winners,
     };
     triggerDownload(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }), `inspector-winners-${stamp()}.json`);
+  }
+
+  /** Exporta a cascata CSS completa (matchedRules na ordem de especificidade). */
+  function downloadCascade(entry: LogEntry) {
+    const meta = { ts: entry.ts, route: entry.route, selector: entry.selector, domPath: entry.domPath, source: entry.source, component: entry.component, inShadow: entry.inShadow };
+    const lines = [JSON.stringify({ kind: "meta", ...meta })];
+    entry.matchedRules.forEach((r, i) => lines.push(JSON.stringify({ kind: "rule", order: i + 1, ...r })));
+    triggerDownload(new Blob([lines.join("\n") + "\n"], { type: "application/x-ndjson" }), `inspector-cascade-${stamp()}.ndjson`);
   }
 
   function stamp() { return new Date().toISOString().replace(/[:.]/g, "-"); }
