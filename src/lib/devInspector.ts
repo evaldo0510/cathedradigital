@@ -240,7 +240,7 @@ export function initDevInspector() {
       </div>
       <div style="margin-top:10px;opacity:.5;font-size:10px">logs: ${logs.length} · Ctrl/Cmd+Shift+I para alternar</div>
     `;
-    panel.querySelector('[data-act="close"]')?.addEventListener("click", () => panel?.remove() || (panel = null));
+    panel.querySelector('[data-act="close"]')?.addEventListener("click", () => { panel?.remove(); panel = null; });
     panel.querySelector('[data-act="copy"]')?.addEventListener("click", () => copyEntry(entry));
     panel.querySelector('[data-act="export"]')?.addEventListener("click", exportNDJSON);
   }
