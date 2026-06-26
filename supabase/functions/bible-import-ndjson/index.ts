@@ -221,7 +221,7 @@ Deno.serve(async (req) => {
 
   try {
     const reader = stream!.getReader();
-    const lines = await streamLines(reader);
+    const lines = streamLines(reader);
     let lineNo = 0;
     let currentBookKey = "";
     for await (const raw of lines) {
