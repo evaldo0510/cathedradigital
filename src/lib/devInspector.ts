@@ -18,6 +18,14 @@ export type Conflict = {
   winner: MatchedRule;
   losers: MatchedRule[];
 };
+export type CssVarUsage = {
+  name: string;            // --foo
+  resolved: string;        // computed value
+  usedIn: string[];        // CSS props in winners that reference it
+  fromSelector: string | null;   // selector that defines the var
+  fromOrigin: string | null;     // origin label
+  fromElement: string | null;    // tag/path of ancestor providing it
+};
 export type LogEntry = {
   ts: string;
   route: string;
@@ -31,6 +39,7 @@ export type LogEntry = {
   styles: Record<string, string>;
   matchedRules: MatchedRule[];
   conflicts: Conflict[];
+  cssVars: CssVarUsage[];
   outerHTML: string;
   inShadow: boolean;
 };
