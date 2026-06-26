@@ -552,6 +552,50 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           );
         })}
       </ul>
+
+      {errorRows.length > 0 && (
+        <details className="mt-spacing-xs" data-testid="catechism-error-details">
+          <summary className="cursor-pointer text-premium-xs font-display tracking-[0.1em] uppercase text-primary/60 hover:text-primary">
+            Falhas com detalhe ({errorRows.length})
+          </summary>
+          <div className="mt-spacing-xs overflow-x-auto">
+            <table className="w-full text-premium-xs font-mono">
+              <thead>
+                <tr className="text-left text-muted-foreground border-b border-primary/10">
+                  <th className="py-spacing-2xs pr-spacing-sm">§</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Tentativas</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Última</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">HTTP</th>
+                  <th className="py-spacing-2xs pr-spacing-sm">Código</th>
+                  <th className="py-spacing-2xs">Mensagem</th>
+                </tr>
+              </thead>
+              <tbody>
+                {errorRows.map(r => (
+                  <tr key={r.paragraph} className="border-b border-primary/5 align-top">
+                    <td className="py-spacing-2xs pr-spacing-sm">
+                      <button
+                        type="button"
+                        onClick={() => onJumpTo?.(r.paragraph)}
+                        className="text-primary/80 hover:text-primary underline-offset-2 hover:underline"
+                      >
+                        §{r.paragraph}
+                      </button>
+                    </td>
+                    <td className="py-spacing-2xs pr-spacing-sm tabular-nums">{r.attempts}</td>
+                    <td className="py-spacing-2xs pr-spacing-sm text-muted-foreground">
+                      {r.lastAttemptAt ? new Date(r.lastAttemptAt).toLocaleTimeString() : '—'}
+                    </td>
+                    <td className="py-spacing-2xs pr-spacing-sm tabular-nums">{r.httpStatus ?? '—'}</td>
+                    <td className="py-spacing-2xs pr-spacing-sm">{r.errorCode ?? '—'}</td>
+                    <td className="py-spacing-2xs text-destructive/80 break-all">{r.errorMessage ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
     </aside>
   );
 };
