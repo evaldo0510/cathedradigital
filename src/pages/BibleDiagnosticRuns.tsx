@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import BibleCoveragePanel from '@/components/cathedra/BibleCoveragePanel';
 
 type Run = {
   id: string;
@@ -215,11 +216,16 @@ const BibleDiagnosticRuns: React.FC = () => {
         <p className="text-muted-foreground">Histórico das execuções do diagnóstico read-only dos 73 livros.</p>
       </header>
 
-      <Tabs defaultValue="runs">
+      <Tabs defaultValue="coverage">
         <TabsList>
+          <TabsTrigger value="coverage">Cobertura (73 livros)</TabsTrigger>
           <TabsTrigger value="runs">Execuções</TabsTrigger>
           <TabsTrigger value="compare">Comparar runs</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="coverage" className="mt-4">
+          <BibleCoveragePanel />
+        </TabsContent>
 
         <TabsContent value="runs" className="space-y-4 mt-4">
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
