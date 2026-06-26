@@ -90,6 +90,9 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [results, setResults] = useState<Record<number, ParaState>>({});
   const [runStatus, setRunStatus] = useState<'idle' | 'running' | 'cancelled' | 'completed'>('idle');
+  const [paused, setPaused] = useState(false);
+  const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
+  const [exportFilter, setExportFilter] = useState<'all' | 'pending' | 'backoff' | 'error'>('all');
   const [now, setNow] = useState(() => Date.now());
 
   const [concurrency, setConcurrency] = useState<number>(() => readNum(CONCURRENCY_KEY, 4, 1, 8));
@@ -97,6 +100,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
   const [baseBackoffMs, setBaseBackoffMs] = useState<number>(() => readNum(BASE_BACKOFF_KEY, 600, 100, 5000));
 
   const cancelRef = useRef({ cancelled: false });
+  const pausedRef = useRef(false);
   const autoResumedRef = useRef(false);
   const sessionKey = `cathedra.catechism.verifyRun.${startPara}-${endPara}`;
 
@@ -110,20 +114,27 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     autoResumedRef.current = false;
     try {
       const raw = sessionStorage.getItem(sessionKey);
-      if (!raw) { setProgress({ done: 0, total: 0 }); setResults({}); setRunStatus('idle'); return; }
+      if (!raw) {
+        setProgress({ done: 0, total: 0 }); setResults({}); setRunStatus('idle');
+        setPaused(false); pausedRef.current = false;
+        return;
+      }
       const saved = JSON.parse(raw);
       setProgress(saved.progress ?? { done: 0, total: 0 });
       setResults(saved.results ?? {});
       setRunStatus(saved.runStatus ?? 'idle');
+      const wasPaused = Boolean(saved.paused);
+      setPaused(wasPaused);
+      pausedRef.current = wasPaused;
     } catch {}
   }, [sessionKey]);
 
   // Persiste estado a cada mudança.
   useEffect(() => {
     try {
-      sessionStorage.setItem(sessionKey, JSON.stringify({ progress, results, runStatus }));
+      sessionStorage.setItem(sessionKey, JSON.stringify({ progress, results, runStatus, paused }));
     } catch {}
-  }, [sessionKey, progress, results, runStatus]);
+  }, [sessionKey, progress, results, runStatus, paused]);
 
   // Tick global apenas quando há countdown ativo.
   useEffect(() => {
