@@ -568,6 +568,11 @@ serve(async (req) => {
   const t0 = Date.now();
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
+  // PR-B2: captura cold-start desta request e marca isolate como aquecido.
+  const wasCold = isolateColdStart;
+  isolateColdStart = false;
+  const requestSource = sanitizeRequestSource(req.headers.get('x-request-source'));
+
   // Endpoint interno: aquecimento pelo script (POST com {warm:true}).
   let abbrev: string | undefined;
   let chapter: number | undefined;
