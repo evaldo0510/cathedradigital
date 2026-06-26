@@ -18,6 +18,14 @@ export type Conflict = {
   winner: MatchedRule;
   losers: MatchedRule[];
 };
+export type CssVarUsage = {
+  name: string;            // --foo
+  resolved: string;        // computed value
+  usedIn: string[];        // CSS props in winners that reference it
+  fromSelector: string | null;   // selector that defines the var
+  fromOrigin: string | null;     // origin label
+  fromElement: string | null;    // tag/path of ancestor providing it
+};
 export type LogEntry = {
   ts: string;
   route: string;
@@ -31,6 +39,7 @@ export type LogEntry = {
   styles: Record<string, string>;
   matchedRules: MatchedRule[];
   conflicts: Conflict[];
+  cssVars: CssVarUsage[];
   outerHTML: string;
   inShadow: boolean;
 };
@@ -154,10 +163,55 @@ export function domPath(el: Element): string {
 
 function pickStyles(el: Element): Record<string, string> {
   const cs = window.getComputedStyle(el);
-  const keys = ["font-family","font-size","font-weight","line-height","letter-spacing","color","padding","margin","text-transform"];
+  const keys = ["font-family","font-size","font-weight","line-height","letter-spacing","color","padding","margin","text-transform","border-top-width","border-top-style","border-top-color"];
   const out: Record<string, string> = {};
   for (const k of keys) out[k] = cs.getPropertyValue(k).trim();
   return out;
+}
+
+/** Scans matched-rule cssText for var(--x) refs and walks ancestors to find the declarer. */
+export function extractCssVars(el: Element, rules: MatchedRule[]): CssVarUsage[] {
+  const usage = new Map<string, Set<string>>(); // varName -> set of props using it
+  const re = /var\(\s*(--[\w-]+)/g;
+  for (const r of rules) {
+    for (const [prop, val] of Object.entries(r.declarations)) {
+      let m: RegExpExecArray | null;
+      const local = new RegExp(re.source, "g");
+      while ((m = local.exec(val))) {
+        if (!usage.has(m[1])) usage.set(m[1], new Set());
+        usage.get(m[1])!.add(prop);
+      }
+    }
+  }
+  if (!usage.size) return [];
+  const out: CssVarUsage[] = [];
+  for (const [name, props] of usage) {
+    const resolved = window.getComputedStyle(el).getPropertyValue(name).trim();
+    let fromSelector: string | null = null;
+    let fromOrigin: string | null = null;
+    let fromElement: string | null = null;
+    // Walk ancestors (including el) looking for a matched rule that declares the var
+    let cur: Element | null = el;
+    outer: while (cur) {
+      const ruleSet = getMatchedRules(cur);
+      for (const r of ruleSet) {
+        if (name in r.declarations) {
+          fromSelector = r.selector;
+          fromOrigin = r.origin;
+          fromElement = cur.tagName.toLowerCase() + (cur.id ? `#${cur.id}` : cur.className && typeof cur.className === "string" ? "." + cur.className.trim().split(/\s+/)[0] : "");
+          break outer;
+        }
+      }
+      cur = cur.parentElement;
+    }
+    if (!fromSelector) {
+      // Fallback: :root via documentElement computed style
+      const rootVal = window.getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      if (rootVal) { fromSelector = ":root"; fromOrigin = "computed"; fromElement = "html"; }
+    }
+    out.push({ name, resolved, usedIn: Array.from(props), fromSelector, fromOrigin, fromElement });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function specificity(selector: string): [number, number, number] {
@@ -395,6 +449,7 @@ export function initDevInspector() {
       styles: pickStyles(el),
       matchedRules,
       conflicts: detectConflicts(matchedRules),
+      cssVars: extractCssVars(el, matchedRules),
       outerHTML: el.outerHTML.slice(0, 50000),
       inShadow: el.getRootNode() instanceof ShadowRoot,
     };
@@ -462,10 +517,11 @@ export function initDevInspector() {
         <div style="display:flex;gap:4px;flex-wrap:wrap">
           <button data-act="lock" style="${btn()}">${locked ? "Desafixar" : "Fixar"}</button>
           <button data-act="compare" style="${btn()}">${compareMode ? "Sair cmp" : "Comparar"}</button>
-          <button data-act="package" style="${btn(true)}">📎 Pacote</button>
+          <button data-act="package" style="${btn(true)}" title="P">📎 Pacote</button>
           <button data-act="copy" style="${btn()}">Copiar</button>
           <button data-act="html" style="${btn()}">HTML</button>
           <button data-act="winners" style="${btn()}">Winners</button>
+          <button data-act="cascade" style="${btn()}" title="Cascata completa">Cascade</button>
           <button data-act="export" style="${btn()}">NDJSON</button>
           <button data-act="clear" style="${btn()}">Limpar</button>
           <button data-act="close" style="${btn()}">×</button>
@@ -482,6 +538,16 @@ export function initDevInspector() {
       <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">Estilos computados</div>
         <table style="width:100%;margin-top:4px;border-collapse:collapse">${stylesRows}</table>
       </div>
+
+      <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">CSS Variables (var(--…))</div>
+        ${entry.cssVars.length ? entry.cssVars.map((v) => `
+          <div style="margin-top:4px;padding:5px 7px;background:rgba(255,255,255,0.04);border-left:2px solid #3b82f6;border-radius:0 4px 4px 0;font-size:11px">
+            <div><code style="color:#93c5fd">${escapeHtml(v.name)}</code> → <span style="color:#C8A96A">${escapeHtml(v.resolved || "(vazio)")}</span></div>
+            <div style="opacity:.65;font-size:10px">usada em: ${v.usedIn.map(escapeHtml).join(", ")}</div>
+            <div style="opacity:.65;font-size:10px">origem: <code>${escapeHtml(v.fromSelector || "?")}</code> @ ${escapeHtml(v.fromOrigin || "?")} (${escapeHtml(v.fromElement || "?")})</div>
+          </div>`).join("") : '<div style="opacity:.5;font-size:11px">Nenhuma var(--…) usada pelas regras vencedoras.</div>'}
+      </div>
+
 
       <div style="margin-top:10px">
         <div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Cascata CSS · filtros</div>
@@ -510,6 +576,7 @@ export function initDevInspector() {
     panel!.querySelector('[data-act="export"]')?.addEventListener("click", exportNDJSON);
     panel!.querySelector('[data-act="html"]')?.addEventListener("click", () => downloadHTML(entry));
     panel!.querySelector('[data-act="winners"]')?.addEventListener("click", () => downloadWinners(entry));
+    panel!.querySelector('[data-act="cascade"]')?.addEventListener("click", () => downloadCascade(entry));
     panel!.querySelector('[data-act="compare"]')?.addEventListener("click", () => toggleCompareMode());
     panel!.querySelector('[data-act="lock"]')?.addEventListener("click", () => {
       locked = !locked;
@@ -674,19 +741,36 @@ ${entry.outerHTML}
     triggerDownload(new Blob([doc], { type: "text/html" }), `inspector-${stamp()}.html`);
   }
 
-  /** Resumo das regras vencedoras para font-size, line-height, padding, font-family. */
+  /** Resumo das regras vencedoras para tipografia, cor, peso e bordas — inclui var() resolvidas e source. */
   function downloadWinners(entry: LogEntry) {
-    const target = ["font-size", "line-height", "padding", "padding-top", "padding-right", "padding-bottom", "padding-left", "font-family"];
-    const winners: Array<{ prop: string; value: string; selector: string; origin: string; cssText: string }> = [];
+    const target = [
+      "font-size","line-height","font-family","font-weight","color",
+      "padding","padding-top","padding-right","padding-bottom","padding-left",
+      "border","border-width","border-style","border-color",
+      "border-top","border-top-width","border-top-style","border-top-color",
+      "border-right","border-right-width","border-right-style","border-right-color",
+      "border-bottom","border-bottom-width","border-bottom-style","border-bottom-color",
+      "border-left","border-left-width","border-left-style","border-left-color",
+    ];
+    const winners: Array<{ prop: string; value: string; selector: string; origin: string; source: string | null; cssText: string }> = [];
     for (const prop of target) {
       const r = entry.matchedRules.find((m) => prop in m.declarations);
-      if (r) winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, cssText: r.cssText });
+      if (r) winners.push({ prop, value: r.declarations[prop], selector: r.selector, origin: r.origin, source: entry.source, cssText: r.cssText });
     }
     const payload = {
       ts: entry.ts, route: entry.route, selector: entry.selector, domPath: entry.domPath,
-      source: entry.source, component: entry.component, computed: entry.styles, winners,
+      source: entry.source, component: entry.component, computed: entry.styles,
+      cssVars: entry.cssVars, winners,
     };
     triggerDownload(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }), `inspector-winners-${stamp()}.json`);
+  }
+
+  /** Exporta a cascata CSS completa (matchedRules na ordem de especificidade). */
+  function downloadCascade(entry: LogEntry) {
+    const meta = { ts: entry.ts, route: entry.route, selector: entry.selector, domPath: entry.domPath, source: entry.source, component: entry.component, inShadow: entry.inShadow };
+    const lines = [JSON.stringify({ kind: "meta", ...meta })];
+    entry.matchedRules.forEach((r, i) => lines.push(JSON.stringify({ kind: "rule", order: i + 1, ...r })));
+    triggerDownload(new Blob([lines.join("\n") + "\n"], { type: "application/x-ndjson" }), `inspector-cascade-${stamp()}.ndjson`);
   }
 
   function stamp() { return new Date().toISOString().replace(/[:.]/g, "-"); }
@@ -772,16 +856,38 @@ ${entry.outerHTML}
     console.log(`%c[Inspector] ${active ? "ATIVO" : "off"}`, "color:#C8A96A");
   }
 
+  function isTypingTarget(t: EventTarget | null): boolean {
+    const el = t as HTMLElement | null;
+    if (!el) return false;
+    const tag = el.tagName;
+    return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (el as HTMLElement).isContentEditable;
+  }
+
   window.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "I" || e.key === "i")) {
-      e.preventDefault(); toggle();
+      e.preventDefault(); toggle(); return;
     }
-    if (e.key === "Escape" && active) toggle();
-    if (active && (e.key === "l" || e.key === "L") && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      locked = !locked;
-      if (!locked) { lockedEntry = null; lockedEl = null; }
+    if (e.key === "Escape" && active) { toggle(); return; }
+    if (!active) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (isTypingTarget(e.target)) return;
+    const k = e.key.toLowerCase();
+    const lastEntry = logs[logs.length - 1];
+    if (k === "l" || k === "f") {
+      // L (legado) ou F = alternar Fixar usando última seleção
+      e.preventDefault();
+      if (locked) { locked = false; lockedEntry = null; lockedEl = null; }
+      else if (lastEntry) { locked = true; lockedEntry = lastEntry; /* lockedEl: tenta resolver */
+        try { lockedEl = document.querySelector(lastEntry.selector); } catch { lockedEl = null; } }
       persist();
       if (lockedEntry && lockedEl) renderPanel(lockedEntry, lockedEl);
+    } else if (k === "c") {
+      e.preventDefault();
+      toggleCompareMode();
+    } else if (k === "p") {
+      if (!lastEntry) return;
+      e.preventDefault();
+      copyPackage(lastEntry);
     }
   });
   window.addEventListener("mousemove", onMove, true);
@@ -800,5 +906,5 @@ ${entry.outerHTML}
     buildPackage,
   };
   // eslint-disable-next-line no-console
-  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I para alternar, L para fixar, Comparar p/ A⇄B", "color:#C8A96A");
+  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I alterna · F fixar · C comparar · P pacote · Esc sai", "color:#C8A96A");
 }

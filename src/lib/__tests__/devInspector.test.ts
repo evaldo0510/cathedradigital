@@ -23,6 +23,7 @@ function makeEntry(selector: string): LogEntry {
     styles: { "font-size": "24px", "line-height": "32px" },
     matchedRules: [],
     conflicts: [],
+    cssVars: [],
     outerHTML: `<${selector}>T</${selector}>`,
     inShadow: false,
   };
