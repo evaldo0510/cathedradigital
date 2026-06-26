@@ -248,16 +248,16 @@ export function convertText(content: string, format: DumpFormat): ConversionResu
   const sep = format === "tsv" ? "\t" : ",";
   const lines = content.split(/\r?\n/);
   let header: string[] | null = null;
-  lines.forEach((line, i) => {
-    if (!line.trim()) return;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim()) continue;
     const cells = parseCsvLine(line, sep);
-    if (!header) { header = cells.map((c) => c.toLowerCase().trim()); return; }
+    if (!header) { header = cells.map((c) => c.toLowerCase().trim()); continue; }
     const rec: Record<string, unknown> = {};
-    header.forEach((h, idx) => { rec[h] = cells[idx]; });
+    for (let j = 0; j < header.length; j++) rec[header[j]] = cells[j];
     push(rec, i + 1, line);
-  });
-  return { versesheader: header, verses, rejected } as unknown as ConversionResult;
-  // (o `versesheader` extra é só para satisfazer TS; nunca usado)
+  }
+  return { verses, rejected };
 }
 
 export function previewDump(content: string, filename: string): DumpPreview {
