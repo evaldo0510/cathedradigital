@@ -576,6 +576,7 @@ export function initDevInspector() {
     panel!.querySelector('[data-act="export"]')?.addEventListener("click", exportNDJSON);
     panel!.querySelector('[data-act="html"]')?.addEventListener("click", () => downloadHTML(entry));
     panel!.querySelector('[data-act="winners"]')?.addEventListener("click", () => downloadWinners(entry));
+    panel!.querySelector('[data-act="cascade"]')?.addEventListener("click", () => downloadCascade(entry));
     panel!.querySelector('[data-act="compare"]')?.addEventListener("click", () => toggleCompareMode());
     panel!.querySelector('[data-act="lock"]')?.addEventListener("click", () => {
       locked = !locked;
