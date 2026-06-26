@@ -74,14 +74,18 @@ const CatechismContent: React.FC<{
   const handleRetry = useCallback(async () => {
     const result = await refetch();
     if (result.error) {
-      const code = (result.error as any)?.code;
-      if (code === 'not_found') {
-        toast.error(`§${paragraph} ainda não está disponível no banco oficial.`);
-      } else {
-        toast.error(`Falha ao reconsultar §${paragraph}.`, {
-          description: (result.error as any)?.message,
-        });
-      }
+      const err: any = result.error;
+      const code = err?.code ?? 'unknown';
+      const reason =
+        code === 'not_found' ? 'não encontrado no banco oficial' :
+        code === 'network' ? 'falha de rede' :
+        code === 'unauthorized' ? 'sessão expirada' :
+        code === 'forbidden' ? 'sem permissão' :
+        'erro desconhecido';
+      const failureCount = (result as any)?.failureCount ?? 1;
+      toast.error(`§${paragraph} — ${reason}`, {
+        description: `Tentativa ${failureCount}${err?.status ? ` · HTTP ${err.status}` : ''}${err?.message ? ` · ${err.message}` : ''}`,
+      });
     } else if (result.data) {
       toast.success(`§${paragraph} carregado com sucesso.`);
     }
