@@ -203,6 +203,12 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     return { ok: false, err: lastErr, attempts };
   };
 
+  const waitWhilePaused = async () => {
+    while (pausedRef.current && !cancelRef.current.cancelled) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+  };
+
   const runWorkers = async (queue: number[], cfg: { maxRetries: number; baseBackoffMs: number; concurrency: number }) => {
     const total = queue.length;
     let recovered = 0;
@@ -220,6 +226,10 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           }
           idx = queue.length;
           break;
+        }
+        if (pausedRef.current) {
+          await waitWhilePaused();
+          if (cancelRef.current.cancelled) continue;
         }
         const p = queue[idx++];
         const attemptIdx = idx;
@@ -277,16 +287,43 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
 
   const verifyAll = () => startRun(inRange, { resume: false });
 
-  const handleCancel = () => {
-    if (!isRunning) return;
+  const confirmCancel = () => {
     cancelRef.current.cancelled = true;
+    pausedRef.current = false;
+    setPaused(false);
     setRunStatus('cancelled');
+    setConfirmCancelOpen(false);
   };
 
-  // Retomada automática após refresh: apenas se runStatus === 'running' (não cancelado/concluído).
+  const handlePause = () => {
+    if (!isRunning) return;
+    pausedRef.current = true;
+    setPaused(true);
+    toast.message('Execução pausada.', { description: 'Workers em andamento concluirão o item atual.' });
+  };
+
+  const handleResume = () => {
+    pausedRef.current = false;
+    setPaused(false);
+    if (!isRunning && runStatus === 'running') {
+      // Pausa estava ativa entre refresh: retomar com o que restar.
+      const processed = new Set(
+        Object.values(results)
+          .filter(r => r.status === 'recovered' || r.status === 'error')
+          .map(r => r.paragraph),
+      );
+      const remaining = inRange.filter(p => !processed.has(p));
+      if (remaining.length > 0) startRun(remaining, { resume: true });
+    } else {
+      toast.message('Execução retomada.');
+    }
+  };
+
+  // Retomada automática após refresh: só se 'running' E não pausado/cancelado/concluído.
   useEffect(() => {
     if (autoResumedRef.current) return;
     if (runStatus !== 'running') return;
+    if (paused) return;
     if (isRunning) return;
     if (inRange.length === 0) return;
     autoResumedRef.current = true;
@@ -303,7 +340,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     toast.message('Retomando verificação…', { description: `${remaining.length} parágrafo(s) restantes.` });
     startRun(remaining, { resume: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runStatus, inRange.length]);
+  }, [runStatus, paused, inRange.length]);
 
   if (inRange.length === 0 && Object.keys(results).length === 0) return null;
 
