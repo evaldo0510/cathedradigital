@@ -517,10 +517,11 @@ export function initDevInspector() {
         <div style="display:flex;gap:4px;flex-wrap:wrap">
           <button data-act="lock" style="${btn()}">${locked ? "Desafixar" : "Fixar"}</button>
           <button data-act="compare" style="${btn()}">${compareMode ? "Sair cmp" : "Comparar"}</button>
-          <button data-act="package" style="${btn(true)}">📎 Pacote</button>
+          <button data-act="package" style="${btn(true)}" title="P">📎 Pacote</button>
           <button data-act="copy" style="${btn()}">Copiar</button>
           <button data-act="html" style="${btn()}">HTML</button>
           <button data-act="winners" style="${btn()}">Winners</button>
+          <button data-act="cascade" style="${btn()}" title="Cascata completa">Cascade</button>
           <button data-act="export" style="${btn()}">NDJSON</button>
           <button data-act="clear" style="${btn()}">Limpar</button>
           <button data-act="close" style="${btn()}">×</button>
