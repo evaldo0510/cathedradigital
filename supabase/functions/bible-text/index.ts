@@ -627,7 +627,7 @@ serve(async (req) => {
       const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
-      recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
+      recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: 'warm', total_wall_clock_ms: Date.now() - t0 });
       return new Response(JSON.stringify({ ok: !!result, cacheKey, tier, source: result?.source ?? null, correlationId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json', 'x-correlation-id': correlationId },
       });
