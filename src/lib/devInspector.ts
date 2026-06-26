@@ -449,6 +449,7 @@ export function initDevInspector() {
       styles: pickStyles(el),
       matchedRules,
       conflicts: detectConflicts(matchedRules),
+      cssVars: extractCssVars(el, matchedRules),
       outerHTML: el.outerHTML.slice(0, 50000),
       inShadow: el.getRootNode() instanceof ShadowRoot,
     };
