@@ -15,6 +15,12 @@
  */
 
 type FiberSource = { fileName?: string; lineNumber?: number; columnNumber?: number };
+type MatchedRule = {
+  selector: string;
+  specificity: [number, number, number];
+  origin: string;
+  cssText: string;
+};
 type LogEntry = {
   ts: string;
   route: string;
@@ -24,7 +30,9 @@ type LogEntry = {
   domPath: string;
   classes: string;
   size: { w: number; h: number };
+  viewport: { w: number; h: number; dpr: number; breakpoint: string };
   styles: Record<string, string>;
+  matchedRules: MatchedRule[];
 };
 
 function getFiberFromNode(node: Element): any | null {
@@ -107,6 +115,84 @@ function pickStyles(el: Element): Record<string, string> {
   for (const k of keys) out[k] = cs.getPropertyValue(k).trim();
   return out;
 }
+
+function specificity(selector: string): [number, number, number] {
+  // strip pseudo-element ::before/::after etc (count later) and split by comma is caller's job
+  const s = selector.replace(/\/\*.*?\*\//g, "").trim();
+  const ids = (s.match(/#[\w-]+/g) || []).length;
+  const classes = (s.match(/\.[\w-]+/g) || []).length;
+  const attrs = (s.match(/\[[^\]]+\]/g) || []).length;
+  const pseudoClasses = (s.match(/:(?!:)[\w-]+(\([^)]*\))?/g) || []).length;
+  const pseudoElements = (s.match(/::[\w-]+/g) || []).length;
+  const tags = (s.match(/(^|[\s>+~])([a-zA-Z][\w-]*)/g) || []).length;
+  return [ids, classes + attrs + pseudoClasses, tags + pseudoElements];
+}
+
+function ruleOrigin(sheet: CSSStyleSheet): string {
+  if (sheet.href) {
+    try {
+      return new URL(sheet.href).pathname.split("/").pop() || sheet.href;
+    } catch {
+      return sheet.href;
+    }
+  }
+  return sheet.ownerNode?.nodeName === "STYLE" ? "<style>" : "inline";
+}
+
+function getMatchedRules(el: Element): MatchedRule[] {
+  const out: MatchedRule[] = [];
+  const sheets = Array.from(document.styleSheets) as CSSStyleSheet[];
+  for (const sheet of sheets) {
+    let rules: CSSRuleList | null = null;
+    try {
+      rules = sheet.cssRules;
+    } catch {
+      continue; // CORS-locked sheet
+    }
+    if (!rules) continue;
+    walkRules(rules, sheet, el, out);
+    if (out.length > 200) break;
+  }
+  out.sort((a, b) => {
+    for (let i = 0; i < 3; i++) if (b.specificity[i] !== a.specificity[i]) return b.specificity[i] - a.specificity[i];
+    return 0;
+  });
+  return out.slice(0, 60);
+}
+
+function walkRules(rules: CSSRuleList, sheet: CSSStyleSheet, el: Element, out: MatchedRule[]) {
+  for (const rule of Array.from(rules)) {
+    if (rule instanceof CSSStyleRule) {
+      const selectorText = rule.selectorText;
+      for (const sel of selectorText.split(",").map((s) => s.trim())) {
+        const cleaned = sel.replace(/::[\w-]+$/, "").trim() || "*";
+        try {
+          if (el.matches(cleaned)) {
+            out.push({
+              selector: sel,
+              specificity: specificity(sel),
+              origin: ruleOrigin(sheet),
+              cssText: rule.style.cssText,
+            });
+            break;
+          }
+        } catch {
+          /* invalid selector */
+        }
+      }
+    } else if ((rule as CSSGroupingRule).cssRules) {
+      walkRules((rule as CSSGroupingRule).cssRules, sheet, el, out);
+    }
+  }
+}
+
+function getViewportInfo() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const bp = w < 640 ? "xs" : w < 768 ? "sm" : w < 1024 ? "md" : w < 1280 ? "lg" : w < 1536 ? "xl" : "2xl";
+  return { w, h, dpr: window.devicePixelRatio || 1, breakpoint: bp };
+}
+
 
 export function initDevInspector() {
   if (typeof window === "undefined") return;
@@ -192,7 +278,9 @@ export function initDevInspector() {
       domPath: domPath(el),
       classes: (el.getAttribute("class") || "").trim(),
       size: { w: Math.round(r.width), h: Math.round(r.height) },
+      viewport: getViewportInfo(),
       styles: pickStyles(el),
+      matchedRules: getMatchedRules(el),
     };
   }
 
@@ -220,6 +308,22 @@ export function initDevInspector() {
     const stylesRows = Object.entries(entry.styles)
       .map(([k, v]) => `<tr><td style="opacity:.6;padding-right:8px">${k}</td><td>${escapeHtml(v)}</td></tr>`)
       .join("");
+    const cascadeRows = entry.matchedRules.length
+      ? entry.matchedRules
+          .map(
+            (r, i) => `
+              <div style="margin-top:6px;padding:6px 8px;border-left:2px solid #C8A96A;background:rgba(255,255,255,0.04);border-radius:0 4px 4px 0">
+                <div style="display:flex;justify-content:space-between;gap:8px;font-size:10px;opacity:.7">
+                  <span>#${i + 1} · ${r.specificity.join(",")}</span>
+                  <span>${escapeHtml(r.origin)}</span>
+                </div>
+                <div style="color:#C8A96A;word-break:break-all">${escapeHtml(r.selector)}</div>
+                <div style="opacity:.85;word-break:break-all;font-size:11px">${escapeHtml(r.cssText)}</div>
+              </div>`,
+          )
+          .join("")
+      : '<div style="opacity:.5;font-size:11px">Nenhuma regra encontrada (sheets cross-origin podem estar bloqueadas)</div>';
+    const vp = entry.viewport;
     panel.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px">
         <strong style="color:#C8A96A;font-size:11px;letter-spacing:.15em;text-transform:uppercase">Inspector</strong>
@@ -229,7 +333,7 @@ export function initDevInspector() {
           <button data-act="close" style="${btn()}">×</button>
         </div>
       </div>
-      <div style="font-size:11px;opacity:.6">${escapeHtml(entry.route)} · ${entry.size.w}×${entry.size.h}px</div>
+      <div style="font-size:11px;opacity:.6">${escapeHtml(entry.route)} · elem ${entry.size.w}×${entry.size.h}px · vp ${vp.w}×${vp.h} · ${vp.breakpoint} · dpr ${vp.dpr}</div>
       <div style="margin-top:8px"><span style="color:#C8A96A">${escapeHtml(entry.component || el.tagName.toLowerCase())}</span></div>
       ${entry.source ? `<div style="opacity:.85;margin-top:2px">${escapeHtml(entry.source)}</div>` : '<div style="opacity:.5;margin-top:2px">sem _debugSource</div>'}
       <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">Seletor</div><div style="word-break:break-all">${escapeHtml(entry.selector)}</div></div>
@@ -237,6 +341,9 @@ export function initDevInspector() {
       <div style="margin-top:8px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">DOM path</div><div style="word-break:break-all">${escapeHtml(entry.domPath)}</div></div>
       <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">Estilos computados</div>
         <table style="width:100%;margin-top:4px;border-collapse:collapse">${stylesRows}</table>
+      </div>
+      <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">Cascata CSS (especificidade · origem)</div>
+        ${cascadeRows}
       </div>
       <div style="margin-top:10px;opacity:.5;font-size:10px">logs: ${logs.length} · Ctrl/Cmd+Shift+I para alternar</div>
     `;
@@ -317,9 +424,41 @@ export function initDevInspector() {
     console.log("[Inspector]", entry);
   }
 
+  let dockToggleBtn: HTMLButtonElement | null = null;
+  function renderDock() {
+    const dock = document.createElement("div");
+    Object.assign(dock.style, {
+      position: "fixed",
+      bottom: "12px",
+      right: "12px",
+      zIndex: "2147483647",
+      display: "flex",
+      gap: "6px",
+      padding: "6px",
+      background: "#0B1F3A",
+      borderRadius: "999px",
+      boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+      border: "1px solid rgba(200,169,106,0.4)",
+    } as CSSStyleDeclaration);
+    dockToggleBtn = document.createElement("button");
+    dockToggleBtn.style.cssText = btn() + ";border-radius:999px;padding:4px 10px";
+    dockToggleBtn.textContent = "🔍 Inspect";
+    dockToggleBtn.onclick = () => toggle();
+    const exportBtn = document.createElement("button");
+    exportBtn.style.cssText = btn() + ";border-radius:999px;padding:4px 10px";
+    exportBtn.textContent = "⬇ NDJSON";
+    exportBtn.onclick = exportNDJSON;
+    dock.append(dockToggleBtn, exportBtn);
+    document.body.appendChild(dock);
+  }
+
   function toggle() {
     active = !active;
     document.body.style.cursor = active ? "crosshair" : "";
+    if (dockToggleBtn) {
+      dockToggleBtn.style.background = active ? "#C8A96A" : "rgba(200,169,106,0.15)";
+      dockToggleBtn.style.color = active ? "#0B1F3A" : "#fff";
+    }
     if (!active) {
       hideHover();
       panel?.remove();
@@ -339,7 +478,13 @@ export function initDevInspector() {
   window.addEventListener("mousemove", onMove, true);
   window.addEventListener("click", onClick, true);
 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderDock);
+  } else {
+    renderDock();
+  }
+
   (window as any).__cathedraInspector = { toggle, logs, exportNDJSON };
   // eslint-disable-next-line no-console
-  console.log("%c[Inspector] pronto — Ctrl/Cmd+Shift+I", "color:#C8A96A");
+  console.log("%c[Inspector] pronto — botão no canto ou Ctrl/Cmd+Shift+I", "color:#C8A96A");
 }
