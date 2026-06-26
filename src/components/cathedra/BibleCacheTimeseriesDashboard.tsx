@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RefreshCw, Activity, ShieldAlert, Download, Mail } from 'lucide-react';
 import { toast } from 'sonner';
+import BibleCacheBenchmarkCompare from './BibleCacheBenchmarkCompare';
 
 interface TimeseriesRow {
   bucket_start: string;
