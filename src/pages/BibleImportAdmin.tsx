@@ -143,10 +143,8 @@ export default function BibleImportAdmin() {
     try { localStorage.removeItem(LOGS_STORAGE_KEY); } catch { /* ignore */ }
   }, []);
 
-  const resetRun = useCallback(() => {
-    setSteps(INITIAL_STEPS); setLogs([]); setActiveJobId(null);
-    try { localStorage.removeItem(LOGS_STORAGE_KEY); } catch { /* ignore */ }
-  }, []);
+
+
 
   const loadAll = useCallback(async () => {
     const [{ data: src, error: srcErr }, { data: jb, error: jbErr }] = await Promise.all([
