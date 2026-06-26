@@ -413,10 +413,31 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           </p>
         </div>
         <div className="flex items-center gap-spacing-2xs flex-wrap">
+          <Select value={exportFilter} onValueChange={(v: any) => setExportFilter(v)}>
+            <SelectTrigger
+              aria-label="Filtro da exportação"
+              className="h-8 w-spacing-5xl text-premium-xs"
+              data-testid="catechism-export-filter"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="pending">Pendentes</SelectItem>
+              <SelectItem value="backoff">Em backoff</SelectItem>
+              <SelectItem value="error">Com erro</SelectItem>
+            </SelectContent>
+          </Select>
           <Button onClick={exportCSV} disabled={!hasExportable} variant="ghost" size="sm" data-testid="catechism-export-csv">CSV</Button>
           <Button onClick={exportJSON} disabled={!hasExportable} variant="ghost" size="sm" data-testid="catechism-export-json">JSON</Button>
-          {isRunning ? (
-            <Button onClick={handleCancel} variant="outline" size="sm" data-testid="catechism-verify-cancel">Cancelar</Button>
+          {isRunning && !paused && (
+            <Button onClick={handlePause} variant="outline" size="sm" data-testid="catechism-verify-pause">Pausar</Button>
+          )}
+          {(isRunning && paused) || (runStatus === 'running' && paused && !isRunning) ? (
+            <Button onClick={handleResume} variant="outline" size="sm" data-testid="catechism-verify-resume">Retomar</Button>
+          ) : null}
+          {(isRunning || (runStatus === 'running' && paused)) ? (
+            <Button onClick={() => setConfirmCancelOpen(true)} variant="outline" size="sm" data-testid="catechism-verify-cancel">Cancelar</Button>
           ) : (
             <Button onClick={verifyAll} variant="outline" size="sm" data-testid="catechism-verify-all" disabled={inRange.length === 0}>
               Verificar todos ({inRange.length})
@@ -424,6 +445,25 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           )}
         </div>
       </div>
+
+      <AlertDialog open={confirmCancelOpen} onOpenChange={setConfirmCancelOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancelar verificação em lote?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Os workers em andamento concluirão o item atual e os parágrafos restantes serão marcados
+              como “cancelados”. A retomada automática após refresh ficará bloqueada — só uma nova
+              execução manual irá processá-los novamente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="catechism-cancel-modal-keep">Continuar verificando</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCancel} data-testid="catechism-cancel-modal-confirm">
+              Cancelar mesmo assim
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="grid gap-spacing-sm sm:grid-cols-3" data-testid="catechism-verify-config">
         <div className="flex items-center gap-spacing-xs">
