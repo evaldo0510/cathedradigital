@@ -554,6 +554,15 @@ export function initDevInspector() {
         </div>
       </div>
       <div style="font-size:11px;opacity:.6">${escapeHtml(entry.route)} · elem ${entry.size.w}×${entry.size.h}px · vp ${vp.w}×${vp.h} · ${vp.breakpoint} · dpr ${vp.dpr}</div>
+
+      <div style="margin-top:6px;padding:5px 7px;background:rgba(200,169,106,0.08);border:1px dashed rgba(200,169,106,0.35);border-radius:4px;font-size:10px;opacity:.9;display:flex;gap:8px;flex-wrap:wrap">
+        <span><kbd style="${kbd()}">F</kbd> Fixar</span>
+        <span><kbd style="${kbd()}">C</kbd> Comparar</span>
+        <span><kbd style="${kbd()}">P</kbd> Pacote</span>
+        <span><kbd style="${kbd()}">Esc</kbd> Sair / cancelar Comparar</span>
+        <span style="opacity:.7"><kbd style="${kbd()}">Ctrl/Cmd</kbd>+<kbd style="${kbd()}">Shift</kbd>+<kbd style="${kbd()}">I</kbd> liga/desliga</span>
+      </div>
+
       <div style="margin-top:8px"><span style="color:#C8A96A">${escapeHtml(entry.component || el.tagName.toLowerCase())}</span></div>
       ${entry.source ? `<div style="opacity:.85;margin-top:2px">${escapeHtml(entry.source)}</div>` : '<div style="opacity:.5;margin-top:2px">sem _debugSource</div>'}
       <div style="margin-top:10px"><div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em">Seletor</div><div style="word-break:break-all">${escapeHtml(entry.selector)}</div></div>
@@ -574,6 +583,7 @@ export function initDevInspector() {
           </div>`).join("") : '<div style="opacity:.5;font-size:11px">Nenhuma var(--…) usada pelas regras vencedoras.</div>'}
       </div>
 
+      ${renderWinnersBlock(entry)}
 
       <div style="margin-top:10px">
         <div style="opacity:.5;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Cascata CSS · filtros</div>
@@ -586,6 +596,7 @@ export function initDevInspector() {
       </div>
       <div style="margin-top:10px;opacity:.5;font-size:10px">logs: ${logs.length} · sessão salva em localStorage</div>
     `;
+
 
     panel!.querySelectorAll("[data-filter]").forEach((s) => {
       s.addEventListener("change", (e) => {
