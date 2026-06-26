@@ -134,7 +134,7 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
           errorMessage: undefined,
           httpStatus: undefined,
         });
-        return { ok: true };
+        return { ok: true, attempts };
       } catch (err: any) {
         lastErr = err;
         const code = err instanceof CatechismFetchError ? err.code : 'unknown';
