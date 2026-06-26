@@ -56,11 +56,36 @@ const CatechismContent: React.FC<{
   const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
-
+  const { markPending, clearPending } = useCatechismPending();
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
   }, [paragraph, prefetch, isVisible]);
+
+  // Sincroniza este parágrafo com o painel de pendências da seção.
+  useEffect(() => {
+    if (isError && (error as any)?.code === 'not_found') {
+      markPending(paragraph);
+    } else if (data) {
+      clearPending(paragraph);
+    }
+  }, [isError, error, data, paragraph, markPending, clearPending]);
+
+  const handleRetry = useCallback(async () => {
+    const result = await refetch();
+    if (result.error) {
+      const code = (result.error as any)?.code;
+      if (code === 'not_found') {
+        toast.error(`§${paragraph} ainda não está disponível no banco oficial.`);
+      } else {
+        toast.error(`Falha ao reconsultar §${paragraph}.`, {
+          description: (result.error as any)?.message,
+        });
+      }
+    } else if (result.data) {
+      toast.success(`§${paragraph} carregado com sucesso.`);
+    }
+  }, [refetch, paragraph]);
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
@@ -79,13 +104,16 @@ const CatechismContent: React.FC<{
     return <CatechismParagraphSkeleton paragraph={paragraph} />;
   }
 
+  // Refetch em andamento após erro: mostra skeleton em vez de bolha vazia.
+  if (isError && isFetching) {
+    return <CatechismParagraphSkeleton paragraph={paragraph} />;
+  }
+
   if (isError) {
     const err: any = error;
     const code: string = err?.code ?? 'unknown';
     const status = err?.status;
 
-    // Fallback suave para parágrafos ainda não disponíveis no banco oficial.
-    // Mantém o ritmo de leitura e evita "bolhas vazias" com alerta destrutivo.
     if (code === 'not_found') {
       return (
         <div
@@ -104,7 +132,7 @@ const CatechismContent: React.FC<{
           </p>
           <div className="pt-spacing-xs">
             <Button
-              onClick={() => refetch()}
+              onClick={handleRetry}
               disabled={isFetching}
               variant="ghost"
               size="sm"
@@ -141,7 +169,7 @@ const CatechismContent: React.FC<{
         )}
         <div className="flex items-center gap-spacing-xs pt-spacing-xs">
           <Button
-            onClick={() => refetch()}
+            onClick={handleRetry}
             disabled={isFetching}
             variant="outline"
             size="sm"
