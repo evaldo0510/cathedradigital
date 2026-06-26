@@ -108,6 +108,8 @@ const ALIAS_TO_ABBR: Record<string, string> = (() => {
   return map;
 })();
 
+const CANON_ABBRS = new Set(BIBLE_CANON.map((b) => b.abbr));
+
 export function resolveAbbr(raw: unknown): string | null {
   if (raw == null) return null;
   const s = String(raw).trim().toLowerCase().replace(/\s+/g, " ");
@@ -116,7 +118,7 @@ export function resolveAbbr(raw: unknown): string | null {
   const compact = s.replace(/[.\s]/g, "");
   if (ALIAS_TO_ABBR[compact]) return ALIAS_TO_ABBR[compact];
   const fromCanon = normalizeAbbr(String(raw));
-  return fromCanon || null;
+  return fromCanon && CANON_ABBRS.has(fromCanon) ? fromCanon : null;
 }
 
 export function detectFormat(filename: string): DumpFormat {
