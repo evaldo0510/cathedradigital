@@ -17,6 +17,19 @@ export const BLOCKING_FINDING_TYPES = [
 ] as const;
 export type BlockingFindingType = typeof BLOCKING_FINDING_TYPES[number];
 
+export interface Sprint1Gate {
+  books_ok: number;
+  books_total: number;
+  books_expected: number;
+  books_missing: string[];
+  books_partial: string[];
+  books_contaminated: string[];
+  english_verses: number;
+  verses_total: number;
+  search_ok: boolean;
+  passed: boolean;
+}
+
 export interface PostRunVerifyResult {
   ran: boolean;
   passed: boolean;
@@ -24,6 +37,7 @@ export interface PostRunVerifyResult {
   duration_ms: number;
   total_findings: number;
   blocking: Record<BlockingFindingType, number>;
+  sprint1?: Sprint1Gate;
   error?: string;
 }
 
@@ -48,6 +62,57 @@ function fail(reason: string, startedAt: number, runId: string | null = null, to
     blocking: { ...ZERO_BLOCKING },
     error: reason,
   };
+}
+
+/** Avalia critérios da Sprint 1: 73 livros, zero inglês, busca funcionando. */
+async function evaluateSprint1Gate(admin: ReturnType<typeof createClient>): Promise<Sprint1Gate | undefined> {
+  try {
+    const { data: coverage, error: covErr } = await admin.rpc("bible_canonical_coverage");
+    if (covErr || !Array.isArray(coverage)) return undefined;
+
+    const rows = coverage as Array<{
+      abbrev: string;
+      status: string;
+      verses_total: number;
+      english_verse_count: number;
+    }>;
+
+    const booksExpected = 73;
+    const booksOk = rows.filter((r) => r.status === "ok").length;
+    const booksMissing = rows.filter((r) => r.status === "missing" || r.status === "empty").map((r) => r.abbrev);
+    const booksPartial = rows.filter((r) => r.status === "partial" || r.status === "over").map((r) => r.abbrev);
+    const booksContaminated = rows.filter((r) => r.status === "contaminated").map((r) => r.abbrev);
+    const englishVerses = rows.reduce((acc, r) => acc + (Number(r.english_verse_count) || 0), 0);
+    const versesTotal = rows.reduce((acc, r) => acc + (Number(r.verses_total) || 0), 0);
+
+    // Busca soberana: existe pelo menos 1 verso com texto indexável.
+    const { count: searchableCount } = await admin
+      .from("bible_verses")
+      .select("id", { count: "exact", head: true })
+      .not("text", "is", null);
+    const searchOk = (searchableCount ?? 0) > 0 && versesTotal > 0;
+
+    return {
+      books_ok: booksOk,
+      books_total: rows.length,
+      books_expected: booksExpected,
+      books_missing: booksMissing,
+      books_partial: booksPartial,
+      books_contaminated: booksContaminated,
+      english_verses: englishVerses,
+      verses_total: versesTotal,
+      search_ok: searchOk,
+      passed:
+        booksOk === booksExpected &&
+        booksMissing.length === 0 &&
+        booksPartial.length === 0 &&
+        booksContaminated.length === 0 &&
+        englishVerses === 0 &&
+        searchOk,
+    };
+  } catch {
+    return undefined;
+  }
 }
 
 export async function runPostRunVerify(ctx: PostRunVerifyContext): Promise<PostRunVerifyResult> {
@@ -86,14 +151,16 @@ export async function runPostRunVerify(ctx: PostRunVerifyContext): Promise<PostR
     for (const row of (data ?? []) as Array<{ finding_type: BlockingFindingType }>) {
       blocking[row.finding_type] = (blocking[row.finding_type] ?? 0) + 1;
     }
-    const passed = Object.values(blocking).every((n) => n === 0);
+    const diagnosePassed = Object.values(blocking).every((n) => n === 0);
+    const sprint1 = await evaluateSprint1Gate(admin);
     const result: PostRunVerifyResult = {
       ran: true,
-      passed,
+      passed: diagnosePassed && (sprint1?.passed ?? true),
       run_id: runId,
       duration_ms: Date.now() - t0,
       total_findings: totalFindings,
       blocking,
+      sprint1,
     };
 
     // Best-effort log (não bloqueia resposta em caso de erro RLS/insert)
