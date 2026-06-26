@@ -278,7 +278,9 @@ export function initDevInspector() {
       domPath: domPath(el),
       classes: (el.getAttribute("class") || "").trim(),
       size: { w: Math.round(r.width), h: Math.round(r.height) },
+      viewport: getViewportInfo(),
       styles: pickStyles(el),
+      matchedRules: getMatchedRules(el),
     };
   }
 
