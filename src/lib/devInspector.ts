@@ -191,6 +191,8 @@ function getViewportInfo() {
   const h = window.innerHeight;
   const bp = w < 640 ? "xs" : w < 768 ? "sm" : w < 1024 ? "md" : w < 1280 ? "lg" : w < 1536 ? "xl" : "2xl";
   return { w, h, dpr: window.devicePixelRatio || 1, breakpoint: bp };
+}
+
 
 export function initDevInspector() {
   if (typeof window === "undefined") return;
