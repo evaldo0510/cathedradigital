@@ -127,6 +127,8 @@ const defaultSettings: ReadingSettings = {
   audioCaptionSize: 'medium',
   showAudioTranscriptPanel: false,
   showStudyMarginalia: false,
+  bibleTranslationId: null,
+  bibleModernize: false,
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
