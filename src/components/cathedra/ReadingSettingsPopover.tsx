@@ -117,7 +117,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setOpen(false)}
+                onClick={closePopover}
                 aria-label="Fechar configurações"
                 title="Fechar"
                 className="h-7 w-7 rounded-full text-primary/50 hover:text-primary hover:bg-primary/5"
