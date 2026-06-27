@@ -52,7 +52,9 @@ if (isPreviewHost || isInIframe) {
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <MaintenanceGate>
+      <App />
+    </MaintenanceGate>
   </React.StrictMode>
 );
 
