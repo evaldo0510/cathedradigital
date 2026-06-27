@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { MaintenanceGate } from "./components/MaintenanceGate";
 import { prefetchCoreModules } from "./lib/prefetch";
 import { initLiturgicalPrefetchGuard } from "./lib/litcalPrefetchGuard";
 import { registerSW } from 'virtual:pwa-register';
