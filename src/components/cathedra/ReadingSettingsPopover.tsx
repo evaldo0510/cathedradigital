@@ -70,16 +70,18 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   ] as const;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         {children || (
           <Button
+            ref={triggerRef}
             variant="ghost"
             size="icon"
             className={cn("rounded-premium-full", triggerClassName)}
             title="Configurações de Leitura"
             aria-label="Configurações de Leitura"
             aria-expanded={open}
+            aria-haspopup="dialog"
           >
             <Icons.Type className="w-spacing-md h-spacing-md text-primary/40" />
           </Button>
@@ -87,10 +89,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
       </PopoverTrigger>
       <PopoverContent
         data-testid="reading-settings-popover"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Configurações de leitura"
         className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
         align="end"
         sideOffset={8}
         collisionPadding={12}
+        onPointerDownOutside={() => closePopover()}
+        onEscapeKeyDown={() => closePopover()}
       >
         <div className="space-y-spacing-xl">
           <div
