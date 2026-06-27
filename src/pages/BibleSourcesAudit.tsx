@@ -90,8 +90,14 @@ export default function BibleSourcesAudit() {
   const [reporting, setReporting] = useState(false);
   const [autoRetry, setAutoRetry] = useState(false);
   const [batchRunning, setBatchRunning] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  useEffect(() => { pausedRef.current = paused; }, [paused]);
   const [reconciling, setReconciling] = useState(false);
-  const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
+  type RetryLogRow = { ts: string; target: string; outcome: string; httpStatus?: number | null; error?: string | null };
+  const [retryLog, setRetryLog] = useState<RetryLogRow[]>([]);
+  // Última tentativa por capítulo (abbrev:chapter → metadados)
+  const [lastAttempts, setLastAttempts] = useState<Record<string, { ts: string; outcome: string; httpStatus?: number | null; error?: string | null }>>({});
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
   // Batch retry controls (persisted in localStorage)
