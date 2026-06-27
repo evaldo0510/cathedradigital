@@ -1,0 +1,102 @@
+name: ReadingSettingsPopover CI
+
+# Bloqueia merges quando os testes unitários, de snapshot, a11y, teclado
+# ou o e2e do popover de configurações de leitura falharem.
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'src/components/cathedra/ReadingSettingsPopover.tsx'
+      - 'src/components/cathedra/__tests__/ReadingSettingsPopover*'
+      - 'src/contexts/ReadingSettingsContext*'
+      - 'tests/e2e/reading-settings-popover.spec.ts'
+      - 'playwright.config.ts'
+      - '.github/workflows/reading-settings-popover.yml'
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: rsp-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Vitest (unit + snapshot + a11y + keyboard)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Run popover vitest suite
+        run: bunx vitest run src/components/cathedra/__tests__/ReadingSettingsPopover
+      - name: Upload snapshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reading-settings-popover-snapshots
+          path: src/components/cathedra/__tests__/__snapshots__/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  e2e:
+    name: Playwright (${{ matrix.project }})
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        # Cobre mobile, tablet e desktop para a regressão visual/UX completa.
+        project: [mobile-safari, tablet-safari, chromium]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('**/bun.lockb', '**/package.json') }}
+      - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: bunx playwright install --with-deps
+      - name: Install Playwright OS deps
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: bunx playwright install-deps
+      - name: Build app
+        run: bun run build
+      - name: Start preview server
+        run: |
+          bun run preview --port 8080 --host 127.0.0.1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8080 >/dev/null; then
+              echo "preview is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "preview failed to start"; exit 1
+      - name: Run Playwright (popover spec only)
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
+          CI: 'true'
+        run: bunx playwright test tests/e2e/reading-settings-popover.spec.ts --project=${{ matrix.project }}
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rsp-playwright-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
