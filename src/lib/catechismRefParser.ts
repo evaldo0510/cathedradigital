@@ -47,9 +47,15 @@ export function parseCatechismReferences(text: string): CatechismSegment[] {
           // Not a valid paragraph, treat as text
           continue;
         }
-        // Text before this number (prefix/separator)
+        // Text before this number (prefix/separator). Strip trailing §/§§ + spaces
+        // because the popover label already includes the § prefix — otherwise we'd
+        // render "§§2053" or "CIC §§2053".
         if (numMatch.index > blockLastIndex) {
-          segments.push({ type: 'text', value: block.slice(blockLastIndex, numMatch.index) });
+          const rawPrefix = block.slice(blockLastIndex, numMatch.index);
+          const cleanedPrefix = rawPrefix.replace(/§+\s*$/u, '');
+          if (cleanedPrefix.length > 0) {
+            segments.push({ type: 'text', value: cleanedPrefix });
+          }
         }
         segments.push({ type: 'catechismRef', value: `§${num}`, paragraph: num });
         blockLastIndex = numMatch.index + numMatch[0].length;
