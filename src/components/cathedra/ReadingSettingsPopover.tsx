@@ -13,15 +13,21 @@ import { Separator } from '@/components/ui/separator';
 interface ReadingSettingsPopoverProps {
   children?: React.ReactNode;
   triggerClassName?: string;
+  /**
+   * Atraso (ms) para ignorar alternâncias rápidas (tap-duplo). Padrão 280ms.
+   * Use 0 em testes/e2e para tornar a abertura/fechamento determinísticos.
+   */
+  debounceMs?: number;
 }
 
 // Debounce para evitar toggling duplo em taps rápidos no mobile (Radix
 // pode receber pointerdown + click ou dois clicks fantasmas).
-const TAP_DEBOUNCE_MS = 280;
+const DEFAULT_TAP_DEBOUNCE_MS = 280;
 
 const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   children,
-  triggerClassName
+  triggerClassName,
+  debounceMs = DEFAULT_TAP_DEBOUNCE_MS,
 }) => {
   const { settings, updateSettings } = useReadingSettings();
   const [open, setOpen] = useState(false);
@@ -30,7 +36,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
   const handleOpenChange = useCallback((next: boolean) => {
     const now = Date.now();
-    if (now - lastToggleAtRef.current < TAP_DEBOUNCE_MS) {
+    if (now - lastToggleAtRef.current < debounceMs) {
       // Ignora alternâncias muito próximas para preservar o estado
       // (incluindo "Modo Imersivo") e evitar abrir/fechar em loop.
       return;
@@ -41,7 +47,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
       // Retorna o foco ao gatilho (letra T) para fluxo com leitor de tela.
       requestAnimationFrame(() => triggerRef.current?.focus());
     }
-  }, []);
+  }, [debounceMs]);
 
   const closePopover = useCallback(() => {
     lastToggleAtRef.current = Date.now();
