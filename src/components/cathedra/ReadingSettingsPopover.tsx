@@ -269,6 +269,46 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           <Separator className="bg-primary/5" />
 
+          {/* Tradução bíblica + modernização ortográfica */}
+          <section aria-labelledby="reading-settings-translation" className="space-y-spacing-md">
+            <h4 id="reading-settings-translation" className="text-[10px] font-black uppercase tracking-widest text-primary/30">
+              Tradução Bíblica
+            </h4>
+            <select
+              aria-label="Selecionar tradução bíblica"
+              value={settings.bibleTranslationId ?? ''}
+              onChange={(e) => updateSettings({ bibleTranslationId: e.target.value || null })}
+              className="w-full text-xs font-serif italic px-3 py-2 rounded-premium bg-background border border-primary/10 text-primary/80 focus:outline-none focus:border-primary/30"
+            >
+              <option value="">Padrão (primária do servidor)</option>
+              {translations.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+            <div className="flex items-center justify-between p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5">
+              <div className="flex flex-col text-left pr-2">
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Modernização Ortográfica</span>
+                <span className="text-[10px] font-serif italic text-primary/60">
+                  Opcional. Texto original sempre preservado no banco.
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-pressed={settings.bibleModernize}
+                onClick={() => updateSettings({ bibleModernize: !settings.bibleModernize })}
+                className={cn(
+                  "h-7 px-3 rounded-full text-[9px] uppercase tracking-tighter border border-primary/5 transition-all whitespace-nowrap",
+                  settings.bibleModernize ? "bg-primary/10 text-primary border-primary/20" : "text-primary/40"
+                )}
+              >
+                {settings.bibleModernize ? 'Ativo' : 'Inativo'}
+              </Button>
+            </div>
+          </section>
+
+          <Separator className="bg-primary/5" />
+
           <div className="pt-spacing-xs">
             <div className="flex items-center justify-between p-spacing-sm">
               <div className="flex flex-col">
