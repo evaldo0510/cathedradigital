@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -15,12 +15,39 @@ interface ReadingSettingsPopoverProps {
   triggerClassName?: string;
 }
 
+// Debounce para evitar toggling duplo em taps rápidos no mobile (Radix
+// pode receber pointerdown + click ou dois clicks fantasmas).
+const TAP_DEBOUNCE_MS = 280;
+
 const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   children,
   triggerClassName
 }) => {
   const { settings, updateSettings } = useReadingSettings();
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const lastToggleAtRef = useRef(0);
+
+  const handleOpenChange = useCallback((next: boolean) => {
+    const now = Date.now();
+    if (now - lastToggleAtRef.current < TAP_DEBOUNCE_MS) {
+      // Ignora alternâncias muito próximas para preservar o estado
+      // (incluindo "Modo Imersivo") e evitar abrir/fechar em loop.
+      return;
+    }
+    lastToggleAtRef.current = now;
+    setOpen(next);
+    if (!next) {
+      // Retorna o foco ao gatilho (letra T) para fluxo com leitor de tela.
+      requestAnimationFrame(() => triggerRef.current?.focus());
+    }
+  }, []);
+
+  const closePopover = useCallback(() => {
+    lastToggleAtRef.current = Date.now();
+    setOpen(false);
+    requestAnimationFrame(() => triggerRef.current?.focus());
+  }, []);
 
   const themes = [
     { id: 'paper', label: 'Claro', color: 'bg-[#FEFDFB]', text: 'text-stone-900' },
@@ -43,16 +70,18 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   ] as const;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         {children || (
           <Button
+            ref={triggerRef}
             variant="ghost"
             size="icon"
             className={cn("rounded-premium-full", triggerClassName)}
             title="Configurações de Leitura"
             aria-label="Configurações de Leitura"
             aria-expanded={open}
+            aria-haspopup="dialog"
           >
             <Icons.Type className="w-spacing-md h-spacing-md text-primary/40" />
           </Button>
@@ -60,10 +89,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
       </PopoverTrigger>
       <PopoverContent
         data-testid="reading-settings-popover"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Configurações de leitura"
         className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
         align="end"
         sideOffset={8}
         collisionPadding={12}
+        onPointerDownOutside={() => closePopover()}
+        onEscapeKeyDown={() => closePopover()}
       >
         <div className="space-y-spacing-xl">
           <div
@@ -83,7 +117,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setOpen(false)}
+                onClick={closePopover}
                 aria-label="Fechar configurações"
                 title="Fechar"
                 className="h-7 w-7 rounded-full text-primary/50 hover:text-primary hover:bg-primary/5"
