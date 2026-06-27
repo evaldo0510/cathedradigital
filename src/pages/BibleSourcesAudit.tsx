@@ -453,6 +453,22 @@ export default function BibleSourcesAudit() {
     }
     const ts = new Date().toISOString();
     setLastAttempts(prev => ({ ...prev, [key]: { ts, ...result } }));
+    // Track consecutive failures and warn on repetition
+    const failed = result.outcome.startsWith('error') || result.outcome.startsWith('failed');
+    if (failed) {
+      const next = (consecutiveFailures.current.get(key) ?? 0) + 1;
+      consecutiveFailures.current.set(key, next);
+      if (next >= REPEATED_FAIL_THRESHOLD && !notifiedRepeated.current.has(key)) {
+        notifiedRepeated.current.add(key);
+        toast.warning(`Falhas repetidas em ${key}`, {
+          description: `${next} tentativas consecutivas falharam${result.httpStatus ? ` · HTTP ${result.httpStatus}` : ''}${result.error ? ` · ${result.error}` : ''}`,
+          duration: 10000,
+        });
+      }
+    } else {
+      consecutiveFailures.current.delete(key);
+      notifiedRepeated.current.delete(key);
+    }
     return result;
   };
 
