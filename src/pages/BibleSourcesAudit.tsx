@@ -433,6 +433,8 @@ export default function BibleSourcesAudit() {
     downloadCsv(rows, `bible-retry-log-${dateFrom}_to_${dateTo}.csv`);
     toast.success(`CSV do log de tentativas exportado (${rows.length - 1} linhas)`);
   };
+
+  const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
     setImporting(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-import-deutero', {
