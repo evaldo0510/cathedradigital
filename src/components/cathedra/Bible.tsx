@@ -401,6 +401,17 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Re-busca o capítulo quando o usuário troca a tradução ou alterna a
+  // modernização ortográfica (chave de cache muda no servidor).
+  const reloadKey = `${settings.bibleTranslationId ?? 'primary'}|${settings.bibleModernize ? 1 : 0}`;
+  useEffect(() => {
+    if (selectedBook && selectedChapter) {
+      fetchVerses(selectedBook.abbr, selectedChapter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadKey]);
+
+
   // Local Persistence Logic
   useEffect(() => {
     const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
