@@ -1223,6 +1223,39 @@ export default function BibleSourcesAudit() {
           </CardContent>
         </Card>
       )}
+
+      {/* Confirmação Pausar / Retomar */}
+      <AlertDialog open={confirmAction !== null} onOpenChange={(o) => { if (!o) setConfirmAction(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction === 'pause' ? 'Pausar workers do lote?' : 'Retomar processamento do lote?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction === 'pause'
+                ? 'Os workers atualmente em execução vão terminar a tentativa em andamento e aguardar. Nenhum novo capítulo será processado até você retomar.'
+                : 'Os workers voltam a consumir a fila imediatamente, respeitando o cooldown configurado por capítulo.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (confirmAction === 'pause') {
+                  setPaused(true);
+                  toast.message('Pausado — workers aguardando.');
+                } else if (confirmAction === 'resume') {
+                  setPaused(false);
+                  toast.success('Retomado.');
+                }
+                setConfirmAction(null);
+              }}
+            >
+              {confirmAction === 'pause' ? 'Pausar' : 'Retomar'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
