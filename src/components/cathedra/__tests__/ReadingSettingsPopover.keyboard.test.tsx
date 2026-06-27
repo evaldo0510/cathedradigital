@@ -81,6 +81,36 @@ describe('ReadingSettingsPopover · navegação por teclado', () => {
     await act(async () => { await waitFor(() => !screen.queryByTestId('reading-settings-popover')); });
     expect(document.activeElement).toBe(trigger);
   });
+
+  it('mantém o foco preso dentro do diálogo após múltiplos Tabs e devolve ao gatilho ao fechar', async () => {
+    const user = userEvent.setup();
+    render(<ReadingSettingsPopover debounceMs={0} />);
+
+    const trigger = screen.getByRole('button', { name: /Configurações de Leitura/i });
+    trigger.focus();
+    await user.keyboard('{Enter}');
+
+    const dialog = screen.getByRole('dialog');
+    // Pressiona Tab muitas vezes — o foco nunca deve escapar do diálogo
+    // (focus trap garantido pelo Radix Popover em modo dialog).
+    for (let i = 0; i < 25; i++) {
+      await user.tab();
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      // Foco nunca deve voltar ao gatilho enquanto o diálogo está aberto.
+      expect(document.activeElement).not.toBe(trigger);
+    }
+
+    // Shift+Tab idem — segue preso ao diálogo.
+    for (let i = 0; i < 10; i++) {
+      await user.tab({ shift: true });
+      expect(dialog.contains(document.activeElement)).toBe(true);
+    }
+
+    // Esc fecha e devolve foco ao botão da letra T.
+    await user.keyboard('{Escape}');
+    await act(async () => { await waitFor(() => !screen.queryByTestId('reading-settings-popover')); });
+    expect(document.activeElement).toBe(trigger);
+  });
 });
 
 describe('ReadingSettingsPopover · ARIA / screen reader', () => {
