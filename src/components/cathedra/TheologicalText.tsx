@@ -17,7 +17,16 @@ const TheologicalText: React.FC<TheologicalTextProps> = ({ text, className }) =>
   const navigate = useNavigate();
   if (!text) return null;
 
-  const segments = parseTheologicalReferences(text);
+  // Fallback: se o parser falhar, renderiza o texto cru sem quebrar a bolha/UI.
+  let segments: ReturnType<typeof parseTheologicalReferences>;
+  try {
+    segments = parseTheologicalReferences(text);
+  } catch (err) {
+    if (typeof console !== 'undefined') {
+      console.warn('[TheologicalText] parser failed, fallback to plain text:', err);
+    }
+    return <span className={className} data-fallback="parser-error">{text}</span>;
+  }
 
   const handleNavigateToBible = (abbr: string, chapter: number, verse?: number) => {
     const params = new URLSearchParams({ book: abbr, chapter: String(chapter) });
