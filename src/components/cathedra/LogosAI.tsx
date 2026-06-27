@@ -10,6 +10,7 @@ import { LogosChatSkeleton } from './SacredSkeleton';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
 import { useVisualViewport } from '@/hooks/useVisualViewport';
+import TheologicalText from './TheologicalText';
 
 interface LogosAIProps {
   context?: string;
@@ -338,7 +339,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                           <span className="text-[7px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
                       )}
-                      {msg.content}
+                      {msg.role === 'assistant' ? <TheologicalText text={msg.content} /> : msg.content}
                     </div>
                   </motion.div>
                 ))}
@@ -508,7 +509,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       ? 'bg-primary text-primary-foreground shadow-premium' 
                       : 'bg-card border border-border/5 font-serif italic text-foreground/80'
                   }`}>
-                    {msg.content}
+                    {msg.role === 'assistant' ? <TheologicalText text={msg.content} /> : msg.content}
                   </div>
                   <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-spacing-md">
                     {msg.role === 'user' ? 'Peregrino' : 'Logos'}
