@@ -9,7 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
@@ -138,6 +143,23 @@ export default function BibleSourcesAudit() {
   const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
   const [dateFrom, setDateFrom] = useState<string>(sevenDaysAgo.toISOString().slice(0, 10));
   const [dateTo, setDateTo] = useState<string>(today.toISOString().slice(0, 10));
+
+  // Batch progress (real-time)
+  const [batchProgress, setBatchProgress] = useState<{ total: number; done: number; ok: number; fail: number }>({ total: 0, done: 0, ok: 0, fail: 0 });
+
+  // Filtros/busca das tabelas (Última tentativa + Log)
+  const [attemptStatusFilter, setAttemptStatusFilter] = useState<string>('all'); // all|ok|fail|2xx|4xx|5xx
+  const [attemptSearch, setAttemptSearch] = useState<string>('');
+  const [logStatusFilter, setLogStatusFilter] = useState<string>('all');
+  const [logSearch, setLogSearch] = useState<string>('');
+
+  // Confirmação Pausar/Retomar
+  const [confirmAction, setConfirmAction] = useState<null | 'pause' | 'resume'>(null);
+
+  // Falhas consecutivas por capítulo → alerta repetidas
+  const consecutiveFailures = useRef<Map<string, number>>(new Map());
+  const REPEATED_FAIL_THRESHOLD = 3;
+  const notifiedRepeated = useRef<Set<string>>(new Set());
 
   const load = async () => {
     setLoading(true);
@@ -367,6 +389,51 @@ export default function BibleSourcesAudit() {
     toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas, fonte=${csvSourceFilter})`);
   };
 
+  // Filtros de status HTTP / outcome aplicados às tabelas
+  const matchStatusFilter = (filter: string, outcome: string, httpStatus?: number | null) => {
+    if (filter === 'all') return true;
+    const isOk = outcome.startsWith('resolved') || outcome.startsWith('imported');
+    if (filter === 'ok') return isOk;
+    if (filter === 'fail') return !isOk;
+    if (filter === '2xx') return httpStatus != null && httpStatus >= 200 && httpStatus < 300;
+    if (filter === '4xx') return httpStatus != null && httpStatus >= 400 && httpStatus < 500;
+    if (filter === '5xx') return httpStatus != null && httpStatus >= 500;
+    return true;
+  };
+
+  const filteredLastAttempts = useMemo(() => {
+    const q = attemptSearch.trim().toLowerCase();
+    return Object.entries(lastAttempts)
+      .filter(([key, a]) => matchStatusFilter(attemptStatusFilter, a.outcome, a.httpStatus))
+      .filter(([key]) => !q || key.toLowerCase().includes(q))
+      .sort(([, a], [, b]) => b.ts.localeCompare(a.ts));
+  }, [lastAttempts, attemptStatusFilter, attemptSearch]);
+
+  const filteredRetryLog = useMemo(() => {
+    const q = logSearch.trim().toLowerCase();
+    return retryLog
+      .filter(r => matchStatusFilter(logStatusFilter, r.outcome, r.httpStatus))
+      .filter(r => !q || r.target.toLowerCase().includes(q));
+  }, [retryLog, logStatusFilter, logSearch]);
+
+  const exportLastAttemptsCsv = () => {
+    const rows: string[][] = [['chapter_key', 'last_attempt_ts', 'http_status', 'outcome', 'error']];
+    for (const [key, a] of filteredLastAttempts) {
+      rows.push([key, a.ts, String(a.httpStatus ?? ''), a.outcome, a.error ?? '']);
+    }
+    downloadCsv(rows, `bible-last-attempts-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV de últimas tentativas exportado (${rows.length - 1} linhas)`);
+  };
+
+  const exportRetryLogCsv = () => {
+    const rows: string[][] = [['ts', 'target', 'http_status', 'outcome', 'error']];
+    for (const r of filteredRetryLog) {
+      rows.push([r.ts, r.target, String(r.httpStatus ?? ''), r.outcome, r.error ?? '']);
+    }
+    downloadCsv(rows, `bible-retry-log-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV do log de tentativas exportado (${rows.length - 1} linhas)`);
+  };
+
   const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
     setImporting(true);
     try {
@@ -431,6 +498,22 @@ export default function BibleSourcesAudit() {
     }
     const ts = new Date().toISOString();
     setLastAttempts(prev => ({ ...prev, [key]: { ts, ...result } }));
+    // Track consecutive failures and warn on repetition
+    const failed = result.outcome.startsWith('error') || result.outcome.startsWith('failed');
+    if (failed) {
+      const next = (consecutiveFailures.current.get(key) ?? 0) + 1;
+      consecutiveFailures.current.set(key, next);
+      if (next >= REPEATED_FAIL_THRESHOLD && !notifiedRepeated.current.has(key)) {
+        notifiedRepeated.current.add(key);
+        toast.warning(`Falhas repetidas em ${key}`, {
+          description: `${next} tentativas consecutivas falharam${result.httpStatus ? ` · HTTP ${result.httpStatus}` : ''}${result.error ? ` · ${result.error}` : ''}`,
+          duration: 10000,
+        });
+      }
+    } else {
+      consecutiveFailures.current.delete(key);
+      notifiedRepeated.current.delete(key);
+    }
     return result;
   };
 
@@ -470,6 +553,7 @@ export default function BibleSourcesAudit() {
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
     setPaused(false);
+    setBatchProgress({ total: queue.length, done: 0, ok: 0, fail: 0 });
     const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
@@ -477,13 +561,38 @@ export default function BibleSourcesAudit() {
         await waitWhilePaused();
         const c = queue[idx++];
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
+        const row: RetryLogRow = { ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null };
+        log.push(row);
+        const isOk = r.outcome.startsWith('resolved') || r.outcome.startsWith('imported');
+        setBatchProgress(prev => ({
+          total: prev.total,
+          done: prev.done + 1,
+          ok: prev.ok + (isOk ? 1 : 0),
+          fail: prev.fail + (isOk ? 0 : 1),
+        }));
       }
     });
     await Promise.all(workers);
     setRetryLog(prev => [...log, ...prev].slice(0, 60));
     const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
-    toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`);
+    const failures = log.length - resolved;
+    // Resumo HTTP status para o toast
+    const httpCounts: Record<string, number> = {};
+    for (const l of log) {
+      if (l.httpStatus != null) {
+        const bucket = `${Math.floor(l.httpStatus / 100)}xx`;
+        httpCounts[bucket] = (httpCounts[bucket] ?? 0) + 1;
+      }
+    }
+    const httpSummary = Object.entries(httpCounts).sort().map(([k, v]) => `${k}:${v}`).join(' · ') || 'sem códigos';
+    if (failures > 0) {
+      toast.error(`Lote concluído com erros: ${failures}/${queue.length} falhas`, {
+        description: `${resolved} resolvidos · HTTP ${httpSummary}`,
+        duration: 10000,
+      });
+    } else {
+      toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`, { description: `HTTP ${httpSummary}` });
+    }
     await load();
     setBatchRunning(false);
   };
@@ -572,11 +681,11 @@ export default function BibleSourcesAudit() {
           </Button>
           {batchRunning && (
             paused ? (
-              <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
+              <Button onClick={() => setConfirmAction('resume')} size="sm" variant="outline">
                 <PlayCircle className="w-4 h-4 mr-2" />Retomar
               </Button>
             ) : (
-              <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
+              <Button onClick={() => setConfirmAction('pause')} size="sm" variant="outline">
                 <PauseCircle className="w-4 h-4 mr-2" />Pausar
               </Button>
             )
@@ -589,6 +698,44 @@ export default function BibleSourcesAudit() {
           </Button>
         </div>
       </div>
+
+      {/* Aviso visual quando workers estão pausados */}
+      {batchRunning && paused && (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
+          <PauseCircle className="w-5 h-5 text-amber-600" />
+          <div className="flex-1">
+            <div className="text-sm font-semibold">Workers pausados</div>
+            <div className="text-xs">Nenhum capítulo será reprocessado até você Retomar. Tentativas em andamento já foram concluídas.</div>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setConfirmAction('resume')}>
+            <PlayCircle className="w-4 h-4 mr-2" />Retomar
+          </Button>
+        </div>
+      )}
+
+      {/* Indicador de progresso do lote em tempo real */}
+      {batchRunning && batchProgress.total > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Layers className="w-4 h-4" /> Re-tentar lote — progresso em tempo real
+              {paused && <Badge variant="outline" className="ml-2 border-amber-400 text-amber-700">Pausado</Badge>}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Progress value={Math.round((batchProgress.done / batchProgress.total) * 100)} />
+            <div className="flex flex-wrap gap-4 text-xs tabular-nums">
+              <span><strong>{Math.round((batchProgress.done / batchProgress.total) * 100)}%</strong> concluído</span>
+              <span className="text-muted-foreground">Concluídos: <strong>{batchProgress.done}</strong>/{batchProgress.total}</span>
+              <span className="text-emerald-700">Sucesso: <strong>{batchProgress.ok}</strong></span>
+              <span className="text-destructive">Falha: <strong>{batchProgress.fail}</strong></span>
+              <span className="text-muted-foreground">Pendentes: <strong>{batchProgress.total - batchProgress.done}</strong></span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+
 
       {/* Filtros: intervalo de datas */}
       <Card>
@@ -905,26 +1052,51 @@ export default function BibleSourcesAudit() {
       {/* Última tentativa por capítulo */}
       {Object.keys(lastAttempts).length > 0 && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2">
+          <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
             <CardTitle className="text-sm flex items-center gap-2">
-              <Repeat className="w-4 h-4" /> Última tentativa por capítulo ({Object.keys(lastAttempts).length})
+              <Repeat className="w-4 h-4" /> Última tentativa por capítulo ({filteredLastAttempts.length}/{Object.keys(lastAttempts).length})
               {batchRunning && (
                 <Badge variant={paused ? 'outline' : 'secondary'} className="ml-2">
                   {paused ? 'Pausado' : 'Em execução'}
                 </Badge>
               )}
             </CardTitle>
-            {batchRunning && (
-              paused ? (
-                <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
-                  <PlayCircle className="w-4 h-4 mr-2" />Retomar
-                </Button>
-              ) : (
-                <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
-                  <PauseCircle className="w-4 h-4 mr-2" />Pausar
-                </Button>
-              )
-            )}
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar capítulo (ex: Gn:3)"
+                  value={attemptSearch}
+                  onChange={e => setAttemptSearch(e.target.value)}
+                  className="h-8 pl-8 w-44 text-xs"
+                />
+              </div>
+              <Select value={attemptStatusFilter} onValueChange={setAttemptStatusFilter}>
+                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="ok">Sucesso</SelectItem>
+                  <SelectItem value="fail">Falha</SelectItem>
+                  <SelectItem value="2xx">HTTP 2xx</SelectItem>
+                  <SelectItem value="4xx">HTTP 4xx</SelectItem>
+                  <SelectItem value="5xx">HTTP 5xx</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={exportLastAttemptsCsv} disabled={filteredLastAttempts.length === 0} size="sm" variant="secondary">
+                <Download className="w-4 h-4 mr-2" />CSV
+              </Button>
+              {batchRunning && (
+                paused ? (
+                  <Button onClick={() => setConfirmAction('resume')} size="sm" variant="outline">
+                    <PlayCircle className="w-4 h-4 mr-2" />Retomar
+                  </Button>
+                ) : (
+                  <Button onClick={() => setConfirmAction('pause')} size="sm" variant="outline">
+                    <PauseCircle className="w-4 h-4 mr-2" />Pausar
+                  </Button>
+                )
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <div className="max-h-64 overflow-y-auto">
@@ -938,28 +1110,28 @@ export default function BibleSourcesAudit() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Object.entries(lastAttempts)
-                    .sort(([, a], [, b]) => b.ts.localeCompare(a.ts))
-                    .map(([key, a]) => {
-                      const failed = a.outcome.startsWith('error') || a.outcome.startsWith('failed');
-                      return (
-                        <TableRow key={key}>
-                          <TableCell className="font-mono text-xs">{key}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</TableCell>
-                          <TableCell>
-                            {a.httpStatus ? (
-                              <Badge variant={a.httpStatus >= 400 ? 'destructive' : 'secondary'}>{a.httpStatus}</Badge>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">—</span>
-                            )}
-                          </TableCell>
-                          <TableCell className={`text-xs ${failed ? 'text-destructive' : ''}`}>
-                            <div className="font-mono break-all">{a.outcome}</div>
-                            {a.error && <div className="text-[10px] text-muted-foreground mt-0.5 break-all">{a.error}</div>}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                  {filteredLastAttempts.length === 0 ? (
+                    <TableRow><TableCell colSpan={4} className="text-center text-xs text-muted-foreground py-6">Nenhum resultado para os filtros atuais.</TableCell></TableRow>
+                  ) : filteredLastAttempts.map(([key, a]) => {
+                    const failed = a.outcome.startsWith('error') || a.outcome.startsWith('failed');
+                    return (
+                      <TableRow key={key}>
+                        <TableCell className="font-mono text-xs">{key}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</TableCell>
+                        <TableCell>
+                          {a.httpStatus ? (
+                            <Badge variant={a.httpStatus >= 400 ? 'destructive' : 'secondary'}>{a.httpStatus}</Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className={`text-xs ${failed ? 'text-destructive' : ''}`}>
+                          <div className="font-mono break-all">{a.outcome}</div>
+                          {a.error && <div className="text-[10px] text-muted-foreground mt-0.5 break-all">{a.error}</div>}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
@@ -970,10 +1142,39 @@ export default function BibleSourcesAudit() {
       {/* Log de retries */}
       {retryLog.length > 0 && (
         <Card>
-          <CardHeader><CardTitle className="text-sm">Log de tentativas ({retryLog.length})</CardTitle></CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
+            <CardTitle className="text-sm">Log de tentativas ({filteredRetryLog.length}/{retryLog.length})</CardTitle>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar alvo"
+                  value={logSearch}
+                  onChange={e => setLogSearch(e.target.value)}
+                  className="h-8 pl-8 w-40 text-xs"
+                />
+              </div>
+              <Select value={logStatusFilter} onValueChange={setLogStatusFilter}>
+                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="ok">Sucesso</SelectItem>
+                  <SelectItem value="fail">Falha</SelectItem>
+                  <SelectItem value="2xx">HTTP 2xx</SelectItem>
+                  <SelectItem value="4xx">HTTP 4xx</SelectItem>
+                  <SelectItem value="5xx">HTTP 5xx</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={exportRetryLogCsv} disabled={filteredRetryLog.length === 0} size="sm" variant="secondary">
+                <Download className="w-4 h-4 mr-2" />CSV
+              </Button>
+            </div>
+          </CardHeader>
           <CardContent>
             <div className="font-mono text-xs space-y-1 max-h-48 overflow-y-auto">
-              {retryLog.map((r, i) => (
+              {filteredRetryLog.length === 0 ? (
+                <div className="text-muted-foreground text-center py-4">Nenhuma entrada para os filtros atuais.</div>
+              ) : filteredRetryLog.map((r, i) => (
                 <div key={i}>
                   <span className="text-muted-foreground">{new Date(r.ts).toLocaleTimeString()}</span>
                   {' · '}<span className="font-semibold">{r.target}</span>
@@ -1022,6 +1223,39 @@ export default function BibleSourcesAudit() {
           </CardContent>
         </Card>
       )}
+
+      {/* Confirmação Pausar / Retomar */}
+      <AlertDialog open={confirmAction !== null} onOpenChange={(o) => { if (!o) setConfirmAction(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction === 'pause' ? 'Pausar workers do lote?' : 'Retomar processamento do lote?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction === 'pause'
+                ? 'Os workers atualmente em execução vão terminar a tentativa em andamento e aguardar. Nenhum novo capítulo será processado até você retomar.'
+                : 'Os workers voltam a consumir a fila imediatamente, respeitando o cooldown configurado por capítulo.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (confirmAction === 'pause') {
+                  setPaused(true);
+                  toast.message('Pausado — workers aguardando.');
+                } else if (confirmAction === 'resume') {
+                  setPaused(false);
+                  toast.success('Retomado.');
+                }
+                setConfirmAction(null);
+              }}
+            >
+              {confirmAction === 'pause' ? 'Pausar' : 'Retomar'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
