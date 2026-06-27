@@ -469,13 +469,15 @@ export default function BibleSourcesAudit() {
     const queue = unavailableChapters.slice(0, batchMaxPerRun);
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
-    const log: typeof retryLog = [];
+    setPaused(false);
+    const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
       while (idx < queue.length) {
+        await waitWhilePaused();
         const c = queue[idx++];
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
       }
     });
     await Promise.all(workers);
