@@ -276,6 +276,10 @@ const InstitutionalVideoSection = () => {
                   <img 
                     src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1200" 
                     alt="Interior de uma catedral majestosa" 
+                    width={1200}
+                    height={675}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover opacity-40"
                   />
                   <div className="absolute inset-0 bg-muted/20 animate-pulse" />
