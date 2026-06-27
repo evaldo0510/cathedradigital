@@ -144,6 +144,23 @@ export default function BibleSourcesAudit() {
   const [dateFrom, setDateFrom] = useState<string>(sevenDaysAgo.toISOString().slice(0, 10));
   const [dateTo, setDateTo] = useState<string>(today.toISOString().slice(0, 10));
 
+  // Batch progress (real-time)
+  const [batchProgress, setBatchProgress] = useState<{ total: number; done: number; ok: number; fail: number }>({ total: 0, done: 0, ok: 0, fail: 0 });
+
+  // Filtros/busca das tabelas (Última tentativa + Log)
+  const [attemptStatusFilter, setAttemptStatusFilter] = useState<string>('all'); // all|ok|fail|2xx|4xx|5xx
+  const [attemptSearch, setAttemptSearch] = useState<string>('');
+  const [logStatusFilter, setLogStatusFilter] = useState<string>('all');
+  const [logSearch, setLogSearch] = useState<string>('');
+
+  // Confirmação Pausar/Retomar
+  const [confirmAction, setConfirmAction] = useState<null | 'pause' | 'resume'>(null);
+
+  // Falhas consecutivas por capítulo → alerta repetidas
+  const consecutiveFailures = useRef<Map<string, number>>(new Map());
+  const REPEATED_FAIL_THRESHOLD = 3;
+  const notifiedRepeated = useRef<Set<string>>(new Set());
+
   const load = async () => {
     setLoading(true);
     const fromIso = new Date(`${dateFrom}T00:00:00`).toISOString();
