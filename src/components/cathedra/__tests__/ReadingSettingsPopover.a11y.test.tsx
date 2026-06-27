@@ -34,12 +34,13 @@ beforeEach(() => {
 });
 
 describe('ReadingSettingsPopover · acessibilidade e tap', () => {
-  it('expõe role=dialog com aria-modal e aria-label', () => {
+  it('expõe role=dialog com aria-modal e nome acessível', () => {
     render(<ReadingSettingsPopover />);
     fireEvent.click(screen.getByRole('button', { name: /Configurações de Leitura/i }));
 
-    const dialog = screen.getByRole('dialog', { name: /Configurações de leitura/i });
+    const dialog = screen.getByRole('dialog', { name: /Aparência/i });
     expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog).toHaveAttribute('aria-describedby', 'reading-settings-desc');
   });
 
   it('fecha com Esc e devolve o foco ao gatilho (letra T)', async () => {
@@ -59,6 +60,7 @@ describe('ReadingSettingsPopover · acessibilidade e tap', () => {
   });
 
   it('ignora alternâncias muito rápidas (debounce anti tap-duplo)', async () => {
+    // Debounce padrão (280ms) — dois clicks no mesmo tick devem ser fundidos.
     render(<ReadingSettingsPopover />);
     const trigger = screen.getByRole('button', { name: /Configurações de Leitura/i });
 

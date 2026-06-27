@@ -13,15 +13,21 @@ import { Separator } from '@/components/ui/separator';
 interface ReadingSettingsPopoverProps {
   children?: React.ReactNode;
   triggerClassName?: string;
+  /**
+   * Atraso (ms) para ignorar alternâncias rápidas (tap-duplo). Padrão 280ms.
+   * Use 0 em testes/e2e para tornar a abertura/fechamento determinísticos.
+   */
+  debounceMs?: number;
 }
 
 // Debounce para evitar toggling duplo em taps rápidos no mobile (Radix
 // pode receber pointerdown + click ou dois clicks fantasmas).
-const TAP_DEBOUNCE_MS = 280;
+const DEFAULT_TAP_DEBOUNCE_MS = 280;
 
 const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   children,
-  triggerClassName
+  triggerClassName,
+  debounceMs = DEFAULT_TAP_DEBOUNCE_MS,
 }) => {
   const { settings, updateSettings } = useReadingSettings();
   const [open, setOpen] = useState(false);
@@ -30,7 +36,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
   const handleOpenChange = useCallback((next: boolean) => {
     const now = Date.now();
-    if (now - lastToggleAtRef.current < TAP_DEBOUNCE_MS) {
+    if (now - lastToggleAtRef.current < debounceMs) {
       // Ignora alternâncias muito próximas para preservar o estado
       // (incluindo "Modo Imersivo") e evitar abrir/fechar em loop.
       return;
@@ -41,7 +47,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
       // Retorna o foco ao gatilho (letra T) para fluxo com leitor de tela.
       requestAnimationFrame(() => triggerRef.current?.focus());
     }
-  }, []);
+  }, [debounceMs]);
 
   const closePopover = useCallback(() => {
     lastToggleAtRef.current = Date.now();
@@ -91,7 +97,8 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
         data-testid="reading-settings-popover"
         role="dialog"
         aria-modal="true"
-        aria-label="Configurações de leitura"
+        aria-labelledby="reading-settings-title"
+        aria-describedby="reading-settings-desc"
         className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
         align="end"
         sideOffset={8}
@@ -99,12 +106,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
         onPointerDownOutside={() => closePopover()}
         onEscapeKeyDown={() => closePopover()}
       >
+        <p id="reading-settings-desc" className="sr-only">
+          Preferências de leitura agrupadas por seção. Pressione Esc para fechar e retornar ao botão de configurações.
+        </p>
         <div className="space-y-spacing-xl">
           <div
             data-testid="reading-settings-header"
             className="flex items-center justify-between gap-spacing-sm flex-wrap"
           >
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
+            <h4 id="reading-settings-title" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
             <div className="flex items-center gap-spacing-xs">
               <Button
                 variant="ghost"
@@ -129,7 +139,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
 
           {/* Temas */}
-          <div className="grid grid-cols-4 gap-spacing-sm">
+          <div role="radiogroup" aria-label="Temas de leitura" className="grid grid-cols-4 gap-spacing-sm">
             {themes.map((t) => (
               <button
                 key={t.id}
@@ -148,12 +158,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
           <Separator className="bg-primary/5" />
 
           {/* Tamanho da Fonte */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Tamanho do Texto</h4>
-            <div className="flex bg-primary/[0.03] p-1 rounded-premium-full border border-primary/5">
+          <section aria-labelledby="reading-settings-size" className="space-y-spacing-md">
+            <h4 id="reading-settings-size" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Tamanho do Texto</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-size" className="flex bg-primary/[0.03] p-1 rounded-premium-full border border-primary/5">
               {fontSizes.map((f) => (
                 <button
                   key={f.id}
+                  role="radio"
+                  aria-checked={settings.fontSize === f.id}
+                  aria-label={`Tamanho ${f.id}`}
                   onClick={() => updateSettings({ fontSize: f.id })}
                   className={cn(
                     "flex-1 py-spacing-xs rounded-premium-full transition-all text-center",
@@ -164,12 +177,12 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Contraste e Acessibilidade */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
-            <div className="flex gap-spacing-sm">
+          <section aria-labelledby="reading-settings-a11y" className="space-y-spacing-md">
+            <h4 id="reading-settings-a11y" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-a11y" className="flex gap-spacing-sm">
               {[
                 { id: 'normal', label: 'Normal', icon: Icons.Circle },
                 { id: 'soft', label: 'Suave', icon: Icons.Droplets },
@@ -177,6 +190,9 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               ].map((c) => (
                 <button
                   key={c.id}
+                  role="radio"
+                  aria-checked={settings.contrast === c.id}
+                  aria-label={c.label}
                   onClick={() => updateSettings({ contrast: c.id as any })}
                   className={cn(
                     "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
@@ -189,15 +205,18 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Espaçamento */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
-            <div className="flex gap-spacing-sm">
+          <section aria-labelledby="reading-settings-spacing" className="space-y-spacing-md">
+            <h4 id="reading-settings-spacing" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-spacing" className="flex gap-spacing-sm">
               {lineSpacings.map((s) => (
                 <button
                   key={s.id}
+                  role="radio"
+                  aria-checked={settings.lineSpacing === s.id}
+                  aria-label={s.label}
                   onClick={() => updateSettings({ lineSpacing: s.id })}
                   className={cn(
                     "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
@@ -209,7 +228,8 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
+
 
           
           <div className="pt-spacing-sm">
