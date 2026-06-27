@@ -16,6 +16,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  emptyBatchProgress,
+  nextProgress,
+  progressPct,
+  pending,
+  summarizeHttp,
+  formatHttpSummary,
+} from '@/pages/bibleSourcesAudit/batchHelpers';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
 
