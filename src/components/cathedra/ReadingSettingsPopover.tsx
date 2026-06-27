@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -15,12 +15,39 @@ interface ReadingSettingsPopoverProps {
   triggerClassName?: string;
 }
 
+// Debounce para evitar toggling duplo em taps rápidos no mobile (Radix
+// pode receber pointerdown + click ou dois clicks fantasmas).
+const TAP_DEBOUNCE_MS = 280;
+
 const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   children,
   triggerClassName
 }) => {
   const { settings, updateSettings } = useReadingSettings();
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const lastToggleAtRef = useRef(0);
+
+  const handleOpenChange = useCallback((next: boolean) => {
+    const now = Date.now();
+    if (now - lastToggleAtRef.current < TAP_DEBOUNCE_MS) {
+      // Ignora alternâncias muito próximas para preservar o estado
+      // (incluindo "Modo Imersivo") e evitar abrir/fechar em loop.
+      return;
+    }
+    lastToggleAtRef.current = now;
+    setOpen(next);
+    if (!next) {
+      // Retorna o foco ao gatilho (letra T) para fluxo com leitor de tela.
+      requestAnimationFrame(() => triggerRef.current?.focus());
+    }
+  }, []);
+
+  const closePopover = useCallback(() => {
+    lastToggleAtRef.current = Date.now();
+    setOpen(false);
+    requestAnimationFrame(() => triggerRef.current?.focus());
+  }, []);
 
   const themes = [
     { id: 'paper', label: 'Claro', color: 'bg-[#FEFDFB]', text: 'text-stone-900' },
