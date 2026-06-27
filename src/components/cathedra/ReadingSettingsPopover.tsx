@@ -133,7 +133,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
 
           {/* Temas */}
-          <div className="grid grid-cols-4 gap-spacing-sm">
+          <div role="radiogroup" aria-label="Temas de leitura" className="grid grid-cols-4 gap-spacing-sm">
             {themes.map((t) => (
               <button
                 key={t.id}
