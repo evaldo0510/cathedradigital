@@ -687,11 +687,24 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    // Paraleliza as 3 queries de leitura: config, feature flag e L2 row.
-    // Antes eram 3 round-trips sequenciais (~80-150ms cada). Agora rodam em
-    // paralelo via Promise.all e o L1 in-memory absorve hits subsequentes.
-    // L2 row é buscado e classificado depois, com a version vinda do config.
-    const cacheKey = `${abbrev}:${chapter}`;
+    // Resolve tradução: explícita pelo cliente OU primária por padrão.
+    let translationId: string | null = parsed.data.translation_id ?? null;
+    let translationCode: string | null = null;
+    if (translationId) {
+      translationCode = await timedSql(ctx, 'resolveTranslationCode', () => resolveTranslationCode(translationId!));
+      if (!translationCode) {
+        // ID desconhecido — não rejeita: cai para primária silenciosamente.
+        translationId = null;
+      }
+    }
+    if (!translationId) {
+      const prim = await timedSql(ctx, 'resolvePrimaryTranslation', () => resolvePrimaryTranslation());
+      if (prim) { translationId = prim.id; translationCode = prim.code; }
+    }
+    const modernize = parsed.data.modernize === true;
+
+    // Chave de cache inclui tradução e modernização para isolar conteúdos.
+    const cacheKey = `${abbrev}:${chapter}:t=${translationId ?? 'none'}:m=${modernize ? 1 : 0}`;
     const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
       timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
       timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
@@ -703,7 +716,7 @@ serve(async (req) => {
 
     // Modo warm: força revalidação e responde mínimo. Usado pelo script.
     if (warmOnly) {
-      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled, translationId, translationCode, modernize, cacheKey);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
       recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: 'warm', total_wall_clock_ms: Date.now() - t0 });
