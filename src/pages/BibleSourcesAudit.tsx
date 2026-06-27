@@ -570,6 +570,17 @@ export default function BibleSourcesAudit() {
           <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
             <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, batchMaxPerRun)})`}
           </Button>
+          {batchRunning && (
+            paused ? (
+              <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
+                <PlayCircle className="w-4 h-4 mr-2" />Retomar
+              </Button>
+            ) : (
+              <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
+                <PauseCircle className="w-4 h-4 mr-2" />Pausar
+              </Button>
+            )
+          )}
           <Button onClick={() => runImport()} disabled={importing} size="sm">
             {importing ? 'Importando…' : 'Importar faltantes'}
           </Button>
