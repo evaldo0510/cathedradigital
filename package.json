@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/seo-checklist.ts",
     "build": "vite build",
+    "seo:checklist": "bun run scripts/seo-checklist.ts",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "task-master": "bun run scripts/task-master.ts",
