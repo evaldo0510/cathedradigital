@@ -59,6 +59,7 @@ describe('ReadingSettingsPopover · acessibilidade e tap', () => {
   });
 
   it('ignora alternâncias muito rápidas (debounce anti tap-duplo)', async () => {
+    // Debounce padrão (280ms) — dois clicks no mesmo tick devem ser fundidos.
     render(<ReadingSettingsPopover />);
     const trigger = screen.getByRole('button', { name: /Configurações de Leitura/i });
 
