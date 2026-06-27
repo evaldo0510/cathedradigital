@@ -55,15 +55,20 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]" align="end">
+      <PopoverContent
+        className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
+        align="end"
+        sideOffset={8}
+        collisionPadding={12}
+      >
         <div className="space-y-spacing-xl">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-spacing-sm flex-wrap">
             <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
-              className={cn("text-[9px] uppercase tracking-tighter h-7 px-2 rounded-full", settings.immersiveMode && "bg-primary/10 text-primary")}
+              className={cn("text-[9px] uppercase tracking-tighter h-7 px-2 rounded-full whitespace-nowrap", settings.immersiveMode && "bg-primary/10 text-primary")}
             >
               Modo Imersivo
             </Button>
