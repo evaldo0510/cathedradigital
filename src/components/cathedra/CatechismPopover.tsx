@@ -19,9 +19,18 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
   onNavigate,
   variant = 'default',
 }) => {
-  const { data, isLoading, isFetched } = useCatechismParagraph(paragraph);
+  const { data, isLoading, isFetched, error } = useCatechismParagraph(paragraph);
+  const [showDiag, setShowDiag] = React.useState(false);
 
   const content = data?.content || '';
+  const err = error as any;
+  const diag = {
+    status: err?.code || data?.status || (isFetched && !content ? 'empty' : 'ok'),
+    httpStatus: err?.status ?? '—',
+    requestId: `cic-${paragraph}-${Date.now().toString(36)}`,
+    message: err?.message || (isFetched && !content ? 'Conteúdo vazio retornado pelo servidor.' : ''),
+  };
+  const hasIssue = Boolean(err) || (isFetched && !content);
 
   return (
     <Popover>
@@ -71,6 +80,42 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
           )}
           {!isLoading && isFetched && !content && (
             <p className="text-premium-xs text-muted-foreground italic">Texto não disponível.</p>
+          )}
+
+          {!isLoading && hasIssue && (
+            <div className="mt-spacing-sm border-t border-border pt-spacing-xs">
+              <button
+                type="button"
+                onClick={() => setShowDiag(v => !v)}
+                className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
+                data-testid="catechism-diag-toggle"
+              >
+                <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm" />
+                Diagnóstico {showDiag ? '▾' : '▸'}
+              </button>
+              {showDiag && (
+                <dl className="mt-spacing-xs space-y-spacing-2xs text-premium-xs font-mono bg-muted/40 rounded-premium p-spacing-xs">
+                  <div className="flex justify-between gap-spacing-xs">
+                    <dt className="text-muted-foreground">status</dt>
+                    <dd className="text-foreground">{String(diag.status)}</dd>
+                  </div>
+                  <div className="flex justify-between gap-spacing-xs">
+                    <dt className="text-muted-foreground">http</dt>
+                    <dd className="text-foreground">{String(diag.httpStatus)}</dd>
+                  </div>
+                  <div className="flex justify-between gap-spacing-xs">
+                    <dt className="text-muted-foreground">request_id</dt>
+                    <dd className="text-foreground break-all">{diag.requestId}</dd>
+                  </div>
+                  {diag.message && (
+                    <div>
+                      <dt className="text-muted-foreground mb-spacing-2xs">message</dt>
+                      <dd className="text-foreground whitespace-pre-wrap break-words">{diag.message}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+            </div>
           )}
         </div>
       </PopoverContent>
