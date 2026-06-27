@@ -718,13 +718,13 @@ export default function BibleSourcesAudit() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Progress value={Math.round((batchProgress.done / batchProgress.total) * 100)} />
-            <div className="flex flex-wrap gap-4 text-xs tabular-nums">
-              <span><strong>{Math.round((batchProgress.done / batchProgress.total) * 100)}%</strong> concluído</span>
-              <span className="text-muted-foreground">Concluídos: <strong>{batchProgress.done}</strong>/{batchProgress.total}</span>
-              <span className="text-emerald-700">Sucesso: <strong>{batchProgress.ok}</strong></span>
-              <span className="text-destructive">Falha: <strong>{batchProgress.fail}</strong></span>
-              <span className="text-muted-foreground">Pendentes: <strong>{batchProgress.total - batchProgress.done}</strong></span>
+            <Progress value={progressPct(batchProgress)} data-testid="batch-progress-bar" />
+            <div className="flex flex-wrap gap-4 text-xs tabular-nums" data-testid="batch-progress-stats">
+              <span><strong data-testid="batch-progress-pct">{progressPct(batchProgress)}%</strong> concluído</span>
+              <span className="text-muted-foreground">Concluídos: <strong data-testid="batch-progress-done">{batchProgress.done}</strong>/{batchProgress.total}</span>
+              <span className="text-emerald-700">Sucesso: <strong data-testid="batch-progress-ok">{batchProgress.ok}</strong></span>
+              <span className="text-destructive">Falha: <strong data-testid="batch-progress-fail">{batchProgress.fail}</strong></span>
+              <span className="text-muted-foreground">Pendentes: <strong data-testid="batch-progress-pending">{pending(batchProgress)}</strong></span>
             </div>
           </CardContent>
         </Card>
