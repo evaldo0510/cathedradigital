@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -9,6 +9,8 @@ import { Icons } from '@/constants';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/integrations/supabase/client';
+
 
 interface ReadingSettingsPopoverProps {
   children?: React.ReactNode;
@@ -33,6 +35,26 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const lastToggleAtRef = useRef(0);
+  const [translations, setTranslations] = useState<Array<{ id: string; code: string; name: string }>>([]);
+
+  // Carrega traduções prontas uma única vez ao abrir.
+  useEffect(() => {
+    if (!open || translations.length > 0) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('bible_translation_sources')
+        .select('id, code, name, is_primary, status')
+        .in('status', ['ready', 'draft'])
+        .order('is_primary', { ascending: false })
+        .order('code');
+      if (!cancelled && data) {
+        setTranslations(data as any);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [open, translations.length]);
+
 
   const handleOpenChange = useCallback((next: boolean) => {
     const now = Date.now();
@@ -244,6 +266,46 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               <Icons.Shuffle className="w-spacing-sm h-spacing-sm text-primary/20 group-hover:text-primary transition-colors" />
             </button>
           </div>
+
+          <Separator className="bg-primary/5" />
+
+          {/* Tradução bíblica + modernização ortográfica */}
+          <section aria-labelledby="reading-settings-translation" className="space-y-spacing-md">
+            <h4 id="reading-settings-translation" className="text-[10px] font-black uppercase tracking-widest text-primary/30">
+              Tradução Bíblica
+            </h4>
+            <select
+              aria-label="Selecionar tradução bíblica"
+              value={settings.bibleTranslationId ?? ''}
+              onChange={(e) => updateSettings({ bibleTranslationId: e.target.value || null })}
+              className="w-full text-xs font-serif italic px-3 py-2 rounded-premium bg-background border border-primary/10 text-primary/80 focus:outline-none focus:border-primary/30"
+            >
+              <option value="">Padrão (primária do servidor)</option>
+              {translations.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+            <div className="flex items-center justify-between p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5">
+              <div className="flex flex-col text-left pr-2">
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Modernização Ortográfica</span>
+                <span className="text-[10px] font-serif italic text-primary/60">
+                  Opcional. Texto original sempre preservado no banco.
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-pressed={settings.bibleModernize}
+                onClick={() => updateSettings({ bibleModernize: !settings.bibleModernize })}
+                className={cn(
+                  "h-7 px-3 rounded-full text-[9px] uppercase tracking-tighter border border-primary/5 transition-all whitespace-nowrap",
+                  settings.bibleModernize ? "bg-primary/10 text-primary border-primary/20" : "text-primary/40"
+                )}
+              >
+                {settings.bibleModernize ? 'Ativo' : 'Inativo'}
+              </Button>
+            </div>
+          </section>
 
           <Separator className="bg-primary/5" />
 

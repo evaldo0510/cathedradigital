@@ -401,6 +401,17 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Re-busca o capítulo quando o usuário troca a tradução ou alterna a
+  // modernização ortográfica (chave de cache muda no servidor).
+  const reloadKey = `${settings.bibleTranslationId ?? 'primary'}|${settings.bibleModernize ? 1 : 0}`;
+  useEffect(() => {
+    if (selectedBook && selectedChapter) {
+      fetchVerses(selectedBook.abbr, selectedChapter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadKey]);
+
+
   // Local Persistence Logic
   useEffect(() => {
     const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
@@ -645,7 +656,13 @@ const Bible: React.FC = () => {
 
     const textPromise = supabase.functions
       .invoke('bible-text', {
-        body: { abbrev: abbr, chapter, client_cache_version: cacheSyncVersion },
+        body: {
+          abbrev: abbr,
+          chapter,
+          client_cache_version: cacheSyncVersion,
+          ...(settings.bibleTranslationId ? { translation_id: settings.bibleTranslationId } : {}),
+          ...(settings.bibleModernize ? { modernize: true } : {}),
+        },
       })
       .finally(() => biblePerf.mark(runId, 'text:end'));
 

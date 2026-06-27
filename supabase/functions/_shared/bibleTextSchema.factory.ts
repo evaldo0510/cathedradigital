@@ -15,6 +15,8 @@ export function buildBibleTextSchemas(z: any) {
     abbrev: z.string().trim().min(1, "abbrev é obrigatório").max(16, "abbrev muito longo"),
     chapter: z.number({ invalid_type_error: "chapter deve ser número" }).int().positive(),
     client_cache_version: z.union([z.string(), z.number()]).optional(),
+    translation_id: z.string().uuid().optional(),
+    modernize: z.boolean().optional(),
   }).strict();
 
   const BibleVerseSchema = z.object({
@@ -36,6 +38,9 @@ export function buildBibleTextSchemas(z: any) {
     received_abbrev: z.string().min(1),
     canonical_abbr: z.string().nullable(),
     bollsId: z.number().int().positive().nullable(),
+    translation_id: z.string().uuid().nullable().optional(),
+    translation_code: z.string().nullable().optional(),
+    modernized: z.boolean().optional(),
   }).passthrough();
 
   const BibleTextSuccessSchema = z.object({

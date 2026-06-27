@@ -4755,6 +4755,27 @@ export type Database = {
           sprint1_passed: boolean
         }[]
       }
+      bible_translations_readiness: {
+        Args: never
+        Returns: {
+          author: string
+          books_count: number
+          certified_at: string
+          chapters_count: number
+          code: string
+          gate_blocked: boolean
+          id: string
+          imported_at: string
+          is_primary: boolean
+          name: string
+          ready: boolean
+          reason: string
+          sprint1_passed: boolean
+          status: string
+          verses_count: number
+          year_published: number
+        }[]
+      }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
         Args: { p_override_days?: number; p_triggered_by?: string }

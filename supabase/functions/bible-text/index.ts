@@ -269,15 +269,75 @@ function metric(event: string, fields: Record<string, unknown>) {
 // =========================================================================
 // Fontes
 // =========================================================================
-async function fetchFromCathedraDb(abbrev: string, chapter: number) {
+
+// Cache em memória para o id+code da tradução primária (atualiza a cada hora).
+let _primaryTranslationCache: { id: string; code: string; expires: number } | null = null;
+async function resolvePrimaryTranslation(): Promise<{ id: string; code: string } | null> {
+  const now = Date.now();
+  if (_primaryTranslationCache && _primaryTranslationCache.expires > now) {
+    return { id: _primaryTranslationCache.id, code: _primaryTranslationCache.code };
+  }
+  const { data } = await supabase
+    .from('bible_translation_sources')
+    .select('id, code')
+    .eq('is_primary', true)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (!data?.id) return null;
+  _primaryTranslationCache = { id: data.id, code: data.code, expires: now + 3_600_000 };
+  return { id: data.id, code: data.code };
+}
+
+async function resolveTranslationCode(translationId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from('bible_translation_sources')
+    .select('code')
+    .eq('id', translationId)
+    .maybeSingle();
+  return data?.code ?? null;
+}
+
+async function fetchFromCathedraDb(
+  abbrev: string,
+  chapter: number,
+  translationId: string | null,
+  modernize: boolean,
+) {
   try {
     const { data: book } = await supabase.from('bible_books').select('id, name').eq('abbrev', abbrev).single();
     if (!book) return null;
     const { data: ch } = await supabase.from('bible_chapters').select('id').eq('book_id', book.id).eq('number', chapter).single();
     if (!ch) return null;
-    const { data: verses } = await supabase.from('bible_verses').select('number, text').eq('chapter_id', ch.id).order('number');
+    let q = supabase.from('bible_verses').select('id, number, text').eq('chapter_id', ch.id).order('number');
+    if (translationId) q = q.eq('translation_id', translationId);
+    const { data: verses } = await q;
     if (!verses || verses.length === 0) return null;
-    return { verses, bookName: book.name };
+
+    let finalVerses = verses.map(v => ({ number: v.number, text: v.text, id: v.id }));
+    let modernizedApplied = false;
+    if (modernize && translationId) {
+      const verseIds = verses.map(v => v.id);
+      const { data: mods } = await supabase
+        .from('bible_verse_modernizations')
+        .select('verse_id, modernized_text')
+        .in('verse_id', verseIds)
+        .eq('translation_id', translationId);
+      if (mods && mods.length > 0) {
+        const byId = new Map(mods.map(m => [m.verse_id, m.modernized_text]));
+        finalVerses = finalVerses.map(v => ({
+          number: v.number,
+          text: byId.get(v.id) ?? v.text,
+          id: v.id,
+        }));
+        modernizedApplied = mods.length > 0;
+      }
+    }
+    return {
+      verses: finalVerses.map(v => ({ number: v.number, text: v.text })),
+      bookName: book.name,
+      modernizedApplied,
+    };
   } catch { return null; }
 }
 
@@ -500,6 +560,10 @@ async function revalidate(
   ttlHours: number,
   ctx: ReqCtx,
   sovereigntyEnabledHint?: boolean,
+  translationId: string | null = null,
+  translationCode: string | null = null,
+  modernize = false,
+  cacheKeyOverride?: string,
 ): Promise<{ data: any; source: string } | null> {
   const isSovereigntyEnabled = sovereigntyEnabledHint !== undefined
     ? sovereigntyEnabledHint
@@ -507,15 +571,17 @@ async function revalidate(
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
-
-
-  let result = await timedSql(ctx, 'fetchFromCathedraDb', () => fetchFromCathedraDb(abbrev, chapter));
+  let result = await timedSql(ctx, 'fetchFromCathedraDb', () =>
+    fetchFromCathedraDb(abbrev, chapter, translationId, modernize),
+  );
   let source = 'Cathedra (Local)';
+  let modernizedApplied = !!result?.modernizedApplied;
   if (!isSovereigntyEnabled || !result) {
     const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
     if (fallback) {
-      result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
+      result = { verses: fallback, bookName: bookNameFromAbbr(abbrev), modernizedApplied: false };
       source = 'BollsLife (Fallback)';
+      modernizedApplied = false;
     }
   }
   // Segunda fonte pública: bibliacatolica.com.br (Ave-Maria) — usada quando
@@ -523,8 +589,9 @@ async function revalidate(
   if (!result) {
     const ave = await fetchFromBibliaCatolica(abbrev, chapter, correlationId);
     if (ave && ave.length > 0) {
-      result = { verses: ave, bookName: bookNameFromAbbr(abbrev) };
+      result = { verses: ave, bookName: bookNameFromAbbr(abbrev), modernizedApplied: false };
       source = 'BibliaCatolica (Ave-Maria)';
+      modernizedApplied = false;
     }
   }
   if (!result) return null;
@@ -551,9 +618,13 @@ async function revalidate(
       received_abbrev: abbrev,
       canonical_abbr: resolvedBook?.abbr ?? null,
       bollsId: resolvedBollsId,
+      translation_id: translationId,
+      translation_code: translationCode,
+      modernized: modernizedApplied,
     },
   };
-  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, effectiveTtlHours));
+  const cacheKey = cacheKeyOverride ?? `${abbrev}:${chapter}`;
+  await timedSql(ctx, 'setCacheL2', () => setCacheL2(cacheKey, responseData, contentHash, cacheVersion, effectiveTtlHours));
   return { data: responseData, source };
 }
 
@@ -616,11 +687,24 @@ serve(async (req) => {
     chapter = parsed.data.chapter;
     client_cache_version = parsed.data.client_cache_version;
 
-    // Paraleliza as 3 queries de leitura: config, feature flag e L2 row.
-    // Antes eram 3 round-trips sequenciais (~80-150ms cada). Agora rodam em
-    // paralelo via Promise.all e o L1 in-memory absorve hits subsequentes.
-    // L2 row é buscado e classificado depois, com a version vinda do config.
-    const cacheKey = `${abbrev}:${chapter}`;
+    // Resolve tradução: explícita pelo cliente OU primária por padrão.
+    let translationId: string | null = parsed.data.translation_id ?? null;
+    let translationCode: string | null = null;
+    if (translationId) {
+      translationCode = await timedSql(ctx, 'resolveTranslationCode', () => resolveTranslationCode(translationId!));
+      if (!translationCode) {
+        // ID desconhecido — não rejeita: cai para primária silenciosamente.
+        translationId = null;
+      }
+    }
+    if (!translationId) {
+      const prim = await timedSql(ctx, 'resolvePrimaryTranslation', () => resolvePrimaryTranslation());
+      if (prim) { translationId = prim.id; translationCode = prim.code; }
+    }
+    const modernize = parsed.data.modernize === true;
+
+    // Chave de cache inclui tradução e modernização para isolar conteúdos.
+    const cacheKey = `${abbrev}:${chapter}:t=${translationId ?? 'none'}:m=${modernize ? 1 : 0}`;
     const [cacheConfig, sovereigntyEnabled, l2Row] = await Promise.all([
       timedSql(ctx, 'getCacheConfig', () => getCacheConfig()),
       timedSql(ctx, 'getFeatureFlag:sovereignty', () => getFeatureFlag('bible_sovereignty_enabled')),
@@ -632,7 +716,7 @@ serve(async (req) => {
 
     // Modo warm: força revalidação e responde mínimo. Usado pelo script.
     if (warmOnly) {
-      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
+      const result = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled, translationId, translationCode, modernize, cacheKey);
       const totalMs = Date.now() - t0;
       metric('warm', { correlationId, cacheKey, tier, ok: !!result, ms: totalMs });
       recordEvent({ abbrev, chapter, cache: 'WARM', source: result?.source ?? null, status_code: result ? 200 : 502, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: 'warm', total_wall_clock_ms: Date.now() - t0 });
@@ -673,7 +757,7 @@ serve(async (req) => {
         metric('request_end', { correlationId, cache: 'STALE', tier, cacheKey, ageS: lookup.ageS, ms: totalMs });
         recordEvent({ abbrev, chapter, cache: 'STALE', source: 'L2-SWR', status_code: 200, total_ms: totalMs, correlation_id: correlationId, ctx, cold_start: wasCold, request_source: requestSource, total_wall_clock_ms: Date.now() - t0 });
         const bgCtx: ReqCtx = newCtx();
-        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx, sovereigntyEnabled)
+        waitUntil(revalidate(abbrev!, chapter!, correlationId, cacheConfig.version, policy.ttlHours, bgCtx, sovereigntyEnabled, translationId, translationCode, modernize, cacheKey)
 
           .then((r) => metric('swr_revalidate', { correlationId, cacheKey, ok: !!r, source: r?.source ?? null })));
         return new Response(JSON.stringify({
@@ -694,7 +778,7 @@ serve(async (req) => {
     }
 
     // ---- MISS (ou stale fora da janela) → revalidar síncrono ----
-    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled);
+    const revalidated = await revalidate(abbrev, chapter, correlationId, cacheConfig.version, policy.ttlHours, ctx, sovereigntyEnabled, translationId, translationCode, modernize, cacheKey);
     if (revalidated) {
       const totalMs = Date.now() - t0;
       metric('request_end', { correlationId, cache: 'MISS', tier, cacheKey, source: revalidated.source, ms: totalMs });

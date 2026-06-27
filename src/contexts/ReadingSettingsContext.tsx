@@ -58,6 +58,10 @@ interface ReadingSettings {
   audioCaptionSize: 'small' | 'medium' | 'large';
   showAudioTranscriptPanel: boolean;
   showStudyMarginalia: boolean;
+  /** UUID da tradução bíblica selecionada (null = primária do servidor). */
+  bibleTranslationId: string | null;
+  /** Aplica camada opcional de modernização ortográfica sobre o texto original. */
+  bibleModernize: boolean;
   lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
@@ -123,6 +127,8 @@ const defaultSettings: ReadingSettings = {
   audioCaptionSize: 'medium',
   showAudioTranscriptPanel: false,
   showStudyMarginalia: false,
+  bibleTranslationId: null,
+  bibleModernize: false,
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);

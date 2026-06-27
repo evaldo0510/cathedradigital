@@ -197,8 +197,15 @@ Deno.serve(async (req) => {
     // Insere em batches
     for (let i = 0; i < buf.length; i += VERSE_BATCH) {
       const slice = buf.slice(i, i + VERSE_BATCH);
-      const rows = slice.map((v) => ({ chapter_id: chapterId, number: v.verse, text: v.text }));
-      const { error } = await admin.from("bible_verses").upsert(rows, { onConflict: "chapter_id,number" });
+      const rows = slice.map((v) => ({
+        chapter_id: chapterId,
+        translation_id: source.id,
+        number: v.verse,
+        text: v.text,
+      }));
+      const { error } = await admin
+        .from("bible_verses")
+        .upsert(rows, { onConflict: "chapter_id,translation_id,number" });
       if (error) throw new Error(`verses upsert ${key}: ${error.message}`);
       stats.verses += rows.length;
     }
