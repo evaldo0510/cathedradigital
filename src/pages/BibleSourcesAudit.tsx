@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp } from 'lucide-react';
+import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
@@ -90,8 +90,14 @@ export default function BibleSourcesAudit() {
   const [reporting, setReporting] = useState(false);
   const [autoRetry, setAutoRetry] = useState(false);
   const [batchRunning, setBatchRunning] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  useEffect(() => { pausedRef.current = paused; }, [paused]);
   const [reconciling, setReconciling] = useState(false);
-  const [retryLog, setRetryLog] = useState<{ ts: string; target: string; outcome: string }[]>([]);
+  type RetryLogRow = { ts: string; target: string; outcome: string; httpStatus?: number | null; error?: string | null };
+  const [retryLog, setRetryLog] = useState<RetryLogRow[]>([]);
+  // Última tentativa por capítulo (abbrev:chapter → metadados)
+  const [lastAttempts, setLastAttempts] = useState<Record<string, { ts: string; outcome: string; httpStatus?: number | null; error?: string | null }>>({});
   const lastRetryAt = useRef<Map<string, number>>(new Map());
 
   // Batch retry controls (persisted in localStorage)
@@ -394,26 +400,44 @@ export default function BibleSourcesAudit() {
     }
   };
 
-  const retryChapter = async (abbrev: string, chapter: number) => {
+  const retryChapter = async (abbrev: string, chapter: number): Promise<{ outcome: string; httpStatus?: number | null; error?: string | null }> => {
     const key = `${abbrev}:${chapter}`;
     const now = Date.now();
     const last = lastRetryAt.current.get(key) ?? 0;
-    if (now - last < batchCooldownMs) return { outcome: 'cooldown' };
+    if (now - last < batchCooldownMs) return { outcome: 'cooldown', httpStatus: null, error: null };
     lastRetryAt.current.set(key, now);
+    let result: { outcome: string; httpStatus?: number | null; error?: string | null };
     try {
-      const { data } = await supabase.functions.invoke('bible-text', {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { abbrev, chapter, force_revalidate: true },
       });
-      if (data?.unavailable) {
+      const httpStatus = (error as any)?.context?.status ?? (data?.status_code ?? null);
+      if (error) {
+        result = { outcome: `error: ${error.message}`, httpStatus, error: error.message };
+      } else if (data?.unavailable) {
         const imp = await supabase.functions.invoke('bible-import-deutero', {
           body: { dryRun: false, targets: [{ abbrev, chapter }] },
         });
-        const result = imp.data?.results?.[0];
-        return { outcome: result?.status === 'imported' ? `imported (${result.verses}v)` : `failed: ${result?.error ?? result?.status ?? 'unknown'}` };
+        const r = imp.data?.results?.[0];
+        const impStatus = (imp.error as any)?.context?.status ?? null;
+        result = r?.status === 'imported'
+          ? { outcome: `imported (${r.verses}v)`, httpStatus: impStatus, error: null }
+          : { outcome: `failed: ${r?.error ?? r?.status ?? 'unknown'}`, httpStatus: impStatus, error: r?.error ?? null };
+      } else {
+        result = { outcome: `resolved via ${data?.metadata?.source ?? 'unknown'}`, httpStatus, error: null };
       }
-      return { outcome: `resolved via ${data?.metadata?.source ?? 'unknown'}` };
     } catch (e: any) {
-      return { outcome: `error: ${e?.message ?? e}` };
+      result = { outcome: `error: ${e?.message ?? e}`, httpStatus: null, error: String(e?.message ?? e) };
+    }
+    const ts = new Date().toISOString();
+    setLastAttempts(prev => ({ ...prev, [key]: { ts, ...result } }));
+    return result;
+  };
+
+  // Aguarda enquanto pausa estiver ativa (polling leve, sem timers pesados)
+  const waitWhilePaused = async () => {
+    while (pausedRef.current) {
+      await new Promise(r => setTimeout(r, 250));
     }
   };
 
@@ -422,10 +446,12 @@ export default function BibleSourcesAudit() {
     let cancelled = false;
     const tick = async () => {
       if (cancelled || unavailableChapters.length === 0) return;
-      const log: typeof retryLog = [];
+      const log: RetryLogRow[] = [];
       for (const c of unavailableChapters.slice(0, 5)) {
+        if (cancelled) break;
+        await waitWhilePaused();
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
       }
       if (!cancelled) {
         setRetryLog(prev => [...log, ...prev].slice(0, 30));
@@ -443,13 +469,15 @@ export default function BibleSourcesAudit() {
     const queue = unavailableChapters.slice(0, batchMaxPerRun);
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
-    const log: typeof retryLog = [];
+    setPaused(false);
+    const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
       while (idx < queue.length) {
+        await waitWhilePaused();
         const c = queue[idx++];
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
       }
     });
     await Promise.all(workers);
@@ -542,6 +570,17 @@ export default function BibleSourcesAudit() {
           <Button onClick={runBatchRetry} disabled={batchRunning || unavailableChapters.length === 0} size="sm">
             <Layers className="w-4 h-4 mr-2" />{batchRunning ? 'Reprocessando…' : `Re-tentar lote (${Math.min(unavailableChapters.length, batchMaxPerRun)})`}
           </Button>
+          {batchRunning && (
+            paused ? (
+              <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
+                <PlayCircle className="w-4 h-4 mr-2" />Retomar
+              </Button>
+            ) : (
+              <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
+                <PauseCircle className="w-4 h-4 mr-2" />Pausar
+              </Button>
+            )
+          )}
           <Button onClick={() => runImport()} disabled={importing} size="sm">
             {importing ? 'Importando…' : 'Importar faltantes'}
           </Button>
@@ -863,6 +902,71 @@ export default function BibleSourcesAudit() {
         </CardContent>
       </Card>
 
+      {/* Última tentativa por capítulo */}
+      {Object.keys(lastAttempts).length > 0 && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Repeat className="w-4 h-4" /> Última tentativa por capítulo ({Object.keys(lastAttempts).length})
+              {batchRunning && (
+                <Badge variant={paused ? 'outline' : 'secondary'} className="ml-2">
+                  {paused ? 'Pausado' : 'Em execução'}
+                </Badge>
+              )}
+            </CardTitle>
+            {batchRunning && (
+              paused ? (
+                <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
+                  <PlayCircle className="w-4 h-4 mr-2" />Retomar
+                </Button>
+              ) : (
+                <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
+                  <PauseCircle className="w-4 h-4 mr-2" />Pausar
+                </Button>
+              )
+            )}
+          </CardHeader>
+          <CardContent>
+            <div className="max-h-64 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Capítulo</TableHead>
+                    <TableHead>Último timestamp</TableHead>
+                    <TableHead>HTTP</TableHead>
+                    <TableHead>Resultado / erro</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Object.entries(lastAttempts)
+                    .sort(([, a], [, b]) => b.ts.localeCompare(a.ts))
+                    .map(([key, a]) => {
+                      const failed = a.outcome.startsWith('error') || a.outcome.startsWith('failed');
+                      return (
+                        <TableRow key={key}>
+                          <TableCell className="font-mono text-xs">{key}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</TableCell>
+                          <TableCell>
+                            {a.httpStatus ? (
+                              <Badge variant={a.httpStatus >= 400 ? 'destructive' : 'secondary'}>{a.httpStatus}</Badge>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell className={`text-xs ${failed ? 'text-destructive' : ''}`}>
+                            <div className="font-mono break-all">{a.outcome}</div>
+                            {a.error && <div className="text-[10px] text-muted-foreground mt-0.5 break-all">{a.error}</div>}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Log de retries */}
       {retryLog.length > 0 && (
         <Card>
@@ -870,7 +974,13 @@ export default function BibleSourcesAudit() {
           <CardContent>
             <div className="font-mono text-xs space-y-1 max-h-48 overflow-y-auto">
               {retryLog.map((r, i) => (
-                <div key={i}><span className="text-muted-foreground">{new Date(r.ts).toLocaleTimeString()}</span> · <span className="font-semibold">{r.target}</span> → {r.outcome}</div>
+                <div key={i}>
+                  <span className="text-muted-foreground">{new Date(r.ts).toLocaleTimeString()}</span>
+                  {' · '}<span className="font-semibold">{r.target}</span>
+                  {r.httpStatus != null && <> {' · '}<span className={r.httpStatus >= 400 ? 'text-destructive' : ''}>HTTP {r.httpStatus}</span></>}
+                  {' → '}{r.outcome}
+                  {r.error && <span className="text-muted-foreground"> ({r.error})</span>}
+                </div>
               ))}
             </div>
           </CardContent>
