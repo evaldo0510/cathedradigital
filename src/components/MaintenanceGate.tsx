@@ -47,7 +47,7 @@ export function MaintenanceGate({ children }: { children: React.ReactNode }) {
   if (!active) return <>{children}</>;
 
   return (
-    <>
+    <HelmetProvider>
       <Helmet>
         <title>Em manutenção — Cathedra Digital</title>
         <meta name="robots" content="noindex, nofollow" />
