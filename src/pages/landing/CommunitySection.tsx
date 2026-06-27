@@ -111,6 +111,10 @@ const CommunitySection = () => {
                 <img 
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 20}`} 
                   alt="Avatar de membro"
+                  width={64}
+                  height={64}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>
