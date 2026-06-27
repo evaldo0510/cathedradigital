@@ -1052,26 +1052,51 @@ export default function BibleSourcesAudit() {
       {/* Última tentativa por capítulo */}
       {Object.keys(lastAttempts).length > 0 && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2">
+          <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
             <CardTitle className="text-sm flex items-center gap-2">
-              <Repeat className="w-4 h-4" /> Última tentativa por capítulo ({Object.keys(lastAttempts).length})
+              <Repeat className="w-4 h-4" /> Última tentativa por capítulo ({filteredLastAttempts.length}/{Object.keys(lastAttempts).length})
               {batchRunning && (
                 <Badge variant={paused ? 'outline' : 'secondary'} className="ml-2">
                   {paused ? 'Pausado' : 'Em execução'}
                 </Badge>
               )}
             </CardTitle>
-            {batchRunning && (
-              paused ? (
-                <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
-                  <PlayCircle className="w-4 h-4 mr-2" />Retomar
-                </Button>
-              ) : (
-                <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
-                  <PauseCircle className="w-4 h-4 mr-2" />Pausar
-                </Button>
-              )
-            )}
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar capítulo (ex: Gn:3)"
+                  value={attemptSearch}
+                  onChange={e => setAttemptSearch(e.target.value)}
+                  className="h-8 pl-8 w-44 text-xs"
+                />
+              </div>
+              <Select value={attemptStatusFilter} onValueChange={setAttemptStatusFilter}>
+                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="ok">Sucesso</SelectItem>
+                  <SelectItem value="fail">Falha</SelectItem>
+                  <SelectItem value="2xx">HTTP 2xx</SelectItem>
+                  <SelectItem value="4xx">HTTP 4xx</SelectItem>
+                  <SelectItem value="5xx">HTTP 5xx</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={exportLastAttemptsCsv} disabled={filteredLastAttempts.length === 0} size="sm" variant="secondary">
+                <Download className="w-4 h-4 mr-2" />CSV
+              </Button>
+              {batchRunning && (
+                paused ? (
+                  <Button onClick={() => setConfirmAction('resume')} size="sm" variant="outline">
+                    <PlayCircle className="w-4 h-4 mr-2" />Retomar
+                  </Button>
+                ) : (
+                  <Button onClick={() => setConfirmAction('pause')} size="sm" variant="outline">
+                    <PauseCircle className="w-4 h-4 mr-2" />Pausar
+                  </Button>
+                )
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <div className="max-h-64 overflow-y-auto">
@@ -1085,28 +1110,28 @@ export default function BibleSourcesAudit() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Object.entries(lastAttempts)
-                    .sort(([, a], [, b]) => b.ts.localeCompare(a.ts))
-                    .map(([key, a]) => {
-                      const failed = a.outcome.startsWith('error') || a.outcome.startsWith('failed');
-                      return (
-                        <TableRow key={key}>
-                          <TableCell className="font-mono text-xs">{key}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</TableCell>
-                          <TableCell>
-                            {a.httpStatus ? (
-                              <Badge variant={a.httpStatus >= 400 ? 'destructive' : 'secondary'}>{a.httpStatus}</Badge>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">—</span>
-                            )}
-                          </TableCell>
-                          <TableCell className={`text-xs ${failed ? 'text-destructive' : ''}`}>
-                            <div className="font-mono break-all">{a.outcome}</div>
-                            {a.error && <div className="text-[10px] text-muted-foreground mt-0.5 break-all">{a.error}</div>}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                  {filteredLastAttempts.length === 0 ? (
+                    <TableRow><TableCell colSpan={4} className="text-center text-xs text-muted-foreground py-6">Nenhum resultado para os filtros atuais.</TableCell></TableRow>
+                  ) : filteredLastAttempts.map(([key, a]) => {
+                    const failed = a.outcome.startsWith('error') || a.outcome.startsWith('failed');
+                    return (
+                      <TableRow key={key}>
+                        <TableCell className="font-mono text-xs">{key}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</TableCell>
+                        <TableCell>
+                          {a.httpStatus ? (
+                            <Badge variant={a.httpStatus >= 400 ? 'destructive' : 'secondary'}>{a.httpStatus}</Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className={`text-xs ${failed ? 'text-destructive' : ''}`}>
+                          <div className="font-mono break-all">{a.outcome}</div>
+                          {a.error && <div className="text-[10px] text-muted-foreground mt-0.5 break-all">{a.error}</div>}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
@@ -1117,10 +1142,39 @@ export default function BibleSourcesAudit() {
       {/* Log de retries */}
       {retryLog.length > 0 && (
         <Card>
-          <CardHeader><CardTitle className="text-sm">Log de tentativas ({retryLog.length})</CardTitle></CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
+            <CardTitle className="text-sm">Log de tentativas ({filteredRetryLog.length}/{retryLog.length})</CardTitle>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar alvo"
+                  value={logSearch}
+                  onChange={e => setLogSearch(e.target.value)}
+                  className="h-8 pl-8 w-40 text-xs"
+                />
+              </div>
+              <Select value={logStatusFilter} onValueChange={setLogStatusFilter}>
+                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="ok">Sucesso</SelectItem>
+                  <SelectItem value="fail">Falha</SelectItem>
+                  <SelectItem value="2xx">HTTP 2xx</SelectItem>
+                  <SelectItem value="4xx">HTTP 4xx</SelectItem>
+                  <SelectItem value="5xx">HTTP 5xx</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={exportRetryLogCsv} disabled={filteredRetryLog.length === 0} size="sm" variant="secondary">
+                <Download className="w-4 h-4 mr-2" />CSV
+              </Button>
+            </div>
+          </CardHeader>
           <CardContent>
             <div className="font-mono text-xs space-y-1 max-h-48 overflow-y-auto">
-              {retryLog.map((r, i) => (
+              {filteredRetryLog.length === 0 ? (
+                <div className="text-muted-foreground text-center py-4">Nenhuma entrada para os filtros atuais.</div>
+              ) : filteredRetryLog.map((r, i) => (
                 <div key={i}>
                   <span className="text-muted-foreground">{new Date(r.ts).toLocaleTimeString()}</span>
                   {' · '}<span className="font-semibold">{r.target}</span>
