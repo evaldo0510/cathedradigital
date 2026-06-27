@@ -508,6 +508,7 @@ export default function BibleSourcesAudit() {
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
     setPaused(false);
+    setBatchProgress({ total: queue.length, done: 0, ok: 0, fail: 0 });
     const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
@@ -515,13 +516,38 @@ export default function BibleSourcesAudit() {
         await waitWhilePaused();
         const c = queue[idx++];
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
+        const row: RetryLogRow = { ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null };
+        log.push(row);
+        const isOk = r.outcome.startsWith('resolved') || r.outcome.startsWith('imported');
+        setBatchProgress(prev => ({
+          total: prev.total,
+          done: prev.done + 1,
+          ok: prev.ok + (isOk ? 1 : 0),
+          fail: prev.fail + (isOk ? 0 : 1),
+        }));
       }
     });
     await Promise.all(workers);
     setRetryLog(prev => [...log, ...prev].slice(0, 60));
     const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
-    toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`);
+    const failures = log.length - resolved;
+    // Resumo HTTP status para o toast
+    const httpCounts: Record<string, number> = {};
+    for (const l of log) {
+      if (l.httpStatus != null) {
+        const bucket = `${Math.floor(l.httpStatus / 100)}xx`;
+        httpCounts[bucket] = (httpCounts[bucket] ?? 0) + 1;
+      }
+    }
+    const httpSummary = Object.entries(httpCounts).sort().map(([k, v]) => `${k}:${v}`).join(' · ') || 'sem códigos';
+    if (failures > 0) {
+      toast.error(`Lote concluído com erros: ${failures}/${queue.length} falhas`, {
+        description: `${resolved} resolvidos · HTTP ${httpSummary}`,
+        duration: 10000,
+      });
+    } else {
+      toast.success(`Batch retry: ${resolved}/${queue.length} resolvidos.`, { description: `HTTP ${httpSummary}` });
+    }
     await load();
     setBatchRunning(false);
   };
