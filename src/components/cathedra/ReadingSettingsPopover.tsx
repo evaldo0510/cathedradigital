@@ -1,8 +1,8 @@
-import React from 'react';
-import { 
-  Popover, 
-  PopoverContent, 
-  PopoverTrigger 
+import React, { useState } from 'react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
@@ -15,11 +15,12 @@ interface ReadingSettingsPopoverProps {
   triggerClassName?: string;
 }
 
-const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({ 
-  children, 
-  triggerClassName 
+const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
+  children,
+  triggerClassName
 }) => {
   const { settings, updateSettings } = useReadingSettings();
+  const [open, setOpen] = useState(false);
 
   const themes = [
     { id: 'paper', label: 'Claro', color: 'bg-[#FEFDFB]', text: 'text-stone-900' },
@@ -42,37 +43,56 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   ] as const;
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children || (
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className={cn("rounded-premium-full", triggerClassName)}
             title="Configurações de Leitura"
+            aria-label="Configurações de Leitura"
+            aria-expanded={open}
           >
             <Icons.Type className="w-spacing-md h-spacing-md text-primary/40" />
           </Button>
         )}
       </PopoverTrigger>
       <PopoverContent
+        data-testid="reading-settings-popover"
         className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
         align="end"
         sideOffset={8}
         collisionPadding={12}
       >
         <div className="space-y-spacing-xl">
-          <div className="flex items-center justify-between gap-spacing-sm flex-wrap">
+          <div
+            data-testid="reading-settings-header"
+            className="flex items-center justify-between gap-spacing-sm flex-wrap"
+          >
             <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
-              className={cn("text-[9px] uppercase tracking-tighter h-7 px-2 rounded-full whitespace-nowrap", settings.immersiveMode && "bg-primary/10 text-primary")}
-            >
-              Modo Imersivo
-            </Button>
+            <div className="flex items-center gap-spacing-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
+                className={cn("text-[9px] uppercase tracking-tighter h-7 px-2 rounded-full whitespace-nowrap", settings.immersiveMode && "bg-primary/10 text-primary")}
+              >
+                Modo Imersivo
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpen(false)}
+                aria-label="Fechar configurações"
+                title="Fechar"
+                className="h-7 w-7 rounded-full text-primary/50 hover:text-primary hover:bg-primary/5"
+              >
+                <Icons.X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
+
 
           {/* Temas */}
           <div className="grid grid-cols-4 gap-spacing-sm">
