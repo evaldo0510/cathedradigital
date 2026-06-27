@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -9,6 +9,8 @@ import { Icons } from '@/constants';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/integrations/supabase/client';
+
 
 interface ReadingSettingsPopoverProps {
   children?: React.ReactNode;
