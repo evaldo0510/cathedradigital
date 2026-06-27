@@ -91,7 +91,8 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
         data-testid="reading-settings-popover"
         role="dialog"
         aria-modal="true"
-        aria-label="Configurações de leitura"
+        aria-labelledby="reading-settings-title"
+        aria-describedby="reading-settings-desc"
         className="w-[min(20rem,calc(100vw-1.5rem))] max-w-sm p-spacing-lg bg-background/80 backdrop-blur-3xl border-primary/10 shadow-premium rounded-premium-lg z-[100]"
         align="end"
         sideOffset={8}
@@ -99,12 +100,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
         onPointerDownOutside={() => closePopover()}
         onEscapeKeyDown={() => closePopover()}
       >
+        <p id="reading-settings-desc" className="sr-only">
+          Ajuste tema, tamanho do texto, contraste, espaçamento e tipografia da leitura. Pressione Esc para fechar e retornar ao botão de configurações.
+        </p>
         <div className="space-y-spacing-xl">
           <div
             data-testid="reading-settings-header"
             className="flex items-center justify-between gap-spacing-sm flex-wrap"
           >
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
+            <h4 id="reading-settings-title" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
             <div className="flex items-center gap-spacing-xs">
               <Button
                 variant="ghost"
