@@ -560,6 +560,10 @@ async function revalidate(
   ttlHours: number,
   ctx: ReqCtx,
   sovereigntyEnabledHint?: boolean,
+  translationId: string | null = null,
+  translationCode: string | null = null,
+  modernize = false,
+  cacheKeyOverride?: string,
 ): Promise<{ data: any; source: string } | null> {
   const isSovereigntyEnabled = sovereigntyEnabledHint !== undefined
     ? sovereigntyEnabledHint
@@ -567,15 +571,17 @@ async function revalidate(
   const resolvedBook = findBookByAbbr(abbrev);
   const resolvedBollsId = resolvedBook?.bollsId ?? BOLLS_MAP[abbrev] ?? null;
 
-
-
-  let result = await timedSql(ctx, 'fetchFromCathedraDb', () => fetchFromCathedraDb(abbrev, chapter));
+  let result = await timedSql(ctx, 'fetchFromCathedraDb', () =>
+    fetchFromCathedraDb(abbrev, chapter, translationId, modernize),
+  );
   let source = 'Cathedra (Local)';
+  let modernizedApplied = !!result?.modernizedApplied;
   if (!isSovereigntyEnabled || !result) {
     const fallback = await fetchFromBollsLife(abbrev, chapter, correlationId, ctx);
     if (fallback) {
-      result = { verses: fallback, bookName: bookNameFromAbbr(abbrev) };
+      result = { verses: fallback, bookName: bookNameFromAbbr(abbrev), modernizedApplied: false };
       source = 'BollsLife (Fallback)';
+      modernizedApplied = false;
     }
   }
   // Segunda fonte pública: bibliacatolica.com.br (Ave-Maria) — usada quando
@@ -583,8 +589,9 @@ async function revalidate(
   if (!result) {
     const ave = await fetchFromBibliaCatolica(abbrev, chapter, correlationId);
     if (ave && ave.length > 0) {
-      result = { verses: ave, bookName: bookNameFromAbbr(abbrev) };
+      result = { verses: ave, bookName: bookNameFromAbbr(abbrev), modernizedApplied: false };
       source = 'BibliaCatolica (Ave-Maria)';
+      modernizedApplied = false;
     }
   }
   if (!result) return null;
@@ -611,9 +618,13 @@ async function revalidate(
       received_abbrev: abbrev,
       canonical_abbr: resolvedBook?.abbr ?? null,
       bollsId: resolvedBollsId,
+      translation_id: translationId,
+      translation_code: translationCode,
+      modernized: modernizedApplied,
     },
   };
-  await timedSql(ctx, 'setCacheL2', () => setCacheL2(`${abbrev}:${chapter}`, responseData, contentHash, cacheVersion, effectiveTtlHours));
+  const cacheKey = cacheKeyOverride ?? `${abbrev}:${chapter}`;
+  await timedSql(ctx, 'setCacheL2', () => setCacheL2(cacheKey, responseData, contentHash, cacheVersion, effectiveTtlHours));
   return { data: responseData, source };
 }
 
