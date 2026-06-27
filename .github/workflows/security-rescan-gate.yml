@@ -1,0 +1,80 @@
+name: Security Rescan Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Re-scan diário às 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Audit npm dependencies (high+critical only)
+        id: deps
+        run: |
+          set -o pipefail
+          # bun audit; fallback to npm audit if not available
+          if bun audit --help >/dev/null 2>&1; then
+            bun audit --json > audit.json || true
+          else
+            npx --yes npm-audit-resolver || true
+            npm audit --omit=dev --json > audit.json || true
+          fi
+          HIGH=$(jq '[.. | objects | select(.severity? == "high")] | length' audit.json 2>/dev/null || echo 0)
+          CRIT=$(jq '[.. | objects | select(.severity? == "critical")] | length' audit.json 2>/dev/null || echo 0)
+          echo "high=$HIGH"     >> "$GITHUB_OUTPUT"
+          echo "critical=$CRIT" >> "$GITHUB_OUTPUT"
+          echo "::notice::deps high=$HIGH critical=$CRIT"
+
+      - name: Validate Supabase rescan report
+        id: report
+        run: |
+          REPORT=public/security-rescan-report.json
+          test -f "$REPORT" || { echo "::error::missing $REPORT"; exit 1; }
+          CRIT=$(jq '.summary.critical' "$REPORT")
+          HIGH=$(jq '.summary.high'     "$REPORT")
+          echo "report_high=$HIGH"     >> "$GITHUB_OUTPUT"
+          echo "report_critical=$CRIT" >> "$GITHUB_OUTPUT"
+
+      - name: Fail if critical/high findings exist
+        run: |
+          DC=${{ steps.deps.outputs.critical }}
+          DH=${{ steps.deps.outputs.high }}
+          RC=${{ steps.report.outputs.report_critical }}
+          RH=${{ steps.report.outputs.report_high }}
+          FAIL=0
+          if [ "${DC:-0}" -gt 0 ] || [ "${RC:-0}" -gt 0 ]; then
+            echo "::error::Critical findings detected (deps=$DC, supabase=$RC)"
+            FAIL=1
+          fi
+          if [ "${DH:-0}" -gt 0 ] || [ "${RH:-0}" -gt 0 ]; then
+            echo "::error::High findings detected (deps=$DH, supabase=$RH)"
+            FAIL=1
+          fi
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+          echo "✅ Sem achados críticos/altos."
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-rescan
+          path: |
+            audit.json
+            public/security-rescan-report.json

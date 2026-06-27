@@ -17,6 +17,7 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
+import SecurityRescanReportCard from '@/components/cathedra/SecurityRescanReportCard';
 
 const PAGE_SIZE = 20;
 
@@ -161,6 +162,8 @@ const SecurityDashboard = () => {
           </Button>
         </div>
       </div>
+
+      <SecurityRescanReportCard />
 
       <Card className="rounded-[2rem] border-primary/10 shadow-premium overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/40">
