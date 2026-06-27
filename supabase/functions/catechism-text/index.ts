@@ -85,7 +85,7 @@ serve(async (req: Request) => {
         code: 'not_found',
         error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.`,
       },
-      404,
+      200,
     );
   } catch (error) {
     console.error('[catechism-text] unhandled', error);
