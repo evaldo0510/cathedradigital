@@ -681,11 +681,11 @@ export default function BibleSourcesAudit() {
           </Button>
           {batchRunning && (
             paused ? (
-              <Button onClick={() => { setPaused(false); toast.success('Retomado.'); }} size="sm" variant="outline">
+              <Button onClick={() => setConfirmAction('resume')} size="sm" variant="outline">
                 <PlayCircle className="w-4 h-4 mr-2" />Retomar
               </Button>
             ) : (
-              <Button onClick={() => { setPaused(true); toast.message('Pausado — workers aguardando.'); }} size="sm" variant="outline">
+              <Button onClick={() => setConfirmAction('pause')} size="sm" variant="outline">
                 <PauseCircle className="w-4 h-4 mr-2" />Pausar
               </Button>
             )
