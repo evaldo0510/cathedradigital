@@ -107,7 +107,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
         onEscapeKeyDown={() => closePopover()}
       >
         <p id="reading-settings-desc" className="sr-only">
-          Ajuste tema, tamanho do texto, contraste, espaçamento e tipografia da leitura. Pressione Esc para fechar e retornar ao botão de configurações.
+          Preferências de leitura agrupadas por seção. Pressione Esc para fechar e retornar ao botão de configurações.
         </p>
         <div className="space-y-spacing-xl">
           <div
