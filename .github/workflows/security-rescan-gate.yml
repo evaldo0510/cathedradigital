@@ -25,6 +25,27 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
+      - name: TypeScript typecheck (blocks merges on TS2322/TS2345)
+        run: |
+          if [ -f node_modules/.bin/tsgo ]; then
+            node_modules/.bin/tsgo --noEmit
+          else
+            bunx tsc --noEmit
+          fi
+
+      - name: Validate rescan report schema (zod)
+        run: |
+          bunx tsx -e "
+            import { readFileSync } from 'node:fs';
+            import { RescanReportSchema, RescanHistorySchema } from './src/lib/securityRescanSchema';
+            const r = JSON.parse(readFileSync('public/security-rescan-report.json','utf8'));
+            const h = JSON.parse(readFileSync('public/security-rescan-history.json','utf8'));
+            RescanReportSchema.parse(r);
+            RescanHistorySchema.parse(h);
+            console.log('✅ schemas válidos');
+          "
+
+
       - name: Audit npm dependencies (high+critical only)
         id: deps
         run: |

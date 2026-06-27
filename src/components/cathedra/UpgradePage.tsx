@@ -57,7 +57,7 @@ const WebhookAlerts = () => {
     setIsSaving(true);
     const { error } = await supabase
       .from('webhook_settings')
-      .update({ [field]: value, updated_at: new Date().toISOString() })
+      .update({ [field]: value, updated_at: new Date().toISOString() } as any)
       .eq('id', settings.id);
     
     if (error) toast.error('Erro ao salvar configurações');
