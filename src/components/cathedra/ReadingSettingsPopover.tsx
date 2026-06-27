@@ -1,8 +1,8 @@
-import React from 'react';
-import { 
-  Popover, 
-  PopoverContent, 
-  PopoverTrigger 
+import React, { useState } from 'react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
@@ -15,11 +15,12 @@ interface ReadingSettingsPopoverProps {
   triggerClassName?: string;
 }
 
-const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({ 
-  children, 
-  triggerClassName 
+const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
+  children,
+  triggerClassName
 }) => {
   const { settings, updateSettings } = useReadingSettings();
+  const [open, setOpen] = useState(false);
 
   const themes = [
     { id: 'paper', label: 'Claro', color: 'bg-[#FEFDFB]', text: 'text-stone-900' },
