@@ -400,26 +400,44 @@ export default function BibleSourcesAudit() {
     }
   };
 
-  const retryChapter = async (abbrev: string, chapter: number) => {
+  const retryChapter = async (abbrev: string, chapter: number): Promise<{ outcome: string; httpStatus?: number | null; error?: string | null }> => {
     const key = `${abbrev}:${chapter}`;
     const now = Date.now();
     const last = lastRetryAt.current.get(key) ?? 0;
-    if (now - last < batchCooldownMs) return { outcome: 'cooldown' };
+    if (now - last < batchCooldownMs) return { outcome: 'cooldown', httpStatus: null, error: null };
     lastRetryAt.current.set(key, now);
+    let result: { outcome: string; httpStatus?: number | null; error?: string | null };
     try {
-      const { data } = await supabase.functions.invoke('bible-text', {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
         body: { abbrev, chapter, force_revalidate: true },
       });
-      if (data?.unavailable) {
+      const httpStatus = (error as any)?.context?.status ?? (data?.status_code ?? null);
+      if (error) {
+        result = { outcome: `error: ${error.message}`, httpStatus, error: error.message };
+      } else if (data?.unavailable) {
         const imp = await supabase.functions.invoke('bible-import-deutero', {
           body: { dryRun: false, targets: [{ abbrev, chapter }] },
         });
-        const result = imp.data?.results?.[0];
-        return { outcome: result?.status === 'imported' ? `imported (${result.verses}v)` : `failed: ${result?.error ?? result?.status ?? 'unknown'}` };
+        const r = imp.data?.results?.[0];
+        const impStatus = (imp.error as any)?.context?.status ?? null;
+        result = r?.status === 'imported'
+          ? { outcome: `imported (${r.verses}v)`, httpStatus: impStatus, error: null }
+          : { outcome: `failed: ${r?.error ?? r?.status ?? 'unknown'}`, httpStatus: impStatus, error: r?.error ?? null };
+      } else {
+        result = { outcome: `resolved via ${data?.metadata?.source ?? 'unknown'}`, httpStatus, error: null };
       }
-      return { outcome: `resolved via ${data?.metadata?.source ?? 'unknown'}` };
     } catch (e: any) {
-      return { outcome: `error: ${e?.message ?? e}` };
+      result = { outcome: `error: ${e?.message ?? e}`, httpStatus: null, error: String(e?.message ?? e) };
+    }
+    const ts = new Date().toISOString();
+    setLastAttempts(prev => ({ ...prev, [key]: { ts, ...result } }));
+    return result;
+  };
+
+  // Aguarda enquanto pausa estiver ativa (polling leve, sem timers pesados)
+  const waitWhilePaused = async () => {
+    while (pausedRef.current) {
+      await new Promise(r => setTimeout(r, 250));
     }
   };
 
@@ -428,10 +446,12 @@ export default function BibleSourcesAudit() {
     let cancelled = false;
     const tick = async () => {
       if (cancelled || unavailableChapters.length === 0) return;
-      const log: typeof retryLog = [];
+      const log: RetryLogRow[] = [];
       for (const c of unavailableChapters.slice(0, 5)) {
+        if (cancelled) break;
+        await waitWhilePaused();
         const r = await retryChapter(c.abbrev, c.chapter);
-        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome });
+        log.push({ ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null });
       }
       if (!cancelled) {
         setRetryLog(prev => [...log, ...prev].slice(0, 30));
