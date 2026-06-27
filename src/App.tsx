@@ -564,8 +564,12 @@ const AppLayout: React.FC = () => {
 
               <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemGuide /></Suspense>} />
 
+              {!import.meta.env.PROD && (
+                <Route path="/__test/theological-text" element={<Suspense fallback={<LoadingFallback />}><TheologicalTextFixture /></Suspense>} />
+              )}
 
               <Route path="*" element={<Navigate to="/" replace />} />
+
             </Routes>
             </AnimatePresence>
           </SwipeNavigation>
