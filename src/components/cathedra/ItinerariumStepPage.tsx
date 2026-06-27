@@ -93,7 +93,7 @@ const ItinerariumStepPage: React.FC = () => {
           title: step.title,
           route: `/itineraria/${itinerariumId}/step?step=${stepId}`,
           type: 'itinerarium'
-        });
+        } as any);
       } catch (e) {
         console.warn('Failed to persist reading mark', e);
       }

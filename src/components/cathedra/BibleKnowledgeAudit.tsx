@@ -268,7 +268,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
         verification_details
       };
 
-      await supabase.from('bible_audit_webhook_deliveries').insert([result]);
+      await supabase.from('bible_audit_webhook_deliveries').insert([result] as any);
       fetchWebhookDeliveries();
       toast.success(response.ok ? 'Webhook entregue com sucesso' : `Falha na entrega: ${response.status}`);
     } catch (e: any) {

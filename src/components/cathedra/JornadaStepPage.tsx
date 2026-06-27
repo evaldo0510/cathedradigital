@@ -84,7 +84,7 @@ const JornadaStepPage: React.FC = () => {
         title: step.title,
         route: `/jornadas/${journeyId}/step?step=${stepId}`,
         type: 'journey'
-      });
+      } as any);
     }
   }, [stepId, journeyId, step?.title, journeyTitle, user?.id]);
 
