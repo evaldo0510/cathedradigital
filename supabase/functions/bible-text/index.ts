@@ -269,15 +269,75 @@ function metric(event: string, fields: Record<string, unknown>) {
 // =========================================================================
 // Fontes
 // =========================================================================
-async function fetchFromCathedraDb(abbrev: string, chapter: number) {
+
+// Cache em memória para o id+code da tradução primária (atualiza a cada hora).
+let _primaryTranslationCache: { id: string; code: string; expires: number } | null = null;
+async function resolvePrimaryTranslation(): Promise<{ id: string; code: string } | null> {
+  const now = Date.now();
+  if (_primaryTranslationCache && _primaryTranslationCache.expires > now) {
+    return { id: _primaryTranslationCache.id, code: _primaryTranslationCache.code };
+  }
+  const { data } = await supabase
+    .from('bible_translation_sources')
+    .select('id, code')
+    .eq('is_primary', true)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (!data?.id) return null;
+  _primaryTranslationCache = { id: data.id, code: data.code, expires: now + 3_600_000 };
+  return { id: data.id, code: data.code };
+}
+
+async function resolveTranslationCode(translationId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from('bible_translation_sources')
+    .select('code')
+    .eq('id', translationId)
+    .maybeSingle();
+  return data?.code ?? null;
+}
+
+async function fetchFromCathedraDb(
+  abbrev: string,
+  chapter: number,
+  translationId: string | null,
+  modernize: boolean,
+) {
   try {
     const { data: book } = await supabase.from('bible_books').select('id, name').eq('abbrev', abbrev).single();
     if (!book) return null;
     const { data: ch } = await supabase.from('bible_chapters').select('id').eq('book_id', book.id).eq('number', chapter).single();
     if (!ch) return null;
-    const { data: verses } = await supabase.from('bible_verses').select('number, text').eq('chapter_id', ch.id).order('number');
+    let q = supabase.from('bible_verses').select('id, number, text').eq('chapter_id', ch.id).order('number');
+    if (translationId) q = q.eq('translation_id', translationId);
+    const { data: verses } = await q;
     if (!verses || verses.length === 0) return null;
-    return { verses, bookName: book.name };
+
+    let finalVerses = verses.map(v => ({ number: v.number, text: v.text, id: v.id }));
+    let modernizedApplied = false;
+    if (modernize && translationId) {
+      const verseIds = verses.map(v => v.id);
+      const { data: mods } = await supabase
+        .from('bible_verse_modernizations')
+        .select('verse_id, modernized_text')
+        .in('verse_id', verseIds)
+        .eq('translation_id', translationId);
+      if (mods && mods.length > 0) {
+        const byId = new Map(mods.map(m => [m.verse_id, m.modernized_text]));
+        finalVerses = finalVerses.map(v => ({
+          number: v.number,
+          text: byId.get(v.id) ?? v.text,
+          id: v.id,
+        }));
+        modernizedApplied = mods.length > 0;
+      }
+    }
+    return {
+      verses: finalVerses.map(v => ({ number: v.number, text: v.text })),
+      bookName: book.name,
+      modernizedApplied,
+    };
   } catch { return null; }
 }
 
