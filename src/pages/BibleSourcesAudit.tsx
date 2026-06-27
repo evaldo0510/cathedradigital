@@ -389,7 +389,50 @@ export default function BibleSourcesAudit() {
     toast.success(`CSV de indisponíveis exportado (${rows.length - 1} linhas, fonte=${csvSourceFilter})`);
   };
 
-  const runImport = async (targets?: { abbrev: string; chapter: number }[]) => {
+  // Filtros de status HTTP / outcome aplicados às tabelas
+  const matchStatusFilter = (filter: string, outcome: string, httpStatus?: number | null) => {
+    if (filter === 'all') return true;
+    const isOk = outcome.startsWith('resolved') || outcome.startsWith('imported');
+    if (filter === 'ok') return isOk;
+    if (filter === 'fail') return !isOk;
+    if (filter === '2xx') return httpStatus != null && httpStatus >= 200 && httpStatus < 300;
+    if (filter === '4xx') return httpStatus != null && httpStatus >= 400 && httpStatus < 500;
+    if (filter === '5xx') return httpStatus != null && httpStatus >= 500;
+    return true;
+  };
+
+  const filteredLastAttempts = useMemo(() => {
+    const q = attemptSearch.trim().toLowerCase();
+    return Object.entries(lastAttempts)
+      .filter(([key, a]) => matchStatusFilter(attemptStatusFilter, a.outcome, a.httpStatus))
+      .filter(([key]) => !q || key.toLowerCase().includes(q))
+      .sort(([, a], [, b]) => b.ts.localeCompare(a.ts));
+  }, [lastAttempts, attemptStatusFilter, attemptSearch]);
+
+  const filteredRetryLog = useMemo(() => {
+    const q = logSearch.trim().toLowerCase();
+    return retryLog
+      .filter(r => matchStatusFilter(logStatusFilter, r.outcome, r.httpStatus))
+      .filter(r => !q || r.target.toLowerCase().includes(q));
+  }, [retryLog, logStatusFilter, logSearch]);
+
+  const exportLastAttemptsCsv = () => {
+    const rows: string[][] = [['chapter_key', 'last_attempt_ts', 'http_status', 'outcome', 'error']];
+    for (const [key, a] of filteredLastAttempts) {
+      rows.push([key, a.ts, String(a.httpStatus ?? ''), a.outcome, a.error ?? '']);
+    }
+    downloadCsv(rows, `bible-last-attempts-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV de últimas tentativas exportado (${rows.length - 1} linhas)`);
+  };
+
+  const exportRetryLogCsv = () => {
+    const rows: string[][] = [['ts', 'target', 'http_status', 'outcome', 'error']];
+    for (const r of filteredRetryLog) {
+      rows.push([r.ts, r.target, String(r.httpStatus ?? ''), r.outcome, r.error ?? '']);
+    }
+    downloadCsv(rows, `bible-retry-log-${dateFrom}_to_${dateTo}.csv`);
+    toast.success(`CSV do log de tentativas exportado (${rows.length - 1} linhas)`);
+  };
     setImporting(true);
     try {
       const { data, error } = await supabase.functions.invoke('bible-import-deutero', {
