@@ -1382,68 +1382,152 @@ export type Database = {
       bible_translation_sources: {
         Row: {
           attribution: string
+          author: string | null
           books_count: number
+          certified_at: string | null
+          certified_by: string | null
           chapters_count: number
           code: string
           created_at: string
           created_by: string | null
           file_url: string | null
           id: string
+          import_completed_at: string | null
+          import_started_at: string | null
           imported_at: string | null
           is_primary: boolean
           language: string
           license: string
+          metadata: Json
           name: string
           notes: string | null
+          payload_bytes: number | null
+          payload_hash: string | null
+          source_origin: string | null
           source_url: string | null
           status: string
           translation: string
           updated_at: string
           verses_count: number
+          year_published: number | null
         }
         Insert: {
           attribution: string
+          author?: string | null
           books_count?: number
+          certified_at?: string | null
+          certified_by?: string | null
           chapters_count?: number
           code: string
           created_at?: string
           created_by?: string | null
           file_url?: string | null
           id?: string
+          import_completed_at?: string | null
+          import_started_at?: string | null
           imported_at?: string | null
           is_primary?: boolean
           language?: string
           license: string
+          metadata?: Json
           name: string
           notes?: string | null
+          payload_bytes?: number | null
+          payload_hash?: string | null
+          source_origin?: string | null
           source_url?: string | null
           status?: string
           translation: string
           updated_at?: string
           verses_count?: number
+          year_published?: number | null
         }
         Update: {
           attribution?: string
+          author?: string | null
           books_count?: number
+          certified_at?: string | null
+          certified_by?: string | null
           chapters_count?: number
           code?: string
           created_at?: string
           created_by?: string | null
           file_url?: string | null
           id?: string
+          import_completed_at?: string | null
+          import_started_at?: string | null
           imported_at?: string | null
           is_primary?: boolean
           language?: string
           license?: string
+          metadata?: Json
           name?: string
           notes?: string | null
+          payload_bytes?: number | null
+          payload_hash?: string | null
+          source_origin?: string | null
           source_url?: string | null
           status?: string
           translation?: string
           updated_at?: string
           verses_count?: number
+          year_published?: number | null
         }
         Relationships: []
+      }
+      bible_verse_modernizations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          method: string
+          modernization_version: string
+          modernized_text: string
+          notes: string | null
+          translation_id: string
+          updated_at: string
+          verse_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          method?: string
+          modernization_version?: string
+          modernized_text: string
+          notes?: string | null
+          translation_id: string
+          updated_at?: string
+          verse_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          method?: string
+          modernization_version?: string
+          modernized_text?: string
+          notes?: string | null
+          translation_id?: string
+          updated_at?: string
+          verse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_verse_modernizations_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "bible_translation_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bible_verse_modernizations_verse_id_fkey"
+            columns: ["verse_id"]
+            isOneToOne: false
+            referencedRelation: "bible_verses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bible_verses: {
         Row: {
@@ -1452,6 +1536,7 @@ export type Database = {
           id: string
           number: number
           text: string
+          translation_id: string
           updated_at: string
         }
         Insert: {
@@ -1460,6 +1545,7 @@ export type Database = {
           id?: string
           number: number
           text: string
+          translation_id: string
           updated_at?: string
         }
         Update: {
@@ -1468,6 +1554,7 @@ export type Database = {
           id?: string
           number?: number
           text?: string
+          translation_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -1476,6 +1563,13 @@ export type Database = {
             columns: ["chapter_id"]
             isOneToOne: false
             referencedRelation: "bible_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bible_verses_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "bible_translation_sources"
             referencedColumns: ["id"]
           },
         ]
@@ -4651,6 +4745,15 @@ export type Database = {
       bible_source_sprint1_passed: {
         Args: { p_source_id: string }
         Returns: boolean
+      }
+      bible_translation_ready: {
+        Args: { p_translation_id: string }
+        Returns: {
+          gate_blocked: boolean
+          ready: boolean
+          reason: string
+          sprint1_passed: boolean
+        }[]
       }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
