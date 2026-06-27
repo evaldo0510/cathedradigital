@@ -78,7 +78,7 @@ export function MaintenanceGate({ children }: { children: React.ReactNode }) {
           </p>
         </div>
       </main>
-    </>
+    </HelmetProvider>
   );
 }
 
