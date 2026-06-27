@@ -645,7 +645,13 @@ const Bible: React.FC = () => {
 
     const textPromise = supabase.functions
       .invoke('bible-text', {
-        body: { abbrev: abbr, chapter, client_cache_version: cacheSyncVersion },
+        body: {
+          abbrev: abbr,
+          chapter,
+          client_cache_version: cacheSyncVersion,
+          ...(settings.bibleTranslationId ? { translation_id: settings.bibleTranslationId } : {}),
+          ...(settings.bibleModernize ? { modernize: true } : {}),
+        },
       })
       .finally(() => biblePerf.mark(runId, 'text:end'));
 
