@@ -696,7 +696,7 @@ export default function BibleSourcesAudit() {
 
       {/* Aviso visual quando workers estão pausados */}
       {batchRunning && paused && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
+        <div data-testid="batch-paused-banner" role="status" className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
           <PauseCircle className="w-5 h-5 text-amber-600" />
           <div className="flex-1">
             <div className="text-sm font-semibold">Workers pausados</div>
