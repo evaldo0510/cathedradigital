@@ -100,7 +100,7 @@ describe('ReadingSettingsPopover · ARIA / screen reader', () => {
     const desc = document.getElementById('reading-settings-desc');
     expect(desc).not.toBeNull();
     expect(desc?.className).toMatch(/sr-only/);
-    expect(desc?.textContent).toMatch(/tema, tamanho do texto, contraste/i);
+    expect(desc?.textContent).toMatch(/Preferências de leitura/i);
   });
 
   it('cada seção é anunciada com seu próprio título (aria-labelledby)', () => {
