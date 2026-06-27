@@ -1,0 +1,45 @@
+# Cathedra Digital
+
+> Plataforma católica de vida interior: Bíblia, Catecismo, Magistério, Liturgia, oração e formação espiritual em português.
+
+A Cathedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Igreja Católica, documentos do Magistério, a liturgia diária, vidas de santos, devoções tradicionais e ferramentas de estudo teológico. Tudo interligado por referências cruzadas (Nexus Theologicus) para aprofundar a vida espiritual sem perder o contexto.
+
+## Pages
+
+- [Início](/): Visão geral da plataforma e acesso rápido aos módulos.
+- [Bíblia](/bible): Leitura e estudo da Sagrada Escritura com referências cruzadas.
+- [Catecismo](/catechism): Catecismo da Igreja Católica navegável por parágrafo.
+- [Magistério](/magisterium): Documentos pontifícios e do Magistério da Igreja.
+- [Liturgia](/liturgia): Liturgia diária, calendário e leituras da Missa.
+- [Missal](/missal): Ordinário e próprio da Missa.
+- [Breviário](/breviary): Liturgia das Horas.
+- [Calendário Litúrgico](/calendar): Tempo litúrgico, festas e memórias.
+- [Santos](/santos): Vidas de santos e santas da Igreja Católica.
+- [Papas](/papas): História dos pontífices.
+- [Aparições](/aparicoes): Aparições marianas reconhecidas.
+- [Dogmas](/dogmas): Dogmas da fé católica.
+- [Orações](/oracao): Orações tradicionais.
+- [Rosário](/rosary): Mistérios e oração do Santo Rosário.
+- [Via-Sacra](/viacrucis): Estações da Via-Sacra.
+- [Ladainhas](/litanies): Ladainhas tradicionais.
+- [Lectio Divina](/lectio): Método de leitura orante da Escritura.
+- [Confissão](/confession): Guia para o Sacramento da Reconciliação.
+- [Jornadas](/jornadas): Itinerários espirituais guiados.
+- [Itinerários](/itineraria): Caminhos formativos estruturados.
+- [Temas](/temas): Mapas temáticos da fé católica.
+- [Enciclopédia](/encyclopedia): Verbetes de A a Z sobre a fé.
+- [Glossário](/glossary): Termos teológicos explicados.
+- [Aquinas Opera](/aquinas): Obras de Santo Tomás de Aquino.
+- [Guia dos Módulos](/guia-modulos): Como usar cada módulo da plataforma.
+- [Logos AI](/logos): Assistente teológico católico.
+- [Busca](/buscar): Busca global em todo o acervo.
+- [Hoje](/hoje): Painel espiritual diário.
+- [Sobre](/about): Sobre a Cathedra Digital.
+- [Planos](/pricing): Planos e assinaturas.
+- [Transparência](/transparencia): Modelo de doação e transparência financeira.
+- [Parceiros](/partners): Instituições parceiras.
+
+## Optional
+
+- [Termos](/terms): Termos de uso.
+- [Privacidade](/privacy): Política de privacidade.
