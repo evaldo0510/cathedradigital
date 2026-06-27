@@ -561,7 +561,7 @@ export default function BibleSourcesAudit() {
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
     setPaused(false);
-    setBatchProgress({ total: queue.length, done: 0, ok: 0, fail: 0 });
+    setBatchProgress(emptyBatchProgress(queue.length));
     const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
@@ -571,13 +571,7 @@ export default function BibleSourcesAudit() {
         const r = await retryChapter(c.abbrev, c.chapter);
         const row: RetryLogRow = { ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null };
         log.push(row);
-        const isOk = r.outcome.startsWith('resolved') || r.outcome.startsWith('imported');
-        setBatchProgress(prev => ({
-          total: prev.total,
-          done: prev.done + 1,
-          ok: prev.ok + (isOk ? 1 : 0),
-          fail: prev.fail + (isOk ? 0 : 1),
-        }));
+        setBatchProgress(prev => nextProgress(prev, r.outcome));
       }
     });
     await Promise.all(workers);
@@ -585,14 +579,7 @@ export default function BibleSourcesAudit() {
     const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
     const failures = log.length - resolved;
     // Resumo HTTP status para o toast
-    const httpCounts: Record<string, number> = {};
-    for (const l of log) {
-      if (l.httpStatus != null) {
-        const bucket = `${Math.floor(l.httpStatus / 100)}xx`;
-        httpCounts[bucket] = (httpCounts[bucket] ?? 0) + 1;
-      }
-    }
-    const httpSummary = Object.entries(httpCounts).sort().map(([k, v]) => `${k}:${v}`).join(' · ') || 'sem códigos';
+    const httpSummary = formatHttpSummary(summarizeHttp(log));
     if (failures > 0) {
       toast.error(`Lote concluído com erros: ${failures}/${queue.length} falhas`, {
         description: `${resolved} resolvidos · HTTP ${httpSummary}`,
