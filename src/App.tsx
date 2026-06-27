@@ -23,6 +23,7 @@ import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingS
 import { initGA4AutoTracking } from './lib/analytics';
 
 import CathedralSidebar from './components/cathedra/Sidebar';
+const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
@@ -564,8 +565,12 @@ const AppLayout: React.FC = () => {
 
               <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemGuide /></Suspense>} />
 
+              {!import.meta.env.PROD && (
+                <Route path="/__test/theological-text" element={<Suspense fallback={<LoadingFallback />}><TheologicalTextFixture /></Suspense>} />
+              )}
 
               <Route path="*" element={<Navigate to="/" replace />} />
+
             </Routes>
             </AnimatePresence>
           </SwipeNavigation>
