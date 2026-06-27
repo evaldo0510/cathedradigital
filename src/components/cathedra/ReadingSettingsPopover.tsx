@@ -35,6 +35,26 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const lastToggleAtRef = useRef(0);
+  const [translations, setTranslations] = useState<Array<{ id: string; code: string; name: string }>>([]);
+
+  // Carrega traduções prontas uma única vez ao abrir.
+  useEffect(() => {
+    if (!open || translations.length > 0) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('bible_translation_sources')
+        .select('id, code, name, is_primary, status')
+        .in('status', ['ready', 'draft'])
+        .order('is_primary', { ascending: false })
+        .order('code');
+      if (!cancelled && data) {
+        setTranslations(data as any);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [open, translations.length]);
+
 
   const handleOpenChange = useCallback((next: boolean) => {
     const now = Date.now();
