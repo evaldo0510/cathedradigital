@@ -16,6 +16,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  emptyBatchProgress,
+  nextProgress,
+  progressPct,
+  pending,
+  summarizeHttp,
+  formatHttpSummary,
+} from '@/pages/bibleSourcesAudit/batchHelpers';
 
 type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
 
@@ -553,7 +561,7 @@ export default function BibleSourcesAudit() {
     if (queue.length === 0) { toast.info('Nada para reprocessar.'); return; }
     setBatchRunning(true);
     setPaused(false);
-    setBatchProgress({ total: queue.length, done: 0, ok: 0, fail: 0 });
+    setBatchProgress(emptyBatchProgress(queue.length));
     const log: RetryLogRow[] = [];
     let idx = 0;
     const workers = Array.from({ length: Math.max(1, batchConcurrency) }, async () => {
@@ -563,13 +571,7 @@ export default function BibleSourcesAudit() {
         const r = await retryChapter(c.abbrev, c.chapter);
         const row: RetryLogRow = { ts: new Date().toISOString(), target: `${c.abbrev} ${c.chapter}`, outcome: r.outcome, httpStatus: r.httpStatus ?? null, error: r.error ?? null };
         log.push(row);
-        const isOk = r.outcome.startsWith('resolved') || r.outcome.startsWith('imported');
-        setBatchProgress(prev => ({
-          total: prev.total,
-          done: prev.done + 1,
-          ok: prev.ok + (isOk ? 1 : 0),
-          fail: prev.fail + (isOk ? 0 : 1),
-        }));
+        setBatchProgress(prev => nextProgress(prev, r.outcome));
       }
     });
     await Promise.all(workers);
@@ -577,14 +579,7 @@ export default function BibleSourcesAudit() {
     const resolved = log.filter(l => l.outcome.startsWith('resolved') || l.outcome.startsWith('imported')).length;
     const failures = log.length - resolved;
     // Resumo HTTP status para o toast
-    const httpCounts: Record<string, number> = {};
-    for (const l of log) {
-      if (l.httpStatus != null) {
-        const bucket = `${Math.floor(l.httpStatus / 100)}xx`;
-        httpCounts[bucket] = (httpCounts[bucket] ?? 0) + 1;
-      }
-    }
-    const httpSummary = Object.entries(httpCounts).sort().map(([k, v]) => `${k}:${v}`).join(' · ') || 'sem códigos';
+    const httpSummary = formatHttpSummary(summarizeHttp(log));
     if (failures > 0) {
       toast.error(`Lote concluído com erros: ${failures}/${queue.length} falhas`, {
         description: `${resolved} resolvidos · HTTP ${httpSummary}`,
@@ -701,7 +696,7 @@ export default function BibleSourcesAudit() {
 
       {/* Aviso visual quando workers estão pausados */}
       {batchRunning && paused && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
+        <div data-testid="batch-paused-banner" role="status" className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
           <PauseCircle className="w-5 h-5 text-amber-600" />
           <div className="flex-1">
             <div className="text-sm font-semibold">Workers pausados</div>
@@ -723,13 +718,13 @@ export default function BibleSourcesAudit() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Progress value={Math.round((batchProgress.done / batchProgress.total) * 100)} />
-            <div className="flex flex-wrap gap-4 text-xs tabular-nums">
-              <span><strong>{Math.round((batchProgress.done / batchProgress.total) * 100)}%</strong> concluído</span>
-              <span className="text-muted-foreground">Concluídos: <strong>{batchProgress.done}</strong>/{batchProgress.total}</span>
-              <span className="text-emerald-700">Sucesso: <strong>{batchProgress.ok}</strong></span>
-              <span className="text-destructive">Falha: <strong>{batchProgress.fail}</strong></span>
-              <span className="text-muted-foreground">Pendentes: <strong>{batchProgress.total - batchProgress.done}</strong></span>
+            <Progress value={progressPct(batchProgress)} data-testid="batch-progress-bar" />
+            <div className="flex flex-wrap gap-4 text-xs tabular-nums" data-testid="batch-progress-stats">
+              <span><strong data-testid="batch-progress-pct">{progressPct(batchProgress)}%</strong> concluído</span>
+              <span className="text-muted-foreground">Concluídos: <strong data-testid="batch-progress-done">{batchProgress.done}</strong>/{batchProgress.total}</span>
+              <span className="text-emerald-700">Sucesso: <strong data-testid="batch-progress-ok">{batchProgress.ok}</strong></span>
+              <span className="text-destructive">Falha: <strong data-testid="batch-progress-fail">{batchProgress.fail}</strong></span>
+              <span className="text-muted-foreground">Pendentes: <strong data-testid="batch-progress-pending">{pending(batchProgress)}</strong></span>
             </div>
           </CardContent>
         </Card>
