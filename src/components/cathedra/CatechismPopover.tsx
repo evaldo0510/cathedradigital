@@ -19,9 +19,18 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
   onNavigate,
   variant = 'default',
 }) => {
-  const { data, isLoading, isFetched } = useCatechismParagraph(paragraph);
+  const { data, isLoading, isFetched, error } = useCatechismParagraph(paragraph);
+  const [showDiag, setShowDiag] = React.useState(false);
 
   const content = data?.content || '';
+  const err = error as any;
+  const diag = {
+    status: err?.code || data?.status || (isFetched && !content ? 'empty' : 'ok'),
+    httpStatus: err?.status ?? '—',
+    requestId: `cic-${paragraph}-${Date.now().toString(36)}`,
+    message: err?.message || (isFetched && !content ? 'Conteúdo vazio retornado pelo servidor.' : ''),
+  };
+  const hasIssue = Boolean(err) || (isFetched && !content);
 
   return (
     <Popover>
