@@ -152,12 +152,15 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
           <Separator className="bg-primary/5" />
 
           {/* Tamanho da Fonte */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Tamanho do Texto</h4>
-            <div className="flex bg-primary/[0.03] p-1 rounded-premium-full border border-primary/5">
+          <section aria-labelledby="reading-settings-size" className="space-y-spacing-md">
+            <h4 id="reading-settings-size" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Tamanho do Texto</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-size" className="flex bg-primary/[0.03] p-1 rounded-premium-full border border-primary/5">
               {fontSizes.map((f) => (
                 <button
                   key={f.id}
+                  role="radio"
+                  aria-checked={settings.fontSize === f.id}
+                  aria-label={`Tamanho ${f.id}`}
                   onClick={() => updateSettings({ fontSize: f.id })}
                   className={cn(
                     "flex-1 py-spacing-xs rounded-premium-full transition-all text-center",
@@ -168,12 +171,12 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Contraste e Acessibilidade */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
-            <div className="flex gap-spacing-sm">
+          <section aria-labelledby="reading-settings-a11y" className="space-y-spacing-md">
+            <h4 id="reading-settings-a11y" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-a11y" className="flex gap-spacing-sm">
               {[
                 { id: 'normal', label: 'Normal', icon: Icons.Circle },
                 { id: 'soft', label: 'Suave', icon: Icons.Droplets },
@@ -181,6 +184,9 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               ].map((c) => (
                 <button
                   key={c.id}
+                  role="radio"
+                  aria-checked={settings.contrast === c.id}
+                  aria-label={c.label}
                   onClick={() => updateSettings({ contrast: c.id as any })}
                   className={cn(
                     "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
@@ -193,15 +199,18 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Espaçamento */}
-          <div className="space-y-spacing-md">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
-            <div className="flex gap-spacing-sm">
+          <section aria-labelledby="reading-settings-spacing" className="space-y-spacing-md">
+            <h4 id="reading-settings-spacing" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
+            <div role="radiogroup" aria-labelledby="reading-settings-spacing" className="flex gap-spacing-sm">
               {lineSpacings.map((s) => (
                 <button
                   key={s.id}
+                  role="radio"
+                  aria-checked={settings.lineSpacing === s.id}
+                  aria-label={s.label}
                   onClick={() => updateSettings({ lineSpacing: s.id })}
                   className={cn(
                     "flex-1 flex flex-col items-center gap-spacing-xs p-spacing-sm rounded-premium transition-all border",
@@ -213,7 +222,8 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 </button>
               ))}
             </div>
-          </div>
+          </section>
+
 
           
           <div className="pt-spacing-sm">
