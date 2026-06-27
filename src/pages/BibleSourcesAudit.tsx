@@ -699,6 +699,44 @@ export default function BibleSourcesAudit() {
         </div>
       </div>
 
+      {/* Aviso visual quando workers estão pausados */}
+      {batchRunning && paused && (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 text-amber-900 px-4 py-3 flex items-center gap-3">
+          <PauseCircle className="w-5 h-5 text-amber-600" />
+          <div className="flex-1">
+            <div className="text-sm font-semibold">Workers pausados</div>
+            <div className="text-xs">Nenhum capítulo será reprocessado até você Retomar. Tentativas em andamento já foram concluídas.</div>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setConfirmAction('resume')}>
+            <PlayCircle className="w-4 h-4 mr-2" />Retomar
+          </Button>
+        </div>
+      )}
+
+      {/* Indicador de progresso do lote em tempo real */}
+      {batchRunning && batchProgress.total > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Layers className="w-4 h-4" /> Re-tentar lote — progresso em tempo real
+              {paused && <Badge variant="outline" className="ml-2 border-amber-400 text-amber-700">Pausado</Badge>}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Progress value={Math.round((batchProgress.done / batchProgress.total) * 100)} />
+            <div className="flex flex-wrap gap-4 text-xs tabular-nums">
+              <span><strong>{Math.round((batchProgress.done / batchProgress.total) * 100)}%</strong> concluído</span>
+              <span className="text-muted-foreground">Concluídos: <strong>{batchProgress.done}</strong>/{batchProgress.total}</span>
+              <span className="text-emerald-700">Sucesso: <strong>{batchProgress.ok}</strong></span>
+              <span className="text-destructive">Falha: <strong>{batchProgress.fail}</strong></span>
+              <span className="text-muted-foreground">Pendentes: <strong>{batchProgress.total - batchProgress.done}</strong></span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+
+
       {/* Filtros: intervalo de datas */}
       <Card>
         <CardHeader className="pb-3">
