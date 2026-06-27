@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-06-27T21:37:28.754Z",
+  "project_domain": "https://www.cathedradigital.com.br",
+  "summary": {
+    "pass": 10,
+    "warn": 2,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "id": "sitemap_exists",
+      "label": "sitemap.xml presente",
+      "status": "pass",
+      "detail": "48 URLs declaradas."
+    },
+    {
+      "id": "sitemap_host",
+      "label": "sitemap.xml usa domínio do projeto",
+      "status": "pass",
+      "detail": "Base https://www.cathedradigital.com.br confirmada."
+    },
+    {
+      "id": "robots_exists",
+      "label": "robots.txt presente",
+      "status": "pass",
+      "detail": "Arquivo presente."
+    },
+    {
+      "id": "robots_sitemap",
+      "label": "robots.txt aponta para o sitemap correto",
+      "status": "pass",
+      "detail": "Sitemap: https://www.cathedradigital.com.br/sitemap.xml"
+    },
+    {
+      "id": "robots_not_blocking",
+      "label": "robots.txt não bloqueia o site inteiro",
+      "status": "pass",
+      "detail": "Crawl permitido em /."
+    },
+    {
+      "id": "llms_exists",
+      "label": "llms.txt presente",
+      "status": "pass",
+      "detail": "2493 bytes."
+    },
+    {
+      "id": "llms_summary",
+      "label": "llms.txt traz resumo (>)",
+      "status": "pass",
+      "detail": "Resumo presente."
+    },
+    {
+      "id": "meta_title",
+      "label": "<title> definido e não genérico",
+      "status": "pass",
+      "detail": "Cathedra Digital — Bíblia, Catecismo e Tradição Católica"
+    },
+    {
+      "id": "meta_description",
+      "label": "meta description definida",
+      "status": "pass",
+      "detail": "150 caracteres"
+    },
+    {
+      "id": "meta_canonical",
+      "label": "canonical aponta para o domínio",
+      "status": "warn",
+      "detail": "https://cathedradigital.lovable.app/"
+    },
+    {
+      "id": "meta_og",
+      "label": "Open Graph (og:title, og:url) presentes",
+      "status": "pass",
+      "detail": "og:title=true, og:url=true"
+    },
+    {
+      "id": "gsc_meta",
+      "label": "Google Search Console: meta verification",
+      "status": "warn",
+      "detail": "Sem meta google-site-verification (configurar via /admin/seo-status após conectar GSC)."
+    }
+  ]
+}
