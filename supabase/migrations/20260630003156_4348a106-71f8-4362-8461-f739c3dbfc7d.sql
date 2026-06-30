@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Users can manage their own audit schedules" ON public.bible_audit_schedules;
