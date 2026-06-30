@@ -79,7 +79,21 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
             </p>
           )}
           {!isLoading && isFetched && !content && (
-            <p className="text-premium-xs text-muted-foreground italic">Texto não disponível.</p>
+            <div className="space-y-spacing-xs">
+              <p className="text-premium-xs text-muted-foreground italic">
+                Texto ainda não importado para o banco oficial.
+              </p>
+              <a
+                href={`https://www.google.com/search?q=${encodeURIComponent(`CIC §${paragraph} site:vatican.va`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline"
+                data-testid="catechism-vatican-fallback"
+              >
+                <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
+                Ler §{paragraph} no Vatican.va
+              </a>
+            </div>
           )}
 
           {!isLoading && hasIssue && (
