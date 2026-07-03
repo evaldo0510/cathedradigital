@@ -417,7 +417,67 @@ const Magisterium: React.FC = () => {
               )}
             </div>
           </div>
+
+          {/* Chips de filtros ativos (removíveis) */}
+          {(selectedCategory || selectedThemes.length > 0 || searchQuery) && (
+            <div
+              className="flex items-center flex-wrap gap-spacing-2xs pt-spacing-2xs"
+              role="region"
+              aria-label="Filtros ativos"
+            >
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30 mr-spacing-2xs">
+                Filtros ativos:
+              </span>
+
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  aria-label={`Remover busca: ${searchQuery}`}
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                >
+                  <span className="normal-case tracking-normal">“{searchQuery}”</span>
+                  <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
+                </button>
+              )}
+
+              {selectedCategory && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory(null)}
+                  aria-label={`Remover categoria: ${selectedCategory}`}
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                >
+                  {selectedCategory}
+                  <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
+                </button>
+              )}
+
+              {selectedThemes.map(theme => (
+                <button
+                  key={theme}
+                  type="button"
+                  onClick={() => toggleTheme(theme)}
+                  aria-label={`Remover tema: ${theme}`}
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                >
+                  {theme}
+                  <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/60 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+              >
+                <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
+                Limpar tudo
+              </button>
+            </div>
+          )}
         </div>
+
 
 
         {/* Documents Grid */}
