@@ -569,6 +569,44 @@ const Magisterium: React.FC = () => {
           ))}
         </div>
 
+        {/* Paginação */}
+        {pagination.totalPages > 1 && (
+          <nav
+            className="flex items-center justify-center gap-spacing-md pt-spacing-md"
+            aria-label="Paginação de documentos"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={pagination.page <= 1}
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              aria-label="Página anterior"
+              className="text-[9px] font-black uppercase tracking-[0.2em]"
+            >
+              <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+              Anterior
+            </Button>
+            <span
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              Página {pagination.page} de {pagination.totalPages}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={pagination.page >= pagination.totalPages}
+              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+              aria-label="Próxima página"
+              className="text-[9px] font-black uppercase tracking-[0.2em]"
+            >
+              Próxima
+              <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
+            </Button>
+          </nav>
+        )}
+
         {filteredDocs.length === 0 && (
           <div className="text-center py-spacing-4xl opacity-20">
             <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto mb-spacing-md" strokeWidth={0.5} />
