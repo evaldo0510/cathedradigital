@@ -68,7 +68,7 @@ export function filterAndSortDocuments(
 // URL persistence
 // ---------------------------------------------------------------------------
 
-const PARAM_KEYS = { q: 'q', cat: 'cat', theme: 'theme', sort: 'sort' } as const;
+const PARAM_KEYS = { q: 'q', cat: 'cat', theme: 'theme', sort: 'sort', page: 'page' } as const;
 const VALID_SORTS: MagisteriumSort[] = ['canonical', 'chronological-asc', 'chronological-desc'];
 
 export function stateToSearchParams(state: MagisteriumFilterState): URLSearchParams {
@@ -77,6 +77,7 @@ export function stateToSearchParams(state: MagisteriumFilterState): URLSearchPar
   if (state.category) params.set(PARAM_KEYS.cat, state.category);
   for (const t of state.themes) params.append(PARAM_KEYS.theme, t);
   if (state.sort !== 'canonical') params.set(PARAM_KEYS.sort, state.sort);
+  if (state.page > 1) params.set(PARAM_KEYS.page, String(state.page));
   return params;
 }
 
@@ -85,11 +86,14 @@ export function searchParamsToState(params: URLSearchParams): MagisteriumFilterS
   const sort = (VALID_SORTS as string[]).includes(rawSort ?? '')
     ? (rawSort as MagisteriumSort)
     : 'canonical';
+  const rawPage = Number(params.get(PARAM_KEYS.page));
+  const page = Number.isInteger(rawPage) && rawPage >= 1 ? rawPage : 1;
   return {
     search: params.get(PARAM_KEYS.q) ?? '',
     category: params.get(PARAM_KEYS.cat),
     themes: params.getAll(PARAM_KEYS.theme),
     sort,
+    page,
   };
 }
 
@@ -106,6 +110,37 @@ export function mergeFilterParams(
   const patch = stateToSearchParams(state);
   patch.forEach((value, key) => next.append(key, value));
   return next;
+}
+
+// ---------------------------------------------------------------------------
+// Pagination helper
+// ---------------------------------------------------------------------------
+
+export interface PaginationResult<T> {
+  items: T[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+}
+
+/** Fatia a lista pelo `page` do state, com clamp seguro. */
+export function paginate<T>(
+  items: readonly T[],
+  page: number,
+  pageSize: number = MAGISTERIUM_PAGE_SIZE,
+): PaginationResult<T> {
+  const totalItems = items.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const clamped = Math.min(Math.max(1, page), totalPages);
+  const start = (clamped - 1) * pageSize;
+  return {
+    items: items.slice(start, start + pageSize),
+    page: clamped,
+    totalPages,
+    totalItems,
+    pageSize,
+  };
 }
 
 // ---------------------------------------------------------------------------
