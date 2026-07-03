@@ -1030,3 +1030,50 @@ test.describe('Magistério Explorer — teclado nos chips (barra + removíveis)'
     expect(focusedLabel).toMatch(/Documentos do Magistério/);
   });
 });
+
+test.describe('Magistério Explorer — clamp inicial de ?page com filtros', () => {
+  test('URL ?page=99 com filtro é clamped ao carregar, URL reescrita e aria-live anuncia página válida uma única vez', async ({ page }) => {
+    // Abre direto com filtro que reduz drasticamente o total de páginas + page fora do intervalo.
+    await page.goto(`${ROUTE}?q=Maria&page=99`);
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+
+    // Aguarda normalização da URL: page é clamped para o último válido (ou removido se totalPages=1).
+    await page.waitForFunction(() => !/[?&]page=99(&|$)/.test(window.location.search));
+
+    const url = new URL(page.url());
+    const pageParam = url.searchParams.get('page');
+    // Filtro ativo preservado.
+    expect(url.searchParams.get('q')).toBe('Maria');
+
+    // Descobre a página efetiva a partir do aria-live.
+    const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ });
+    let announced: string | null = null;
+    let effectivePage = 1;
+    let totalPages = 1;
+
+    if (await live.count()) {
+      announced = (await live.first().textContent())?.trim() ?? null;
+      const match = announced?.match(/Página (\d+) de (\d+)/);
+      if (match) {
+        effectivePage = Number(match[1]);
+        totalPages = Number(match[2]);
+      }
+      // Anunciado exatamente uma vez (um único nó aria-live de paginação).
+      await expect(live).toHaveCount(1);
+      // Página anunciada nunca excede o total.
+      expect(effectivePage).toBeLessThanOrEqual(totalPages);
+      expect(effectivePage).toBeGreaterThanOrEqual(1);
+      // Não pode ter permanecido em 99.
+      expect(effectivePage).toBeLessThan(99);
+    }
+
+    // Coerência entre URL e anúncio:
+    // - se totalPages === 1, o param page deve ser removido;
+    // - caso contrário, page da URL === effectivePage.
+    if (totalPages === 1) {
+      expect(pageParam).toBeNull();
+    } else {
+      expect(pageParam).toBe(String(effectivePage));
+    }
+  });
+});
