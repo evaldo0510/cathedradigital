@@ -33,6 +33,13 @@ import {
   MAGISTERIUM_THEMES,
   type MagisteriumDocument,
 } from '@/data/magisterium-urls';
+import {
+  filterAndSortDocuments,
+  highlightSegments,
+  mergeFilterParams,
+  searchParamsToState,
+  type MagisteriumSort,
+} from '@/lib/magisteriumFilters';
 
 const SPIRITUAL_GUIDANCE = [
   {
