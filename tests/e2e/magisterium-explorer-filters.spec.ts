@@ -729,22 +729,22 @@ test.describe('Magistério Explorer — clamp de ?page= fora do intervalo', () =
 test.describe('Magistério Explorer — aria-live paginação', () => {
   test('anuncia "Página N de M" ao trocar de página e ao recarregar com ?page=', async ({ page }) => {
     await openExplorer(page);
-    const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ });
-    await expect(live).toHaveText(/Página 1 de 3/);
+    const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/i });
+    await expect(live).toHaveText(/Página 1 de 3/i);
 
     // Próxima → aria-live atualiza para "Página 2 de 3"
     await page.getByRole('button', { name: 'Próxima página' }).click();
-    await expect(live).toHaveText(/Página 2 de 3/);
+    await expect(live).toHaveText(/Página 2 de 3/i);
 
     // Anterior → volta para "Página 1 de 3"
     await page.getByRole('button', { name: 'Página anterior' }).click();
-    await expect(live).toHaveText(/Página 1 de 3/);
+    await expect(live).toHaveText(/Página 1 de 3/i);
 
     // Deep-link com ?page=3 hidrata o anúncio corretamente após reload.
     await page.goto('/magisterium?page=3');
     await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
     await expect(
-      page.locator('[aria-live="polite"]', { hasText: /Página 3 de 3/ }),
+      page.locator('[aria-live="polite"]', { hasText: /Página 3 de 3/i }),
     ).toBeVisible();
   });
 });
@@ -753,23 +753,23 @@ test.describe('Magistério Explorer — histórico do navegador para paginação
   test('voltar/avançar alterna ?page= na URL', async ({ page }) => {
     // Deep-link inicial cria a entrada base do histórico.
     await openExplorer(page, '?cat=Enc%C3%ADclicas');
-    await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
 
     // Próxima página → gera nova entrada no histórico (push).
     await page.getByRole('button', { name: 'Próxima página' }).click();
     await expect(page).toHaveURL(/[?&]page=2/);
-    await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
+    await expect(page.getByText(/Página 2 de 2/i)).toBeVisible();
 
     // Voltar do browser → retorna à página 1 (sem ?page=), mantendo o filtro.
     await page.goBack();
     await expect(page).not.toHaveURL(/[?&]page=/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
-    await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
 
     // Avançar do browser → volta para página 2.
     await page.goForward();
     await expect(page).toHaveURL(/[?&]page=2/);
-    await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
+    await expect(page.getByText(/Página 2 de 2/i)).toBeVisible();
 
     // scrollY permanece coerente (≥ 0, sem quebra visual).
     const y = await page.evaluate(() => window.scrollY);
@@ -782,7 +782,7 @@ test.describe('Magistério Explorer — mudança de filtro reseta paginação', 
     // Começa em página 2 sem filtros.
     await openExplorer(page, '?page=2');
     await expect(page).toHaveURL(/[?&]page=2/);
-    await expect(page.getByText(/Página 2 de 3/)).toBeVisible();
+    await expect(page.getByText(/Página 2 de 3/i)).toBeVisible();
 
     // Rola para baixo para provar que o reset volta ao topo.
     await page.evaluate(() => window.scrollTo(0, 400));
@@ -792,7 +792,7 @@ test.describe('Magistério Explorer — mudança de filtro reseta paginação', 
     await page.getByRole('button', { name: 'Encíclicas', exact: true }).first().click();
     await expect(page).not.toHaveURL(/[?&]page=/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
-    await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
     // Scroll consistente com o topo (behavior smooth pode não zerar em síncrono;
     // damos um tempinho e checamos que voltou para perto do topo).
     await page.waitForTimeout(400);
