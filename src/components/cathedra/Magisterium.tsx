@@ -161,14 +161,58 @@ const Magisterium: React.FC = () => {
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialFilterState = useMemo(() => searchParamsToState(searchParams), []);
+
+  // A URL é a única fonte de verdade dos filtros. Derivamos o state a cada
+  // render — assim back/forward, deep-links e edições internas sempre coincidem.
+  const urlFilterState = useMemo(() => searchParamsToState(searchParams), [searchParams]);
+  const { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page } = urlFilterState;
+
+  // Setter unificado — escreve no `searchParams` preservando `topic`/`doc`.
+  const updateFilters = useCallback(
+    (
+      patch: Partial<typeof urlFilterState>,
+      opts: { push?: boolean } = {},
+    ) => {
+      const next = { ...urlFilterState, ...patch };
+      const merged = mergeFilterParams(searchParams, {
+        search: next.search,
+        category: next.category,
+        themes: next.themes,
+        sort: next.sort,
+        page: next.page,
+      });
+      if (merged.toString() !== searchParams.toString()) {
+        setSearchParams(merged, { replace: !opts.push });
+      }
+    },
+    [urlFilterState, searchParams, setSearchParams],
+  );
+
+  const setSearchQuery = useCallback(
+    (q: string) => updateFilters({ search: q, page: 1 }),
+    [updateFilters],
+  );
+  const setSelectedCategory = useCallback(
+    (c: string | null) => updateFilters({ category: c, page: 1 }),
+    [updateFilters],
+  );
+  const setSortBy = useCallback(
+    (updater: MagisteriumSort | ((prev: MagisteriumSort) => MagisteriumSort)) => {
+      const nextSort =
+        typeof updater === 'function' ? (updater as (p: MagisteriumSort) => MagisteriumSort)(sortBy) : updater;
+      updateFilters({ sort: nextSort, page: 1 });
+    },
+    [sortBy, updateFilters],
+  );
+  const setPage = useCallback(
+    (updater: number | ((prev: number) => number)) => {
+      const nextPage = typeof updater === 'function' ? (updater as (p: number) => number)(page) : updater;
+      updateFilters({ page: nextPage }, { push: true });
+    },
+    [page, updateFilters],
+  );
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
-  const [searchQuery, setSearchQuery] = useState(initialFilterState.search);
-  const [selectedThemes, setSelectedThemes] = useState<string[]>(initialFilterState.themes);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialFilterState.category);
-  const [sortBy, setSortBy] = useState<MagisteriumSort>(initialFilterState.sort);
-  const [page, setPage] = useState<number>(initialFilterState.page);
   
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
