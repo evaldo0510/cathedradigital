@@ -1235,3 +1235,54 @@ test.describe('Magistério Explorer — bolha por teclado (Tab/Shift+Tab)', () =
     expect(remaining).toBeLessThanOrEqual(1);
   });
 });
+
+test.describe('Magistério Explorer — bolha atualiza texto ao alternar estado/página', () => {
+  test('após aplicar filtro e trocar de página, texto muda de Adicionar→Remover e sem órfãos', async ({ page }) => {
+    await openExplorer(page);
+
+    const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+
+    // 1) Estado inicial: tema inativo → bolha "Adicionar tema: Maria".
+    await barChip.focus();
+    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(1);
+    await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(0);
+
+    // 2) Aplica o tema com Enter (chip agora ativo).
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/theme=Maria/);
+
+    // 3) Move foco para fora — nenhum tooltip permanece.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await expect(page.getByRole('tooltip')).toHaveCount(0);
+
+    // 4) Refoca — a bolha agora anuncia "Remover" (texto antigo não sobrevive).
+    await barChip.focus();
+    const remover = page.getByRole('tooltip', { name: /Remover tema: Maria/ });
+    await expect(remover).toHaveCount(1);
+    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
+
+    // 5) Troca de página (se houver) — nenhum tooltip órfão do estado anterior.
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    if (await next.count()) {
+      await next.click();
+      await expect(page).toHaveURL(/[?&]page=2/);
+      await expect(page.getByRole('tooltip')).toHaveCount(0);
+
+      // Refocando o chip da nova página, o texto continua refletindo o estado atual.
+      const barChip2 = page.getByRole('button', { name: 'Maria', exact: true }).first();
+      await barChip2.focus();
+      await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(1);
+    }
+
+    // 6) Remove o tema via chip removível; refocando o chip da barra volta a "Adicionar".
+    const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
+    await removable.click();
+    await expect(page).not.toHaveURL(/theme=Maria/);
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await expect(page.getByRole('tooltip')).toHaveCount(0);
+
+    const barChip3 = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await barChip3.focus();
+    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(1);
+  });
+});
