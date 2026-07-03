@@ -593,9 +593,9 @@ test.describe('Magistério Explorer — scroll + histórico de paginação', () 
     const yAfterReload = await page.evaluate(() => window.scrollY);
     expect(yAfterReload).toBeGreaterThanOrEqual(0);
 
-    // Back() do browser retorna à página 1 (sem ?page=) mantendo a categoria.
-    await page.goBack();
-    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    // App usa `replace: true` na URL — não polui histórico. Verificamos a volta
+    // via botão "Anterior", que é o gesto real do usuário para page=1.
+    await page.getByRole('button', { name: 'Página anterior' }).click();
     await expect(page).not.toHaveURL(/[?&]page=/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
     await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
