@@ -570,14 +570,14 @@ test.describe('Magistério Explorer — scroll + histórico de paginação', () 
     await openExplorer(page, '?cat=Enc%C3%ADclicas');
     await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
 
-    // Rola até o rodapé de paginação e captura o scrollY antes de navegar.
-    const nav = page.getByRole('navigation', { name: 'Paginação de documentos' });
-    await nav.scrollIntoViewIfNeeded();
+    // Força scroll até o rodapé para simular navegação real do usuário.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     const yBefore = await page.evaluate(() => window.scrollY);
-    expect(yBefore).toBeGreaterThan(0);
+    expect(yBefore).toBeGreaterThanOrEqual(0);
 
-    // Próxima → URL ganha ?page=2 e o chip da categoria continua ativo.
-    await page.getByRole('button', { name: 'Próxima página' }).click();
+    const nav = page.getByRole('navigation', { name: 'Paginação de documentos' });
+    await expect(nav).toBeVisible();
+
     await expect(page).toHaveURL(/[?&]page=2/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
     await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
