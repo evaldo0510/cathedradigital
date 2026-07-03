@@ -264,16 +264,16 @@ const Magisterium: React.FC = () => {
   // Ref para o cabeçalho da lista — recebe foco após scroll ao topo (a11y).
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
 
-  // Rola até o cabeçalho da lista. Usa scrollIntoView (funciona em window ou
-  // em container com overflow interno, como o ContemplativeLayout).
+  // Rola até o topo da página. Cobre `window`, `document.documentElement` e
+  // `document.body` porque o layout usa scroll no `body` em alguns ambientes.
   const scrollToResultsTop = useCallback((focusHeading = false) => {
-    const el = resultsHeadingRef.current;
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (document.body) document.body.scrollTop = 0;
+      if (document.documentElement) document.documentElement.scrollTop = 0;
     }
     if (focusHeading) {
+      // Foca o cabeçalho da lista para leitores de tela (a11y).
       requestAnimationFrame(() => {
         resultsHeadingRef.current?.focus({ preventScroll: true });
       });
