@@ -277,6 +277,14 @@ const Magisterium: React.FC = () => {
     if (pagination.page !== page) setPage(pagination.page);
   }, [pagination.page, page]);
 
+  // Ref para o cabeçalho da lista — recebe foco quando trocamos de tema para
+  // conduzir leitores de tela ao topo da nova lista após o scroll.
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Rastreia se a última mudança foi *só* de página (usuário paginou) — nesse
+  // caso queremos criar entrada no histórico para permitir back/forward.
+  const prevPageRef = useRef<number>(pagination.page);
+
   // Persistência dos filtros na URL (preserva `topic` e `doc`).
   useEffect(() => {
     const merged = mergeFilterParams(searchParams, {
@@ -287,20 +295,37 @@ const Magisterium: React.FC = () => {
       page: pagination.page,
     });
     if (merged.toString() !== searchParams.toString()) {
-      setSearchParams(merged, { replace: true });
+      // Se a única diferença é `page`, empurra no histórico (permite voltar/avançar).
+      const pageChanged = pagination.page !== prevPageRef.current;
+      const otherChanged =
+        merged.get('q') !== searchParams.get('q') ||
+        merged.get('cat') !== searchParams.get('cat') ||
+        merged.get('sort') !== searchParams.get('sort') ||
+        merged.getAll('theme').join('|') !== searchParams.getAll('theme').join('|');
+      const onlyPageChanged = pageChanged && !otherChanged;
+      setSearchParams(merged, { replace: !onlyPageChanged });
     }
+    prevPageRef.current = pagination.page;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
+
+  // Scroll suave até o topo + foco no cabeçalho da lista (acessibilidade).
+  const scrollToResultsTop = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Aguarda o próximo frame para o heading estar em posição antes do foco.
+    requestAnimationFrame(() => {
+      resultsHeadingRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
 
   const toggleTheme = useCallback((theme: string) => {
     setSelectedThemes(prev =>
       prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
     );
-    // Ao mudar de tema, volta para o topo para o usuário ver a lista atualizada.
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, []);
+    scrollToResultsTop();
+  }, [scrollToResultsTop]);
 
   const clearFilters = useCallback(() => {
     setSearchQuery('');
@@ -309,6 +334,7 @@ const Magisterium: React.FC = () => {
     setSortBy('canonical');
     setPage(1);
   }, []);
+
 
 
   const handleSelectGuidance = (item: typeof SPIRITUAL_GUIDANCE[0]) => {
