@@ -384,3 +384,182 @@ test.describe('Magistério Explorer — ordenação com múltiplos temas', () =>
     }
   });
 });
+
+test.describe('Magistério Explorer — paginação', () => {
+  test('paginação respeita filtros, atualiza ?page= e sobrevive ao reload', async ({ page }) => {
+    // Sem filtros: 35 docs / 12 por página = 3 páginas.
+    await openExplorer(page);
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page.getByRole('navigation', { name: 'Paginação de documentos' })).toBeVisible();
+    await expect(page.getByText(/Página 1 de 3/)).toBeVisible();
+
+    // Avança para a página 2 → URL ganha ?page=2.
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page.getByText(/Página 2 de 3/)).toBeVisible();
+
+    // Avança para a página 3.
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(page).toHaveURL(/[?&]page=3/);
+    await expect(page.getByText(/Página 3 de 3/)).toBeVisible();
+    // Na última página, "Próxima" fica desabilitado.
+    await expect(page.getByRole('button', { name: 'Próxima página' })).toBeDisabled();
+
+    // Reload preserva a página.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]page=3/);
+    await expect(page.getByText(/Página 3 de 3/)).toBeVisible();
+
+    // Aplicar filtro reseta para página 1 e (por caber em 1 página) some ?page=.
+    // Cartas Apostólicas: 6 docs → 1 página.
+    await page.getByRole('button', { name: 'Cartas Apostólicas', exact: true }).first().click();
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page.getByRole('heading', { name: 'Salvifici Doloris' })).toBeVisible();
+    // Menos de 12 docs → nav de paginação some.
+    await expect(page.getByRole('navigation', { name: 'Paginação de documentos' })).toHaveCount(0);
+
+    // Deep-link direto com ?cat= + ?page= hidrata na página certa.
+    // Encíclicas tem 13 docs → 2 páginas; página 2 mostra o mais recente.
+    await page.goto('/magisterium?cat=Enc%C3%ADclicas&page=2');
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Remover categoria: Encíclicas' }),
+    ).toBeVisible();
+  });
+});
+
+test.describe('Magistério Explorer — busca mobile', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('?q= hidrata input, chip e <mark> em mobile e persiste após reload', async ({ page }) => {
+    await openExplorer(page, '?q=Laudato');
+
+    const input = page.getByPlaceholder('Buscar documento, autor ou tema...');
+    await expect(input).toHaveValue('Laudato');
+    await expect(page.getByRole('button', { name: 'Remover busca: Laudato' })).toBeVisible();
+
+    const mark = page.locator('mark', { hasText: 'Laudato' });
+    await expect(mark.first()).toBeVisible();
+    const countBefore = await mark.count();
+    expect(countBefore).toBeGreaterThan(0);
+
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]q=Laudato/);
+    await expect(input).toHaveValue('Laudato');
+    await expect(page.getByRole('button', { name: 'Remover busca: Laudato' })).toBeVisible();
+    const markAfter = page.locator('mark', { hasText: 'Laudato' });
+    await expect(markAfter.first()).toBeVisible();
+    expect(await markAfter.count()).toBe(countBefore);
+  });
+});
+
+test.describe('Magistério Explorer — sort × filtros coerentes', () => {
+  async function collectYears(page: Page): Promise<number[]> {
+    const raw = await page.locator('span.tracking-widest').allInnerTexts();
+    return raw.map(y => Number(y.trim())).filter(y => Number.isFinite(y));
+  }
+
+  test('sort persiste ao adicionar/remover theme e cat e sobrevive ao reload', async ({ page }) => {
+    await openExplorer(page);
+    // Ativa sort=chronological-desc via 2 cliques.
+    const sortBtn = page.getByRole('button', { name: /Ordem canônica|Cronológica/ });
+    await sortBtn.click();
+    await sortBtn.click();
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+
+    // Adiciona tema "Maria" — sort desc permanece; ordem desc coerente.
+    await page.getByRole('button', { name: 'Maria', exact: true }).first().click();
+    await expect(page).toHaveURL(/theme=Maria/);
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    let years = await collectYears(page);
+    expect(years.length).toBeGreaterThan(0);
+    for (let i = 0; i < years.length - 1; i++) {
+      expect(years[i]).toBeGreaterThanOrEqual(years[i + 1]);
+    }
+
+    // Adiciona categoria "Constituições Apostólicas" — sort continua.
+    await page
+      .getByRole('button', { name: 'Constituições Apostólicas', exact: true })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/cat=Constitui%C3%A7%C3%B5es\+Apost%C3%B3licas|cat=Constitui%C3%A7%C3%B5es%20Apost%C3%B3licas/);
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    years = await collectYears(page);
+    for (let i = 0; i < years.length - 1; i++) {
+      expect(years[i]).toBeGreaterThanOrEqual(years[i + 1]);
+    }
+
+    // Reload preserva sort + cat + theme e a ordem.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    await expect(page).toHaveURL(/theme=Maria/);
+    await expect(page).toHaveURL(/cat=Constitui/);
+    const yearsAfterReload = await collectYears(page);
+    expect(yearsAfterReload).toEqual(years);
+
+    // Remove chip de tema — sort ainda persiste.
+    await page.getByRole('button', { name: 'Remover tema: Maria' }).click();
+    await expect(page).not.toHaveURL(/theme=/);
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    const yearsNoTheme = await collectYears(page);
+    for (let i = 0; i < yearsNoTheme.length - 1; i++) {
+      expect(yearsNoTheme[i]).toBeGreaterThanOrEqual(yearsNoTheme[i + 1]);
+    }
+
+    // Remove chip de categoria — sort ainda persiste.
+    await page.getByRole('button', { name: 'Remover categoria: Constituições Apostólicas' }).click();
+    await expect(page).not.toHaveURL(/cat=/);
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+  });
+});
+
+test.describe('Magistério Explorer — a11y teclado mobile', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('Tab/Shift+Tab entre chips e ativação por Enter/Space sincronizam URL', async ({ page }) => {
+    await openExplorer(page, '?cat=Enc%C3%ADclicas&theme=F%C3%A9&theme=Ros%C3%A1rio');
+
+    const catChip = page.getByRole('button', { name: 'Remover categoria: Encíclicas' });
+    const themeFe = page.getByRole('button', { name: 'Remover tema: Fé' });
+    const themeRos = page.getByRole('button', { name: 'Remover tema: Rosário' });
+    const clearAll = page.getByRole('button', { name: /Limpar tudo/i });
+
+    // Ordem DOM esperada (via renderização): cat → temas (na ordem do state) → Limpar tudo.
+    await catChip.focus();
+    await expect(catChip).toBeFocused();
+
+    // Tab avança para o próximo chip removível (Fé).
+    await page.keyboard.press('Tab');
+    await expect(themeFe).toBeFocused();
+
+    // Tab avança para o próximo (Rosário).
+    await page.keyboard.press('Tab');
+    await expect(themeRos).toBeFocused();
+
+    // Shift+Tab volta para Fé.
+    await page.keyboard.press('Shift+Tab');
+    await expect(themeFe).toBeFocused();
+
+    // Enter no chip focado remove da URL.
+    await page.keyboard.press('Enter');
+    await expect(page).not.toHaveURL(/theme=F%C3%A9/);
+    await expect(page).toHaveURL(/theme=Ros%C3%A1rio/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+
+    // Foca o próximo chip (Rosário) e remove com Space.
+    await themeRos.focus();
+    await expect(themeRos).toBeFocused();
+    await page.keyboard.press('Space');
+    await expect(page).not.toHaveURL(/theme=/);
+
+    // Foca "Limpar tudo" e aciona por teclado — remove os filtros restantes.
+    await clearAll.focus();
+    await expect(clearAll).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).not.toHaveURL(/[?&](q|cat|theme|sort)=/);
+  });
+});

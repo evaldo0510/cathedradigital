@@ -37,7 +37,9 @@ import {
   filterAndSortDocuments,
   highlightSegments,
   mergeFilterParams,
+  paginate,
   searchParamsToState,
+  MAGISTERIUM_PAGE_SIZE,
   type MagisteriumSort,
 } from '@/lib/magisteriumFilters';
 
@@ -166,6 +168,8 @@ const Magisterium: React.FC = () => {
   const [selectedThemes, setSelectedThemes] = useState<string[]>(initialFilterState.themes);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialFilterState.category);
   const [sortBy, setSortBy] = useState<MagisteriumSort>(initialFilterState.sort);
+  const [page, setPage] = useState<number>(initialFilterState.page);
+  
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
@@ -244,11 +248,34 @@ const Magisterium: React.FC = () => {
     () =>
       filterAndSortDocuments(
         MAGISTERIUM_DOCUMENTS,
-        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy },
+        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page },
         CATEGORY_ORDER,
       ),
-    [searchQuery, selectedCategory, selectedThemes, sortBy],
+    [searchQuery, selectedCategory, selectedThemes, sortBy, page],
   );
+
+  // Página corrente (com clamp) + fatia visível.
+  const pagination = useMemo(
+    () => paginate(filteredDocs, page, MAGISTERIUM_PAGE_SIZE),
+    [filteredDocs, page],
+  );
+  const visibleDocs = pagination.items;
+
+  // Reset de página quando filtros mudam (mantém `page` só quando o usuário
+  // navega pela paginação).
+  const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
+  const prevFiltersKey = useRef(filtersKey);
+  useEffect(() => {
+    if (prevFiltersKey.current !== filtersKey) {
+      prevFiltersKey.current = filtersKey;
+      if (page !== 1) setPage(1);
+    }
+  }, [filtersKey, page]);
+
+  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza o state.
+  useEffect(() => {
+    if (pagination.page !== page) setPage(pagination.page);
+  }, [pagination.page, page]);
 
   // Persistência dos filtros na URL (preserva `topic` e `doc`).
   useEffect(() => {
@@ -257,12 +284,13 @@ const Magisterium: React.FC = () => {
       category: selectedCategory,
       themes: selectedThemes,
       sort: sortBy,
+      page: pagination.page,
     });
     if (merged.toString() !== searchParams.toString()) {
       setSearchParams(merged, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedCategory, selectedThemes, sortBy]);
+  }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
 
   const toggleTheme = useCallback((theme: string) => {
     setSelectedThemes(prev =>
@@ -275,6 +303,7 @@ const Magisterium: React.FC = () => {
     setSelectedThemes([]);
     setSelectedCategory(null);
     setSortBy('canonical');
+    setPage(1);
   }, []);
 
 
@@ -376,7 +405,17 @@ const Magisterium: React.FC = () => {
           {/* Ordenação + reset */}
           <div className="flex items-center justify-between gap-spacing-md">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">
-              {filteredDocs.length} {filteredDocs.length === 1 ? 'documento' : 'documentos'}
+              {pagination.totalItems === 0 ? (
+                <>0 documentos</>
+              ) : (
+                <>
+                  {(pagination.page - 1) * pagination.pageSize + 1}
+                  –
+                  {(pagination.page - 1) * pagination.pageSize + pagination.items.length}
+                  {' de '}
+                  {pagination.totalItems}
+                </>
+              )}
             </div>
             <div className="flex items-center gap-spacing-xs">
               <Button
@@ -482,7 +521,7 @@ const Magisterium: React.FC = () => {
 
         {/* Documents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
-          {filteredDocs.map((doc, idx) => (
+          {visibleDocs.map((doc, idx) => (
             <CathedraCard
               key={doc.id}
               variant="interactive"
@@ -529,6 +568,44 @@ const Magisterium: React.FC = () => {
             </CathedraCard>
           ))}
         </div>
+
+        {/* Paginação */}
+        {pagination.totalPages > 1 && (
+          <nav
+            className="flex items-center justify-center gap-spacing-md pt-spacing-md"
+            aria-label="Paginação de documentos"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={pagination.page <= 1}
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              aria-label="Página anterior"
+              className="text-[9px] font-black uppercase tracking-[0.2em]"
+            >
+              <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+              Anterior
+            </Button>
+            <span
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              Página {pagination.page} de {pagination.totalPages}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={pagination.page >= pagination.totalPages}
+              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+              aria-label="Próxima página"
+              className="text-[9px] font-black uppercase tracking-[0.2em]"
+            >
+              Próxima
+              <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
+            </Button>
+          </nav>
+        )}
 
         {filteredDocs.length === 0 && (
           <div className="text-center py-spacing-4xl opacity-20">
