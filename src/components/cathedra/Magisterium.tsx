@@ -553,8 +553,19 @@ const Magisterium: React.FC = () => {
 
 
 
+        {/* Cabeçalho da lista (focável para acessibilidade após scroll ao topo). */}
+        <h2
+          ref={resultsHeadingRef}
+          tabIndex={-1}
+          aria-label={`Documentos do Magistério (${pagination.totalItems})`}
+          className="sr-only"
+        >
+          Documentos do Magistério
+        </h2>
+
         {/* Documents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+
           {visibleDocs.map((doc, idx) => (
             <CathedraCard
               key={doc.id}
