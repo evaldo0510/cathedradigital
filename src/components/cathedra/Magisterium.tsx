@@ -219,14 +219,49 @@ const Magisterium: React.FC = () => {
     );
   }, [activeTab, selectedGuidance, navigate]);
 
-  const filteredDocs = useMemo(() => {
-    return DOCS_LIST.filter(doc => {
-      const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           doc.author.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesTheme = !selectedTheme || doc.theme.includes(selectedTheme);
-      return matchesSearch && matchesTheme;
+  const filteredDocs = useMemo<MagisteriumDocument[]>(() => {
+    const q = searchQuery.trim().toLowerCase();
+    const result = MAGISTERIUM_DOCUMENTS.filter(doc => {
+      const matchesSearch =
+        !q ||
+        doc.title.toLowerCase().includes(q) ||
+        doc.author.toLowerCase().includes(q) ||
+        (doc.abbr?.toLowerCase().includes(q) ?? false) ||
+        doc.themes.some(t => t.toLowerCase().includes(q)) ||
+        doc.summary.toLowerCase().includes(q);
+      const matchesCategory = !selectedCategory || doc.category === selectedCategory;
+      const matchesThemes =
+        selectedThemes.length === 0 || selectedThemes.every(t => doc.themes.includes(t));
+      return matchesSearch && matchesCategory && matchesThemes;
     });
-  }, [searchQuery, selectedTheme]);
+
+    if (sortBy === 'canonical') {
+      return result.sort((a, b) => {
+        const ca = CATEGORY_ORDER[a.category] ?? 999;
+        const cb = CATEGORY_ORDER[b.category] ?? 999;
+        if (ca !== cb) return ca - cb;
+        return (a.date ?? `${a.year}`).localeCompare(b.date ?? `${b.year}`);
+      });
+    }
+    const dir = sortBy === 'chronological-asc' ? 1 : -1;
+    return result.sort(
+      (a, b) => dir * (a.date ?? `${a.year}`).localeCompare(b.date ?? `${b.year}`),
+    );
+  }, [searchQuery, selectedCategory, selectedThemes, sortBy]);
+
+  const toggleTheme = useCallback((theme: string) => {
+    setSelectedThemes(prev =>
+      prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
+    );
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedThemes([]);
+    setSelectedCategory(null);
+    setSortBy('canonical');
+  }, []);
+
 
   const handleSelectGuidance = (item: typeof SPIRITUAL_GUIDANCE[0]) => {
     if (selectedGuidance.id === item.id) return;
