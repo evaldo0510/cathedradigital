@@ -122,46 +122,16 @@ const SPIRITUAL_GUIDANCE = [
   },
 ];
 
-const DOCS_LIST = [
-  // Encíclicas
-  { id: 'rn', title: 'Rerum Novarum', type: 'Encíclica', author: 'Leão XIII', year: 1891, theme: ['Social', 'Trabalho'], summary: 'Sobre a condição dos operários e a questão social.' },
-  { id: 'hv', title: 'Humanae Vitae', type: 'Encíclica', author: 'Paulo VI', year: 1968, theme: ['Vida', 'Família'], summary: 'Sobre a regulação da natalidade e o amor conjugal.' },
-  { id: 'ls', title: 'Laudato Si\'', type: 'Encíclica', author: 'Francisco', year: 2015, theme: ['Ecologia', 'Criação'], summary: 'Sobre o cuidado da casa comum.' },
-  { id: 'ft', title: 'Fratelli Tutti', type: 'Encíclica', author: 'Francisco', year: 2020, theme: ['Fraternidade', 'Social'], summary: 'Sobre a fraternidade e a amizade social.' },
-  { id: 'rh', title: 'Redemptor Hominis', type: 'Encíclica', author: 'João Paulo II', year: 1979, theme: ['Cristologia', 'Antropologia'], summary: 'O Redentor do homem, centro do cosmos e da história.' },
-  { id: 'vs', title: 'Veritatis Splendor', type: 'Encíclica', author: 'João Paulo II', year: 1993, theme: ['Moral', 'Verdade'], summary: 'Sobre algumas questões fundamentais do ensinamento moral da Igreja.' },
-  { id: 'fr', title: 'Fides et Ratio', type: 'Encíclica', author: 'João Paulo II', year: 1998, theme: ['Fé', 'Razão'], summary: 'Sobre as relações entre fé e razão.' },
-  { id: 'dce', title: 'Deus Caritas Est', type: 'Encíclica', author: 'Bento XVI', year: 2005, theme: ['Amor', 'Caridade'], summary: 'Sobre o amor cristão.' },
-  { id: 'ss', title: 'Spe Salvi', type: 'Encíclica', author: 'Bento XVI', year: 2007, theme: ['Esperança', 'Escatologia'], summary: 'Sobre a esperança cristã.' },
-  { id: 'civ', title: 'Caritas in Veritate', type: 'Encíclica', author: 'Bento XVI', year: 2009, theme: ['Social', 'Desenvolvimento'], summary: 'Sobre o desenvolvimento humano integral na caridade e na verdade.' },
-  { id: 'lf', title: 'Lumen Fidei', type: 'Encíclica', author: 'Francisco', year: 2013, theme: ['Fé'], summary: 'Sobre a luz da fé.' },
-  { id: 'ev', title: 'Evangelium Vitae', type: 'Encíclica', author: 'João Paulo II', year: 1995, theme: ['Vida'], summary: 'Sobre o valor e a inviolabilidade da vida humana.' },
-  { id: 'ge', title: 'Gaudete et Exsultate', type: 'Exortação Apostólica', author: 'Francisco', year: 2018, theme: ['Santidade'], summary: 'Sobre o chamado à santidade no mundo atual.' },
-  { id: 'al', title: 'Amoris Laetitia', type: 'Exortação Apostólica', author: 'Francisco', year: 2016, theme: ['Família', 'Amor'], summary: 'Sobre o amor na família.' },
-  { id: 'cv', title: 'Christus Vivit', type: 'Exortação Apostólica', author: 'Francisco', year: 2019, theme: ['Jovens', 'Vocação'], summary: 'Exortação aos jovens e a todo o Povo de Deus.' },
-  { id: 'sd', title: 'Salvifici Doloris', type: 'Carta Apostólica', author: 'João Paulo II', year: 1984, theme: ['Sofrimento'], summary: 'Sobre o sentido cristão do sofrimento humano.' },
-  
-  // Constituições
-  { id: 'lg', title: 'Lumen Gentium', type: 'Constituição', author: 'Concílio Vaticano II', year: 1964, theme: ['Eclesiologia'], summary: 'Constituição Dogmática sobre a Igreja.' },
-  { id: 'dv', title: 'Dei Verbum', type: 'Constituição', author: 'Concílio Vaticano II', year: 1965, theme: ['Revelação', 'Bíblia'], summary: 'Constituição Dogmática sobre a Revelação Divina.' },
-  { id: 'sc', title: 'Sacrosanctum Concilium', type: 'Constituição', author: 'Concílio Vaticano II', year: 1963, theme: ['Liturgia'], summary: 'Constituição sobre a Sagrada Liturgia.' },
-  { id: 'gs', title: 'Gaudium et Spes', type: 'Constituição', author: 'Concílio Vaticano II', year: 1965, theme: ['Social', 'Mundo'], summary: 'Constituição Pastoral sobre a Igreja no mundo atual.' },
-  
-  // Cartas Apostólicas
-  { id: 'pc', title: 'Patris Corde', type: 'Carta Apostólica', author: 'Francisco', year: 2020, theme: ['São José', 'Paternidade'], summary: 'Com coração de pai: no 150º aniversário da declaração de São José como Padroeiro da Igreja Universal.' },
-  { id: 'mm', title: 'Misericordia et Misera', type: 'Carta Apostólica', author: 'Francisco', year: 2016, theme: ['Misericórdia'], summary: 'No termo do Jubileu Extraordinário da Misericórdia.' },
-  { id: 'rvm', title: 'Rosarium Virginis Mariae', type: 'Carta Apostólica', author: 'João Paulo II', year: 2002, theme: ['Maria', 'Rosário'], summary: 'Sobre o Santo Rosário.' },
-  { id: 'dd', title: 'Dies Domini', type: 'Carta Apostólica', author: 'João Paulo II', year: 1998, theme: ['Domingo', 'Eucaristia'], summary: 'Sobre a santificação do domingo.' },
-  { id: 'md', title: 'Mulieris Dignitatem', type: 'Carta Apostólica', author: 'João Paulo II', year: 1988, theme: ['Mulher', 'Dignidade'], summary: 'Sobre a dignidade e a vocação da mulher.' },
-  
-  // Documentos Oficiais
-  { id: 'cic', title: 'Catecismo da Igreja Católica', type: 'Documento Oficial', author: 'João Paulo II', year: 1992, theme: ['Doutrina', 'Fé'], summary: 'Exposição sistemática da fé e da doutrina católica.' },
-  { id: 'cdsi', title: 'Compêndio da Doutrina Social', type: 'Documento Oficial', author: 'Pontifício Conselho Justiça e Paz', year: 2004, theme: ['Social', 'Moral'], summary: 'Apresentação orgânica do ensinamento social da Igreja.' },
-  { id: 'cdc', title: 'Código de Direito Canônico', type: 'Documento Oficial', author: 'João Paulo II', year: 1983, theme: ['Direito', 'Disciplina'], summary: 'Corpo legislativo fundamental para a Igreja latina.' },
-  { id: 'di', title: 'Dominus Iesus', type: 'Documento Oficial', author: 'CDF (Bento XVI)', year: 2000, theme: ['Ecumenismo', 'Salvação'], summary: 'Sobre a unicidade e a universalidade salvífica de Jesus Cristo e da Igreja.' },
-];
+/**
+ * Ordem canônica das categorias (menor `order` = maior autoridade).
+ * Fonte: `MAGISTERIUM_CATEGORIES` em `src/data/magisterium-urls.ts`.
+ */
+const CATEGORY_ORDER: Record<string, number> = MAGISTERIUM_CATEGORIES.reduce(
+  (acc, cat) => ({ ...acc, [cat.name]: cat.order }),
+  {} as Record<string, number>,
+);
 
-const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
+type MagisteriumSort = 'canonical' | 'chronological-asc' | 'chronological-desc';
 
 const Magisterium: React.FC = () => {
   useRenderPerf('Magisterium', 15);
@@ -172,7 +142,9 @@ const Magisterium: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<MagisteriumSort>('canonical');
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
