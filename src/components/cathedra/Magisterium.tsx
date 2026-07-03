@@ -319,26 +319,91 @@ const Magisterium: React.FC = () => {
             />
           </div>
 
-          <div className="flex items-center justify-center gap-spacing-xs overflow-x-auto no-scrollbar py-spacing-xs">
-            <Button 
+          {/* Categoria (autoridade canônica) */}
+          <div className="flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
+            <Button
               variant="ghost"
-              className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
-              onClick={() => setSelectedTheme(null)}
+              className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+              onClick={() => setSelectedCategory(null)}
             >
-              Todos os Temas
+              Todas as Categorias
             </Button>
-            {THEMES.slice(0, 6).map(theme => (
-              <Button 
-                key={theme}
+            {MAGISTERIUM_CATEGORIES.map(cat => (
+              <Button
+                key={cat.name}
                 variant="ghost"
-                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
-                onClick={() => setSelectedTheme(theme)}
+                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                onClick={() => setSelectedCategory(cat.name)}
               >
-                {theme}
+                {cat.name}
               </Button>
             ))}
           </div>
+
+          {/* Temas (multi-seleção) */}
+          <div className="flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
+            {MAGISTERIUM_THEMES.map(theme => {
+              const active = selectedThemes.includes(theme);
+              return (
+                <Button
+                  key={theme}
+                  variant="ghost"
+                  aria-pressed={active}
+                  className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary border border-primary/10'}`}
+                  onClick={() => toggleTheme(theme)}
+                >
+                  {theme}
+                </Button>
+              );
+            })}
+          </div>
+
+          {/* Ordenação + reset */}
+          <div className="flex items-center justify-between gap-spacing-md">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">
+              {filteredDocs.length} {filteredDocs.length === 1 ? 'documento' : 'documentos'}
+            </div>
+            <div className="flex items-center gap-spacing-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  setSortBy(prev =>
+                    prev === 'canonical'
+                      ? 'chronological-asc'
+                      : prev === 'chronological-asc'
+                        ? 'chronological-desc'
+                        : 'canonical',
+                  )
+                }
+                className="text-[9px] font-black uppercase tracking-[0.2em]"
+              >
+                <Icons.ArrowDown
+                  className={cn(
+                    'w-spacing-sm h-spacing-sm mr-spacing-2xs transition-transform',
+                    sortBy === 'chronological-desc' && 'rotate-180',
+                  )}
+                />
+                {sortBy === 'canonical'
+                  ? 'Ordem canônica'
+                  : sortBy === 'chronological-asc'
+                    ? 'Cronológica ↑'
+                    : 'Cronológica ↓'}
+              </Button>
+              {(searchQuery || selectedThemes.length > 0 || selectedCategory) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground"
+                >
+                  Limpar
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
+
 
         {/* Documents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
