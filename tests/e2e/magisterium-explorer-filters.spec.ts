@@ -209,13 +209,13 @@ test.describe('Magistério Explorer — filtros + URL', () => {
     // Estado inicial: canonical (default) NÃO vai à URL.
     await expect(page).not.toHaveURL(/[?&]sort=/);
     const sortBtn = page.getByRole('button', { name: /Ordem canônica|Cronológica/ });
-    await expect(sortBtn).toHaveText(/Ordem canônica/);
+    await expect(sortBtn).toHaveAccessibleName(/Ordem canônica/);
 
     // 1º clique → chronological-asc
     await sortBtn.click();
     await expect(page).toHaveURL(/[?&]sort=chronological-asc/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
-    await expect(sortBtn).toHaveText(/Cronológica ↑/);
+    await expect(sortBtn).toHaveAccessibleName(/Cronológica ↑/);
 
     // 2º clique → chronological-desc
     await sortBtn.click();
@@ -232,7 +232,7 @@ test.describe('Magistério Explorer — filtros + URL', () => {
     ).toBeVisible();
     await expect(
       page.getByRole('button', { name: /Ordem canônica|Cronológica/ }),
-    ).toHaveText(/Cronológica ↓/);
+    ).toHaveAccessibleName(/Cronológica ↓/);
 
     // 3º clique volta para canonical → sort desaparece da URL.
     await page.getByRole('button', { name: /Cronológica ↓/ }).click();
