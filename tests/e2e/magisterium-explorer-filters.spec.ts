@@ -1154,3 +1154,47 @@ test.describe('Magistério Explorer — normalização de page=0 e page=-1', () 
     });
   }
 });
+
+test.describe('Magistério Explorer — bolhas (tooltips) nos filtros', () => {
+  test('focar/hover em chip abre tooltip correto (role=tooltip), sem duplicar após filtro/página', async ({ page }) => {
+    await openExplorer(page);
+
+    // 1) Foco por teclado em um chip da barra de temas abre exatamente 1 tooltip.
+    const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await barChip.focus();
+    // Radix renderiza role="tooltip" com o texto informado.
+    const tipBarAdd = page.getByRole('tooltip', { name: /Adicionar tema: Maria/ });
+    await expect(tipBarAdd).toHaveCount(1);
+
+    // aria-describedby aponta para o id do tooltip.
+    const describedBy = await barChip.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const describedNode = page.locator(`#${describedBy}`);
+    await expect(describedNode).toHaveText(/Adicionar tema: Maria/);
+
+    // 2) Move o foco (Tab) — o tooltip anterior fecha, evitando duplicação.
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
+
+    // 3) Aplica o tema e revalida: a bolha agora anuncia "Remover".
+    await barChip.focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/theme=Maria/);
+    await barChip.focus();
+    await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(1);
+
+    // 4) Após navegar para outra página, não deve haver tooltip órfão no DOM.
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    if (await next.count()) {
+      await next.click();
+      // Nenhum role=tooltip permanece renderizado sem trigger focado.
+      await expect(page.getByRole('tooltip')).toHaveCount(0);
+    }
+
+    // 5) Chip removível também tem tooltip único.
+    const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
+    await removable.focus();
+    const tipRemove = page.getByRole('tooltip', { name: /Remover tema: Maria/ });
+    await expect(tipRemove).toHaveCount(1);
+  });
+});
