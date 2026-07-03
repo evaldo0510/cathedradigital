@@ -853,3 +853,180 @@ test.describe('Magistério Explorer — clique em tema: scroll + foco + URL', ()
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Nova bateria: clamp de ?page, redução de movimento, aria-live idempotente,
+// tamanho de página múltiplo de 3, acessibilidade dos chips por teclado.
+// ---------------------------------------------------------------------------
+
+test.describe('Magistério Explorer — clamp de ?page ao reduzir total', () => {
+  test('mudar filtro reduzindo páginas clampa ?page inválido e atualiza aria-live', async ({ page }) => {
+    // Sem filtros, garantimos que existam várias páginas.
+    await openExplorer(page, '?page=3');
+    const counter = page.locator('[aria-live="polite"]', {
+      hasText: /Página \d+ de \d+/,
+    }).first();
+    await expect(counter).toContainText(/Página 3 de \d+/);
+
+    // Aplica filtro forte que reduz o total a poucas páginas (idealmente 1).
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').fill('Rosarium');
+
+    // URL não deve mais conter ?page= (clamp para 1 remove o param).
+    await expect(page).not.toHaveURL(/[?&]page=/);
+
+    // Recarrega com um ?page manualmente inválido e valida o clamp.
+    const activeUrl = new URL(page.url());
+    activeUrl.searchParams.set('page', '99');
+    await page.goto(activeUrl.pathname + '?' + activeUrl.searchParams.toString());
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+
+    // Se ainda houver paginação, aria-live reflete o último page válido.
+    if (await counter.count()) {
+      const text = await counter.innerText();
+      const match = text.match(/Página (\d+) de (\d+)/);
+      expect(match).not.toBeNull();
+      const [, cur, total] = match!.map(Number);
+      expect(cur).toBeLessThanOrEqual(total);
+      // URL foi normalizada — não pode continuar com ?page=99.
+      await expect(page).not.toHaveURL(/[?&]page=99/);
+    } else {
+      // Sem paginação: URL foi limpa de ?page= pelo efeito de normalização.
+      await expect(page).not.toHaveURL(/[?&]page=/);
+    }
+  });
+});
+
+test.describe('Magistério Explorer — redução de movimento', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('clicar tema com prefers-reduced-motion mantém heading focado e URL sincronizada', async ({ page }) => {
+    await openExplorer(page);
+    await page.evaluate(() => window.scrollTo(0, 600));
+
+    await page.getByRole('button', { name: 'Maria', exact: true }).first().click();
+
+    await expect(page).toHaveURL(/theme=Maria/);
+
+    // Scroll conclui de forma imediata/instantânea (sem animação suave).
+    await page.waitForTimeout(150);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    const focusedLabel = await page.evaluate(
+      () => document.activeElement?.getAttribute('aria-label'),
+    );
+    expect(focusedLabel).toMatch(/Documentos do Magistério/);
+  });
+});
+
+test.describe('Magistério Explorer — aria-live idempotente', () => {
+  test('trocas rápidas em Próxima não geram anúncios duplicados e recarga anuncia uma vez', async ({ page }) => {
+    await openExplorer(page);
+    const counter = page.locator('[aria-live="polite"]', {
+      hasText: /Página \d+ de \d+/,
+    }).first();
+
+    // Precisa existir paginação para o teste ser significativo.
+    test.skip(!(await counter.count()), 'Sem paginação suficiente no dataset');
+
+    // Escuta mutações no nó do contador durante cliques rápidos.
+    await counter.evaluate((el) => {
+      (window as any).__ariaLiveMutations = 0;
+      const obs = new MutationObserver(() => {
+        (window as any).__ariaLiveMutations += 1;
+      });
+      obs.observe(el, { childList: true, characterData: true, subtree: true });
+      (window as any).__ariaLiveObserver = obs;
+    });
+
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    await next.click();
+    await next.click();
+    await next.click();
+    await page.waitForTimeout(200);
+
+    const mutations = await page.evaluate(() => (window as any).__ariaLiveMutations as number);
+    // Cada clique deve gerar no máximo uma mutação de texto — nunca duplicadas
+    // no mesmo destino final.
+    expect(mutations).toBeLessThanOrEqual(3);
+
+    // Recarrega com ?page=2 e valida que só existe um nó de aria-live com o texto.
+    await page.goto(`${ROUTE}?page=2`);
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    const liveNodes = page.locator('[aria-live="polite"]', {
+      hasText: /Página 2 de \d+/,
+    });
+    await expect(liveNodes).toHaveCount(1);
+  });
+});
+
+test.describe('Magistério Explorer — tamanho da página e contagem total', () => {
+  test('grid mostra até 12 itens (múltiplo de 3) e contagem bate com filtro', async ({ page }) => {
+    await openExplorer(page);
+    const total = await readCount(page);
+    const cards = page.locator('article, [data-slot="card"]');
+    const shown = await cards.count();
+
+    // Grid respeita page size = 12 (ou o total se menor).
+    expect(shown).toBeLessThanOrEqual(12);
+    expect(shown).toBe(Math.min(12, total));
+
+    // Se houver mais de uma página, itens visíveis são múltiplos de 3 (linha cheia).
+    if (total > 12) {
+      expect(shown % 3).toBe(0);
+    }
+
+    // Navega para page=2 e revalida coerência com o filtro (sem filtros ativos).
+    const counter = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ }).first();
+    if (await counter.count()) {
+      await page.getByRole('button', { name: 'Próxima página' }).click();
+      await expect(page).toHaveURL(/[?&]page=2/);
+      const shown2 = await cards.count();
+      expect(shown2).toBeLessThanOrEqual(12);
+      // Total exibido no rótulo permanece o mesmo (contagem = filtro, não página).
+      expect(await readCount(page)).toBe(total);
+    }
+  });
+});
+
+test.describe('Magistério Explorer — teclado nos chips (barra + removíveis)', () => {
+  test('Tab/Shift+Tab navega e Enter/Espaço remove, com URL e scroll consistentes', async ({ page }) => {
+    await openExplorer(page, '?theme=Maria');
+
+    const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
+    await expect(removable).toBeVisible();
+
+    // Foca no chip removível via JS (ponto de partida estável) e valida Tab/Shift+Tab.
+    await removable.focus();
+    await expect(removable).toBeFocused();
+
+    await page.keyboard.press('Shift+Tab');
+    const prevFocusable = await page.evaluate(() => document.activeElement?.tagName);
+    expect(prevFocusable).toBeTruthy();
+
+    // Volta o foco para o chip e remove com Enter.
+    await removable.focus();
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await page.keyboard.press('Enter');
+    await expect(page).not.toHaveURL(/theme=Maria/);
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    // Foco não foi perdido para o body (deve estar no heading ou em elemento válido).
+    const focusedTag = await page.evaluate(() => document.activeElement?.tagName);
+    expect(focusedTag).not.toBe('BODY');
+
+    // Aplica tema via chip da barra com Space e valida URL + scroll.
+    const barChip = page.getByRole('button', { name: 'Fé', exact: true }).first();
+    await barChip.focus();
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await page.keyboard.press(' ');
+    await expect(page).toHaveURL(/theme=F%C3%A9/);
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    const focusedLabel = await page.evaluate(
+      () => document.activeElement?.getAttribute('aria-label'),
+    );
+    expect(focusedLabel).toMatch(/Documentos do Magistério/);
+  });
+});
