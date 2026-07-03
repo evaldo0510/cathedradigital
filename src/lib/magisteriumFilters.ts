@@ -6,11 +6,17 @@ import type { MagisteriumDocument } from '@/data/magisterium-urls';
 
 export type MagisteriumSort = 'canonical' | 'chronological-asc' | 'chronological-desc';
 
+/** Tamanho fixo da página do Explorer. Ajustado ao grid 3-col para não gerar
+ *  linhas “órfãs” em desktop. */
+export const MAGISTERIUM_PAGE_SIZE = 12;
+
 export interface MagisteriumFilterState {
   search: string;
   category: string | null;
   themes: string[];
   sort: MagisteriumSort;
+  /** Página 1-indexada. */
+  page: number;
 }
 
 export const DEFAULT_FILTER_STATE: MagisteriumFilterState = {
@@ -18,6 +24,7 @@ export const DEFAULT_FILTER_STATE: MagisteriumFilterState = {
   category: null,
   themes: [],
   sort: 'canonical',
+  page: 1,
 };
 
 const dateKey = (d: MagisteriumDocument): string => d.date ?? `${d.year}`;
