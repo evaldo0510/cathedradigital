@@ -1198,3 +1198,40 @@ test.describe('Magistério Explorer — bolhas (tooltips) nos filtros', () => {
     await expect(tipRemove).toHaveCount(1);
   });
 });
+
+test.describe('Magistério Explorer — bolha por teclado (Tab/Shift+Tab)', () => {
+  test('Tab abre tooltip no chip focado, Shift+Tab fecha e não deixa role=tooltip duplicado', async ({ page }) => {
+    await openExplorer(page);
+
+    const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+
+    // Foca o chip anterior via JS e navega para o chip alvo apenas com Tab (sem hover).
+    await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll('button')) as HTMLButtonElement[];
+      const idx = btns.findIndex((b) => (b.textContent || '').trim() === 'Maria');
+      if (idx > 0) btns[idx - 1].focus();
+    });
+
+    await page.keyboard.press('Tab');
+    await expect(barChip).toBeFocused();
+
+    // Bolha abre sem hover, exatamente uma instância no DOM.
+    const tip = page.getByRole('tooltip', { name: /Adicionar tema: Maria/ });
+    await expect(tip).toHaveCount(1);
+    await expect(page.getByRole('tooltip')).toHaveCount(1);
+
+    // aria-describedby coerente com o tooltip aberto.
+    const describedBy = await barChip.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    await expect(page.locator(`#${describedBy}`)).toHaveText(/Adicionar tema: Maria/);
+
+    // Shift+Tab move o foco para trás — a bolha do chip anterior fecha.
+    await page.keyboard.press('Shift+Tab');
+    await expect(barChip).not.toBeFocused();
+    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
+
+    // Sem tooltips órfãos: no máximo 1 (do novo foco) e nunca o antigo duplicado.
+    const remaining = await page.getByRole('tooltip').count();
+    expect(remaining).toBeLessThanOrEqual(1);
+  });
+});
