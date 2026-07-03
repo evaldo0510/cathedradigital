@@ -302,6 +302,10 @@ const Magisterium: React.FC = () => {
   // caso queremos criar entrada no histórico para permitir back/forward.
   const prevPageRef = useRef<number>(pagination.page);
 
+  // Rastreia a última URL que *nós* escrevemos — mudanças externas
+  // (back/forward do browser, deep-link) precisam re-hidratar o state local.
+  const lastWrittenSearchRef = useRef<string>(searchParams.toString());
+
   // Persistência dos filtros na URL (preserva `topic` e `doc`).
   useEffect(() => {
     const merged = mergeFilterParams(searchParams, {
@@ -321,10 +325,29 @@ const Magisterium: React.FC = () => {
         merged.getAll('theme').join('|') !== searchParams.getAll('theme').join('|');
       const onlyPageChanged = pageChanged && !otherChanged;
       setSearchParams(merged, { replace: !onlyPageChanged });
+      lastWrittenSearchRef.current = merged.toString();
     }
     prevPageRef.current = pagination.page;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
+
+  // Hidratação reversa: quando a URL muda por fora (back/forward, deep-link),
+  // re-sincroniza o state local para a UI refletir a nova URL.
+  useEffect(() => {
+    const current = searchParams.toString();
+    if (current === lastWrittenSearchRef.current) return;
+    const next = searchParamsToState(searchParams);
+    setSearchQuery(next.search);
+    setSelectedCategory(next.category);
+    setSelectedThemes(next.themes);
+    setSortBy(next.sort);
+    setPage(next.page);
+    // Marca essa URL como já processada — evita loop no effect de escrita.
+    lastWrittenSearchRef.current = current;
+    // Reseta o "ancoramento" de filtros para não disparar reset de page.
+    prevFiltersKey.current = `${next.search}::${next.category ?? ''}::${next.themes.join('|')}::${next.sort}`;
+  }, [searchParams]);
+
 
   const toggleTheme = useCallback((theme: string) => {
     setSelectedThemes(prev =>
