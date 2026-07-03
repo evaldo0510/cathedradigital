@@ -324,91 +324,43 @@ const Magisterium: React.FC = () => {
     }
   }, []);
 
-  // Reset de página quando filtros mudam (mantém `page` só quando o usuário
-  // navega pela paginação).
+  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza a URL.
+  useEffect(() => {
+    if (pagination.page !== page) updateFilters({ page: pagination.page });
+  }, [pagination.page, page, updateFilters]);
+
+  // Detecta mudanças de filtro (não paginação) para rolar ao topo.
   const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
   const prevFiltersKey = useRef(filtersKey);
   useEffect(() => {
     if (prevFiltersKey.current !== filtersKey) {
       prevFiltersKey.current = filtersKey;
-      if (page !== 1) setPage(1);
-      // Filtros mudaram → rola ao topo por consistência com a nova lista.
       scrollToResultsTop(false);
     }
-  }, [filtersKey, page, scrollToResultsTop]);
+  }, [filtersKey, scrollToResultsTop]);
 
-  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza o state.
-  useEffect(() => {
-    if (pagination.page !== page) setPage(pagination.page);
-  }, [pagination.page, page]);
-
-  // Rastreia se a última mudança foi *só* de página (usuário paginou) — nesse
-  // caso queremos criar entrada no histórico para permitir back/forward.
-  const prevPageRef = useRef<number>(pagination.page);
-
-  // Rastreia a última URL que *nós* escrevemos — mudanças externas
-  // (back/forward do browser, deep-link) precisam re-hidratar o state local.
-  const lastWrittenSearchRef = useRef<string>(searchParams.toString());
-
-  // Persistência dos filtros na URL (preserva `topic` e `doc`).
-  useEffect(() => {
-    const merged = mergeFilterParams(searchParams, {
-      search: searchQuery,
-      category: selectedCategory,
-      themes: selectedThemes,
-      sort: sortBy,
-      page: pagination.page,
-    });
-    if (merged.toString() !== searchParams.toString()) {
-      // Se a única diferença é `page`, empurra no histórico (permite voltar/avançar).
-      const pageChanged = pagination.page !== prevPageRef.current;
-      const otherChanged =
-        merged.get('q') !== searchParams.get('q') ||
-        merged.get('cat') !== searchParams.get('cat') ||
-        merged.get('sort') !== searchParams.get('sort') ||
-        merged.getAll('theme').join('|') !== searchParams.getAll('theme').join('|');
-      const onlyPageChanged = pageChanged && !otherChanged;
-      setSearchParams(merged, { replace: !onlyPageChanged });
-      lastWrittenSearchRef.current = merged.toString();
-    }
-    prevPageRef.current = pagination.page;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
-
-  // Hidratação reversa: quando a URL muda por fora (back/forward, deep-link),
-  // re-sincroniza o state local para a UI refletir a nova URL.
-  useEffect(() => {
-    const current = searchParams.toString();
-    if (current === lastWrittenSearchRef.current) return;
-    const next = searchParamsToState(searchParams);
-    setSearchQuery(next.search);
-    setSelectedCategory(next.category);
-    setSelectedThemes(next.themes);
-    setSortBy(next.sort);
-    setPage(next.page);
-    // Marca essa URL como já processada — evita loop no effect de escrita.
-    lastWrittenSearchRef.current = current;
-    // Reseta o "ancoramento" de filtros para não disparar reset de page.
-    prevFiltersKey.current = `${next.search}::${next.category ?? ''}::${next.themes.join('|')}::${next.sort}`;
-  }, [searchParams]);
-
-
-  const toggleTheme = useCallback((theme: string) => {
-    setSelectedThemes(prev =>
-      prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
-    );
-    // Ao trocar tema, rola ao topo e foca o cabeçalho para leitores de tela.
-    scrollToResultsTop(true);
-  }, [scrollToResultsTop]);
-
+  const toggleTheme = useCallback(
+    (theme: string) => {
+      const next = selectedThemes.includes(theme)
+        ? selectedThemes.filter(t => t !== theme)
+        : [...selectedThemes, theme];
+      updateFilters({ themes: next, page: 1 });
+      // Ao trocar tema, rola ao topo e foca o cabeçalho para leitores de tela.
+      scrollToResultsTop(true);
+    },
+    [selectedThemes, updateFilters, scrollToResultsTop],
+  );
 
   const clearFilters = useCallback(() => {
-    setSearchQuery('');
-    setSelectedThemes([]);
-    setSelectedCategory(null);
-    setSortBy('canonical');
-    setPage(1);
-  }, []);
+    updateFilters({
+      search: '',
+      themes: [],
+      category: null,
+      sort: 'canonical',
+      page: 1,
+    });
+  }, [updateFilters]);
+
 
 
 
