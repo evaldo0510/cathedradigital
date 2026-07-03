@@ -291,3 +291,96 @@ test.describe('Magistério Explorer — filtros + URL', () => {
     expect(await markAfter.count()).toBe(countBefore);
   });
 });
+
+test.describe('Magistério Explorer — mobile (390×844)', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('chips, “Limpar tudo” e teclado sincronizam URL em viewport mobile', async ({ page }) => {
+    await openExplorer(page, '?cat=Enc%C3%ADclicas&theme=F%C3%A9&topic=medo');
+
+    const catChip = page.getByRole('button', { name: 'Remover categoria: Encíclicas' });
+    const themeChip = page.getByRole('button', { name: 'Remover tema: Fé' });
+    const clearAll = page.getByRole('button', { name: /Limpar tudo/i });
+
+    // Chips e botão renderizados e visíveis no viewport pequeno.
+    await expect(catChip).toBeVisible();
+    await expect(themeChip).toBeVisible();
+    await expect(clearAll).toBeVisible();
+
+    // Região de filtros ativos com landmark acessível.
+    await expect(page.getByRole('region', { name: 'Filtros ativos' })).toBeVisible();
+
+    // Tap no chip de tema (interação primária em mobile) → URL sincroniza.
+    await themeChip.tap();
+    await expect(page).not.toHaveURL(/[?&]theme=/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page).toHaveURL(/topic=medo/);
+
+    // Teclado (bluetooth/externo) permanece funcional em mobile.
+    await catChip.focus();
+    await expect(catChip).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).not.toHaveURL(/[?&]cat=/);
+    await expect(page).toHaveURL(/topic=medo/);
+
+    // "Limpar tudo" via tap remove filtros mas preserva topic externo.
+    // Rehidrata estado para garantir presença do botão.
+    await openExplorer(page, '?q=vida&cat=Enc%C3%ADclicas&theme=Vida&topic=medo');
+    await page.getByRole('button', { name: /Limpar tudo/i }).tap();
+    await expect(page).not.toHaveURL(/[?&](q|cat|theme|sort)=/);
+    await expect(page).toHaveURL(/topic=medo/);
+  });
+});
+
+test.describe('Magistério Explorer — ordenação com múltiplos temas', () => {
+  test('alternar sort com AND estrito de 2 temas mantém coerência cronológica', async ({ page }) => {
+    // "Maria" isolado retorna ≥3 docs de anos distintos, permitindo aferir ordem.
+    await openExplorer(page, '?theme=Maria');
+
+    async function collectYears(): Promise<number[]> {
+      const raw = await page.locator('span.tracking-widest').allInnerTexts();
+      return raw.map(y => Number(y.trim())).filter(y => Number.isFinite(y));
+    }
+
+    // 1) Ordem canônica default (sem ?sort= na URL).
+    await expect(page).not.toHaveURL(/[?&]sort=/);
+    const canonical = await collectYears();
+    expect(canonical.length).toBeGreaterThanOrEqual(3);
+
+    // 2) chronological-asc — todos crescentes.
+    const sortBtn = page.getByRole('button', { name: /Ordem canônica|Cronológica/ });
+    await sortBtn.click();
+    await expect(page).toHaveURL(/[?&]sort=chronological-asc/);
+    await expect(page).toHaveURL(/theme=Maria/);
+    const asc = await collectYears();
+    expect(asc.length).toBe(canonical.length);
+    for (let i = 0; i < asc.length - 1; i++) {
+      expect(asc[i]).toBeLessThanOrEqual(asc[i + 1]);
+    }
+
+    // 3) chronological-desc — todos decrescentes.
+    await sortBtn.click();
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    await expect(page).toHaveURL(/theme=Maria/);
+    const desc = await collectYears();
+    expect(desc.length).toBe(canonical.length);
+    for (let i = 0; i < desc.length - 1; i++) {
+      expect(desc[i]).toBeGreaterThanOrEqual(desc[i + 1]);
+    }
+    // asc reverso ≡ desc — coerência forte.
+    expect(desc).toEqual([...asc].reverse());
+
+    // 4) Adiciona segundo tema mantendo sort=desc: AND estrito não quebra ordenação.
+    await page.getByRole('button', { name: 'Rosário', exact: true }).first().click();
+    await expect(page).toHaveURL(/theme=Maria/);
+    await expect(page).toHaveURL(/theme=Ros%C3%A1rio/);
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    const andYears = await collectYears();
+    // Subconjunto (AND reduz), mas ainda ordenado desc.
+    expect(andYears.length).toBeLessThanOrEqual(desc.length);
+    expect(andYears.length).toBeGreaterThan(0);
+    for (let i = 0; i < andYears.length - 1; i++) {
+      expect(andYears[i]).toBeGreaterThanOrEqual(andYears[i + 1]);
+    }
+  });
+});
