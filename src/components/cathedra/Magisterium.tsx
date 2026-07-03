@@ -37,7 +37,9 @@ import {
   filterAndSortDocuments,
   highlightSegments,
   mergeFilterParams,
+  paginate,
   searchParamsToState,
+  MAGISTERIUM_PAGE_SIZE,
   type MagisteriumSort,
 } from '@/lib/magisteriumFilters';
 
@@ -166,6 +168,8 @@ const Magisterium: React.FC = () => {
   const [selectedThemes, setSelectedThemes] = useState<string[]>(initialFilterState.themes);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialFilterState.category);
   const [sortBy, setSortBy] = useState<MagisteriumSort>(initialFilterState.sort);
+  const [page, setPage] = useState<number>(initialFilterState.page);
+  
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
@@ -244,11 +248,34 @@ const Magisterium: React.FC = () => {
     () =>
       filterAndSortDocuments(
         MAGISTERIUM_DOCUMENTS,
-        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy },
+        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page },
         CATEGORY_ORDER,
       ),
-    [searchQuery, selectedCategory, selectedThemes, sortBy],
+    [searchQuery, selectedCategory, selectedThemes, sortBy, page],
   );
+
+  // Página corrente (com clamp) + fatia visível.
+  const pagination = useMemo(
+    () => paginate(filteredDocs, page, MAGISTERIUM_PAGE_SIZE),
+    [filteredDocs, page],
+  );
+  const visibleDocs = pagination.items;
+
+  // Reset de página quando filtros mudam (mantém `page` só quando o usuário
+  // navega pela paginação).
+  const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
+  const prevFiltersKey = useRef(filtersKey);
+  useEffect(() => {
+    if (prevFiltersKey.current !== filtersKey) {
+      prevFiltersKey.current = filtersKey;
+      if (page !== 1) setPage(1);
+    }
+  }, [filtersKey, page]);
+
+  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza o state.
+  useEffect(() => {
+    if (pagination.page !== page) setPage(pagination.page);
+  }, [pagination.page, page]);
 
   // Persistência dos filtros na URL (preserva `topic` e `doc`).
   useEffect(() => {
@@ -257,12 +284,13 @@ const Magisterium: React.FC = () => {
       category: selectedCategory,
       themes: selectedThemes,
       sort: sortBy,
+      page: pagination.page,
     });
     if (merged.toString() !== searchParams.toString()) {
       setSearchParams(merged, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedCategory, selectedThemes, sortBy]);
+  }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
 
   const toggleTheme = useCallback((theme: string) => {
     setSelectedThemes(prev =>
@@ -275,6 +303,7 @@ const Magisterium: React.FC = () => {
     setSelectedThemes([]);
     setSelectedCategory(null);
     setSortBy('canonical');
+    setPage(1);
   }, []);
 
 
