@@ -202,4 +202,92 @@ test.describe('Magistério Explorer — filtros + URL', () => {
     await page.keyboard.press('Enter');
     await expect(page).not.toHaveURL(/[?&](q|cat|theme|sort)=/);
   });
+
+  test('alternar sort atualiza ?sort= na URL, mantém filtros e sobrevive ao reload', async ({ page }) => {
+    await openExplorer(page, '?cat=Enc%C3%ADclicas');
+
+    // Estado inicial: canonical (default) NÃO vai à URL.
+    await expect(page).not.toHaveURL(/[?&]sort=/);
+    const sortBtn = page.getByRole('button', { name: /Ordem canônica|Cronológica/ });
+    await expect(sortBtn).toHaveText(/Ordem canônica/);
+
+    // 1º clique → chronological-asc
+    await sortBtn.click();
+    await expect(page).toHaveURL(/[?&]sort=chronological-asc/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(sortBtn).toHaveText(/Cronológica ↑/);
+
+    // 2º clique → chronological-desc
+    await sortBtn.click();
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+
+    // Reload preserva sort e filtros.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]sort=chronological-desc/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(
+      page.getByRole('button', { name: 'Remover categoria: Encíclicas' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /Ordem canônica|Cronológica/ }),
+    ).toHaveText(/Cronológica ↓/);
+
+    // 3º clique volta para canonical → sort desaparece da URL.
+    await page.getByRole('button', { name: /Cronológica ↓/ }).click();
+    await expect(page).not.toHaveURL(/[?&]sort=/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+  });
+
+  test('remover um ?theme mantém AND com os restantes e atualiza a contagem', async ({ page }) => {
+    await openExplorer(page, '?theme=Maria&theme=Ros%C3%A1rio');
+
+    // AND estrito com 2 temas: só 1 doc (Rosarium Virginis Mariae).
+    const countBefore = await readCount(page);
+    expect(countBefore).toBe(1);
+    await expect(page.getByRole('heading', { name: 'Rosarium Virginis Mariae' })).toBeVisible();
+
+    // Remove só o chip "Rosário" — filtro passa a ser AND com {Maria}.
+    await page.getByRole('button', { name: 'Remover tema: Rosário' }).click();
+
+    // URL mantém apenas theme=Maria.
+    await expect(page).toHaveURL(/theme=Maria/);
+    await expect(page).not.toHaveURL(/theme=Ros%C3%A1rio/);
+    await expect(page.getByRole('button', { name: 'Remover tema: Maria' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Remover tema: Rosário' })).toHaveCount(0);
+
+    // Contagem cresce (mais docs têm "Maria") e todos os visíveis contêm Maria.
+    const countAfter = await readCount(page);
+    expect(countAfter).toBeGreaterThan(countBefore);
+
+    // Docs com Maria (mas sem Rosário) que antes estavam ocultos agora aparecem.
+    await expect(page.getByRole('heading', { name: 'Ineffabilis Deus' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Munificentissimus Deus' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Rosarium Virginis Mariae' })).toBeVisible();
+
+    // Doc sem "Maria" continua fora (AND estrito com {Maria}).
+    await expect(page.getByRole('heading', { name: 'Rerum Novarum' })).toHaveCount(0);
+  });
+
+  test('realce <mark> aparece ao hidratar via ?q= e persiste após reload', async ({ page }) => {
+    await openExplorer(page, '?q=Laudato');
+
+    // Estado hidratado da URL: input preenchido, chip de busca e <mark> nos cards.
+    await expect(page.getByPlaceholder('Buscar documento, autor ou tema...')).toHaveValue('Laudato');
+    await expect(page.getByRole('button', { name: 'Remover busca: Laudato' })).toBeVisible();
+    const mark = page.locator('mark', { hasText: 'Laudato' });
+    await expect(mark.first()).toBeVisible();
+    const countBefore = await mark.count();
+    expect(countBefore).toBeGreaterThan(0);
+
+    // Reload — realce e estado devem persistir.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]q=Laudato/);
+    await expect(page.getByPlaceholder('Buscar documento, autor ou tema...')).toHaveValue('Laudato');
+    const markAfter = page.locator('mark', { hasText: 'Laudato' });
+    await expect(markAfter.first()).toBeVisible();
+    expect(await markAfter.count()).toBe(countBefore);
+  });
 });
