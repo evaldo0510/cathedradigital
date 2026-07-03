@@ -138,7 +138,7 @@ const CATEGORY_ORDER: Record<string, number> = MAGISTERIUM_CATEGORIES.reduce(
   {} as Record<string, number>,
 );
 
-type MagisteriumSort = 'canonical' | 'chronological-asc' | 'chronological-desc';
+
 
 const Magisterium: React.FC = () => {
   useRenderPerf('Magisterium', 15);
