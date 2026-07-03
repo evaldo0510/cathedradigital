@@ -261,6 +261,25 @@ const Magisterium: React.FC = () => {
   );
   const visibleDocs = pagination.items;
 
+  // Ref para o cabeçalho da lista — recebe foco após scroll ao topo (a11y).
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Rola até o cabeçalho da lista. Usa scrollIntoView (funciona em window ou
+  // em container com overflow interno, como o ContemplativeLayout).
+  const scrollToResultsTop = useCallback((focusHeading = false) => {
+    const el = resultsHeadingRef.current;
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (focusHeading) {
+      requestAnimationFrame(() => {
+        resultsHeadingRef.current?.focus({ preventScroll: true });
+      });
+    }
+  }, []);
+
   // Reset de página quando filtros mudam (mantém `page` só quando o usuário
   // navega pela paginação).
   const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
@@ -270,20 +289,14 @@ const Magisterium: React.FC = () => {
       prevFiltersKey.current = filtersKey;
       if (page !== 1) setPage(1);
       // Filtros mudaram → rola ao topo por consistência com a nova lista.
-      if (typeof window !== 'undefined') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      scrollToResultsTop(false);
     }
-  }, [filtersKey, page]);
+  }, [filtersKey, page, scrollToResultsTop]);
 
   // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza o state.
   useEffect(() => {
     if (pagination.page !== page) setPage(pagination.page);
   }, [pagination.page, page]);
-
-  // Ref para o cabeçalho da lista — recebe foco quando trocamos de tema para
-  // conduzir leitores de tela ao topo da nova lista após o scroll.
-  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
 
   // Rastreia se a última mudança foi *só* de página (usuário paginou) — nesse
   // caso queremos criar entrada no histórico para permitir back/forward.
@@ -313,23 +326,14 @@ const Magisterium: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
 
-  // Scroll suave até o topo + foco no cabeçalho da lista (acessibilidade).
-  const scrollToResultsTop = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    // Aguarda o próximo frame para o heading estar em posição antes do foco.
-    requestAnimationFrame(() => {
-      resultsHeadingRef.current?.focus({ preventScroll: true });
-    });
-  }, []);
-
   const toggleTheme = useCallback((theme: string) => {
     setSelectedThemes(prev =>
       prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
     );
-    scrollToResultsTop();
+    // Ao trocar tema, rola ao topo e foca o cabeçalho para leitores de tela.
+    scrollToResultsTop(true);
   }, [scrollToResultsTop]);
+
 
   const clearFilters = useCallback(() => {
     setSearchQuery('');
