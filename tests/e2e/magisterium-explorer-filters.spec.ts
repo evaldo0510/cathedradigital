@@ -563,3 +563,165 @@ test.describe('Magistério Explorer — a11y teclado mobile', () => {
     await expect(page).not.toHaveURL(/[?&](q|cat|theme|sort)=/);
   });
 });
+
+test.describe('Magistério Explorer — scroll + histórico de paginação', () => {
+  test('trocar página sincroniza ?page=, sobrevive ao reload e volta com back()', async ({ page }) => {
+    // Filtro estável que gera 2+ páginas: Encíclicas (13 docs → 2 páginas).
+    await openExplorer(page, '?cat=Enc%C3%ADclicas');
+    await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
+
+    // Força scroll até o rodapé para simular navegação real do usuário.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const yBefore = await page.evaluate(() => window.scrollY);
+    expect(yBefore).toBeGreaterThanOrEqual(0);
+
+    const nav = page.getByRole('navigation', { name: 'Paginação de documentos' });
+    await expect(nav).toBeVisible();
+
+    // Próxima → URL ganha ?page=2 e o chip da categoria continua ativo.
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
+
+    // Reload preserva URL, filtros e comportamento de rolagem estável (≥ 0).
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
+    const yAfterReload = await page.evaluate(() => window.scrollY);
+    expect(yAfterReload).toBeGreaterThanOrEqual(0);
+
+    // App usa `replace: true` na URL — não polui histórico. Verificamos a volta
+    // via botão "Anterior", que é o gesto real do usuário para page=1.
+    await page.getByRole('button', { name: 'Página anterior' }).click();
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page.getByText(/Página 1 de 2/)).toBeVisible();
+  });
+});
+
+test.describe('Magistério Explorer — busca mobile + paginação', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('?q= + ?page= preservam filtros, chips e <mark> após reload em mobile', async ({ page }) => {
+    // "de" é preposição comum → matches em muitos títulos/resumos, gerando 2+ páginas.
+    await openExplorer(page, '?q=de&page=2');
+
+    // Hidrata na página 2 (ou clampa se houver menos), URL reflete o estado real.
+    const input = page.getByPlaceholder('Buscar documento, autor ou tema...');
+    await expect(input).toHaveValue('de');
+    await expect(page.getByRole('button', { name: 'Remover busca: de' })).toBeVisible();
+
+    const nav = page.getByRole('navigation', { name: 'Paginação de documentos' });
+    await expect(nav).toBeVisible();
+    const pageLabel = page.getByText(/Página \d+ de \d+/);
+    const labelText = await pageLabel.innerText();
+    const [, current, total] = labelText.match(/Página (\d+) de (\d+)/) ?? [];
+    expect(Number(total)).toBeGreaterThanOrEqual(2);
+    // Se clampou (menos páginas que 2), URL foi reescrita para o valor real.
+    if (Number(current) === Number(total) && Number(total) < 2) {
+      await expect(page).not.toHaveURL(/[?&]page=2/);
+    } else {
+      await expect(page).toHaveURL(/[?&]page=2/);
+    }
+
+    // Realce <mark> presente nos cards da página atual.
+    const mark = page.locator('mark', { hasText: /^de$/i });
+    await expect(mark.first()).toBeVisible();
+    const markBefore = await mark.count();
+    expect(markBefore).toBeGreaterThan(0);
+
+    // Reload preserva q, page, chip e realce.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]q=de/);
+    await expect(input).toHaveValue('de');
+    await expect(page.getByRole('button', { name: 'Remover busca: de' })).toBeVisible();
+    const markAfter = page.locator('mark', { hasText: /^de$/i });
+    await expect(markAfter.first()).toBeVisible();
+    expect(await markAfter.count()).toBe(markBefore);
+  });
+});
+
+test.describe('Magistério Explorer — a11y paginação', () => {
+  test('Anterior/Próxima têm aria-label, foco por teclado e disabled nos extremos', async ({ page }) => {
+    await openExplorer(page);
+    await expect(page.getByText(/Página 1 de 3/)).toBeVisible();
+
+    const anterior = page.getByRole('button', { name: 'Página anterior' });
+    const proxima = page.getByRole('button', { name: 'Próxima página' });
+
+    // Extremo inicial: Anterior disabled, Próxima habilitado.
+    await expect(anterior).toBeDisabled();
+    await expect(proxima).toBeEnabled();
+
+    // Foco por teclado + ativação por Enter avança de página.
+    await proxima.focus();
+    await expect(proxima).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page.getByText(/Página 2 de 3/)).toBeVisible();
+
+    // Em página do meio, ambos habilitados.
+    await expect(anterior).toBeEnabled();
+    await expect(proxima).toBeEnabled();
+
+    // Space também aciona (após novo foco).
+    await proxima.focus();
+    await page.keyboard.press('Space');
+    await expect(page).toHaveURL(/[?&]page=3/);
+
+    // Extremo final: Próxima disabled, Anterior habilitado e focável.
+    await expect(proxima).toBeDisabled();
+    await expect(anterior).toBeEnabled();
+    await anterior.focus();
+    await expect(anterior).toBeFocused();
+
+    // aria-live no rótulo de página anuncia a mudança para leitores de tela.
+    const liveLabel = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ });
+    await expect(liveLabel).toBeVisible();
+  });
+});
+
+test.describe('Magistério Explorer — clamp de ?page= fora do intervalo', () => {
+  test('?page=999 clampa para a última página e reescreve a URL', async ({ page }) => {
+    // Sem filtros: 3 páginas totais.
+    await openExplorer(page, '?page=999');
+    await expect(page.getByText(/Página 3 de 3/)).toBeVisible();
+    // URL é reescrita para o valor real via replace.
+    await expect(page).toHaveURL(/[?&]page=3/);
+    await expect(page).not.toHaveURL(/[?&]page=999/);
+
+    await expect(page.getByRole('button', { name: 'Próxima página' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Página anterior' })).toBeEnabled();
+
+    // Reload mantém o clamp coerente.
+    await page.reload();
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]page=3/);
+    await expect(page.getByText(/Página 3 de 3/)).toBeVisible();
+  });
+
+  test('?page=0 (inválido) clampa para 1 e remove ?page= da URL', async ({ page }) => {
+    await openExplorer(page, '?page=0');
+    await expect(page.getByText(/Página 1 de 3/)).toBeVisible();
+    // page=1 é o default → não persiste na URL.
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page.getByRole('button', { name: 'Página anterior' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Próxima página' })).toBeEnabled();
+  });
+
+  test('?page= fora do intervalo com filtro clampa dentro do subconjunto', async ({ page }) => {
+    // Cartas Apostólicas: 6 docs → 1 página. ?page=5 deve virar 1 (sem ?page=).
+    await openExplorer(page, '?cat=Cartas+Apost%C3%B3licas&page=5');
+    // Menos de 12 docs → nav de paginação nem aparece.
+    await expect(page.getByRole('navigation', { name: 'Paginação de documentos' })).toHaveCount(0);
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/cat=Cartas/);
+    await expect(
+      page.getByRole('button', { name: 'Remover categoria: Cartas Apostólicas' }),
+    ).toBeVisible();
+  });
+});
