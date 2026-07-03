@@ -433,7 +433,7 @@ const Magisterium: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
-                  {doc.theme.map(t => (
+                  {doc.themes.map(t => (
                     <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-premium-full">
                       {t}
                     </span>
