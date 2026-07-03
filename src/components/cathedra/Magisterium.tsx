@@ -430,9 +430,20 @@ const Magisterium: React.FC = () => {
                 </div>
 
                 <div className="space-y-spacing-xs flex-1">
-                  <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
-                  <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
-                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">{doc.summary}</p>
+                  <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">
+                    {renderHighlighted(doc.title, searchQuery)}
+                    {doc.abbr && (
+                      <span className="ml-spacing-2xs text-[9px] font-black text-primary/40 tracking-[0.2em] align-middle">
+                        ({renderHighlighted(doc.abbr, searchQuery)})
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">
+                    {renderHighlighted(doc.author, searchQuery)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">
+                    {renderHighlighted(doc.summary, searchQuery)}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
