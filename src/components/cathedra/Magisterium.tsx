@@ -269,6 +269,10 @@ const Magisterium: React.FC = () => {
     if (prevFiltersKey.current !== filtersKey) {
       prevFiltersKey.current = filtersKey;
       if (page !== 1) setPage(1);
+      // Filtros mudaram → rola ao topo por consistência com a nova lista.
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   }, [filtersKey, page]);
 
