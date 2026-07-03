@@ -1077,3 +1077,80 @@ test.describe('Magistério Explorer — clamp inicial de ?page com filtros', () 
     }
   });
 });
+
+test.describe('Magistério Explorer — clamp com combinação de filtros', () => {
+  test('URL com ?theme=&cat=&q=&page=99 clampa page, preserva filtros e aria-live sem duplicar', async ({ page }) => {
+    await page.goto(`${ROUTE}?theme=Maria&cat=Encíclica&q=Maria&page=99`);
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+
+    await page.waitForFunction(() => !/[?&]page=99(&|$)/.test(window.location.search));
+
+    const url = new URL(page.url());
+    // Filtros preservados.
+    expect(url.searchParams.get('q')).toBe('Maria');
+    expect(url.searchParams.get('cat')).toBe('Encíclica');
+    expect(url.searchParams.getAll('theme')).toContain('Maria');
+
+    const pageParam = url.searchParams.get('page');
+    const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ });
+
+    if (await live.count()) {
+      await expect(live).toHaveCount(1);
+      const text = (await live.first().textContent())?.trim() ?? '';
+      const match = text.match(/Página (\d+) de (\d+)/);
+      expect(match).not.toBeNull();
+      const [, pStr, totalStr] = match!;
+      const effective = Number(pStr);
+      const total = Number(totalStr);
+      expect(effective).toBeGreaterThanOrEqual(1);
+      expect(effective).toBeLessThanOrEqual(total);
+      expect(effective).toBeLessThan(99);
+      if (total === 1) {
+        expect(pageParam).toBeNull();
+      } else {
+        expect(pageParam).toBe(String(effective));
+      }
+    } else {
+      // Sem paginador visível: totalPages=1, page deve ter sido removido.
+      expect(pageParam).toBeNull();
+    }
+  });
+});
+
+test.describe('Magistério Explorer — normalização de page=0 e page=-1', () => {
+  for (const invalid of ['0', '-1']) {
+    test(`?q=Maria&page=${invalid} é normalizado para página válida e aria-live anuncia uma única vez`, async ({ page }) => {
+      await page.goto(`${ROUTE}?q=Maria&page=${invalid}`);
+      await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+
+      // Aguarda a URL ser normalizada — page=0/-1 não é válido.
+      await page.waitForFunction(
+        (bad) => !new URL(window.location.href).searchParams.get('page')?.match(new RegExp(`^${bad}$`)),
+        invalid,
+      );
+
+      const url = new URL(page.url());
+      expect(url.searchParams.get('q')).toBe('Maria');
+      const pageParam = url.searchParams.get('page');
+
+      const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/ });
+      if (await live.count()) {
+        await expect(live).toHaveCount(1);
+        const text = (await live.first().textContent())?.trim() ?? '';
+        const match = text.match(/Página (\d+) de (\d+)/);
+        expect(match).not.toBeNull();
+        const effective = Number(match![1]);
+        const total = Number(match![2]);
+        expect(effective).toBeGreaterThanOrEqual(1);
+        expect(effective).toBeLessThanOrEqual(total);
+        if (total === 1) {
+          expect(pageParam).toBeNull();
+        } else {
+          expect(pageParam).toBe(String(effective));
+        }
+      } else {
+        expect(pageParam).toBeNull();
+      }
+    });
+  }
+});
