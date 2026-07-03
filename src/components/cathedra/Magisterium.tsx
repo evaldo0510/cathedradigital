@@ -296,6 +296,10 @@ const Magisterium: React.FC = () => {
     setSelectedThemes(prev =>
       prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
     );
+    // Ao mudar de tema, volta para o topo para o usuário ver a lista atualizada.
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   const clearFilters = useCallback(() => {
