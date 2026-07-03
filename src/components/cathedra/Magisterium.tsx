@@ -138,6 +138,18 @@ const CATEGORY_ORDER: Record<string, number> = MAGISTERIUM_CATEGORIES.reduce(
   {} as Record<string, number>,
 );
 
+/** Renderiza um texto com trechos que casam a query destacados no card. */
+const renderHighlighted = (text: string, query: string): React.ReactNode =>
+  highlightSegments(text, query).map((seg, i) =>
+    seg.match ? (
+      <mark key={i} className="bg-secondary/25 text-inherit rounded-[2px] px-[1px]">
+        {seg.text}
+      </mark>
+    ) : (
+      <React.Fragment key={i}>{seg.text}</React.Fragment>
+    ),
+  );
+
 
 
 const Magisterium: React.FC = () => {
