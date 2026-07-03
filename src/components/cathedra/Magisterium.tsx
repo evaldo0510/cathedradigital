@@ -27,6 +27,12 @@ import ContemplativeLayout from './ContemplativeLayout';
 import ReadingMark from './ReadingMark';
 import { CathedraCard } from './CathedraCard';
 import { cn } from '@/lib/utils';
+import {
+  MAGISTERIUM_DOCUMENTS,
+  MAGISTERIUM_CATEGORIES,
+  MAGISTERIUM_THEMES,
+  type MagisteriumDocument,
+} from '@/data/magisterium-urls';
 
 const SPIRITUAL_GUIDANCE = [
   {
