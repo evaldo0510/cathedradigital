@@ -324,10 +324,15 @@ const Magisterium: React.FC = () => {
     }
   }, []);
 
-  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza a URL.
+  // Normaliza a URL: se `?page=` está fora do intervalo (clampado) ou inválido
+  // (0, negativo, "abc"), reescreve para o valor efetivo.
   useEffect(() => {
-    if (pagination.page !== page) updateFilters({ page: pagination.page });
-  }, [pagination.page, page, updateFilters]);
+    const rawUrlPage = searchParams.get('page');
+    const normalizedNeeded =
+      pagination.page !== page || (rawUrlPage !== null && Number(rawUrlPage) !== pagination.page);
+    if (normalizedNeeded) updateFilters({ page: pagination.page });
+  }, [pagination.page, page, searchParams, updateFilters]);
+
 
   // Detecta mudanças de filtro (não paginação) para rolar ao topo.
   const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
