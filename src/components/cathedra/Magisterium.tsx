@@ -161,14 +161,58 @@ const Magisterium: React.FC = () => {
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialFilterState = useMemo(() => searchParamsToState(searchParams), []);
+
+  // A URL é a única fonte de verdade dos filtros. Derivamos o state a cada
+  // render — assim back/forward, deep-links e edições internas sempre coincidem.
+  const urlFilterState = useMemo(() => searchParamsToState(searchParams), [searchParams]);
+  const { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page } = urlFilterState;
+
+  // Setter unificado — escreve no `searchParams` preservando `topic`/`doc`.
+  const updateFilters = useCallback(
+    (
+      patch: Partial<typeof urlFilterState>,
+      opts: { push?: boolean } = {},
+    ) => {
+      const next = { ...urlFilterState, ...patch };
+      const merged = mergeFilterParams(searchParams, {
+        search: next.search,
+        category: next.category,
+        themes: next.themes,
+        sort: next.sort,
+        page: next.page,
+      });
+      if (merged.toString() !== searchParams.toString()) {
+        setSearchParams(merged, { replace: !opts.push });
+      }
+    },
+    [urlFilterState, searchParams, setSearchParams],
+  );
+
+  const setSearchQuery = useCallback(
+    (q: string) => updateFilters({ search: q, page: 1 }),
+    [updateFilters],
+  );
+  const setSelectedCategory = useCallback(
+    (c: string | null) => updateFilters({ category: c, page: 1 }),
+    [updateFilters],
+  );
+  const setSortBy = useCallback(
+    (updater: MagisteriumSort | ((prev: MagisteriumSort) => MagisteriumSort)) => {
+      const nextSort =
+        typeof updater === 'function' ? (updater as (p: MagisteriumSort) => MagisteriumSort)(sortBy) : updater;
+      updateFilters({ sort: nextSort, page: 1 });
+    },
+    [sortBy, updateFilters],
+  );
+  const setPage = useCallback(
+    (updater: number | ((prev: number) => number)) => {
+      const nextPage = typeof updater === 'function' ? (updater as (p: number) => number)(page) : updater;
+      updateFilters({ page: nextPage }, { push: true });
+    },
+    [page, updateFilters],
+  );
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
-  const [searchQuery, setSearchQuery] = useState(initialFilterState.search);
-  const [selectedThemes, setSelectedThemes] = useState<string[]>(initialFilterState.themes);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialFilterState.category);
-  const [sortBy, setSortBy] = useState<MagisteriumSort>(initialFilterState.sort);
-  const [page, setPage] = useState<number>(initialFilterState.page);
   
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
@@ -261,54 +305,68 @@ const Magisterium: React.FC = () => {
   );
   const visibleDocs = pagination.items;
 
-  // Reset de página quando filtros mudam (mantém `page` só quando o usuário
-  // navega pela paginação).
+  // Ref para o cabeçalho da lista — recebe foco após scroll ao topo (a11y).
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Rola até o topo da página. Cobre `window`, `document.documentElement` e
+  // `document.body` porque o layout usa scroll no `body` em alguns ambientes.
+  const scrollToResultsTop = useCallback((focusHeading = false) => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (document.body) document.body.scrollTop = 0;
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+    }
+    if (focusHeading) {
+      // Foca o cabeçalho da lista para leitores de tela (a11y).
+      requestAnimationFrame(() => {
+        resultsHeadingRef.current?.focus({ preventScroll: true });
+      });
+    }
+  }, []);
+
+  // Normaliza a URL: se `?page=` está fora do intervalo (clampado) ou inválido
+  // (0, negativo, "abc"), reescreve para o valor efetivo.
+  useEffect(() => {
+    const rawUrlPage = searchParams.get('page');
+    const normalizedNeeded =
+      pagination.page !== page || (rawUrlPage !== null && Number(rawUrlPage) !== pagination.page);
+    if (normalizedNeeded) updateFilters({ page: pagination.page });
+  }, [pagination.page, page, searchParams, updateFilters]);
+
+
+  // Detecta mudanças de filtro (não paginação) para rolar ao topo.
   const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
   const prevFiltersKey = useRef(filtersKey);
   useEffect(() => {
     if (prevFiltersKey.current !== filtersKey) {
       prevFiltersKey.current = filtersKey;
-      if (page !== 1) setPage(1);
+      scrollToResultsTop(false);
     }
-  }, [filtersKey, page]);
+  }, [filtersKey, scrollToResultsTop]);
 
-  // Se o clamp reduziu a página (ex: filtro cortou docs), sincroniza o state.
-  useEffect(() => {
-    if (pagination.page !== page) setPage(pagination.page);
-  }, [pagination.page, page]);
-
-  // Persistência dos filtros na URL (preserva `topic` e `doc`).
-  useEffect(() => {
-    const merged = mergeFilterParams(searchParams, {
-      search: searchQuery,
-      category: selectedCategory,
-      themes: selectedThemes,
-      sort: sortBy,
-      page: pagination.page,
-    });
-    if (merged.toString() !== searchParams.toString()) {
-      setSearchParams(merged, { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedCategory, selectedThemes, sortBy, pagination.page]);
-
-  const toggleTheme = useCallback((theme: string) => {
-    setSelectedThemes(prev =>
-      prev.includes(theme) ? prev.filter(t => t !== theme) : [...prev, theme],
-    );
-    // Ao mudar de tema, volta para o topo para o usuário ver a lista atualizada.
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, []);
+  const toggleTheme = useCallback(
+    (theme: string) => {
+      const next = selectedThemes.includes(theme)
+        ? selectedThemes.filter(t => t !== theme)
+        : [...selectedThemes, theme];
+      updateFilters({ themes: next, page: 1 });
+      // Ao trocar tema, rola ao topo e foca o cabeçalho para leitores de tela.
+      scrollToResultsTop(true);
+    },
+    [selectedThemes, updateFilters, scrollToResultsTop],
+  );
 
   const clearFilters = useCallback(() => {
-    setSearchQuery('');
-    setSelectedThemes([]);
-    setSelectedCategory(null);
-    setSortBy('canonical');
-    setPage(1);
-  }, []);
+    updateFilters({
+      search: '',
+      themes: [],
+      category: null,
+      sort: 'canonical',
+      page: 1,
+    });
+  }, [updateFilters]);
+
+
 
 
   const handleSelectGuidance = (item: typeof SPIRITUAL_GUIDANCE[0]) => {
@@ -523,8 +581,19 @@ const Magisterium: React.FC = () => {
 
 
 
+        {/* Cabeçalho da lista (focável para acessibilidade após scroll ao topo). */}
+        <h2
+          ref={resultsHeadingRef}
+          tabIndex={-1}
+          aria-label={`Documentos do Magistério (${pagination.totalItems})`}
+          className="sr-only"
+        >
+          Documentos do Magistério
+        </h2>
+
         {/* Documents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+
           {visibleDocs.map((doc, idx) => (
             <CathedraCard
               key={doc.id}

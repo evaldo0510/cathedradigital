@@ -725,3 +725,131 @@ test.describe('Magistério Explorer — clamp de ?page= fora do intervalo', () =
     ).toBeVisible();
   });
 });
+
+test.describe('Magistério Explorer — aria-live paginação', () => {
+  test('anuncia "Página N de M" ao trocar de página e ao recarregar com ?page=', async ({ page }) => {
+    await openExplorer(page);
+    const live = page.locator('[aria-live="polite"]', { hasText: /Página \d+ de \d+/i });
+    await expect(live).toHaveText(/Página 1 de 3/i);
+
+    // Próxima → aria-live atualiza para "Página 2 de 3"
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(live).toHaveText(/Página 2 de 3/i);
+
+    // Anterior → volta para "Página 1 de 3"
+    await page.getByRole('button', { name: 'Página anterior' }).click();
+    await expect(live).toHaveText(/Página 1 de 3/i);
+
+    // Deep-link com ?page=3 hidrata o anúncio corretamente após reload.
+    await page.goto('/magisterium?page=3');
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(
+      page.locator('[aria-live="polite"]', { hasText: /Página 3 de 3/i }),
+    ).toBeVisible();
+  });
+});
+
+test.describe('Magistério Explorer — histórico do navegador para paginação', () => {
+  test('voltar/avançar alterna ?page= na URL', async ({ page }) => {
+    // Deep-link inicial cria a entrada base do histórico.
+    await openExplorer(page, '?cat=Enc%C3%ADclicas');
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
+
+    // Próxima página → gera nova entrada no histórico (push).
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page.getByText(/Página 2 de 2/i)).toBeVisible();
+
+    // Voltar do browser → retorna à página 1 (sem ?page=), mantendo o filtro.
+    await page.goBack();
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
+
+    // Avançar do browser → volta para página 2.
+    await page.goForward();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page.getByText(/Página 2 de 2/i)).toBeVisible();
+
+    // scrollY permanece coerente (≥ 0, sem quebra visual).
+    const y = await page.evaluate(() => window.scrollY);
+    expect(y).toBeGreaterThanOrEqual(0);
+  });
+});
+
+test.describe('Magistério Explorer — mudança de filtro reseta paginação', () => {
+  test('mudar cat/theme/q em page=2+ remove ?page= e rola ao topo', async ({ page }) => {
+    // Começa em página 2 sem filtros.
+    await openExplorer(page, '?page=2');
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await expect(page.getByText(/Página 2 de 3/i)).toBeVisible();
+
+    // Rola para baixo para provar que o reset volta ao topo.
+    await page.evaluate(() => window.scrollTo(0, 400));
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+    // Aplica categoria → page volta a 1 → ?page= sai da URL.
+    await page.getByRole('button', { name: 'Encíclicas', exact: true }).first().click();
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+    await expect(page.getByText(/Página 1 de 2/i)).toBeVisible();
+    // Scroll consistente com o topo (behavior smooth pode não zerar em síncrono;
+    // damos um tempinho e checamos que voltou para perto do topo).
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    // Vai para página 2 dentro do filtro.
+    await page.getByRole('button', { name: 'Próxima página' }).click();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await page.evaluate(() => window.scrollTo(0, 400));
+
+    // Aplica um tema → reset para page 1 novamente.
+    await page.getByRole('button', { name: 'Fé', exact: true }).first().click();
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/theme=F%C3%A9/);
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    // Busca também reseta page.
+    await page.goto('/magisterium?page=2');
+    await page.getByPlaceholder('Buscar documento, autor ou tema...').waitFor();
+    await expect(page).toHaveURL(/[?&]page=2/);
+    await page
+      .getByPlaceholder('Buscar documento, autor ou tema...')
+      .fill('Laudato');
+    await expect(page).not.toHaveURL(/[?&]page=/);
+    await expect(page).toHaveURL(/[?&]q=Laudato/);
+  });
+});
+
+test.describe('Magistério Explorer — clique em tema: scroll + foco + URL', () => {
+  test('clicar tema rola ao topo, foca o cabeçalho da lista e sincroniza URL', async ({ page }) => {
+    await openExplorer(page);
+    // Rola para baixo antes de clicar no tema.
+    await page.evaluate(() => window.scrollTo(0, 500));
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+    // Clique no chip da barra de filtros.
+    await page.getByRole('button', { name: 'Maria', exact: true }).first().click();
+
+    // URL sincroniza com ?theme=Maria (sem quebrar).
+    await expect(page).toHaveURL(/theme=Maria/);
+
+    // Aguarda animação de scroll suave completar.
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+    // Cabeçalho da lista recebeu foco (acessibilidade).
+    const focusedLabel = await page.evaluate(
+      () => document.activeElement?.getAttribute('aria-label'),
+    );
+    expect(focusedLabel).toMatch(/Documentos do Magistério/);
+
+    // Clicar no chip removível também rola ao topo (mesma pipeline).
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await page.getByRole('button', { name: 'Remover tema: Maria' }).click();
+    await expect(page).not.toHaveURL(/theme=/);
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+  });
+});
