@@ -578,6 +578,8 @@ test.describe('Magistério Explorer — scroll + histórico de paginação', () 
     const nav = page.getByRole('navigation', { name: 'Paginação de documentos' });
     await expect(nav).toBeVisible();
 
+    // Próxima → URL ganha ?page=2 e o chip da categoria continua ativo.
+    await page.getByRole('button', { name: 'Próxima página' }).click();
     await expect(page).toHaveURL(/[?&]page=2/);
     await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
     await expect(page.getByText(/Página 2 de 2/)).toBeVisible();
