@@ -20,6 +20,14 @@ export type MagisteriumType =
   | 'Compêndio'
   | 'Código';
 
+/**
+ * Tag temática usada nos chips do Explorer.
+ * Alias nomeado para tornar explícito que `MagisteriumDocument.themes`
+ * (plural) é a lista de tags, distinta de `SPIRITUAL_GUIDANCE.theme`
+ * (singular = nome do tópico de orientação espiritual).
+ */
+export type MagisteriumTheme = string;
+
 export interface MagisteriumDocument {
   /** Slug estável usado nas rotas (`/magisterium/:id`) e no lookup de URL. */
   id: string;
@@ -35,7 +43,8 @@ export interface MagisteriumDocument {
   year: number;
   /** Data ISO (YYYY-MM-DD) quando conhecida — usada em ordenação cronológica fina. */
   date?: string;
-  themes: string[];
+  /** Tags temáticas (plural). NÃO usar `theme` singular. */
+  themes: MagisteriumTheme[];
   url: string;
   summary: string;
 }
