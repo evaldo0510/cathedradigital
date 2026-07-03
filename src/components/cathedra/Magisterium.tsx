@@ -17,7 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import ReadingControlPanel from './ReadingControlPanel';
@@ -33,6 +33,13 @@ import {
   MAGISTERIUM_THEMES,
   type MagisteriumDocument,
 } from '@/data/magisterium-urls';
+import {
+  filterAndSortDocuments,
+  highlightSegments,
+  mergeFilterParams,
+  searchParamsToState,
+  type MagisteriumSort,
+} from '@/lib/magisteriumFilters';
 
 const SPIRITUAL_GUIDANCE = [
   {
@@ -131,7 +138,19 @@ const CATEGORY_ORDER: Record<string, number> = MAGISTERIUM_CATEGORIES.reduce(
   {} as Record<string, number>,
 );
 
-type MagisteriumSort = 'canonical' | 'chronological-asc' | 'chronological-desc';
+/** Renderiza um texto com trechos que casam a query destacados no card. */
+const renderHighlighted = (text: string, query: string): React.ReactNode =>
+  highlightSegments(text, query).map((seg, i) =>
+    seg.match ? (
+      <mark key={i} className="bg-secondary/25 text-inherit rounded-[2px] px-[1px]">
+        {seg.text}
+      </mark>
+    ) : (
+      <React.Fragment key={i}>{seg.text}</React.Fragment>
+    ),
+  );
+
+
 
 const Magisterium: React.FC = () => {
   useRenderPerf('Magisterium', 15);
@@ -139,12 +158,14 @@ const Magisterium: React.FC = () => {
   useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const { saveLastRead, getLastRead } = useReadingMarks();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialFilterState = useMemo(() => searchParamsToState(searchParams), []);
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<MagisteriumSort>('canonical');
+  const [searchQuery, setSearchQuery] = useState(initialFilterState.search);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>(initialFilterState.themes);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialFilterState.category);
+  const [sortBy, setSortBy] = useState<MagisteriumSort>(initialFilterState.sort);
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
@@ -219,34 +240,28 @@ const Magisterium: React.FC = () => {
     );
   }, [activeTab, selectedGuidance, navigate]);
 
-  const filteredDocs = useMemo<MagisteriumDocument[]>(() => {
-    const q = searchQuery.trim().toLowerCase();
-    const result = MAGISTERIUM_DOCUMENTS.filter(doc => {
-      const matchesSearch =
-        !q ||
-        doc.title.toLowerCase().includes(q) ||
-        doc.author.toLowerCase().includes(q) ||
-        (doc.abbr?.toLowerCase().includes(q) ?? false) ||
-        doc.themes.some(t => t.toLowerCase().includes(q)) ||
-        doc.summary.toLowerCase().includes(q);
-      const matchesCategory = !selectedCategory || doc.category === selectedCategory;
-      const matchesThemes =
-        selectedThemes.length === 0 || selectedThemes.every(t => doc.themes.includes(t));
-      return matchesSearch && matchesCategory && matchesThemes;
-    });
+  const filteredDocs = useMemo<MagisteriumDocument[]>(
+    () =>
+      filterAndSortDocuments(
+        MAGISTERIUM_DOCUMENTS,
+        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy },
+        CATEGORY_ORDER,
+      ),
+    [searchQuery, selectedCategory, selectedThemes, sortBy],
+  );
 
-    if (sortBy === 'canonical') {
-      return result.sort((a, b) => {
-        const ca = CATEGORY_ORDER[a.category] ?? 999;
-        const cb = CATEGORY_ORDER[b.category] ?? 999;
-        if (ca !== cb) return ca - cb;
-        return (a.date ?? `${a.year}`).localeCompare(b.date ?? `${b.year}`);
-      });
+  // Persistência dos filtros na URL (preserva `topic` e `doc`).
+  useEffect(() => {
+    const merged = mergeFilterParams(searchParams, {
+      search: searchQuery,
+      category: selectedCategory,
+      themes: selectedThemes,
+      sort: sortBy,
+    });
+    if (merged.toString() !== searchParams.toString()) {
+      setSearchParams(merged, { replace: true });
     }
-    const dir = sortBy === 'chronological-asc' ? 1 : -1;
-    return result.sort(
-      (a, b) => dir * (a.date ?? `${a.year}`).localeCompare(b.date ?? `${b.year}`),
-    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory, selectedThemes, sortBy]);
 
   const toggleTheme = useCallback((theme: string) => {
@@ -427,9 +442,20 @@ const Magisterium: React.FC = () => {
                 </div>
 
                 <div className="space-y-spacing-xs flex-1">
-                  <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
-                  <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
-                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">{doc.summary}</p>
+                  <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">
+                    {renderHighlighted(doc.title, searchQuery)}
+                    {doc.abbr && (
+                      <span className="ml-spacing-2xs text-[9px] font-black text-primary/40 tracking-[0.2em] align-middle">
+                        ({renderHighlighted(doc.abbr, searchQuery)})
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">
+                    {renderHighlighted(doc.author, searchQuery)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">
+                    {renderHighlighted(doc.summary, searchQuery)}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
