@@ -102,6 +102,9 @@ export const SmartActionButton: React.FC = () => {
             <SheetTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/60">
               Atalhos rápidos
             </SheetTitle>
+            <SheetDescription className="sr-only">
+              Escolha um atalho: buscar, oração, diário ou favoritos.
+            </SheetDescription>
           </SheetHeader>
 
           <div className="grid grid-cols-2 gap-spacing-sm mt-spacing-lg">
