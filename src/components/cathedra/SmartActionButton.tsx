@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
@@ -21,16 +21,8 @@ const SHORTCUTS: ShortcutTile[] = [
     description: 'Bíblia, Catecismo, Santos',
     icon: Icons.Search,
     onSelect: () => {
-      // Dispara o mesmo atalho global do CommandCenter (Ctrl+K)
-      const event = new KeyboardEvent('keydown', {
-        key: 'k',
-        code: 'KeyK',
-        ctrlKey: true,
-        metaKey: true,
-        bubbles: true,
-      });
-      window.dispatchEvent(event);
-      document.dispatchEvent(event);
+      // Usa o evento oficial exposto pelo CommandCenter (evita conflito com outros atalhos)
+      window.dispatchEvent(new CustomEvent('open-command-center'));
     },
   },
   {
@@ -110,6 +102,9 @@ export const SmartActionButton: React.FC = () => {
             <SheetTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/60">
               Atalhos rápidos
             </SheetTitle>
+            <SheetDescription className="sr-only">
+              Escolha um atalho: buscar, oração, diário ou favoritos.
+            </SheetDescription>
           </SheetHeader>
 
           <div className="grid grid-cols-2 gap-spacing-sm mt-spacing-lg">
