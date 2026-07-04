@@ -16,7 +16,45 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+/**
+ * Bolha ancorada no clique — reproduz o comportamento anterior das “bolhas”:
+ * abre no elemento clicado, fecha ao clicar fora ou após 1.6s (feedback rápido).
+ * Mantém a ação original do trigger intacta (Radix não bloqueia o onClick do filho).
+ */
+const BubbleHint: React.FC<{
+  children: React.ReactElement;
+  label: React.ReactNode;
+  kind: string;
+}> = ({ children, label, kind }) => {
+  const [open, setOpen] = React.useState(false);
+  const timerRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => setOpen(false), 1600);
+    return () => {
+      if (timerRef.current) window.clearTimeout(timerRef.current);
+    };
+  }, [open, label]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent
+        side="top"
+        align="center"
+        data-tip-kind={kind}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        className="w-auto max-w-xs rounded-premium-lg px-spacing-sm py-spacing-2xs text-premium-xs font-medium"
+      >
+        {label}
+      </PopoverContent>
+    </Popover>
+  );
+};
 import AudioButton from './AudioButton';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
