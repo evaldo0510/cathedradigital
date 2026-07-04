@@ -1155,84 +1155,110 @@ test.describe('Magistério Explorer — normalização de page=0 e page=-1', () 
   }
 });
 
-test.describe('Magistério Explorer — bolhas (tooltips) nos filtros', () => {
-  test('focar/hover em chip abre tooltip correto (role=tooltip), sem duplicar após filtro/página', async ({ page }) => {
+// ------------------------------------------------------------------
+// Bolhas (Popover) — comportamento após migração de Tooltip → Popover
+// ------------------------------------------------------------------
+// A bolha ancorada no clique é renderizada por Radix Popover, com um
+// PopoverContent marcado por `data-tip-kind`. Não deve haver nenhum
+// `role="tooltip"` gerado por essas bolhas. Relações de a11y agora
+// são via `aria-expanded` + `aria-controls` no trigger.
+
+const bubble = (page: Page, textRegex: RegExp) =>
+  page.locator('[data-tip-kind]').filter({ hasText: textRegex });
+
+test.describe('Magistério Explorer — bolhas (Popover) nos filtros', () => {
+  test('clique no chip abre bolha única (data-tip-kind), sem role=tooltip e sem duplicar após filtro/página', async ({ page }) => {
     await openExplorer(page);
 
-    // 1) Foco por teclado em um chip da barra de temas abre exatamente 1 tooltip.
     const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+
+    // 1) Foco sozinho NÃO abre a bolha (regressão explícita do modo Popover).
     await barChip.focus();
-    // Radix renderiza role="tooltip" com o texto informado.
-    const tipBarAdd = page.getByRole('tooltip', { name: /Adicionar tema: Maria/ });
-    await expect(tipBarAdd).toHaveCount(1);
+    await expect(bubble(page, /Adicionar tema: Maria/)).toHaveCount(0);
+    await expect(barChip).toHaveAttribute('aria-expanded', 'false');
 
-    // aria-describedby aponta para o id do tooltip.
-    const describedBy = await barChip.getAttribute('aria-describedby');
-    expect(describedBy).toBeTruthy();
-    const describedNode = page.locator(`#${describedBy}`);
-    await expect(describedNode).toHaveText(/Adicionar tema: Maria/);
+    // 2) Clique abre exatamente 1 bolha e nenhum role=tooltip é criado.
+    await barChip.click();
+    await expect(bubble(page, /Adicionar tema: Maria/)).toHaveCount(1);
+    await expect(page.locator('[role="tooltip"]')).toHaveCount(0);
 
-    // 2) Move o foco (Tab) — o tooltip anterior fecha, evitando duplicação.
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
+    // aria-controls aponta para o PopoverContent visível.
+    await expect(barChip).toHaveAttribute('aria-expanded', 'true');
+    const controls = await barChip.getAttribute('aria-controls');
+    expect(controls).toBeTruthy();
+    await expect(page.locator(`#${controls}`)).toHaveText(/Adicionar tema: Maria/);
 
-    // 3) Aplica o tema e revalida: a bolha agora anuncia "Remover".
-    await barChip.focus();
-    await page.keyboard.press('Enter');
+    // 3) Após aplicar o filtro (clique já disparou a ação), a URL reflete o tema.
     await expect(page).toHaveURL(/theme=Maria/);
-    await barChip.focus();
-    await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(1);
 
-    // 4) Após navegar para outra página, não deve haver tooltip órfão no DOM.
+    // 4) Clica novamente após o estado ativo → bolha anuncia "Remover".
+    await barChip.click();
+    await expect(bubble(page, /Remover tema: Maria/)).toHaveCount(1);
+
+    // 5) Troca de página não deixa bolha órfã.
     const next = page.getByRole('button', { name: 'Próxima página' });
     if (await next.count()) {
       await next.click();
-      // Nenhum role=tooltip permanece renderizado sem trigger focado.
-      await expect(page.getByRole('tooltip')).toHaveCount(0);
+      await expect(page.locator('[data-tip-kind]')).toHaveCount(0);
+      await expect(page.locator('[role="tooltip"]')).toHaveCount(0);
     }
-
-    // 5) Chip removível também tem tooltip único.
-    const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
-    await removable.focus();
-    const tipRemove = page.getByRole('tooltip', { name: /Remover tema: Maria/ });
-    await expect(tipRemove).toHaveCount(1);
   });
 });
 
-test.describe('Magistério Explorer — bolha por teclado (Tab/Shift+Tab)', () => {
-  test('Tab abre tooltip no chip focado, Shift+Tab fecha e não deixa role=tooltip duplicado', async ({ page }) => {
+test.describe('Magistério Explorer — bolha por teclado (Enter/Espaço e Shift+Tab)', () => {
+  test('Enter e Espaço abrem a bolha; Shift+Tab fecha sem deixar conteúdo órfão', async ({ page }) => {
     await openExplorer(page);
 
     const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
 
-    // Foca o chip anterior via JS e navega para o chip alvo apenas com Tab (sem hover).
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button')) as HTMLButtonElement[];
-      const idx = btns.findIndex((b) => (b.textContent || '').trim() === 'Maria');
-      if (idx > 0) btns[idx - 1].focus();
-    });
+    // Enter abre a bolha (ação do chip também dispara — comportamento do Popover controlado).
+    await barChip.focus();
+    await expect(bubble(page, /Maria/)).toHaveCount(0);
+    await page.keyboard.press('Enter');
+    await expect(bubble(page, /Maria/)).toHaveCount(1);
+    await expect(barChip).toHaveAttribute('aria-expanded', 'true');
 
-    await page.keyboard.press('Tab');
-    await expect(barChip).toBeFocused();
-
-    // Bolha abre sem hover, exatamente uma instância no DOM.
-    const tip = page.getByRole('tooltip', { name: /Adicionar tema: Maria/ });
-    await expect(tip).toHaveCount(1);
-    await expect(page.getByRole('tooltip')).toHaveCount(1);
-
-    // aria-describedby coerente com o tooltip aberto.
-    const describedBy = await barChip.getAttribute('aria-describedby');
-    expect(describedBy).toBeTruthy();
-    await expect(page.locator(`#${describedBy}`)).toHaveText(/Adicionar tema: Maria/);
-
-    // Shift+Tab move o foco para trás — a bolha do chip anterior fecha.
+    // Shift+Tab move o foco para trás → bolha fecha (onBlur do trigger).
     await page.keyboard.press('Shift+Tab');
     await expect(barChip).not.toBeFocused();
-    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
+    await expect(bubble(page, /Maria/)).toHaveCount(0);
+    await expect(page.locator('[role="tooltip"]')).toHaveCount(0);
 
-    // Sem tooltips órfãos: no máximo 1 (do novo foco) e nunca o antigo duplicado.
-    const remaining = await page.getByRole('tooltip').count();
-    expect(remaining).toBeLessThanOrEqual(1);
+    // Espaço também abre a bolha ao refocar o chip.
+    await barChip.focus();
+    await page.keyboard.press('Space');
+    await expect(bubble(page, /Maria/)).toHaveCount(1);
+
+    // Nenhuma duplicação global.
+    await expect(page.locator('[data-tip-kind]')).toHaveCount(1);
+  });
+});
+
+test.describe('Magistério Explorer — regressão: bolha só abre no clique e fecha após 1.6s / fora', () => {
+  test('hover NÃO abre; clique abre; clique fora fecha; auto-close em 1.6s', async ({ page }) => {
+    await openExplorer(page);
+
+    const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+
+    // Hover puro não deve abrir bolha (regressão do modo tooltip).
+    await barChip.hover();
+    await page.waitForTimeout(300);
+    await expect(bubble(page, /Maria/)).toHaveCount(0);
+
+    // Clique abre a bolha.
+    await barChip.click();
+    await expect(bubble(page, /Maria/)).toHaveCount(1);
+
+    // Clique fora fecha imediatamente.
+    await page.locator('body').click({ position: { x: 5, y: 5 } });
+    await expect(bubble(page, /Maria/)).toHaveCount(0);
+
+    // Reabre e valida auto-close em ~1.6s.
+    await barChip.click();
+    await expect(bubble(page, /Maria/)).toHaveCount(1);
+    await page.waitForTimeout(1800);
+    await expect(bubble(page, /Maria/)).toHaveCount(0);
+    await expect(page.locator('[role="tooltip"]')).toHaveCount(0);
   });
 });
 
@@ -1243,47 +1269,46 @@ test.describe('Magistério Explorer — bolha atualiza texto ao alternar estado/
     const barChip = page.getByRole('button', { name: 'Maria', exact: true }).first();
 
     // 1) Estado inicial: tema inativo → bolha "Adicionar tema: Maria".
-    await barChip.focus();
-    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(1);
-    await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(0);
+    await barChip.click();
+    await expect(bubble(page, /Adicionar tema: Maria/)).toHaveCount(1);
+    await expect(bubble(page, /Remover tema: Maria/)).toHaveCount(0);
 
-    // 2) Aplica o tema com Enter (chip agora ativo).
-    await page.keyboard.press('Enter');
+    // Aguarda auto-close para o próximo passo.
+    await page.waitForTimeout(1800);
+    await expect(page.locator('[data-tip-kind]')).toHaveCount(0);
+
+    // 2) URL reflete o tema aplicado no clique anterior.
     await expect(page).toHaveURL(/theme=Maria/);
 
-    // 3) Move foco para fora — nenhum tooltip permanece.
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await expect(page.getByRole('tooltip')).toHaveCount(0);
+    // 3) Reclica: bolha agora anuncia "Remover" (texto antigo não sobrevive).
+    await barChip.click();
+    await expect(bubble(page, /Remover tema: Maria/)).toHaveCount(1);
+    await expect(bubble(page, /Adicionar tema: Maria/)).toHaveCount(0);
 
-    // 4) Refoca — a bolha agora anuncia "Remover" (texto antigo não sobrevive).
-    await barChip.focus();
-    const remover = page.getByRole('tooltip', { name: /Remover tema: Maria/ });
-    await expect(remover).toHaveCount(1);
-    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(0);
-
-    // 5) Troca de página (se houver) — nenhum tooltip órfão do estado anterior.
+    // 4) Troca de página (se houver) — nenhuma bolha órfã do estado anterior.
+    await page.waitForTimeout(1800);
     const next = page.getByRole('button', { name: 'Próxima página' });
     if (await next.count()) {
       await next.click();
       await expect(page).toHaveURL(/[?&]page=2/);
-      await expect(page.getByRole('tooltip')).toHaveCount(0);
+      await expect(page.locator('[data-tip-kind]')).toHaveCount(0);
 
-      // Refocando o chip da nova página, o texto continua refletindo o estado atual.
       const barChip2 = page.getByRole('button', { name: 'Maria', exact: true }).first();
-      await barChip2.focus();
-      await expect(page.getByRole('tooltip', { name: /Remover tema: Maria/ })).toHaveCount(1);
+      await barChip2.click();
+      await expect(bubble(page, /Remover tema: Maria/)).toHaveCount(1);
+      await page.waitForTimeout(1800);
     }
 
-    // 6) Remove o tema via chip removível; refocando o chip da barra volta a "Adicionar".
+    // 5) Remove o tema via chip removível; reclicando o chip da barra volta a "Adicionar".
     const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
     await removable.click();
     await expect(page).not.toHaveURL(/theme=Maria/);
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await expect(page.getByRole('tooltip')).toHaveCount(0);
+    await page.waitForTimeout(1800);
+    await expect(page.locator('[data-tip-kind]')).toHaveCount(0);
 
     const barChip3 = page.getByRole('button', { name: 'Maria', exact: true }).first();
-    await barChip3.focus();
-    await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(1);
+    await barChip3.click();
+    await expect(bubble(page, /Adicionar tema: Maria/)).toHaveCount(1);
   });
 });
 
