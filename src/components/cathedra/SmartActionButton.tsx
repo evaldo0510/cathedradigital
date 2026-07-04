@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Icons } from '@/constants';
@@ -50,17 +50,38 @@ const SHORTCUTS: ShortcutTile[] = [
 
 export const SmartActionButton: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const shouldReduceMotion = useReducedMotion();
+  const fallbackTimerRef = useRef<number | null>(null);
+
+  // Limpa loading quando a rota muda (navegação concluída)
+  useEffect(() => {
+    if (pendingKey) setPendingKey(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Fallback: se por algum motivo a rota não mudar em 1s, libera o botão
+  useEffect(() => {
+    if (!pendingKey) return;
+    fallbackTimerRef.current = window.setTimeout(() => setPendingKey(null), 1000);
+    return () => {
+      if (fallbackTimerRef.current) window.clearTimeout(fallbackTimerRef.current);
+    };
+  }, [pendingKey]);
 
   const handleSelect = useCallback(
     (shortcut: ShortcutTile) => {
+      setPendingKey(shortcut.key);
       setOpen(false);
       // Aguarda o fechamento do Sheet antes de disparar a ação
       setTimeout(() => shortcut.onSelect(navigate), 180);
     },
     [navigate],
   );
+
+  const isLoading = pendingKey !== null;
 
   return (
     <>
@@ -70,13 +91,16 @@ export const SmartActionButton: React.FC = () => {
       >
         <motion.button
           type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Abrir atalhos rápidos"
+          onClick={() => !isLoading && setOpen(true)}
+          aria-label={isLoading ? 'Carregando' : 'Abrir atalhos rápidos'}
           aria-haspopup="dialog"
           aria-expanded={open}
+          aria-busy={isLoading || undefined}
+          disabled={isLoading}
           data-testid="smart-action-button"
-          whileTap={shouldReduceMotion ? undefined : { scale: 0.94 }}
-          whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+          data-loading={isLoading || undefined}
+          whileTap={shouldReduceMotion || isLoading ? undefined : { scale: 0.94 }}
+          whileHover={shouldReduceMotion || isLoading ? undefined : { y: -2 }}
           transition={{ type: 'spring', stiffness: 380, damping: 26 }}
           className={cn(
             'pointer-events-auto relative flex items-center justify-center',
@@ -86,10 +110,22 @@ export const SmartActionButton: React.FC = () => {
             'border border-primary/20',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             'tap-highlight-transparent touch-manipulation',
+            'disabled:cursor-wait',
           )}
         >
-          <Icons.Sparkles size={22} strokeWidth={1.6} aria-hidden="true" />
-          <span className="sr-only">Atalhos rápidos</span>
+          {isLoading ? (
+            <Icons.Loader
+              size={22}
+              strokeWidth={1.8}
+              className="animate-spin"
+              aria-hidden="true"
+            />
+          ) : (
+            <Icons.Sparkles size={22} strokeWidth={1.6} aria-hidden="true" />
+          )}
+          <span className="sr-only">
+            {isLoading ? 'Carregando' : 'Atalhos rápidos'}
+          </span>
         </motion.button>
       </div>
 
@@ -110,11 +146,14 @@ export const SmartActionButton: React.FC = () => {
           <div className="grid grid-cols-2 gap-spacing-sm mt-spacing-lg">
             {SHORTCUTS.map((s) => {
               const Icon = s.icon;
+              const tileLoading = pendingKey === s.key;
               return (
                 <button
                   key={s.key}
                   type="button"
                   onClick={() => handleSelect(s)}
+                  disabled={isLoading}
+                  aria-busy={tileLoading || undefined}
                   data-testid={`smart-action-${s.key}`}
                   className={cn(
                     'flex flex-col items-start gap-spacing-xs p-spacing-md text-left',
@@ -122,10 +161,15 @@ export const SmartActionButton: React.FC = () => {
                     'active:scale-[0.98] transition-transform duration-200',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                     'min-h-[88px]',
+                    'disabled:opacity-60 disabled:cursor-wait',
                   )}
                 >
                   <span className="flex items-center justify-center w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary/10 text-primary">
-                    <Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+                    {tileLoading ? (
+                      <Icons.Loader size={20} strokeWidth={1.8} className="animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+                    )}
                   </span>
                   <span className="text-[12px] font-bold text-foreground leading-tight">
                     {s.label}
