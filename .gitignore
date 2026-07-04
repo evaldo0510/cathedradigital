@@ -32,3 +32,13 @@ dist-ssr
 
 reports/
 logs/
+
+# CI/audit artifacts (não versionar)
+compliance-report.*
+sitemap-validation-report.json
+spacing-audit-summary.txt
+test-results.json
+summary.json
+translations.html
+bible-regression-test.js
+visual-audit-report.json
