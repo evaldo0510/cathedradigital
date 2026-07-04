@@ -21,16 +21,8 @@ const SHORTCUTS: ShortcutTile[] = [
     description: 'Bíblia, Catecismo, Santos',
     icon: Icons.Search,
     onSelect: () => {
-      // Dispara o mesmo atalho global do CommandCenter (Ctrl+K)
-      const event = new KeyboardEvent('keydown', {
-        key: 'k',
-        code: 'KeyK',
-        ctrlKey: true,
-        metaKey: true,
-        bubbles: true,
-      });
-      window.dispatchEvent(event);
-      document.dispatchEvent(event);
+      // Usa o evento oficial exposto pelo CommandCenter (evita conflito com outros atalhos)
+      window.dispatchEvent(new CustomEvent('open-command-center'));
     },
   },
   {
