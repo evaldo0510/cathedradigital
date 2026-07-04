@@ -452,7 +452,6 @@ const Magisterium: React.FC = () => {
 
       <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
         {/* Unified Search & Filters */}
-        <TooltipProvider delayDuration={200} disableHoverableContent>
         <div className="space-y-spacing-xl">
           <div className="relative group w-full">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -467,33 +466,29 @@ const Magisterium: React.FC = () => {
 
           {/* Categoria (autoridade canônica) */}
           <div className="flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
-            <Tooltip>
-              <TooltipTrigger asChild>
+            <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
+              <Button
+                variant="ghost"
+                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                onClick={() => setSelectedCategory(null)}
+              >
+                Todas as Categorias
+              </Button>
+            </BubbleHint>
+            {MAGISTERIUM_CATEGORIES.map(cat => (
+              <BubbleHint
+                key={cat.name}
+                kind="category"
+                label={selectedCategory === cat.name ? `Remover filtro de categoria: ${cat.name}` : `Filtrar por categoria: ${cat.name}`}
+              >
                 <Button
                   variant="ghost"
-                  className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
-                  onClick={() => setSelectedCategory(null)}
+                  className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                  onClick={() => setSelectedCategory(cat.name)}
                 >
-                  Todas as Categorias
+                  {cat.name}
                 </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top" data-tip-kind="category">Mostrar documentos de todas as categorias</TooltipContent>
-            </Tooltip>
-            {MAGISTERIUM_CATEGORIES.map(cat => (
-              <Tooltip key={cat.name}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
-                    onClick={() => setSelectedCategory(cat.name)}
-                  >
-                    {cat.name}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top" data-tip-kind="category">
-                  {selectedCategory === cat.name ? `Remover filtro de categoria: ${cat.name}` : `Filtrar por categoria: ${cat.name}`}
-                </TooltipContent>
-              </Tooltip>
+              </BubbleHint>
             ))}
           </div>
 
@@ -502,21 +497,20 @@ const Magisterium: React.FC = () => {
             {MAGISTERIUM_THEMES.map(theme => {
               const active = selectedThemes.includes(theme);
               return (
-                <Tooltip key={theme}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      aria-pressed={active}
-                      className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary border border-primary/10'}`}
-                      onClick={() => toggleTheme(theme)}
-                    >
-                      {theme}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" data-tip-kind="theme-bar">
-                    {active ? `Remover tema: ${theme}` : `Adicionar tema: ${theme}`}
-                  </TooltipContent>
-                </Tooltip>
+                <BubbleHint
+                  key={theme}
+                  kind="theme-bar"
+                  label={active ? `Remover tema: ${theme}` : `Adicionar tema: ${theme}`}
+                >
+                  <Button
+                    variant="ghost"
+                    aria-pressed={active}
+                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary border border-primary/10'}`}
+                    onClick={() => toggleTheme(theme)}
+                  >
+                    {theme}
+                  </Button>
+                </BubbleHint>
               );
             })}
           </div>
@@ -537,53 +531,45 @@ const Magisterium: React.FC = () => {
               )}
             </div>
             <div className="flex items-center gap-spacing-xs">
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <BubbleHint kind="sort" label="Alternar ordenação (canônica → cronológica ↑ → cronológica ↓)">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    setSortBy(prev =>
+                      prev === 'canonical'
+                        ? 'chronological-asc'
+                        : prev === 'chronological-asc'
+                          ? 'chronological-desc'
+                          : 'canonical',
+                    )
+                  }
+                  className="text-[9px] font-black uppercase tracking-[0.2em]"
+                >
+                  <Icons.ArrowDown
+                    className={cn(
+                      'w-spacing-sm h-spacing-sm mr-spacing-2xs transition-transform',
+                      sortBy === 'chronological-desc' && 'rotate-180',
+                    )}
+                  />
+                  {sortBy === 'canonical'
+                    ? 'Ordem canônica'
+                    : sortBy === 'chronological-asc'
+                      ? 'Cronológica ↑'
+                      : 'Cronológica ↓'}
+                </Button>
+              </BubbleHint>
+              {(searchQuery || selectedThemes.length > 0 || selectedCategory) && (
+                <BubbleHint kind="clear" label="Remover todos os filtros ativos">
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() =>
-                      setSortBy(prev =>
-                        prev === 'canonical'
-                          ? 'chronological-asc'
-                          : prev === 'chronological-asc'
-                            ? 'chronological-desc'
-                            : 'canonical',
-                      )
-                    }
-                    className="text-[9px] font-black uppercase tracking-[0.2em]"
+                    onClick={clearFilters}
+                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground"
                   >
-                    <Icons.ArrowDown
-                      className={cn(
-                        'w-spacing-sm h-spacing-sm mr-spacing-2xs transition-transform',
-                        sortBy === 'chronological-desc' && 'rotate-180',
-                      )}
-                    />
-                    {sortBy === 'canonical'
-                      ? 'Ordem canônica'
-                      : sortBy === 'chronological-asc'
-                        ? 'Cronológica ↑'
-                        : 'Cronológica ↓'}
+                    Limpar
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top" data-tip-kind="sort">
-                  Alternar ordenação (canônica → cronológica ↑ → cronológica ↓)
-                </TooltipContent>
-              </Tooltip>
-              {(searchQuery || selectedThemes.length > 0 || selectedCategory) && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearFilters}
-                      className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground"
-                    >
-                      Limpar
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" data-tip-kind="clear">Remover todos os filtros ativos</TooltipContent>
-                </Tooltip>
+                </BubbleHint>
               )}
             </div>
           </div>
@@ -600,73 +586,61 @@ const Magisterium: React.FC = () => {
               </span>
 
               {searchQuery && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      aria-label={`Remover busca: ${searchQuery}`}
-                      className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
-                    >
-                      <span className="normal-case tracking-normal">“{searchQuery}”</span>
-                      <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" data-tip-kind="chip-search">Remover busca “{searchQuery}”</TooltipContent>
-                </Tooltip>
+                <BubbleHint kind="chip-search" label={`Remover busca “${searchQuery}”`}>
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    aria-label={`Remover busca: ${searchQuery}`}
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                  >
+                    <span className="normal-case tracking-normal">“{searchQuery}”</span>
+                    <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
+                  </button>
+                </BubbleHint>
               )}
 
               {selectedCategory && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCategory(null)}
-                      aria-label={`Remover categoria: ${selectedCategory}`}
-                      className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
-                    >
-                      {selectedCategory}
-                      <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" data-tip-kind="chip-category">Remover categoria: {selectedCategory}</TooltipContent>
-                </Tooltip>
+                <BubbleHint kind="chip-category" label={`Remover categoria: ${selectedCategory}`}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory(null)}
+                    aria-label={`Remover categoria: ${selectedCategory}`}
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                  >
+                    {selectedCategory}
+                    <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
+                  </button>
+                </BubbleHint>
               )}
 
               {selectedThemes.map(theme => (
-                <Tooltip key={theme}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => toggleTheme(theme)}
-                      aria-label={`Remover tema: ${theme}`}
-                      className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
-                    >
-                      {theme}
-                      <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" data-tip-kind="chip-theme">Remover tema: {theme}</TooltipContent>
-                </Tooltip>
-              ))}
-
-              <Tooltip>
-                <TooltipTrigger asChild>
+                <BubbleHint key={theme} kind="chip-theme" label={`Remover tema: ${theme}`}>
                   <button
                     type="button"
-                    onClick={clearFilters}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/60 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                    onClick={() => toggleTheme(theme)}
+                    aria-label={`Remover tema: ${theme}`}
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
                   >
-                    <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
-                    Limpar tudo
+                    {theme}
+                    <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
                   </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" data-tip-kind="chip-clear">Remover todos os filtros de uma vez</TooltipContent>
-              </Tooltip>
+                </BubbleHint>
+              ))}
+
+              <BubbleHint kind="chip-clear" label="Remover todos os filtros de uma vez">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/60 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                >
+                  <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
+                  Limpar tudo
+                </button>
+              </BubbleHint>
             </div>
           )}
         </div>
-        </TooltipProvider>
+
 
 
 
