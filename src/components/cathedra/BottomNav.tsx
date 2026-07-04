@@ -9,6 +9,7 @@ import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
 import { APP_ROUTES } from '@/config/routes';
+import { SmartActionButton } from './SmartActionButton';
 
 /* ── Ripple helper ── */
 function useRipple() {
