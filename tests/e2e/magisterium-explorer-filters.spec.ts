@@ -1367,3 +1367,82 @@ test.describe('Magistério Explorer — aria-live com filtros inválidos', () =>
     await expect(page).not.toHaveURL(/[?&]page=42\b/);
   });
 });
+
+// ------------------------------------------------------------------
+// Ancoragem do Popover ao chip clicado — posicionamento correto
+// mesmo após aplicar filtros e trocar de página.
+// ------------------------------------------------------------------
+test.describe('Magistério Explorer — Popover ancorado ao chip clicado', () => {
+  const HORIZONTAL_TOLERANCE = 120; // px — folga para align="center" + collision
+  const VERTICAL_MAX_GAP = 40; // px — bolha "colada" acima/abaixo do chip
+
+  async function assertBubbleAnchoredTo(page: Page, chip: ReturnType<Page['getByRole']>, textRegex: RegExp) {
+    const bubbleLoc = page.locator('[data-tip-kind]').filter({ hasText: textRegex });
+    await expect(bubbleLoc).toHaveCount(1);
+
+    const chipBox = await chip.boundingBox();
+    const bubbleBox = await bubbleLoc.boundingBox();
+    expect(chipBox, 'chip deve ter boundingBox').not.toBeNull();
+    expect(bubbleBox, 'bolha deve ter boundingBox').not.toBeNull();
+
+    const chipCenterX = chipBox!.x + chipBox!.width / 2;
+    const bubbleCenterX = bubbleBox!.x + bubbleBox!.width / 2;
+
+    // Horizontal: bolha centralizada perto do centro do chip.
+    expect(Math.abs(bubbleCenterX - chipCenterX)).toBeLessThanOrEqual(HORIZONTAL_TOLERANCE);
+
+    // Vertical: bolha logo acima OU logo abaixo do chip (Radix flip por colisão).
+    const gapAbove = chipBox!.y - (bubbleBox!.y + bubbleBox!.height);
+    const gapBelow = bubbleBox!.y - (chipBox!.y + chipBox!.height);
+    const closestGap = Math.min(
+      gapAbove >= 0 ? gapAbove : Infinity,
+      gapBelow >= 0 ? gapBelow : Infinity,
+    );
+    expect(closestGap).toBeLessThanOrEqual(VERTICAL_MAX_GAP);
+  }
+
+  test('bolha permanece ancorada ao chip após aplicar filtros e trocar de página', async ({ page }) => {
+    await openExplorer(page);
+
+    // 1) Estado inicial: clica em "Maria" e valida ancoragem.
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+    await chip.click();
+    await assertBubbleAnchoredTo(page, chip, /Adicionar tema: Maria/);
+    await page.waitForTimeout(1800); // auto-close
+
+    // 2) Após filtro aplicado (URL tem theme=Maria), reclica e revalida ancoragem
+    // ao chip da barra (agora ativo → texto "Remover").
+    await expect(page).toHaveURL(/theme=Maria/);
+    const chipAtivo = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chipAtivo.scrollIntoViewIfNeeded();
+    await chipAtivo.click();
+    await assertBubbleAnchoredTo(page, chipAtivo, /Remover tema: Maria/);
+    await page.waitForTimeout(1800);
+
+    // 3) Ancoragem do chip removível (posição diferente na tela).
+    const removivel = page.getByRole('button', { name: 'Remover tema: Maria' });
+    await removivel.scrollIntoViewIfNeeded();
+    await removivel.click();
+    // Este clique remove o filtro; reaplica para continuar testando na próxima página.
+    await expect(page).not.toHaveURL(/theme=Maria/);
+    await page.waitForTimeout(1800);
+
+    // 4) Reaplica filtro e troca de página; ancoragem deve permanecer correta.
+    const chipReapply = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chipReapply.click();
+    await page.waitForTimeout(1800);
+    await expect(page).toHaveURL(/theme=Maria/);
+
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    if (await next.count()) {
+      await next.click();
+      await expect(page).toHaveURL(/[?&]page=2/);
+
+      const chipPage2 = page.getByRole('button', { name: 'Maria', exact: true }).first();
+      await chipPage2.scrollIntoViewIfNeeded();
+      await chipPage2.click();
+      await assertBubbleAnchoredTo(page, chipPage2, /Remover tema: Maria/);
+    }
+  });
+});
