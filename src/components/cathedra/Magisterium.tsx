@@ -40,12 +40,23 @@ const BubbleHint: React.FC<{
     };
   }, [open, label]);
 
+  // Fecha ao mover o foco para fora do trigger (Tab / Shift+Tab)
+  // sem deixar conteúdo órfão no DOM.
+  const childOnBlur = (children.props as { onBlur?: React.FocusEventHandler }).onBlur;
+  const enhancedChild = React.cloneElement(children, {
+    onBlur: (e: React.FocusEvent) => {
+      childOnBlur?.(e);
+      setOpen(false);
+    },
+  });
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger asChild>{enhancedChild}</PopoverTrigger>
       <PopoverContent
         side="top"
         align="center"
+        role="status"
         data-tip-kind={kind}
         onOpenAutoFocus={(e) => e.preventDefault()}
         className="w-auto max-w-xs rounded-premium-lg px-spacing-sm py-spacing-2xs text-premium-xs font-medium"
