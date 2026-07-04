@@ -1575,3 +1575,111 @@ test.describe('Magistério Explorer — Popover ancorado (robustez)', () => {
     await expect(remaining).toContainText(/Encíclicas/);
   });
 });
+
+// ------------------------------------------------------------------
+// Robustez adicional: scroll interno, a11y (aria-controls/expanded)
+// e helpers com retries para reduzir flakiness. Artefatos (screenshot
+// + HTML do PopoverContent) são anexados automaticamente em falhas.
+// ------------------------------------------------------------------
+import {
+  BUBBLE_SELECTOR,
+  assertAnchored as assertAnchoredH,
+  assertInViewport as assertInViewportH,
+  bubbleLocator,
+  dumpBubbleArtifacts,
+  openBubble,
+  waitForBubbleClosed,
+  waitForBubbleOpen,
+} from './utils/popover-bubble';
+
+test.describe('Magistério Explorer — Popover: scroll interno, a11y e helpers', () => {
+  test('ancora corretamente após rolar dentro de container interno (não window)', async ({ page }, testInfo) => {
+    await openExplorer(page);
+
+    // Encontra o ancestral com overflow-y scroll do primeiro chip "Maria".
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+
+    const scrolled = await chip.evaluate((el) => {
+      let node: HTMLElement | null = el.parentElement;
+      while (node && node !== document.body) {
+        const style = getComputedStyle(node);
+        const canScroll =
+          /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 4;
+        if (canScroll) {
+          node.scrollTop = Math.min(120, node.scrollHeight - node.clientHeight);
+          return { scrolled: true, top: node.scrollTop };
+        }
+        node = node.parentElement;
+      }
+      return { scrolled: false, top: 0 };
+    });
+
+    // Se não há container interno rolável, fallback: rolar window para simular deslocamento.
+    if (!scrolled.scrolled) {
+      await page.mouse.wheel(0, 200);
+      await page.waitForTimeout(100);
+    }
+
+    await openBubble(page, chip, /Adicionar tema: Maria/);
+    await assertAnchoredH(page, testInfo, chip, /Adicionar tema: Maria/);
+  });
+
+  test('a11y: aria-controls/aria-expanded corretos ao abrir por clique e por teclado; sem role=tooltip duplicado', async ({ page }, testInfo) => {
+    await openExplorer(page);
+
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+
+    // Estado fechado: aria-expanded=false (ou ausente); sem bolha no DOM.
+    const initialExpanded = await chip.getAttribute('aria-expanded');
+    expect(initialExpanded === null || initialExpanded === 'false').toBe(true);
+    await expect(bubbleLocator(page)).toHaveCount(0);
+
+    // Abre por CLIQUE.
+    await chip.click();
+    const bubbleClick = await waitForBubbleOpen(page, chip, /Adicionar tema: Maria/);
+
+    // aria-controls do chip deve apontar para o id do PopoverContent.
+    const controls = await chip.getAttribute('aria-controls');
+    expect(controls, 'chip deve ter aria-controls quando bolha está aberta').toBeTruthy();
+    const bubbleId = await bubbleClick.getAttribute('id');
+    if (bubbleId) {
+      // Alguns builds do Radix omitem id no content; validamos igualdade só quando presente.
+      expect(controls).toBe(bubbleId);
+    }
+
+    // Sem role=tooltip duplicado no PopoverContent (é um Popover, não Tooltip).
+    try {
+      const tooltipRoles = page.locator('[role="tooltip"]');
+      expect(await tooltipRoles.count()).toBe(0);
+    } catch (err) {
+      await dumpBubbleArtifacts(page, testInfo, 'tooltip-role-check');
+      throw err;
+    }
+
+    // Fecha (Escape) e espera limpar DOM.
+    await page.keyboard.press('Escape');
+    await waitForBubbleClosed(page);
+    const afterCloseExpanded = await chip.getAttribute('aria-expanded');
+    expect(afterCloseExpanded === null || afterCloseExpanded === 'false').toBe(true);
+
+    // Abre por TECLADO (foco + Enter).
+    await chip.focus();
+    await page.keyboard.press('Enter');
+    await waitForBubbleOpen(page, chip, /Adicionar tema: Maria/);
+    expect(await page.locator('[role="tooltip"]').count()).toBe(0);
+  });
+
+  test('helpers com retries: fluxo completo abrir → validar → auto-fechar sem flakiness', async ({ page }, testInfo) => {
+    await openExplorer(page);
+
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await openBubble(page, chip, /Adicionar tema: Maria/);
+    await assertAnchoredH(page, testInfo, chip, /Adicionar tema: Maria/);
+    await assertInViewportH(page, testInfo, bubbleLocator(page, /Maria/));
+
+    // Auto-close após 1.6s (com folga).
+    await waitForBubbleClosed(page, 3000);
+  });
+});
