@@ -9,6 +9,7 @@ import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
 import { APP_ROUTES } from '@/config/routes';
+import { SmartActionButton } from './SmartActionButton';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -196,6 +197,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full relative">
+        <SmartActionButton />
         {items.map((item, i) => {
           const isActive = item.isMenu 
             ? false 
