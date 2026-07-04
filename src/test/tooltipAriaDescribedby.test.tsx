@@ -1,86 +1,123 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 /**
- * Cobre a garantia de acessibilidade das “bolhas” do Explorer:
- * cada trigger, ao focar, precisa expor `aria-describedby` apontando
- * para um elemento com `role="tooltip"` único no DOM.
+ * Cobre a garantia de acessibilidade das “bolhas” do Explorer após a
+ * migração de Tooltip → Popover (bolha ancorada no clique):
+ *  - trigger expõe `aria-expanded` e `aria-controls`
+ *  - conteúdo aberto é único no DOM (sem duplicação)
+ *  - `aria-controls` aponta para o id do PopoverContent visível
+ *  - nenhum `role="tooltip"` é gerado por essas bolhas
  */
-function Fixture() {
+function Bubble({
+  label,
+  kind,
+  content,
+}: {
+  label: string;
+  kind: string;
+  content: string;
+}) {
+  const [open, setOpen] = React.useState(false);
   return (
-    <TooltipProvider delayDuration={0} disableHoverableContent>
-      <Tooltip>
-        <TooltipTrigger>Maria</TooltipTrigger>
-        <TooltipContent>Adicionar tema: Maria</TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger>Fé</TooltipTrigger>
-        <TooltipContent>Adicionar tema: Fé</TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger>Encíclica</TooltipTrigger>
-        <TooltipContent>Filtrar por categoria: Encíclica</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger>{label}</PopoverTrigger>
+      <PopoverContent
+        role="status"
+        data-tip-kind={kind}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        {content}
+      </PopoverContent>
+    </Popover>
   );
 }
 
-describe('Tooltip acessibilidade — aria-describedby / role=tooltip', () => {
-  it('cada trigger focado gera role=tooltip único e aria-describedby coerente', async () => {
+function Fixture() {
+  return (
+    <>
+      <Bubble label="Maria" kind="theme" content="Adicionar tema: Maria" />
+      <Bubble label="Fé" kind="theme" content="Adicionar tema: Fé" />
+      <Bubble
+        label="Encíclica"
+        kind="category"
+        content="Filtrar por categoria: Encíclica"
+      />
+    </>
+  );
+}
+
+describe('Bolhas (Popover) — acessibilidade e ausência de duplicação', () => {
+  it('clique abre bolha única, aria-controls coerente e sem role=tooltip', async () => {
     const user = userEvent.setup();
     render(<Fixture />);
 
     const triggers = [
-      { label: 'Maria', tip: 'Adicionar tema: Maria' },
-      { label: 'Fé', tip: 'Adicionar tema: Fé' },
-      { label: 'Encíclica', tip: 'Filtrar por categoria: Encíclica' },
+      { label: 'Maria', content: 'Adicionar tema: Maria', kind: 'theme' },
+      { label: 'Fé', content: 'Adicionar tema: Fé', kind: 'theme' },
+      { label: 'Encíclica', content: 'Filtrar por categoria: Encíclica', kind: 'category' },
     ];
 
-    for (const { label, tip } of triggers) {
+    for (const { label, content, kind } of triggers) {
       const trigger = screen.getByRole('button', { name: label });
+
+      // Antes do clique: nenhuma bolha aberta para este trigger.
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByText(content)).toBeNull();
+
+      await user.click(trigger);
+
+      // Exatamente 1 bolha do tipo esperado.
+      const bubbles = document.querySelectorAll(`[data-tip-kind="${kind}"]`);
+      const visible = Array.from(bubbles).filter((el) => el.textContent?.includes(content));
+      expect(visible).toHaveLength(1);
+
+      // aria-controls aponta para o id do PopoverContent visível.
+      const controlsId = trigger.getAttribute('aria-controls');
+      expect(controlsId).toBeTruthy();
+      const controlled = document.getElementById(controlsId!);
+      expect(controlled).not.toBeNull();
+      expect(controlled).toHaveTextContent(content);
+
+      // Nenhuma bolha de qualquer trigger renderiza role=tooltip.
+      expect(document.querySelectorAll('[role="tooltip"]').length).toBe(0);
+
+      // Fecha antes de próxima iteração para não somar bolhas abertas.
       await act(async () => {
-        trigger.focus();
+        await user.keyboard('{Escape}');
       });
-
-      // Exatamente 1 role=tooltip no DOM enquanto um trigger está focado.
-      const tips = await screen.findAllByRole('tooltip');
-      expect(tips).toHaveLength(1);
-      expect(tips[0]).toHaveTextContent(tip);
-
-      // aria-describedby aponta para o id do tooltip visível.
-      const describedBy = trigger.getAttribute('aria-describedby');
-      expect(describedBy).toBeTruthy();
-      expect(tips[0].id).toBe(describedBy);
-
-      // Move foco para fora — o tooltip anterior é removido.
-      await act(async () => {
-        trigger.blur();
-      });
-      await user.keyboard('{Tab}');
+      await waitFor(() =>
+        expect(trigger).toHaveAttribute('aria-expanded', 'false'),
+      );
     }
   });
 
-  it('não deixa role=tooltip órfão após blur', async () => {
+  it('foco sozinho (Tab) NÃO abre a bolha; somente clique/Enter/Espaço abre', async () => {
+    const user = userEvent.setup();
     render(<Fixture />);
+
     const trigger = screen.getByRole('button', { name: 'Maria' });
 
     await act(async () => {
       trigger.focus();
     });
-    expect(await screen.findAllByRole('tooltip')).toHaveLength(1);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByText('Adicionar tema: Maria')).toBeNull();
 
-    await act(async () => {
-      trigger.blur();
-    });
-    // Aguarda o Radix limpar o portal.
-    await new Promise((r) => setTimeout(r, 50));
-    expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+    await user.keyboard('{Enter}');
+    await waitFor(() =>
+      expect(trigger).toHaveAttribute('aria-expanded', 'true'),
+    );
+    expect(screen.getByText('Adicionar tema: Maria')).toBeInTheDocument();
+
+    // Sem role=tooltip órfão.
+    expect(document.querySelectorAll('[role="tooltip"]').length).toBe(0);
   });
 });
