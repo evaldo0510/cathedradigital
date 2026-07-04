@@ -1286,3 +1286,59 @@ test.describe('Magistério Explorer — bolha atualiza texto ao alternar estado/
     await expect(page.getByRole('tooltip', { name: /Adicionar tema: Maria/ })).toHaveCount(1);
   });
 });
+
+test.describe('Magistério Explorer — aria-live com filtros inválidos', () => {
+  const liveLocator = (page: Page) =>
+    page.locator('[aria-live="polite"]', { hasText: /^Página\s+\d+\s+de\s+\d+$/ });
+
+  test('page negativo é clamped e aria-live "Página N de M" aparece única no DOM', async ({ page }) => {
+    await openExplorer(page, '?page=-5');
+
+    // URL não deve manter page negativo.
+    await expect(page).not.toHaveURL(/[?&]page=-\d+/);
+
+    const live = liveLocator(page);
+    await expect(live).toHaveCount(1);
+    const text = (await live.innerText()).trim();
+    const m = text.match(/^Página\s+(\d+)\s+de\s+(\d+)$/);
+    expect(m).not.toBeNull();
+    const [, current, total] = m!;
+    expect(Number(current)).toBeGreaterThanOrEqual(1);
+    expect(Number(current)).toBeLessThanOrEqual(Number(total));
+  });
+
+  test('page fora do intervalo com filtros ativos é clamped e anunciado sem duplicar', async ({ page }) => {
+    await openExplorer(page, '?theme=Maria&cat=Enc%C3%ADclicas&page=99');
+
+    const live = liveLocator(page);
+    await expect(live).toHaveCount(1);
+    const text = (await live.innerText()).trim();
+    const m = text.match(/^Página\s+(\d+)\s+de\s+(\d+)$/);
+    expect(m).not.toBeNull();
+    const [, current, total] = m!;
+    expect(Number(current)).toBe(Number(total));
+
+    // Filtros permanecem na URL após o clamp.
+    await expect(page).toHaveURL(/theme=Maria/);
+    await expect(page).toHaveURL(/cat=Enc%C3%ADclicas/);
+  });
+
+  test('combinação sem resultados: contador zera e aria-live "Página N de M" único', async ({ page }) => {
+    await openExplorer(page, '?q=zzz-nao-existe-xyz&page=42');
+
+    // Zero documentos exibidos.
+    expect(await readCount(page)).toBe(0);
+
+    // Sem resultados a paginação pode ser omitida; se presente, o live é único e coerente.
+    const live = liveLocator(page);
+    const total = await live.count();
+    expect(total).toBeLessThanOrEqual(1);
+    if (total === 1) {
+      const text = (await live.innerText()).trim();
+      expect(text).toBe('Página 1 de 1');
+    }
+
+    // page=42 não deve persistir quando não há páginas suficientes.
+    await expect(page).not.toHaveURL(/[?&]page=42\b/);
+  });
+});
