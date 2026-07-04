@@ -1446,3 +1446,132 @@ test.describe('Magistério Explorer — Popover ancorado ao chip clicado', () =>
     }
   });
 });
+
+// ------------------------------------------------------------------
+// Robustez do Popover ancorado: scroll, textos por tipo de chip,
+// permanência no viewport e auto-fechamento em transições.
+// ------------------------------------------------------------------
+test.describe('Magistério Explorer — Popover ancorado (robustez)', () => {
+  const HORIZONTAL_TOLERANCE = 120;
+  const VERTICAL_MAX_GAP = 40;
+
+  async function assertAnchored(page: Page, chip: ReturnType<Page['getByRole']>, textRegex: RegExp) {
+    const bubble = page.locator('[data-tip-kind]').filter({ hasText: textRegex });
+    await expect(bubble).toHaveCount(1);
+    const cb = await chip.boundingBox();
+    const bb = await bubble.boundingBox();
+    expect(cb).not.toBeNull();
+    expect(bb).not.toBeNull();
+    const cx = cb!.x + cb!.width / 2;
+    const bx = bb!.x + bb!.width / 2;
+    expect(Math.abs(bx - cx)).toBeLessThanOrEqual(HORIZONTAL_TOLERANCE);
+    const gapAbove = cb!.y - (bb!.y + bb!.height);
+    const gapBelow = bb!.y - (cb!.y + cb!.height);
+    const gap = Math.min(gapAbove >= 0 ? gapAbove : Infinity, gapBelow >= 0 ? gapBelow : Infinity);
+    expect(gap).toBeLessThanOrEqual(VERTICAL_MAX_GAP);
+  }
+
+  async function assertInViewport(page: Page, bubble: ReturnType<Page['locator']>) {
+    const bb = await bubble.boundingBox();
+    const vp = page.viewportSize()!;
+    expect(bb).not.toBeNull();
+    expect(bb!.x).toBeGreaterThanOrEqual(0);
+    expect(bb!.y).toBeGreaterThanOrEqual(0);
+    expect(bb!.x + bb!.width).toBeLessThanOrEqual(vp.width);
+    expect(bb!.y + bb!.height).toBeLessThanOrEqual(vp.height);
+  }
+
+  test('após rolar a página, Popover ancora corretamente na nova posição do chip', async ({ page }) => {
+    await openExplorer(page);
+    // Rola para deslocar chips no viewport.
+    await page.mouse.wheel(0, 400);
+    await page.waitForTimeout(150);
+
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+    await chip.click();
+    await assertAnchored(page, chip, /Adicionar tema: Maria/);
+  });
+
+  test('texto da bolha é correto para categoria / tema / tema-removível depois de filtros', async ({ page }) => {
+    await openExplorer(page);
+
+    // Categoria (chip inativo → "Adicionar categoria").
+    const cat = page.getByRole('button', { name: 'Encíclicas', exact: true }).first();
+    await cat.scrollIntoViewIfNeeded();
+    await cat.click();
+    await assertAnchored(page, cat, /Adicionar categoria: Encíclicas/);
+    await page.waitForTimeout(1800);
+
+    // Tema (chip inativo).
+    const theme = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await theme.scrollIntoViewIfNeeded();
+    await theme.click();
+    await assertAnchored(page, theme, /Adicionar tema: Maria/);
+    await page.waitForTimeout(1800);
+
+    // Chip removível (agora com filtros aplicados).
+    await expect(page).toHaveURL(/theme=Maria/);
+    const removable = page.getByRole('button', { name: 'Remover tema: Maria' });
+    await removable.scrollIntoViewIfNeeded();
+    await removable.click();
+    // Ao clicar, remove o filtro; a bolha da própria ação deve refletir a semântica de remoção.
+    // Como o clique também dispara a remoção, validamos que a bolha apareceu ancorada com texto "Remover".
+    const bubble = page.locator('[data-tip-kind]').filter({ hasText: /Remover tema: Maria/ });
+    await expect(bubble).toHaveCount(1);
+  });
+
+  test('Popover permanece dentro do viewport ao aplicar filtros e navegar para page=2', async ({ page }) => {
+    await openExplorer(page, '?theme=Maria');
+
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+    await chip.click();
+    let bubble = page.locator('[data-tip-kind]').filter({ hasText: /Maria/ });
+    await expect(bubble).toHaveCount(1);
+    await assertInViewport(page, bubble);
+    await page.waitForTimeout(1800);
+
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    if (await next.count()) {
+      await next.click();
+      await expect(page).toHaveURL(/[?&]page=2/);
+
+      const chipP2 = page.getByRole('button', { name: 'Maria', exact: true }).first();
+      await chipP2.scrollIntoViewIfNeeded();
+      await chipP2.click();
+      bubble = page.locator('[data-tip-kind]').filter({ hasText: /Maria/ });
+      await expect(bubble).toHaveCount(1);
+      await assertInViewport(page, bubble);
+    }
+  });
+
+  test('bolha fecha automaticamente ao trocar de página ou aplicar novo filtro (sem órfã)', async ({ page }) => {
+    await openExplorer(page, '?theme=Maria');
+
+    // Abre bolha no chip ativo.
+    const chip = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip.scrollIntoViewIfNeeded();
+    await chip.click();
+    await expect(page.locator('[data-tip-kind]')).toHaveCount(1);
+
+    // Navega para page=2 (se disponível) — bolha não deve permanecer aberta.
+    const next = page.getByRole('button', { name: 'Próxima página' });
+    if (await next.count()) {
+      await next.click();
+      await expect(page).toHaveURL(/[?&]page=2/);
+      await expect(page.locator('[data-tip-kind]')).toHaveCount(0);
+    }
+
+    // Aplica novo filtro (categoria) — qualquer bolha remanescente deve fechar.
+    const chip2 = page.getByRole('button', { name: 'Maria', exact: true }).first();
+    await chip2.click();
+    await expect(page.locator('[data-tip-kind]')).toHaveCount(1);
+
+    await page.getByRole('button', { name: 'Encíclicas', exact: true }).first().click();
+    // A nova bolha da categoria pode aparecer; a bolha antiga do tema não deve coexistir.
+    const remaining = page.locator('[data-tip-kind]');
+    await expect(remaining).toHaveCount(1);
+    await expect(remaining).toContainText(/Encíclicas/);
+  });
+});
