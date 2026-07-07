@@ -110,7 +110,7 @@ const ConsultoriaPage: React.FC = () => {
   }, []);
 
   const handleCta = (origem: 'hero' | 'footer') => {
-    trackEvent('consultoria_cta_click', { origem });
+    trackEvent('conversion', { tipo: 'consultoria_cta', origem });
   };
 
   return (
