@@ -420,12 +420,12 @@ export default function BibleImportAdmin() {
   }, [jobs]);
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-6xl">
+    <div className="container mx-auto py-spacing-xl space-y-6 max-w-6xl">
       <header>
         <h1 className="text-3xl font-semibold">Importação de Bíblia</h1>
         <p className="text-muted-foreground mt-1">
           Importa traduções a partir de dumps NDJSON canônicos
-          (<code className="mx-1 px-1 py-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>)
+          (<code className="mx-spacing-xs px-spacing-xs py-spacing-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>)
           ou dumps brutos (JSON/CSV/TSV) que são convertidos no servidor.
         </p>
       </header>
@@ -438,7 +438,7 @@ export default function BibleImportAdmin() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+          <form onSubmit={handleSubmit} className="grid gap-spacing-md md:grid-cols-2">
             <div className="space-y-1">
               <Label htmlFor="code">Código *</Label>
               <Input id="code" value={form.code} onChange={(e) => update("code", e.target.value)}
@@ -498,7 +498,7 @@ export default function BibleImportAdmin() {
                 placeholder="https://exemplo.com/dump.ndjson" disabled={!!file} />
             </div>
 
-            <div className="flex items-center gap-2 md:col-span-2 p-3 rounded-md border bg-muted/30">
+            <div className="flex items-center gap-spacing-xs md:col-span-2 p-spacing-sm rounded-md border bg-muted/30">
               <Wand2 className="h-4 w-4 text-muted-foreground" />
               <Switch id="raw_mode" checked={rawMode} onCheckedChange={setRawMode} disabled={!file} />
               <Label htmlFor="raw_mode" className="cursor-pointer flex-1">
@@ -506,7 +506,7 @@ export default function BibleImportAdmin() {
               </Label>
             </div>
 
-            <div className="flex items-center gap-2 md:col-span-2">
+            <div className="flex items-center gap-spacing-xs md:col-span-2">
               <Switch id="is_primary" checked={form.is_primary}
                 onCheckedChange={(v) => update("is_primary", v)} />
               <Label htmlFor="is_primary" className="cursor-pointer">
@@ -517,8 +517,8 @@ export default function BibleImportAdmin() {
             {/* Preview client-side */}
             {file && (
               <div className="md:col-span-2 rounded-md border bg-card">
-                <div className="px-4 py-3 border-b flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="px-spacing-md py-spacing-sm border-b flex items-center justify-between">
+                  <div className="flex items-center gap-spacing-xs">
                     <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium text-sm">Preview do dump</span>
                     {previewing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
@@ -530,16 +530,16 @@ export default function BibleImportAdmin() {
                     </Button>
                   )}
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-spacing-md space-y-3">
                   {previewTruncated && (
-                    <p className="text-xs text-amber-600 flex items-center gap-1">
+                    <p className="text-xs text-amber-600 flex items-center gap-spacing-xs">
                       <AlertTriangle className="h-3 w-3" />
                       Arquivo grande — preview limitado aos primeiros 5 MB. As contagens são parciais.
                     </p>
                   )}
                   {preview ? (
                     <>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm text-sm">
                         <Stat label="Versos válidos" value={preview.validVerses.toLocaleString("pt-BR")} />
                         <Stat label="Rejeitados" value={preview.rejectedCount.toLocaleString("pt-BR")}
                           tone={preview.rejectedCount > 0 ? "warn" : "ok"} />
@@ -550,7 +550,7 @@ export default function BibleImportAdmin() {
                       {preview.warnings.length > 0 && (
                         <ul className="text-xs text-amber-700 space-y-1">
                           {preview.warnings.map((w, i) => (
-                            <li key={i} className="flex gap-1 items-start">
+                            <li key={i} className="flex gap-spacing-xs items-start">
                               <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" /> <span>{w}</span>
                             </li>
                           ))}
@@ -564,16 +564,16 @@ export default function BibleImportAdmin() {
                           <div className="mt-2 max-h-48 overflow-auto border rounded">
                             <table className="w-full text-xs">
                               <thead className="bg-muted/50 sticky top-0">
-                                <tr><th className="text-left px-2 py-1">Abbr</th>
-                                  <th className="text-right px-2 py-1">Capítulos</th>
-                                  <th className="text-right px-2 py-1">Versos</th></tr>
+                                <tr><th className="text-left px-spacing-xs py-spacing-xs">Abbr</th>
+                                  <th className="text-right px-spacing-xs py-spacing-xs">Capítulos</th>
+                                  <th className="text-right px-spacing-xs py-spacing-xs">Versos</th></tr>
                               </thead>
                               <tbody>
                                 {preview.byBook.map((b) => (
                                   <tr key={b.abbr} className="border-t">
-                                    <td className="px-2 py-1 font-mono">{b.abbr}</td>
-                                    <td className="px-2 py-1 text-right">{b.chapters}</td>
-                                    <td className="px-2 py-1 text-right">{b.verses}</td>
+                                    <td className="px-spacing-xs py-spacing-xs font-mono">{b.abbr}</td>
+                                    <td className="px-spacing-xs py-spacing-xs text-right">{b.chapters}</td>
+                                    <td className="px-spacing-xs py-spacing-xs text-right">{b.verses}</td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -599,7 +599,7 @@ export default function BibleImportAdmin() {
               </div>
             )}
 
-            <div className="md:col-span-2 flex justify-end gap-2 pt-2">
+            <div className="md:col-span-2 flex justify-end gap-spacing-xs pt-2">
               <Button type="button" variant="outline" onClick={resetForm} disabled={submitting}>
                 Limpar
               </Button>
@@ -632,7 +632,7 @@ export default function BibleImportAdmin() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-spacing-xs text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
             </div>
           ) : sources.length === 0 ? (
@@ -672,7 +672,7 @@ export default function BibleImportAdmin() {
                       <TableCell className="text-xs min-w-[200px]">
                         {job ? (
                           <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-spacing-xs">
                               {jobStatusBadge(job.status)}
                               {job.status === "running" && (
                                 <span className="text-muted-foreground">
@@ -686,7 +686,7 @@ export default function BibleImportAdmin() {
                             {job.message && <div className="text-muted-foreground truncate" title={job.message}>{job.message}</div>}
                             {job.error && <div className="text-destructive truncate" title={job.error}>{job.error}</div>}
                             {job.verification && !job.verification.skipped && (
-                              <div className="flex items-center gap-1">
+                              <div className="flex items-center gap-spacing-xs">
                                 {job.verification.passed
                                   ? <><ShieldCheck className="h-3 w-3 text-emerald-600" /> Cobertura OK</>
                                   : <><ShieldAlert className="h-3 w-3 text-destructive" />
@@ -695,7 +695,7 @@ export default function BibleImportAdmin() {
                             )}
                             {job.verification?.rejected_path && (job.verification?.rejected_count ?? 0) > 0 && (
                               <Button type="button" size="sm" variant="ghost"
-                                className="h-6 px-2 text-xs"
+                                className="h-6 px-spacing-xs text-xs"
                                 onClick={() => downloadRejectedFromJob(job)}>
                                 <Download className="h-3 w-3 mr-1" />
                                 Baixar {job.verification.rejected_count} rejeitados
@@ -734,7 +734,7 @@ function Stat({ label, value, tone = "default" }: { label: string; value: string
     tone === "warn" ? "text-amber-600" :
     tone === "bad" ? "text-destructive" : "text-foreground";
   return (
-    <div className="rounded-md border bg-background px-3 py-2">
+    <div className="rounded-md border bg-background px-spacing-sm py-spacing-xs">
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className={`text-lg font-semibold tabular-nums ${cls}`}>{value}</div>
     </div>
@@ -785,9 +785,9 @@ function ImportProgressPanel({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-start justify-between gap-4">
+      <CardHeader className="flex flex-row items-start justify-between gap-spacing-md">
         <div>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-spacing-xs">
             Progresso da importação
             {running
               ? <Badge className="bg-blue-600">em execução</Badge>
@@ -802,7 +802,7 @@ function ImportProgressPanel({
             {activeJobId && <> · job <code className="text-xs">{activeJobId}</code></>}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-spacing-xs">
           <Button type="button" size="sm" variant="outline" onClick={copyLogs} disabled={logs.length === 0}>
             <ClipboardCopy className="h-3 w-3 mr-1" /> Copiar logs
           </Button>
@@ -819,10 +819,10 @@ function ImportProgressPanel({
 
         <ol className="space-y-2">
           {steps.map((s, i) => (
-            <li key={s.key} className="flex items-start gap-3 rounded-md border p-3 bg-card">
+            <li key={s.key} className="flex items-start gap-spacing-sm rounded-md border p-spacing-sm bg-card">
               <div className="pt-0.5"><StepIcon status={s.status} /></div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-spacing-xs">
                   <span className="font-medium text-sm">
                     {i + 1}. {s.label}
                   </span>
@@ -851,11 +851,11 @@ function ImportProgressPanel({
           </summary>
           <div className="mt-2 max-h-72 overflow-auto rounded-md border bg-muted/30 font-mono text-xs">
             {logs.length === 0 ? (
-              <p className="p-3 text-muted-foreground">Sem registros ainda.</p>
+              <p className="p-spacing-sm text-muted-foreground">Sem registros ainda.</p>
             ) : (
               <ul>
                 {logs.map((l, i) => (
-                  <li key={i} className={`px-3 py-1 border-b last:border-0 flex gap-2 ${
+                  <li key={i} className={`px-spacing-sm py-spacing-xs border-b last:border-0 flex gap-spacing-xs ${
                     l.level === "error" ? "text-destructive" :
                     l.level === "warn" ? "text-amber-700" :
                     l.level === "success" ? "text-emerald-700" : "text-foreground"
