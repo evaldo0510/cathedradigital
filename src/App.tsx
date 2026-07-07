@@ -142,6 +142,7 @@ const TelemetryDashboard = lazy(() => import('./components/cathedra/TelemetryDas
 const NavigationErrorInspector = lazy(() => import('./components/cathedra/NavigationErrorInspector'));
 const AuditDashboard = lazy(() => import('./pages/AuditDashboard'));
 const IntegrityReport = lazy(() => import('./pages/IntegrityReport'));
+const ConsultoriaPage = lazy(() => import('./pages/ConsultoriaPage'));
 const SecurityAlertsPage = lazy(() => import('./components/cathedra/SecurityAlertsPage'));
 
 
