@@ -1,7 +1,7 @@
 import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button";
+import { CathedraButton as Button } from "@/components/cathedra/CathedraButton";
 
 export const SpacingDebugger: React.FC = () => {
   const [isEnabled, setIsEnabled] = useState(false);
