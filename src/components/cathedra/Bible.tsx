@@ -47,7 +47,7 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
   if (isLoading) {
     return (
-      <div className="space-y-2 animate-pulse">
+      <div className="space-y-spacing-xs animate-pulse">
         <div className="h-3 bg-primary/10 rounded w-full" />
         <div className="h-3 bg-primary/10 rounded w-5/6" />
       </div>
@@ -1178,21 +1178,21 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
       <button 
         onClick={() => setIsDiagnosticOpen(true)}
         aria-label="Abrir diagnóstico cirúrgico da Bíblia"
-        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-2 bg-primary/5 rounded-full opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
+        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
       >
         <Icons.Activity className="w-4 h-4 text-primary/20" aria-hidden="true" />
       </button>
 
       <AnimatePresence>
         {isDiagnosticOpen && (
-          <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-spacing-lg bg-background/80 backdrop-blur-md">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-card border border-primary/10 rounded-3xl p-8 max-w-lg w-full shadow-premium space-y-4"
+              className="bg-card border border-primary/10 rounded-3xl p-spacing-xl max-w-lg w-full shadow-premium space-y-spacing-md"
             >
               <h2 className="text-lg font-bold">Diagnóstico Cirúrgico</h2>
-              <div className="space-y-2 text-xs font-mono bg-muted p-4 rounded-xl max-h-60 overflow-y-auto">
+              <div className="space-y-spacing-xs text-xs font-mono bg-muted p-spacing-md rounded-xl max-h-60 overflow-y-auto">
                  <p>Sessão: {sessionId}</p>
                  <p>Logs Coletados: {diagnosticLogs.length}</p>
                  <p className="border-t border-primary/5 pt-2">Livro Atual: {selectedBook?.name}</p>
@@ -1201,31 +1201,31 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                  <p className="border-t border-primary/5 pt-2">Invalidações: L:{invalidationStats.legacy} / E:{invalidationStats.expired}</p>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex flex-col gap-2">
+              <div className="space-y-spacing-md">
+                <div className="flex flex-col gap-spacing-xs">
                   <span className="text-[10px] font-black uppercase text-primary/40">Filtros de Exportação</span>
-                  <div className="flex gap-2">
+                  <div className="flex gap-spacing-xs">
                     <input 
                       id="diag-book-filter"
                       placeholder="Livro (ex: Jo)"
-                      className="flex-1 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                      className="flex-1 bg-primary/5 border-none rounded-lg p-spacing-xs text-[10px]"
                     />
                     <input 
                       id="diag-chapter-start"
                       type="number"
                       placeholder="Início"
-                      className="w-16 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                      className="w-16 bg-primary/5 border-none rounded-lg p-spacing-xs text-[10px]"
                     />
                     <input 
                       id="diag-chapter-end"
                       type="number"
                       placeholder="Fim"
-                      className="w-16 bg-primary/5 border-none rounded-lg p-2 text-[10px]"
+                      className="w-16 bg-primary/5 border-none rounded-lg p-spacing-xs text-[10px]"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-spacing-xs">
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -1314,11 +1314,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   </Button>
                 </div>
 
-                <div className="pt-4 border-t border-primary/5 space-y-4">
+                <div className="pt-4 border-t border-primary/5 space-y-spacing-md">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase text-primary/40">Relatório de Auditoria Final</span>
                     {scanResults.length > 0 && (
-                      <div className="flex gap-2">
+                      <div className="flex gap-spacing-xs">
                         <Button 
                           variant="ghost" 
                           size="sm"
@@ -1330,7 +1330,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             link.download = `auditoria-final-${new Date().toISOString()}.json`;
                             link.click();
                           }}
-                          className="h-6 text-[8px] uppercase font-bold px-2"
+                          className="h-6 text-[8px] uppercase font-bold px-spacing-xs"
                         >
                           JSON
                         </Button>
@@ -1347,7 +1347,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             link.download = `auditoria-final-${new Date().toISOString()}.csv`;
                             link.click();
                           }}
-                          className="h-6 text-[8px] uppercase font-bold px-2"
+                          className="h-6 text-[8px] uppercase font-bold px-spacing-xs"
                         >
                           CSV
                         </Button>
@@ -1355,7 +1355,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     )}
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-spacing-xs">
                     <Button 
                       variant="outline" 
                       size="sm"
@@ -1384,12 +1384,12 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   </div>
 
                   {scanResults.length > 0 && (
-                    <div className="space-y-4">
-                      <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-xl max-h-[400px] overflow-y-auto space-y-6">
+                    <div className="space-y-spacing-md">
+                      <div className="p-spacing-sm bg-red-500/5 border border-red-500/20 rounded-xl max-h-[400px] overflow-y-auto space-y-spacing-lg">
                         {Object.entries(groupedScanResults).map(([groupKey, items]) => (
-                          <div key={groupKey} className="space-y-3">
-                            <div className="flex items-center gap-2 sticky top-0 bg-card/90 backdrop-blur-sm py-1 z-10">
-                              <span className="text-[10px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md">
+                          <div key={groupKey} className="space-y-spacing-sm">
+                            <div className="flex items-center gap-spacing-xs sticky top-0 bg-card/90 backdrop-blur-sm py-spacing-xs z-10">
+                              <span className="text-[10px] font-black uppercase text-red-500 bg-red-500/10 px-spacing-xs py-spacing-0.5 rounded-md">
                                 {groupKey}
                               </span>
                               <div className="flex-1 h-px bg-red-500/10" />
@@ -1397,7 +1397,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             </div>
                             
                             {items.map((res, i) => (
-                              <div key={res.id} className="pl-2 space-y-2 border-l-2 border-red-500/10 pb-4 last:pb-0">
+                              <div key={res.id} className="pl-2 space-y-spacing-xs border-l-2 border-red-500/10 pb-4 last:pb-0">
                                 <div className="flex items-center justify-between">
                                   <span className="text-[9px] font-bold text-red-500">Versículo {res.v}</span>
                                   <span className="text-[8px] opacity-40 italic">{res.type}</span>
@@ -1428,7 +1428,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </div>
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-spacing-xs">
                 <Button 
                   variant="destructive" 
                   size="sm" 
@@ -1461,50 +1461,50 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={cn(
-              "px-6 pt-10 pb-32 max-w-lg mx-auto transition-colors duration-1000",
+              "px-spacing-lg pt-10 pb-32 max-w-lg mx-auto transition-colors duration-1000",
               settings.theme === 'night' && "bg-[#0D0E10] text-stone-400"
             )}
 
           >
             {/* Minimal Header */}
-            <header className="mb-10 flex items-center justify-between">
+            <header className="mb-spacing-xl flex items-center justify-between">
               <div className="w-10" /> {/* Spacer */}
               <div className="flex flex-col items-center">
-                <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-3" />
+                <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-spacing-sm" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-spacing-xs">
                 <button 
                   onClick={() => setIsConnectionEditorOpen(true)}
-                  className="p-2 text-secondary/40 active:scale-95 transition-transform"
+                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
                   title="Editor Bíblia ↔ CIC"
                 >
                   <Icons.Edit3 className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={() => setIsFeedbackOpen(true)}
-                  className="p-2 text-secondary/40 active:scale-95 transition-transform"
+                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
                   title="Suporte & Feedback"
                 >
                   <Icons.HelpCircle className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={() => setShowKnowledgePanel(true)}
-                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
+                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
                   title="Auditoria Estratégica"
                 >
                   <Icons.Activity className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => navigate('/bible-recovery')}
-                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
+                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
                   title="Recovery Bíblia"
                 >
                   <Icons.Stethoscope className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => setViewMode('notes')}
-                  className="p-2 text-secondary/80 active:scale-95 transition-transform"
+                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
                 >
                   <Icons.List className="w-6 h-6" />
                 </button>
@@ -1516,18 +1516,18 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             </header>
 
             {/* Bible Home Experience */}
-            <div className="space-y-4 mb-12">
+            <div className="space-y-spacing-md mb-spacing-2xl">
               <BibleHome onSelectBook={selectBook} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             </div>
 
-            <div className="flex gap-4 mb-12">
+            <div className="flex gap-spacing-md mb-spacing-2xl">
               <button 
                 onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 shadow-sm"
+                className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 shadow-sm"
               >
                 <Icons.Download className="w-3 h-3" /> Exportar
               </button>
-              <label className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
+              <label className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
                 <Icons.Upload className="w-3 h-3" /> Importar
                 <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
               </label>
@@ -1537,20 +1537,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
             {/* Vertical Book List */}
-            <div className="space-y-12">
+            <div className="space-y-spacing-2xl">
               {Object.entries(filteredBooks).map(([testament, categories]: any) => (
-                <section key={testament} className="space-y-6">
+                <section key={testament} className="space-y-spacing-lg">
                   <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary/50 border-b border-primary/5 pb-2">{testament}</h2>
                   
                   {categories.map((cat: any) => (
-                    <div key={cat.name} className="space-y-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 ml-2 mb-2 block">{cat.name}</span>
+                    <div key={cat.name} className="space-y-spacing-xs">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 ml-spacing-xs mb-spacing-xs block">{cat.name}</span>
                       <div className="divide-y divide-primary/[0.03]">
                         {cat.books.map((book: BibleBook) => (
                           <button 
                             key={book.abbr}
                             onClick={() => selectBook(book)}
-                            className="w-full h-14 flex items-center justify-between active:bg-primary/[0.02] transition-colors px-2 group"
+                            className="w-full h-14 flex items-center justify-between active:bg-primary/[0.02] transition-colors px-spacing-xs group"
                           >
                             <span className="font-serif text-lg text-primary/70 group-active:text-primary transition-colors">{book.name}</span>
                             <span className="text-[10px] font-black uppercase tracking-widest text-primary/20">{book.abbr}</span>
@@ -1571,30 +1571,30 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="px-6 pt-10 pb-32 max-w-lg mx-auto"
+            className="px-spacing-lg pt-10 pb-32 max-w-lg mx-auto"
           >
             <button 
               onClick={() => {
                 navigate('/bible');
                 window.scrollTo({ top: 0, behavior: 'instant' });
               }}
-              className="mb-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 active:text-secondary transition-colors"
+              className="mb-spacing-xl flex items-center gap-spacing-xs text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 active:text-secondary transition-colors"
             >
               <Icons.ChevronLeft className="w-4 h-4" /> Voltar
             </button>
 
-            <header className="mb-8 text-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/50 mb-2 block">Sumário Bíblico</span>
-              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-4">{selectedBook.name}</h1>
+            <header className="mb-spacing-xl text-center">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/50 mb-spacing-xs block">Sumário Bíblico</span>
+              <h1 className="font-display text-4xl text-primary/80 tracking-tight mb-spacing-md">{selectedBook.name}</h1>
               {selectedBook.description && (
-                <p className="text-sm font-serif italic text-primary/40 leading-relaxed max-w-xs mx-auto mb-6">
+                <p className="text-sm font-serif italic text-primary/40 leading-relaxed max-w-xs mx-auto mb-spacing-lg">
                   {selectedBook.description}
                 </p>
               )}
               <div className="w-12 h-px bg-secondary/20 mx-auto" />
             </header>
 
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-spacing-sm">
               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => {
                 const missing = isChapterMissing(selectedBook.abbr, ch);
                 return (
@@ -1622,7 +1622,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                       ? "text-primary/40 line-through decoration-primary/30"
                       : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
                   )}>{ch}</span>
-                  <div className="flex items-center gap-1 mt-1">
+                  <div className="flex items-center gap-spacing-xs mt-spacing-xs">
                     {missing && (
                       <span className="text-[9px] uppercase tracking-wider text-primary/40">
                         sem fonte
@@ -1660,17 +1660,17 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           >
             {/* Sticky Reading Header */}
             <header className={cn(
-              "sticky top-0 z-50 backdrop-blur-md border-b border-primary/5 px-4 h-14 flex items-center justify-between transition-colors duration-1000",
+              "sticky top-0 z-50 backdrop-blur-md border-b border-primary/5 px-spacing-md h-14 flex items-center justify-between transition-colors duration-1000",
               settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
             )}>
 
-              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="p-spacing-xs min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
                 <Icons.ChevronLeft className="w-6 h-6" aria-hidden="true" />
               </button>
               <div className="text-center">
                 <h2 className="text-[11px] font-black uppercase tracking-widest text-primary/80">{selectedBook.name} {selectedChapter}</h2>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-spacing-xs">
                 <button
                   type="button"
                   onClick={toggleHighContrast}
@@ -1679,7 +1679,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   title="Alto contraste do Nexus"
                   data-testid="nexus-contrast-toggle"
                   className={cn(
-                    'p-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
+                    'p-spacing-xs rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
                     highContrast ? 'text-secondary bg-secondary/15' : 'text-primary/50 hover:text-primary',
                   )}
                 >
@@ -1690,16 +1690,16 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             </header>
 
             <motion.div 
-              className="px-6 py-10 pb-40 max-w-prose mx-auto"
+              className="px-spacing-lg py-spacing-xl pb-40 max-w-prose mx-auto"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.1}
               onDragEnd={handleDragEnd}
             >
               {isLoading ? <BibleSkeleton /> : (
-                <article className="space-y-12">
-                  <header className="flex flex-col items-center mb-16 opacity-30">
-                    <Icons.Logo className="w-10 h-10 mb-6" />
+                <article className="space-y-spacing-2xl">
+                  <header className="flex flex-col items-center mb-spacing-2xl opacity-30">
+                    <Icons.Logo className="w-10 h-10 mb-spacing-lg" />
                     <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
                   </header>
 
@@ -1707,9 +1707,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-secondary/5 rounded-2xl border border-secondary/10 mb-8"
+                    className="p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-xl"
                   >
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                       <Icons.Info className="w-4 h-4 text-secondary/40" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Contexto do Livro</span>
                     </div>
@@ -1721,7 +1721,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   {/* Hidratação de conexões — não bloqueia leitura */}
                   {connectionsLoading && verses.length > 0 && (
                     <div
-                      className="flex items-center gap-2 -mt-4 mb-4 text-[10px] font-black uppercase tracking-widest text-secondary/60"
+                      className="flex items-center gap-spacing-xs -mt-spacing-md mb-spacing-md text-[10px] font-black uppercase tracking-widest text-secondary/60"
                       role="status"
                       aria-live="polite"
                     >
@@ -1731,11 +1731,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     </div>
                   )}
 
-                  <div className="space-y-8">
+                  <div className="space-y-spacing-xl">
                     {verses.length === 0 && !isLoading ? (
-                      <div className="py-20 text-center space-y-6 bg-primary/[0.02] rounded-3xl border border-primary/5 p-8">
+                      <div className="py-spacing-2xl text-center space-y-spacing-lg bg-primary/[0.02] rounded-3xl border border-primary/5 p-spacing-xl">
                         <Icons.AlertCircle className="w-12 h-12 text-secondary/40 mx-auto" />
-                        <div className="space-y-2">
+                        <div className="space-y-spacing-xs">
                           <h4 className="text-[11px] font-black uppercase tracking-widest text-primary/60">Texto não disponível</h4>
                           <p className="text-sm font-serif italic text-primary/40">
                             Não conseguimos carregar este capítulo. Verifique sua conexão ou relate o problema.
@@ -1750,7 +1750,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         </Button>
                       </div>
                     ) : (
-                      <div className="space-y-6">
+                      <div className="space-y-spacing-lg">
                         {verses.map((v, index) => {
 
 
@@ -1770,7 +1770,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "flex gap-4 group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-2 -mx-2 rounded-lg",
+                            "flex gap-spacing-md group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-spacing-xs -mx-spacing-xs rounded-lg",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1778,7 +1778,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           )}
                         >
 
-                          <div className="flex flex-col items-center gap-1.5 mt-2 w-5 shrink-0">
+                          <div className="flex flex-col items-center gap-spacing-xs.5 mt-spacing-xs w-5 shrink-0">
                             <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
                             {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
@@ -1789,7 +1789,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                               />
                             )}
                             {hasNote && (
-                              <div className="flex flex-col items-center gap-1">
+                              <div className="flex flex-col items-center gap-spacing-xs">
                                 <div className="w-1.5 h-1.5 rounded-full bg-secondary/60 shadow-sm" title="Possui anotação" />
                                 <span className="text-[7px] font-black uppercase tracking-tighter text-secondary/40 leading-none">Meditado</span>
                               </div>
@@ -1798,7 +1798,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
                           
-                          <div className="flex-1 space-y-4">
+                          <div className="flex-1 space-y-spacing-md">
                             {(() => {
                               const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
                               const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || [];
@@ -1829,7 +1829,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   handleOpenAnnotation(v);
                                 }}
                                 aria-label={`Anotar versículo ${v.number}`}
-                                className="absolute -right-8 top-1 p-2 min-h-11 min-w-11 flex items-center justify-center text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
+                                className="absolute -right-8 top-1 p-spacing-xs min-h-11 min-w-11 flex items-center justify-center text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
                               >
                                 <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
@@ -1837,7 +1837,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                             {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs pt-2">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
                                     catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-800', stripe: 'bg-blue-600', kicker: 'Catecismo' },
@@ -1874,8 +1874,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
                                     >
                                       <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
-                                      <div className="pl-2.5 pr-2 py-1.5 flex flex-col gap-0.5">
-                                        <div className="flex items-center gap-1.5">
+                                      <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
+                                        <div className="flex items-center gap-spacing-xs.5">
                                           <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
                                           <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
                                             {meta.kicker}
@@ -1896,7 +1896,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                             {/* Cross References */}
                             {crossRefs.length > 0 && !KNOWLEDGE_CONNECTIONS[connectionKey] && (
-                              <div className="flex flex-wrap gap-2 pt-2">
+                              <div className="flex flex-wrap gap-spacing-xs pt-2">
                                 {crossRefs.map(ref => {
                                   const [b, c, vNum] = ref.split('-');
                                   return (
@@ -1906,7 +1906,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                         e.stopPropagation();
                                         navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
                                       }}
-                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/80 px-2 py-1 rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/80 px-spacing-xs py-spacing-xs rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
                                     >
                                       {b} {c}:{vNum}
                                     </button>
@@ -1933,22 +1933,22 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
                   {/* Vertical Navigation Buttons */}
-                  <footer className="pt-12 pb-20 space-y-4">
-                    <div className="flex gap-4">
+                  <footer className="pt-12 pb-20 space-y-spacing-md">
+                    <div className="flex gap-spacing-md">
                       <Button 
                         onClick={prevChapter}
                         disabled={selectedChapter <= 1}
                         variant="outline"
                         className="flex-1 h-16 rounded-2xl border-primary/5 text-primary/40 text-[10px] font-black uppercase tracking-widest shadow-sm"
                       >
-                        <Icons.ChevronLeft className="w-4 h-4 mr-2" /> Anterior
+                        <Icons.ChevronLeft className="w-4 h-4 mr-spacing-xs" /> Anterior
                       </Button>
                       <Button 
                         onClick={nextChapter}
                         disabled={selectedChapter >= selectedBook.chapters}
                         className="flex-[2] h-16 rounded-2xl bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all"
                       >
-                        Próximo Capítulo <Icons.ChevronRight className="w-4 h-4 ml-2" />
+                        Próximo Capítulo <Icons.ChevronRight className="w-4 h-4 ml-spacing-xs" />
                       </Button>
                     </div>
                   </footer>
@@ -2040,7 +2040,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
       <AnimatePresence>
         {expandedConnection && (
-          <div className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-6 pointer-events-none">
+          <div className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-spacing-lg pointer-events-none">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2054,14 +2054,14 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-8 pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden"
+              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden"
             >
               {/* Drag handle for mobile-first feel */}
-              <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-6 lg:hidden" />
+              <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-spacing-lg lg:hidden" />
               
-              <div className="flex items-center justify-between mb-6">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between mb-spacing-lg">
+                <div className="space-y-spacing-xs">
+                  <div className="flex items-center gap-spacing-xs">
                     <div className={cn("w-2 h-2 rounded-full animate-pulse", expandedConnection.color)} />
                     <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">
                       {expandedConnection.label}
@@ -2072,7 +2072,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   </span>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-spacing-xs">
                   <Button 
                     variant="ghost" 
                     size="icon" 
@@ -2084,20 +2084,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </div>
               </div>
               
-              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 md:p-8 mb-8 space-y-4">
+              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-spacing-lg md:p-spacing-xl mb-spacing-xl space-y-spacing-md">
                 <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
                   {expandedConnection.summary}
                 </p>
                 
                 {expandedConnection.type === 'catechism' && (
                   <div className="pt-4 border-t border-primary/5">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-3">Parágrafo Relacionado</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-spacing-sm">Parágrafo Relacionado</p>
                     <CatechismParagraphPreview paragraphId={expandedConnection.id} />
                   </div>
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-spacing-md">
                 <Button 
                   variant="outline"
                   onClick={() => {
@@ -2111,7 +2111,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   }}
                   className="h-16 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10 hover:bg-primary/5"
                 >
-                  <Icons.BookOpen className="w-4 h-4 mr-2 text-secondary" /> 
+                  <Icons.BookOpen className="w-4 h-4 mr-spacing-xs text-secondary" /> 
                   Ler no {expandedConnection.type === 'catechism' ? 'Catecismo' : 'Documento'}
                 </Button>
 
@@ -2146,7 +2146,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
       <AnimatePresence>
         {isFeedbackOpen && (
-          <div className="fixed inset-0 z-[210] flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[210] flex items-center justify-center p-spacing-lg">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2158,22 +2158,22 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-md bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 space-y-6"
+              className="relative w-full max-w-md bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-spacing-xl space-y-spacing-lg"
             >
-              <div className="text-center space-y-2">
-                <Icons.HelpCircle className="w-10 h-10 text-secondary mx-auto mb-4" />
+              <div className="text-center space-y-spacing-xs">
+                <Icons.HelpCircle className="w-10 h-10 text-secondary mx-auto mb-spacing-md" />
                 <h3 className="text-lg font-display font-bold text-primary uppercase tracking-widest">Suporte Sagrado</h3>
                 <p className="text-sm font-serif italic text-primary/60">
                   Relate problemas de exibição ou sugira conexões teológicas.
                 </p>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-1">
+              <div className="space-y-spacing-md">
+                <div className="space-y-spacing-xs">
                   <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">O que está acontecendo?</span>
                   <textarea 
                     placeholder="Ex: O capítulo 3 de Gênesis não está carregando..."
-                    className="w-full bg-primary/[0.02] border border-primary/5 rounded-2xl p-4 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-secondary/20"
+                    className="w-full bg-primary/[0.02] border border-primary/5 rounded-2xl p-spacing-md text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-secondary/20"
                     rows={4}
                   />
                 </div>
@@ -2195,7 +2195,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
       <AnimatePresence>
         {isConnectionEditorOpen && (
-          <div className="fixed inset-0 z-[220] flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[220] flex items-center justify-center p-spacing-lg">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2207,7 +2207,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-8 space-y-6"
+              className="relative w-full max-w-lg bg-card border border-primary/10 rounded-[2.5rem] shadow-premium p-spacing-xl space-y-spacing-lg"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-display font-bold text-primary uppercase">Editor Bíblia ↔ CIC</h3>
@@ -2216,32 +2216,32 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 </Button>
               </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
+              <div className="space-y-spacing-md">
+                <div className="grid grid-cols-2 gap-spacing-md">
+                  <div className="space-y-spacing-xs">
                     <span className="text-[9px] font-black uppercase text-primary/30">Versículo</span>
-                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: João 6,35" />
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: João 6,35" />
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-spacing-xs">
                     <span className="text-[9px] font-black uppercase text-primary/30">Parágrafo CIC</span>
-                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" placeholder="Ex: 1324" />
+                    <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: 1324" />
                   </div>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-spacing-xs">
                   <span className="text-[9px] font-black uppercase text-primary/30">Nota de Relacionamento</span>
-                  <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-3 text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
+                  <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
                 </div>
               </div>
 
-              <div className="p-4 bg-primary/[0.01] rounded-2xl border border-primary/5 max-h-40 overflow-y-auto">
-                <span className="text-[8px] font-black uppercase text-primary/20 block mb-3">Histórico de Revisão</span>
-                <div className="space-y-3">
+              <div className="p-spacing-md bg-primary/[0.01] rounded-2xl border border-primary/5 max-h-40 overflow-y-auto">
+                <span className="text-[8px] font-black uppercase text-primary/20 block mb-spacing-sm">Histórico de Revisão</span>
+                <div className="space-y-spacing-sm">
                   {[
                     { ref: 'Jo 1:1 ↔ CIC 279', status: 'Validado', author: 'Dr. Silva', date: '04/06/2026', diff: 'v1.2 → v1.3' },
                     { ref: 'Mt 5:3 ↔ CIC 1716', status: 'Pendente', author: 'Ana M.', date: '05/06/2026', diff: 'Novo' },
                   ].map((entry, idx) => (
-                    <div key={idx} className="space-y-1 border-b border-primary/5 pb-2 last:border-0 last:pb-0">
+                    <div key={idx} className="space-y-spacing-xs border-b border-primary/5 pb-2 last:border-0 last:pb-0">
                       <div className="flex items-center justify-between text-[10px]">
                         <span className="font-serif font-bold">{entry.ref}</span>
                         <span className={cn(
