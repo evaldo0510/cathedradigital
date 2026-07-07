@@ -577,6 +577,8 @@ const AppLayout: React.FC = () => {
                 <Route path="/__test/theological-text" element={<Suspense fallback={<LoadingFallback />}><TheologicalTextFixture /></Suspense>} />
               )}
 
+              <Route path="/consultoria" element={<Suspense fallback={<LoadingFallback />}><ConsultoriaPage /></Suspense>} />
+
               <Route path="*" element={<Navigate to="/" replace />} />
 
             </Routes>
