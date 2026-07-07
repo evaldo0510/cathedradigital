@@ -229,7 +229,7 @@ export default function BibleCacheAdminPage() {
   const allBookOptions = (summary.data?.books ?? []).map((b) => b.abbrev);
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-6 px-spacing-md py-spacing-xl">
+    <div className="container mx-auto max-w-7xl space-y-spacing-lg px-spacing-md py-spacing-xl">
       <header className="flex flex-wrap items-end justify-between gap-spacing-sm">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Cache da Bíblia (L2)</h1>
@@ -255,24 +255,24 @@ export default function BibleCacheAdminPage() {
             </SelectContent>
           </Select>
           <Button size="sm" variant={live ? 'default' : 'outline'} onClick={() => setLive((v) => !v)} title={live ? 'Live ON' : 'Live OFF'}>
-            {live ? <Wifi className="mr-2 h-4 w-4" /> : <WifiOff className="mr-2 h-4 w-4" />}
+            {live ? <Wifi className="mr-spacing-xs h-4 w-4" /> : <WifiOff className="mr-spacing-xs h-4 w-4" />}
             {live ? 'Live' : 'Pausado'}
-            {live && realtimeOk && <span className="ml-2 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />}
+            {live && realtimeOk && <span className="ml-spacing-xs inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />}
           </Button>
           <Button size="sm" variant="outline" onClick={() => runAggregator.mutate()} disabled={runAggregator.isPending}>
-            {runAggregator.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+            {runAggregator.isPending ? <Loader2 className="mr-spacing-xs h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-spacing-xs h-4 w-4" />}
             Agregar agora
           </Button>
         </div>
       </header>
 
       {(alerts.data?.rows?.length ?? 0) > 0 && (
-        <Card className="space-y-2 border-amber-500/40 bg-amber-50/50 p-spacing-md dark:bg-amber-950/20">
+        <Card className="space-y-spacing-xs border-amber-500/40 bg-amber-50/50 p-spacing-md dark:bg-amber-950/20">
           <div className="flex items-center gap-spacing-xs text-amber-700 dark:text-amber-300">
             <AlertTriangle className="h-4 w-4" />
             <span className="text-sm font-semibold">{alerts.data!.rows.length} alerta(s) aberto(s)</span>
           </div>
-          <ul className="space-y-1.5">
+          <ul className="space-y-spacing-xs.5">
             {alerts.data!.rows.map((a) => (
               <li key={a.id} className="flex flex-wrap items-center justify-between gap-spacing-sm rounded border border-amber-500/20 bg-background/60 px-spacing-sm py-spacing-xs text-sm">
                 <div className="flex items-center gap-spacing-xs">
@@ -285,7 +285,7 @@ export default function BibleCacheAdminPage() {
                     <Button size="sm" variant="ghost" onClick={() => setDrillBook(a.abbrev!)}>Drilldown</Button>
                   )}
                   <Button size="sm" variant="ghost" onClick={() => resolveAlert.mutate(a.id)}>
-                    <CheckCircle2 className="mr-1 h-4 w-4" /> Resolver
+                    <CheckCircle2 className="mr-spacing-xs h-4 w-4" /> Resolver
                   </Button>
                 </div>
               </li>
@@ -313,13 +313,13 @@ export default function BibleCacheAdminPage() {
           <TabsTrigger value="compare">Comparar</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="charts" className="space-y-4">
+        <TabsContent value="charts" className="space-y-spacing-md">
           <Card className="p-spacing-md">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-spacing-sm flex items-center justify-between">
               <h2 className="text-sm font-semibold">Hits / Miss / Stale {bookFilter !== '__all__' ? `· ${bookFilter}` : ''}</h2>
               <div className="flex gap-spacing-xs">
-                <Button size="sm" variant="outline" onClick={() => downloadExport('csv')}><Download className="mr-1 h-4 w-4" />CSV</Button>
-                <Button size="sm" variant="outline" onClick={() => downloadExport('json')}><Download className="mr-1 h-4 w-4" />JSON</Button>
+                <Button size="sm" variant="outline" onClick={() => downloadExport('csv')}><Download className="mr-spacing-xs h-4 w-4" />CSV</Button>
+                <Button size="sm" variant="outline" onClick={() => downloadExport('json')}><Download className="mr-spacing-xs h-4 w-4" />JSON</Button>
               </div>
             </div>
             <div className="h-72">
@@ -339,7 +339,7 @@ export default function BibleCacheAdminPage() {
           </Card>
 
           <Card className="p-spacing-md">
-            <h2 className="mb-3 text-sm font-semibold">Latência (p95 vs médio)</h2>
+            <h2 className="mb-spacing-sm text-sm font-semibold">Latência (p95 vs médio)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={series}>
@@ -359,7 +359,7 @@ export default function BibleCacheAdminPage() {
 
         <TabsContent value="books">
           <Card className="overflow-auto p-spacing-md">
-            <div className="mb-3 flex items-center gap-spacing-xs">
+            <div className="mb-spacing-sm flex items-center gap-spacing-xs">
               <span className="text-xs text-muted-foreground">Ordenar por</span>
               <Select value={bookSort} onValueChange={(v) => setBookSort(v as keyof SummaryBook)}>
                 <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
@@ -419,20 +419,20 @@ export default function BibleCacheAdminPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="ops" className="space-y-4">
-          <Card className="space-y-3 p-spacing-md">
+        <TabsContent value="ops" className="space-y-spacing-md">
+          <Card className="space-y-spacing-sm p-spacing-md">
             <h2 className="text-sm font-semibold">Reaquecer (lista livre)</h2>
             <p className="text-xs text-muted-foreground">Formato: <code className="rounded bg-muted px-spacing-xs">Sl:1, Mt:5, Jo:3</code></p>
             <div className="flex gap-spacing-xs">
               <Input value={warmInput} onChange={(e) => setWarmInput(e.target.value)} className="font-mono text-sm" />
               <Button onClick={handleWarm} disabled={warm.isPending}>
-                {warm.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Flame className="mr-2 h-4 w-4" />}
+                {warm.isPending ? <Loader2 className="mr-spacing-xs h-4 w-4 animate-spin" /> : <Flame className="mr-spacing-xs h-4 w-4" />}
                 Reaquecer
               </Button>
             </div>
           </Card>
 
-          <Card className="space-y-3 p-spacing-md">
+          <Card className="space-y-spacing-sm p-spacing-md">
             <h2 className="text-sm font-semibold">Operações em lote por intervalo</h2>
             <div className="flex flex-wrap items-end gap-spacing-xs">
               <div>
@@ -448,10 +448,10 @@ export default function BibleCacheAdminPage() {
                 <Input className="w-20" type="number" value={bulkTo} onChange={(e) => setBulkTo(Number(e.target.value))} />
               </div>
               <Button onClick={() => bulk.mutate({ abbrev: bulkAbbrev, chapter_from: bulkFrom, chapter_to: bulkTo, op: 'warm' })} disabled={bulk.isPending}>
-                <Flame className="mr-2 h-4 w-4" /> Reaquecer intervalo
+                <Flame className="mr-spacing-xs h-4 w-4" /> Reaquecer intervalo
               </Button>
               <Button variant="destructive" onClick={() => bulk.mutate({ abbrev: bulkAbbrev, chapter_from: bulkFrom, chapter_to: bulkTo, op: 'purge' })} disabled={bulk.isPending}>
-                <Trash2 className="mr-2 h-4 w-4" /> Purgar intervalo
+                <Trash2 className="mr-spacing-xs h-4 w-4" /> Purgar intervalo
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">Limite: até 200 capítulos por chamada. Toda execução é registrada na aba Auditoria.</p>
@@ -459,7 +459,7 @@ export default function BibleCacheAdminPage() {
         </TabsContent>
 
         <TabsContent value="entries">
-          <Card className="space-y-3 p-spacing-md">
+          <Card className="space-y-spacing-sm p-spacing-md">
             <div className="flex flex-wrap items-center gap-spacing-xs">
               <h2 className="text-sm font-semibold">Entradas no cache</h2>
               <div className="ml-auto flex flex-wrap gap-spacing-xs">
@@ -524,7 +524,7 @@ export default function BibleCacheAdminPage() {
         </TabsContent>
 
         <TabsContent value="audit">
-          <Card className="space-y-3 p-spacing-md">
+          <Card className="space-y-spacing-sm p-spacing-md">
             <div className="flex flex-wrap items-center gap-spacing-xs">
               <h2 className="text-sm font-semibold">Trilha de auditoria</h2>
               <Select value={auditFilter} onValueChange={(v) => { setAuditFilter(v); setAuditPage(0); }}>
@@ -588,11 +588,11 @@ export default function BibleCacheAdminPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="compare" className="space-y-4">
-          <Card className="space-y-3 p-spacing-md">
+        <TabsContent value="compare" className="space-y-spacing-md">
+          <Card className="space-y-spacing-sm p-spacing-md">
             <h2 className="text-sm font-semibold">Comparar duas janelas</h2>
             <div className="grid gap-spacing-sm md:grid-cols-2">
-              <div className="space-y-2 rounded border border-border/40 p-spacing-sm">
+              <div className="space-y-spacing-xs rounded border border-border/40 p-spacing-sm">
                 <div className="text-xs font-semibold uppercase text-muted-foreground">Janela A</div>
                 <div className="flex flex-wrap gap-spacing-xs">
                   <div className="flex-1 min-w-[180px]">
@@ -605,7 +605,7 @@ export default function BibleCacheAdminPage() {
                   </div>
                 </div>
               </div>
-              <div className="space-y-2 rounded border border-border/40 p-spacing-sm">
+              <div className="space-y-spacing-xs rounded border border-border/40 p-spacing-sm">
                 <div className="text-xs font-semibold uppercase text-muted-foreground">Janela B</div>
                 <div className="flex flex-wrap gap-spacing-xs">
                   <div className="flex-1 min-w-[180px]">
@@ -634,7 +634,7 @@ export default function BibleCacheAdminPage() {
                 onClick={() => { setCmpRun((n) => n + 1); setTimeout(() => compare.refetch(), 0); }}
                 disabled={compare.isFetching}
               >
-                {compare.isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+                {compare.isFetching ? <Loader2 className="mr-spacing-xs h-4 w-4 animate-spin" /> : <RefreshCcw className="mr-spacing-xs h-4 w-4" />}
                 Comparar
               </Button>
               <span className="text-[11px] text-muted-foreground">
@@ -652,13 +652,13 @@ export default function BibleCacheAdminPage() {
               </div>
 
               <Card className="overflow-auto p-spacing-md">
-                <h3 className="mb-2 text-sm font-semibold">Variação por livro (B − A)</h3>
+                <h3 className="mb-spacing-xs text-sm font-semibold">Variação por livro (B − A)</h3>
                 <CompareBookTable a={compare.data.a.books} b={compare.data.b.books} />
               </Card>
 
               {compare.data.chapters && (
                 <Card className="overflow-auto p-spacing-md">
-                  <h3 className="mb-2 text-sm font-semibold">Variação por capítulo · {compare.data.abbrev}</h3>
+                  <h3 className="mb-spacing-xs text-sm font-semibold">Variação por capítulo · {compare.data.abbrev}</h3>
                   <CompareChapterTable a={compare.data.chapters.a} b={compare.data.chapters.b} />
                 </Card>
               )}
@@ -683,7 +683,7 @@ export default function BibleCacheAdminPage() {
             <div className="py-spacing-xl text-center text-sm text-muted-foreground">Sem eventos para "{drillBook}" nesta janela.</div>
           )}
           {(drilldown.data?.rows?.length ?? 0) > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-spacing-sm">
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={drilldown.data!.rows}>
@@ -751,7 +751,7 @@ function Kpi({ label, value, tone = 'default' }: { label: string; value: any; to
   return (
     <Card className="p-spacing-sm">
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className={`mt-1 text-2xl font-semibold ${color}`}>{value ?? '—'}</div>
+      <div className={`mt-spacing-xs text-2xl font-semibold ${color}`}>{value ?? '—'}</div>
     </Card>
   );
 }
@@ -787,12 +787,12 @@ function DeltaKpi({ label, a, b, fmt, higherIsBetter }: { label: string; a: numb
   return (
     <Card className="p-spacing-sm">
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className="mt-1 flex items-baseline gap-spacing-xs text-sm">
+      <div className="mt-spacing-xs flex items-baseline gap-spacing-xs text-sm">
         <span className="text-muted-foreground">A {fmt(a)}</span>
         <span>→</span>
         <span className="font-semibold">B {fmt(b)}</span>
       </div>
-      <div className={`mt-1 text-base font-semibold ${color}`}>{arrow} Δ {fmt(Math.abs(delta))}</div>
+      <div className={`mt-spacing-xs text-base font-semibold ${color}`}>{arrow} Δ {fmt(Math.abs(delta))}</div>
     </Card>
   );
 }
@@ -893,7 +893,7 @@ function DeltaCell({ a, b, fmt, higherIsBetter }: { a: number; b: number; fmt: (
   return (
     <td className="py-spacing-xs pr-3 text-xs">
       <span className="text-muted-foreground">{fmt(a)} → {fmt(b)}</span>
-      <span className={`ml-2 font-semibold ${color}`}>{arrow} {fmt(Math.abs(delta))}</span>
+      <span className={`ml-spacing-xs font-semibold ${color}`}>{arrow} {fmt(Math.abs(delta))}</span>
     </td>
   );
 }
