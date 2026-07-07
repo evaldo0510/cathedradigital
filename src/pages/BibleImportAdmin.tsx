@@ -420,12 +420,12 @@ export default function BibleImportAdmin() {
   }, [jobs]);
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-6xl">
+    <div className="container mx-auto py-spacing-xl space-y-spacing-lg max-w-6xl">
       <header>
         <h1 className="text-3xl font-semibold">Importação de Bíblia</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-spacing-xs">
           Importa traduções a partir de dumps NDJSON canônicos
-          (<code className="mx-1 px-1 py-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>)
+          (<code className="mx-spacing-xs px-spacing-xs py-spacing-0.5 bg-muted rounded text-xs">{"{abbr,chapter,verse,text}"}</code>)
           ou dumps brutos (JSON/CSV/TSV) que são convertidos no servidor.
         </p>
       </header>
@@ -438,67 +438,67 @@ export default function BibleImportAdmin() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-1">
+          <form onSubmit={handleSubmit} className="grid gap-spacing-md md:grid-cols-2">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="code">Código *</Label>
               <Input id="code" value={form.code} onChange={(e) => update("code", e.target.value)}
                 placeholder="ex.: acf-2011" required />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="name">Nome interno *</Label>
               <Input id="name" value={form.name} onChange={(e) => update("name", e.target.value)}
                 placeholder="ex.: ACF 2011" required />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="translation">Tradução *</Label>
               <Input id="translation" value={form.translation} onChange={(e) => update("translation", e.target.value)}
                 placeholder="ex.: Almeida Corrigida Fiel" required />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="language">Idioma</Label>
               <Input id="language" value={form.language} onChange={(e) => update("language", e.target.value)}
                 placeholder="pt-BR" />
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-spacing-xs md:col-span-2">
               <Label htmlFor="license">Licença *</Label>
               <Input id="license" value={form.license} onChange={(e) => update("license", e.target.value)}
                 placeholder="ex.: Domínio público / CC BY 4.0 / Licença Editorial XYZ" required />
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-spacing-xs md:col-span-2">
               <Label htmlFor="attribution">Atribuição *</Label>
               <Input id="attribution" value={form.attribution} onChange={(e) => update("attribution", e.target.value)}
                 placeholder='ex.: "Bíblia Sagrada — Ave-Maria, 1959 (uso autorizado)"' required />
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-spacing-xs md:col-span-2">
               <Label htmlFor="source_url">URL-fonte (referência da licença)</Label>
               <Input id="source_url" type="url" value={form.source_url}
                 onChange={(e) => update("source_url", e.target.value)} placeholder="https://..." />
             </div>
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-spacing-xs md:col-span-2">
               <Label htmlFor="notes">Notas</Label>
               <Textarea id="notes" value={form.notes} onChange={(e) => update("notes", e.target.value)}
                 rows={2} placeholder="Observações internas (opcional)" />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="file">Arquivo (NDJSON, JSON, CSV ou TSV)</Label>
               <Input id="file" type="file" accept=".ndjson,.jsonl,.json,.csv,.tsv" ref={fileInputRef}
                 onChange={onFileChange} />
               {file && (
                 <p className="text-xs text-muted-foreground">
-                  <FileText className="inline h-3 w-3 mr-1" />
+                  <FileText className="inline h-3 w-3 mr-spacing-xs" />
                   {file.name} ({(file.size / 1024).toFixed(0)} KB · {detectFormat(file.name)})
                 </p>
               )}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="file_url">… ou URL HTTPS (NDJSON)</Label>
               <Input id="file_url" type="url" value={form.file_url}
                 onChange={(e) => update("file_url", e.target.value)}
                 placeholder="https://exemplo.com/dump.ndjson" disabled={!!file} />
             </div>
 
-            <div className="flex items-center gap-2 md:col-span-2 p-3 rounded-md border bg-muted/30">
+            <div className="flex items-center gap-spacing-xs md:col-span-2 p-spacing-sm rounded-md border bg-muted/30">
               <Wand2 className="h-4 w-4 text-muted-foreground" />
               <Switch id="raw_mode" checked={rawMode} onCheckedChange={setRawMode} disabled={!file} />
               <Label htmlFor="raw_mode" className="cursor-pointer flex-1">
@@ -506,7 +506,7 @@ export default function BibleImportAdmin() {
               </Label>
             </div>
 
-            <div className="flex items-center gap-2 md:col-span-2">
+            <div className="flex items-center gap-spacing-xs md:col-span-2">
               <Switch id="is_primary" checked={form.is_primary}
                 onCheckedChange={(v) => update("is_primary", v)} />
               <Label htmlFor="is_primary" className="cursor-pointer">
@@ -517,29 +517,29 @@ export default function BibleImportAdmin() {
             {/* Preview client-side */}
             {file && (
               <div className="md:col-span-2 rounded-md border bg-card">
-                <div className="px-4 py-3 border-b flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="px-spacing-md py-spacing-sm border-b flex items-center justify-between">
+                  <div className="flex items-center gap-spacing-xs">
                     <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium text-sm">Preview do dump</span>
                     {previewing && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
                   </div>
                   {preview && preview.rejected.length > 0 && (
                     <Button type="button" size="sm" variant="outline" onClick={downloadRejectedFromPreview}>
-                      <Download className="h-3 w-3 mr-1" />
+                      <Download className="h-3 w-3 mr-spacing-xs" />
                       Baixar {preview.rejected.length} rejeitados
                     </Button>
                   )}
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-spacing-md space-y-spacing-sm">
                   {previewTruncated && (
-                    <p className="text-xs text-amber-600 flex items-center gap-1">
+                    <p className="text-xs text-amber-600 flex items-center gap-spacing-xs">
                       <AlertTriangle className="h-3 w-3" />
                       Arquivo grande — preview limitado aos primeiros 5 MB. As contagens são parciais.
                     </p>
                   )}
                   {preview ? (
                     <>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm text-sm">
                         <Stat label="Versos válidos" value={preview.validVerses.toLocaleString("pt-BR")} />
                         <Stat label="Rejeitados" value={preview.rejectedCount.toLocaleString("pt-BR")}
                           tone={preview.rejectedCount > 0 ? "warn" : "ok"} />
@@ -548,9 +548,9 @@ export default function BibleImportAdmin() {
                         <Stat label="Capítulos" value={preview.uniqueChapters.toLocaleString("pt-BR")} />
                       </div>
                       {preview.warnings.length > 0 && (
-                        <ul className="text-xs text-amber-700 space-y-1">
+                        <ul className="text-xs text-amber-700 space-y-spacing-xs">
                           {preview.warnings.map((w, i) => (
-                            <li key={i} className="flex gap-1 items-start">
+                            <li key={i} className="flex gap-spacing-xs items-start">
                               <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" /> <span>{w}</span>
                             </li>
                           ))}
@@ -561,19 +561,19 @@ export default function BibleImportAdmin() {
                           <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
                             Ver contagem por livro ({preview.byBook.length})
                           </summary>
-                          <div className="mt-2 max-h-48 overflow-auto border rounded">
+                          <div className="mt-spacing-xs max-h-48 overflow-auto border rounded">
                             <table className="w-full text-xs">
                               <thead className="bg-muted/50 sticky top-0">
-                                <tr><th className="text-left px-2 py-1">Abbr</th>
-                                  <th className="text-right px-2 py-1">Capítulos</th>
-                                  <th className="text-right px-2 py-1">Versos</th></tr>
+                                <tr><th className="text-left px-spacing-xs py-spacing-xs">Abbr</th>
+                                  <th className="text-right px-spacing-xs py-spacing-xs">Capítulos</th>
+                                  <th className="text-right px-spacing-xs py-spacing-xs">Versos</th></tr>
                               </thead>
                               <tbody>
                                 {preview.byBook.map((b) => (
                                   <tr key={b.abbr} className="border-t">
-                                    <td className="px-2 py-1 font-mono">{b.abbr}</td>
-                                    <td className="px-2 py-1 text-right">{b.chapters}</td>
-                                    <td className="px-2 py-1 text-right">{b.verses}</td>
+                                    <td className="px-spacing-xs py-spacing-xs font-mono">{b.abbr}</td>
+                                    <td className="px-spacing-xs py-spacing-xs text-right">{b.chapters}</td>
+                                    <td className="px-spacing-xs py-spacing-xs text-right">{b.verses}</td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -586,7 +586,7 @@ export default function BibleImportAdmin() {
                           <summary className="cursor-pointer text-amber-700 hover:text-amber-900">
                             {preview.missingCanonBooks.length} livro(s) do canon ausentes
                           </summary>
-                          <p className="mt-1 font-mono text-muted-foreground">
+                          <p className="mt-spacing-xs font-mono text-muted-foreground">
                             {preview.missingCanonBooks.join(", ")}
                           </p>
                         </details>
@@ -599,14 +599,14 @@ export default function BibleImportAdmin() {
               </div>
             )}
 
-            <div className="md:col-span-2 flex justify-end gap-2 pt-2">
+            <div className="md:col-span-2 flex justify-end gap-spacing-xs pt-2">
               <Button type="button" variant="outline" onClick={resetForm} disabled={submitting}>
                 Limpar
               </Button>
               <Button type="submit" disabled={submitting || previewing}>
                 {submitting
-                  ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processando…</>
-                  : <><Upload className="h-4 w-4 mr-2" /> Salvar e importar</>}
+                  ? <><Loader2 className="h-4 w-4 mr-spacing-xs animate-spin" /> Processando…</>
+                  : <><Upload className="h-4 w-4 mr-spacing-xs" /> Salvar e importar</>}
               </Button>
             </div>
           </form>
@@ -632,7 +632,7 @@ export default function BibleImportAdmin() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-spacing-xs text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
             </div>
           ) : sources.length === 0 ? (
@@ -658,7 +658,7 @@ export default function BibleImportAdmin() {
                     <TableRow key={s.id}>
                       <TableCell className="font-mono text-xs">
                         {s.code}
-                        {s.is_primary && <Badge variant="outline" className="ml-2">primária</Badge>}
+                        {s.is_primary && <Badge variant="outline" className="ml-spacing-xs">primária</Badge>}
                       </TableCell>
                       <TableCell>
                         <div className="font-medium">{s.translation}</div>
@@ -671,8 +671,8 @@ export default function BibleImportAdmin() {
                       </TableCell>
                       <TableCell className="text-xs min-w-[200px]">
                         {job ? (
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                          <div className="space-y-spacing-xs">
+                            <div className="flex items-center gap-spacing-xs">
                               {jobStatusBadge(job.status)}
                               {job.status === "running" && (
                                 <span className="text-muted-foreground">
@@ -686,7 +686,7 @@ export default function BibleImportAdmin() {
                             {job.message && <div className="text-muted-foreground truncate" title={job.message}>{job.message}</div>}
                             {job.error && <div className="text-destructive truncate" title={job.error}>{job.error}</div>}
                             {job.verification && !job.verification.skipped && (
-                              <div className="flex items-center gap-1">
+                              <div className="flex items-center gap-spacing-xs">
                                 {job.verification.passed
                                   ? <><ShieldCheck className="h-3 w-3 text-emerald-600" /> Cobertura OK</>
                                   : <><ShieldAlert className="h-3 w-3 text-destructive" />
@@ -695,16 +695,16 @@ export default function BibleImportAdmin() {
                             )}
                             {job.verification?.rejected_path && (job.verification?.rejected_count ?? 0) > 0 && (
                               <Button type="button" size="sm" variant="ghost"
-                                className="h-6 px-2 text-xs"
+                                className="h-6 px-spacing-xs text-xs"
                                 onClick={() => downloadRejectedFromJob(job)}>
-                                <Download className="h-3 w-3 mr-1" />
+                                <Download className="h-3 w-3 mr-spacing-xs" />
                                 Baixar {job.verification.rejected_count} rejeitados
                               </Button>
                             )}
                           </div>
                         ) : <span className="text-muted-foreground">—</span>}
                       </TableCell>
-                      <TableCell className="text-right space-x-2">
+                      <TableCell className="text-right space-x-spacing-xs">
                         {s.source_url && (
                           <a href={s.source_url} target="_blank" rel="noreferrer"
                             className="inline-flex items-center text-xs text-muted-foreground hover:text-foreground">
@@ -734,7 +734,7 @@ function Stat({ label, value, tone = "default" }: { label: string; value: string
     tone === "warn" ? "text-amber-600" :
     tone === "bad" ? "text-destructive" : "text-foreground";
   return (
-    <div className="rounded-md border bg-background px-3 py-2">
+    <div className="rounded-md border bg-background px-spacing-sm py-spacing-xs">
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className={`text-lg font-semibold tabular-nums ${cls}`}>{value}</div>
     </div>
@@ -785,9 +785,9 @@ function ImportProgressPanel({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-start justify-between gap-4">
+      <CardHeader className="flex flex-row items-start justify-between gap-spacing-md">
         <div>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-spacing-xs">
             Progresso da importação
             {running
               ? <Badge className="bg-blue-600">em execução</Badge>
@@ -802,27 +802,27 @@ function ImportProgressPanel({
             {activeJobId && <> · job <code className="text-xs">{activeJobId}</code></>}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-spacing-xs">
           <Button type="button" size="sm" variant="outline" onClick={copyLogs} disabled={logs.length === 0}>
-            <ClipboardCopy className="h-3 w-3 mr-1" /> Copiar logs
+            <ClipboardCopy className="h-3 w-3 mr-spacing-xs" /> Copiar logs
           </Button>
           <Button type="button" size="sm" variant="outline" onClick={downloadLogs} disabled={logs.length === 0}>
-            <Download className="h-3 w-3 mr-1" /> Baixar
+            <Download className="h-3 w-3 mr-spacing-xs" /> Baixar
           </Button>
           <Button type="button" size="sm" variant="ghost" onClick={onClear} disabled={running}>
             Limpar
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-spacing-md">
         <Progress value={pct} className="h-2" />
 
-        <ol className="space-y-2">
+        <ol className="space-y-spacing-xs">
           {steps.map((s, i) => (
-            <li key={s.key} className="flex items-start gap-3 rounded-md border p-3 bg-card">
+            <li key={s.key} className="flex items-start gap-spacing-sm rounded-md border p-spacing-sm bg-card">
               <div className="pt-0.5"><StepIcon status={s.status} /></div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-spacing-xs">
                   <span className="font-medium text-sm">
                     {i + 1}. {s.label}
                   </span>
@@ -833,7 +833,7 @@ function ImportProgressPanel({
                   </span>
                 </div>
                 {s.detail && (
-                  <p className={`text-xs mt-1 break-words ${
+                  <p className={`text-xs mt-spacing-xs break-words ${
                     s.status === "error" ? "text-destructive" :
                     s.status === "skipped" ? "text-muted-foreground" : "text-muted-foreground"
                   }`}>
@@ -849,13 +849,13 @@ function ImportProgressPanel({
           <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
             Logs ({logs.length})
           </summary>
-          <div className="mt-2 max-h-72 overflow-auto rounded-md border bg-muted/30 font-mono text-xs">
+          <div className="mt-spacing-xs max-h-72 overflow-auto rounded-md border bg-muted/30 font-mono text-xs">
             {logs.length === 0 ? (
-              <p className="p-3 text-muted-foreground">Sem registros ainda.</p>
+              <p className="p-spacing-sm text-muted-foreground">Sem registros ainda.</p>
             ) : (
               <ul>
                 {logs.map((l, i) => (
-                  <li key={i} className={`px-3 py-1 border-b last:border-0 flex gap-2 ${
+                  <li key={i} className={`px-spacing-sm py-spacing-xs border-b last:border-0 flex gap-spacing-xs ${
                     l.level === "error" ? "text-destructive" :
                     l.level === "warn" ? "text-amber-700" :
                     l.level === "success" ? "text-emerald-700" : "text-foreground"

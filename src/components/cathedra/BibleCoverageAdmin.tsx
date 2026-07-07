@@ -90,18 +90,18 @@ export default function BibleCoverageAdmin() {
   }, [rows]);
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <header className="mb-8">
-        <p className="text-xs uppercase tracking-[0.18em] text-secondary mb-2">Bíblia · Operações</p>
+    <div className="container mx-auto py-spacing-xl px-spacing-md max-w-6xl">
+      <header className="mb-spacing-xl">
+        <p className="text-xs uppercase tracking-[0.18em] text-secondary mb-spacing-xs">Bíblia · Operações</p>
         <h1 className="font-serif text-3xl md:text-4xl text-primary">Cobertura local da Escritura</h1>
-        <p className="text-muted-foreground mt-2 max-w-2xl">
+        <p className="text-muted-foreground mt-spacing-xs max-w-2xl">
           Quantos capítulos e versículos vivem no banco local versus quantos ainda dependem
           do fallback público (bolls.life · NAA).
         </p>
       </header>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm mb-spacing-lg">
           <StatCard label="Livros canônicos" value={stats.total} />
           <StatCard label="Locais" value={stats.local} tone="local" />
           <StatCard label="Fallback Bolls" value={stats.fallback} tone="fallback" />
@@ -113,7 +113,7 @@ export default function BibleCoverageAdmin() {
         placeholder="Filtrar por livro ou abreviação…"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className="mb-4 max-w-sm"
+        className="mb-spacing-md max-w-sm"
       />
 
       <Card className="overflow-hidden border-primary/10">
@@ -121,25 +121,25 @@ export default function BibleCoverageAdmin() {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
-                <th className="text-left px-4 py-3">Livro</th>
-                <th className="text-left px-4 py-3">Abbr</th>
-                <th className="text-right px-4 py-3">Capítulos</th>
-                <th className="text-right px-4 py-3">Versículos</th>
-                <th className="text-right px-4 py-3">Fonte</th>
+                <th className="text-left px-spacing-md py-spacing-sm">Livro</th>
+                <th className="text-left px-spacing-md py-spacing-sm">Abbr</th>
+                <th className="text-right px-spacing-md py-spacing-sm">Capítulos</th>
+                <th className="text-right px-spacing-md py-spacing-sm">Versículos</th>
+                <th className="text-right px-spacing-md py-spacing-sm">Fonte</th>
               </tr>
             </thead>
             <tbody>
               {!filtered && !error && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
-                    <Loader2 className="inline w-4 h-4 mr-2 animate-spin" />
+                  <td colSpan={5} className="px-spacing-md py-spacing-xl text-center text-muted-foreground">
+                    <Loader2 className="inline w-4 h-4 mr-spacing-xs animate-spin" />
                     Carregando cobertura…
                   </td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-destructive">{error}</td>
+                  <td colSpan={5} className="px-spacing-md py-spacing-xl text-center text-destructive">{error}</td>
                 </tr>
               )}
               {filtered?.map((r) => (
@@ -147,22 +147,22 @@ export default function BibleCoverageAdmin() {
                   key={r.book.abbr}
                   className="border-t border-border/40 hover:bg-muted/20 transition-colors"
                 >
-                  <td className="px-4 py-2.5 font-medium text-primary">
+                  <td className="px-spacing-md py-spacing-xs.5 font-medium text-primary">
                     {r.book.name}
                     {r.book.deuterocanonical && (
-                      <span className="ml-2 text-[10px] uppercase tracking-wide text-secondary">deutero</span>
+                      <span className="ml-spacing-xs text-[10px] uppercase tracking-wide text-secondary">deutero</span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 text-muted-foreground tabular-nums">{r.book.abbr}</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums">{r.chapters}</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums">{r.verses}</td>
-                  <td className="px-4 py-2.5 text-right">
+                  <td className="px-spacing-md py-spacing-xs.5 text-muted-foreground tabular-nums">{r.book.abbr}</td>
+                  <td className="px-spacing-md py-spacing-xs.5 text-right tabular-nums">{r.chapters}</td>
+                  <td className="px-spacing-md py-spacing-xs.5 text-right tabular-nums">{r.verses}</td>
+                  <td className="px-spacing-md py-spacing-xs.5 text-right">
                     {r.source === 'local' ? (
-                      <Badge variant="secondary" className="gap-1">
+                      <Badge variant="secondary" className="gap-spacing-xs">
                         <Database className="w-3 h-3" /> local
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="gap-1 text-muted-foreground">
+                      <Badge variant="outline" className="gap-spacing-xs text-muted-foreground">
                         <Cloud className="w-3 h-3" /> fallback
                       </Badge>
                     )}
@@ -185,9 +185,9 @@ function StatCard({ label, value, tone }: { label: string; value: number | strin
       ? 'border-muted-foreground/30 bg-muted/30'
       : 'border-primary/10 bg-card';
   return (
-    <Card className={`p-4 ${accent}`}>
+    <Card className={`p-spacing-md ${accent}`}>
       <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
-      <p className="font-serif text-2xl text-primary mt-1 tabular-nums">{value}</p>
+      <p className="font-serif text-2xl text-primary mt-spacing-xs tabular-nums">{value}</p>
     </Card>
   );
 }
