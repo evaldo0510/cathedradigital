@@ -29,26 +29,21 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
     if (!user) return;
     setInternalLoading(true);
     try {
-      const { data: continuityData, error } = await supabase.functions.invoke('spiritual-continuity');
-      
-      if (!error && continuityData) {
-        setInternalData(continuityData);
-      } else {
-        // Fallback to basic history if AI fails
-        const { data: historyData } = await supabase
-          .from('user_history')
-          .select('title, route, visited_at')
-          .eq('user_id', user.id)
-          .order('visited_at', { ascending: false })
-          .limit(1);
-        
-        if (historyData?.[0]) {
-          setInternalData({ recommendations: [{
-            title: historyData[0].title,
-            route: historyData[0].route,
-            description: 'Onde você parou'
-          }] });
-        }
+      // Edge function 'spiritual-continuity' está congelada (Sprint Zero freeze).
+      // Fonte soberana: histórico local direto, sem chamar a função (evita 503).
+      const { data: historyData } = await supabase
+        .from('user_history')
+        .select('title, route, visited_at')
+        .eq('user_id', user.id)
+        .order('visited_at', { ascending: false })
+        .limit(1);
+
+      if (historyData?.[0]) {
+        setInternalData({ recommendations: [{
+          title: historyData[0].title,
+          route: historyData[0].route,
+          description: 'Onde você parou'
+        }] });
       }
     } catch (err) {
       console.error('Continuity Internal Error:', err);
