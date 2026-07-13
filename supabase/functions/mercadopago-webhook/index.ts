@@ -90,6 +90,9 @@ serve(async (req) => {
   // Sprint A / CAT-001 — correlation_id (ADR-009)
   const _cid = getOrCreateCorrelationId(req);
   const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // shadow json (CID) — garante x-correlation-id em toda resposta
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
