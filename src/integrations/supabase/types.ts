@@ -5111,7 +5111,7 @@ export type Database = {
         Returns: number
       }
       get_correlation_trail: {
-        Args: { _cid: string }
+        Args: { _cid: string; _include_responses?: boolean }
         Returns: {
           actor_id: string
           details: Json
