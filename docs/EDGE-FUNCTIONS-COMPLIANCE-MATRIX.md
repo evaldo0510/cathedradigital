@@ -17,13 +17,18 @@ Colunas:
 - **TEST** — suíte Deno associada
 - **Status** — 🟢 conforme · 🟡 parcial · 🔴 não-conforme
 
-## Status atual (pós-A1.a homologada + A1.b CID-only)
+## Status atual (pós-A1.c CID-only 100%)
 
 **Convenção CID:**
 - ✅ A1.a — bible-* padronizado com `getOrCreateCorrelationId` + shadowing de `corsHeaders` (16/16).
-- ✅ A1.b — mercadopago-*/mercado-pago-*/*-notifications*/send-*/daily-streak-push com o mesmo padrão CID-only (12/12).
+- ✅ A1.b — mercadopago-*/mercado-pago-*/*-notifications*/send-*/daily-streak-push (12/12).
+- ✅ A1.c — catechism-text, elevenlabs-tts, liturgical-calendar, saint-of-the-day,
+  sitemap, vatican-document + stubs frozen (colloquium, logos-ai, logos-spiritual-insight,
+  search-saint, spiritual-continuity) — todos com CID + logger correlacionado (11/11).
 - 🔒 pcl-* — CID herdado de `_shared/pcl-transition.ts`.
 - ✅ nexus-relations, translation-lookup — padrão-ouro pré-existente.
+- 🧭 Novo helper `_shared/logger.ts` emite JSON com `correlation_id`,
+  amarrando log-lines ao header e ao trigger `capture_governance_audit`.
 
 | # | Função | CID | VAL | AUTHN | AUTHZ | RATE | HTTP | TEST | Status |
 |---|---|---|---|---|---|---|---|---|---|
