@@ -124,6 +124,7 @@ const LanguageAdmin = lazy(() => import('./components/cathedra/LanguageAdmin'));
 const BibleCoverageAdmin = lazy(() => import('./components/cathedra/BibleCoverageAdmin'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
+const CidComplianceDashboardPage = lazy(() => import('./pages/CidComplianceDashboardPage'));
 const BibleCacheAdminPage = lazy(() => import('./pages/BibleCacheAdminPage'));
 const BiblePerfDashboard = lazy(() => import('./pages/BiblePerfDashboard'));
 const BibleCacheTimeseriesDashboard = lazy(() => import('./components/cathedra/BibleCacheTimeseriesDashboard'));
