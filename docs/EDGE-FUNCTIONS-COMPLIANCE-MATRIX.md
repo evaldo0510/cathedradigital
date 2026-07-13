@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.3 · atualizada 2026-07-13 (pós-A1.c CID-only 100%)**
+**Sprint A (Governança) · v1.4 · atualizada 2026-07-13 (pós-A1.d — trilha CID + gate governance)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
@@ -27,8 +27,23 @@ Colunas:
   search-saint, spiritual-continuity) — todos com CID + logger correlacionado (11/11).
 - 🔒 pcl-* — CID herdado de `_shared/pcl-transition.ts`.
 - ✅ nexus-relations, translation-lookup — padrão-ouro pré-existente.
-- 🧭 Novo helper `_shared/logger.ts` emite JSON com `correlation_id`,
+- 🧭 Helper `_shared/logger.ts` emite JSON com `correlation_id`,
   amarrando log-lines ao header e ao trigger `capture_governance_audit`.
+
+**Fase A1.d — Trilha, gate e relatório (2026-07-13):**
+- ✅ Novo teste `tests/cid_error_scenarios_test.ts` — força falhas 4xx/5xx
+  por categoria (bible / pcl / mercadopago / notifications / misc / geração
+  automática) e valida presença/eco de `x-correlation-id` no response.
+- ✅ RPC `public.get_correlation_trail(text)` (SECURITY DEFINER, admin-only)
+  unifica `governance_audit_log` + `bible_cache_metric_events` por CID,
+  sem tabela nova. Migration `20260713…get_correlation_trail_rpc`.
+- ✅ Gate reformulado `tests/cid_governance_gate_test.ts` — restrito às **7
+  funções que mutam tabelas auditadas** (`pcl-activate/approve/expire/
+  reactivate/revoke/suspend`, `nexus-relations`). Requer
+  `SUPABASE_SERVICE_ROLE_KEY` (skip automático se ausente).
+- ✅ Relatório de conformidade `scripts/generate-cid-compliance-report.ts`
+  gera `artifacts/cid-compliance-report.{md,json}` no CI, anexado como
+  artefato do workflow `edge-cid-smoke` (`always()`).
 
 | # | Função | CID | VAL | AUTHN | AUTHZ | RATE | HTTP | TEST | Status |
 |---|---|---|---|---|---|---|---|---|---|
