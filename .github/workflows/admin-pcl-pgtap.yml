@@ -1,0 +1,51 @@
+name: admin-pcl-pgtap
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/tests/admin_pcl.pgtap.sql'
+      - 'supabase/migrations/**'
+      - '.github/workflows/admin-pcl-pgtap.yml'
+  workflow_dispatch:
+
+jobs:
+  pgtap:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: supabase/postgres:15.1.1.78
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pg_prove
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client libtap-parser-sourcehandler-pgtap-perl
+          cpanm --notest TAP::Parser::SourceHandler::pgTAP 2>/dev/null || true
+
+      - name: Apply migrations
+        run: |
+          for f in $(ls supabase/migrations/*.sql | sort); do
+            echo "→ $f"
+            psql -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      - name: Run pgTAP T1–T8 (Painel PCL)
+        run: |
+          pg_prove --ext .sql supabase/tests/admin_pcl.pgtap.sql
