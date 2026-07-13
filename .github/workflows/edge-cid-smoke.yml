@@ -54,6 +54,9 @@ jobs:
       - name: E2E — variações de header x-correlation-id (missing/empty/dup/extreme)
         run: deno test -A supabase/functions/tests/cid_header_variations_test.ts
 
+      - name: A2/Zod — envelope padronizado nas funções auditadas
+        run: deno test -A supabase/functions/tests/cid_zod_envelope_test.ts
+
       - name: Relatório de conformidade CID (matriz + contagem + falhas)
         if: always()
         run: deno run -A scripts/generate-cid-compliance-report.ts
