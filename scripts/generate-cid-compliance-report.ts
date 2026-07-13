@@ -235,10 +235,18 @@ async function main() {
   console.log(
     `[cid-report] total=${total} cid_ok=${cidCounts.conforme + cidCounts.herdado} ausente=${cidCounts.ausente} falhas_por_função=${failing.length} cobertura=${meta.coverage_pct}`,
   );
-  // Este script é RELATÓRIO, não gate. O gate real é o smoke test.
-  // Nunca sair com erro para não bloquear a coleta do artefato.
-  if (!passed) console.error(`[cid-report] alerta — há funções sem CID na matriz`);
 
+  // Modo estrito (--strict ou env CID_STRICT=1): exit 1 se CID ausente
+  // ou funções com etapas em falha. Usado como GATE no workflow, DEPOIS
+  // que o artefato/summary já foram escritos.
+  const strict = Deno.args.includes('--strict') || Deno.env.get('CID_STRICT') === '1';
+  if (!passed || failing.length > 0) {
+    console.error(`::error::[cid-report] CID ausente=${cidCounts.ausente} · funções em falha=${failing.length}`);
+    for (const r of failing.slice(0, 50)) {
+      console.error(`::error file=${MATRIX_PATH}::${r.name} (${r.category}) — ${r.failedSteps.join(', ')}`);
+    }
+    if (strict) Deno.exit(1);
+  }
 }
 
 if (import.meta.main) await main();
