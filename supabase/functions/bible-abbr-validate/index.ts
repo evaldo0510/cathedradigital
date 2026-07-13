@@ -23,19 +23,30 @@
  * Resposta 404 quando a abreviação não é reconhecida (mesmo formato,
  * com `resolved: false` e `canonical_abbr: null`).
  */
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { findBookByAbbr, normalizeAbbr } from '../_shared/bibleCanon.ts';
+import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
 
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+};
 
 Deno.serve(async (req) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+
+  // Shadow helper com cid — call sites permanecem inalterados
+  const json = (body: unknown, status = 200): Response =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' },
+    });
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
   }
 
   let abbrev: string | null = null;

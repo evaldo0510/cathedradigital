@@ -17,10 +17,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { BIBLE_CANON } from "../_shared/bibleCanon.ts";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret, x-correlation-id",
+  "Access-Control-Expose-Headers": "x-correlation-id",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
@@ -269,7 +271,17 @@ function toCsv(rows: Array<Record<string, unknown>>, headers: string[]): string 
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  // Shadow helper com cid — call sites `json(...)` inalterados
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, ...cidH, "Content-Type": "application/json" },
+    });
+
+  if (req.method === "OPTIONS") return new Response("ok", { headers: { ...corsHeaders, ...cidH } });
 
   try {
     const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);

@@ -9,9 +9,16 @@
  *
  * Body opcional: { threshold_ms?: number, concurrency?: number, max_chapters_per_book?: number, dry_run?: boolean }
  */
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { runPostRunVerify } from '../_shared/postRunVerify.ts';
+import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
 
 const ALWAYS_PRIORITY: Record<string, number> = {
   // Lv primeiro, restante do Pentateuco em seguida
@@ -44,7 +51,10 @@ interface Body {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
 
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }
@@ -118,7 +128,7 @@ Deno.serve(async (req) => {
 
   if (dry) {
     return new Response(JSON.stringify({ ...summary, sample: queue.slice(0, 50), queue: verbose ? queue : undefined }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      { headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' } });
   }
 
   // 3. Execute warm with concurrency
@@ -161,5 +171,5 @@ Deno.serve(async (req) => {
     ...summary, executed: { ok, fail, ms: Date.now() - t0 },
     logs: verbose ? logs : undefined,
     verification,
-  }), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }), { status, headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' } });
 });

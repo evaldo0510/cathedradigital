@@ -8,8 +8,16 @@
  *
  * Body opcional: { days?: number, threshold_ms?: number, min_samples?: number, dry_run?: boolean }
  */
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
 
 interface Body {
   days?: number;
@@ -19,7 +27,10 @@ interface Body {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
 
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }
@@ -43,7 +54,7 @@ Deno.serve(async (req) => {
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500, headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' },
     });
   }
 
@@ -114,5 +125,5 @@ Deno.serve(async (req) => {
     regressed,
     alert_id: alertId,
     dry_run: dry,
-  }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }), { headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' } });
 });

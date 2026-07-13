@@ -19,10 +19,12 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -103,7 +105,18 @@ function toCsv(rows: any[], cols: string[]) {
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  // Shadow helper com cid — call sites `json(...)` inalterados
+  // deno-lint-ignore no-explicit-any
+  const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', ...cidH, ...extraHeaders },
+    });
+
+  if (req.method === 'OPTIONS') return new Response(null, { headers: { ...corsHeaders, ...cidH } });
 
   const authHeader = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
   if (!authHeader) return json({ error: 'missing_authorization' }, 401);
@@ -351,7 +364,7 @@ serve(async (req) => {
       const filename = `bible-cache-metrics-${hours}h-${new Date().toISOString().slice(0, 10)}`;
       if (format === 'json') {
         return new Response(JSON.stringify({ since, hours, rows: data ?? [] }, null, 2), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="${filename}.json"` },
+          headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="${filename}.json"` },
         });
       }
       const csv = toCsv(data ?? [], [
@@ -359,7 +372,7 @@ serve(async (req) => {
         'sum_ms', 'max_ms', 'p95_ms', 'bolls_calls', 'bolls_failures', 'bolls_sum_ms',
       ]);
       return new Response(csv, {
-        headers: { ...corsHeaders, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}.csv"` },
+        headers: { ...corsHeaders, ...cidH, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}.csv"` },
       });
     }
 
