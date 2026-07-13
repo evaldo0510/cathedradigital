@@ -44,13 +44,19 @@ export default function CidComplianceDashboardPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cid-compliance-stats', days],
     enabled: !!isAdmin,
-    queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke<StatsResponse>('cid-compliance-stats', {
+    queryFn: async (): Promise<StatsResponse> => {
+      const { data: session } = await supabase.auth.getSession();
+      const token = session.session?.access_token;
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cid-compliance-stats?days=${days}`;
+      const res = await fetch(url, {
         method: 'GET',
-        // supabase-js typa GET com query via body sério; usamos fetch direto:
-      } as any);
-      if (error) throw error;
-      return data as StatsResponse;
+        headers: {
+          Authorization: `Bearer ${token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
+        },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+      return await res.json();
     },
   });
 
