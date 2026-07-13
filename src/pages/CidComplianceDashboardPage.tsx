@@ -12,11 +12,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Loader2, AlertTriangle, CheckCircle2, Download } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, Legend,
 } from 'recharts';
+import { downloadSnapshotCsv, downloadTrendCsv, downloadFailingCsv } from '@/lib/cidComplianceCsv';
 
 type Counts = { conforme: number; herdado: number; na: number; ausente: number; desconhecido?: number };
 type Category = { total: number; cidOk: number; failed: number };
