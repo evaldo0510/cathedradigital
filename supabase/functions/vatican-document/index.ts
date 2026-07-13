@@ -1,24 +1,16 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeLogger } from "../_shared/logger.ts";
 
 /**
- * vatican-document edge function
- *
- * Estratégia:
- *  1. Lê `vatican_cache` (limit(1)) — evita 406 do .maybeSingle() em zero rows
- *  2. Se cache existir e for "gordo" (content_length >= MIN_CONTENT_LEN),
- *     responde imediatamente
- *  3. Senão, busca em vatican.va com `AbortSignal.timeout(8s)` e fallback de
- *     idioma `_pt → _po → _sp → _it → _la`
- *  4. Extrai conteúdo, valida tamanho mínimo e devolve `meta` com a etapa
- *     (cache_hit | cache_thin | fetch_ok | fetch_thin | fetch_404 | fetch_error)
- *  5. NUNCA persiste conteúdo abaixo do mínimo (`thin`), mas sempre atualiza
- *     `last_attempt_at` e `fetched_status` para auditoria
+ * vatican-document edge function — Sprint A / CAT-001 propaga correlation_id.
  */
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+    'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -29,15 +21,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 const MIN_CONTENT_LEN = 500;
 const FETCH_TIMEOUT_MS = 8_000;
 const LANG_FALLBACK_SUFFIXES = ['_pt.html', '_po.html', '_sp.html', '_it.html', '_la.html'];
-
-const json = (
-  body: Record<string, unknown>,
-  status = 200,
-): Response =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
 
 /** Strip HTML/JS/CSS keeping a stable text-only body. */
 const extractText = (html: string): { title: string; content: string } => {
