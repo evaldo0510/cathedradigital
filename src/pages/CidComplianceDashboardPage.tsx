@@ -38,7 +38,7 @@ type TrendPoint = { t: string; coverage_ratio: number; total: number; ausente: n
 type StatsResponse = { data: { latest: Snapshot | null; trend: TrendPoint[]; count: number; window_days: number }; correlation_id: string };
 
 export default function CidComplianceDashboardPage() {
-  const { isAdmin, loading } = useIsAdmin();
+  const { isAdmin, isLoading: adminLoading } = useIsAdmin();
   const [days, setDays] = useState<'7' | '30' | '90'>('30');
 
   const { data, isLoading, error } = useQuery({
