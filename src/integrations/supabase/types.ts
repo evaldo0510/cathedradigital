@@ -2149,6 +2149,54 @@ export type Database = {
           },
         ]
       }
+      governance_audit_log: {
+        Row: {
+          actor_id: string | null
+          actor_role: string
+          after_state: Json | null
+          before_state: Json | null
+          correlation_id: string | null
+          created_at: string
+          diff: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip: unknown
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          occurred_at?: string
+          operation: string
+          request_ip?: unknown
+        }
+        Update: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          occurred_at?: string
+          operation?: string
+          request_ip?: unknown
+        }
+        Relationships: []
+      }
       intelligent_notification_logs: {
         Row: {
           channel: string
