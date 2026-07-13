@@ -195,3 +195,25 @@ Deno.test('db_error ao buscar tradução → 500', async () => {
   assertEquals(res.status, 500);
   assertEquals((await res.json()).error, 'db_error');
 });
+
+// ─── Sprint 1.13 / ADR-009 — correlation_id ────────────────────────────────
+
+Deno.test('E1(lookup): 400 propaga x-correlation-id gerado', async () => {
+  const { deps } = makeDeps();
+  const res = await handleRequest(req('/'), deps);
+  const cid = res.headers.get('x-correlation-id');
+  assert(cid && cid.length > 0, 'x-correlation-id ausente');
+  await res.text();
+});
+
+Deno.test('E3(lookup): correlation_id do cliente é preservado', async () => {
+  const { deps } = makeDeps();
+  const clientCid = 'cid-lookup-777';
+  const r = new Request('http://x/', {
+    method: 'GET',
+    headers: { 'x-correlation-id': clientCid },
+  });
+  const res = await handleRequest(r, deps);
+  assertEquals(res.headers.get('x-correlation-id'), clientCid);
+  await res.text();
+});
