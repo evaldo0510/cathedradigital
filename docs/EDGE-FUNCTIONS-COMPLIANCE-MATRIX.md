@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.2 · atualizada 2026-07-13 (pós-A1.a homologada + A1.b CID-only)**
+**Sprint A (Governança) · v1.3 · atualizada 2026-07-13 (pós-A1.c CID-only 100%)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
