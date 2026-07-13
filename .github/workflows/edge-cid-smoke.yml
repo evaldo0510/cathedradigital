@@ -1,0 +1,45 @@
+name: edge-cid-smoke
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/**'
+      - 'supabase/functions/tests/cid_cors_smoke_test.ts'
+      - '.github/workflows/edge-cid-smoke.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+  workflow_dispatch:
+
+concurrency:
+  group: edge-cid-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: correlation_id + CORS smoke (47 Edge Functions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # Endpoint público — obrigatórios como secrets do repo
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Guard — secrets configurados
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_PUBLISHABLE_KEY" ]; then
+            echo "::error::VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY não configurados no repositório."
+            exit 1
+          fi
+
+      - name: Rodar smoke (fail-on-red)
+        run: deno test -A supabase/functions/tests/cid_cors_smoke_test.ts
