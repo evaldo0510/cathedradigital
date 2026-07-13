@@ -1,15 +1,23 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 import { logSecurityEvent } from '../_shared/security-logs.ts'
 
-const corsHeaders = {
+const _corsBase = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
 }
 
-const GENERIC_ERROR = 'Erro interno. Tente novamente.'
+
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;const GENERIC_ERROR = 'Erro interno. Tente novamente.'
 
 serve(async (req) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const _cid = getOrCreateCorrelationId(req);
+  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }

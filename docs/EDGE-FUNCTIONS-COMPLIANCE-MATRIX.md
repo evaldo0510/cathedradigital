@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.1 · atualizada 2026-07-13 (pós-A1.a)**
+**Sprint A (Governança) · v1.2 · atualizada 2026-07-13 (pós-A1.a homologada + A1.b CID-only)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
@@ -17,7 +17,13 @@ Colunas:
 - **TEST** — suíte Deno associada
 - **Status** — 🟢 conforme · 🟡 parcial · 🔴 não-conforme
 
-## Baseline (pré-Sprint A)
+## Status atual (pós-A1.a homologada + A1.b CID-only)
+
+**Convenção CID:**
+- ✅ A1.a — bible-* padronizado com `getOrCreateCorrelationId` + shadowing de `corsHeaders` (16/16).
+- ✅ A1.b — mercadopago-*/mercado-pago-*/*-notifications*/send-*/daily-streak-push com o mesmo padrão CID-only (12/12).
+- 🔒 pcl-* — CID herdado de `_shared/pcl-transition.ts`.
+- ✅ nexus-relations, translation-lookup — padrão-ouro pré-existente.
 
 | # | Função | CID | VAL | AUTHN | AUTHZ | RATE | HTTP | TEST | Status |
 |---|---|---|---|---|---|---|---|---|---|
@@ -26,31 +32,31 @@ Colunas:
 | 3 | bible-auto-warm-slow | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 4 | bible-availability-report | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 5 | bible-cache-admin | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 6 | bible-cache-aggregator | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 7 | bible-cache-timeseries | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 6 | bible-cache-aggregator | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 7 | bible-cache-timeseries | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 8 | bible-canon-diagnose | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 9 | bible-convert-dump | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 10 | bible-import-deutero | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 11 | bible-import-ndjson | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 12 | bible-integrity-check | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 12 | bible-integrity-check | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 13 | bible-latency-regression-alert | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 14 | bible-perf-render | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 14 | bible-perf-render | ✅ A1.a | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 15 | bible-search | ✅ A1.a | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
-| 16 | bible-text | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | 🟡 |
+| 16 | bible-text | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | 🟡 |
 | 17 | catechism-text | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
 | 18 | colloquium | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
-| 19 | daily-streak-push | ❌ | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 19 | daily-streak-push | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 20 | elevenlabs-tts | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 21 | intelligent-notifications | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
+| 21 | intelligent-notifications | ✅ A1.b | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
 | 22 | liturgical-calendar | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
 | 23 | logos-ai | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
 | 24 | logos-spiritual-insight | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
-| 25 | mercado-pago-retry | ❌ | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 26 | mercado-pago-webhook | ❌ | ❌ | ✅ assinatura | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 27 | mercadopago-create-preference | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
-| 28 | mercadopago-simulate | ❌ | ❌ | ✅ admin | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 29 | mercadopago-sync-payment | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 30 | mercadopago-webhook | ❌ | ❌ | ✅ assinatura | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 25 | mercado-pago-retry | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
+| 26 | mercado-pago-webhook | ✅ A1.b | ❌ | ✅ assinatura | ➖ | ✅ | ❌ | ❌ | 🟡 |
+| 27 | mercadopago-create-preference | ✅ A1.b | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
+| 28 | mercadopago-simulate | ✅ A1.b | ❌ | ✅ admin | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 29 | mercadopago-sync-payment | ✅ A1.b | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 30 | mercadopago-webhook | ✅ A1.b | ❌ | ✅ assinatura | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 31 | nexus-relations | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | 🟡 padrão-ouro |
 | 32 | pcl-activate | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 33 | pcl-approve | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
@@ -58,31 +64,49 @@ Colunas:
 | 35 | pcl-reactivate | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 36 | pcl-revoke | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 37 | pcl-suspend | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
-| 38 | retention-notifications | ❌ | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
+| 38 | retention-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 39 | saint-of-the-day | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
 | 40 | search-saint | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 41 | send-notification | ❌ | ❌ | ✅ service/cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 42 | send-push | ❌ | ❌ | ✅ | ➖ | ✅ | ❌ | ❌ | 🟡 |
+| 41 | send-notification | ✅ A1.b | ❌ | ✅ service/cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
+| 42 | send-push | ✅ A1.b | ❌ | ✅ | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 43 | sitemap | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
 | 44 | spiritual-continuity | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
-| 45 | telemetry-notifications | ❌ | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 45 | telemetry-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 46 | translation-lookup | ✅ | ✅ | ➖ público | ➖ | ✅ | 🟡 parcial | ✅ | 🟡 padrão-ouro |
 | 47 | validate-coupon | ❌ | ❌ | ✅ service | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 48 | vatican-document | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
 
-**Totais atualizados (47 funções ativas, pós-Fase A1.a):**
+**Totais atualizados (47 funções ativas):**
 
-| Critério | Baseline | Pós-A1.a | Δ |
-|---|---:|---:|---:|
-| CID | 14/47 (30%) | 25/47 (53%) | +11 (+23pp) |
-| VAL | 12/47 (26%) | 12/47 (26%) | 0 |
-| AUTHN | 39/47 (83%) | 39/47 (83%) | 0 |
-| RATE (quando aplicável) | 10/47 | 10/47 | 0 |
-| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 0 |
-| Testes | 9/47 (19%) | 9/47 (19%) | 0 |
+| Critério | Baseline | Pós-A1.a | Pós-A1.b | Δ vs baseline |
+|---|---:|---:|---:|---:|
+| CID | 14/47 (30%) | 25/47 (53%) | **37/47 (79%)** | +23 (+49pp) |
+| VAL | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 0 |
+| AUTHN | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 0 |
+| RATE (quando aplicável) | 10/47 | 10/47 | 10/47 | 0 |
+| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 0 |
+| Testes | 9/47 (19%) | 9/47 (19%) | 9/47 (19%) + smoke E2E CID/CORS | +1 |
+
+**Restam para CID 100% (10 funções, tratadas nas fases A1.c/A1.d):**
+catechism-text, colloquium (stub), elevenlabs-tts, liturgical-calendar,
+logos-ai (stub), logos-spiritual-insight (stub), saint-of-the-day, search-saint,
+sitemap, spiritual-continuity (stub), vatican-document.
+(Stubs entram apenas se forem ativados; do contrário serão marcados ➖ N/A.)
 
 **Alvo Sprint A:** CID 100% · VAL 100% · HTTP 100% · AUTHN documentado 100% ·
 `SECURITY DEFINER` sem exposição a `anon` (CAT-003) · índice duplicado eliminado (CAT-004).
+
+## Smoke test E2E
+
+`supabase/functions/tests/cid_cors_smoke_test.ts` valida em uma única execução:
+
+1. **Preflight OPTIONS** — todas as 47 funções expõem `x-correlation-id` em
+   `Access-Control-Allow-Headers` e `Access-Control-Expose-Headers`.
+2. **Echo de CID** — todas retornam o header `x-correlation-id` no response
+   (tanto em path de sucesso quanto em erro padronizado — o header não depende
+   do status HTTP).
+
+Rodar com `deno test -A supabase/functions/tests/cid_cors_smoke_test.ts`.
 
 ## Referências padrão-ouro
 

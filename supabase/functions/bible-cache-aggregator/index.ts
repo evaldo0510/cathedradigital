@@ -4,12 +4,16 @@
 // Chamado pelo pg_cron (POST sem corpo). Pode ser disparado manualmente também.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
-const corsHeaders = {
+const _corsBase = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
 };
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -107,6 +111,10 @@ async function evaluateRegression(
 }
 
 serve(async (req) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const _cid = getOrCreateCorrelationId(req);
+  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+
 
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
   const t0 = Date.now();
