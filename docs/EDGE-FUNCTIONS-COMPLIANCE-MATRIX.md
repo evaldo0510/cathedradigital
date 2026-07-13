@@ -70,16 +70,16 @@ Colunas:
 | 47 | validate-coupon | ❌ | ❌ | ✅ service | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 48 | vatican-document | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
 
-**Totais baseline (47 funções ativas, excluindo `_shared/` e `tests/`):**
+**Totais atualizados (47 funções ativas, pós-Fase A1.a):**
 
-| Critério | Conforme | % |
-|---|---|---|
-| CID | 14/47 | 30% |
-| VAL | 12/47 | 26% |
-| AUTHN | 39/47 | 83% |
-| RATE (quando aplicável) | 10/47 | 21% |
-| HTTP padronizado | 6/47 | 13% |
-| Testes | 9/47 | 19% |
+| Critério | Baseline | Pós-A1.a | Δ |
+|---|---:|---:|---:|
+| CID | 14/47 (30%) | 25/47 (53%) | +11 (+23pp) |
+| VAL | 12/47 (26%) | 12/47 (26%) | 0 |
+| AUTHN | 39/47 (83%) | 39/47 (83%) | 0 |
+| RATE (quando aplicável) | 10/47 | 10/47 | 0 |
+| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 0 |
+| Testes | 9/47 (19%) | 9/47 (19%) | 0 |
 
 **Alvo Sprint A:** CID 100% · VAL 100% · HTTP 100% · AUTHN documentado 100% ·
 `SECURITY DEFINER` sem exposição a `anon` (CAT-003) · índice duplicado eliminado (CAT-004).
