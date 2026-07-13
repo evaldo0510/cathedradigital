@@ -64,7 +64,7 @@ export default function CidComplianceDashboardPage() {
       .sort((a, b) => b.failed - a.failed);
   }, [latest]);
 
-  if (loading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
+  if (adminLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
   if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
