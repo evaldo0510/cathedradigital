@@ -143,7 +143,7 @@ Deno.test('POST admin + payload válido → 201', async () => {
   const inserted = { id: 'new-id', ...validRel };
   const { deps, calls } = makeDeps({
     isAdmin: true,
-    mock: { tables: { nexus_relations: (ctx: { method: string }) => ctx.method method === 'insert'
+    mock: { tables: { nexus_relations: (ctx: { method: string }) => ctx.method === 'insert'
       ? { data: inserted, error: null } : { data: null, error: { message: 'x' } } } },
   });
   const res = await handleRequest(req('POST', '/', validRel), deps);
