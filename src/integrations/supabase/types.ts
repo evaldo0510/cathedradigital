@@ -5110,6 +5110,20 @@ export type Database = {
         Args: { p_scan_id: string }
         Returns: number
       }
+      get_correlation_trail: {
+        Args: { _cid: string }
+        Returns: {
+          actor_id: string
+          details: Json
+          duration_ms: number
+          entity_id: string
+          entity_type: string
+          occurred_at: string
+          operation: string
+          source: string
+          status_code: number
+        }[]
+      }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       get_pending_webhook_retries: {
         Args: never
