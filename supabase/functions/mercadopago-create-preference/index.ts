@@ -1,11 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://esm.sh/zod@3.25.76";
 
-const corsHeaders = {
+const _corsBase = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-correlation-id",
+  "Access-Control-Expose-Headers": "x-correlation-id",
 };
 
 const DEFAULT_PLAN_PRICE = 19.9;
@@ -109,6 +111,10 @@ async function parseMercadoPagoResponse(response: Response) {
 }
 
 serve(async (req) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const _cid = getOrCreateCorrelationId(req);
+  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }

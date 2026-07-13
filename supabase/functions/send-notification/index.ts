@@ -1,9 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 
-const corsHeaders = {
+const _corsBase = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Expose-Headers": "x-correlation-id",
 };
 
 // Rate limiter
@@ -44,6 +46,10 @@ async function logSecurityEvent(supabase: any, event: { type: string, severity: 
 }
 
 Deno.serve(async (req) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const _cid = getOrCreateCorrelationId(req);
+  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
