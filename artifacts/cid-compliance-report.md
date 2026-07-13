@@ -1,6 +1,6 @@
 # Relatório de conformidade CID — Edge Functions
 
-- **Gerado em:** `2026-07-13T21:31:15.486Z`
+- **Gerado em:** `2026-07-13T21:31:45.038Z`
 - **Fonte:** `docs/EDGE-FUNCTIONS-COMPLIANCE-MATRIX.md`
 - **Total de funções:** **48**
 - **Cobertura CID:** **97.9%**
