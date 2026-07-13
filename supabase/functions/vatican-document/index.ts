@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
 import { makeLogger } from "../_shared/logger.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 /**
  * vatican-document edge function — Sprint A / CAT-001 propaga correlation_id.
