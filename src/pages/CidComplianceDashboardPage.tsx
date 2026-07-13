@@ -77,21 +77,47 @@ export default function CidComplianceDashboardPage() {
 
   return (
     <div className="container max-w-7xl mx-auto p-6 space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Saúde da rastreabilidade CID</h1>
           <p className="text-sm text-muted-foreground">
             Snapshots do cid-compliance-report (matriz de 47 Edge Functions).
           </p>
         </div>
-        <Select value={days} onValueChange={(v) => setDays(v as '7' | '30' | '90')}>
-          <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7">7 dias</SelectItem>
-            <SelectItem value="30">30 dias</SelectItem>
-            <SelectItem value="90">90 dias</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!latest}
+            onClick={() => latest && downloadSnapshotCsv(latest)}
+          >
+            <Download className="h-4 w-4 mr-1" /> Snapshot CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!latest || latest.failing_functions.length === 0}
+            onClick={() => latest && downloadFailingCsv(latest)}
+          >
+            <Download className="h-4 w-4 mr-1" /> Falhas CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={trend.length === 0}
+            onClick={() => downloadTrendCsv(trend, data?.data.window_days ?? Number(days))}
+          >
+            <Download className="h-4 w-4 mr-1" /> Tendência CSV
+          </Button>
+          <Select value={days} onValueChange={(v) => setDays(v as '7' | '30' | '90')}>
+            <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">7 dias</SelectItem>
+              <SelectItem value="30">30 dias</SelectItem>
+              <SelectItem value="90">90 dias</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </header>
 
       {isLoading && <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>}
