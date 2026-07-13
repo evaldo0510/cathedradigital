@@ -2149,6 +2149,165 @@ export type Database = {
           },
         ]
       }
+      governance_audit_log: {
+        Row: {
+          actor_id: string | null
+          actor_role: string
+          after_state: Json | null
+          before_state: Json | null
+          correlation_id: string | null
+          created_at: string
+          diff: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip: unknown
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          occurred_at?: string
+          operation: string
+          request_ip?: unknown
+        }
+        Update: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          occurred_at?: string
+          operation?: string
+          request_ip?: unknown
+        }
+        Relationships: []
+      }
+      governance_audit_log_archive: {
+        Row: {
+          actor_id: string | null
+          actor_role: string
+          after_state: Json | null
+          archived_at: string
+          before_state: Json | null
+          correlation_id: string | null
+          created_at: string
+          diff: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip: unknown
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_role: string
+          after_state?: Json | null
+          archived_at?: string
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at: string
+          diff?: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip?: unknown
+        }
+        Update: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          archived_at?: string
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          occurred_at?: string
+          operation?: string
+          request_ip?: unknown
+        }
+        Relationships: []
+      }
+      governance_audit_log_cleanup_runs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          retention_days: number
+          rows_archived: number
+          status: string
+          triggered_by: string
+          triggered_user: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          retention_days: number
+          rows_archived?: number
+          status: string
+          triggered_by: string
+          triggered_user?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          retention_days?: number
+          rows_archived?: number
+          status?: string
+          triggered_by?: string
+          triggered_user?: string | null
+        }
+        Relationships: []
+      }
+      governance_audit_retention_config: {
+        Row: {
+          auto_archive_enabled: boolean
+          id: boolean
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_archive_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_archive_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       intelligent_notification_logs: {
         Row: {
           channel: string
@@ -4880,6 +5039,16 @@ export type Database = {
           year_published: number
         }[]
       }
+      capture_governance_audit: {
+        Args: {
+          p_after_state: Json
+          p_before_state: Json
+          p_entity_id: string
+          p_entity_type: string
+          p_operation: string
+        }
+        Returns: undefined
+      }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
         Args: { p_override_days?: number; p_triggered_by?: string }
@@ -4892,6 +5061,14 @@ export type Database = {
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
+      fn_archive_governance_audit: {
+        Args: { p_override_days?: number; p_triggered_by?: string }
+        Returns: {
+          retention_days: number
+          rows_archived: number
+          status: string
+        }[]
+      }
       generate_security_diff_summary: {
         Args: { after_val: Json; before_val: Json }
         Returns: string
@@ -4913,6 +5090,10 @@ export type Database = {
       }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
+      jsonb_shallow_diff: {
+        Args: { p_after: Json; p_before: Json }
+        Returns: Json
+      }
       log_access_denial: {
         Args: {
           attempted_action: string
