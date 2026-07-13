@@ -9,18 +9,24 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 import { z } from 'https://esm.sh/zod@3.23.8';
 import { checkRateLimit as defaultCheckRateLimit } from '../_shared/rate-limit.ts';
+import {
+  getOrCreateCorrelationId,
+  correlationResponseHeader,
+} from '../_shared/correlation.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
 };
 
-const json = (body: unknown, status = 200) =>
+const json = (body: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json', ...extra },
   });
+
 
 const QuerySchema = z.object({
   abbrev: z.string().trim().min(1).max(16),
