@@ -5,11 +5,16 @@ on:
     paths:
       - 'supabase/functions/**'
       - 'supabase/functions/tests/cid_cors_smoke_test.ts'
+      - 'supabase/functions/tests/cid_error_scenarios_test.ts'
+      - 'supabase/functions/tests/cid_governance_gate_test.ts'
+      - 'scripts/generate-cid-compliance-report.ts'
+      - 'docs/EDGE-FUNCTIONS-COMPLIANCE-MATRIX.md'
       - '.github/workflows/edge-cid-smoke.yml'
   push:
     branches: [main]
     paths:
       - 'supabase/functions/**'
+      - 'docs/EDGE-FUNCTIONS-COMPLIANCE-MATRIX.md'
   workflow_dispatch:
 
 concurrency:
@@ -20,9 +25,8 @@ jobs:
   smoke:
     name: correlation_id + CORS smoke (47 Edge Functions)
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
-      # Endpoint público — obrigatórios como secrets do repo
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
     steps:
@@ -41,5 +45,53 @@ jobs:
             exit 1
           fi
 
-      - name: Rodar smoke (fail-on-red)
+      - name: Smoke — CORS + eco/geração de CID (47 funções)
         run: deno test -A supabase/functions/tests/cid_cors_smoke_test.ts
+
+      - name: E2E — CID em respostas de erro por categoria
+        run: deno test -A supabase/functions/tests/cid_error_scenarios_test.ts
+
+      - name: Relatório de conformidade CID (matriz + contagem)
+        if: always()
+        run: deno run -A scripts/generate-cid-compliance-report.ts
+
+      - name: Upload artefato — cid-compliance-report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cid-compliance-report
+          path: artifacts/cid-compliance-report.*
+          if-no-files-found: warn
+          retention-days: 30
+
+  governance-gate:
+    name: governance_audit_log — CID nas 7 funções auditadas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: smoke
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Guard — SERVICE_ROLE opcional (skip se ausente)
+        id: guard
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY ausente — gate de governance será IGNORADO."
+            echo "has_service_role=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_service_role=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Rodar gate reformulado (7 funções auditadas)
+        if: steps.guard.outputs.has_service_role == 'true'
+        run: deno test -A supabase/functions/tests/cid_governance_gate_test.ts
