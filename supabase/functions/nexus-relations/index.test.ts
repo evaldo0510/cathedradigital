@@ -217,3 +217,39 @@ Deno.test('DELETE admin → 200 ok', async () => {
   assertEquals(res.status, 200);
   assertEquals((await res.json()).ok, true);
 });
+
+// ─── Sprint 1.13 / ADR-009 — correlation_id ────────────────────────────────
+
+Deno.test('E1: resposta 200 propaga x-correlation-id gerado', async () => {
+  const { deps } = makeDeps({
+    mock: { tables: { nexus_relations: () => ({ data: [], error: null }) } },
+  });
+  const res = await handleRequest(req('GET', '/?kind=bible_verse&abbrev=Jo&chapter=3'), deps);
+  assertEquals(res.status, 200);
+  const cid = res.headers.get('x-correlation-id');
+  assert(cid && cid.length > 0, 'x-correlation-id ausente');
+  await res.text();
+});
+
+Deno.test('E2: resposta de erro (429) também propaga correlation_id', async () => {
+  const { deps } = makeDeps({ rateLimit: false });
+  const res = await handleRequest(req('GET', '/?kind=bible_verse&abbrev=Jo&chapter=3'), deps);
+  assertEquals(res.status, 429);
+  const cid = res.headers.get('x-correlation-id');
+  assert(cid && cid.length > 0, 'erros devem incluir correlation_id');
+  await res.text();
+});
+
+Deno.test('E3: correlation_id enviado pelo cliente é preservado', async () => {
+  const { deps } = makeDeps({
+    mock: { tables: { nexus_relations: () => ({ data: [], error: null }) } },
+  });
+  const clientCid = 'cid-cliente-fixo-1234';
+  const res = await handleRequest(
+    req('GET', '/?kind=bible_verse&abbrev=Jo&chapter=3', undefined, { 'x-correlation-id': clientCid }),
+    deps,
+  );
+  assertEquals(res.status, 200);
+  assertEquals(res.headers.get('x-correlation-id'), clientCid);
+  await res.text();
+});
