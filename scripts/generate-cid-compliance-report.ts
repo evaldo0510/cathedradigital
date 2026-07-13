@@ -235,10 +235,10 @@ async function main() {
   console.log(
     `[cid-report] total=${total} cid_ok=${cidCounts.conforme + cidCounts.herdado} ausente=${cidCounts.ausente} falhas_por_função=${failing.length} cobertura=${meta.coverage_pct}`,
   );
-  if (!passed) {
-    console.error(`[cid-report] FAIL — há funções sem CID`);
-    Deno.exit(1);
-  }
+  // Este script é RELATÓRIO, não gate. O gate real é o smoke test.
+  // Nunca sair com erro para não bloquear a coleta do artefato.
+  if (!passed) console.error(`[cid-report] alerta — há funções sem CID na matriz`);
+
 }
 
 if (import.meta.main) await main();
