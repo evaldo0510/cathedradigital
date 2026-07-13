@@ -143,6 +143,7 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
   const log = makeLogger('vatican-document', cid);
+  const R = makeResponder(cid);
   const headers = { ...corsHeaders, ...cidH };
   const json = (body: Record<string, unknown>, status = 200): Response =>
     new Response(JSON.stringify({ ...body, correlation_id: cid }), {
@@ -156,16 +157,17 @@ Deno.serve(async (req) => {
 
   try {
     const { url } = await req.json().catch(() => ({ url: null }));
-    if (!url || typeof url !== 'string') return json({ error: 'URL is required' }, 400);
+    if (!url || typeof url !== 'string')
+      return R.error(400, 'invalid_body', { message: 'URL is required' });
 
     let parsed: URL;
     try {
       parsed = new URL(url);
     } catch {
-      return json({ error: 'Invalid URL' }, 400);
+      return R.error(400, 'invalid_body', { message: 'Invalid URL' });
     }
     if (!parsed.hostname.endsWith('vatican.va')) {
-      return json({ error: 'Only vatican.va URLs are allowed' }, 400);
+      return R.error(400, 'invalid_body', { message: 'Only vatican.va URLs are allowed' });
     }
 
     // 1) Cache lookup with limit(1)
