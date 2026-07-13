@@ -57,8 +57,14 @@ const defaultDeps: NexusDeps = {
   getClient: (req: Request) => {
     const url = Deno.env.get('SUPABASE_URL')!;
     const anon = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const cid = req.headers.get('x-correlation-id') ?? '';
     return createClient(url, anon, {
-      global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
+      global: {
+        headers: {
+          Authorization: req.headers.get('Authorization') ?? '',
+          ...(cid ? { 'x-correlation-id': cid } : {}),
+        },
+      },
     });
   },
   checkRateLimit: defaultCheckRateLimit,
@@ -69,13 +75,23 @@ const defaultDeps: NexusDeps = {
 };
 
 export async function handleRequest(req: Request, deps: NexusDeps = defaultDeps): Promise<Response> {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  // Sprint 1.13 / ADR-009 — correlation_id ponta a ponta
+  const cid = getOrCreateCorrelationId(req);
+  const cidHeaders = correlationResponseHeader(cid);
+  // Injeta no request para que defaultDeps.getClient propague ao Supabase client
+  if (!req.headers.get('x-correlation-id')) {
+    try { req.headers.set('x-correlation-id', cid); } catch { /* immutable in some runtimes */ }
+  }
+  const j = (body: unknown, status = 200) => json(body, status, cidHeaders);
+
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidHeaders } });
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
-  if (!deps.checkRateLimit(ip)) return json({ error: 'rate_limited' }, 429);
+  if (!deps.checkRateLimit(ip)) return j({ error: 'rate_limited' }, 429);
 
   const supabase = deps.getClient(req);
   const url = new URL(req.url);
+
 
   try {
     if (req.method === 'GET') {
