@@ -105,7 +105,18 @@ function toCsv(rows: any[], cols: string[]) {
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  // Shadow helper com cid — call sites `json(...)` inalterados
+  // deno-lint-ignore no-explicit-any
+  const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', ...cidH, ...extraHeaders },
+    });
+
+  if (req.method === 'OPTIONS') return new Response(null, { headers: { ...corsHeaders, ...cidH } });
 
   const authHeader = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
   if (!authHeader) return json({ error: 'missing_authorization' }, 401);
