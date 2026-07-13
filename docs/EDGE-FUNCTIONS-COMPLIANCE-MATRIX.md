@@ -129,6 +129,29 @@ VAL (Zod) — fase A2 · HTTP padronizado — fase A5 · `SECURITY DEFINER` — 
 Rodar local: `deno test -A supabase/functions/tests/cid_cors_smoke_test.ts`
 (carrega credenciais do `.env` via `std/dotenv/load.ts`).
 
+**Fase A1.e (2026-07-13) — cobertura ampliada:**
+- ✅ `tests/cid_header_variations_test.ts` — cobre `x-correlation-id` **ausente**,
+  **vazio**, **duplicado** (append) e **tamanhos extremos** (128 OK / >128 substituído).
+- ✅ Relatório `scripts/generate-cid-compliance-report.ts` v2 — contagem por
+  função **e por categoria** (bible/pcl/mercadopago/nexus/ai/notifications/content/misc),
+  com destaque de **etapas em falha** (CID, VAL, HTTP, TEST). Gera também
+  `cid-compliance-summary.md` (usado no PR comment).
+- ✅ Workflow `edge-cid-smoke.yml` posta o resumo como **comentário sticky** no PR
+  (idempotente via marcador `<!-- cid-compliance-report -->`) e anexa o relatório
+  completo como artefato `cid-compliance-report` (30 dias).
+- ✅ RPC `public.get_correlation_trail(_cid, _include_responses boolean default false)` —
+  modo estendido agrega `core_audit_logs` (status_code/response), `bible_cache_alerts`
+  e `bible_integrity_reports`, permitindo depurar a jornada completa do CID.
+
+**Fase A2.a (2026-07-13) — Zod nas funções auditadas:**
+- ✅ pcl-* (6) usam Zod via `_shared/pcl-transition.ts` (`BaseBody` com
+  `source_id: uuid` e `reason: string.min(1).max(4000).optional()`).
+- ✅ `nexus-relations` usa Zod local (`RefKind`, `RelationInput`, `RelationPatch`).
+- ✅ Novo `tests/cid_zod_envelope_test.ts` no CI — força payload inválido em cada
+  função auditada e valida: 4xx, `Content-Type: application/json`, header
+  `x-correlation-id` ecoado e body com `error` string + `correlation_id == CID enviado`.
+
+
 ## Logging correlacionado
 
 `supabase/functions/_shared/logger.ts` (`makeLogger(fn, cid)`) emite JSON estruturado
