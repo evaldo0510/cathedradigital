@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.0 · baseline: 2026-07-13**
+**Sprint A (Governança) · v1.1 · atualizada 2026-07-13 (pós-A1.a)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
@@ -21,21 +21,21 @@ Colunas:
 
 | # | Função | CID | VAL | AUTHN | AUTHZ | RATE | HTTP | TEST | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | bible-abbr-validate | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 2 | bible-alerts-reconcile | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 3 | bible-auto-warm-slow | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 4 | bible-availability-report | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 5 | bible-cache-admin | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
+| 1 | bible-abbr-validate | ✅ A1.a | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 2 | bible-alerts-reconcile | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 3 | bible-auto-warm-slow | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 4 | bible-availability-report | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 5 | bible-cache-admin | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 6 | bible-cache-aggregator | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 7 | bible-cache-timeseries | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 8 | bible-canon-diagnose | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 9 | bible-convert-dump | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 10 | bible-import-deutero | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
-| 11 | bible-import-ndjson | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
+| 8 | bible-canon-diagnose | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 9 | bible-convert-dump | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 10 | bible-import-deutero | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
+| 11 | bible-import-ndjson | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 12 | bible-integrity-check | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 13 | bible-latency-regression-alert | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🔴 |
+| 13 | bible-latency-regression-alert | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 14 | bible-perf-render | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
-| 15 | bible-search | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 15 | bible-search | ✅ A1.a | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 16 | bible-text | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | 🟡 |
 | 17 | catechism-text | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
 | 18 | colloquium | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
