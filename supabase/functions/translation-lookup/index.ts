@@ -52,7 +52,6 @@ const defaultDeps: LookupDeps = {
 };
 
 export async function handleRequest(req: Request, deps: LookupDeps = defaultDeps): Promise<Response> {
-export async function handleRequest(req: Request, deps: LookupDeps = defaultDeps): Promise<Response> {
   // Sprint 1.13 / ADR-009 — correlation_id ponta a ponta
   const cid = getOrCreateCorrelationId(req);
   const cidHeaders = correlationResponseHeader(cid);
