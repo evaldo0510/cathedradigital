@@ -5061,6 +5061,14 @@ export type Database = {
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
+      fn_archive_governance_audit: {
+        Args: { p_override_days?: number; p_triggered_by?: string }
+        Returns: {
+          retention_days: number
+          rows_archived: number
+          status: string
+        }[]
+      }
       generate_security_diff_summary: {
         Args: { after_val: Json; before_val: Json }
         Returns: string
