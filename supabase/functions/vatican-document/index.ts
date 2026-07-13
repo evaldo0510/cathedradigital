@@ -217,12 +217,13 @@ Deno.serve(async (req) => {
     if (!extracted) {
       const step = lastStatus === 404 ? 'fetch_404' : lastStatus === 0 ? 'fetch_error' : `fetch_${lastStatus}`;
       await recordAttempt(url, step);
-      return json(
-        {
-          error: lastStatus === 404 ? 'Documento não encontrado em nenhum idioma.' : 'Falha ao buscar documento.',
-          meta: { step, status: lastStatus, tried: chain },
-        },
+      return R.error(
         lastStatus === 404 ? 404 : 502,
+        lastStatus === 404 ? 'not_found' : 'internal_error',
+        {
+          message: lastStatus === 404 ? 'Documento não encontrado em nenhum idioma.' : 'Falha ao buscar documento.',
+          step, status: lastStatus, tried: chain,
+        },
       );
     }
 
