@@ -364,7 +364,7 @@ serve(async (req) => {
       const filename = `bible-cache-metrics-${hours}h-${new Date().toISOString().slice(0, 10)}`;
       if (format === 'json') {
         return new Response(JSON.stringify({ since, hours, rows: data ?? [] }, null, 2), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="${filename}.json"` },
+          headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="${filename}.json"` },
         });
       }
       const csv = toCsv(data ?? [], [
@@ -372,7 +372,7 @@ serve(async (req) => {
         'sum_ms', 'max_ms', 'p95_ms', 'bolls_calls', 'bolls_failures', 'bolls_sum_ms',
       ]);
       return new Response(csv, {
-        headers: { ...corsHeaders, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}.csv"` },
+        headers: { ...corsHeaders, ...cidH, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}.csv"` },
       });
     }
 
