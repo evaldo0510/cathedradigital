@@ -7,7 +7,7 @@
 
 const REPORT_PATH = 'artifacts/cid-compliance-report.json';
 
-async function main() {
+export async function main() {
   const url = Deno.env.get('VITE_SUPABASE_URL') ?? Deno.env.get('SUPABASE_URL');
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !key) {
@@ -17,7 +17,7 @@ async function main() {
 
   let raw: string;
   try { raw = await Deno.readTextFile(REPORT_PATH); }
-  catch { console.error(`[cid-snapshot] ${REPORT_PATH} ausente`); Deno.exit(0); }
+  catch { console.error(`[cid-snapshot] ${REPORT_PATH} ausente`); Deno.exit(0); return; }
 
   const doc = JSON.parse(raw) as { meta: Record<string, unknown>; rows: unknown[] };
   const meta = doc.meta as any;
@@ -56,8 +56,10 @@ async function main() {
   if (!res.ok) {
     console.error(`[cid-snapshot] INSERT falhou: ${res.status} ${await res.text()}`);
     Deno.exit(0); // não bloqueia CI
+    return;
   }
   console.log(`[cid-snapshot] snapshot persistido (sha=${commit?.slice(0,7)} branch=${branch})`);
 }
+
 
 if (import.meta.main) await main();

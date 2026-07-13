@@ -4,8 +4,13 @@
 // e, opcionalmente, core_audit_logs + bible_cache_alerts + bible_integrity_reports.
 //
 // Uso:
-//   GET /functions/v1/cid-trail?cid=<CID>&include_responses=true
+//   GET /functions/v1/cid-trail?cid=<CID>&include_responses=true&limit=100&offset=0
 //   Authorization: Bearer <JWT do admin>
+//
+// Paginação:
+//   - limit: default 100, min 1, max 500
+//   - offset: default 0, min 0
+//   - resposta inclui { total, limit, offset, has_more, events }
 //
 // Segurança:
 //   - Requer JWT (verify_jwt=true — configurado abaixo)
@@ -18,9 +23,14 @@ import { makeResponder } from '../_shared/http-response.ts';
 import { parseQuery } from '../_shared/validation.ts';
 import { z } from 'https://esm.sh/zod@3.23.8';
 
+const MAX_LIMIT = 500;
+const DEFAULT_LIMIT = 100;
+
 const QuerySchema = z.object({
   cid: z.string().min(1).max(128),
   include_responses: z.enum(['true', 'false']).optional().default('false'),
+  limit: z.coerce.number().int().min(1).max(MAX_LIMIT).optional().default(DEFAULT_LIMIT),
+  offset: z.coerce.number().int().min(0).optional().default(0),
 });
 
 Deno.serve(async (req) => {
@@ -54,10 +64,19 @@ Deno.serve(async (req) => {
     return R.error(500, 'internal_error', { pg: error.message, code: error.code });
   }
 
+  const all = (data ?? []) as unknown[];
+  const total = all.length;
+  const { limit, offset } = q.data;
+  const events = all.slice(offset, offset + limit);
+
   return R.ok({
     cid: q.data.cid,
     include_responses: q.data.include_responses === 'true',
-    events: data ?? [],
-    count: (data ?? []).length,
+    events,
+    total,
+    limit,
+    offset,
+    has_more: offset + events.length < total,
+    count: events.length,
   });
 });
