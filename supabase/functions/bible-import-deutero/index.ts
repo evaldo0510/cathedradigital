@@ -12,10 +12,12 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { resolveExternalChapter, checkVerseCount } from '../_shared/bibleChapterNormalize.ts';
 import { runPostRunVerify } from '../_shared/postRunVerify.ts';
+import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -51,7 +53,10 @@ async function scrape(slug: string, chapter: number): Promise<{ number: number; 
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
 
   const url = Deno.env.get('SUPABASE_URL')!;
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -158,6 +163,6 @@ Deno.serve(async (req) => {
   const status = !skipVerify && failOnBlocking && verification && 'passed' in verification && !verification.passed ? 422 : 200;
   return new Response(
     JSON.stringify({ ok: status === 200, imported, total: results.length, results, verification }, null, 2),
-    { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    { status, headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' } },
   );
 });
