@@ -4,10 +4,9 @@ on:
   pull_request:
     paths:
       - 'supabase/functions/**'
-      - 'supabase/functions/tests/cid_cors_smoke_test.ts'
-      - 'supabase/functions/tests/cid_error_scenarios_test.ts'
-      - 'supabase/functions/tests/cid_governance_gate_test.ts'
+      - 'supabase/functions/tests/**'
       - 'scripts/generate-cid-compliance-report.ts'
+      - 'scripts/persist-cid-snapshot.ts'
       - 'docs/EDGE-FUNCTIONS-COMPLIANCE-MATRIX.md'
       - '.github/workflows/edge-cid-smoke.yml'
   push:
@@ -25,10 +24,11 @@ jobs:
   smoke:
     name: correlation_id + CORS smoke (47 Edge Functions)
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     env:
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,12 +54,20 @@ jobs:
       - name: E2E — variações de header x-correlation-id (missing/empty/dup/extreme)
         run: deno test -A supabase/functions/tests/cid_header_variations_test.ts
 
-      - name: A2/Zod — envelope padronizado nas funções auditadas
+      - name: E2E — concorrência (múltiplos CIDs simultâneos sem mistura)
+        run: deno test -A supabase/functions/tests/cid_concurrency_test.ts
+
+      - name: A2/Zod strict — envelope padronizado nas funções auditadas
         run: deno test -A supabase/functions/tests/cid_zod_envelope_test.ts
 
       - name: Relatório de conformidade CID (matriz + contagem + falhas)
         if: always()
+        id: report
         run: deno run -A scripts/generate-cid-compliance-report.ts
+
+      - name: Persistir snapshot na tabela cid_compliance_snapshots
+        if: always() && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        run: deno run -A scripts/persist-cid-snapshot.ts
 
       - name: Upload artefato — cid-compliance-report
         if: always()
@@ -82,17 +90,31 @@ jobs:
               return;
             }
             const body = fs.readFileSync(path, 'utf8');
+            const jsonPath = 'artifacts/cid-compliance-report.json';
+            let alert = '';
+            if (fs.existsSync(jsonPath)) {
+              const doc = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+              const ausente = doc.meta?.cid_counts?.ausente ?? 0;
+              const failing = (doc.rows || []).filter(r => (r.failedSteps||[]).length > 0);
+              if (ausente > 0 || failing.length > 0) {
+                alert = `> 🚨 **Alerta CID**: ${ausente} função(ões) sem CID · ${failing.length} com etapas em falha.\n\n`;
+              }
+            }
             const marker = '<!-- cid-compliance-report -->';
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const comments = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
             const existing = comments.data.find((c) => c.body && c.body.includes(marker));
-            const finalBody = `${marker}\n${body}`;
+            const finalBody = `${marker}\n${alert}${body}`;
             if (existing) {
               await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: finalBody });
             } else {
               await github.rest.issues.createComment({ owner, repo, issue_number, body: finalBody });
             }
+
+      - name: Gate estrito — falha se CID ausente ou etapas em falha
+        if: always()
+        run: deno run -A scripts/generate-cid-compliance-report.ts --strict
 
   governance-gate:
     name: governance_audit_log — CID nas 7 funções auditadas
