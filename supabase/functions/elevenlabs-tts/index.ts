@@ -1,22 +1,28 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeLogger } from "../_shared/logger.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Expose-Headers": "x-correlation-id",
 };
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  const log = makeLogger("elevenlabs-tts", cid);
+  const headers = { ...corsHeaders, ...cidH };
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify({ ...(body as object), correlation_id: cid }), {
+      status,
+      headers: { ...headers, "Content-Type": "application/json" },
+    });
+
+  if (req.method === "OPTIONS") return new Response(null, { headers });
 
   try {
-    // ---- Auth check ----
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return json({ error: "Unauthorized" }, 401);
@@ -25,7 +31,7 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
     const supabase = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
+      global: { headers: { Authorization: authHeader, "x-correlation-id": cid } },
     });
 
     const token = authHeader.replace("Bearer ", "");
@@ -35,7 +41,6 @@ serve(async (req) => {
     }
     const userId = claimsData.claims.sub as string;
 
-    // Restrict TTS to premium users (matches logos-ai access model)
     const { data: profile } = await supabase
       .from("profiles")
       .select("is_premium")
@@ -57,7 +62,7 @@ serve(async (req) => {
 
     const ELEVEN_LABS_API_KEY = Deno.env.get("ELEVEN_LABS_API_KEY");
     if (!ELEVEN_LABS_API_KEY) {
-      console.error("ELEVEN_LABS_API_KEY is not configured");
+      log.error("missing_api_key");
       return json({ error: "TTS service is not configured" }, 500);
     }
 
@@ -76,15 +81,15 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("ElevenLabs error:", response.status, errorText);
+      log.error("elevenlabs_error", { status: response.status, body: errorText.slice(0, 200) });
       return json({ error: "Failed to generate audio" }, response.status);
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "audio/mpeg" },
+      headers: { ...headers, "Content-Type": "audio/mpeg" },
     });
   } catch (error) {
-    console.error("TTS function error:", error);
+    log.error("unhandled", { err: String(error) });
     return json({ error: "Erro interno. Tente novamente." }, 500);
   }
 });
