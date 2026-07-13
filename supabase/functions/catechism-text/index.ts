@@ -1,17 +1,25 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeLogger } from "../_shared/logger.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-correlation-id',
+  'Access-Control-Expose-Headers': 'x-correlation-id',
   'Content-Type': 'application/json',
 };
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: corsHeaders });
-
 serve(async (req: Request) => {
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  const log = makeLogger('catechism-text', cid);
+  const headers = { ...corsHeaders, ...cidH };
+  const json = (body: Record<string, unknown>, status = 200) =>
+    new Response(JSON.stringify({ ...body, correlation_id: cid }), { status, headers });
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers });
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
@@ -22,11 +30,12 @@ serve(async (req: Request) => {
     const paragraph = Number(body?.paragraph);
 
     if (!Number.isFinite(paragraph) || paragraph < 1 || paragraph > 2865) {
+      log.warn('invalid_paragraph', { paragraph });
       return json({ error: 'Parágrafo inválido', code: 'invalid_input', paragraph }, 400);
     }
 
     if (!supabaseUrl || !serviceKey) {
-      console.error('[catechism-text] missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+      log.error('missing_env');
       return json({ error: 'Configuração de servidor ausente', code: 'server_misconfig' }, 500);
     }
 
@@ -35,7 +44,7 @@ serve(async (req: Request) => {
 
     const officialResp = await fetch(
       `${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=*`,
-      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'x-correlation-id': cid } },
     );
 
     if (officialResp.ok) {
@@ -45,13 +54,13 @@ serve(async (req: Request) => {
         source = 'official';
       }
     } else {
-      console.error('[catechism-text] official query failed', officialResp.status, await officialResp.text().catch(() => ''));
+      log.error('official_query_failed', { status: officialResp.status });
     }
 
     if (!existingContent) {
       const dbResp = await fetch(
         `${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`,
-        { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+        { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'x-correlation-id': cid } },
       );
       if (dbResp.ok) {
         const rows = await dbResp.json();
@@ -60,7 +69,7 @@ serve(async (req: Request) => {
           source = 'cached';
         }
       } else {
-        console.error('[catechism-text] cache query failed', dbResp.status);
+        log.error('cache_query_failed', { status: dbResp.status });
       }
     }
 
@@ -78,17 +87,14 @@ serve(async (req: Request) => {
       });
     }
 
-    return json(
-      {
-        paragraph,
-        status: 'not_found',
-        code: 'not_found',
-        error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.`,
-      },
-      200,
-    );
+    return json({
+      paragraph,
+      status: 'not_found',
+      code: 'not_found',
+      error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.`,
+    }, 200);
   } catch (error) {
-    console.error('[catechism-text] unhandled', error);
+    log.error('unhandled', { err: String(error) });
     return json({ error: 'Erro interno. Tente novamente.', code: 'internal_error' }, 500);
   }
 });
