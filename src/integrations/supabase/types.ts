@@ -1403,6 +1403,8 @@ export type Database = {
           notes: string | null
           payload_bytes: number | null
           payload_hash: string | null
+          pcl_activated_at: string | null
+          pcl_activated_by: string | null
           pcl_status: string
           provider: string | null
           source_origin: string | null
@@ -1436,6 +1438,8 @@ export type Database = {
           notes?: string | null
           payload_bytes?: number | null
           payload_hash?: string | null
+          pcl_activated_at?: string | null
+          pcl_activated_by?: string | null
           pcl_status?: string
           provider?: string | null
           source_origin?: string | null
@@ -1469,6 +1473,8 @@ export type Database = {
           notes?: string | null
           payload_bytes?: number | null
           payload_hash?: string | null
+          pcl_activated_at?: string | null
+          pcl_activated_by?: string | null
           pcl_status?: string
           provider?: string | null
           source_origin?: string | null
