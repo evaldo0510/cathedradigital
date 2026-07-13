@@ -4884,6 +4884,39 @@ export type Database = {
       }
     }
     Functions: {
+      admin_list_translation_sources: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_pcl_status?: string
+          p_search?: string
+        }
+        Returns: {
+          author: string
+          certified_at: string
+          code: string
+          id: string
+          imported_at: string
+          is_primary: boolean
+          language: string
+          name: string
+          pcl_activated_at: string
+          pcl_activated_by: string
+          pcl_status: string
+          provider: string
+          status: string
+          total_count: number
+          updated_at: string
+          year_published: number
+        }[]
+      }
+      admin_pcl_kpis: {
+        Args: never
+        Returns: {
+          pcl_status: string
+          total: number
+        }[]
+      }
       aggregate_bible_cache_metrics: {
         Args: { p_since?: string }
         Returns: number
