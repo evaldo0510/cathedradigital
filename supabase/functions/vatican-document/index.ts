@@ -139,7 +139,19 @@ const recordAttempt = async (
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  const log = makeLogger('vatican-document', cid);
+  const headers = { ...corsHeaders, ...cidH };
+  const json = (body: Record<string, unknown>, status = 200): Response =>
+    new Response(JSON.stringify({ ...body, correlation_id: cid }), {
+      status,
+      headers: { ...headers, 'Content-Type': 'application/json' },
+    });
+
+  if (req.method === 'OPTIONS') return new Response(null, { headers });
+
+
 
   try {
     const { url } = await req.json().catch(() => ({ url: null }));
