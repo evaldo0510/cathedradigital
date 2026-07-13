@@ -3,6 +3,14 @@ const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 10; // 10 requests per minute
 
 /**
+ * Test-only: limpa os caches em memória. Não usar em produção.
+ */
+export function __resetRateLimitCaches() {
+  RATE_LIMIT_CACHE.clear();
+  BRUTE_FORCE_CACHE.clear();
+}
+
+/**
  * Simple in-memory rate limiting for Edge Functions.
  * Note: Since Edge Functions are short-lived/ephemeral, this is most effective 
  * per-instance, but provides basic protection against common bursts.
