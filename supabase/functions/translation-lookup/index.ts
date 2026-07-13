@@ -52,16 +52,23 @@ const defaultDeps: LookupDeps = {
 };
 
 export async function handleRequest(req: Request, deps: LookupDeps = defaultDeps): Promise<Response> {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'GET') return json({ error: 'method_not_allowed' }, 405);
+export async function handleRequest(req: Request, deps: LookupDeps = defaultDeps): Promise<Response> {
+  // Sprint 1.13 / ADR-009 — correlation_id ponta a ponta
+  const cid = getOrCreateCorrelationId(req);
+  const cidHeaders = correlationResponseHeader(cid);
+  const j = (body: unknown, status = 200) => json(body, status, cidHeaders);
+
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidHeaders } });
+  if (req.method !== 'GET') return j({ error: 'method_not_allowed' }, 405);
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
-  if (!deps.checkRateLimit(ip)) return json({ error: 'rate_limited' }, 429);
+  if (!deps.checkRateLimit(ip)) return j({ error: 'rate_limited' }, 429);
 
   const url = new URL(req.url);
   const parsed = QuerySchema.safeParse(Object.fromEntries(url.searchParams));
-  if (!parsed.success) return json({ error: 'invalid_query', issues: parsed.error.flatten() }, 400);
+  if (!parsed.success) return j({ error: 'invalid_query', issues: parsed.error.flatten() }, 400);
   const { abbrev, chapter, verse, translation_id } = parsed.data;
+
 
   const supabase = deps.getClient();
 
