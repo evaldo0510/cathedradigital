@@ -103,8 +103,8 @@ Deno.test('happy path com translation_id explícito → 200', async () => {
   const res = await handleRequest(req(`/?abbrev=Jo&chapter=3&translation_id=${T_ID}`), deps);
   assertEquals(res.status, 200);
   await res.json();
-  const tCall = calls.find((c) => c.table === 'bible_translation_sources');
-  assert(tCall?.filters?.some((f) => f.op === 'eq' && f.args[0] === 'id' && f.args[1] === T_ID));
+  const tCall = calls.find((c: MockCall) => c.table === 'bible_translation_sources');
+  assert(tCall?.filters?.some((f: { op: string; args: unknown[] }) => f.op === 'eq' && f.args[0] === 'id' && f.args[1] === T_ID));
 });
 
 // ─── 404 chains ───────────────────────────────────────────────────────────────

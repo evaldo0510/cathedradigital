@@ -63,8 +63,8 @@ Deno.test('GET bible_verse feliz → items', async () => {
   assertEquals(res.status, 200);
   const body = await res.json();
   assertEquals(body.items, items);
-  const call = calls.find((c) => c.table === 'nexus_relations');
-  assert(call?.filters?.some((f) => f.op === 'or'));
+  const call = calls.find((c: MockCall) => c.table === 'nexus_relations');
+  assert(call?.filters?.some((f: { op: string; args: unknown[] }) => f.op === 'or'));
 });
 
 Deno.test('GET bible_verse sem abbrev → 400', async () => {
@@ -143,13 +143,13 @@ Deno.test('POST admin + payload válido → 201', async () => {
   const inserted = { id: 'new-id', ...validRel };
   const { deps, calls } = makeDeps({
     isAdmin: true,
-    mock: { tables: { nexus_relations: ({ method }) => method === 'insert'
+    mock: { tables: { nexus_relations: (ctx: { method: string }) => ctx.method method === 'insert'
       ? { data: inserted, error: null } : { data: null, error: { message: 'x' } } } },
   });
   const res = await handleRequest(req('POST', '/', validRel), deps);
   assertEquals(res.status, 201);
   assertEquals((await res.json()).item.id, 'new-id');
-  assert(calls.some((c) => c.method === 'insert' && c.table === 'nexus_relations'));
+  assert(calls.some((c: MockCall) => c.method === 'insert' && c.table === 'nexus_relations'));
 });
 
 Deno.test('POST admin + payload inválido → 400', async () => {
