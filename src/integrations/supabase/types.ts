@@ -1724,6 +1724,60 @@ export type Database = {
         }
         Relationships: []
       }
+      cid_compliance_snapshots: {
+        Row: {
+          branch: string | null
+          by_category: Json
+          captured_at: string
+          cid_counts: Json
+          commit_sha: string | null
+          coverage_pct: string
+          coverage_ratio: number
+          created_at: string
+          failing_functions: Json
+          http_counts: Json
+          id: string
+          passed: boolean
+          test_counts: Json
+          total_functions: number
+          validation_counts: Json
+        }
+        Insert: {
+          branch?: string | null
+          by_category: Json
+          captured_at?: string
+          cid_counts: Json
+          commit_sha?: string | null
+          coverage_pct: string
+          coverage_ratio: number
+          created_at?: string
+          failing_functions?: Json
+          http_counts: Json
+          id?: string
+          passed?: boolean
+          test_counts: Json
+          total_functions: number
+          validation_counts: Json
+        }
+        Update: {
+          branch?: string | null
+          by_category?: Json
+          captured_at?: string
+          cid_counts?: Json
+          commit_sha?: string | null
+          coverage_pct?: string
+          coverage_ratio?: number
+          created_at?: string
+          failing_functions?: Json
+          http_counts?: Json
+          id?: string
+          passed?: boolean
+          test_counts?: Json
+          total_functions?: number
+          validation_counts?: Json
+        }
+        Relationships: []
+      }
       colloquium_conversations: {
         Row: {
           created_at: string
