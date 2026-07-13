@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.2 · atualizada 2026-07-13 (pós-A1.a homologada + A1.b CID-only)**
+**Sprint A (Governança) · v1.3 · atualizada 2026-07-13 (pós-A1.c CID-only 100%)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
@@ -17,13 +17,18 @@ Colunas:
 - **TEST** — suíte Deno associada
 - **Status** — 🟢 conforme · 🟡 parcial · 🔴 não-conforme
 
-## Status atual (pós-A1.a homologada + A1.b CID-only)
+## Status atual (pós-A1.c CID-only 100%)
 
 **Convenção CID:**
 - ✅ A1.a — bible-* padronizado com `getOrCreateCorrelationId` + shadowing de `corsHeaders` (16/16).
-- ✅ A1.b — mercadopago-*/mercado-pago-*/*-notifications*/send-*/daily-streak-push com o mesmo padrão CID-only (12/12).
+- ✅ A1.b — mercadopago-*/mercado-pago-*/*-notifications*/send-*/daily-streak-push (12/12).
+- ✅ A1.c — catechism-text, elevenlabs-tts, liturgical-calendar, saint-of-the-day,
+  sitemap, vatican-document + stubs frozen (colloquium, logos-ai, logos-spiritual-insight,
+  search-saint, spiritual-continuity) — todos com CID + logger correlacionado (11/11).
 - 🔒 pcl-* — CID herdado de `_shared/pcl-transition.ts`.
 - ✅ nexus-relations, translation-lookup — padrão-ouro pré-existente.
+- 🧭 Novo helper `_shared/logger.ts` emite JSON com `correlation_id`,
+  amarrando log-lines ao header e ao trigger `capture_governance_audit`.
 
 | # | Função | CID | VAL | AUTHN | AUTHZ | RATE | HTTP | TEST | Status |
 |---|---|---|---|---|---|---|---|---|---|
@@ -43,14 +48,14 @@ Colunas:
 | 14 | bible-perf-render | ✅ A1.a | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 15 | bible-search | ✅ A1.a | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 16 | bible-text | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | 🟡 |
-| 17 | catechism-text | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 18 | colloquium | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 17 | catechism-text | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 18 | colloquium | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 19 | daily-streak-push | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
-| 20 | elevenlabs-tts | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 20 | elevenlabs-tts | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 21 | intelligent-notifications | ✅ A1.b | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
-| 22 | liturgical-calendar | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 23 | logos-ai | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
-| 24 | logos-spiritual-insight | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 22 | liturgical-calendar | ✅ A1.c | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 23 | logos-ai | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
+| 24 | logos-spiritual-insight | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 25 | mercado-pago-retry | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 26 | mercado-pago-webhook | ✅ A1.b | ❌ | ✅ assinatura | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 27 | mercadopago-create-preference | ✅ A1.b | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
@@ -65,48 +70,60 @@ Colunas:
 | 36 | pcl-revoke | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 37 | pcl-suspend | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 38 | retention-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 39 | saint-of-the-day | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 40 | search-saint | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 39 | saint-of-the-day | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 40 | search-saint | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 41 | send-notification | ✅ A1.b | ❌ | ✅ service/cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 42 | send-push | ✅ A1.b | ❌ | ✅ | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 43 | sitemap | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 44 | spiritual-continuity | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 43 | sitemap | ✅ A1.c | ➖ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 44 | spiritual-continuity | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 45 | telemetry-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 46 | translation-lookup | ✅ | ✅ | ➖ público | ➖ | ✅ | 🟡 parcial | ✅ | 🟡 padrão-ouro |
 | 47 | validate-coupon | ❌ | ❌ | ✅ service | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 48 | vatican-document | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 48 | vatican-document | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
 
 **Totais atualizados (47 funções ativas):**
 
-| Critério | Baseline | Pós-A1.a | Pós-A1.b | Δ vs baseline |
-|---|---:|---:|---:|---:|
-| CID | 14/47 (30%) | 25/47 (53%) | **37/47 (79%)** | +23 (+49pp) |
-| VAL | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 0 |
-| AUTHN | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 0 |
-| RATE (quando aplicável) | 10/47 | 10/47 | 10/47 | 0 |
-| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 0 |
-| Testes | 9/47 (19%) | 9/47 (19%) | 9/47 (19%) + smoke E2E CID/CORS | +1 |
+| Critério | Baseline | Pós-A1.a | Pós-A1.b | Pós-A1.c | Δ vs baseline |
+|---|---:|---:|---:|---:|---:|
+| CID | 14/47 (30%) | 25/47 (53%) | 37/47 (79%) | **47/47 (100%)** ✅ | +33 (+70pp) |
+| VAL | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 0 |
+| AUTHN | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 0 |
+| RATE (quando aplicável) | 10/47 | 10/47 | 10/47 | 10/47 | 0 |
+| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 0 |
+| Testes | 9/47 (19%) | 9/47 (19%) | 9/47 (19%) + smoke | 9/47 (19%) + smoke 3× | +1 |
 
-**Restam para CID 100% (10 funções, tratadas nas fases A1.c/A1.d):**
-catechism-text, colloquium (stub), elevenlabs-tts, liturgical-calendar,
-logos-ai (stub), logos-spiritual-insight (stub), saint-of-the-day, search-saint,
-sitemap, spiritual-continuity (stub), vatican-document.
-(Stubs entram apenas se forem ativados; do contrário serão marcados ➖ N/A.)
+**CAT-001 (CID) — CONCLUÍDO.** Restam para Sprint A:
+VAL (Zod) — fase A2 · HTTP padronizado — fase A5 · `SECURITY DEFINER` — fase A3 ·
+índice duplicado (CAT-004).
 
-**Alvo Sprint A:** CID 100% · VAL 100% · HTTP 100% · AUTHN documentado 100% ·
+**Alvo Sprint A:** CID 100% ✅ · VAL 100% · HTTP 100% · AUTHN documentado 100% ·
 `SECURITY DEFINER` sem exposição a `anon` (CAT-003) · índice duplicado eliminado (CAT-004).
 
 ## Smoke test E2E
 
-`supabase/functions/tests/cid_cors_smoke_test.ts` valida em uma única execução:
+`supabase/functions/tests/cid_cors_smoke_test.ts` — CI: `.github/workflows/edge-cid-smoke.yml`
+(fail-on-red em PR e push). Valida em uma execução:
 
 1. **Preflight OPTIONS** — todas as 47 funções expõem `x-correlation-id` em
    `Access-Control-Allow-Headers` e `Access-Control-Expose-Headers`.
-2. **Echo de CID** — todas retornam o header `x-correlation-id` no response
-   (tanto em path de sucesso quanto em erro padronizado — o header não depende
-   do status HTTP).
+2. **Echo com header** — quando o cliente envia `x-correlation-id`, o mesmo valor
+   é ecoado no response (sucesso ou erro padronizado).
+3. **Geração sem header** — quando o cliente NÃO envia, a função gera um cid
+   válido (`^[A-Za-z0-9._:-]{1,128}$`) e o retorna no response.
 
-Rodar com `deno test -A supabase/functions/tests/cid_cors_smoke_test.ts`.
+Rodar local: `deno test -A supabase/functions/tests/cid_cors_smoke_test.ts`
+(carrega credenciais do `.env` via `std/dotenv/load.ts`).
+
+## Logging correlacionado
+
+`supabase/functions/_shared/logger.ts` (`makeLogger(fn, cid)`) emite JSON estruturado
+com `correlation_id`, timestamp e nível. Toda função migrada nas fases A1.a/b/c
+usa este logger nos caminhos de erro/aviso, permitindo:
+
+- Rastreio ponta a ponta: `x-correlation-id` (client) → log line (edge) →
+  `governance_audit_log.correlation_id` (banco, via `capture_governance_audit`).
+- Correlação com o dashboard `bible_cache_metric_events.correlation_id`
+  (já existente em bible-*).
 
 ## Referências padrão-ouro
 

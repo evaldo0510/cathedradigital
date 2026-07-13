@@ -1,19 +1,15 @@
 // Sprint A / CAT-001 — Smoke test E2E de correlation_id + CORS
 //
-// Objetivo: validar, para TODAS as 47 Edge Functions, que:
-//   1. A resposta ao preflight OPTIONS inclui:
-//      - Access-Control-Allow-Headers contendo "x-correlation-id"
-//      - Access-Control-Expose-Headers contendo "x-correlation-id"
-//   2. A resposta HTTP propaga o header `x-correlation-id` idêntico ao enviado
-//      no request (echo) — cobre tanto path de sucesso quanto de erro
-//      padronizado (envelope { error, correlation_id }).
+// Cobertura:
+//   1. Preflight OPTIONS expõe x-correlation-id em Allow-Headers e Expose-Headers.
+//   2. Com header enviado: x-correlation-id é ECOADO idêntico no response
+//      (mesmo em respostas de erro padronizado).
+//   3. Sem header enviado: função GERA um x-correlation-id válido e o retorna.
 //
-// O teste NÃO exige credenciais válidas: usamos anon key + payload vazio.
-// A maioria das funções responderá 400/401/405 — o que interessa é o header.
-// Esse é um smoke test intencionalmente barato (~2s), rodável em CI e local.
-//
-// Rodar:
+// Rodar local:
 //   deno test -A supabase/functions/tests/cid_cors_smoke_test.ts
+//
+// CI: .github/workflows/edge-cid-smoke.yml (fail-on-red).
 
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 import { assert, assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
@@ -24,7 +20,6 @@ const ANON =
   Deno.env.get("VITE_SUPABASE_PUBLISHABLE_KEY") ??
   Deno.env.get("SUPABASE_ANON_KEY");
 
-// Lista canônica — mantida em sincronia com a matriz de conformidade.
 const FUNCTIONS = [
   "bible-abbr-validate",
   "bible-alerts-reconcile",
@@ -78,8 +73,11 @@ const FUNCTIONS = [
 
 const skipIfNoEnv = !SUPABASE_URL || !ANON;
 
+// UUID v4 ou strings de teste (aceita ambos)
+const CID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
+
 Deno.test({
-  name: "smoke: CORS preflight expõe x-correlation-id em todas as 47 funções",
+  name: "smoke: CORS preflight expõe x-correlation-id em todas as funções",
   ignore: skipIfNoEnv,
   async fn() {
     const failures: string[] = [];
@@ -100,15 +98,13 @@ Deno.test({
         failures.push(`${name} allow="${allow}" expose="${expose}"`);
       }
     }
-    if (failures.length) {
-      console.error("Funções sem CORS/CID:\n" + failures.join("\n"));
-    }
+    if (failures.length) console.error("Funções sem CORS/CID:\n" + failures.join("\n"));
     assertEquals(failures.length, 0, `${failures.length}/${FUNCTIONS.length} sem CORS/CID`);
   },
 });
 
 Deno.test({
-  name: "smoke: x-correlation-id é ecoado no response de todas as 47 funções",
+  name: "smoke: x-correlation-id enviado é ecoado idêntico no response",
   ignore: skipIfNoEnv,
   async fn() {
     const failures: string[] = [];
@@ -127,18 +123,42 @@ Deno.test({
       });
       await res.body?.cancel();
       const echoed = res.headers.get("x-correlation-id");
-      // Aceita: eco exato (comportamento desejado) OU header presente (algumas
-      // funções regeneram cid quando o valor não passa validação — ainda conforme).
       if (!echoed) {
-        failures.push(`${name} status=${res.status} sem x-correlation-id no response`);
+        failures.push(`${name} status=${res.status} — header ausente`);
       } else if (echoed !== cid) {
-        // Não é falha bloqueante — apenas log de auditoria.
-        console.warn(`[warn] ${name} regenerou cid: enviado=${cid} recebido=${echoed}`);
+        failures.push(`${name} status=${res.status} — cid não ecoado: enviado=${cid} recebido=${echoed}`);
       }
     }
-    if (failures.length) {
-      console.error("Funções sem CID no response:\n" + failures.join("\n"));
+    if (failures.length) console.error("Funções sem eco de CID:\n" + failures.join("\n"));
+    assertEquals(failures.length, 0, `${failures.length}/${FUNCTIONS.length} sem eco de CID`);
+  },
+});
+
+Deno.test({
+  name: "smoke: sem x-correlation-id no request, função gera um válido",
+  ignore: skipIfNoEnv,
+  async fn() {
+    const failures: string[] = [];
+    for (const name of FUNCTIONS) {
+      const url = `${SUPABASE_URL}/functions/v1/${name}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${ANON}`,
+          "apikey": ANON!,
+        },
+        body: "{}",
+      });
+      await res.body?.cancel();
+      const generated = res.headers.get("x-correlation-id");
+      if (!generated) {
+        failures.push(`${name} status=${res.status} — não gerou cid`);
+      } else if (!CID_RE.test(generated)) {
+        failures.push(`${name} cid gerado inválido: "${generated}"`);
+      }
     }
-    assertEquals(failures.length, 0, `${failures.length}/${FUNCTIONS.length} sem CID no response`);
+    if (failures.length) console.error("Funções que não geram CID:\n" + failures.join("\n"));
+    assertEquals(failures.length, 0, `${failures.length}/${FUNCTIONS.length} sem geração de CID`);
   },
 });
