@@ -48,14 +48,14 @@ Colunas:
 | 14 | bible-perf-render | ✅ A1.a | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 |
 | 15 | bible-search | ✅ A1.a | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 16 | bible-text | ✅ A1.a | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ | 🟡 |
-| 17 | catechism-text | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 18 | colloquium | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 17 | catechism-text | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 18 | colloquium | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 19 | daily-streak-push | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
-| 20 | elevenlabs-tts | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 20 | elevenlabs-tts | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 21 | intelligent-notifications | ✅ A1.b | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
-| 22 | liturgical-calendar | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 23 | logos-ai | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
-| 24 | logos-spiritual-insight | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 22 | liturgical-calendar | ✅ A1.c | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 23 | logos-ai | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
+| 24 | logos-spiritual-insight | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 25 | mercado-pago-retry | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 26 | mercado-pago-webhook | ✅ A1.b | ❌ | ✅ assinatura | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 27 | mercadopago-create-preference | ✅ A1.b | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | 🟡 |
@@ -70,16 +70,16 @@ Colunas:
 | 36 | pcl-revoke | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 37 | pcl-suspend | 🔒 | 🔒 | 🔒 | 🔒 | ➖ | 🔒 | ✅ | 🟢 |
 | 38 | retention-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 39 | saint-of-the-day | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 40 | search-saint | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 39 | saint-of-the-day | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 40 | search-saint | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 41 | send-notification | ✅ A1.b | ❌ | ✅ service/cron | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 42 | send-push | ✅ A1.b | ❌ | ✅ | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 43 | sitemap | ❌ | ❌ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🔴 |
-| 44 | spiritual-continuity | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🔴 stub |
+| 43 | sitemap | ✅ A1.c | ➖ | ➖ público | ➖ | ❌ | ❌ | ❌ | 🟡 |
+| 44 | spiritual-continuity | ✅ A1.c | ➖ frozen | ➖ | ➖ | ➖ | ➖ | ❌ | 🟢 stub |
 | 45 | telemetry-notifications | ✅ A1.b | ❌ | ✅ cron | ➖ | ❌ | ❌ | ❌ | 🟡 |
 | 46 | translation-lookup | ✅ | ✅ | ➖ público | ➖ | ✅ | 🟡 parcial | ✅ | 🟡 padrão-ouro |
 | 47 | validate-coupon | ❌ | ❌ | ✅ service | ➖ | ✅ | ❌ | ❌ | 🟡 |
-| 48 | vatican-document | ❌ | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🔴 |
+| 48 | vatican-document | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
 
 **Totais atualizados (47 funções ativas):**
 
