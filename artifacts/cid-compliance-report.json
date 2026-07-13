@@ -1,0 +1,945 @@
+{
+  "meta": {
+    "generated_at": "2026-07-13T21:31:15.486Z",
+    "matrix_source": "docs/EDGE-FUNCTIONS-COMPLIANCE-MATRIX.md",
+    "total_functions": 48,
+    "cid_counts": {
+      "conforme": 41,
+      "herdado": 6,
+      "na": 0,
+      "ausente": 1,
+      "desconhecido": 0
+    },
+    "validation_counts": {
+      "conforme": 5,
+      "herdado": 6,
+      "na": 6,
+      "ausente": 31,
+      "desconhecido": 0
+    },
+    "http_counts": {
+      "conforme": 0,
+      "herdado": 6,
+      "na": 5,
+      "ausente": 36,
+      "desconhecido": 1
+    },
+    "test_counts": {
+      "conforme": 9,
+      "herdado": 0,
+      "na": 0,
+      "ausente": 39,
+      "desconhecido": 0
+    },
+    "by_category": {
+      "bible": {
+        "total": 16,
+        "cidOk": 16,
+        "failed": 16
+      },
+      "content": {
+        "total": 9,
+        "cidOk": 8,
+        "failed": 8
+      },
+      "ai": {
+        "total": 4,
+        "cidOk": 4,
+        "failed": 4
+      },
+      "notifications": {
+        "total": 6,
+        "cidOk": 6,
+        "failed": 6
+      },
+      "mercadopago": {
+        "total": 6,
+        "cidOk": 6,
+        "failed": 6
+      },
+      "nexus": {
+        "total": 1,
+        "cidOk": 1,
+        "failed": 1
+      },
+      "pcl": {
+        "total": 6,
+        "cidOk": 6,
+        "failed": 0
+      }
+    },
+    "coverage_ratio": 0.9792,
+    "coverage_pct": "97.9%",
+    "passed": false
+  },
+  "rows": [
+    {
+      "index": 1,
+      "name": "bible-abbr-validate",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "bible-alerts-reconcile",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "bible-auto-warm-slow",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "bible-availability-report",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "bible-cache-admin",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "bible-cache-aggregator",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "bible-cache-timeseries",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "bible-canon-diagnose",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "bible-convert-dump",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "bible-import-deutero",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "bible-import-ndjson",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 12,
+      "name": "bible-integrity-check",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "bible-latency-regression-alert",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "bible-perf-render",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "✅",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "conforme",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 15,
+      "name": "bible-search",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "bible-text",
+      "category": "bible",
+      "cid": "✅ A1.a",
+      "val": "❌",
+      "http": "❌",
+      "test": "✅",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "conforme",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "catechism-text",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 18,
+      "name": "colloquium",
+      "category": "ai",
+      "cid": "✅ A1.c",
+      "val": "➖ frozen",
+      "http": "➖",
+      "test": "❌",
+      "status": "🟢 stub",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "na",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 19,
+      "name": "daily-streak-push",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 20,
+      "name": "elevenlabs-tts",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 21,
+      "name": "intelligent-notifications",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 22,
+      "name": "liturgical-calendar",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 23,
+      "name": "logos-ai",
+      "category": "ai",
+      "cid": "✅ A1.c",
+      "val": "➖ frozen",
+      "http": "➖",
+      "test": "❌",
+      "status": "🟢 stub",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "na",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 24,
+      "name": "logos-spiritual-insight",
+      "category": "ai",
+      "cid": "✅ A1.c",
+      "val": "➖ frozen",
+      "http": "➖",
+      "test": "❌",
+      "status": "🟢 stub",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "na",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 25,
+      "name": "mercado-pago-retry",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 26,
+      "name": "mercado-pago-webhook",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 27,
+      "name": "mercadopago-create-preference",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "✅",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "conforme",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 28,
+      "name": "mercadopago-simulate",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 29,
+      "name": "mercadopago-sync-payment",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "✅",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "conforme",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 30,
+      "name": "mercadopago-webhook",
+      "category": "mercadopago",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 31,
+      "name": "nexus-relations",
+      "category": "nexus",
+      "cid": "✅",
+      "val": "✅",
+      "http": "❌",
+      "test": "✅",
+      "status": "🟡 padrão-ouro",
+      "cidClass": "conforme",
+      "valClass": "conforme",
+      "httpClass": "ausente",
+      "testClass": "conforme",
+      "failedSteps": [
+        "Resposta HTTP padronizada"
+      ]
+    },
+    {
+      "index": 32,
+      "name": "pcl-activate",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 33,
+      "name": "pcl-approve",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 34,
+      "name": "pcl-expire",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 35,
+      "name": "pcl-reactivate",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 36,
+      "name": "pcl-revoke",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 37,
+      "name": "pcl-suspend",
+      "category": "pcl",
+      "cid": "🔒",
+      "val": "🔒",
+      "http": "🔒",
+      "test": "✅",
+      "status": "🟢",
+      "cidClass": "herdado",
+      "valClass": "herdado",
+      "httpClass": "herdado",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 38,
+      "name": "retention-notifications",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 39,
+      "name": "saint-of-the-day",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 40,
+      "name": "search-saint",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "➖ frozen",
+      "http": "➖",
+      "test": "❌",
+      "status": "🟢 stub",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "na",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 41,
+      "name": "send-notification",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 42,
+      "name": "send-push",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 43,
+      "name": "sitemap",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "➖",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 44,
+      "name": "spiritual-continuity",
+      "category": "ai",
+      "cid": "✅ A1.c",
+      "val": "➖ frozen",
+      "http": "➖",
+      "test": "❌",
+      "status": "🟢 stub",
+      "cidClass": "conforme",
+      "valClass": "na",
+      "httpClass": "na",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 45,
+      "name": "telemetry-notifications",
+      "category": "notifications",
+      "cid": "✅ A1.b",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 46,
+      "name": "translation-lookup",
+      "category": "content",
+      "cid": "✅",
+      "val": "✅",
+      "http": "🟡 parcial",
+      "test": "✅",
+      "status": "🟡 padrão-ouro",
+      "cidClass": "conforme",
+      "valClass": "conforme",
+      "httpClass": "desconhecido",
+      "testClass": "conforme",
+      "failedSteps": []
+    },
+    {
+      "index": 47,
+      "name": "validate-coupon",
+      "category": "content",
+      "cid": "❌",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "ausente",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "CID gerado/propagado",
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    },
+    {
+      "index": 48,
+      "name": "vatican-document",
+      "category": "content",
+      "cid": "✅ A1.c",
+      "val": "❌",
+      "http": "❌",
+      "test": "❌",
+      "status": "🟡",
+      "cidClass": "conforme",
+      "valClass": "ausente",
+      "httpClass": "ausente",
+      "testClass": "ausente",
+      "failedSteps": [
+        "Validação Zod",
+        "Resposta HTTP padronizada",
+        "Cobertura E2E"
+      ]
+    }
+  ]
+}
