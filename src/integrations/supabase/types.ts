@@ -5039,6 +5039,16 @@ export type Database = {
           year_published: number
         }[]
       }
+      capture_governance_audit: {
+        Args: {
+          p_after_state: Json
+          p_before_state: Json
+          p_entity_id: string
+          p_entity_type: string
+          p_operation: string
+        }
+        Returns: undefined
+      }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
         Args: { p_override_days?: number; p_triggered_by?: string }
@@ -5072,6 +5082,10 @@ export type Database = {
       }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
+      jsonb_shallow_diff: {
+        Args: { p_after: Json; p_before: Json }
+        Returns: Json
+      }
       log_access_denial: {
         Args: {
           attempted_action: string
