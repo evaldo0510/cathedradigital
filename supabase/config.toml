@@ -14,3 +14,7 @@ verify_jwt = false
 
 [functions.vatican-document]
 verify_jwt = false
+
+[functions.translation-lookup]
+verify_jwt = false
+

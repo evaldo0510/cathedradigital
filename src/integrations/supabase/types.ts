@@ -1403,6 +1403,8 @@ export type Database = {
           notes: string | null
           payload_bytes: number | null
           payload_hash: string | null
+          pcl_status: string
+          provider: string | null
           source_origin: string | null
           source_url: string | null
           status: string
@@ -1434,6 +1436,8 @@ export type Database = {
           notes?: string | null
           payload_bytes?: number | null
           payload_hash?: string | null
+          pcl_status?: string
+          provider?: string | null
           source_origin?: string | null
           source_url?: string | null
           status?: string
@@ -1465,6 +1469,8 @@ export type Database = {
           notes?: string | null
           payload_bytes?: number | null
           payload_hash?: string | null
+          pcl_status?: string
+          provider?: string | null
           source_origin?: string | null
           source_url?: string | null
           status?: string
@@ -2513,6 +2519,89 @@ export type Database = {
           term?: string
         }
         Relationships: []
+      }
+      nexus_relation_types: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          label_pt: string
+          provisional: boolean
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description: string
+          label_pt: string
+          provisional?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          label_pt?: string
+          provisional?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      nexus_relations: {
+        Row: {
+          attributed_to: string | null
+          confidence: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          relation_type: string
+          source_kind: string
+          source_ref: Json
+          target_kind: string
+          target_ref: Json
+          updated_at: string
+        }
+        Insert: {
+          attributed_to?: string | null
+          confidence?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          relation_type: string
+          source_kind: string
+          source_ref: Json
+          target_kind: string
+          target_ref: Json
+          updated_at?: string
+        }
+        Update: {
+          attributed_to?: string | null
+          confidence?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          relation_type?: string
+          source_kind?: string
+          source_ref?: Json
+          target_kind?: string
+          target_ref?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nexus_relations_relation_type_fkey"
+            columns: ["relation_type"]
+            isOneToOne: false
+            referencedRelation: "nexus_relation_types"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       nexus_synonyms: {
         Row: {
@@ -4745,6 +4834,15 @@ export type Database = {
       bible_source_sprint1_passed: {
         Args: { p_source_id: string }
         Returns: boolean
+      }
+      bible_translation_readable: {
+        Args: { p_translation_id: string }
+        Returns: {
+          pcl_status: string
+          provider: string
+          readable: boolean
+          reason: string
+        }[]
       }
       bible_translation_ready: {
         Args: { p_translation_id: string }
