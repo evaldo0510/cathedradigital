@@ -7,6 +7,8 @@ const _corsBase = {
     "authorization, x-client-info, apikey, content-type, x-correlation-id",
   "Access-Control-Expose-Headers": "x-correlation-id",
 };
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;
 
 // Rate limiter
 const rateLimitMap = new Map<string, number[]>();

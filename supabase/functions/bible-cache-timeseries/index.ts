@@ -15,6 +15,8 @@ const _corsBase = {
   "Access-Control-Expose-Headers": "x-correlation-id",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;

@@ -9,6 +9,8 @@ const _corsBase = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-correlation-id",
   "Access-Control-Expose-Headers": "x-correlation-id",
 };
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;
 
 const DEFAULT_PLAN_PRICE = 19.9;
 const DEFAULT_PLAN_TITLE = "Cathedra PRO – Plano Mensal";

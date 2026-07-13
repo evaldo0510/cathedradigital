@@ -10,7 +10,9 @@ const _corsBase = {
   'Access-Control-Expose-Headers': 'x-correlation-id',
 }
 
-serve(async (req) => {
+
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;serve(async (req) => {
   // Sprint A / CAT-001 — correlation_id (ADR-009)
   const _cid = getOrCreateCorrelationId(req);
   const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };

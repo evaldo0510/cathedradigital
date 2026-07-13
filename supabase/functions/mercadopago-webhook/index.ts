@@ -8,6 +8,8 @@ const _corsBase = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-correlation-id",
   "Access-Control-Expose-Headers": "x-correlation-id",
 };
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

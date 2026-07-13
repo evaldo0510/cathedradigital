@@ -9,7 +9,9 @@ const _corsBase = {
   'Access-Control-Expose-Headers': 'x-correlation-id',
 }
 
-const GENERIC_ERROR = 'Erro interno. Tente novamente.'
+
+// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
+const corsHeaders = _corsBase;const GENERIC_ERROR = 'Erro interno. Tente novamente.'
 
 serve(async (req) => {
   // Sprint A / CAT-001 — correlation_id (ADR-009)
