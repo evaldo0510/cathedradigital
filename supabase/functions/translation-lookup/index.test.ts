@@ -150,7 +150,12 @@ Deno.test('capítulo inexistente → 404', async () => {
 // ─── Gate PCL ────────────────────────────────────────────────────────────────
 
 Deno.test('gate PCL bloqueado (draft) → 423 Locked', async () => {
-  const cfg = happyMock();
+  const cfg = happyMock({
+    bible_translation_sources: () => ({
+      data: { id: T_ID, provider: 'bolls', pcl_status: 'draft', code: 'nvi-pt' },
+      error: null,
+    }),
+  });
   cfg.rpc = {
     bible_translation_readable: () => ({
       data: [{ readable: false, provider: 'bolls', pcl_status: 'draft', reason: 'pcl_blocked:draft' }],
@@ -158,7 +163,7 @@ Deno.test('gate PCL bloqueado (draft) → 423 Locked', async () => {
     }),
   };
   const { deps } = makeDeps({ mock: cfg });
-  const res = await handleRequest(req('/?abbrev=Jo&chapter=3'), deps);
+  const res = await handleRequest(req(`/?abbrev=Jo&chapter=3&translation_id=${T_ID}`), deps);
   assertEquals(res.status, 423);
   const body = await res.json();
   assertEquals(body.error, 'pcl_blocked');
