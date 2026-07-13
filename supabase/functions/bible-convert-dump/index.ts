@@ -20,10 +20,12 @@ import {
   convertText, detectFormat, toCanonicalNDJSON, rejectedToNDJSON,
   type DumpFormat,
 } from "../_shared/ndjsonConverter.ts";
+import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Expose-Headers": "x-correlation-id",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -40,7 +42,16 @@ function jsonResponse(body: unknown, status = 200) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  const cid = getOrCreateCorrelationId(req);
+  const cidH = correlationResponseHeader(cid);
+  // Shadow helper com cid — call sites `jsonResponse(...)` inalterados
+  const jsonResponse = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body, null, 2), {
+      status, headers: { ...corsHeaders, ...cidH, "Content-Type": "application/json" },
+    });
+
+  if (req.method === "OPTIONS") return new Response("ok", { headers: { ...corsHeaders, ...cidH } });
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
   const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
