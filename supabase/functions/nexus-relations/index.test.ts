@@ -3,7 +3,7 @@
 // rate limiting, CORS/OPTIONS, method_not_allowed e erros de DB.
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { handleRequest, type NexusDeps } from '../nexus-relations/index.ts';
-import { createMockClient, type MockConfig } from '../tests/_supabase_mock.ts';
+import { createMockClient, type MockConfig, type MockCall } from '../tests/_supabase_mock.ts';
 
 function makeDeps(opts: {
   mock?: MockConfig;
