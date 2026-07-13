@@ -200,7 +200,7 @@ Deno.test('db_error ao buscar tradução → 500', async () => {
 
 Deno.test('E1(lookup): 400 propaga x-correlation-id gerado', async () => {
   const { deps } = makeDeps();
-  const res = await handleRequest(req('GET', '/'), deps);
+  const res = await handleRequest(req('/'), deps);
   const cid = res.headers.get('x-correlation-id');
   assert(cid && cid.length > 0, 'x-correlation-id ausente');
   await res.text();
