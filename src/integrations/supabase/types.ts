@@ -2197,6 +2197,117 @@ export type Database = {
         }
         Relationships: []
       }
+      governance_audit_log_archive: {
+        Row: {
+          actor_id: string | null
+          actor_role: string
+          after_state: Json | null
+          archived_at: string
+          before_state: Json | null
+          correlation_id: string | null
+          created_at: string
+          diff: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip: unknown
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_role: string
+          after_state?: Json | null
+          archived_at?: string
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at: string
+          diff?: Json | null
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          operation: string
+          request_ip?: unknown
+        }
+        Update: {
+          actor_id?: string | null
+          actor_role?: string
+          after_state?: Json | null
+          archived_at?: string
+          before_state?: Json | null
+          correlation_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          occurred_at?: string
+          operation?: string
+          request_ip?: unknown
+        }
+        Relationships: []
+      }
+      governance_audit_log_cleanup_runs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          retention_days: number
+          rows_archived: number
+          status: string
+          triggered_by: string
+          triggered_user: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          retention_days: number
+          rows_archived?: number
+          status: string
+          triggered_by: string
+          triggered_user?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          retention_days?: number
+          rows_archived?: number
+          status?: string
+          triggered_by?: string
+          triggered_user?: string | null
+        }
+        Relationships: []
+      }
+      governance_audit_retention_config: {
+        Row: {
+          auto_archive_enabled: boolean
+          id: boolean
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_archive_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_archive_enabled?: boolean
+          id?: boolean
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       intelligent_notification_logs: {
         Row: {
           channel: string
