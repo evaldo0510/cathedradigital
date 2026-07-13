@@ -4,7 +4,7 @@
 // rate limiting, CORS, method_not_allowed, db_error.
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { handleRequest, type LookupDeps } from '../translation-lookup/index.ts';
-import { createMockClient, type MockConfig } from '../tests/_supabase_mock.ts';
+import { createMockClient, type MockConfig, type MockCall } from '../tests/_supabase_mock.ts';
 
 function makeDeps(opts: { mock?: MockConfig; rateLimit?: boolean } = {}) {
   const { client, calls } = createMockClient(opts.mock ?? {});
