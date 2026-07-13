@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.6 · atualizada 2026-07-13 (pós-A1.f — persistência de snapshots, dashboard admin, endpoints cid-trail/cid-compliance-stats, gate estrito, teste de concorrência, schema Zod único de erro)**
+**Sprint A (Governança) · v1.7 · atualizada 2026-07-13 (A2.b Wave 1 — envelope estrito em sitemap, saint-of-the-day, search-saint, liturgical-calendar, vatican-document + matriz de exceções documentada)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).

@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
 import { makeLogger } from "../_shared/logger.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 /**
  * vatican-document edge function — Sprint A / CAT-001 propaga correlation_id.
@@ -142,6 +143,7 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
   const log = makeLogger('vatican-document', cid);
+  const R = makeResponder(cid);
   const headers = { ...corsHeaders, ...cidH };
   const json = (body: Record<string, unknown>, status = 200): Response =>
     new Response(JSON.stringify({ ...body, correlation_id: cid }), {
@@ -155,16 +157,17 @@ Deno.serve(async (req) => {
 
   try {
     const { url } = await req.json().catch(() => ({ url: null }));
-    if (!url || typeof url !== 'string') return json({ error: 'URL is required' }, 400);
+    if (!url || typeof url !== 'string')
+      return R.error(400, 'invalid_body', { message: 'URL is required' });
 
     let parsed: URL;
     try {
       parsed = new URL(url);
     } catch {
-      return json({ error: 'Invalid URL' }, 400);
+      return R.error(400, 'invalid_body', { message: 'Invalid URL' });
     }
     if (!parsed.hostname.endsWith('vatican.va')) {
-      return json({ error: 'Only vatican.va URLs are allowed' }, 400);
+      return R.error(400, 'invalid_body', { message: 'Only vatican.va URLs are allowed' });
     }
 
     // 1) Cache lookup with limit(1)
@@ -214,12 +217,13 @@ Deno.serve(async (req) => {
     if (!extracted) {
       const step = lastStatus === 404 ? 'fetch_404' : lastStatus === 0 ? 'fetch_error' : `fetch_${lastStatus}`;
       await recordAttempt(url, step);
-      return json(
-        {
-          error: lastStatus === 404 ? 'Documento não encontrado em nenhum idioma.' : 'Falha ao buscar documento.',
-          meta: { step, status: lastStatus, tried: chain },
-        },
+      return R.error(
         lastStatus === 404 ? 404 : 502,
+        lastStatus === 404 ? 'not_found' : 'internal_error',
+        {
+          message: lastStatus === 404 ? 'Documento não encontrado em nenhum idioma.' : 'Falha ao buscar documento.',
+          step, status: lastStatus, tried: chain,
+        },
       );
     }
 
@@ -240,6 +244,6 @@ Deno.serve(async (req) => {
     }, isThin ? 206 : 200);
   } catch (error) {
     log.error('unhandled', { err: (error as Error).message });
-    return json({ error: (error as Error).message, meta: { step: 'fetch_error' } }, 500);
+    return R.error(500, 'internal_error', { message: (error as Error).message, step: 'fetch_error' });
   }
 });
