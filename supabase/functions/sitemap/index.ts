@@ -62,9 +62,10 @@ serve(async (req) => {
     });
   } catch (error: any) {
     log.error('unhandled', { err: String(error) });
-    return new Response(JSON.stringify({ error: error.message, correlation_id: cid }), {
-      headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    // A2.b Wave 1: envelope de erro estrito
+    return new Response(
+      JSON.stringify({ error: 'internal_error', details: { message: error.message }, correlation_id: cid }),
+      { headers: { ...baseHeaders, 'Content-Type': 'application/json' }, status: 500 },
+    );
   }
 });
