@@ -244,6 +244,6 @@ Deno.serve(async (req) => {
     }, isThin ? 206 : 200);
   } catch (error) {
     log.error('unhandled', { err: (error as Error).message });
-    return json({ error: (error as Error).message, meta: { step: 'fetch_error' } }, 500);
+    return R.error(500, 'internal_error', { message: (error as Error).message, step: 'fetch_error' });
   }
 });
