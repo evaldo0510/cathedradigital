@@ -3,9 +3,12 @@
 // GET  ?kind=catechism_paragraph&paragraph=460          → idem para CIC
 // POST { relation_type, source_kind, source_ref, target_kind, target_ref, ... } (admin)
 // PATCH/DELETE ?id=...                                  (admin)
+//
+// Sprint 1.12: `handleRequest(req, deps)` isola o handler do runtime para permitir
+// testes por injeção. `Deno.serve` chama-o com deps padrão em produção.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 import { z } from 'https://esm.sh/zod@3.23.8';
-import { checkRateLimit } from '../_shared/rate-limit.ts';
+import { checkRateLimit as defaultCheckRateLimit } from '../_shared/rate-limit.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -34,27 +37,37 @@ const RelationInput = z.object({
 
 const RelationPatch = RelationInput.partial();
 
-function getClient(req: Request) {
-  const url = Deno.env.get('SUPABASE_URL')!;
-  const anon = Deno.env.get('SUPABASE_ANON_KEY')!;
-  return createClient(url, anon, {
-    global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
-  });
+// deno-lint-ignore no-explicit-any
+export type SupabaseLike = any;
+
+export interface NexusDeps {
+  getClient: (req: Request) => SupabaseLike;
+  checkRateLimit: (ip: string | null) => boolean;
+  isAdmin: (supabase: SupabaseLike) => Promise<boolean>;
 }
 
-async function requireAdmin(supabase: ReturnType<typeof getClient>) {
-  const { data, error } = await supabase.rpc('is_current_user_admin');
-  if (error || data !== true) return false;
-  return true;
-}
+const defaultDeps: NexusDeps = {
+  getClient: (req: Request) => {
+    const url = Deno.env.get('SUPABASE_URL')!;
+    const anon = Deno.env.get('SUPABASE_ANON_KEY')!;
+    return createClient(url, anon, {
+      global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
+    });
+  },
+  checkRateLimit: defaultCheckRateLimit,
+  isAdmin: async (supabase) => {
+    const { data, error } = await supabase.rpc('is_current_user_admin');
+    return !error && data === true;
+  },
+};
 
-Deno.serve(async (req) => {
+export async function handleRequest(req: Request, deps: NexusDeps = defaultDeps): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
-  if (!checkRateLimit(ip)) return json({ error: 'rate_limited' }, 429);
+  if (!deps.checkRateLimit(ip)) return json({ error: 'rate_limited' }, 429);
 
-  const supabase = getClient(req);
+  const supabase = deps.getClient(req);
   const url = new URL(req.url);
 
   try {
@@ -101,7 +114,7 @@ Deno.serve(async (req) => {
 
     // Mutations exigem admin
     if (['POST', 'PATCH', 'DELETE'].includes(req.method)) {
-      if (!(await requireAdmin(supabase))) return json({ error: 'forbidden' }, 403);
+      if (!(await deps.isAdmin(supabase))) return json({ error: 'forbidden' }, 403);
     }
 
     if (req.method === 'POST') {
@@ -137,4 +150,6 @@ Deno.serve(async (req) => {
     console.error('[nexus-relations] unhandled', err);
     return json({ error: 'internal_error' }, 500);
   }
-});
+}
+
+Deno.serve((req) => handleRequest(req));
