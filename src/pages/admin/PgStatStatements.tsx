@@ -542,6 +542,10 @@ export default function PgStatStatements() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button size="sm" variant="outline" onClick={copyShareLink}>
+              <Link2 className="h-4 w-4 mr-2" /> Copiar link
+            </Button>
+
 
             <div className="flex items-center gap-2 ml-2 rounded-md border px-3 py-1.5">
               <Switch
