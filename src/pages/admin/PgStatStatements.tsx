@@ -419,7 +419,8 @@ export default function PgStatStatements() {
 
       <AutoSnapshotConfigCard />
 
-      <SnapshotsPanel />
+      <SnapshotsPanel snapshots={snapshots} loading={snapshotsLoading} reload={reloadSnapshots} />
+
 
       <Card>
         <CardHeader>
