@@ -237,6 +237,12 @@ export function SnapshotsPanel() {
           </Table>
         </div>
 
+        <div className="border-t pt-4">
+          <p className="text-sm font-medium mb-3">Tendências entre janelas</p>
+          <SnapshotTrends snapshots={snapshots} />
+        </div>
+
+
         {snapshots.length >= 2 && (
           <div className="border-t pt-4 space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
