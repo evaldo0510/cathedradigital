@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Camera, Trash2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { SnapshotTrends } from './SnapshotTrends';
 
 interface SnapshotRow {
   id: string;
@@ -235,6 +236,12 @@ export function SnapshotsPanel() {
             </TableBody>
           </Table>
         </div>
+
+        <div className="border-t pt-4">
+          <p className="text-sm font-medium mb-3">Tendências entre janelas</p>
+          <SnapshotTrends snapshots={snapshots} />
+        </div>
+
 
         {snapshots.length >= 2 && (
           <div className="border-t pt-4 space-y-3">

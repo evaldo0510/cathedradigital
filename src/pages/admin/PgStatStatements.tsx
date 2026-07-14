@@ -16,6 +16,9 @@ import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
 import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
+import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
+import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
+import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -95,6 +98,7 @@ export default function PgStatStatements() {
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [explainOpen, setExplainOpen] = useState(false);
   const [explainQuery, setExplainQuery] = useState('');
+  const [groupByFingerprint, setGroupByFingerprint] = useState(false);
 
   const currentView: PgStatViewConfig = {
     orderBy, limit, minCalls, opFilter, tableFilter,
@@ -162,6 +166,47 @@ export default function PgStatStatements() {
     });
   }, [rows, opFilter, tableFilter]);
 
+  interface DisplayRow extends StatRow {
+    fingerprint: string;
+    variant_count: number;
+  }
+
+  const displayed = useMemo<DisplayRow[]>(() => {
+    if (!groupByFingerprint) {
+      return filtered.map((r) => ({ ...r, fingerprint: fingerprintQuery(r.query), variant_count: 1 }));
+    }
+    const map = new Map<string, DisplayRow>();
+    for (const r of filtered) {
+      const fp = fingerprintQuery(r.query);
+      const cur = map.get(fp);
+      if (!cur) {
+        map.set(fp, { ...r, fingerprint: fp, variant_count: 1 });
+      } else {
+        const totalCalls = cur.calls + r.calls;
+        const totalTime = cur.total_exec_ms + r.total_exec_ms;
+        map.set(fp, {
+          ...cur,
+          calls: totalCalls,
+          total_exec_ms: totalTime,
+          mean_exec_ms: totalCalls > 0 ? totalTime / totalCalls : 0,
+          max_exec_ms: Math.max(cur.max_exec_ms, r.max_exec_ms),
+          min_exec_ms: Math.min(cur.min_exec_ms, r.min_exec_ms),
+          stddev_exec_ms: Math.max(cur.stddev_exec_ms, r.stddev_exec_ms),
+          rows_returned: cur.rows_returned + r.rows_returned,
+          shared_blks_hit: cur.shared_blks_hit + r.shared_blks_hit,
+          shared_blks_read: cur.shared_blks_read + r.shared_blks_read,
+          variant_count: cur.variant_count + 1,
+          query: cur.query, // keep first as example
+        });
+      }
+    }
+    const order = orderBy === 'total_exec_time' ? 'total_exec_ms'
+      : orderBy === 'mean_exec_time' ? 'mean_exec_ms'
+      : orderBy === 'max_exec_time' ? 'max_exec_ms' : 'calls';
+    return [...map.values()].sort((a, b) => (b[order as keyof DisplayRow] as number) - (a[order as keyof DisplayRow] as number));
+  }, [filtered, groupByFingerprint, orderBy]);
+
+
   const toggleExpand = (i: number) => {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -197,16 +242,16 @@ export default function PgStatStatements() {
   const exportJSON = () => {
     const payload = {
       exported_at: new Date().toISOString(),
-      filters: { orderBy, limit, minCalls, opFilter, tableFilter },
+      filters: { orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint },
       window_started_at: statsSince ?? null,
-      rows: filtered,
+      rows: displayed,
     };
     downloadBlob(
       `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
       JSON.stringify(payload, null, 2),
       'application/json',
     );
-    toast.success(`Exportados ${filtered.length} registros (JSON)`);
+    toast.success(`Exportados ${displayed.length} registros (JSON)`);
   };
 
   const exportCSV = () => {
@@ -216,10 +261,11 @@ export default function PgStatStatements() {
     };
     const header = [
       'rank','op','table','calls','mean_ms','max_ms','min_ms','stddev_ms',
-      'total_ms','pct_total','rows_returned','cache_hit','cache_read','query',
+      'total_ms','pct_total','rows_returned','cache_hit','cache_read',
+      'variants','fingerprint','query',
     ];
     const lines = [header.join(',')];
-    filtered.forEach((r, i) => {
+    displayed.forEach((r, i) => {
       const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
       lines.push([
         i + 1, inferOp(r.query), inferTable(r.query),
@@ -227,6 +273,7 @@ export default function PgStatStatements() {
         r.min_exec_ms.toFixed(3), r.stddev_exec_ms.toFixed(3),
         r.total_exec_ms.toFixed(3), pct.toFixed(2),
         r.rows_returned, r.shared_blks_hit, r.shared_blks_read,
+        r.variant_count, r.fingerprint,
         r.query.replace(/\s+/g, ' ').trim(),
       ].map(escape).join(','));
     });
@@ -235,8 +282,9 @@ export default function PgStatStatements() {
       lines.join('\n'),
       'text/csv;charset=utf-8',
     );
-    toast.success(`Exportados ${filtered.length} registros (CSV)`);
+    toast.success(`Exportados ${displayed.length} registros (CSV)`);
   };
+
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 space-y-4">
@@ -315,7 +363,7 @@ export default function PgStatStatements() {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="outline" disabled={filtered.length === 0}>
+                <Button size="sm" variant="outline" disabled={displayed.length === 0}>
                   <Download className="h-4 w-4 mr-2" /> Exportar
                 </Button>
               </DropdownMenuTrigger>
@@ -325,6 +373,17 @@ export default function PgStatStatements() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <div className="flex items-center gap-2 ml-2 rounded-md border px-3 py-1.5">
+              <Switch
+                id="group-fp"
+                checked={groupByFingerprint}
+                onCheckedChange={setGroupByFingerprint}
+              />
+              <Label htmlFor="group-fp" className="text-xs cursor-pointer">
+                Agrupar por fingerprint
+              </Label>
+            </div>
+
             {statsSince && (
               <div className="text-xs text-muted-foreground ml-auto">
                 Janela desde <strong>{new Date(statsSince).toLocaleString('pt-BR')}</strong>
@@ -332,10 +391,11 @@ export default function PgStatStatements() {
                   <> ({(windowSeconds / 3600).toFixed(1)} h)</>
                 )}
                 {' · '}
-                Tempo acumulado (top {filtered.length}): <strong>{fmtMs(totalMsAll)}</strong>
+                Tempo acumulado (top {displayed.length}): <strong>{fmtMs(totalMsAll)}</strong>
               </div>
             )}
           </div>
+
 
           <p className="text-xs text-muted-foreground mt-3">
             <strong>Nota:</strong> <code>pg_stat_statements</code> é cumulativo desde o último reset —
@@ -354,11 +414,15 @@ export default function PgStatStatements() {
         </CardContent>
       </Card>
 
+      <AutoSnapshotConfigCard />
+
       <SnapshotsPanel />
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Resultado ({filtered.length})</CardTitle>
+          <CardTitle className="text-base">
+            Resultado ({displayed.length}){groupByFingerprint ? ' — agrupado por fingerprint' : ''}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -373,22 +437,25 @@ export default function PgStatStatements() {
                   <TableHead className="text-right">Máx</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead className="text-right">% total</TableHead>
-                  <TableHead>Query</TableHead>
+                  <TableHead>{groupByFingerprint ? 'Fingerprint' : 'Query'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.length === 0 && !loading && (
+                {displayed.length === 0 && !loading && (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                       Nenhuma consulta encontrada com os filtros atuais.
                     </TableCell>
                   </TableRow>
                 )}
-                {filtered.map((r, i) => {
+                {displayed.map((r, i) => {
                   const op = inferOp(r.query);
                   const table = inferTable(r.query);
                   const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
                   const isOpen = expanded.has(i);
+                  const display = groupByFingerprint
+                    ? shortFingerprint(r.fingerprint, 100)
+                    : firstLine(r.query, 100);
                   return (
                     <React.Fragment key={i}>
                       <TableRow className="cursor-pointer hover:bg-muted/50" onClick={() => toggleExpand(i)}>
@@ -397,7 +464,14 @@ export default function PgStatStatements() {
                           <Badge variant={OP_VARIANT[op]} className="text-xs">{op}</Badge>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{table}</TableCell>
-                        <TableCell className="text-right">{fmtInt(r.calls)}</TableCell>
+                        <TableCell className="text-right">
+                          {fmtInt(r.calls)}
+                          {groupByFingerprint && r.variant_count > 1 && (
+                            <span className="ml-1 text-xs text-muted-foreground">
+                              ({r.variant_count}v)
+                            </span>
+                          )}
+                        </TableCell>
                         <TableCell className="text-right">{fmtMs(r.mean_exec_ms)}</TableCell>
                         <TableCell className="text-right">
                           <span className={r.max_exec_ms > 200 ? 'text-destructive font-medium' : ''}>
@@ -407,7 +481,7 @@ export default function PgStatStatements() {
                         <TableCell className="text-right font-medium">{fmtMs(r.total_exec_ms)}</TableCell>
                         <TableCell className="text-right text-xs">{pct.toFixed(1)}%</TableCell>
                         <TableCell className="max-w-md truncate font-mono text-xs">
-                          {firstLine(r.query, 100)}
+                          {display}
                         </TableCell>
                       </TableRow>
                       {isOpen && (
@@ -419,6 +493,7 @@ export default function PgStatStatements() {
                                   min {fmtMs(r.min_exec_ms)} · stddev {fmtMs(r.stddev_exec_ms)} ·
                                   {' '}rows {fmtInt(r.rows_returned)} ·
                                   {' '}cache hit {fmtInt(r.shared_blks_hit)} / read {fmtInt(r.shared_blks_read)}
+                                  {groupByFingerprint && <> · variantes: <strong>{r.variant_count}</strong></>}
                                 </span>
                                 <Button
                                   size="sm" variant="ghost" className="ml-auto h-7"
@@ -433,7 +508,13 @@ export default function PgStatStatements() {
                                   <Copy className="h-3 w-3 mr-1" /> Copiar query
                                 </Button>
                               </div>
+                              {groupByFingerprint && (
+                                <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                  <span className="text-muted-foreground">fingerprint:</span> {r.fingerprint}
+                                </pre>
+                              )}
                               <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                {groupByFingerprint && <span className="text-muted-foreground">exemplo: </span>}
                                 {r.query}
                               </pre>
                             </div>
@@ -453,3 +534,4 @@ export default function PgStatStatements() {
     </div>
   );
 }
+

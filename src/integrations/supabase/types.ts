@@ -2918,6 +2918,39 @@ export type Database = {
         }
         Relationships: []
       }
+      pg_stat_snapshot_config: {
+        Row: {
+          enabled: boolean
+          id: number
+          interval_minutes: number
+          last_run_at: string | null
+          last_snapshot_id: string | null
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          id?: number
+          interval_minutes?: number
+          last_run_at?: string | null
+          last_snapshot_id?: string | null
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          id?: number
+          interval_minutes?: number
+          last_run_at?: string | null
+          last_snapshot_id?: string | null
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       pg_stat_snapshots: {
         Row: {
           created_at: string
@@ -5135,6 +5168,25 @@ export type Database = {
         Args: { p_analyze?: boolean; p_query: string }
         Returns: string
       }
+      admin_get_pg_stat_snapshot_config: {
+        Args: never
+        Returns: {
+          enabled: boolean
+          id: number
+          interval_minutes: number
+          last_run_at: string | null
+          last_snapshot_id: string | null
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "pg_stat_snapshot_config"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       admin_get_pg_stat_statements: {
         Args: { p_limit?: number; p_min_calls?: number; p_order_by?: string }
         Returns: {
@@ -5185,6 +5237,29 @@ export type Database = {
         }[]
       }
       admin_reset_pg_stat_statements: { Args: never; Returns: string }
+      admin_update_pg_stat_snapshot_config: {
+        Args: {
+          p_enabled: boolean
+          p_interval_minutes: number
+          p_retention_days: number
+        }
+        Returns: {
+          enabled: boolean
+          id: number
+          interval_minutes: number
+          last_run_at: string | null
+          last_snapshot_id: string | null
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "pg_stat_snapshot_config"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       aggregate_bible_cache_metrics: {
         Args: { p_since?: string }
         Returns: number
@@ -5445,6 +5520,7 @@ export type Database = {
         Returns: string
       }
       mask_ip: { Args: { ip: string }; Returns: string }
+      pg_stat_snapshot_auto_run: { Args: never; Returns: undefined }
       purge_user_bible_cache: {
         Args: { p_book_abbr?: string; p_user_id: string }
         Returns: undefined
