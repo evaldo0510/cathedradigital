@@ -18,6 +18,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
+import SourceAttribution from './SourceAttribution';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -352,6 +353,13 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </Button>
         </motion.div>
 
+        <SourceAttribution
+          source={(saint as any).source_name || (saint as any).source}
+          sourceUrl={(saint as any).source_url || (saint as any).sourceUrl || (saint as any).url}
+          bioSourceUrl={(saint as any).bio_source_url || (saint as any).bioSourceUrl}
+          prayerSourceUrl={(saint as any).prayer_source_url || (saint as any).prayerSourceUrl}
+          lastScrapedAt={(saint as any).last_scraped_at || (saint as any).lastScrapedAt}
+        />
 
       </div>
     </motion.div>

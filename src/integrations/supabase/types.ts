@@ -3343,10 +3343,12 @@ export type Database = {
         Row: {
           bible_refs: Json | null
           bio: string | null
+          bio_source_url: string | null
           born: string | null
           catechism_refs: number[] | null
           category: string | null
           church_doc_refs: Json | null
+          content_hash: string | null
           created_at: string | null
           died: string | null
           feast_day: string | null
@@ -3355,10 +3357,14 @@ export type Database = {
           full_bio: string | null
           id: string
           image: string | null
+          last_scraped_at: string | null
           name: string
           patron_of: string[] | null
           prayer: string | null
+          prayer_source_url: string | null
           quotes: string[] | null
+          source_name: string | null
+          source_url: string | null
           title: string | null
           updated_at: string | null
           virtues: string[] | null
@@ -3367,10 +3373,12 @@ export type Database = {
         Insert: {
           bible_refs?: Json | null
           bio?: string | null
+          bio_source_url?: string | null
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
           church_doc_refs?: Json | null
+          content_hash?: string | null
           created_at?: string | null
           died?: string | null
           feast_day?: string | null
@@ -3379,10 +3387,14 @@ export type Database = {
           full_bio?: string | null
           id: string
           image?: string | null
+          last_scraped_at?: string | null
           name: string
           patron_of?: string[] | null
           prayer?: string | null
+          prayer_source_url?: string | null
           quotes?: string[] | null
+          source_name?: string | null
+          source_url?: string | null
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
@@ -3391,10 +3403,12 @@ export type Database = {
         Update: {
           bible_refs?: Json | null
           bio?: string | null
+          bio_source_url?: string | null
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
           church_doc_refs?: Json | null
+          content_hash?: string | null
           created_at?: string | null
           died?: string | null
           feast_day?: string | null
@@ -3403,10 +3417,14 @@ export type Database = {
           full_bio?: string | null
           id?: string
           image?: string | null
+          last_scraped_at?: string | null
           name?: string
           patron_of?: string[] | null
           prayer?: string | null
+          prayer_source_url?: string | null
           quotes?: string[] | null
+          source_name?: string | null
+          source_url?: string | null
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
@@ -5313,10 +5331,12 @@ export type Database = {
         Returns: {
           bible_refs: Json | null
           bio: string | null
+          bio_source_url: string | null
           born: string | null
           catechism_refs: number[] | null
           category: string | null
           church_doc_refs: Json | null
+          content_hash: string | null
           created_at: string | null
           died: string | null
           feast_day: string | null
@@ -5325,10 +5345,14 @@ export type Database = {
           full_bio: string | null
           id: string
           image: string | null
+          last_scraped_at: string | null
           name: string
           patron_of: string[] | null
           prayer: string | null
+          prayer_source_url: string | null
           quotes: string[] | null
+          source_name: string | null
+          source_url: string | null
           title: string | null
           updated_at: string | null
           virtues: string[] | null

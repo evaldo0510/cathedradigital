@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Icons } from '@/constants';
+import SourceAttribution from '@/components/cathedra/SourceAttribution';
 
 interface SaintRow {
   id: string;
@@ -20,6 +22,11 @@ interface SaintRow {
   full_bio: string | null;
   category: string | null;
   prayer: string | null;
+  source_name: string | null;
+  source_url: string | null;
+  bio_source_url: string | null;
+  prayer_source_url: string | null;
+  last_scraped_at: string | null;
 }
 
 const DAYS_IN_MONTH = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -36,10 +43,23 @@ const emptyForm = (): SaintRow => ({
   full_bio: '',
   category: '',
   prayer: '',
+  source_name: '',
+  source_url: '',
+  bio_source_url: '',
+  prayer_source_url: '',
+  last_scraped_at: null,
 });
 
 const slugify = (s: string) =>
   s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const isValidUrl = (v: string | null | undefined) => {
+  if (!v) return true;
+  try { new URL(v); return true; } catch { return false; }
+};
+
+const SELECT_COLS =
+  'id,name,title,feast_day,feast_month,feast_day_num,bio,full_bio,category,prayer,source_name,source_url,bio_source_url,prayer_source_url,last_scraped_at';
 
 const SaintsAdmin: React.FC = () => {
   const [rows, setRows] = useState<SaintRow[]>([]);
@@ -47,13 +67,15 @@ const SaintsAdmin: React.FC = () => {
   const [form, setForm] = useState<SaintRow>(emptyForm());
   const [editing, setEditing] = useState(false);
   const [filter, setFilter] = useState<number | 'all'>('all');
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [reimporting, setReimporting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('saints')
-      .select('id, name, title, feast_day, feast_month, feast_day_num, bio, full_bio, category, prayer')
+      .select(SELECT_COLS)
       .order('feast_month', { ascending: true, nullsFirst: false })
       .order('feast_day_num', { ascending: true, nullsFirst: false });
     setLoading(false);
@@ -79,6 +101,10 @@ const SaintsAdmin: React.FC = () => {
     if (!f.name.trim()) return 'Nome é obrigatório.';
     if (!f.feast_month || f.feast_month < 1 || f.feast_month > 12) return 'Mês inválido (1..12).';
     if (!f.feast_day_num || f.feast_day_num < 1 || f.feast_day_num > DAYS_IN_MONTH[f.feast_month - 1]) return `Dia inválido para ${MONTHS_PT[f.feast_month - 1]}.`;
+    if (!f.bio?.trim()) return 'Bio curta é obrigatória.';
+    if (!isValidUrl(f.source_url)) return 'URL da fonte inválida.';
+    if (!isValidUrl(f.bio_source_url)) return 'URL da fonte da biografia inválida.';
+    if (!isValidUrl(f.prayer_source_url)) return 'URL da fonte da oração inválida.';
     return null;
   };
 
@@ -86,7 +112,15 @@ const SaintsAdmin: React.FC = () => {
     const err = validate(form);
     if (err) return toast.error(err);
     const id = form.id || slugify(form.name);
-    const payload = { ...form, id, feast_day: form.feast_day || `${form.feast_day_num} de ${MONTHS_PT[form.feast_month! - 1]}` };
+    const payload = {
+      ...form,
+      id,
+      feast_day: form.feast_day || `${form.feast_day_num} de ${MONTHS_PT[form.feast_month! - 1]}`,
+      source_name: form.source_name?.trim() || null,
+      source_url: form.source_url?.trim() || null,
+      bio_source_url: form.bio_source_url?.trim() || null,
+      prayer_source_url: form.prayer_source_url?.trim() || null,
+    };
     const { error } = await supabase.from('saints').upsert(payload as any, { onConflict: 'id' });
     if (error) return toast.error('Falha ao salvar', { description: error.message });
     toast.success(editing ? 'Santo atualizado' : 'Santo cadastrado');
@@ -130,17 +164,42 @@ const SaintsAdmin: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const runIncrementalReimport = async () => {
+    if (!confirm('Rodar reimport incremental? Só atualiza santos com conteúdo alterado ou scrape > 30 dias.')) return;
+    setReimporting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-incremental-reimport-saints', {
+        body: { ttl_days: 30 },
+      });
+      if (error) throw error;
+      toast.success('Reimport concluído', {
+        description: `Atualizados: ${data?.updated ?? 0} · Pulados (sem mudança): ${data?.skipped ?? 0} · Falhas: ${data?.failed ?? 0}`,
+      });
+      load();
+    } catch (e: any) {
+      toast.error('Falha no reimport', { description: e?.message ?? String(e) });
+    } finally {
+      setReimporting(false);
+    }
+  };
+
   return (
     <div className="container max-w-6xl mx-auto p-6 space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">Administração de Santos</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Cadastro, edição e importação em massa. Cobertura atual:{' '}
-          <Badge variant={gaps.length === 0 ? 'default' : 'destructive'}>
-            {366 - gaps.length}/366 dias
-          </Badge>
-          {gaps.length > 0 && <span className="ml-2">({gaps.length} sem santo)</span>}
-        </p>
+      <header className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold">Administração de Santos</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Cadastro, edição e importação em massa. Cobertura atual:{' '}
+            <Badge variant={gaps.length === 0 ? 'default' : 'destructive'}>
+              {366 - gaps.length}/366 dias
+            </Badge>
+            {gaps.length > 0 && <span className="ml-2">({gaps.length} sem santo)</span>}
+          </p>
+        </div>
+        <Button onClick={runIncrementalReimport} disabled={reimporting} variant="secondary" size="sm">
+          <Icons.RefreshCw className={`w-4 h-4 mr-2 ${reimporting ? 'animate-spin' : ''}`} />
+          {reimporting ? 'Reimportando…' : 'Reimport incremental'}
+        </Button>
       </header>
 
       <Card>
@@ -150,6 +209,9 @@ const SaintsAdmin: React.FC = () => {
             <input ref={fileRef} type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files?.[0] && importJson(e.target.files[0])} />
             <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
               <Icons.Upload className="w-4 h-4 mr-2" /> Importar JSON
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)} disabled={!form.name}>
+              <Icons.Eye className="w-4 h-4 mr-2" /> Preview
             </Button>
             {editing && (
               <Button variant="ghost" size="sm" onClick={() => { setForm(emptyForm()); setEditing(false); }}>
@@ -176,17 +238,38 @@ const SaintsAdmin: React.FC = () => {
             <Input id="day" type="number" min={1} max={31} value={form.feast_day_num ?? ''} onChange={(e) => setForm({ ...form, feast_day_num: e.target.value ? Number(e.target.value) : null })} />
           </div>
           <div className="md:col-span-2">
-            <Label htmlFor="bio">Bio curta</Label>
+            <Label htmlFor="bio">Bio curta *</Label>
             <Textarea id="bio" rows={2} value={form.bio || ''} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
           </div>
           <div className="md:col-span-2">
-            <Label htmlFor="fullBio">Biografia completa</Label>
-            <Textarea id="fullBio" rows={5} value={form.full_bio || ''} onChange={(e) => setForm({ ...form, full_bio: e.target.value })} />
+            <Label htmlFor="fullBio">Biografia completa (full_bio)</Label>
+            <Textarea id="fullBio" rows={6} value={form.full_bio || ''} onChange={(e) => setForm({ ...form, full_bio: e.target.value })} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="prayer">Oração</Label>
-            <Textarea id="prayer" rows={3} value={form.prayer || ''} onChange={(e) => setForm({ ...form, prayer: e.target.value })} />
+            <Textarea id="prayer" rows={4} value={form.prayer || ''} onChange={(e) => setForm({ ...form, prayer: e.target.value })} />
           </div>
+
+          <div className="md:col-span-2 pt-2 border-t border-border/40">
+            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Atribuição de fonte</p>
+          </div>
+          <div>
+            <Label htmlFor="source_name">Nome da fonte</Label>
+            <Input id="source_name" placeholder="Ex.: Vatican News · CNBB · Santopedia" value={form.source_name || ''} onChange={(e) => setForm({ ...form, source_name: e.target.value })} />
+          </div>
+          <div>
+            <Label htmlFor="source_url">URL da fonte principal</Label>
+            <Input id="source_url" placeholder="https://…" value={form.source_url || ''} onChange={(e) => setForm({ ...form, source_url: e.target.value })} />
+          </div>
+          <div>
+            <Label htmlFor="bio_source_url">URL da fonte da biografia</Label>
+            <Input id="bio_source_url" placeholder="https://…" value={form.bio_source_url || ''} onChange={(e) => setForm({ ...form, bio_source_url: e.target.value })} />
+          </div>
+          <div>
+            <Label htmlFor="prayer_source_url">URL da fonte da oração</Label>
+            <Input id="prayer_source_url" placeholder="https://…" value={form.prayer_source_url || ''} onChange={(e) => setForm({ ...form, prayer_source_url: e.target.value })} />
+          </div>
+
           <div className="md:col-span-2 flex justify-end">
             <Button onClick={save}>{editing ? 'Salvar alterações' : 'Cadastrar'}</Button>
           </div>
@@ -225,10 +308,16 @@ const SaintsAdmin: React.FC = () => {
               {filtered.map((r) => (
                 <div key={r.id} className="flex items-center justify-between py-2 gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium truncate">{r.name}</p>
+                    <p className="font-medium truncate">
+                      {r.name}
+                      {!r.full_bio && <Badge variant="outline" className="ml-2 text-[10px]">sem full_bio</Badge>}
+                      {!r.prayer && <Badge variant="outline" className="ml-2 text-[10px]">sem oração</Badge>}
+                      {!r.source_url && <Badge variant="outline" className="ml-2 text-[10px]">sem fonte</Badge>}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {r.feast_month && r.feast_day_num ? `${String(r.feast_day_num).padStart(2, '0')}/${String(r.feast_month).padStart(2, '0')}` : '— sem data —'}
                       {r.title ? ` · ${r.title}` : ''}
+                      {r.source_name ? ` · ${r.source_name}` : ''}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -241,6 +330,50 @@ const SaintsAdmin: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Preview: {form.name || 'Sem nome'}</DialogTitle>
+          </DialogHeader>
+          <article className="space-y-4 py-2">
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-primary">
+                {form.title || 'Santo do Dia'}
+              </p>
+              <h2 className="text-2xl font-serif font-bold text-foreground">{form.name}</h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {form.feast_day || (form.feast_month && form.feast_day_num
+                  ? `${form.feast_day_num} de ${MONTHS_PT[form.feast_month - 1]}`
+                  : '—')}
+              </p>
+            </div>
+            {form.bio && (
+              <p className="text-base font-serif italic text-foreground/90 border-l-4 border-primary/20 pl-4">
+                {form.bio}
+              </p>
+            )}
+            {form.full_bio && (
+              <div className="text-sm text-muted-foreground space-y-3 leading-relaxed">
+                {form.full_bio.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
+              </div>
+            )}
+            {form.prayer && (
+              <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
+                <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Oração</p>
+                <p className="text-sm italic text-foreground/90 whitespace-pre-line">{form.prayer}</p>
+              </div>
+            )}
+            <SourceAttribution
+              source={form.source_name}
+              sourceUrl={form.source_url}
+              bioSourceUrl={form.bio_source_url}
+              prayerSourceUrl={form.prayer_source_url}
+              lastScrapedAt={form.last_scraped_at}
+            />
+          </article>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
