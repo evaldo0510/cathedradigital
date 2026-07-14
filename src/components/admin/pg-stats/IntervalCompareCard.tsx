@@ -60,15 +60,59 @@ function daysAgoIso(days: number): string {
   const d = new Date(); d.setDate(d.getDate() - days); return toIsoDate(d);
 }
 
-const REGRESSION_MEAN_PCT = 20;
-const REGRESSION_P95_PCT = 25;
+const DEFAULT_REG_MEAN_PCT = 20;
+const DEFAULT_REG_P95_PCT = 25;
+
+function readParam(name: string, fallback: string): string {
+  if (typeof window === 'undefined') return fallback;
+  return new URLSearchParams(window.location.search).get(name) ?? fallback;
+}
 
 export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryRow[] }) {
-  const [aFrom, setAFrom] = useState(daysAgoIso(14));
-  const [aTo, setATo] = useState(daysAgoIso(7));
-  const [bFrom, setBFrom] = useState(daysAgoIso(7));
-  const [bTo, setBTo] = useState(todayIso());
-  const [onlyRegressions, setOnlyRegressions] = useState(false);
+  const [aFrom, setAFrom] = useState(() => readParam('aFrom', daysAgoIso(14)));
+  const [aTo, setATo] = useState(() => readParam('aTo', daysAgoIso(7)));
+  const [bFrom, setBFrom] = useState(() => readParam('bFrom', daysAgoIso(7)));
+  const [bTo, setBTo] = useState(() => readParam('bTo', todayIso()));
+  const [onlyRegressions, setOnlyRegressions] = useState(() => readParam('onlyReg', '') === '1');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [regMean, setRegMean] = useState<number>(DEFAULT_REG_MEAN_PCT);
+  const [regP95, setRegP95] = useState<number>(DEFAULT_REG_P95_PCT);
+
+  // load user + persisted thresholds (per user, fallback session)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user?.id ?? null;
+      if (cancelled) return;
+      setUserId(uid);
+      const key = uid ? `pgstats:reg:${uid}` : 'pgstats:reg:session';
+      const raw = (uid ? localStorage.getItem(key) : sessionStorage.getItem(key));
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed.mean === 'number') setRegMean(parsed.mean);
+          if (typeof parsed.p95 === 'number') setRegP95(parsed.p95);
+        } catch { /* ignore */ }
+      }
+      // URL params override persisted
+      const urlMean = Number(readParam('regMean', ''));
+      const urlP95 = Number(readParam('regP95', ''));
+      if (Number.isFinite(urlMean) && urlMean > 0) setRegMean(urlMean);
+      if (Number.isFinite(urlP95) && urlP95 > 0) setRegP95(urlP95);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // persist thresholds
+  useEffect(() => {
+    const payload = JSON.stringify({ mean: regMean, p95: regP95 });
+    const key = userId ? `pgstats:reg:${userId}` : 'pgstats:reg:session';
+    try {
+      if (userId) localStorage.setItem(key, payload);
+      else sessionStorage.setItem(key, payload);
+    } catch { /* ignore quota */ }
+  }, [regMean, regP95, userId]);
 
   const filterByRange = (from: string, to: string) => {
     const fromT = new Date(from + 'T00:00:00').getTime();
