@@ -783,7 +783,7 @@ export default function PgStatStatements() {
               <TableBody>
                 {pageRows.length === 0 && !loading && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={groupByFingerprint ? 10 : 9} className="text-center text-muted-foreground py-8">
                       Nenhuma consulta encontrada com os filtros atuais.
                     </TableCell>
                   </TableRow>
@@ -797,6 +797,12 @@ export default function PgStatStatements() {
                   const display = groupByFingerprint
                     ? shortFingerprint(r.fingerprint, 100)
                     : firstLine(r.query, 100);
+                  const evo = groupByFingerprint ? (evolutionByFp.get(r.fingerprint) || []) : [];
+                  const p95Series = evo.map((e) => e.p95);
+                  const meanSeries = evo.map((e) => e.mean);
+                  const callsSeries = evo.map((e) => e.calls);
+                  const lastN = 12;
+                  const trim = <T,>(arr: T[]) => (arr.length > lastN ? arr.slice(-lastN) : arr);
                   return (
                     <React.Fragment key={i}>
                       <TableRow className="cursor-pointer hover:bg-muted/50" onClick={() => toggleExpand(i)}>
@@ -821,13 +827,29 @@ export default function PgStatStatements() {
                         </TableCell>
                         <TableCell className="text-right font-medium">{fmtMs(r.total_exec_ms)}</TableCell>
                         <TableCell className="text-right text-xs">{pct.toFixed(1)}%</TableCell>
+                        {groupByFingerprint && (
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <div
+                              className="flex flex-col gap-0.5 leading-none"
+                              title={
+                                evo.length === 0
+                                  ? 'Sem histórico de snapshots'
+                                  : `${evo.length} snapshot(s) — última janela: ${new Date(evo[evo.length - 1].when).toLocaleString('pt-BR')}`
+                              }
+                            >
+                              <Sparkline values={trim(p95Series)} strokeClass="stroke-destructive" fillClass="fill-destructive/10" ariaLabel={`Evolução p95 · ${evo.length} pontos`} />
+                              <Sparkline values={trim(meanSeries)} strokeClass="stroke-primary" fillClass="fill-primary/10" ariaLabel={`Evolução média · ${evo.length} pontos`} />
+                              <Sparkline values={trim(callsSeries)} strokeClass="stroke-muted-foreground" fillClass="fill-muted-foreground/10" ariaLabel={`Evolução chamadas · ${evo.length} pontos`} />
+                            </div>
+                          </TableCell>
+                        )}
                         <TableCell className="max-w-md truncate font-mono text-xs">
                           {display}
                         </TableCell>
                       </TableRow>
                       {isOpen && (
                         <TableRow>
-                          <TableCell colSpan={9} className="bg-muted/30">
+                          <TableCell colSpan={groupByFingerprint ? 10 : 9} className="bg-muted/30">
                             <div className="space-y-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="text-xs text-muted-foreground">
