@@ -240,18 +240,92 @@ export default function PgStatStatements() {
         });
       }
     }
+    // Base ordering from server-side orderBy (preserves original "rank" semantics)
     const order = orderBy === 'total_exec_time' ? 'total_exec_ms'
       : orderBy === 'mean_exec_time' ? 'mean_exec_ms'
       : orderBy === 'max_exec_time' ? 'max_exec_ms' : 'calls';
     return [...map.values()].sort((a, b) => (b[order as keyof DisplayRow] as number) - (a[order as keyof DisplayRow] as number));
   }, [filtered, groupByFingerprint, orderBy]);
 
+  // Client-side text search on fingerprint + normalized query (single sample) + table name
+  const searched = useMemo<DisplayRow[]>(() => {
+    const q = searchText.trim().toLowerCase();
+    if (!q) return displayed;
+    return displayed.filter((r) => {
+      const hay =
+        r.fingerprint.toLowerCase() + ' ' +
+        r.query.toLowerCase() + ' ' +
+        inferTable(r.query).toLowerCase();
+      return hay.includes(q);
+    });
+  }, [displayed, searchText]);
+
+  // Client-side sort (overrides the base rank ordering when sortKey !== 'rank')
+  const sorted = useMemo<DisplayRow[]>(() => {
+    if (sortKey === 'rank') return searched;
+    const dir = sortDir === 'asc' ? 1 : -1;
+    const cmp = (a: DisplayRow, b: DisplayRow): number => {
+      switch (sortKey) {
+        case 'fingerprint':
+          return a.fingerprint.localeCompare(b.fingerprint) * dir;
+        case 'calls': return (a.calls - b.calls) * dir;
+        case 'mean': return (a.mean_exec_ms - b.mean_exec_ms) * dir;
+        case 'max': return (a.max_exec_ms - b.max_exec_ms) * dir;
+        case 'total': return (a.total_exec_ms - b.total_exec_ms) * dir;
+        default: return 0;
+      }
+    };
+    return [...searched].sort(cmp);
+  }, [searched, sortKey, sortDir]);
+
+  // Evolution per fingerprint from snapshots (used by sparkline + export)
+  const evolutionByFp = useMemo(() => {
+    const sortedSnaps = [...snapshots].sort(
+      (a, b) => new Date(a.taken_at).getTime() - new Date(b.taken_at).getTime(),
+    );
+    const out = new Map<string, Array<{ when: string; calls: number; mean: number; p95: number }>>();
+    for (const s of sortedSnaps) {
+      const perFp = new Map<string, { calls: number; total: number; max: number }>();
+      for (const r of s.rows || []) {
+        const fp = fingerprintQuery(r.query);
+        const cur = perFp.get(fp) || { calls: 0, total: 0, max: 0 };
+        cur.calls += r.calls || 0;
+        cur.total += r.total_exec_time || 0;
+        cur.max = Math.max(cur.max, r.max_exec_time || 0);
+        perFp.set(fp, cur);
+      }
+      const when = s.taken_at;
+      for (const [fp, v] of perFp) {
+        const list = out.get(fp) || [];
+        list.push({
+          when,
+          calls: v.calls,
+          mean: v.calls > 0 ? v.total / v.calls : 0,
+          p95: v.max,
+        });
+        out.set(fp, list);
+      }
+    }
+    return out;
+  }, [snapshots]);
+
+  const clickSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'fingerprint' ? 'asc' : 'desc');
+    }
+  };
+
+  const clearSort = () => { setSortKey('rank'); setSortDir('desc'); };
+
   // Pagination
-  useEffect(() => { setPage(1); }, [orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint, pageSize]);
-  const totalPages = Math.max(1, Math.ceil(displayed.length / pageSize));
+  useEffect(() => { setPage(1); }, [orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint, pageSize, searchText, sortKey, sortDir]);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const pageStart = (page - 1) * pageSize;
   const pageEnd = pageStart + pageSize;
-  const pageRows = useMemo(() => displayed.slice(pageStart, pageEnd), [displayed, pageStart, pageEnd]);
+  const pageRows = useMemo(() => sorted.slice(pageStart, pageEnd), [sorted, pageStart, pageEnd]);
 
   const copyShareLink = async () => {
     try {
