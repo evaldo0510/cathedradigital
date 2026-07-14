@@ -116,12 +116,15 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
   const [enabled, setEnabled] = useState<boolean>(() => isMagisteriumDebugOn());
   const [open, setOpen] = useState(true);
   const [tick, setTick] = useState(0);
+  const [lastCheckedAt, setLastCheckedAt] = useState<number>(() => Date.now());
   const [refreshMs, setRefreshMs] = useState<number>(() => {
     if (typeof window === 'undefined') return 5000;
     const raw = window.localStorage.getItem(REFRESH_STORAGE_KEY);
     const parsed = raw ? Number(raw) : NaN;
     return Number.isFinite(parsed) && parsed >= 0 ? parsed : 5000;
   });
+
+  useEffect(() => { setLastCheckedAt(Date.now()); }, [tick]);
 
   useEffect(() => {
     const handler = () => setTick((t) => t + 1);
