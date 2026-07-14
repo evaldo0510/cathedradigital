@@ -102,11 +102,25 @@ const copyDiagReport = async (
 };
 
 
+const REFRESH_OPTIONS: { label: string; ms: number }[] = [
+  { label: 'off', ms: 0 },
+  { label: '2s', ms: 2000 },
+  { label: '5s', ms: 5000 },
+  { label: '15s', ms: 15000 },
+];
+const REFRESH_STORAGE_KEY = 'magisterium-diag-refresh-ms';
+
 const MagisteriumDiagnosticPanel: React.FC = () => {
   const location = useLocation();
   const [enabled, setEnabled] = useState<boolean>(() => isMagisteriumDebugOn());
   const [open, setOpen] = useState(true);
   const [tick, setTick] = useState(0);
+  const [refreshMs, setRefreshMs] = useState<number>(() => {
+    if (typeof window === 'undefined') return 5000;
+    const raw = window.localStorage.getItem(REFRESH_STORAGE_KEY);
+    const parsed = raw ? Number(raw) : NaN;
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 5000;
+  });
 
   useEffect(() => {
     const handler = () => setTick((t) => t + 1);
@@ -119,12 +133,23 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!enabled || refreshMs <= 0) return;
+    const id = window.setInterval(() => setTick((t) => t + 1), refreshMs);
+    return () => window.clearInterval(id);
+  }, [enabled, refreshMs]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem(REFRESH_STORAGE_KEY, String(refreshMs)); } catch { /* silent */ }
+  }, [refreshMs]);
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('debug') === '1' && !enabled) {
       enableMagisteriumDebug(true);
       setEnabled(true);
     }
   }, [location.search, enabled]);
+
 
   const buffer = useMemo<MagisteriumDiagEvent[]>(() => getMagisteriumDiagBuffer(), [tick]);
   const persisted = useMemo<MagisteriumDiagEvent[]>(() => getPersistedMagisteriumErrors(), [tick]);
@@ -161,6 +186,33 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
           )}
         </div>
         <div className="flex items-center gap-spacing-2xs">
+          <div
+            className="flex items-center gap-[2px] rounded-premium border border-border/50 bg-muted/30 px-[2px] py-[1px]"
+            role="group"
+            aria-label="Intervalo de atualização automática"
+            data-testid="magisterium-diagnostic-refresh"
+          >
+            {REFRESH_OPTIONS.map((opt) => {
+              const active = refreshMs === opt.ms;
+              return (
+                <button
+                  key={opt.ms}
+                  type="button"
+                  onClick={() => setRefreshMs(opt.ms)}
+                  aria-pressed={active}
+                  title={opt.ms === 0 ? 'Atualização automática desligada' : `Atualiza a cada ${opt.label}`}
+                  className={cn(
+                    'px-spacing-2xs h-5 rounded-[4px] text-[9px] font-mono uppercase tracking-wider transition-colors',
+                    active
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
           <Button size="sm" variant="ghost" onClick={() => setOpen((v) => !v)}>{open ? '−' : '+'}</Button>
           <Button
             size="sm"
@@ -171,6 +223,7 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
             ×
           </Button>
         </div>
+
       </div>
 
       {open && (
