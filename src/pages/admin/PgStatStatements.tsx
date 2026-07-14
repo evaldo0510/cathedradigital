@@ -242,16 +242,16 @@ export default function PgStatStatements() {
   const exportJSON = () => {
     const payload = {
       exported_at: new Date().toISOString(),
-      filters: { orderBy, limit, minCalls, opFilter, tableFilter },
+      filters: { orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint },
       window_started_at: statsSince ?? null,
-      rows: filtered,
+      rows: displayed,
     };
     downloadBlob(
       `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
       JSON.stringify(payload, null, 2),
       'application/json',
     );
-    toast.success(`Exportados ${filtered.length} registros (JSON)`);
+    toast.success(`Exportados ${displayed.length} registros (JSON)`);
   };
 
   const exportCSV = () => {
@@ -261,10 +261,11 @@ export default function PgStatStatements() {
     };
     const header = [
       'rank','op','table','calls','mean_ms','max_ms','min_ms','stddev_ms',
-      'total_ms','pct_total','rows_returned','cache_hit','cache_read','query',
+      'total_ms','pct_total','rows_returned','cache_hit','cache_read',
+      'variants','fingerprint','query',
     ];
     const lines = [header.join(',')];
-    filtered.forEach((r, i) => {
+    displayed.forEach((r, i) => {
       const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
       lines.push([
         i + 1, inferOp(r.query), inferTable(r.query),
@@ -272,6 +273,7 @@ export default function PgStatStatements() {
         r.min_exec_ms.toFixed(3), r.stddev_exec_ms.toFixed(3),
         r.total_exec_ms.toFixed(3), pct.toFixed(2),
         r.rows_returned, r.shared_blks_hit, r.shared_blks_read,
+        r.variant_count, r.fingerprint,
         r.query.replace(/\s+/g, ' ').trim(),
       ].map(escape).join(','));
     });
@@ -280,8 +282,9 @@ export default function PgStatStatements() {
       lines.join('\n'),
       'text/csv;charset=utf-8',
     );
-    toast.success(`Exportados ${filtered.length} registros (CSV)`);
+    toast.success(`Exportados ${displayed.length} registros (CSV)`);
   };
+
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 space-y-4">
