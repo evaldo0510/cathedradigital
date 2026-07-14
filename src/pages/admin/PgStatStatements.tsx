@@ -93,6 +93,20 @@ export default function PgStatStatements() {
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [explainOpen, setExplainOpen] = useState(false);
+  const [explainQuery, setExplainQuery] = useState('');
+
+  const currentView: PgStatViewConfig = {
+    orderBy, limit, minCalls, opFilter, tableFilter,
+  };
+
+  const applyView = (cfg: PgStatViewConfig) => {
+    setOrderBy(cfg.orderBy as OrderBy);
+    setLimit(cfg.limit);
+    setMinCalls(cfg.minCalls);
+    setOpFilter(cfg.opFilter as typeof opFilter);
+    setTableFilter(cfg.tableFilter);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
