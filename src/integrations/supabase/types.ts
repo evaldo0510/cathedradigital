@@ -3432,6 +3432,63 @@ export type Database = {
         }
         Relationships: []
       }
+      saints_audit: {
+        Row: {
+          action: string
+          changed_at: string
+          changed_by: string | null
+          id: number
+          new_content_hash: string | null
+          new_full_bio: string | null
+          new_last_scraped_at: string | null
+          new_prayer: string | null
+          new_source_url: string | null
+          old_content_hash: string | null
+          old_full_bio: string | null
+          old_last_scraped_at: string | null
+          old_prayer: string | null
+          old_source_url: string | null
+          saint_id: string
+          source_note: string | null
+        }
+        Insert: {
+          action: string
+          changed_at?: string
+          changed_by?: string | null
+          id?: number
+          new_content_hash?: string | null
+          new_full_bio?: string | null
+          new_last_scraped_at?: string | null
+          new_prayer?: string | null
+          new_source_url?: string | null
+          old_content_hash?: string | null
+          old_full_bio?: string | null
+          old_last_scraped_at?: string | null
+          old_prayer?: string | null
+          old_source_url?: string | null
+          saint_id: string
+          source_note?: string | null
+        }
+        Update: {
+          action?: string
+          changed_at?: string
+          changed_by?: string | null
+          id?: number
+          new_content_hash?: string | null
+          new_full_bio?: string | null
+          new_last_scraped_at?: string | null
+          new_prayer?: string | null
+          new_source_url?: string | null
+          old_content_hash?: string | null
+          old_full_bio?: string | null
+          old_last_scraped_at?: string | null
+          old_prayer?: string | null
+          old_source_url?: string | null
+          saint_id?: string
+          source_note?: string | null
+        }
+        Relationships: []
+      }
       saved_filters: {
         Row: {
           created_at: string | null
