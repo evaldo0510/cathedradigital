@@ -48,9 +48,7 @@ que a cria, sob revisão explícita.
 
 ## Dívidas técnicas registradas
 
-- **CAT-003 residual (baixa):** `cleanup_bible_audit_action_logs` — remover
-  `GRANT ... TO anon` na Sprint B assim que o cron migrar 100% para
-  chamada via service-role autenticada.
+- ~~**CAT-003 residual (baixa):** `cleanup_bible_audit_action_logs`~~ — **encerrada em Sprint B / B2 (2026-07-14).** `EXECUTE` revogado de `anon` e `authenticated`; apenas `service_role` mantém acesso.
 - **Trigger functions com grant redundante (informativo):** linhas 7 e 8 —
   sem impacto de segurança, mas podem ser limpas em qualquer migração
   futura que refaça o REVOKE geral.
