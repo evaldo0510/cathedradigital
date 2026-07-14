@@ -36,6 +36,30 @@ function getInitialFromUrl<T extends string | number | boolean>(
   return parsed !== undefined ? parsed : fallback;
 }
 
+interface SortHeaderProps {
+  label: string;
+  active: boolean;
+  dir: 'asc' | 'desc';
+  onClick: () => void;
+  align?: 'left' | 'right';
+}
+function SortHeader({ label, active, dir, onClick, align = 'left' }: SortHeaderProps) {
+  const Icon = !active ? ArrowUpDown : dir === 'asc' ? ArrowUp : ArrowDown;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Ordenar por ${label}${active ? ` (${dir === 'asc' ? 'crescente' : 'decrescente'})` : ''}`}
+      className={`inline-flex items-center gap-1 hover:text-foreground transition-colors ${
+        active ? 'text-foreground font-medium' : 'text-muted-foreground'
+      } ${align === 'right' ? 'ml-auto' : ''}`}
+    >
+      {label}
+      <Icon className="h-3 w-3" />
+    </button>
+  );
+}
+
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
 
 interface StatRow {
