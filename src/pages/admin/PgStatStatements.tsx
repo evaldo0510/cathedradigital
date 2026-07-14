@@ -236,6 +236,33 @@ export default function PgStatStatements() {
     return [...map.values()].sort((a, b) => (b[order as keyof DisplayRow] as number) - (a[order as keyof DisplayRow] as number));
   }, [filtered, groupByFingerprint, orderBy]);
 
+  // Pagination
+  useEffect(() => { setPage(1); }, [orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint, pageSize]);
+  const totalPages = Math.max(1, Math.ceil(displayed.length / pageSize));
+  const pageStart = (page - 1) * pageSize;
+  const pageEnd = pageStart + pageSize;
+  const pageRows = useMemo(() => displayed.slice(pageStart, pageEnd), [displayed, pageStart, pageEnd]);
+
+  const copyShareLink = async () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set('orderBy', orderBy);
+      params.set('limit', String(limit));
+      params.set('minCalls', String(minCalls));
+      params.set('opFilter', opFilter);
+      params.set('tableFilter', tableFilter);
+      params.set('groupByFp', groupByFingerprint ? '1' : '0');
+      params.set('pageSize', String(pageSize));
+      const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, '', url);
+      toast.success('Link copiado — filtros e intervalos A×B preservados');
+    } catch {
+      toast.error('Falha ao copiar link');
+    }
+  };
+
+
 
   const toggleExpand = (i: number) => {
     setExpanded((prev) => {
