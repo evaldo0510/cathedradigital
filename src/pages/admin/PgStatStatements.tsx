@@ -611,7 +611,7 @@ export default function PgStatStatements() {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="outline" disabled={displayed.length === 0}>
+                <Button size="sm" variant="outline" disabled={sorted.length === 0}>
                   <Download className="h-4 w-4 mr-2" /> Exportar
                 </Button>
               </DropdownMenuTrigger>
