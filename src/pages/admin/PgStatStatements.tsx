@@ -383,16 +383,17 @@ export default function PgStatStatements() {
   const exportJSON = () => {
     const payload = {
       exported_at: new Date().toISOString(),
-      filters: { orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint },
+      filters: { orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint,
+        searchText, sortKey, sortDir },
       window_started_at: statsSince ?? null,
-      rows: displayed,
+      rows: sorted,
     };
     downloadBlob(
       `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
       JSON.stringify(payload, null, 2),
       'application/json',
     );
-    toast.success(`Exportados ${displayed.length} registros (JSON)`);
+    toast.success(`Exportados ${sorted.length} registros (JSON)`);
   };
 
   const exportCSV = () => {
@@ -406,7 +407,7 @@ export default function PgStatStatements() {
       'variants','fingerprint','query',
     ];
     const lines = [header.join(',')];
-    displayed.forEach((r, i) => {
+    sorted.forEach((r, i) => {
       const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
       lines.push([
         i + 1, inferOp(r.query), inferTable(r.query),
@@ -423,7 +424,7 @@ export default function PgStatStatements() {
       lines.join('\n'),
       'text/csv;charset=utf-8',
     );
-    toast.success(`Exportados ${displayed.length} registros (CSV)`);
+    toast.success(`Exportados ${sorted.length} registros (CSV)`);
   };
 
   // ---- Fingerprint aggregate + evolution across snapshots (respects op/table filters) ----
