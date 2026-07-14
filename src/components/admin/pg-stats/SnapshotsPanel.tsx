@@ -275,6 +275,9 @@ export function SnapshotsPanel({ snapshots, loading, reload }: SnapshotsPanelPro
           </div>
         )}
       </CardContent>
-    </Card>
+      </Card>
+      <IntervalCompareCard snapshots={snapshots} />
+    </>
   );
 }
+
