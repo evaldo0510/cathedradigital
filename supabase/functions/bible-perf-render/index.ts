@@ -3,20 +3,14 @@
 // bible_cache_metric_events pela coluna correlation_id.
 //
 // Body: { correlation_id: string, render_ms: number }
-// Resposta: { ok: boolean }
+// Resposta sucesso: { ok: true }
+// Erros: envelope estrito ErrorEnvelopeSchema (Wave 4a).
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { z } from "https://esm.sh/zod@3.23.8";
-
-const _corsBase = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
-  'Access-Control-Expose-Headers': 'x-correlation-id',
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -28,30 +22,20 @@ const BodySchema = z.object({
 });
 
 serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'method_not_allowed' }), {
-      status: 405,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+  if (req.method === 'OPTIONS') return R.cors();
+  if (req.method !== 'POST') return R.error(405, 'method_not_allowed');
 
   try {
     const raw = await req.json().catch(() => ({}));
     const parsed = BodySchema.safeParse(raw);
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: 'invalid_payload', details: parsed.error.flatten().fieldErrors }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return R.error(400, 'invalid_body', parsed.error.flatten().fieldErrors);
     }
     const { correlation_id, render_ms } = parsed.data;
 
-    // Atualiza somente se o evento existir e ainda não tiver render_ms gravado.
     const { error } = await supabase
       .from('bible_cache_metric_events')
       .update({ render_ms })
@@ -60,20 +44,12 @@ serve(async (req) => {
 
     if (error) {
       console.warn('[bible-perf-render] update failed:', error.message);
-      return new Response(JSON.stringify({ ok: false, error: error.message }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return R.error(500, 'internal_error', { message: error.message });
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return R.raw({ ok: true });
   } catch (e: any) {
     console.error('[bible-perf-render] unexpected:', String(e?.message || e));
-    return new Response(JSON.stringify({ ok: false, error: 'internal' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return R.error(500, 'internal_error', { message: 'internal' });
   }
 });
