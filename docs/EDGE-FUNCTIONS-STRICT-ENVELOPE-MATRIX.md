@@ -22,7 +22,7 @@ Envelope de erro validado por `_shared/error-envelope-schema.ts`
 |------|--------|--------|
 | A2.a | Funções auditadas — 7 (pcl-* + nexus-relations) | ✅ concluída |
 | A2.b Wave 1 | `sitemap`, `saint-of-the-day`, `search-saint`, `liturgical-calendar`, `vatican-document` | ✅ concluída (2026-07-13) |
-| A2.b Wave 2 | Diagnóstico/telemetria: `cid-trail`, `cid-compliance-stats`, `bible-*` de admin | ⏳ planejada |
+| A2.b Wave 2 | Diagnóstico/telemetria: `cid-trail`, `cid-compliance-stats`, `bible-abbr-validate` (400/405) | ✅ concluída (2026-07-14) |
 | A2.b Wave 3 | Notificações / stubs: `send-notification`, `send-push`, `daily-streak-push`, `retention-notifications`, `telemetry-notifications`, `intelligent-notifications`, `spiritual-continuity` | ⏳ planejada |
 | A2.b Wave 4 | Ferramentas de manutenção Bíblia: `bible-cache-*`, `bible-import-*`, `bible-integrity-check`, `bible-perf-render`, `bible-alerts-reconcile`, `bible-auto-warm-slow`, `bible-availability-report`, `bible-canon-diagnose`, `bible-convert-dump`, `bible-latency-regression-alert` | ⏳ planejada |
 | A2.b Wave 5 | Domínios com contrato próprio publicado — **exceções documentadas** | 🚫 permanecem com envelope custom |
