@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { toast } from 'sonner';
 import { Icons } from '@/constants';
 import SourceAttribution from '@/components/cathedra/SourceAttribution';
+import SaintsAuditPanel from '@/components/admin/SaintsAuditPanel';
 
 interface SaintRow {
   id: string;
