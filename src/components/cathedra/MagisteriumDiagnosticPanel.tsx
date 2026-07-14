@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import {
   MagisteriumDiagEvent,
   clearMagisteriumDiag,
@@ -12,6 +13,39 @@ import {
   getPersistedMagisteriumErrors,
   isMagisteriumDebugOn,
 } from '@/lib/magisteriumDiagnostics';
+
+const ERROR_STEPS = ['fetch_404', 'fetch_error', 'fetch_thin', 'cache_thin', 'final_error'] as const;
+const OK_STEPS = ['cache_hit', 'fetch_ok'] as const;
+
+const buildDiagReport = (
+  buffer: MagisteriumDiagEvent[],
+  persisted: MagisteriumDiagEvent[],
+) => {
+  const lastError = [...buffer].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step))
+    ?? [...persisted].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step))
+    ?? null;
+
+  const summary = buffer.reduce(
+    (acc, ev) => {
+      if ((OK_STEPS as readonly string[]).includes(ev.step)) acc.ok += 1;
+      else if ((ERROR_STEPS as readonly string[]).includes(ev.step)) acc.errors += 1;
+      else acc.other += 1;
+      return acc;
+    },
+    { ok: 0, errors: 0, other: 0 },
+  );
+
+  return {
+    generatedAt: new Date().toISOString(),
+    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    counts: { buffer: buffer.length, persisted: persisted.length, ...summary },
+    lastError,
+    timeline: buffer,
+    persistedErrors: persisted,
+  };
+};
+
 
 const SEVERITY: Record<string, 'error' | 'warn' | 'ok'> = {
   cache_hit: 'ok',
@@ -27,20 +61,7 @@ const exportDiagReport = (
   buffer: MagisteriumDiagEvent[],
   persisted: MagisteriumDiagEvent[],
 ) => {
-  const lastError = [...buffer, ...persisted].find((ev) =>
-    ['fetch_404', 'fetch_error', 'fetch_thin', 'cache_thin', 'final_error'].includes(ev.step),
-  ) ?? null;
-
-  const report = {
-    generatedAt: new Date().toISOString(),
-    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-    counts: { buffer: buffer.length, persisted: persisted.length },
-    lastError,
-    timeline: buffer,
-    persistedErrors: persisted,
-  };
-
+  const report = buildDiagReport(buffer, persisted);
   try {
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -53,6 +74,33 @@ const exportDiagReport = (
     setTimeout(() => URL.revokeObjectURL(url), 0);
   } catch {/* silent */}
 };
+
+const copyDiagReport = async (
+  buffer: MagisteriumDiagEvent[],
+  persisted: MagisteriumDiagEvent[],
+) => {
+  const report = buildDiagReport(buffer, persisted);
+  const text = JSON.stringify(report, null, 2);
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    toast.success('Relatório de diagnóstico copiado');
+  } catch {
+    toast.error('Falha ao copiar relatório');
+  }
+};
+
 
 const MagisteriumDiagnosticPanel: React.FC = () => {
   const location = useLocation();
@@ -84,6 +132,16 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
   if (!enabled) return null;
 
   const thinCount = buffer.filter((e) => e.step === 'cache_thin' || e.step === 'fetch_thin').length;
+
+  const okCount = buffer.filter((e) => (OK_STEPS as readonly string[]).includes(e.step)).length;
+  const errorCount = buffer.filter((e) => (ERROR_STEPS as readonly string[]).includes(e.step)).length;
+  const lastError = useMemo<MagisteriumDiagEvent | null>(() => {
+    return (
+      [...buffer].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step)) ??
+      [...persisted].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step)) ??
+      null
+    );
+  }, [buffer, persisted]);
 
   return (
     <div
@@ -123,14 +181,50 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
               <div className="font-mono truncate">{location.pathname + location.search}</div>
             </div>
             <div className="space-y-spacing-3xs">
-              <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Eventos</div>
-              <div className="font-mono">{buffer.length} / persist: {persisted.length}</div>
+              <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Requisições</div>
+              <div className="font-mono flex items-center gap-spacing-2xs" data-testid="magisterium-diagnostic-summary">
+                <span className="text-emerald-600 dark:text-emerald-400">✓ {okCount}</span>
+                <span className="text-destructive">✕ {errorCount}</span>
+                <span className="text-muted-foreground">/ {buffer.length}</span>
+              </div>
             </div>
+          </div>
+
+          <div
+            className={cn(
+              'rounded-premium border px-spacing-xs py-spacing-2xs text-[10px] font-mono',
+              lastError
+                ? 'border-destructive/40 bg-destructive/5 text-destructive'
+                : 'border-border/40 bg-muted/20 text-muted-foreground',
+            )}
+            data-testid="magisterium-diagnostic-last-error"
+          >
+            <div className="uppercase tracking-widest text-[9px] mb-spacing-3xs opacity-70">Último erro</div>
+            {lastError ? (
+              <div className="space-y-spacing-3xs">
+                <div>
+                  {new Date(lastError.ts).toLocaleTimeString()} · {lastError.docId ?? '—'} · {lastError.step}
+                  {lastError.status !== undefined ? ` · ${lastError.status}` : ''}
+                </div>
+                {lastError.message && <div className="truncate opacity-90">{lastError.message}</div>}
+              </div>
+            ) : (
+              <div>Nenhum erro registrado.</div>
+            )}
           </div>
 
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Linha do tempo</div>
             <div className="flex items-center gap-spacing-2xs">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={() => copyDiagReport(buffer, persisted)}
+                data-testid="magisterium-diagnostic-copy"
+              >
+                Copiar
+              </Button>
               <Button
                 size="sm"
                 variant="ghost"
@@ -145,6 +239,7 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
               </Button>
             </div>
           </div>
+
 
           <ScrollArea className="h-[240px] rounded-premium border border-border/40 bg-muted/20">
             <ul className="p-spacing-xs space-y-spacing-2xs">
