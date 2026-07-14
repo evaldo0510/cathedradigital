@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Download } from 'lucide-react';
+import { toast } from 'sonner';
 import { fingerprintQuery } from './queryFingerprint';
 import type { SnapshotHistoryRow } from './useSnapshotHistory';
 
