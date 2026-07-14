@@ -64,24 +64,38 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const authHeader = req.headers.get("Authorization") ?? "";
-    const jwt = authHeader.replace(/^Bearer\s+/i, "").trim();
-    if (!jwt) return json({ error: "unauthorized", details: "missing bearer token" }, 401);
-
-    const anon = createClient(supabaseUrl, anonKey);
-    const { data: userData, error: userErr } = await anon.auth.getUser(jwt);
-    if (userErr || !userData?.user) return json({ error: "unauthorized", details: userErr?.message ?? "invalid token" }, 401);
-
     const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
-    const { data: roleRow, error: roleErr } = await admin
-      .from("user_roles").select("role").eq("user_id", userData.user.id).eq("role", "admin").maybeSingle();
-    if (roleErr) return json({ error: "role_check_failed", details: roleErr.message }, 500);
-    if (!roleRow) return json({ error: "forbidden", details: "requires admin role" }, 403);
 
-    const body = await req.json().catch(() => ({})) as { ttl_days?: number; limit?: number; ids?: string[]; dry_run?: boolean };
+    // Bypass admin check via cron secret (usado pelo pg_cron)
+    const cronHeader = req.headers.get("X-Cron-Secret") ?? "";
+    let isCron = false;
+    if (cronHeader) {
+      const { data: secretRow } = await admin
+        .from("_migration_env").select("value").eq("key", "saints_cron_secret").maybeSingle();
+      if (secretRow?.value && secretRow.value === cronHeader) isCron = true;
+    }
+
+    if (!isCron) {
+      const authHeader = req.headers.get("Authorization") ?? "";
+      const jwt = authHeader.replace(/^Bearer\s+/i, "").trim();
+      if (!jwt) return json({ error: "unauthorized", details: "missing bearer token" }, 401);
+      const anon = createClient(supabaseUrl, anonKey);
+      const { data: userData, error: userErr } = await anon.auth.getUser(jwt);
+      if (userErr || !userData?.user) return json({ error: "unauthorized", details: userErr?.message ?? "invalid token" }, 401);
+      const { data: roleRow, error: roleErr } = await admin
+        .from("user_roles").select("role").eq("user_id", userData.user.id).eq("role", "admin").maybeSingle();
+      if (roleErr) return json({ error: "role_check_failed", details: roleErr.message }, 500);
+      if (!roleRow) return json({ error: "forbidden", details: "requires admin role" }, 403);
+    }
+
+    const body = await req.json().catch(() => ({})) as {
+      ttl_days?: number; limit?: number; ids?: string[]; dry_run?: boolean; persist?: boolean; source?: string;
+    };
     const ttlDays = Number.isFinite(body.ttl_days) ? Math.max(1, Number(body.ttl_days)) : 30;
     const limit = Number.isFinite(body.limit) ? Math.max(1, Number(body.limit)) : 100;
     const dryRun = Boolean(body.dry_run);
+    const persist = Boolean(body.persist) && dryRun;
+    const source = body.source === 'cron' ? 'cron' : 'manual';
     const ttlCutoff = new Date(Date.now() - ttlDays * 86400_000).toISOString();
 
     let q = admin
