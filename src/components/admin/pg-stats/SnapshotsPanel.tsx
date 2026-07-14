@@ -20,25 +20,6 @@ import type { SnapshotHistoryRow } from './useSnapshotHistory';
 type SnapshotRow = SnapshotHistoryRow;
 
 
-
-interface SnapshotRow {
-  id: string;
-  taken_at: string;
-  label: string | null;
-  note: string | null;
-  window_seconds: number | null;
-  total_calls: number | null;
-  total_exec_ms: number | null;
-  row_count: number | null;
-  rows: Array<{
-    query: string;
-    calls: number;
-    total_exec_time: number;
-    mean_exec_time: number;
-    max_exec_time: number;
-  }>;
-}
-
 const fmtMs = (v: number | null | undefined) => {
   if (v == null) return '—';
   if (v >= 1000) return `${(v / 1000).toFixed(2)} s`;
@@ -56,41 +37,22 @@ function computeP95(sorted: number[]): number {
   return sorted[idx];
 }
 
-export function SnapshotsPanel() {
-  const [snapshots, setSnapshots] = useState<SnapshotRow[]>([]);
-  const [loading, setLoading] = useState(false);
+interface SnapshotsPanelProps {
+  snapshots: SnapshotRow[];
+  loading: boolean;
+  reload: () => Promise<void> | void;
+}
+
+export function SnapshotsPanel({ snapshots, loading, reload }: SnapshotsPanelProps) {
   const [capturing, setCapturing] = useState(false);
   const [label, setLabel] = useState('');
   const [note, setNote] = useState('');
   const [baseId, setBaseId] = useState<string>('');
   const [compareId, setCompareId] = useState<string>('');
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await (supabase as unknown as {
-        from: (t: string) => {
-          select: (c: string) => {
-            order: (col: string, opts: { ascending: boolean }) => {
-              limit: (n: number) => Promise<{ data: SnapshotRow[] | null; error: unknown }>;
-            };
-          };
-        };
-      })
-        .from('pg_stat_snapshots')
-        .select('id,taken_at,label,note,window_seconds,total_calls,total_exec_ms,row_count,rows')
-        .order('taken_at', { ascending: false })
-        .limit(50);
-      if (error) throw error;
-      setSnapshots((data as SnapshotRow[]) || []);
-    } catch (e) {
-      toast.error(`Falha ao carregar snapshots: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const load = useCallback(async () => { await reload(); }, [reload]);
 
-  useEffect(() => { void load(); }, [load]);
+
 
   const capture = useCallback(async () => {
     setCapturing(true);
