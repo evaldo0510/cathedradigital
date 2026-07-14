@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Save, RefreshCw, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Save, RefreshCw, Clock, AlertTriangle, CheckCircle2, Send, ShieldCheck } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface Config {
@@ -34,10 +34,53 @@ const PRESETS = [
   { label: '24 h', v: 1440 },
 ];
 
+type ChannelKey = 'webhook' | 'slack';
+
 export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) {
   const [cfg, setCfg] = useState<Config | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [channelBusy, setChannelBusy] = useState<Record<ChannelKey, 'validate' | 'send' | null>>({ webhook: null, slack: null });
+  const [channelFeedback, setChannelFeedback] = useState<Record<ChannelKey, { kind: 'ok' | 'error'; msg: string } | null>>({ webhook: null, slack: null });
+
+  const validateChannel = async (channel: ChannelKey) => {
+    if (!cfg) return;
+    const url = channel === 'webhook' ? cfg.notify_webhook_url : cfg.notify_slack_webhook_url;
+    setChannelBusy((s) => ({ ...s, [channel]: 'validate' }));
+    setChannelFeedback((s) => ({ ...s, [channel]: null }));
+    try {
+      const { data, error } = await supabase.rpc('admin_notif_validate_channel' as never, {
+        p_channel: channel, p_url: url ?? '',
+      } as never);
+      if (error) throw error;
+      const res = data as unknown as { valid: boolean; reason: string };
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: res.valid ? 'ok' : 'error', msg: res.reason } }));
+      if (res.valid) toast.success(`URL ${channel} válida`);
+      else toast.error(`URL ${channel}: ${res.reason}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: 'error', msg } }));
+      toast.error(`Validação falhou: ${msg}`);
+    } finally {
+      setChannelBusy((s) => ({ ...s, [channel]: null }));
+    }
+  };
+
+  const sendTest = async (channel: ChannelKey) => {
+    setChannelBusy((s) => ({ ...s, [channel]: 'send' }));
+    try {
+      const { data, error } = await supabase.rpc('admin_notif_send_test' as never, { p_channel: channel } as never);
+      if (error) throw error;
+      const res = data as unknown as { notification_id: string };
+      toast.success(`Notificação de teste enfileirada (id ${res.notification_id.slice(0, 8)}). Veja o resultado no painel de notificações abaixo.`);
+      onChange?.();
+    } catch (e) {
+      toast.error(`Envio de teste falhou: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setChannelBusy((s) => ({ ...s, [channel]: null }));
+    }
+  };
+
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -195,23 +238,53 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="notify-webhook" className="text-xs">Webhook genérico (POST JSON)</Label>
-                  <Input
-                    id="notify-webhook" type="url" placeholder="https://exemplo.com/hook"
-                    value={cfg.notify_webhook_url ?? ''}
-                    onChange={(e) => setCfg({ ...cfg, notify_webhook_url: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="notify-slack" className="text-xs">Slack Incoming Webhook</Label>
-                  <Input
-                    id="notify-slack" type="url" placeholder="https://hooks.slack.com/services/…"
-                    value={cfg.notify_slack_webhook_url ?? ''}
-                    onChange={(e) => setCfg({ ...cfg, notify_slack_webhook_url: e.target.value })}
-                  />
-                </div>
+                {(['webhook','slack'] as ChannelKey[]).map((ch) => {
+                  const value = ch === 'webhook' ? cfg.notify_webhook_url : cfg.notify_slack_webhook_url;
+                  const label = ch === 'webhook' ? 'Webhook genérico (POST JSON)' : 'Slack Incoming Webhook';
+                  const placeholder = ch === 'webhook' ? 'https://exemplo.com/hook' : 'https://hooks.slack.com/services/…';
+                  const fb = channelFeedback[ch];
+                  const busy = channelBusy[ch];
+                  const hasUrl = !!(value && value.trim());
+                  return (
+                    <div key={ch} className="space-y-2">
+                      <Label htmlFor={`notify-${ch}`} className="text-xs">{label}</Label>
+                      <Input
+                        id={`notify-${ch}`} type="url" placeholder={placeholder}
+                        value={value ?? ''}
+                        onChange={(e) => setCfg({
+                          ...cfg,
+                          ...(ch === 'webhook' ? { notify_webhook_url: e.target.value } : { notify_slack_webhook_url: e.target.value }),
+                        })}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm" variant="outline" className="h-7 text-xs"
+                          onClick={() => validateChannel(ch)}
+                          disabled={!hasUrl || busy !== null}
+                        >
+                          <ShieldCheck className={`h-3 w-3 mr-1 ${busy === 'validate' ? 'animate-spin' : ''}`} />
+                          Validar
+                        </Button>
+                        <Button
+                          size="sm" variant="outline" className="h-7 text-xs"
+                          onClick={() => sendTest(ch)}
+                          disabled={!hasUrl || busy !== null}
+                          title="Enfileira uma notificação de teste neste canal"
+                        >
+                          <Send className={`h-3 w-3 mr-1 ${busy === 'send' ? 'animate-spin' : ''}`} />
+                          Enviar teste
+                        </Button>
+                      </div>
+                      {fb && (
+                        <p className={`text-[11px] ${fb.kind === 'ok' ? 'text-primary' : 'text-destructive'}`}>
+                          {fb.msg}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+
               {cfg.last_notification_error && (
                 <p className="text-[11px] text-destructive">
                   Última notificação falhou: {cfg.last_notification_error}
