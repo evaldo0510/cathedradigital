@@ -18,6 +18,10 @@ interface Config {
   last_error_at: string | null;
   last_error_message: string | null;
   consecutive_failures: number;
+  notify_webhook_url: string | null;
+  notify_slack_webhook_url: string | null;
+  last_notified_at: string | null;
+  last_notification_error: string | null;
 }
 
 const PRESETS = [
@@ -50,6 +54,10 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         last_error_at: row.last_error_at ?? null,
         last_error_message: row.last_error_message ?? null,
         consecutive_failures: row.consecutive_failures ?? 0,
+        notify_webhook_url: row.notify_webhook_url ?? null,
+        notify_slack_webhook_url: row.notify_slack_webhook_url ?? null,
+        last_notified_at: row.last_notified_at ?? null,
+        last_notification_error: row.last_notification_error ?? null,
       });
     } catch (e) {
       toast.error(`Falha ao carregar config: ${e instanceof Error ? e.message : String(e)}`);
@@ -74,6 +82,8 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         p_enabled: cfg.enabled,
         p_interval_minutes: cfg.interval_minutes,
         p_retention_days: cfg.retention_days,
+        p_notify_webhook_url: cfg.notify_webhook_url,
+        p_notify_slack_webhook_url: cfg.notify_slack_webhook_url,
       } as never);
       if (error) throw error;
       toast.success('Configuração salva');
@@ -175,6 +185,43 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
                   Snapshots mais antigos são removidos automaticamente.
                 </p>
               </div>
+            </div>
+
+            <div className="rounded-md border p-3 space-y-3">
+              <div>
+                <p className="text-sm font-medium">Notificações de falha</p>
+                <p className="text-xs text-muted-foreground">
+                  Ao falhar, um POST JSON é enviado para as URLs configuradas (além do alerta no admin).
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="notify-webhook" className="text-xs">Webhook genérico (POST JSON)</Label>
+                  <Input
+                    id="notify-webhook" type="url" placeholder="https://exemplo.com/hook"
+                    value={cfg.notify_webhook_url ?? ''}
+                    onChange={(e) => setCfg({ ...cfg, notify_webhook_url: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="notify-slack" className="text-xs">Slack Incoming Webhook</Label>
+                  <Input
+                    id="notify-slack" type="url" placeholder="https://hooks.slack.com/services/…"
+                    value={cfg.notify_slack_webhook_url ?? ''}
+                    onChange={(e) => setCfg({ ...cfg, notify_slack_webhook_url: e.target.value })}
+                  />
+                </div>
+              </div>
+              {cfg.last_notification_error && (
+                <p className="text-[11px] text-destructive">
+                  Última notificação falhou: {cfg.last_notification_error}
+                </p>
+              )}
+              {cfg.last_notified_at && !cfg.last_notification_error && (
+                <p className="text-[11px] text-muted-foreground">
+                  Última notificação enviada: {new Date(cfg.last_notified_at).toLocaleString('pt-BR')}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

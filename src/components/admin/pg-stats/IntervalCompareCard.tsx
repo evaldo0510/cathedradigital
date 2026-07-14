@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { GitCompareArrows, Download } from 'lucide-react';
+import { GitCompareArrows, Download, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fingerprintQuery, shortFingerprint } from './queryFingerprint';
 import type { SnapshotHistoryRow } from './useSnapshotHistory';
+import { supabase } from '@/integrations/supabase/client';
 
 const fmtMs = (v: number) =>
   v >= 1000 ? `${(v / 1000).toFixed(2)} s` : `${v.toFixed(2)} ms`;
@@ -59,15 +60,59 @@ function daysAgoIso(days: number): string {
   const d = new Date(); d.setDate(d.getDate() - days); return toIsoDate(d);
 }
 
-const REGRESSION_MEAN_PCT = 20;
-const REGRESSION_P95_PCT = 25;
+const DEFAULT_REG_MEAN_PCT = 20;
+const DEFAULT_REG_P95_PCT = 25;
+
+function readParam(name: string, fallback: string): string {
+  if (typeof window === 'undefined') return fallback;
+  return new URLSearchParams(window.location.search).get(name) ?? fallback;
+}
 
 export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryRow[] }) {
-  const [aFrom, setAFrom] = useState(daysAgoIso(14));
-  const [aTo, setATo] = useState(daysAgoIso(7));
-  const [bFrom, setBFrom] = useState(daysAgoIso(7));
-  const [bTo, setBTo] = useState(todayIso());
-  const [onlyRegressions, setOnlyRegressions] = useState(false);
+  const [aFrom, setAFrom] = useState(() => readParam('aFrom', daysAgoIso(14)));
+  const [aTo, setATo] = useState(() => readParam('aTo', daysAgoIso(7)));
+  const [bFrom, setBFrom] = useState(() => readParam('bFrom', daysAgoIso(7)));
+  const [bTo, setBTo] = useState(() => readParam('bTo', todayIso()));
+  const [onlyRegressions, setOnlyRegressions] = useState(() => readParam('onlyReg', '') === '1');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [regMean, setRegMean] = useState<number>(DEFAULT_REG_MEAN_PCT);
+  const [regP95, setRegP95] = useState<number>(DEFAULT_REG_P95_PCT);
+
+  // load user + persisted thresholds (per user, fallback session)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user?.id ?? null;
+      if (cancelled) return;
+      setUserId(uid);
+      const key = uid ? `pgstats:reg:${uid}` : 'pgstats:reg:session';
+      const raw = (uid ? localStorage.getItem(key) : sessionStorage.getItem(key));
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed.mean === 'number') setRegMean(parsed.mean);
+          if (typeof parsed.p95 === 'number') setRegP95(parsed.p95);
+        } catch { /* ignore */ }
+      }
+      // URL params override persisted
+      const urlMean = Number(readParam('regMean', ''));
+      const urlP95 = Number(readParam('regP95', ''));
+      if (Number.isFinite(urlMean) && urlMean > 0) setRegMean(urlMean);
+      if (Number.isFinite(urlP95) && urlP95 > 0) setRegP95(urlP95);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // persist thresholds
+  useEffect(() => {
+    const payload = JSON.stringify({ mean: regMean, p95: regP95 });
+    const key = userId ? `pgstats:reg:${userId}` : 'pgstats:reg:session';
+    try {
+      if (userId) localStorage.setItem(key, payload);
+      else sessionStorage.setItem(key, payload);
+    } catch { /* ignore quota */ }
+  }, [regMean, regP95, userId]);
 
   const filterByRange = (from: string, to: string) => {
     const fromT = new Date(from + 'T00:00:00').getTime();
@@ -106,8 +151,8 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
       const dMeanPct = aMean > 0 ? ((bMean - aMean) / aMean) * 100 : (bMean > 0 ? 100 : 0);
       const dP95Pct = aP95 > 0 ? ((bP95 - aP95) / aP95) * 100 : (bP95 > 0 ? 100 : 0);
       const dCallsPct = aCalls > 0 ? ((bCalls - aCalls) / aCalls) * 100 : (bCalls > 0 ? 100 : 0);
-      const regression = (dMeanPct >= REGRESSION_MEAN_PCT && bMean > 5)
-                      || (dP95Pct >= REGRESSION_P95_PCT && bP95 > 20);
+      const regression = (dMeanPct >= regMean && bMean > 5)
+                      || (dP95Pct >= regP95 && bP95 > 20);
       out.push({
         fingerprint: k,
         example: rb?.example || ra?.example || '',
@@ -120,7 +165,28 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
     }
     out.sort((x, y) => (y.bTotal + y.aTotal) - (x.bTotal + x.aTotal));
     return onlyRegressions ? out.filter((r) => r.regression) : out.slice(0, 50);
-  }, [rangeA, rangeB, onlyRegressions]);
+  }, [rangeA, rangeB, onlyRegressions, regMean, regP95]);
+
+  const buildShareUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('aFrom', aFrom); params.set('aTo', aTo);
+    params.set('bFrom', bFrom); params.set('bTo', bTo);
+    params.set('onlyReg', onlyRegressions ? '1' : '0');
+    params.set('regMean', String(regMean));
+    params.set('regP95', String(regP95));
+    return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+  };
+
+  const copyShareUrl = async () => {
+    try {
+      const url = buildShareUrl();
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, '', url);
+      toast.success('Link copiado — filtros e intervalos preservados');
+    } catch {
+      toast.error('Falha ao copiar link');
+    }
+  };
 
   const exportCsv = () => {
     const escape = (v: unknown) => {
@@ -193,7 +259,7 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-end gap-2">
           <Button
             size="sm" variant={onlyRegressions ? 'default' : 'outline'}
             onClick={() => setOnlyRegressions((v) => !v)}
@@ -203,9 +269,32 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
           <Button size="sm" variant="outline" onClick={exportCsv} disabled={rows.length === 0}>
             <Download className="h-4 w-4 mr-2" /> CSV
           </Button>
-          <p className="text-xs text-muted-foreground ml-auto">
-            Regressão: média ≥ +{REGRESSION_MEAN_PCT}% ou p95 ≥ +{REGRESSION_P95_PCT}%
-          </p>
+          <Button size="sm" variant="outline" onClick={copyShareUrl}>
+            <Link2 className="h-4 w-4 mr-2" /> Copiar link
+          </Button>
+          <div className="flex items-center gap-2 ml-auto rounded-md border px-3 py-1.5">
+            <span className="text-xs text-muted-foreground">Limiares REG:</span>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="reg-mean" className="text-[11px]">média ≥</Label>
+              <Input
+                id="reg-mean" type="number" min={1} max={500}
+                className="h-7 w-16 text-xs"
+                value={regMean}
+                onChange={(e) => setRegMean(Math.max(1, Math.min(500, Number(e.target.value) || 0)))}
+              />
+              <span className="text-[11px]">%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="reg-p95" className="text-[11px]">p95 ≥</Label>
+              <Input
+                id="reg-p95" type="number" min={1} max={500}
+                className="h-7 w-16 text-xs"
+                value={regP95}
+                onChange={(e) => setRegP95(Math.max(1, Math.min(500, Number(e.target.value) || 0)))}
+              />
+              <span className="text-[11px]">%</span>
+            </div>
+          </div>
         </div>
 
         <div className="overflow-x-auto">

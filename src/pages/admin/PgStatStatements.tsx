@@ -12,7 +12,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { toast } from 'sonner';
-import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
+import { RefreshCw, RotateCcw, Copy, FileSearch, Download, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
@@ -24,6 +24,16 @@ import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+function getInitialFromUrl<T extends string | number | boolean>(
+  key: string, fallback: T, parse: (v: string) => T | undefined,
+): T {
+  if (typeof window === 'undefined') return fallback;
+  const raw = new URLSearchParams(window.location.search).get(key);
+  if (raw == null) return fallback;
+  const parsed = parse(raw);
+  return parsed !== undefined ? parsed : fallback;
+}
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
 
@@ -91,17 +101,34 @@ const OP_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outl
 export default function PgStatStatements() {
   const { snapshots, loading: snapshotsLoading, reload: reloadSnapshots } = useSnapshotHistory(100);
   const [rows, setRows] = useState<StatRow[]>([]);
-  const [orderBy, setOrderBy] = useState<OrderBy>('total_exec_time');
-  const [limit, setLimit] = useState<number>(25);
-  const [minCalls, setMinCalls] = useState<number>(1);
-  const [tableFilter, setTableFilter] = useState<string>('');
-  const [opFilter, setOpFilter] = useState<'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE'>('ALL');
+  const [orderBy, setOrderBy] = useState<OrderBy>(() =>
+    getInitialFromUrl<OrderBy>('orderBy', 'total_exec_time',
+      (v) => (['total_exec_time','mean_exec_time','max_exec_time','calls'].includes(v) ? (v as OrderBy) : undefined)));
+  const [limit, setLimit] = useState<number>(() =>
+    getInitialFromUrl<number>('limit', 25, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.min(200, n) : undefined;
+    }));
+  const [minCalls, setMinCalls] = useState<number>(() =>
+    getInitialFromUrl<number>('minCalls', 1, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? n : undefined;
+    }));
+  const [tableFilter, setTableFilter] = useState<string>(() =>
+    getInitialFromUrl<string>('tableFilter', '', (v) => v));
+  const [opFilter, setOpFilter] = useState<'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE'>(() =>
+    getInitialFromUrl('opFilter', 'ALL' as const,
+      (v) => (['ALL','SELECT','INSERT','UPDATE','DELETE'].includes(v) ? v as typeof opFilter : undefined)));
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [explainOpen, setExplainOpen] = useState(false);
   const [explainQuery, setExplainQuery] = useState('');
-  const [groupByFingerprint, setGroupByFingerprint] = useState(false);
+  const [groupByFingerprint, setGroupByFingerprint] = useState(() =>
+    getInitialFromUrl<boolean>('groupByFp', false, (v) => v === '1' || v === 'true'));
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(() =>
+    getInitialFromUrl<number>('pageSize', 25, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.min(500, n) : undefined;
+    }));
 
   const currentView: PgStatViewConfig = {
     orderBy, limit, minCalls, opFilter, tableFilter,
@@ -208,6 +235,33 @@ export default function PgStatStatements() {
       : orderBy === 'max_exec_time' ? 'max_exec_ms' : 'calls';
     return [...map.values()].sort((a, b) => (b[order as keyof DisplayRow] as number) - (a[order as keyof DisplayRow] as number));
   }, [filtered, groupByFingerprint, orderBy]);
+
+  // Pagination
+  useEffect(() => { setPage(1); }, [orderBy, limit, minCalls, opFilter, tableFilter, groupByFingerprint, pageSize]);
+  const totalPages = Math.max(1, Math.ceil(displayed.length / pageSize));
+  const pageStart = (page - 1) * pageSize;
+  const pageEnd = pageStart + pageSize;
+  const pageRows = useMemo(() => displayed.slice(pageStart, pageEnd), [displayed, pageStart, pageEnd]);
+
+  const copyShareLink = async () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set('orderBy', orderBy);
+      params.set('limit', String(limit));
+      params.set('minCalls', String(minCalls));
+      params.set('opFilter', opFilter);
+      params.set('tableFilter', tableFilter);
+      params.set('groupByFp', groupByFingerprint ? '1' : '0');
+      params.set('pageSize', String(pageSize));
+      const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, '', url);
+      toast.success('Link copiado — filtros e intervalos A×B preservados');
+    } catch {
+      toast.error('Falha ao copiar link');
+    }
+  };
+
 
 
   const toggleExpand = (i: number) => {
@@ -488,6 +542,10 @@ export default function PgStatStatements() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button size="sm" variant="outline" onClick={copyShareLink}>
+              <Link2 className="h-4 w-4 mr-2" /> Copiar link
+            </Button>
+
 
             <div className="flex items-center gap-2 ml-2 rounded-md border px-3 py-1.5">
               <Switch
@@ -558,14 +616,15 @@ export default function PgStatStatements() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {displayed.length === 0 && !loading && (
+                {pageRows.length === 0 && !loading && (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                       Nenhuma consulta encontrada com os filtros atuais.
                     </TableCell>
                   </TableRow>
                 )}
-                {displayed.map((r, i) => {
+                {pageRows.map((r, localIdx) => {
+                  const i = pageStart + localIdx;
                   const op = inferOp(r.query);
                   const table = inferTable(r.query);
                   const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
@@ -661,6 +720,37 @@ export default function PgStatStatements() {
               </TableBody>
             </Table>
           </div>
+          {displayed.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 border-t px-3 py-2 text-xs">
+              <span className="text-muted-foreground">
+                Mostrando {pageStart + 1}–{Math.min(pageEnd, displayed.length)} de {displayed.length}
+              </span>
+              <div className="flex items-center gap-1 ml-2">
+                <Label htmlFor="page-size" className="text-xs">Por página</Label>
+                <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+                  <SelectTrigger id="page-size" className="h-7 w-20 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[10, 25, 50, 100, 200, 500].map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-1 ml-auto">
+                <Button size="sm" variant="outline" className="h-7 px-2"
+                  disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                  <ChevronLeft className="h-3 w-3" />
+                </Button>
+                <span className="px-2">Página {page} / {totalPages}</span>
+                <Button size="sm" variant="outline" className="h-7 px-2"
+                  disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+                  <ChevronRight className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
