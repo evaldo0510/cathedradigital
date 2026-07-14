@@ -347,6 +347,17 @@ export default function PgStatStatements() {
 
       <Card>
         <CardHeader>
+          <CardTitle className="text-base">Visões salvas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SavedViewsBar current={currentView} onApply={applyView} />
+        </CardContent>
+      </Card>
+
+      <SnapshotsPanel />
+
+      <Card>
+        <CardHeader>
           <CardTitle className="text-base">Resultado ({filtered.length})</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
