@@ -21,7 +21,9 @@ const PG_URL =
   process.env.DATABASE_URL ??
   '';
 
-const RUN = !!PG_URL;
+// Opt-in explícito: só roda contra o banco quando PERF_GUARD=1.
+// Assim CI padrão / preview nunca dispara EXPLAIN em produção por engano.
+const RUN = !!PG_URL && process.env.PERF_GUARD === '1';
 
 /**
  * Orçamentos de performance. Valores absolutos ficam folgados vs. o observado
