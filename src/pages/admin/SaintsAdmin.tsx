@@ -70,6 +70,8 @@ const SaintsAdmin: React.FC = () => {
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [reimporting, setReimporting] = useState(false);
+  const [dryRunPreview, setDryRunPreview] = useState<any[] | null>(null);
+  const [dryRunSummary, setDryRunSummary] = useState<any | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -165,18 +167,33 @@ const SaintsAdmin: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const runIncrementalReimport = async () => {
-    if (!confirm('Rodar reimport incremental? Só atualiza santos com conteúdo alterado ou scrape > 30 dias.')) return;
+  const runIncrementalReimport = async (dryRun: boolean) => {
+    if (!dryRun && !confirm('Rodar reimport incremental? Só atualiza santos com conteúdo alterado ou scrape > 30 dias.')) return;
     setReimporting(true);
     try {
       const { data, error } = await supabase.functions.invoke('admin-incremental-reimport-saints', {
-        body: { ttl_days: 30 },
+        body: { ttl_days: 30, dry_run: dryRun },
       });
       if (error) throw error;
-      toast.success('Reimport concluído', {
-        description: `Atualizados: ${data?.updated ?? 0} · Pulados (sem mudança): ${data?.skipped ?? 0} · Falhas: ${data?.failed ?? 0}`,
-      });
-      load();
+      if (dryRun) {
+        setDryRunPreview(data?.preview ?? []);
+        setDryRunSummary({
+          considered: data?.considered ?? 0,
+          would_update: data?.updated ?? 0,
+          unchanged: data?.unchanged ?? 0,
+          failed: data?.failed ?? 0,
+        });
+        toast.info('Dry-run concluído', {
+          description: `Seriam atualizados ${data?.updated ?? 0} de ${data?.considered ?? 0}.`,
+        });
+      } else {
+        toast.success('Reimport concluído', {
+          description: `Atualizados: ${data?.updated ?? 0} · Sem mudança: ${data?.unchanged ?? 0} · Falhas: ${data?.failed ?? 0}`,
+        });
+        setDryRunPreview(null);
+        setDryRunSummary(null);
+        load();
+      }
     } catch (e: any) {
       toast.error('Falha no reimport', { description: e?.message ?? String(e) });
     } finally {
@@ -197,11 +214,73 @@ const SaintsAdmin: React.FC = () => {
             {gaps.length > 0 && <span className="ml-2">({gaps.length} sem santo)</span>}
           </p>
         </div>
-        <Button onClick={runIncrementalReimport} disabled={reimporting} variant="secondary" size="sm">
-          <Icons.RefreshCw className={`w-4 h-4 mr-2 ${reimporting ? 'animate-spin' : ''}`} />
-          {reimporting ? 'Reimportando…' : 'Reimport incremental'}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => runIncrementalReimport(true)} disabled={reimporting} variant="outline" size="sm">
+            <Icons.Eye className="w-4 h-4 mr-2" /> Dry-run
+          </Button>
+          <Button onClick={() => runIncrementalReimport(false)} disabled={reimporting} variant="secondary" size="sm">
+            <Icons.RefreshCw className={`w-4 h-4 mr-2 ${reimporting ? 'animate-spin' : ''}`} />
+            {reimporting ? 'Processando…' : 'Reimport incremental'}
+          </Button>
+        </div>
       </header>
+
+      {dryRunPreview && dryRunSummary && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Icons.Eye className="w-4 h-4" /> Prévia do reimport (dry-run)
+              <Badge variant="outline" className="ml-2 text-[10px]">
+                {dryRunSummary.would_update} de {dryRunSummary.considered} seriam atualizados
+              </Badge>
+            </CardTitle>
+            <Button variant="ghost" size="sm" onClick={() => { setDryRunPreview(null); setDryRunSummary(null); }}>
+              Fechar
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xs text-muted-foreground mb-3">
+              Sem mudança: {dryRunSummary.unchanged} · Falhas: {dryRunSummary.failed}
+            </div>
+            <div className="divide-y max-h-[360px] overflow-y-auto">
+              {dryRunPreview.length === 0 && (
+                <p className="text-sm text-muted-foreground">Nenhum candidato dentro do TTL.</p>
+              )}
+              {dryRunPreview.map((p) => (
+                <div key={p.id} className="py-2 flex items-center gap-3 text-sm">
+                  <Badge
+                    variant="outline"
+                    className={
+                      p.reason === 'would_fill_full_bio' ? 'border-emerald-500/40 text-emerald-700 dark:text-emerald-300' :
+                      p.reason === 'would_update' ? 'border-blue-500/40 text-blue-700 dark:text-blue-300' :
+                      p.reason === 'fetch_failed' ? 'border-red-500/40 text-red-700 dark:text-red-300' :
+                      'border-border text-muted-foreground'
+                    }
+                  >
+                    {p.reason === 'would_fill_full_bio' ? 'preenche full_bio' :
+                     p.reason === 'would_update' ? 'hash mudou' :
+                     p.reason === 'fetch_failed' ? 'fetch falhou' : 'sem mudança'}
+                  </Badge>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium truncate">{p.name || p.id}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{p.source_url}</p>
+                  </div>
+                  <span className="font-mono text-[10px] text-muted-foreground shrink-0">
+                    {(p.old_hash || '—').slice(0, 8)} → {(p.new_hash || '—').slice(0, 8)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {dryRunSummary.would_update > 0 && (
+              <div className="flex justify-end mt-4">
+                <Button onClick={() => runIncrementalReimport(false)} disabled={reimporting}>
+                  Aplicar {dryRunSummary.would_update} alteraç{dryRunSummary.would_update === 1 ? 'ão' : 'ões'}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
