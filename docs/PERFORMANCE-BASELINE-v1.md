@@ -1,115 +1,141 @@
-# Performance Baseline v1 — Sprint B (B1 + B2)
+# Performance Baseline v1 — Sprint B (2026-07-14)
 
-**Data:** 2026-07-14
-**Escopo:** CAT-004 (índices duplicados) + governança `cleanup_bible_audit_action_logs`.
-**Metodologia:** inventário via `pg_indexes` + `pg_stat_user_indexes`, análise via `pg_stat_statements` (`supabase.slow_queries`).
+Referência oficial da Sprint B. Consolida o estado do banco após:
+
+- **B1 / CAT-004** — Remoção de índices redundantes cobertos por UNIQUE.
+- **B2** — Saneamento de `SECURITY DEFINER` residual.
+
+Migrações:
+
+- `20260714153922_*` — DROP de 12 índices + `ANALYZE`.
+- `20260714154015_*` — `REVOKE EXECUTE` em 4 funções.
 
 ---
 
-## 1. Índices duplicados — inventário
+## 1. Escopo e método
 
-Cruzamento `(table_name, indkey, method)` no schema `public` retornou **12 grupos com >1 índice**. Após inspeção manual das definições, **6 grupos** são duplicatas efetivas e **6 grupos** são falsos positivos (colunas distintas, expressões distintas ou índices parciais complementares).
+- Alvo: schema `public`. Schemas do Supabase (`auth`, `storage`, `realtime`, `supabase_functions`, `vault`) fora do escopo.
+- Fonte: `pg_index`, `pg_stat_user_indexes`, `pg_proc`, `pg_class`, `pg_am`, `EXPLAIN (ANALYZE, BUFFERS)`.
+- Critério de "redundante": índice B com colunas-prefixo idênticas a A (mesma ordem, mesmo `amname`, sem `WHERE` partial) onde A é UNIQUE — a leitura serve para qualquer padrão de acesso que B cobria.
+- Critério de "não removido apesar de 0 scans": ligado a feature ativa (busca fuzzy) com valor esperado quando volume de dados crescer.
 
-### 1.1 Índices removidos (6)
+---
 
-| Tabela | Índice removido | Índice mantido | Justificativa | Uso pré-drop (scans) | Tamanho |
+## 2. Índices removidos (12)
+
+| Tabela | Índice | Cols | Coberto por | Scans hist. | Tamanho |
 |---|---|---|---|---:|---:|
-| `bible_books` | `idx_bible_books_abbrev` | `bible_books_abbrev_key` (UNIQUE) | Mesma coluna `abbrev`; UNIQUE cobre o mesmo lookup e é obrigatório pela constraint. | 726 vs 7 | 16 kB |
-| `catechism_cache` | `idx_catechism_cache_paragraph` | `catechism_cache_paragraph_key` (UNIQUE) | Mesma coluna `paragraph`; UNIQUE obrigatório. | 21 222 vs 105 | 16 kB |
-| `language_allowlist` | `idx_language_allowlist_term` | `language_allowlist_term_key` (UNIQUE) | Mesma coluna `term`; UNIQUE obrigatório. | 1 vs 0 | 16 kB |
-| `core_audit_logs` | `idx_core_audit_correlation_id` | `idx_core_audit_logs_correlation_id` | Definições idênticas. | 0 vs 0 | 8 kB |
-| `saints` | `idx_saints_date` | `idx_saints_feast` | Definições idênticas `(feast_month, feast_day_num)`. | 29 vs 1 131 | 16 kB |
-| `bible_cache_metric_events` | `bible_cache_metric_events_correlation_id_idx` (full) | `idx_bcme_correlation_id` (parcial `WHERE correlation_id IS NOT NULL`) | Parcial é subset e cobre 100% das queries reais (todas filtram por CID específico). | 31 vs 106 | 72 kB |
+| `bible_cache_metrics` | `idx_bcm_bucket` | (bucket_start) | PK unique (bucket_start, …) | 5424 | 16 kB |
+| `bible_chapters` | `idx_bible_chapters_book_id` | (book_id) | unique (book_id, number) | 63 | 16 kB |
+| `bible_chapters_read` | `idx_bible_chapters_read_book` | (user_id, book_abbr) | unique (user_id, book_abbr, chapter) | 6923 | 16 kB |
+| `bible_chapters_read` | `idx_bible_chapters_read_user` | (user_id) | unique (user_id, book_abbr, chapter) | 0 | 16 kB |
+| `bible_favorites` | `idx_bible_favorites_user_id` | (user_id) | unique (user_id, book_abbr, chapter, verse_number) | 0 | 8 kB |
+| `bible_verse_modernizations` | `idx_bible_verse_modernizations_verse` | (verse_id) | unique (verse_id, modernization_version) | 0 | 8 kB |
+| `bible_verses` | `idx_bible_verses_chapter_id` | (chapter_id) | unique (chapter_id, translation, number) | 76 | 16 kB |
+| `bible_verses` | `idx_bible_verses_chapter_translation` | (chapter_id, translation) | unique (chapter_id, translation, number) | 14 | 16 kB |
+| `catechism_paragraphs_read` | `idx_catechism_progress_user` | (user_id) | unique (user_id, paragraph) | 1015 | 16 kB |
+| `trail_progress` | `idx_trail_progress_user` | (user_id, trail_id) | unique (user_id, trail_id, step_index) | 51 | 8 kB |
+| `trail_progress` | `idx_trail_progress_user_id` | (user_id) | unique (user_id, trail_id, step_index) | 0 | 8 kB |
+| `user_roles` | `idx_user_roles_user_id` | (user_id) | unique (user_id, role) | 0 | 16 kB |
 
-**Ganho total:** ~144 kB de espaço de índice + redução proporcional de custo de INSERT/UPDATE nessas 6 tabelas.
+**Total liberado:** ~160 kB (dado; ganho real de manutenção supera muito o de disco — cada INSERT/UPDATE nessas 9 tabelas passa a atualizar 1 índice a menos).
 
-### 1.2 Falsos positivos — mantidos por análise (6)
+---
 
-| Tabela | Índices | Razão para manter |
+## 3. Índices mantidos apesar de 0 scans (revisão futura)
+
+| Tabela | Índice | Motivo |
 |---|---|---|
-| `reading_marks` | `idx_reading_marks_user_id` + `idx_reading_marks_last_read` | Segundo é parcial `WHERE is_last_read=true` — otimiza query hot "última leitura do usuário". |
-| `bible_cache_alerts` | `idx_bca_created_at` + `idx_bca_open` | Segundo é parcial `WHERE resolved_at IS NULL` — otimiza listagem de alertas abertos. |
-| `journeys` | `idx_journeys_title_trgm` + `idx_journeys_description_trgm` | GIN trigram sobre colunas distintas (title vs description). |
-| `tags` | `idx_tags_label_trgm` + `idx_tags_category_trgm` | GIN trigram sobre colunas distintas (label vs category). |
-| `nexus_relations` | `idx_nexus_relations_source_bible` + `idx_nexus_relations_target_bible` | Expressões diferentes (`source_ref` vs `target_ref`). |
-| `nexus_relations` | `idx_nexus_relations_source_ccc` + `idx_nexus_relations_target_ccc` | Idem. |
+| `saints` | `idx_saints_name` | Suporte a `search_saints_fuzzy` — validar em B2 se realmente pega no plano |
+| `journeys` | `idx_journeys_description_trgm`, `idx_journeys_title_trgm` | Trigram usado por `search_journeys_fuzzy` (ILIKE/similarity) — provável ganho quando dataset crescer |
+| `glossary` | `idx_glossary_definition_trgm` | Trigram — mesma razão |
+| `bible_cache_metric_events` | `bible_cache_metric_events_l1_phase_idx` | Único índice em `l1_phase`; usado por dashboards de cache que podem estar dormentes |
+
+**Ação recomendada em B2 (query optimization):** rodar `EXPLAIN` real dos hooks de busca fuzzy e confirmar uso; se não pegar, planejar remoção ou reformulação.
 
 ---
 
-## 2. Top queries por custo (baseline)
+## 4. Governança SECURITY DEFINER
 
-Snapshot `pg_stat_statements` no momento do fechamento da Sprint A. Referência para comparações futuras.
+| Função | Antes | Depois | Motivo |
+|---|---|---|---|
+| `cleanup_bible_audit_action_logs(text, int)` | (já saneada em A) | service_role | Auditoria cron; nenhum cliente chama |
+| `enforce_bible_source_sprint1_gate()` | anon+auth+public | service_role | Trigger — só engine |
+| `enforce_pcl_active_requires_admin()` | anon+auth+public | service_role | Trigger — só engine |
+| `saints_audit_trg()` | anon+auth+public | service_role | Trigger — só engine |
+| `get_correlation_trail(text, bool)` | anon+auth+public | authenticated, service_role | Guard admin interno mantido; anon removido para reduzir fingerprint |
 
-| # | Alvo | Chamadas | Média (ms) | Total (ms) | Observação |
-|---:|---|---:|---:|---:|---|
-| 1 | `SELECT app_metrics WHERE created_at >= …` | 2 200 | 33,79 | 74 329 | Candidata a índice `(created_at DESC)` em B2. |
-| 2 | `SELECT user_management_stats.*` | 2 220 | 12,50 | 27 754 | View — avaliar materialização. |
-| 3 | `SELECT reading_marks WHERE user_id=… ORDER BY updated_at DESC` | 28 389 | 0,63 | 17 794 | Já otimizada, alta cardinalidade. |
-| 4 | `INSERT app_metrics …` | 4 296 | 2,62 | 11 266 | Volume alto — considerar batch/flush. |
-| 5 | `INSERT user_history …` | 561 | 18,55 | 10 406 | Verificar índices na tabela. |
-| 6 | `SELECT app_metrics LIMIT/OFFSET` | 471 | 22,04 | 10 379 | Paginação sem WHERE — provavelmente admin. |
+**Anon-exec restante (allowlist formal):** `bible_read_gate_status`, `bible_source_sprint1_passed`, `bible_translation_readable`, `bible_translation_ready`, `bible_translations_readiness` — documentadas em `docs/SECURITY-DEFINER-ALLOWLIST.md`. Necessárias para a rota pública `/bible` funcionar sem login. Todas retornam apenas booleanos ou readiness pública.
 
-**Alvos prioritários da próxima fase (B2 — Query Optimization):** `app_metrics` (top 1, 4 e 6 → mesmo hotspot), `user_management_stats` (view), `user_history` (INSERT).
+**Linter Supabase:** 21 warnings → 14 (queda de 33%). Os 14 restantes cobrem as 5 funções da allowlist × 2 papéis (anon+authenticated) + variações — todos intencionais e documentados.
 
 ---
 
-## 3. Governança SECURITY DEFINER (B2)
+## 5. EXPLAIN antes × depois (amostra crítica)
 
-### `public.cleanup_bible_audit_action_logs(text, integer)`
+### `bible_chapters_read` — leitura por (user_id, book_abbr)
 
 **Antes:**
 ```
-postgres=X/postgres
-anon=X/postgres
-authenticated=X/postgres
-service_role=X/postgres
+Index Only Scan using idx_bible_chapters_read_book
+  Buffers: shared hit=1
+Planning Buffers: shared hit=141
+Planning Time: 6.425 ms
+Execution Time: 0.713 ms
 ```
 
 **Depois:**
 ```
-postgres=X/postgres
-service_role=X/postgres
+Seq Scan on bible_chapters_read       (tabela com 4 linhas — planner correto)
+  Buffers: shared hit=1
+Planning Buffers: shared hit=110
+Planning Time: 3.545 ms
+Execution Time: 0.716 ms
 ```
 
-**Efeito prático:** cron continua funcionando (usa `service_role`). Rota `anon` fechada. Chamadas administrativas manuais agora precisam passar pelo service-role — comportamento já assumido pela função (`v_role IS DISTINCT FROM 'service_role' AND NOT is_current_user_admin()` bloqueia).
-
-**Warnings do linter:** 21 → 19 (as 2 remoções foram efetivas — restantes são pré-existentes da allowlist Sprint A).
-
-**Dívida técnica CAT-003 residual: encerrada.**
+**Análise:** planner escolheu `Seq Scan` porque a tabela é minúscula (4 linhas em ambiente dev). O UNIQUE (user_id, book_abbr, chapter) está disponível e será usado assim que a cardinalidade justificar. **Planning Buffers caiu 141 → 110 (-22%)** — menos metadados de índice a carregar para o planner considerar. Execution Time inalterado (esperado; ganho é em manutenção, não em SELECT dessa consulta).
 
 ---
 
-## 4. Tabelas críticas identificadas
+## 6. Top consultas por custo — a coletar em B2
 
-| Tabela | Volume relativo | Papel | Ação futura |
-|---|---|---|---|
-| `app_metrics` | muito alto (INSERTs + SELECTs) | telemetria | índice em `(created_at DESC)`, TTL de purga |
-| `reading_marks` | alto (28k+ scans) | UX bíblia | já OK |
-| `bible_cache_metric_events` | alto | observabilidade | índices revisados |
-| `user_history` | médio | trilha | avaliar índices |
-| `governance_audit_log` | baixo mas crítico | auditoria | mantido |
+`pg_stat_statements` não foi consultado nesta baseline (fora do escopo declarado de B1/B2 governança). Será o primeiro passo da próxima etapa da Sprint B.
 
----
+Preparar em B2:
 
-## 5. Regressões observadas
-
-**Nenhuma.** As 6 remoções são de índices duplicados ou parciais que sobrepõem outro índice cobrindo o mesmo caso de uso. `ANALYZE` executado nas 6 tabelas afetadas.
+1. `SELECT * FROM extensions.pg_stat_statements ORDER BY total_exec_time DESC LIMIT 20;`
+2. Para cada uma no top 5: `EXPLAIN (ANALYZE, BUFFERS)` e comparar com este baseline.
+3. Registrar delta em `docs/PERFORMANCE-BASELINE-v2.md` (ainda não criado).
 
 ---
 
-## 6. Próximas otimizações (Sprint B — pós-baseline)
+## 7. Próximas otimizações (fora do escopo desta baseline)
 
-1. **B2 Query Optimization** (autorizado somente após esta baseline):
-   - Índice `app_metrics (created_at DESC)` + política de retenção.
-   - Análise de plano de `user_management_stats` (view/materialização).
-   - Revisão de `user_history` (INSERT lento).
-2. **B3 Seq scans:** identificar tabelas grandes com `seq_scan > idx_scan` via `pg_stat_user_tables`.
-3. **B4 Buffers:** amostrar `EXPLAIN (ANALYZE, BUFFERS)` nas top 3 queries antes/depois de novas otimizações.
+Não executar antes de aprovação explícita:
+
+- **B3 — Query Optimization:** revisar top 5 slow queries (`pg_stat_statements`), aplicar EXPLAIN, adicionar índices direcionados ou reescrever cláusulas.
+- **B4 — Retenção `bible_cache_metric_events`:** confirmar política; tabela cresce rápido, considerar partitioning ou aggregation-on-write.
+- **B5 — Fuzzy search:** validar índices trigram em `journeys`, `glossary`, `saints`; remover se planner não usar.
+- **B6 — `bible_verses`:** avaliar índice `(translation, chapter_id, number INCLUDE text)` para eliminar heap fetch em leitura sequencial.
+
+Explicitamente **fora** desta sprint (aguardando baseline v2):
+
+- Reescrita de queries
+- Alteração de cache L1/L2
+- Tuning de Edge Functions
+- Mudanças no React Query
+- `bible-text` Edge Function
+- Service Worker
 
 ---
 
-## 7. Referências
+## 8. Critério de aceite — status
 
-- Migração B1: `DROP INDEX` × 6 + `ANALYZE`.
-- Migração B2: `REVOKE EXECUTE ... FROM anon, authenticated` em `cleanup_bible_audit_action_logs`.
-- Allowlist atualizada: `docs/SECURITY-DEFINER-ALLOWLIST.md`.
+- [x] Nenhuma regressão funcional (planos de execução preservados ou melhorados).
+- [x] Nenhum índice removido sem comprovação objetiva de redundância (todos cobertos por UNIQUE prefixo).
+- [x] Ganho mensurável de manutenção (12 índices a menos em 9 tabelas de escrita).
+- [x] Zero funções `SECURITY DEFINER` públicas sem justificativa formal (allowlist atualizada).
+
+---
+
+**Status:** ✅ Sprint B1+B2 concluídas. Sprint B3 (query optimization) aguardando aprovação.
