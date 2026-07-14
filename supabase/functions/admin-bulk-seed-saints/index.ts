@@ -20,18 +20,23 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const authHeader = req.headers.get("Authorization") ?? "";
+    const jwt = authHeader.replace(/^Bearer\s+/i, "").trim();
+    if (!jwt) return json({ error: "unauthorized", details: "missing bearer token" }, 401);
 
-    // 1) Verifica usuário admin
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: userData, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userData?.user) return json({ error: "unauthorized" }, 401);
-    const { data: isAdmin, error: roleErr } = await userClient.rpc("has_role", {
+    // 1) Verifica usuário e role admin usando o JWT diretamente
+    const anon = createClient(supabaseUrl, anonKey);
+    const { data: userData, error: userErr } = await anon.auth.getUser(jwt);
+    if (userErr || !userData?.user) {
+      return json({ error: "unauthorized", details: userErr?.message ?? "invalid token" }, 401);
+    }
+    const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+    const { data: isAdmin, error: roleErr } = await admin.rpc("has_role", {
       _user_id: userData.user.id,
       _role: "admin",
     });
-    if (roleErr || !isAdmin) return json({ error: "forbidden", details: "requires admin role" }, 403);
+    if (roleErr) return json({ error: "role_check_failed", details: roleErr.message }, 500);
+    if (!isAdmin) return json({ error: "forbidden", details: "requires admin role" }, 403);
+
 
     // 2) Valida body
     const body = await req.json().catch(() => null) as { saints?: unknown[] } | null;
