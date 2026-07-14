@@ -3489,6 +3489,48 @@ export type Database = {
         }
         Relationships: []
       }
+      saints_reimport_runs: {
+        Row: {
+          applied_summary: Json | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          error: string | null
+          id: string
+          preview: Json
+          source: string
+          status: string
+          summary: Json
+          ttl_days: number
+        }
+        Insert: {
+          applied_summary?: Json | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          preview?: Json
+          source?: string
+          status?: string
+          summary?: Json
+          ttl_days?: number
+        }
+        Update: {
+          applied_summary?: Json | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          preview?: Json
+          source?: string
+          status?: string
+          summary?: Json
+          ttl_days?: number
+        }
+        Relationships: []
+      }
       saved_filters: {
         Row: {
           created_at: string | null
