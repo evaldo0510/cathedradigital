@@ -5486,6 +5486,15 @@ export type Database = {
           year_published: number
         }[]
       }
+      admin_notif_failures_report: {
+        Args: {
+          p_channel?: string
+          p_from?: string
+          p_status?: string
+          p_to?: string
+        }
+        Returns: Json
+      }
       admin_notif_queue_stats: { Args: never; Returns: Json }
       admin_notif_send_test: { Args: { p_channel: string }; Returns: Json }
       admin_notif_validate_channel: {
