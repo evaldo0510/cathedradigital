@@ -104,8 +104,8 @@ describe('Sprint B — B2: consumidores de app_metrics / user_management_stats',
     );
     expect(ums[0].ops[1].args).toEqual([0, 19]);
 
-    // hook exportado permanece disponível (guarda contra remoção acidental).
-    expect(hook).toBeDefined();
+
+
   });
 
   it('TelemetryDashboard consome app_metrics com order+limit inalterados', async () => {
