@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Camera, Trash2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { SnapshotTrends } from './SnapshotTrends';
 
 interface SnapshotRow {
   id: string;
