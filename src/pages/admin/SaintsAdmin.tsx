@@ -412,6 +412,7 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <SaintsReimportRunsPanel onApplied={load} />
       <SaintsAuditPanel />
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
