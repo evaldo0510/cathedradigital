@@ -50,11 +50,92 @@ export function FingerprintDrilldown({
     return map;
   }, [snapshots, variants, fingerprint]);
 
+  const downloadBlob = (name: string, content: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
+  const fpShort = fingerprint.slice(0, 24).replace(/\W+/g, '_');
+
+  const exportJson = () => {
+    const payload = {
+      exported_at: new Date().toISOString(),
+      fingerprint,
+      variants: variants.map((v) => ({
+        query: v.query,
+        calls: v.calls,
+        mean_ms: v.mean_exec_ms,
+        max_ms: v.max_exec_ms,
+        total_ms: v.total_exec_ms,
+        evolution: evolution.get(v.query) || [],
+      })),
+    };
+    downloadBlob(
+      `pg_stat_fp_${fpShort}_${stamp()}.json`,
+      JSON.stringify(payload, null, 2),
+      'application/json',
+    );
+    toast.success(`${variants.length} variantes exportadas (JSON)`);
+  };
+
+  const exportCsv = () => {
+    const escape = (v: unknown) => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = [
+      'fingerprint','variant_idx','calls','mean_ms','max_ms','total_ms',
+      'snapshot_when','snapshot_mean_ms','snapshot_calls','query',
+    ];
+    const lines = [header.join(',')];
+    variants.forEach((v, i) => {
+      const evo = evolution.get(v.query) || [];
+      const q = v.query.replace(/\s+/g, ' ').trim();
+      if (evo.length === 0) {
+        lines.push([
+          fingerprint, i + 1, v.calls, v.mean_exec_ms.toFixed(3),
+          v.max_exec_ms.toFixed(3), v.total_exec_ms.toFixed(3),
+          '', '', '', q,
+        ].map(escape).join(','));
+      } else {
+        for (const e of evo) {
+          lines.push([
+            fingerprint, i + 1, v.calls, v.mean_exec_ms.toFixed(3),
+            v.max_exec_ms.toFixed(3), v.total_exec_ms.toFixed(3),
+            e.when, e.mean.toFixed(3), e.calls, q,
+          ].map(escape).join(','));
+        }
+      }
+    });
+    downloadBlob(
+      `pg_stat_fp_${fpShort}_${stamp()}.csv`,
+      lines.join('\n'),
+      'text/csv;charset=utf-8',
+    );
+    toast.success(`${variants.length} variantes exportadas (CSV)`);
+  };
+
   return (
     <div className="space-y-3">
-      <p className="text-xs font-medium text-muted-foreground">
-        {variants.length} variante{variants.length !== 1 ? 's' : ''} nesta classe
-      </p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-medium text-muted-foreground">
+          {variants.length} variante{variants.length !== 1 ? 's' : ''} nesta classe
+        </p>
+        <div className="flex items-center gap-1">
+          <Button size="sm" variant="outline" className="h-7 text-xs" onClick={exportCsv}>
+            <Download className="h-3 w-3 mr-1" /> CSV
+          </Button>
+          <Button size="sm" variant="outline" className="h-7 text-xs" onClick={exportJson}>
+            <Download className="h-3 w-3 mr-1" /> JSON
+          </Button>
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
