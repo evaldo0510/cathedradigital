@@ -176,6 +176,18 @@ serve(async (req) => {
       updated++;
     }
 
+    let runId: string | null = null;
+    if (persist) {
+      const summary = { considered: candidates?.length ?? 0, would_update: updated, unchanged, failed };
+      const { data: runRow, error: runErr } = await admin
+        .from("saints_reimport_runs")
+        .insert({ source, ttl_days: ttlDays, status: 'pending_approval', summary, preview })
+        .select("id")
+        .maybeSingle();
+      if (runErr) return json({ error: "run_persist_failed", details: runErr.message }, 500);
+      runId = runRow?.id ?? null;
+    }
+
     return json({
       ok: true,
       dry_run: dryRun,
@@ -187,6 +199,7 @@ serve(async (req) => {
       failed,
       failures: failures.slice(0, 20),
       preview: dryRun ? preview : undefined,
+      run_id: runId,
     });
   } catch (e) {
     return json({ error: "internal", details: String(e) }, 500);
