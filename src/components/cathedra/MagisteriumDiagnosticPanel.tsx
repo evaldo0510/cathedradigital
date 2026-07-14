@@ -214,6 +214,17 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
               );
             })}
           </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            title="Atualizar agora"
+            aria-label="Atualizar agora"
+            className="h-6 w-6 p-0"
+            onClick={() => setTick((t) => t + 1)}
+            data-testid="magisterium-diagnostic-refresh-now"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+          </Button>
           <Button size="sm" variant="ghost" onClick={() => setOpen((v) => !v)}>{open ? '−' : '+'}</Button>
           <Button
             size="sm"
