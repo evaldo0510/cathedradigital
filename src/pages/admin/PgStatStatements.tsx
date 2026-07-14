@@ -414,11 +414,15 @@ export default function PgStatStatements() {
         </CardContent>
       </Card>
 
+      <AutoSnapshotConfigCard />
+
       <SnapshotsPanel />
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Resultado ({filtered.length})</CardTitle>
+          <CardTitle className="text-base">
+            Resultado ({displayed.length}){groupByFingerprint ? ' — agrupado por fingerprint' : ''}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -433,22 +437,25 @@ export default function PgStatStatements() {
                   <TableHead className="text-right">Máx</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead className="text-right">% total</TableHead>
-                  <TableHead>Query</TableHead>
+                  <TableHead>{groupByFingerprint ? 'Fingerprint' : 'Query'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.length === 0 && !loading && (
+                {displayed.length === 0 && !loading && (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                       Nenhuma consulta encontrada com os filtros atuais.
                     </TableCell>
                   </TableRow>
                 )}
-                {filtered.map((r, i) => {
+                {displayed.map((r, i) => {
                   const op = inferOp(r.query);
                   const table = inferTable(r.query);
                   const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
                   const isOpen = expanded.has(i);
+                  const display = groupByFingerprint
+                    ? shortFingerprint(r.fingerprint, 100)
+                    : firstLine(r.query, 100);
                   return (
                     <React.Fragment key={i}>
                       <TableRow className="cursor-pointer hover:bg-muted/50" onClick={() => toggleExpand(i)}>
@@ -457,7 +464,14 @@ export default function PgStatStatements() {
                           <Badge variant={OP_VARIANT[op]} className="text-xs">{op}</Badge>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{table}</TableCell>
-                        <TableCell className="text-right">{fmtInt(r.calls)}</TableCell>
+                        <TableCell className="text-right">
+                          {fmtInt(r.calls)}
+                          {groupByFingerprint && r.variant_count > 1 && (
+                            <span className="ml-1 text-xs text-muted-foreground">
+                              ({r.variant_count}v)
+                            </span>
+                          )}
+                        </TableCell>
                         <TableCell className="text-right">{fmtMs(r.mean_exec_ms)}</TableCell>
                         <TableCell className="text-right">
                           <span className={r.max_exec_ms > 200 ? 'text-destructive font-medium' : ''}>
@@ -467,7 +481,7 @@ export default function PgStatStatements() {
                         <TableCell className="text-right font-medium">{fmtMs(r.total_exec_ms)}</TableCell>
                         <TableCell className="text-right text-xs">{pct.toFixed(1)}%</TableCell>
                         <TableCell className="max-w-md truncate font-mono text-xs">
-                          {firstLine(r.query, 100)}
+                          {display}
                         </TableCell>
                       </TableRow>
                       {isOpen && (
@@ -479,6 +493,7 @@ export default function PgStatStatements() {
                                   min {fmtMs(r.min_exec_ms)} · stddev {fmtMs(r.stddev_exec_ms)} ·
                                   {' '}rows {fmtInt(r.rows_returned)} ·
                                   {' '}cache hit {fmtInt(r.shared_blks_hit)} / read {fmtInt(r.shared_blks_read)}
+                                  {groupByFingerprint && <> · variantes: <strong>{r.variant_count}</strong></>}
                                 </span>
                                 <Button
                                   size="sm" variant="ghost" className="ml-auto h-7"
@@ -493,7 +508,13 @@ export default function PgStatStatements() {
                                   <Copy className="h-3 w-3 mr-1" /> Copiar query
                                 </Button>
                               </div>
+                              {groupByFingerprint && (
+                                <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                  <span className="text-muted-foreground">fingerprint:</span> {r.fingerprint}
+                                </pre>
+                              )}
                               <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                {groupByFingerprint && <span className="text-muted-foreground">exemplo: </span>}
                                 {r.query}
                               </pre>
                             </div>
@@ -502,6 +523,17 @@ export default function PgStatStatements() {
                       )}
                     </React.Fragment>
                   );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <ExplainDialog open={explainOpen} onOpenChange={setExplainOpen} initialQuery={explainQuery} />
+    </div>
+  );
+
                 })}
               </TableBody>
             </Table>
