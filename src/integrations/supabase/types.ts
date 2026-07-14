@@ -5289,6 +5289,25 @@ export type Database = {
           total_exec_ms: number
         }[]
       }
+      admin_list_pending_notifications: {
+        Args: { p_limit?: number; p_status?: string }
+        Returns: {
+          attempts: number
+          channel: string
+          created_at: string
+          id: string
+          last_attempt_at: string
+          last_error: string
+          last_request_id: number
+          last_status_code: number
+          max_attempts: number
+          next_attempt_at: string
+          payload: Json
+          status: string
+          succeeded_at: string
+          target_url: string
+        }[]
+      }
       admin_list_translation_sources: {
         Args: {
           p_limit?: number
@@ -5315,6 +5334,7 @@ export type Database = {
           year_published: number
         }[]
       }
+      admin_notif_queue_stats: { Args: never; Returns: Json }
       admin_pcl_kpis: {
         Args: never
         Returns: {
@@ -5323,6 +5343,32 @@ export type Database = {
         }[]
       }
       admin_reset_pg_stat_statements: { Args: never; Returns: string }
+      admin_retry_pending_notification: {
+        Args: { p_id: string }
+        Returns: {
+          attempts: number
+          channel: string
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          last_error: string | null
+          last_request_id: number | null
+          last_status_code: number | null
+          max_attempts: number
+          next_attempt_at: string
+          payload: Json
+          status: string
+          succeeded_at: string | null
+          target_url: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "pg_stat_pending_notifications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       admin_update_pg_stat_snapshot_config: {
         Args: {
           p_enabled: boolean
