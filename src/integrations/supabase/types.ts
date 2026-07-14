@@ -2918,6 +2918,50 @@ export type Database = {
         }
         Relationships: []
       }
+      pg_stat_notif_attempts: {
+        Row: {
+          attempt_no: number
+          created_at: string
+          error_msg: string | null
+          event: string
+          id: string
+          next_attempt_at: string | null
+          notification_id: string
+          request_id: number | null
+          status_code: number | null
+        }
+        Insert: {
+          attempt_no: number
+          created_at?: string
+          error_msg?: string | null
+          event: string
+          id?: string
+          next_attempt_at?: string | null
+          notification_id: string
+          request_id?: number | null
+          status_code?: number | null
+        }
+        Update: {
+          attempt_no?: number
+          created_at?: string
+          error_msg?: string | null
+          event?: string
+          id?: string
+          next_attempt_at?: string | null
+          notification_id?: string
+          request_id?: number | null
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pg_stat_notif_attempts_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "pg_stat_pending_notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pg_stat_pending_notifications: {
         Row: {
           attempts: number
@@ -5287,6 +5331,19 @@ export type Database = {
           stats_since: string
           stddev_exec_ms: number
           total_exec_ms: number
+        }[]
+      }
+      admin_list_notification_attempts: {
+        Args: { p_id: string }
+        Returns: {
+          attempt_no: number
+          created_at: string
+          error_msg: string
+          event: string
+          id: string
+          next_attempt_at: string
+          request_id: number
+          status_code: number
         }[]
       }
       admin_list_pending_notifications: {
