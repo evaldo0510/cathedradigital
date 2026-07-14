@@ -565,6 +565,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/bible-translations-readiness" element={<BibleTranslationsReadiness />} />
                       <Route path="/admin/saints" element={<SaintsAdmin />} />
+                      <Route path="/admin/pg-stat-statements" element={<PgStatStatements />} />
 
 
 
