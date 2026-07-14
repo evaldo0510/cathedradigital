@@ -5363,6 +5363,13 @@ export type Database = {
         Returns: number
       }
       _test_notif_reset: { Args: never; Returns: undefined }
+      _test_notif_run_all: {
+        Args: never
+        Returns: {
+          case_name: string
+          result: string
+        }[]
+      }
       admin_capture_pg_stat_snapshot: {
         Args: { p_label?: string; p_limit?: number; p_note?: string }
         Returns: string
