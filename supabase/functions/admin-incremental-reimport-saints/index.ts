@@ -78,15 +78,15 @@ serve(async (req) => {
     if (roleErr) return json({ error: "role_check_failed", details: roleErr.message }, 500);
     if (!roleRow) return json({ error: "forbidden", details: "requires admin role" }, 403);
 
-    const body = await req.json().catch(() => ({})) as { ttl_days?: number; limit?: number; ids?: string[] };
+    const body = await req.json().catch(() => ({})) as { ttl_days?: number; limit?: number; ids?: string[]; dry_run?: boolean };
     const ttlDays = Number.isFinite(body.ttl_days) ? Math.max(1, Number(body.ttl_days)) : 30;
     const limit = Number.isFinite(body.limit) ? Math.max(1, Number(body.limit)) : 100;
+    const dryRun = Boolean(body.dry_run);
     const ttlCutoff = new Date(Date.now() - ttlDays * 86400_000).toISOString();
 
-    // Seleciona candidatos: com source_url; last_scraped_at nulo ou antigo; opcionalmente filtrado por ids.
     let q = admin
       .from("saints")
-      .select("id,source_url,content_hash,last_scraped_at,full_bio")
+      .select("id,name,source_url,content_hash,last_scraped_at,full_bio")
       .not("source_url", "is", null)
       .limit(limit);
 
@@ -96,28 +96,64 @@ serve(async (req) => {
     const { data: candidates, error: qErr } = await q;
     if (qErr) return json({ error: "query_failed", details: qErr.message }, 500);
 
-    let updated = 0, skipped = 0, unchanged = 0, failed = 0;
+    let updated = 0, unchanged = 0, skipped = 0, failed = 0;
     const failures: { id: string; reason: string }[] = [];
+    const preview: {
+      id: string;
+      name: string | null;
+      source_url: string;
+      reason: 'would_update' | 'would_fill_full_bio' | 'unchanged' | 'fetch_failed';
+      old_hash: string | null;
+      new_hash: string | null;
+      full_bio_was_empty: boolean;
+    }[] = [];
 
     for (const s of candidates || []) {
       const url = (s as any).source_url as string;
       if (!url) { skipped++; continue; }
       const html = await fetchWithTimeout(url);
-      if (!html) { failed++; failures.push({ id: (s as any).id, reason: "fetch_failed" }); continue; }
+      if (!html) {
+        failed++;
+        failures.push({ id: (s as any).id, reason: "fetch_failed" });
+        if (dryRun) preview.push({
+          id: (s as any).id, name: (s as any).name ?? null, source_url: url,
+          reason: 'fetch_failed', old_hash: (s as any).content_hash ?? null, new_hash: null,
+          full_bio_was_empty: !(s as any).full_bio || String((s as any).full_bio).trim().length < 80,
+        });
+        continue;
+      }
       const text = stripHtml(html);
       const hash = await sha256(text);
       const now = new Date().toISOString();
+      const emptyBio = !(s as any).full_bio || String((s as any).full_bio).trim().length < 80;
 
       if (hash === (s as any).content_hash) {
-        // Sem mudança: só marca como visitado.
-        await admin.from("saints").update({ last_scraped_at: now }).eq("id", (s as any).id);
+        if (dryRun) {
+          preview.push({
+            id: (s as any).id, name: (s as any).name ?? null, source_url: url,
+            reason: 'unchanged', old_hash: (s as any).content_hash ?? null, new_hash: hash,
+            full_bio_was_empty: emptyBio,
+          });
+        } else {
+          await admin.from("saints").update({ last_scraped_at: now }).eq("id", (s as any).id);
+        }
         unchanged++;
         continue;
       }
 
+      if (dryRun) {
+        preview.push({
+          id: (s as any).id, name: (s as any).name ?? null, source_url: url,
+          reason: emptyBio ? 'would_fill_full_bio' : 'would_update',
+          old_hash: (s as any).content_hash ?? null, new_hash: hash,
+          full_bio_was_empty: emptyBio,
+        });
+        updated++;
+        continue;
+      }
+
       const patch: Record<string, unknown> = { content_hash: hash, last_scraped_at: now };
-      // Preenche full_bio quando faltando — trecho conservador de até 2500 chars.
-      if (!(s as any).full_bio || String((s as any).full_bio).trim().length < 80) {
+      if (emptyBio) {
         patch.full_bio = text.slice(0, 2500);
         patch.bio_source_url = url;
       }
@@ -128,6 +164,7 @@ serve(async (req) => {
 
     return json({
       ok: true,
+      dry_run: dryRun,
       ttl_days: ttlDays,
       considered: candidates?.length ?? 0,
       updated,
@@ -135,6 +172,7 @@ serve(async (req) => {
       skipped,
       failed,
       failures: failures.slice(0, 20),
+      preview: dryRun ? preview : undefined,
     });
   } catch (e) {
     return json({ error: "internal", details: String(e) }, 500);
