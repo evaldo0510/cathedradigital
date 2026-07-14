@@ -186,6 +186,33 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
           )}
         </div>
         <div className="flex items-center gap-spacing-2xs">
+          <div
+            className="flex items-center gap-[2px] rounded-premium border border-border/50 bg-muted/30 px-[2px] py-[1px]"
+            role="group"
+            aria-label="Intervalo de atualização automática"
+            data-testid="magisterium-diagnostic-refresh"
+          >
+            {REFRESH_OPTIONS.map((opt) => {
+              const active = refreshMs === opt.ms;
+              return (
+                <button
+                  key={opt.ms}
+                  type="button"
+                  onClick={() => setRefreshMs(opt.ms)}
+                  aria-pressed={active}
+                  title={opt.ms === 0 ? 'Atualização automática desligada' : `Atualiza a cada ${opt.label}`}
+                  className={cn(
+                    'px-spacing-2xs h-5 rounded-[4px] text-[9px] font-mono uppercase tracking-wider transition-colors',
+                    active
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
           <Button size="sm" variant="ghost" onClick={() => setOpen((v) => !v)}>{open ? '−' : '+'}</Button>
           <Button
             size="sm"
@@ -196,6 +223,7 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
             ×
           </Button>
         </div>
+
       </div>
 
       {open && (
