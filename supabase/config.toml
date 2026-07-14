@@ -18,3 +18,7 @@ verify_jwt = false
 [functions.translation-lookup]
 verify_jwt = false
 
+[functions.admin-bulk-seed-saints]
+verify_jwt = false
+
+
