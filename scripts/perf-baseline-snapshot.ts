@@ -112,12 +112,85 @@ async function catalogHash(client: any): Promise<string> {
   return createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
 }
 
+/**
+ * Captura versão do PG + parâmetros que afetam plano/latência.
+ * Sem estes valores, comparações entre ambientes são enganosas
+ * (ex.: `work_mem` diferente muda escolha de Hash vs. Merge Join).
+ */
+async function pgEnvironment(client: any) {
+  const { rows: ver } = await client.query('SHOW server_version');
+  const params = [
+    'work_mem',
+    'shared_buffers',
+    'max_parallel_workers',
+    'max_parallel_workers_per_gather',
+    'effective_cache_size',
+    'random_page_cost',
+    'jit',
+    'jit_above_cost',
+    'default_statistics_target',
+  ];
+  const { rows: settings } = await client.query(
+    `SELECT name, setting, unit FROM pg_settings WHERE name = ANY($1)`,
+    [params],
+  );
+  const map: Record<string, string> = {};
+  for (const s of settings) map[s.name] = s.unit ? `${s.setting} ${s.unit}` : s.setting;
+  return { server_version: ver[0].server_version, settings: map };
+}
+
+/** Snapshot de I/O do banco (proxy para cache hit ratio da corrida). */
+async function ioSnapshot(client: any) {
+  const { rows } = await client.query(
+    `SELECT sum(blks_hit)::bigint  AS blks_hit,
+            sum(blks_read)::bigint AS blks_read
+       FROM pg_stat_database
+      WHERE datname = current_database()`,
+  );
+  return { blks_hit: Number(rows[0].blks_hit), blks_read: Number(rows[0].blks_read) };
+}
+
+/**
+ * "Reset" pragmático de cache entre corridas:
+ *   - DISCARD ALL zera plano cache/temp da sessão (sem privilégio).
+ *   - pg_prewarm (se extensão instalada) recarrega tabelas alvo em
+ *     shared_buffers, uniformizando ponto de partida entre corridas.
+ * NÃO é reset real de shared_buffers — isso exigiria restart.
+ */
+async function resetAndWarm(client: any) {
+  await client.query('DISCARD ALL');
+  try {
+    const { rows } = await client.query(
+      `SELECT 1 FROM pg_extension WHERE extname = 'pg_prewarm'`,
+    );
+    if (rows.length) {
+      for (const t of CATALOG_TABLES) {
+        try {
+          await client.query(`SELECT pg_prewarm($1::regclass)`, [`public.${t}`]);
+        } catch { /* ignore per-table */ }
+      }
+      return { pg_prewarm: true, tables_warmed: CATALOG_TABLES };
+    }
+  } catch { /* extensão ausente */ }
+  return { pg_prewarm: false, tables_warmed: [] };
+}
+
 async function main() {
   const commit = execSync('git rev-parse HEAD').toString().trim();
   const short = commit.slice(0, 12);
 
-  const { entries, catalog_hash } = await withClient(async (client) => {
+  const { entries, catalog_hash, pg_env, warmup, cache_stats } = await withClient(async (client) => {
     const ch = await catalogHash(client);
+    const env = await pgEnvironment(client);
+    const warm = await resetAndWarm(client);
+
+    // Warm-up explícito: rodamos cada query 1× antes de medir (descarta),
+    // para uniformizar plan cache e evitar penalizar a primeira query.
+    for (const q of QUERIES) {
+      try { await client.query(q.sql); } catch { /* warm-up best-effort */ }
+    }
+
+    const ioBefore = await ioSnapshot(client);
     const results = [];
     for (const q of QUERIES) {
       const runs: any[] = [];
@@ -132,16 +205,35 @@ async function main() {
         (a, b) => (a['Execution Time'] as number) - (b['Execution Time'] as number),
       );
       const median = samples[Math.floor(samples.length / 2)];
+      // Buffers do próprio nó raiz do plano — reprodutibilidade de I/O.
+      const root = median.Plan;
       results.push({
         name: q.name,
-        total_cost: median.Plan['Total Cost'],
+        total_cost: root['Total Cost'],
         execution_ms: median['Execution Time'],
         planning_ms: median['Planning Time'],
         signature: signature(median),
-        plan: median, // preserva plano completo para diff em página de docs
+        shared_hit: root['Shared Hit Blocks'] ?? 0,
+        shared_read: root['Shared Read Blocks'] ?? 0,
+        plan: median,
       });
     }
-    return { entries: results, catalog_hash: ch };
+    const ioAfter = await ioSnapshot(client);
+    const hitDelta = ioAfter.blks_hit - ioBefore.blks_hit;
+    const readDelta = ioAfter.blks_read - ioBefore.blks_read;
+    const totalDelta = hitDelta + readDelta;
+    return {
+      entries: results,
+      catalog_hash: ch,
+      pg_env: env,
+      warmup: warm,
+      cache_stats: {
+        blks_hit_delta: hitDelta,
+        blks_read_delta: readDelta,
+        cache_hit_ratio_pct:
+          totalDelta > 0 ? +((hitDelta / totalDelta) * 100).toFixed(2) : null,
+      },
+    };
   });
 
   const dir = ENV_NAME
@@ -154,19 +246,24 @@ async function main() {
     env: ENV_NAME || null,
     generated_at: new Date().toISOString(),
     node_version: process.version,
+    pg_env,
+    warmup,
+    cache_stats,
     catalog_hash,
     entries,
   };
   writeFileSync(join(dir, `${short}.json`), JSON.stringify(payload, null, 2));
   writeFileSync(join(dir, 'latest.json'), JSON.stringify(payload, null, 2));
   console.log(
-    `[baseline] gravado ${ENV_NAME ? ENV_NAME + '/' : ''}${short}.json ` +
-      `(catalog_hash=${catalog_hash})`,
+    `[baseline] ${ENV_NAME ? ENV_NAME + '/' : ''}${short}.json · pg=${pg_env.server_version} · ` +
+      `catalog_hash=${catalog_hash} · cache_hit=${cache_stats.cache_hit_ratio_pct ?? '—'}%`,
   );
   console.table(
     entries.map(({ plan: _p, ...rest }) => rest),
   );
 }
+
+
 
 main().catch((e) => {
   console.error(e);
