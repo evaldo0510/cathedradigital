@@ -243,6 +243,31 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
 
       {open && (
         <div className="p-spacing-md space-y-spacing-sm text-premium-xs">
+          <div
+            className="flex items-center justify-between rounded-premium border border-border/40 bg-muted/20 px-spacing-xs py-spacing-2xs"
+            data-testid="magisterium-diagnostic-status"
+          >
+            <div className="flex items-center gap-spacing-2xs">
+              <span
+                className={cn(
+                  'inline-block h-2 w-2 rounded-full',
+                  errorCount > 0
+                    ? 'bg-destructive'
+                    : thinCount > 0
+                    ? 'bg-amber-500'
+                    : 'bg-emerald-500',
+                )}
+                aria-hidden
+              />
+              <span className="uppercase tracking-widest text-[9px] font-bold">
+                {errorCount > 0 ? 'Com erros' : thinCount > 0 ? 'Atenção' : 'OK'}
+              </span>
+            </div>
+            <div className="text-[9px] font-mono text-muted-foreground">
+              Última checagem: {new Date(lastCheckedAt).toLocaleTimeString()}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-spacing-xs">
             <div className="space-y-spacing-3xs">
               <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Rota</div>
