@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { GitCompareArrows, Download } from 'lucide-react';
+import { GitCompareArrows, Download, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { fingerprintQuery, shortFingerprint } from './queryFingerprint';
 import type { SnapshotHistoryRow } from './useSnapshotHistory';
+import { supabase } from '@/integrations/supabase/client';
 
 const fmtMs = (v: number) =>
   v >= 1000 ? `${(v / 1000).toFixed(2)} s` : `${v.toFixed(2)} ms`;
