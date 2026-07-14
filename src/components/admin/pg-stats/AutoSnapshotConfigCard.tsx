@@ -99,6 +99,39 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
           <p className="text-sm text-muted-foreground">Carregando…</p>
         ) : (
           <>
+            {cfg.last_error_at && (!cfg.last_success_at
+                || new Date(cfg.last_error_at).getTime() > new Date(cfg.last_success_at).getTime()) && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>
+                  Captura automática falhou
+                  {cfg.consecutive_failures > 1 && <> ({cfg.consecutive_failures}× consecutivas)</>}
+                </AlertTitle>
+                <AlertDescription className="space-y-1">
+                  <div className="text-xs">
+                    Última falha em <strong>{new Date(cfg.last_error_at).toLocaleString('pt-BR')}</strong>
+                    {cfg.last_success_at && (
+                      <> · último sucesso: <strong>{new Date(cfg.last_success_at).toLocaleString('pt-BR')}</strong></>
+                    )}
+                  </div>
+                  {cfg.last_error_message && (
+                    <pre className="text-[11px] whitespace-pre-wrap break-all bg-background/40 border rounded p-2 mt-1">
+                      {cfg.last_error_message}
+                    </pre>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+            {cfg.enabled && cfg.last_success_at
+              && (!cfg.last_error_at
+                  || new Date(cfg.last_success_at).getTime() >= new Date(cfg.last_error_at).getTime()) && (
+              <div className="flex items-center gap-2 text-xs text-primary rounded-md border border-primary/20 bg-primary/5 p-2">
+                <CheckCircle2 className="h-4 w-4" />
+                Última captura bem-sucedida em{' '}
+                <strong>{new Date(cfg.last_success_at).toLocaleString('pt-BR')}</strong>
+              </div>
+            )}
+
             <div className="flex items-center justify-between rounded-md border p-3">
               <div>
                 <p className="text-sm font-medium">Ativa</p>
