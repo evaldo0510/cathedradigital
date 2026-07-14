@@ -89,6 +89,7 @@ const OP_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outl
 };
 
 export default function PgStatStatements() {
+  const { snapshots, loading: snapshotsLoading, reload: reloadSnapshots } = useSnapshotHistory(100);
   const [rows, setRows] = useState<StatRow[]>([]);
   const [orderBy, setOrderBy] = useState<OrderBy>('total_exec_time');
   const [limit, setLimit] = useState<number>(25);
