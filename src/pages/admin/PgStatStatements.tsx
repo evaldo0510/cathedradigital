@@ -533,15 +533,5 @@ export default function PgStatStatements() {
       <ExplainDialog open={explainOpen} onOpenChange={setExplainOpen} initialQuery={explainQuery} />
     </div>
   );
-
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-
-      <ExplainDialog open={explainOpen} onOpenChange={setExplainOpen} initialQuery={explainQuery} />
-    </div>
-  );
 }
+
