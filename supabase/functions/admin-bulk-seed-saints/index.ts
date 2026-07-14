@@ -30,12 +30,16 @@ serve(async (req) => {
       return json({ error: "unauthorized", details: userErr?.message ?? "invalid token" }, 401);
     }
     const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
-    const { data: isAdmin, error: roleErr } = await admin.rpc("has_role", {
-      _user_id: userData.user.id,
-      _role: "admin",
-    });
+    // Verifica role admin diretamente na tabela user_roles (evita ambiguidade de overloads em has_role)
+    const { data: roleRow, error: roleErr } = await admin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userData.user.id)
+      .eq("role", "admin")
+      .maybeSingle();
     if (roleErr) return json({ error: "role_check_failed", details: roleErr.message }, 500);
-    if (!isAdmin) return json({ error: "forbidden", details: "requires admin role" }, 403);
+    if (!roleRow) return json({ error: "forbidden", details: "requires admin role" }, 403);
+
 
 
     // 2) Valida body
