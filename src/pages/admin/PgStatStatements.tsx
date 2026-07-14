@@ -16,6 +16,9 @@ import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
 import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
+import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
+import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
+import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
