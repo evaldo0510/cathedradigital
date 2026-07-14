@@ -477,8 +477,15 @@ export default function PgStatStatements() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={exportCSV}>CSV</DropdownMenuItem>
-                <DropdownMenuItem onClick={exportJSON}>JSON</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportCSV}>Tabela atual · CSV</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportJSON}>Tabela atual · JSON</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportFingerprintCSV} disabled={fingerprintExportRows.length === 0}>
+                  Fingerprints + evolução · CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportFingerprintJSON} disabled={fingerprintExportRows.length === 0}>
+                  Fingerprints + evolução · JSON
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
