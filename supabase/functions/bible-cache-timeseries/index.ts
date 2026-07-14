@@ -6,6 +6,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const _corsBase = {
@@ -51,22 +52,23 @@ function toCsv(rows: Array<Record<string, unknown>>, headers: string[]): string 
 }
 
 serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4b envelope estrito
   const _cid = getOrCreateCorrelationId(req);
   const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  const R = makeResponder(_cid);
 
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const authHeader = req.headers.get("Authorization") ?? "";
-    if (!authHeader.startsWith("Bearer ")) return json({ error: "Unauthorized", code: "no_token" }, 401);
+    if (!authHeader.startsWith("Bearer ")) return R.error(401, 'unauthorized', { detail: 'no_token' });
 
     const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
     const token = authHeader.replace("Bearer ", "");
     const { data: claimsData, error: claimsErr } = await userClient.auth.getClaims(token);
-    if (claimsErr || !claimsData?.claims?.sub) return json({ error: "Unauthorized", code: "invalid_token" }, 401);
+    if (claimsErr || !claimsData?.claims?.sub) return R.error(401, 'unauthorized', { detail: 'invalid_token' });
     const userId = claimsData.claims.sub as string;
 
     const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -77,13 +79,12 @@ serve(async (req) => {
       .eq("role", "admin")
       .maybeSingle();
     if (!roleRow) {
-      return json({
-        error: "Forbidden",
-        code: "not_admin",
-        message: "Acesso restrito a administradores.",
-        request_access_to: "admin@cathedradigital.com.br",
+      return R.error(403, 'forbidden', {
+        detail: 'not_admin',
+        message: 'Acesso restrito a administradores.',
+        request_access_to: 'admin@cathedradigital.com.br',
         user_id: userId,
-      }, 403);
+      });
     }
 
     const url = new URL(req.url);
@@ -100,7 +101,7 @@ serve(async (req) => {
     if (action === "drilldown") {
       const bucketStart = params.bucket_start as string;
       if (!bucketStart || isNaN(Date.parse(bucketStart))) {
-        return json({ error: "bucket_start (ISO) obrigatório" }, 400);
+        return R.error(400, 'invalid_body', { detail: 'bucket_start (ISO) obrigatório' });
       }
       const windowMinutes = clampInt(params.window_minutes, 1, 1440, 5);
       const limit = clampInt(params.limit, 1, 100, 20);
@@ -119,7 +120,7 @@ serve(async (req) => {
       if (abbrev) q = q.eq("abbrev", abbrev);
 
       const { data, error } = await q;
-      if (error) return json({ error: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { detail: error.message });
       return json({ action, bucket_start: bucketStart, window_minutes: windowMinutes, abbrev, rows: data ?? [] });
     }
 
@@ -186,7 +187,7 @@ serve(async (req) => {
         .select("abbrev, cache, total_ms, sql_ms")
         .gte("created_at", since)
         .limit(100000);
-      if (evErr) return json({ error: evErr.message }, 500);
+      if (evErr) return R.error(500, 'internal_error', { stage: 'events_read', detail: evErr.message });
 
       const classify = (cache: string | null) =>
         cache === "HIT" ? "L1_HIT_FRESH"
@@ -315,7 +316,7 @@ Veja \`bible_cache_ttl_benchmark_detailed.csv\` para a tabela por livro.
     });
     if (error) {
       console.error("[bible-cache-timeseries] rpc error", error);
-      return json({ error: error.message }, 500);
+      return R.error(500, 'internal_error', { stage: 'timeseries_rpc', detail: error.message });
     }
     return json({
       action: "series",
@@ -327,6 +328,6 @@ Veja \`bible_cache_ttl_benchmark_detailed.csv\` para a tabela por livro.
     });
   } catch (e) {
     console.error("[bible-cache-timeseries] unexpected", e);
-    return json({ error: (e as Error).message ?? "Internal error" }, 500);
+    return R.error(500, 'internal_error', { detail: (e as Error).message ?? "Internal error" });
   }
 });
