@@ -12,7 +12,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { toast } from 'sonner';
-import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
+import { RefreshCw, RotateCcw, Copy, FileSearch, Download, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
@@ -24,6 +24,16 @@ import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+function getInitialFromUrl<T extends string | number | boolean>(
+  key: string, fallback: T, parse: (v: string) => T | undefined,
+): T {
+  if (typeof window === 'undefined') return fallback;
+  const raw = new URLSearchParams(window.location.search).get(key);
+  if (raw == null) return fallback;
+  const parsed = parse(raw);
+  return parsed !== undefined ? parsed : fallback;
+}
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
 
