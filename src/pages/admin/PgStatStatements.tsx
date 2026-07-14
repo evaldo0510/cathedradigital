@@ -12,7 +12,13 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { toast } from 'sonner';
-import { RefreshCw, RotateCcw, Copy } from 'lucide-react';
+import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
+import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
+import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
+import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
 
@@ -87,6 +93,20 @@ export default function PgStatStatements() {
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [explainOpen, setExplainOpen] = useState(false);
+  const [explainQuery, setExplainQuery] = useState('');
+
+  const currentView: PgStatViewConfig = {
+    orderBy, limit, minCalls, opFilter, tableFilter,
+  };
+
+  const applyView = (cfg: PgStatViewConfig) => {
+    setOrderBy(cfg.orderBy as OrderBy);
+    setLimit(cfg.limit);
+    setMinCalls(cfg.minCalls);
+    setOpFilter(cfg.opFilter as typeof opFilter);
+    setTableFilter(cfg.tableFilter);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -157,6 +177,65 @@ export default function PgStatStatements() {
     } catch {
       toast.error('Falha ao copiar');
     }
+  };
+
+  const openExplain = (q: string) => {
+    setExplainQuery(q);
+    setExplainOpen(true);
+  };
+
+  const downloadBlob = (name: string, content: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const exportJSON = () => {
+    const payload = {
+      exported_at: new Date().toISOString(),
+      filters: { orderBy, limit, minCalls, opFilter, tableFilter },
+      window_started_at: statsSince ?? null,
+      rows: filtered,
+    };
+    downloadBlob(
+      `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
+      JSON.stringify(payload, null, 2),
+      'application/json',
+    );
+    toast.success(`Exportados ${filtered.length} registros (JSON)`);
+  };
+
+  const exportCSV = () => {
+    const escape = (v: unknown) => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = [
+      'rank','op','table','calls','mean_ms','max_ms','min_ms','stddev_ms',
+      'total_ms','pct_total','rows_returned','cache_hit','cache_read','query',
+    ];
+    const lines = [header.join(',')];
+    filtered.forEach((r, i) => {
+      const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
+      lines.push([
+        i + 1, inferOp(r.query), inferTable(r.query),
+        r.calls, r.mean_exec_ms.toFixed(3), r.max_exec_ms.toFixed(3),
+        r.min_exec_ms.toFixed(3), r.stddev_exec_ms.toFixed(3),
+        r.total_exec_ms.toFixed(3), pct.toFixed(2),
+        r.rows_returned, r.shared_blks_hit, r.shared_blks_read,
+        r.query.replace(/\s+/g, ' ').trim(),
+      ].map(escape).join(','));
+    });
+    downloadBlob(
+      `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.csv`,
+      lines.join('\n'),
+      'text/csv;charset=utf-8',
+    );
+    toast.success(`Exportados ${filtered.length} registros (CSV)`);
   };
 
   return (
@@ -234,6 +313,17 @@ export default function PgStatStatements() {
               <RotateCcw className="h-4 w-4 mr-2" />
               Zerar janela
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="outline" disabled={filtered.length === 0}>
+                  <Download className="h-4 w-4 mr-2" /> Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={exportCSV}>CSV</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportJSON}>JSON</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {statsSince && (
               <div className="text-xs text-muted-foreground ml-auto">
@@ -254,6 +344,17 @@ export default function PgStatStatements() {
           </p>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Visões salvas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SavedViewsBar current={currentView} onApply={applyView} />
+        </CardContent>
+      </Card>
+
+      <SnapshotsPanel />
 
       <Card>
         <CardHeader>
@@ -321,6 +422,12 @@ export default function PgStatStatements() {
                                 </span>
                                 <Button
                                   size="sm" variant="ghost" className="ml-auto h-7"
+                                  onClick={(e) => { e.stopPropagation(); openExplain(r.query); }}
+                                >
+                                  <FileSearch className="h-3 w-3 mr-1" /> EXPLAIN
+                                </Button>
+                                <Button
+                                  size="sm" variant="ghost" className="h-7"
                                   onClick={(e) => { e.stopPropagation(); void copyQuery(r.query); }}
                                 >
                                   <Copy className="h-3 w-3 mr-1" /> Copiar query
@@ -341,6 +448,8 @@ export default function PgStatStatements() {
           </div>
         </CardContent>
       </Card>
+
+      <ExplainDialog open={explainOpen} onOpenChange={setExplainOpen} initialQuery={explainQuery} />
     </div>
   );
 }
