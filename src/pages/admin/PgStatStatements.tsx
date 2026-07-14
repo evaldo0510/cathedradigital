@@ -650,7 +650,7 @@ export default function PgStatStatements() {
                   <> ({(windowSeconds / 3600).toFixed(1)} h)</>
                 )}
                 {' · '}
-                Tempo acumulado (top {displayed.length}): <strong>{fmtMs(totalMsAll)}</strong>
+                Tempo acumulado (top {sorted.length}): <strong>{fmtMs(totalMsAll)}</strong>
               </div>
             )}
           </div>
