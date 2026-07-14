@@ -5369,6 +5369,12 @@ export type Database = {
           result: string
         }[]
       }
+      _test_notif_concurrency_cleanup: { Args: never; Returns: undefined }
+      _test_notif_concurrency_seed: {
+        Args: { p_count?: number; p_fail_ratio?: number }
+        Returns: number
+      }
+      _test_notif_concurrency_verify: { Args: never; Returns: Json }
       _test_notif_reset: { Args: never; Returns: undefined }
       _test_notif_retry_snapshot_row: { Args: { p_id: string }; Returns: Json }
       _test_notif_retry_snapshots: { Args: never; Returns: Json }
