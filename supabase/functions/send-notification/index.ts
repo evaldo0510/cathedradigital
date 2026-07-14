@@ -1,14 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
-
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
+import { makeResponder } from "../_shared/http-response.ts";
 
 // Rate limiter
 const rateLimitMap = new Map<string, number[]>();
@@ -48,55 +40,44 @@ async function logSecurityEvent(supabase: any, event: { type: string, severity: 
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return R.cors();
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   const clientIP = getClientIP(req);
-  
-  // 1. Check Rate Limit
+
   if (isRateLimited(clientIP)) {
     await logSecurityEvent(supabase, {
       type: "RATE_LIMIT_EXCEEDED",
       severity: "warning",
       description: `Rate limit hit for IP: ${clientIP}`,
-      metadata: { ip: clientIP, function: "send-notification" }
+      metadata: { ip: clientIP, function: "send-notification", correlation_id: cid }
     });
-    return new Response(
-      JSON.stringify({ error: "Rate limit exceeded" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 429 }
-    );
+    return R.error(429, "rate_limited");
   }
 
-  // 2. Check Payload Size
   const contentLength = parseInt(req.headers.get("content-length") || "0");
-  if (contentLength > 10240) { // 10KB
+  if (contentLength > 10240) {
     await logSecurityEvent(supabase, {
       type: "PAYLOAD_TOO_LARGE",
       severity: "critical",
       description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
-      metadata: { ip: clientIP, size: contentLength, function: "send-notification" }
+      metadata: { ip: clientIP, size: contentLength, function: "send-notification", correlation_id: cid }
     });
-    return new Response(
-      JSON.stringify({ error: "Payload too large" }),
-      { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return R.error(413, "invalid_body", { reason: "payload_too_large", size: contentLength });
   }
 
-  // Auth check
   const authHeader = req.headers.get("authorization") || "";
   const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
   const cronSecret = Deno.env.get("CRON_SECRET") || "";
   const cronSecretHeader = req.headers.get("x-cron-secret") || "";
-  
+
   const isServiceRole = providedBearer.length > 0 && providedBearer === serviceRoleKey;
   const isCronSecret = cronSecret.length > 0 && cronSecretHeader === cronSecret;
   if (!isServiceRole && !isCronSecret) {
@@ -104,16 +85,16 @@ Deno.serve(async (req) => {
       type: "UNAUTHORIZED_ACCESS",
       severity: "critical",
       description: `Unauthorized attempt to call send-notification from IP: ${clientIP}`,
-      metadata: { ip: clientIP }
+      metadata: { ip: clientIP, correlation_id: cid }
     });
-    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
+    return R.error(403, "forbidden");
   }
 
   try {
     const { user_id, title, message, link, type } = await req.json();
 
     if (!user_id || !title) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: corsHeaders });
+      return R.error(400, "invalid_body", { missing: ["user_id", "title"].filter(k => !({ user_id, title } as any)[k]) });
     }
 
     const { error } = await supabase.from("notifications").insert({
@@ -126,9 +107,9 @@ Deno.serve(async (req) => {
 
     if (error) throw error;
 
-    return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return R.raw({ success: true, correlation_id: cid });
   } catch (err) {
-    console.error("send-notification error:", err);
-    return new Response(JSON.stringify({ error: (err as Error).message }), { status: 500, headers: corsHeaders });
+    console.error("send-notification error:", err, "cid=", cid);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });

@@ -1,22 +1,13 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
-
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
+import { makeResponder } from "../_shared/http-response.ts";
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -25,7 +16,6 @@ Deno.serve(async (req) => {
 
     const { type, title, details, severity, user_name } = await req.json();
 
-    // Buscar configurações de notificação
     const { data: configData } = await supabase
       .from('telemetry_settings')
       .select('value')
@@ -34,26 +24,21 @@ Deno.serve(async (req) => {
 
     const config = configData?.value || { enabled: false };
 
-    // Notificações de mudança de config SEMPRE são enviadas se houver alvo, independente de 'enabled' (opcional)
-    // Ou respeita o 'enabled' global. Vamos respeitar o 'enabled' global.
     if (!config.enabled) {
-      return new Response(JSON.stringify({ message: "Notifications disabled" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return R.raw({ message: "Notifications disabled", correlation_id: cid });
     }
 
     const messages = [];
 
-    // Slack Notification
     if (config.slack_webhook) {
       const slackMessage = {
-        text: `*Telemetria Cathedra - ${severity?.toUpperCase() || 'INFO'}*`,
+        text: `*Telemetria Cathedra - ${severity?.toUpperCase() || 'INFO'}* (cid=${cid})`,
         blocks: [
           {
             type: "section",
             text: {
               type: "mrkdwn",
-              text: `*${title}*\n*Evento:* ${type}\n*Usuário:* ${user_name || 'Sistema'}\n*Severidade:* ${severity || 'info'}`
+              text: `*${title}*\n*Evento:* ${type}\n*Usuário:* ${user_name || 'Sistema'}\n*Severidade:* ${severity || 'info'}\n*Correlation ID:* \`${cid}\``
             }
           },
           {
@@ -73,26 +58,20 @@ Deno.serve(async (req) => {
           body: JSON.stringify(slackMessage)
         });
         if (res.ok) messages.push("Slack sent");
-        else console.error("Slack response error:", await res.text());
+        else console.error("Slack response error cid=", cid, await res.text());
       } catch (e) {
-        console.error("Slack error:", e);
+        console.error("Slack error cid=", cid, e);
       }
     }
 
-    // Email Notification (Placeholder)
     if (config.email) {
-      console.log(`[EMAIL NOTIFICATION] To: ${config.email} - Title: ${title}`);
+      console.log(`[EMAIL NOTIFICATION] cid=${cid} To: ${config.email} - Title: ${title}`);
       messages.push("Email target detected");
     }
 
-    return new Response(JSON.stringify({ success: true, messages }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return R.raw({ success: true, messages, correlation_id: cid });
   } catch (err) {
-    console.error("telemetry-notifications error:", err);
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    console.error("telemetry-notifications error cid=", cid, err);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });
