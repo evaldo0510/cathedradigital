@@ -38,7 +38,10 @@ serve(async (req) => {
         ...dbSaint,
         description: dbSaint.bio,
         fullBio: dbSaint.full_bio,
-        source: "Cathedra Database",
+        source: dbSaint.source_name || "Cathedra Database",
+        sourceUrl: dbSaint.source_url || null,
+        bioSourceUrl: dbSaint.bio_source_url || null,
+        prayerSourceUrl: dbSaint.prayer_source_url || null,
         is_fallback: false,
         correlation_id: cid,
       });
@@ -53,7 +56,6 @@ serve(async (req) => {
 
     if (!allErr && all && all.length > 0) {
       const todayOrd = ordinal(month, day);
-      // score: dias até a próxima festa (0..365)
       const withScore = all.map((s: any) => {
         const so = ordinal(s.feast_month, s.feast_day_num);
         const delta = so > todayOrd ? so - todayOrd : so - todayOrd + 1231;
@@ -68,7 +70,10 @@ serve(async (req) => {
         ...next,
         description: next.bio,
         fullBio: next.full_bio,
-        source: "Cathedra Database",
+        source: next.source_name || "Cathedra Database",
+        sourceUrl: next.source_url || null,
+        bioSourceUrl: next.bio_source_url || null,
+        prayerSourceUrl: next.prayer_source_url || null,
         is_fallback: true,
         fallback_reason: "no_saint_for_today",
         requested_date: { month, day },
