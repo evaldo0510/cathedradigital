@@ -34,10 +34,53 @@ const PRESETS = [
   { label: '24 h', v: 1440 },
 ];
 
+type ChannelKey = 'webhook' | 'slack';
+
 export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) {
   const [cfg, setCfg] = useState<Config | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [channelBusy, setChannelBusy] = useState<Record<ChannelKey, 'validate' | 'send' | null>>({ webhook: null, slack: null });
+  const [channelFeedback, setChannelFeedback] = useState<Record<ChannelKey, { kind: 'ok' | 'error'; msg: string } | null>>({ webhook: null, slack: null });
+
+  const validateChannel = async (channel: ChannelKey) => {
+    if (!cfg) return;
+    const url = channel === 'webhook' ? cfg.notify_webhook_url : cfg.notify_slack_webhook_url;
+    setChannelBusy((s) => ({ ...s, [channel]: 'validate' }));
+    setChannelFeedback((s) => ({ ...s, [channel]: null }));
+    try {
+      const { data, error } = await supabase.rpc('admin_notif_validate_channel' as never, {
+        p_channel: channel, p_url: url ?? '',
+      } as never);
+      if (error) throw error;
+      const res = data as unknown as { valid: boolean; reason: string };
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: res.valid ? 'ok' : 'error', msg: res.reason } }));
+      if (res.valid) toast.success(`URL ${channel} válida`);
+      else toast.error(`URL ${channel}: ${res.reason}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: 'error', msg } }));
+      toast.error(`Validação falhou: ${msg}`);
+    } finally {
+      setChannelBusy((s) => ({ ...s, [channel]: null }));
+    }
+  };
+
+  const sendTest = async (channel: ChannelKey) => {
+    setChannelBusy((s) => ({ ...s, [channel]: 'send' }));
+    try {
+      const { data, error } = await supabase.rpc('admin_notif_send_test' as never, { p_channel: channel } as never);
+      if (error) throw error;
+      const res = data as unknown as { notification_id: string };
+      toast.success(`Notificação de teste enfileirada (id ${res.notification_id.slice(0, 8)}). Veja o resultado no painel de notificações abaixo.`);
+      onChange?.();
+    } catch (e) {
+      toast.error(`Envio de teste falhou: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setChannelBusy((s) => ({ ...s, [channel]: null }));
+    }
+  };
+
 
   const load = useCallback(async () => {
     setLoading(true);
