@@ -348,6 +348,9 @@ export function FailuresReportCard() {
             <Button size="sm" variant="secondary" onClick={downloadJson} disabled={!report}>
               <Download className="h-4 w-4 mr-1" /> JSON
             </Button>
+            <Button size="sm" variant="secondary" onClick={downloadCsv} disabled={!report}>
+              <Download className="h-4 w-4 mr-1" /> CSV
+            </Button>
             <Button size="sm" variant="secondary" onClick={downloadPdf} disabled={!report}>
               <Download className="h-4 w-4 mr-1" /> PDF
             </Button>
