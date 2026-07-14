@@ -616,7 +616,7 @@ export default function PgStatStatements() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {displayed.length === 0 && !loading && (
+                {pageRows.length === 0 && !loading && (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                       Nenhuma consulta encontrada com os filtros atuais.
