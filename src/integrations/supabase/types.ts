@@ -2926,9 +2926,13 @@ export type Database = {
           interval_minutes: number
           last_error_at: string | null
           last_error_message: string | null
+          last_notification_error: string | null
+          last_notified_at: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
           last_success_at: string | null
+          notify_slack_webhook_url: string | null
+          notify_webhook_url: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
@@ -2940,9 +2944,13 @@ export type Database = {
           interval_minutes?: number
           last_error_at?: string | null
           last_error_message?: string | null
+          last_notification_error?: string | null
+          last_notified_at?: string | null
           last_run_at?: string | null
           last_snapshot_id?: string | null
           last_success_at?: string | null
+          notify_slack_webhook_url?: string | null
+          notify_webhook_url?: string | null
           retention_days?: number
           updated_at?: string
           updated_by?: string | null
@@ -2954,9 +2962,13 @@ export type Database = {
           interval_minutes?: number
           last_error_at?: string | null
           last_error_message?: string | null
+          last_notification_error?: string | null
+          last_notified_at?: string | null
           last_run_at?: string | null
           last_snapshot_id?: string | null
           last_success_at?: string | null
+          notify_slack_webhook_url?: string | null
+          notify_webhook_url?: string | null
           retention_days?: number
           updated_at?: string
           updated_by?: string | null
@@ -5189,9 +5201,13 @@ export type Database = {
           interval_minutes: number
           last_error_at: string | null
           last_error_message: string | null
+          last_notification_error: string | null
+          last_notified_at: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
           last_success_at: string | null
+          notify_slack_webhook_url: string | null
+          notify_webhook_url: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
@@ -5257,6 +5273,8 @@ export type Database = {
         Args: {
           p_enabled: boolean
           p_interval_minutes: number
+          p_notify_slack_webhook_url?: string
+          p_notify_webhook_url?: string
           p_retention_days: number
         }
         Returns: {
@@ -5266,9 +5284,13 @@ export type Database = {
           interval_minutes: number
           last_error_at: string | null
           last_error_message: string | null
+          last_notification_error: string | null
+          last_notified_at: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
           last_success_at: string | null
+          notify_slack_webhook_url: string | null
+          notify_webhook_url: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
