@@ -705,9 +705,12 @@ export default function PgStatStatements() {
 
       <AutoSnapshotConfigCard />
 
+      <ChannelGatesPanel />
+
       <PendingNotificationsPanel />
 
       <FailuresReportCard />
+
 
 
 
