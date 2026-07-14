@@ -623,7 +623,8 @@ export default function PgStatStatements() {
                     </TableCell>
                   </TableRow>
                 )}
-                {displayed.map((r, i) => {
+                {pageRows.map((r, localIdx) => {
+                  const i = pageStart + localIdx;
                   const op = inferOp(r.query);
                   const table = inferTable(r.query);
                   const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
