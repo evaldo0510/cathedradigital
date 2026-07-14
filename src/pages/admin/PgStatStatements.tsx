@@ -130,6 +130,15 @@ export default function PgStatStatements() {
     getInitialFromUrl<number>('pageSize', 25, (v) => {
       const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.min(500, n) : undefined;
     }));
+  const [searchText, setSearchText] = useState<string>(() =>
+    getInitialFromUrl<string>('q', '', (v) => v));
+  type SortKey = 'rank' | 'fingerprint' | 'calls' | 'mean' | 'max' | 'total';
+  const [sortKey, setSortKey] = useState<SortKey>(() =>
+    getInitialFromUrl<SortKey>('sortKey', 'rank',
+      (v) => (['rank','fingerprint','calls','mean','max','total'].includes(v) ? v as SortKey : undefined)));
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>(() =>
+    getInitialFromUrl<'asc' | 'desc'>('sortDir', 'desc',
+      (v) => (v === 'asc' || v === 'desc' ? v : undefined)));
 
   const currentView: PgStatViewConfig = {
     orderBy, limit, minCalls, opFilter, tableFilter,
