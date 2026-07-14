@@ -679,25 +679,81 @@ export default function PgStatStatements() {
 
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">
-            Resultado ({displayed.length}){groupByFingerprint ? ' — agrupado por fingerprint' : ''}
-          </CardTitle>
+        <CardHeader className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <CardTitle className="text-base">
+              Resultado ({sorted.length}
+              {sorted.length !== displayed.length && <> de {displayed.length}</>}
+              ){groupByFingerprint ? ' — agrupado por fingerprint' : ''}
+            </CardTitle>
+            <div className="relative ml-auto w-full sm:w-72">
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                aria-label="Buscar por fingerprint, query normalizada ou tabela"
+                placeholder="Buscar fingerprint, query, tabela…"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="h-8 pl-7 pr-7 text-xs"
+              />
+              {searchText && (
+                <button
+                  type="button"
+                  aria-label="Limpar busca"
+                  onClick={() => setSearchText('')}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-0.5 hover:bg-muted"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+            {sortKey !== 'rank' && (
+              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={clearSort}>
+                Limpar ordenação
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-10">#</TableHead>
+                  <TableHead className="w-10">
+                    <SortHeader label="#" active={sortKey === 'rank'} dir={sortDir} onClick={clearSort} />
+                  </TableHead>
                   <TableHead>Op</TableHead>
                   <TableHead>Tabela</TableHead>
-                  <TableHead className="text-right">Chamadas</TableHead>
-                  <TableHead className="text-right">Média</TableHead>
-                  <TableHead className="text-right">Máx</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-right">
+                    <SortHeader label="Chamadas" align="right"
+                      active={sortKey === 'calls'} dir={sortDir}
+                      onClick={() => clickSort('calls')} />
+                  </TableHead>
+                  <TableHead className="text-right">
+                    <SortHeader label="Média" align="right"
+                      active={sortKey === 'mean'} dir={sortDir}
+                      onClick={() => clickSort('mean')} />
+                  </TableHead>
+                  <TableHead className="text-right">
+                    <SortHeader label="Máx" align="right"
+                      active={sortKey === 'max'} dir={sortDir}
+                      onClick={() => clickSort('max')} />
+                  </TableHead>
+                  <TableHead className="text-right">
+                    <SortHeader label="Total" align="right"
+                      active={sortKey === 'total'} dir={sortDir}
+                      onClick={() => clickSort('total')} />
+                  </TableHead>
                   <TableHead className="text-right">% total</TableHead>
-                  <TableHead>{groupByFingerprint ? 'Fingerprint' : 'Query'}</TableHead>
+                  {groupByFingerprint && (
+                    <TableHead className="w-32">Evolução (p95/mean/calls)</TableHead>
+                  )}
+                  <TableHead>
+                    {groupByFingerprint ? (
+                      <SortHeader label="Fingerprint"
+                        active={sortKey === 'fingerprint'} dir={sortDir}
+                        onClick={() => clickSort('fingerprint')} />
+                    ) : 'Query'}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
