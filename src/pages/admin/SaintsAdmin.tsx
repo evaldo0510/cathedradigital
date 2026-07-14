@@ -411,6 +411,8 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <SaintsAuditPanel />
+
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
