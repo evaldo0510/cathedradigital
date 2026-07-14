@@ -1,72 +1,43 @@
-# QA completa do módulo da Bíblia
+## Objetivo
+Testes de integração da fila `pg_stat_pending_notifications` validando retries com backoff/jitter e atualização de `next_attempt_at` para diferentes códigos HTTP e erros de rede, sem chamar rede real.
 
-Objetivo: medir performance, validar acessibilidade das bolhas (popovers de cross-reference), rodar uma suíte E2E e consolidar tudo em um relatório PDF com evidências.
+## Estratégia (mínima invasão)
+Em vez de refatorar `pg_stat_notif_process_queue` inteira, isolar **só a chamada de rede** atrás de um wrapper SQL trocável em modo teste:
 
-## 1. Performance — antes/depois
+- Nova função `public._notif_http_post(url text, headers jsonb, body jsonb) returns table(status int, response text, error text)`.
+  - Modo normal: chama `net.http_post` e devolve status/response/error.
+  - Modo teste: quando `current_setting('app.notif_test_mode', true) = 'on'`, lê da tabela `_test_http_responses` (fila FIFO por URL) e devolve a resposta programada, sem tocar em `pg_net`.
+- Reescrever apenas o trecho de dispatch dentro de `pg_stat_notif_process_queue` para usar `_notif_http_post` (mesma assinatura de retorno que já é consumida). Nenhuma outra lógica muda.
 
-Script Playwright `tests/e2e/bible-performance.spec.ts` que:
+## Tabela de fixtures
+`public._test_http_responses` (usada só em teste, `revoke all` de anon/authenticated):
+- `url text`, `seq bigint`, `status int`, `response text`, `error text`, `consumed bool`
 
-- Abre a rota da Bíblia em **cold cache** (contexto novo, sem IDB/SW) e em **warm cache** (segundo load).
-- Coleta via `page.evaluate`:
-  - `performance.timing` → TTFB, DOMContentLoaded, Load.
-  - `PerformanceObserver` → LCP, FCP, CLS.
-  - `performance.getEntriesByType('resource')` → nº de requisições, bytes totais, requisições para `functions/v1/bible-text`.
-- Mede tempo de render do primeiro capítulo (entre click no livro e o `[data-testid="bible-verse"]` ficar visível).
-- Salva JSON em `/tmp/bible-perf/{cold,warm}.json` e gera um diff antes/depois (cold = "antes", warm = "depois").
+Helper `_test_enqueue_http(url, status, response, error)` para popular na ordem.
 
-## 2. Acessibilidade das bolhas
+## Bateria de testes (`supabase/tests/pg_stat_notif_queue.integration.test.sql`)
+Executada via `psql` no runner do repo (padrão dos outros `.test.sql`). Cada caso:
 
-Audita popovers de versículo (cross-reference / Nexus). Script `tests/e2e/bible-bubbles-a11y.spec.ts`:
+1. **200 OK**: enfileira notif + resposta 200 → `process_queue` → estado `succeeded`, `attempts=1`, `attempt` gravado em `pg_stat_notif_attempts`.
+2. **500 retryable**: resposta 500 → `retry_scheduled`, `attempts=1`, `next_attempt_at` no range esperado do backoff (usa a mesma `pg_stat_notif_backoff`).
+3. **429 rate limit**: mesma verificação de retry + delay dentro da faixa.
+4. **400 não-retryable**: `failed` imediato, sem `next_attempt_at`.
+5. **Erro de rede** (`status=null, error='timeout'`): tratado como retryable, agenda próximo.
+6. **Limite de tentativas**: força `attempts = max-1`, resposta 500 → transição para `failed`, sem novo `next_attempt_at`.
+7. **Avanço de tempo**: usa `update ... set next_attempt_at = now() - interval '1s'` para simular "tempo avançou" e valida que a próxima chamada re-processa.
+8. **Idempotência do worker**: chamar `process_queue` duas vezes seguidas não duplica attempts para item já `succeeded`.
 
-- Foca o gatilho via `Tab` e abre o popover com `Enter`/`Space`.
-- Verifica: `role="dialog"` ou `aria-haspopup`, `aria-expanded`, `aria-controls`, foco entra no popover, `Esc` fecha e devolve foco ao gatilho.
-- Roda `@axe-core/playwright` escopado ao popover aberto (`color-contrast`, `aria-*`, `button-name`).
-- Verifica tamanho mínimo do tap target (44×44) nos gatilhos.
-- Coleta cada falha com seletor + violação e screenshot do estado.
+Cada teste faz `raise exception` se o assert falhar; teste inteiro roda dentro de transação com `rollback` no final (via `begin;` no header do arquivo).
 
-## 3. Suíte E2E do módulo
+## Escopo do que NÃO muda
+- Nenhuma alteração em RLS, GRANTs de tabelas existentes, cron ou UI.
+- `_test_http_responses` e `_notif_http_post` em modo teste só ativam com o GUC `app.notif_test_mode='on'` setado na sessão de teste — produção continua batendo em `net.http_post` normalmente.
 
-`tests/e2e/bible-module-suite.spec.ts` agrupando:
+## Riscos e mitigação
+- **Risco**: bug no wrapper quebra envio real. **Mitigação**: wrapper delega direto para `net.http_post` fora do modo teste, sem lógica extra; smoke test manual no admin após deploy (botão "Reprocessar" numa notif de teste).
+- **Risco**: fixture consumida em ordem errada. **Mitigação**: `seq bigserial` + `for update skip locked` no consumo.
 
-- Render do livro/capítulo padrão (Gn 1) com nº esperado de versículos.
-- Navegação capítulo anterior/próximo (rota muda, conteúdo muda, sem regressão de cache).
-- Busca por referência (`Jo 3:16`) → versículo correto em foco.
-- Abertura de bolha em pelo menos um versículo com cross-ref e validação do conteúdo.
-- Captura screenshot por etapa em `/tmp/bible-e2e/`.
-
-Reutiliza o mock de `functions/v1/bible-text` quando offline para estabilidade.
-
-## 4. Relatório PDF
-
-Script Python `scripts/generate-bible-qa-report.py` que lê os JSONs/screenshots gerados nas etapas 1–3 e produz `/mnt/documents/bible-qa-report.pdf` com:
-
-- Capa + sumário executivo (passed/failed por suíte).
-- Seção 1: tabela de métricas antes/depois (cold vs warm) + delta %.
-- Seção 2: tabela de findings de a11y (severidade, regra, seletor) + screenshots.
-- Seção 3: validação de texto/versículos (contagem por livro amostrado) + status das bolhas.
-- Anexo: logs brutos (resumo) e lista de evidências.
-
-QA visual obrigatório do PDF (pdftoppm + inspeção página a página) antes de entregar.
-
-## 5. Execução e entrega
-
-Ordem de execução no sandbox:
-
-```text
-bunx playwright test tests/e2e/bible-performance.spec.ts
-bunx playwright test tests/e2e/bible-bubbles-a11y.spec.ts
-bunx playwright test tests/e2e/bible-module-suite.spec.ts
-python3 scripts/generate-bible-qa-report.py
-```
-
-Entrega final:
-- PDF em `/mnt/documents/bible-qa-report.pdf` (via `<presentation-artifact>`).
-- Resumo no chat: pass/fail por suíte + 3 principais findings.
-
-## Detalhes técnicos
-
-- Reaproveita helpers existentes (`mockMonthEndpoint` padrão da suíte litcal) adaptados para `bible-text`.
-- Usa `@axe-core/playwright` já presente em outras specs (`bottom-nav-a11y-axe.spec.ts`).
-- Geração do PDF com `reportlab` (Platypus) — sem Unicode sub/superscript.
-- Todas as evidências intermediárias ficam em `/tmp/bible-qa/`; só o PDF vai para `/mnt/documents`.
-- Não altera código de produção; apenas adiciona specs e o script de relatório.
+## Entregáveis
+- Migration: `_notif_http_post`, `_test_http_responses`, `_test_enqueue_http`, patch em `pg_stat_notif_process_queue`.
+- `supabase/tests/pg_stat_notif_queue.integration.test.sql` com os 8 casos.
+- Sem mudança em UI/tipos gerados (não há RPC nova exposta ao client).

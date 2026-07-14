@@ -29,6 +29,60 @@ export type Database = {
         }
         Relationships: []
       }
+      _test_http_response_store: {
+        Row: {
+          created_at: string
+          error_msg: string | null
+          request_id: number
+          response_body: string | null
+          status_code: number | null
+        }
+        Insert: {
+          created_at?: string
+          error_msg?: string | null
+          request_id: number
+          response_body?: string | null
+          status_code?: number | null
+        }
+        Update: {
+          created_at?: string
+          error_msg?: string | null
+          request_id?: number
+          response_body?: string | null
+          status_code?: number | null
+        }
+        Relationships: []
+      }
+      _test_http_responses: {
+        Row: {
+          consumed: boolean
+          created_at: string
+          error_msg: string | null
+          id: number
+          response_body: string | null
+          status_code: number | null
+          url: string
+        }
+        Insert: {
+          consumed?: boolean
+          created_at?: string
+          error_msg?: string | null
+          id?: number
+          response_body?: string | null
+          status_code?: number | null
+          url: string
+        }
+        Update: {
+          consumed?: boolean
+          created_at?: string
+          error_msg?: string | null
+          id?: number
+          response_body?: string | null
+          status_code?: number | null
+          url?: string
+        }
+        Relationships: []
+      }
       achievements: {
         Row: {
           category: string
@@ -5282,6 +5336,40 @@ export type Database = {
       }
     }
     Functions: {
+      _notif_http_post: {
+        Args: {
+          p_body: Json
+          p_headers: Json
+          p_timeout_ms: number
+          p_url: string
+        }
+        Returns: number
+      }
+      _notif_http_response: {
+        Args: { p_request_id: number }
+        Returns: {
+          error_msg: string
+          status: string
+          status_code: number
+        }[]
+      }
+      _test_enqueue_http: {
+        Args: {
+          p_body?: string
+          p_error?: string
+          p_status: number
+          p_url: string
+        }
+        Returns: number
+      }
+      _test_notif_reset: { Args: never; Returns: undefined }
+      _test_notif_run_all: {
+        Args: never
+        Returns: {
+          case_name: string
+          result: string
+        }[]
+      }
       admin_capture_pg_stat_snapshot: {
         Args: { p_label?: string; p_limit?: number; p_note?: string }
         Returns: string
