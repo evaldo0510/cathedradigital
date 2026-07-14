@@ -5055,6 +5055,22 @@ export type Database = {
       }
     }
     Functions: {
+      admin_get_pg_stat_statements: {
+        Args: { p_limit?: number; p_min_calls?: number; p_order_by?: string }
+        Returns: {
+          calls: number
+          max_exec_ms: number
+          mean_exec_ms: number
+          min_exec_ms: number
+          query: string
+          rows_returned: number
+          shared_blks_hit: number
+          shared_blks_read: number
+          stats_since: string
+          stddev_exec_ms: number
+          total_exec_ms: number
+        }[]
+      }
       admin_list_translation_sources: {
         Args: {
           p_limit?: number
@@ -5088,6 +5104,7 @@ export type Database = {
           total: number
         }[]
       }
+      admin_reset_pg_stat_statements: { Args: never; Returns: string }
       aggregate_bible_cache_metrics: {
         Args: { p_since?: string }
         Returns: number
