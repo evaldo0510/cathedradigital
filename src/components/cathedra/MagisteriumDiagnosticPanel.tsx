@@ -133,6 +133,16 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
 
   const thinCount = buffer.filter((e) => e.step === 'cache_thin' || e.step === 'fetch_thin').length;
 
+  const okCount = buffer.filter((e) => (OK_STEPS as readonly string[]).includes(e.step)).length;
+  const errorCount = buffer.filter((e) => (ERROR_STEPS as readonly string[]).includes(e.step)).length;
+  const lastError = useMemo<MagisteriumDiagEvent | null>(() => {
+    return (
+      [...buffer].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step)) ??
+      [...persisted].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step)) ??
+      null
+    );
+  }, [buffer, persisted]);
+
   return (
     <div
       data-testid="magisterium-diagnostic-panel"
@@ -171,14 +181,50 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
               <div className="font-mono truncate">{location.pathname + location.search}</div>
             </div>
             <div className="space-y-spacing-3xs">
-              <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Eventos</div>
-              <div className="font-mono">{buffer.length} / persist: {persisted.length}</div>
+              <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Requisições</div>
+              <div className="font-mono flex items-center gap-spacing-2xs" data-testid="magisterium-diagnostic-summary">
+                <span className="text-emerald-600 dark:text-emerald-400">✓ {okCount}</span>
+                <span className="text-destructive">✕ {errorCount}</span>
+                <span className="text-muted-foreground">/ {buffer.length}</span>
+              </div>
             </div>
+          </div>
+
+          <div
+            className={cn(
+              'rounded-premium border px-spacing-xs py-spacing-2xs text-[10px] font-mono',
+              lastError
+                ? 'border-destructive/40 bg-destructive/5 text-destructive'
+                : 'border-border/40 bg-muted/20 text-muted-foreground',
+            )}
+            data-testid="magisterium-diagnostic-last-error"
+          >
+            <div className="uppercase tracking-widest text-[9px] mb-spacing-3xs opacity-70">Último erro</div>
+            {lastError ? (
+              <div className="space-y-spacing-3xs">
+                <div>
+                  {new Date(lastError.ts).toLocaleTimeString()} · {lastError.docId ?? '—'} · {lastError.step}
+                  {lastError.status !== undefined ? ` · ${lastError.status}` : ''}
+                </div>
+                {lastError.message && <div className="truncate opacity-90">{lastError.message}</div>}
+              </div>
+            ) : (
+              <div>Nenhum erro registrado.</div>
+            )}
           </div>
 
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground uppercase tracking-widest text-[9px]">Linha do tempo</div>
             <div className="flex items-center gap-spacing-2xs">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-6 text-[10px]"
+                onClick={() => copyDiagReport(buffer, persisted)}
+                data-testid="magisterium-diagnostic-copy"
+              >
+                Copiar
+              </Button>
               <Button
                 size="sm"
                 variant="ghost"
@@ -193,6 +239,7 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
               </Button>
             </div>
           </div>
+
 
           <ScrollArea className="h-[240px] rounded-premium border border-border/40 bg-muted/20">
             <ul className="p-spacing-xs space-y-spacing-2xs">
