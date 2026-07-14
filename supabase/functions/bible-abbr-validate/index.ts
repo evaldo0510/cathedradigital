@@ -8,7 +8,7 @@
  * GET  /bible-abbr-validate?abbrev=2%20Cr
  * POST /bible-abbr-validate  { "abbrev": "2 Cr" }
  *
- * Resposta 200:
+ * Resposta 200 (sucesso) — contrato de domínio:
  * {
  *   "input": "2 Cr",
  *   "normalized": "2Cr",
@@ -20,11 +20,16 @@
  *   "resolved": true
  * }
  *
- * Resposta 404 quando a abreviação não é reconhecida (mesmo formato,
- * com `resolved: false` e `canonical_abbr: null`).
+ * Resposta 404 (abbrev não reconhecida) — MANTÉM contrato de domínio
+ * documentado na EDGE-FUNCTIONS-STRICT-ENVELOPE-MATRIX (exceção Wave 2)
+ * porque callers já dependem do payload `{ resolved: false, ... }`.
+ *
+ * Erros 400/405 (validação / método) — Fase A2.b Wave 2:
+ *   envelope estrito `{ error, correlation_id, details? }` via makeResponder.
  */
 import { findBookByAbbr, normalizeAbbr } from '../_shared/bibleCanon.ts';
 import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+import { makeResponder } from '../_shared/http-response.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,8 +42,9 @@ Deno.serve(async (req) => {
   // Sprint A / CAT-001 — correlation_id (ADR-009)
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
+  const R = makeResponder(cid);
 
-  // Shadow helper com cid — call sites permanecem inalterados
+  // Helper apenas para respostas de domínio (200 / 404 resolved:false).
   const json = (body: unknown, status = 200): Response =>
     new Response(JSON.stringify(body), {
       status,
@@ -59,26 +65,30 @@ Deno.serve(async (req) => {
       const v = (body as Record<string, unknown>).abbrev ?? (body as Record<string, unknown>).abbr;
       abbrev = typeof v === 'string' ? v : null;
     } else {
-      return json({ error: 'Method not allowed' }, 405);
+      return R.error(405, 'method_not_allowed');
     }
   } catch (_err) {
-    return json({ error: 'Invalid request' }, 400);
+    return R.error(400, 'invalid_body', { reason: 'malformed_request' });
   }
 
   if (!abbrev || typeof abbrev !== 'string' || abbrev.trim().length === 0) {
-    return json(
-      { error: 'Parâmetro `abbrev` obrigatório (string não vazia).' },
-      400,
-    );
+    return R.error(400, 'invalid_body', {
+      reason: 'missing_abbrev',
+      hint: 'Parâmetro `abbrev` obrigatório (string não vazia).',
+    });
   }
   if (abbrev.length > 64) {
-    return json({ error: '`abbrev` excede 64 caracteres.' }, 400);
+    return R.error(400, 'invalid_body', {
+      reason: 'abbrev_too_long',
+      max_length: 64,
+    });
   }
 
   const normalized = normalizeAbbr(abbrev);
   const book = findBookByAbbr(abbrev);
 
   if (!book) {
+    // 404 mantém contrato de domínio (exceção documentada Wave 2)
     return json(
       {
         input: abbrev,
