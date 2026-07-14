@@ -1,0 +1,106 @@
+name: perf-benchmark
+
+on:
+  schedule:
+    # 04:15 UTC diário (~01:15 America/Sao_Paulo — janela de baixo tráfego)
+    - cron: '15 4 * * *'
+  workflow_dispatch:
+    inputs:
+      concurrency:
+        description: Concorrência simultânea
+        default: '20'
+      duration_s:
+        description: Duração (segundos)
+        default: '30'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: perf-benchmark
+      cancel-in-progress: false
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      BENCH_CONCURRENCY: ${{ github.event.inputs.concurrency || '20' }}
+      BENCH_DURATION_S: ${{ github.event.inputs.duration_s || '30' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Sanity check secrets
+        run: |
+          test -n "$VITE_SUPABASE_URL" || { echo "STAGING_SUPABASE_URL ausente"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "STAGING_SUPABASE_ANON_KEY ausente"; exit 1; }
+
+      - name: Run load benchmark
+        run: |
+          mkdir -p .perf
+          bunx tsx scripts/perf-benchmark-app-metrics.ts \
+            --baseline=docs/perf-baselines/bench-latest.json \
+            --out=.perf/run.json
+
+      - name: Compare with baseline
+        id: cmp
+        run: |
+          node - <<'JS'
+          const fs=require('fs');
+          const cur=JSON.parse(fs.readFileSync('.perf/run.json','utf8'));
+          const basePath='docs/perf-baselines/bench-latest.json';
+          if(!fs.existsSync(basePath)){
+            console.log('sem baseline anterior — criando com esta corrida.');
+            fs.writeFileSync(basePath, JSON.stringify(cur, null, 2));
+            process.exit(0);
+          }
+          const base=JSON.parse(fs.readFileSync(basePath,'utf8'));
+          const map=new Map(base.per_endpoint.map(e=>[e.name,e]));
+          const rows=cur.per_endpoint.map(c=>{
+            const b=map.get(c.name)||{};
+            const d=(k)=>b[k]?((c[k]-b[k])/b[k]*100).toFixed(1)+'%':'—';
+            return {name:c.name,p50:c.p50_ms,p95:c.p95_ms,p99:c.p99_ms,
+                    'Δp95':d('p95_ms'),'Δp99':d('p99_ms')};
+          });
+          console.table(rows);
+          const regress=rows.filter(r=>{
+            const n=parseFloat(r['Δp95']); return !isNaN(n)&&n>25;
+          });
+          fs.writeFileSync('.perf/summary.json', JSON.stringify({rows,regress}, null, 2));
+          if(regress.length){
+            console.error('REGRESSÃO p95 > 25%:', regress);
+            process.exit(1);
+          }
+          JS
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-benchmark-${{ github.run_id }}
+          path: |
+            .perf/run.json
+            .perf/summary.json
+          retention-days: 30
+
+      - name: Rotate baseline on success (main only)
+        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          cp docs/perf-baselines/bench-latest.json docs/perf-baselines/bench-previous.json 2>/dev/null || true
+          cp .perf/run.json docs/perf-baselines/bench-latest.json
+          git config user.name "perf-bot"
+          git config user.email "perf-bot@users.noreply.github.com"
+          git add docs/perf-baselines/bench-latest.json docs/perf-baselines/bench-previous.json
+          if git diff --cached --quiet; then
+            echo "sem mudanças no baseline."
+          else
+            git commit -m "chore(perf): atualiza baseline de benchmark [skip ci]"
+            git push
+          fi
