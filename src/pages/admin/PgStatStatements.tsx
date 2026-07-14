@@ -313,6 +313,17 @@ export default function PgStatStatements() {
               <RotateCcw className="h-4 w-4 mr-2" />
               Zerar janela
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="outline" disabled={filtered.length === 0}>
+                  <Download className="h-4 w-4 mr-2" /> Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={exportCSV}>CSV</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportJSON}>JSON</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {statsSince && (
               <div className="text-xs text-muted-foreground ml-auto">
