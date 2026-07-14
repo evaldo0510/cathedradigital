@@ -68,6 +68,7 @@ tabela acima **não** liberam a função do CID: só liberam o formato do body.
 | `cid_strict_wave1_test.ts` | 5 funções da Wave 1 — envelope estrito |
 | `cid_strict_wave2_test.ts` | `cid-trail`, `cid-compliance-stats`, `bible-abbr-validate` — envelope estrito |
 | `cid_strict_wave3_test.ts` | 7 funções de notificação/telemetria — envelope estrito + concorrência de CID |
+| `cid_strict_wave4a_test.ts` | 6 ferramentas de manutenção Bíblia (lote 1) — envelope estrito |
 | `cid_header_variations_test.ts` | Todas — propagação de CID em variações de header |
 | `cid_concurrency_test.ts` | Todas — sem mistura de CID em requests paralelas |
 | `bible-text-error-schema.spec.ts` (Playwright) | Contrato de domínio `bible-text` |
