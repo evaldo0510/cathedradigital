@@ -422,6 +422,12 @@ export default function PgStatStatements() {
                                 </span>
                                 <Button
                                   size="sm" variant="ghost" className="ml-auto h-7"
+                                  onClick={(e) => { e.stopPropagation(); openExplain(r.query); }}
+                                >
+                                  <FileSearch className="h-3 w-3 mr-1" /> EXPLAIN
+                                </Button>
+                                <Button
+                                  size="sm" variant="ghost" className="h-7"
                                   onClick={(e) => { e.stopPropagation(); void copyQuery(r.query); }}
                                 >
                                   <Copy className="h-3 w-3 mr-1" /> Copiar query
