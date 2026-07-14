@@ -19,6 +19,7 @@ import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
 import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
 import { PendingNotificationsPanel } from '@/components/admin/pg-stats/PendingNotificationsPanel';
 import { FailuresReportCard } from '@/components/admin/pg-stats/FailuresReportCard';
+import { ChannelGatesPanel } from '@/components/admin/pg-stats/ChannelGatesPanel';
 import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
 import { useSnapshotHistory } from '@/components/admin/pg-stats/useSnapshotHistory';
 import { FingerprintDrilldown } from '@/components/admin/pg-stats/FingerprintDrilldown';
