@@ -12,7 +12,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { toast } from 'sonner';
-import { RefreshCw, RotateCcw, Copy, FileSearch, Download, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RefreshCw, RotateCcw, Copy, FileSearch, Download, Link2, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Search, X } from 'lucide-react';
 import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
@@ -20,6 +20,7 @@ import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshot
 import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
 import { useSnapshotHistory } from '@/components/admin/pg-stats/useSnapshotHistory';
 import { FingerprintDrilldown } from '@/components/admin/pg-stats/FingerprintDrilldown';
+import { Sparkline } from '@/components/admin/pg-stats/Sparkline';
 import { Switch } from '@/components/ui/switch';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
