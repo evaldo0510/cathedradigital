@@ -46,6 +46,7 @@ propagando `x-correlation-id` no header e mantêm seu próprio schema versionado
 | `catechism-text` | Cache-first, contrato próprio de conteúdo | — |
 | `translation-lookup` | Envelope legado `{translations, source}` | — |
 | `validate-coupon` | Envelope `{valid, reason, discount}` | Consumido pelo checkout. |
+| `bible-abbr-validate` (404) | `{ resolved: false, input, normalized, canonical_abbr: null, ... }` | Consumido por diagnóstico do canon — 400/405 seguem envelope estrito. |
 
 ## Header obrigatório em TODAS as funções
 
