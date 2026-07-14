@@ -82,6 +82,8 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         p_enabled: cfg.enabled,
         p_interval_minutes: cfg.interval_minutes,
         p_retention_days: cfg.retention_days,
+        p_notify_webhook_url: cfg.notify_webhook_url,
+        p_notify_slack_webhook_url: cfg.notify_slack_webhook_url,
       } as never);
       if (error) throw error;
       toast.success('Configuração salva');
