@@ -9,14 +9,8 @@
  * Body opcional: { days?: number, threshold_ms?: number, min_samples?: number, dry_run?: boolean }
  */
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
-  'Access-Control-Expose-Headers': 'x-correlation-id',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+import { getOrCreateCorrelationId } from '../_shared/correlation.ts';
+import { makeResponder } from '../_shared/http-response.ts';
 
 
 interface Body {
@@ -27,10 +21,10 @@ interface Body {
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4a envelope estrito
   const cid = getOrCreateCorrelationId(req);
-  const cidH = correlationResponseHeader(cid);
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
+  const R = makeResponder(cid);
+  if (req.method === 'OPTIONS') return R.cors();
 
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }
@@ -53,9 +47,7 @@ Deno.serve(async (req) => {
     .not('total_ms', 'is', null);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' },
-    });
+    return R.error(500, 'internal_error', { message: error.message });
   }
 
   // Bucket: book → day → samples
@@ -118,12 +110,12 @@ Deno.serve(async (req) => {
     alertId = (ins?.id as string) ?? null;
   }
 
-  return new Response(JSON.stringify({
+  return R.raw({
     ok: true,
     days, threshold_ms: threshold, min_samples: minSamples,
     regressed_count: regressed.length,
     regressed,
     alert_id: alertId,
     dry_run: dry,
-  }), { headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' } });
+  });
 });

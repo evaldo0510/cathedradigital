@@ -14,74 +14,57 @@
  *      `bible-import-ndjson` apontando para o arquivo convertido.
  *
  * Restrito a admins (JWT validado em código).
+ * Sprint A CAT-002 Wave 4a: erros seguem ErrorEnvelopeSchema.strict();
+ * dados de diagnóstico (stats, sample_rejections) vão em `details`.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import {
   convertText, detectFormat, toCanonicalNDJSON, rejectedToNDJSON,
   type DumpFormat,
 } from "../_shared/ndjsonConverter.ts";
-import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 interface Body {
   source_id: string;
-  file_path: string;     // path dentro de bible-dumps
-  format?: DumpFormat;   // override opcional
-}
-
-function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body, null, 2), {
-    status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  file_path: string;
+  format?: DumpFormat;
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
   const cid = getOrCreateCorrelationId(req);
-  const cidH = correlationResponseHeader(cid);
-  // Shadow helper com cid — call sites `jsonResponse(...)` inalterados
-  const jsonResponse = (body: unknown, status = 200) =>
-    new Response(JSON.stringify(body, null, 2), {
-      status, headers: { ...corsHeaders, ...cidH, "Content-Type": "application/json" },
-    });
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") return new Response("ok", { headers: { ...corsHeaders, ...cidH } });
+  if (req.method === "OPTIONS") return R.cors();
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
   const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
   const authHeader = req.headers.get("Authorization") ?? "";
-  if (!authHeader.startsWith("Bearer ")) return jsonResponse({ error: "unauthorized" }, 401);
+  if (!authHeader.startsWith("Bearer ")) return R.error(401, "unauthorized");
   const userClient = createClient(SUPABASE_URL, ANON_KEY, {
     global: { headers: { Authorization: authHeader } },
   });
   const { data: userData } = await userClient.auth.getUser();
-  if (!userData?.user) return jsonResponse({ error: "unauthorized" }, 401);
+  if (!userData?.user) return R.error(401, "unauthorized");
   const { data: isAdmin, error: adminErr } = await userClient.rpc("is_current_user_admin");
-  if (adminErr || !isAdmin) return jsonResponse({ error: "forbidden" }, 403);
+  if (adminErr || !isAdmin) return R.error(403, "forbidden");
 
   let body: Body;
   try { body = await req.json() as Body; }
-  catch { return jsonResponse({ error: "invalid json body" }, 400); }
+  catch { return R.error(400, "invalid_body", { message: "invalid json body" }); }
   if (!body.source_id || !body.file_path) {
-    return jsonResponse({ error: "source_id and file_path required" }, 400);
+    return R.error(400, "invalid_body", { message: "source_id and file_path required" });
   }
 
   const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
-  // Baixa o arquivo bruto
   const { data: blob, error: dlErr } = await admin.storage.from("bible-dumps").download(body.file_path);
-  if (dlErr || !blob) return jsonResponse({ error: `download: ${dlErr?.message ?? "no blob"}` }, 502);
+  if (dlErr || !blob) return R.error(502, "internal_error", { stage: "download", message: dlErr?.message ?? "no blob" });
 
   const content = await blob.text();
-  if (content.length === 0) return jsonResponse({ error: "arquivo vazio" }, 400);
+  if (content.length === 0) return R.error(400, "invalid_body", { message: "arquivo vazio" });
 
   const fmt: DumpFormat = body.format ?? detectFormat(body.file_path);
 
@@ -89,10 +72,9 @@ Deno.serve(async (req) => {
   try {
     result = convertText(content, fmt);
   } catch (e) {
-    return jsonResponse({ error: `parse: ${(e as Error).message}` }, 422);
+    return R.error(422, "invalid_body", { stage: "parse", message: (e as Error).message });
   }
 
-  // Estatísticas
   const byBook = new Map<string, { chapters: Set<number>; verses: number }>();
   for (const v of result.verses) {
     const st = byBook.get(v.abbr) ?? { chapters: new Set<number>(), verses: 0 };
@@ -108,10 +90,13 @@ Deno.serve(async (req) => {
   };
 
   if (result.verses.length === 0) {
-    return jsonResponse({ error: "Nenhum verso válido foi extraído.", stats, sample_rejections: result.rejected.slice(0, 10) }, 422);
+    return R.error(422, "invalid_body", {
+      message: "Nenhum verso válido foi extraído.",
+      stats,
+      sample_rejections: result.rejected.slice(0, 10),
+    });
   }
 
-  // Persiste arquivos
   const ts = Date.now();
   const convertedPath = `${body.source_id}/converted-${ts}.ndjson`;
   const rejectedPath = `${body.source_id}/rejected-${ts}.ndjson`;
@@ -120,7 +105,7 @@ Deno.serve(async (req) => {
   const { error: upErr } = await admin.storage.from("bible-dumps").upload(convertedPath, convertedBlob, {
     contentType: "application/x-ndjson", upsert: false,
   });
-  if (upErr) return jsonResponse({ error: `upload converted: ${upErr.message}` }, 500);
+  if (upErr) return R.error(500, "internal_error", { stage: "upload_converted", message: upErr.message });
 
   let uploadedRejected: string | null = null;
   if (result.rejected.length > 0) {
@@ -131,7 +116,7 @@ Deno.serve(async (req) => {
     if (!rUpErr) uploadedRejected = rejectedPath;
   }
 
-  return jsonResponse({
+  return R.raw({
     ok: true,
     converted_path: convertedPath,
     rejected_path: uploadedRejected,

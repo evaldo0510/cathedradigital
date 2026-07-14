@@ -15,14 +15,8 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { findBookByAbbr, normalizeAbbr } from '../_shared/bibleCanon.ts';
-import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
-  'Access-Control-Expose-Headers': 'x-correlation-id',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+import { getOrCreateCorrelationId } from '../_shared/correlation.ts';
+import { makeResponder } from '../_shared/http-response.ts';
 
 const LEGACY_UI_ABBREVS = ['Esd', 'Est', 'Pr', 'Ecl', '1 Cor', '2 Cor', '1Cor', '2Cor', 'Fl', '1 Pd', '2 Pd', '1Pd', '2Pd'];
 
@@ -33,10 +27,10 @@ interface ProblemEntry {
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4a envelope estrito
   const cid = getOrCreateCorrelationId(req);
-  const cidH = correlationResponseHeader(cid);
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
+  const R = makeResponder(cid);
+  if (req.method === 'OPTIONS') return R.cors();
 
   const url = Deno.env.get('SUPABASE_URL')!;
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -65,7 +59,7 @@ Deno.serve(async (req) => {
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (e1) return new Response(JSON.stringify({ error: e1.message }), { status: 500, headers: { ...corsHeaders, ...cidH } });
+  if (e1) return R.error(500, 'internal_error', { message: e1.message });
 
   for (const alert of openAlerts ?? []) {
     stats.alerts_examined++;
@@ -164,7 +158,5 @@ Deno.serve(async (req) => {
     stats.legacy_events_purged = count ?? 0;
   }
 
-  return new Response(JSON.stringify({ ok: true, dryRun, stats, details }, null, 2), {
-    headers: { ...corsHeaders, ...cidH, 'Content-Type': 'application/json' },
-  });
+  return R.raw({ ok: true, dryRun, stats, details });
 });
