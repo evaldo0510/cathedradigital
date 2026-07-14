@@ -19,6 +19,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { BIBLE_CANON, normalizeAbbr } from "../_shared/bibleCanon.ts";
 import { runPostRunVerify } from "../_shared/postRunVerify.ts";
 import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -87,17 +88,18 @@ async function* streamLines(reader: ReadableStreamDefaultReader<Uint8Array>): As
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4b envelope estrito
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
-  // Shadow helper com cid — call sites `jsonResponse(...)` inalterados
+  const R = makeResponder(cid);
+  // Shadow helper `jsonResponse` para respostas de SUCESSO com CID no header
   const jsonResponse = (body: unknown, status = 200): Response =>
     new Response(JSON.stringify(body, null, 2), {
       status,
       headers: { ...corsHeaders, ...cidH, "Content-Type": "application/json" },
     });
 
-  if (req.method === "OPTIONS") return new Response("ok", { headers: { ...corsHeaders, ...cidH } });
+  if (req.method === "OPTIONS") return R.cors();
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
   const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -105,28 +107,28 @@ Deno.serve(async (req) => {
 
   // 1) Authn/Authz — exige admin
   const authHeader = req.headers.get("Authorization") ?? "";
-  if (!authHeader.startsWith("Bearer ")) return jsonResponse({ error: "unauthorized" }, 401);
+  if (!authHeader.startsWith("Bearer ")) return R.error(401, "unauthorized");
   const userClient = createClient(SUPABASE_URL, ANON_KEY, {
     global: { headers: { Authorization: authHeader } },
   });
   const { data: userData } = await userClient.auth.getUser();
-  if (!userData?.user) return jsonResponse({ error: "unauthorized" }, 401);
+  if (!userData?.user) return R.error(401, "unauthorized");
   const { data: isAdmin, error: adminErr } = await userClient.rpc("is_current_user_admin");
-  if (adminErr || !isAdmin) return jsonResponse({ error: "forbidden" }, 403);
+  if (adminErr || !isAdmin) return R.error(403, "forbidden");
 
   // 2) Body
   let body: ImportRequest;
   try { body = await req.json() as ImportRequest; }
-  catch { return jsonResponse({ error: "invalid json body" }, 400); }
-  if (!body.source_id) return jsonResponse({ error: "source_id required" }, 400);
-  if (!body.file_path && !body.file_url) return jsonResponse({ error: "file_path or file_url required" }, 400);
+  catch { return R.error(400, "invalid_body", { detail: "invalid json body" }); }
+  if (!body.source_id) return R.error(400, "invalid_body", { detail: "source_id required" });
+  if (!body.file_path && !body.file_url) return R.error(400, "invalid_body", { detail: "file_path or file_url required" });
 
   const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
   // 3) Carrega source + cria job
   const { data: source, error: srcErr } = await admin
     .from("bible_translation_sources").select("*").eq("id", body.source_id).single();
-  if (srcErr || !source) return jsonResponse({ error: `source not found: ${srcErr?.message ?? body.source_id}` }, 404);
+  if (srcErr || !source) return R.error(404, "not_found", { detail: `source not found: ${srcErr?.message ?? body.source_id}` });
 
   const { data: job, error: jobErr } = await admin
     .from("bible_import_jobs")
@@ -137,7 +139,7 @@ Deno.serve(async (req) => {
       created_by: userData.user.id,
       message: "Lendo dump…",
     }).select("id").single();
-  if (jobErr || !job) return jsonResponse({ error: `job create failed: ${jobErr?.message}` }, 500);
+  if (jobErr || !job) return R.error(500, "internal_error", { stage: "job_create", detail: jobErr?.message });
   const jobId = job.id as string;
 
   await admin.from("bible_translation_sources").update({ status: "importing" }).eq("id", source.id);
@@ -159,7 +161,7 @@ Deno.serve(async (req) => {
       status: "failed", error: (e as Error).message, finished_at: new Date().toISOString(),
     }).eq("id", jobId);
     await admin.from("bible_translation_sources").update({ status: "failed" }).eq("id", source.id);
-    return jsonResponse({ error: (e as Error).message }, 502);
+    return R.error(502, "internal_error", { stage: "stream_open", detail: (e as Error).message, job_id: jobId });
   }
 
   // 5) Processa stream: agrupa por livro, faz upsert em ordem
@@ -320,6 +322,6 @@ Deno.serve(async (req) => {
       status: "failed", error: msg, finished_at: new Date().toISOString(),
     }).eq("id", jobId);
     await admin.from("bible_translation_sources").update({ status: "failed" }).eq("id", source.id);
-    return jsonResponse({ error: msg, job_id: jobId }, 500);
+    return R.error(500, "internal_error", { detail: msg, job_id: jobId });
   }
 });
