@@ -12,7 +12,13 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { toast } from 'sonner';
-import { RefreshCw, RotateCcw, Copy } from 'lucide-react';
+import { RefreshCw, RotateCcw, Copy, FileSearch, Download } from 'lucide-react';
+import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stats/SavedViewsBar';
+import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
+import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
 
