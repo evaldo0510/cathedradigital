@@ -29,9 +29,10 @@ que a cria, sob revisão explícita.
 | 4 | `bible_translation_ready` | `(p_translation_id uuid)` | anon, authenticated, service_role | Contraparte de `bible_translation_readable` — verifica se a tradução concluiu o checklist S1. Também retorna `boolean`. |
 | 5 | `bible_translations_readiness` | `()` | anon, authenticated, service_role | Agrega readiness público de todas as traduções para exibir na home antes do login. Nenhum campo sensível — apenas `id`, `abbrev`, `ready`. |
 | ~~6~~ | ~~`cleanup_bible_audit_action_logs`~~ | ~~`(p_triggered_by text, p_override_days integer)`~~ | **service_role** (apenas) | **Encerrada em Sprint B / B2 (2026-07-14):** `REVOKE EXECUTE ... FROM anon, authenticated`. Cron continua funcionando via service-role. Removida definitivamente da allowlist pública. |
-| 7 | `enforce_bible_source_sprint1_gate` | `()` | anon, authenticated, service_role | Trigger function. `GRANT` a `anon` é irrelevante em termos de superfície de ataque (triggers só disparam via DML em tabelas RLS-protegidas), mas mantido por compatibilidade com o restore de dumps. |
-| 8 | `enforce_pcl_active_requires_admin` | `()` | anon, authenticated, service_role | Trigger function — mesma justificativa da linha 7. |
-| 9 | `get_correlation_trail` | `(_cid text, _include_responses boolean)` | anon, authenticated, service_role | Endpoint canônico da trilha de correlação (ADR-009). A função **valida `is_current_user_admin()` internamente** antes de retornar qualquer linha; o `GRANT ... TO anon` existe para permitir a chamada desde a Edge Function `cid-trail` sem service-role. Sem admin, retorna `[]`. |
+| ~~7~~ | ~~`enforce_bible_source_sprint1_gate`~~ | ~~`()`~~ | **service_role** (apenas) | **Sprint B / B2:** `REVOKE` de `anon`, `authenticated`, `PUBLIC`. Trigger — dispara internamente pelo engine, cliente não precisa executar. |
+| ~~8~~ | ~~`enforce_pcl_active_requires_admin`~~ | ~~`()`~~ | **service_role** (apenas) | **Sprint B / B2:** mesmo tratamento da linha 7. |
+| ~~9~~ | ~~`get_correlation_trail`~~ | `(_cid text, _include_responses boolean)` | **authenticated**, service_role | **Sprint B / B2:** `REVOKE` de `anon` e `PUBLIC`. Mantém guard `is_current_user_admin()` interno; deixou de estar acessível sem login para reduzir fingerprint. Edge Function `cid-trail` passa a chamar autenticada. |
+| — | `saints_audit_trg` | `()` | **service_role** (apenas) | **Sprint B / B2:** trigger function saneada; `REVOKE` de `anon`, `authenticated`, `PUBLIC`. |
 
 ## Regras operacionais
 
