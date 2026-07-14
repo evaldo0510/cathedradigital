@@ -630,11 +630,28 @@ export default function PgStatStatements() {
                                   <span className="text-muted-foreground">fingerprint:</span> {r.fingerprint}
                                 </pre>
                               )}
-                              <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
-                                {groupByFingerprint && <span className="text-muted-foreground">exemplo: </span>}
-                                {r.query}
-                              </pre>
+                              {groupByFingerprint ? (
+                                <FingerprintDrilldown
+                                  fingerprint={r.fingerprint}
+                                  variants={rows
+                                    .filter((x) => fingerprintQuery(x.query) === r.fingerprint)
+                                    .map((x) => ({
+                                      query: x.query,
+                                      calls: x.calls,
+                                      total_exec_ms: x.total_exec_ms,
+                                      mean_exec_ms: x.mean_exec_ms,
+                                      max_exec_ms: x.max_exec_ms,
+                                    }))
+                                    .sort((a, b) => b.total_exec_ms - a.total_exec_ms)}
+                                  snapshots={snapshots}
+                                />
+                              ) : (
+                                <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                  {r.query}
+                                </pre>
+                              )}
                             </div>
+
                           </TableCell>
                         </TableRow>
                       )}
