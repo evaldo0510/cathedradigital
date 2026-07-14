@@ -13,6 +13,10 @@ interface Config {
   interval_minutes: number;
   retention_days: number;
   last_run_at: string | null;
+  last_success_at: string | null;
+  last_error_at: string | null;
+  last_error_message: string | null;
+  consecutive_failures: number;
 }
 
 const PRESETS = [
