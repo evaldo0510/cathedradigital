@@ -3016,6 +3016,36 @@ export type Database = {
           },
         ]
       }
+      pg_stat_notif_channel_limits: {
+        Row: {
+          channel: string
+          enabled: boolean
+          max_attempts_default: number
+          max_fail_rate: number
+          min_samples: number
+          updated_at: string
+          window_minutes: number
+        }
+        Insert: {
+          channel: string
+          enabled?: boolean
+          max_attempts_default?: number
+          max_fail_rate?: number
+          min_samples?: number
+          updated_at?: string
+          window_minutes?: number
+        }
+        Update: {
+          channel?: string
+          enabled?: boolean
+          max_attempts_default?: number
+          max_fail_rate?: number
+          min_samples?: number
+          updated_at?: string
+          window_minutes?: number
+        }
+        Relationships: []
+      }
       pg_stat_pending_notifications: {
         Row: {
           attempts: number
@@ -5375,6 +5405,24 @@ export type Database = {
         Returns: number
       }
       _test_notif_concurrency_verify: { Args: never; Returns: Json }
+      _test_notif_limits_cleanup: {
+        Args: { p_prefix: string }
+        Returns: undefined
+      }
+      _test_notif_limits_seed: {
+        Args: {
+          p_channel: string
+          p_count: number
+          p_fail_ratio: number
+          p_max_attempts: number
+          p_prefix: string
+        }
+        Returns: number
+      }
+      _test_notif_limits_verify: {
+        Args: { p_max_attempts: number; p_prefix: string }
+        Returns: Json
+      }
       _test_notif_reset: { Args: never; Returns: undefined }
       _test_notif_retry_snapshot_row: { Args: { p_id: string }; Returns: Json }
       _test_notif_retry_snapshots: { Args: never; Returns: Json }
@@ -5841,6 +5889,14 @@ export type Database = {
       }
       mask_ip: { Args: { ip: string }; Returns: string }
       pg_stat_notif_backoff: { Args: { p_attempts: number }; Returns: string }
+      pg_stat_notif_channel_gate_blocked: {
+        Args: { p_channel: string }
+        Returns: boolean
+      }
+      pg_stat_notif_channel_health: {
+        Args: { p_channel: string }
+        Returns: Json
+      }
       pg_stat_notif_enqueue: {
         Args: {
           p_channel: string
