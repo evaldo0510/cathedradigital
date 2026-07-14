@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import {
   MagisteriumDiagEvent,
   clearMagisteriumDiag,
@@ -12,6 +13,39 @@ import {
   getPersistedMagisteriumErrors,
   isMagisteriumDebugOn,
 } from '@/lib/magisteriumDiagnostics';
+
+const ERROR_STEPS = ['fetch_404', 'fetch_error', 'fetch_thin', 'cache_thin', 'final_error'] as const;
+const OK_STEPS = ['cache_hit', 'fetch_ok'] as const;
+
+const buildDiagReport = (
+  buffer: MagisteriumDiagEvent[],
+  persisted: MagisteriumDiagEvent[],
+) => {
+  const lastError = [...buffer].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step))
+    ?? [...persisted].reverse().find((ev) => (ERROR_STEPS as readonly string[]).includes(ev.step))
+    ?? null;
+
+  const summary = buffer.reduce(
+    (acc, ev) => {
+      if ((OK_STEPS as readonly string[]).includes(ev.step)) acc.ok += 1;
+      else if ((ERROR_STEPS as readonly string[]).includes(ev.step)) acc.errors += 1;
+      else acc.other += 1;
+      return acc;
+    },
+    { ok: 0, errors: 0, other: 0 },
+  );
+
+  return {
+    generatedAt: new Date().toISOString(),
+    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    counts: { buffer: buffer.length, persisted: persisted.length, ...summary },
+    lastError,
+    timeline: buffer,
+    persistedErrors: persisted,
+  };
+};
+
 
 const SEVERITY: Record<string, 'error' | 'warn' | 'ok'> = {
   cache_hit: 'ok',
