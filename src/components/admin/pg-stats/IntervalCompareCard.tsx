@@ -151,8 +151,8 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
       const dMeanPct = aMean > 0 ? ((bMean - aMean) / aMean) * 100 : (bMean > 0 ? 100 : 0);
       const dP95Pct = aP95 > 0 ? ((bP95 - aP95) / aP95) * 100 : (bP95 > 0 ? 100 : 0);
       const dCallsPct = aCalls > 0 ? ((bCalls - aCalls) / aCalls) * 100 : (bCalls > 0 ? 100 : 0);
-      const regression = (dMeanPct >= REGRESSION_MEAN_PCT && bMean > 5)
-                      || (dP95Pct >= REGRESSION_P95_PCT && bP95 > 20);
+      const regression = (dMeanPct >= regMean && bMean > 5)
+                      || (dP95Pct >= regP95 && bP95 > 20);
       out.push({
         fingerprint: k,
         example: rb?.example || ra?.example || '',
@@ -165,7 +165,28 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
     }
     out.sort((x, y) => (y.bTotal + y.aTotal) - (x.bTotal + x.aTotal));
     return onlyRegressions ? out.filter((r) => r.regression) : out.slice(0, 50);
-  }, [rangeA, rangeB, onlyRegressions]);
+  }, [rangeA, rangeB, onlyRegressions, regMean, regP95]);
+
+  const buildShareUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('aFrom', aFrom); params.set('aTo', aTo);
+    params.set('bFrom', bFrom); params.set('bTo', bTo);
+    params.set('onlyReg', onlyRegressions ? '1' : '0');
+    params.set('regMean', String(regMean));
+    params.set('regP95', String(regP95));
+    return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+  };
+
+  const copyShareUrl = async () => {
+    try {
+      const url = buildShareUrl();
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, '', url);
+      toast.success('Link copiado — filtros e intervalos preservados');
+    } catch {
+      toast.error('Falha ao copiar link');
+    }
+  };
 
   const exportCsv = () => {
     const escape = (v: unknown) => {
