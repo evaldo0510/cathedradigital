@@ -2918,6 +2918,60 @@ export type Database = {
         }
         Relationships: []
       }
+      pg_stat_pending_notifications: {
+        Row: {
+          attempts: number
+          channel: string
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          last_error: string | null
+          last_request_id: number | null
+          last_status_code: number | null
+          max_attempts: number
+          next_attempt_at: string
+          payload: Json
+          status: string
+          succeeded_at: string | null
+          target_url: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          channel: string
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          last_request_id?: number | null
+          last_status_code?: number | null
+          max_attempts?: number
+          next_attempt_at?: string
+          payload: Json
+          status?: string
+          succeeded_at?: string | null
+          target_url: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          channel?: string
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          last_request_id?: number | null
+          last_status_code?: number | null
+          max_attempts?: number
+          next_attempt_at?: string
+          payload?: Json
+          status?: string
+          succeeded_at?: string | null
+          target_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pg_stat_snapshot_config: {
         Row: {
           consecutive_failures: number
@@ -5562,6 +5616,21 @@ export type Database = {
         Returns: string
       }
       mask_ip: { Args: { ip: string }; Returns: string }
+      pg_stat_notif_backoff: { Args: { p_attempts: number }; Returns: string }
+      pg_stat_notif_enqueue: {
+        Args: {
+          p_channel: string
+          p_max_attempts?: number
+          p_payload: Json
+          p_target_url: string
+        }
+        Returns: string
+      }
+      pg_stat_notif_is_retryable: {
+        Args: { p_status_code: number }
+        Returns: boolean
+      }
+      pg_stat_notif_process_queue: { Args: never; Returns: number }
       pg_stat_snapshot_auto_run: { Args: never; Returns: undefined }
       purge_user_bible_cache: {
         Args: { p_book_abbr?: string; p_user_id: string }
