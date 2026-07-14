@@ -45,6 +45,10 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         interval_minutes: row.interval_minutes ?? 60,
         retention_days: row.retention_days ?? 30,
         last_run_at: row.last_run_at ?? null,
+        last_success_at: row.last_success_at ?? null,
+        last_error_at: row.last_error_at ?? null,
+        last_error_message: row.last_error_message ?? null,
+        consecutive_failures: row.consecutive_failures ?? 0,
       });
     } catch (e) {
       toast.error(`Falha ao carregar config: ${e instanceof Error ? e.message : String(e)}`);
