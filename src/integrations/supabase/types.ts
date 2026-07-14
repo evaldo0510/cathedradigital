@@ -5362,6 +5362,13 @@ export type Database = {
         }
         Returns: number
       }
+      _test_notif_admin_retry_run_all: {
+        Args: never
+        Returns: {
+          case_name: string
+          result: string
+        }[]
+      }
       _test_notif_reset: { Args: never; Returns: undefined }
       _test_notif_run_all: {
         Args: never
