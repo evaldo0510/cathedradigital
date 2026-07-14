@@ -1,0 +1,83 @@
+# Config: alertas de performance por endpoint
+# ---------------------------------------------------------------
+# Fonte única para os thresholds dos alertas descritos em
+# docs/OBSERVABILITY-APP-METRICS-USER-MANAGEMENT.md.
+#
+# Consumido por: scripts/perf-alerts-eval.ts (dry-run local) e
+# pelo job de observabilidade em produção (mapeado 1:1 nas regras
+# do painel de alertas).
+#
+# Thresholds são POR ROTA e POR JANELA DE HORÁRIO (America/Sao_Paulo).
+# Janela "peak" (08-23) usa limites mais estritos; "offpeak" (00-07)
+# tolera mais latência para permitir cron / backup.
+
+version: 1
+timezone: America/Sao_Paulo
+
+defaults:
+  window_minutes: 15
+  cooldown_minutes: 30
+  environments: [production]
+
+endpoints:
+  # -----------------------------------------------------------------
+  - id: app_metrics_dashboard
+    route: /admin/dashboard
+    query_id: app_metrics:window30d
+    metric: mean_exec_time_ms
+    thresholds:
+      peak:      { hours: "08-23", warning: 60,  critical: 250 }
+      offpeak:   { hours: "00-07", warning: 120, critical: 400 }
+    p95:
+      peak:      { hours: "08-23", warning: 150, critical: 500 }
+      offpeak:   { hours: "00-07", warning: 300, critical: 800 }
+    cardinality:
+      rows_per_call: { max: 10000 }   # dispara se cliente pediu sem LIMIT
+
+  - id: app_metrics_telemetry
+    route: /admin/telemetry
+    query_id: app_metrics:latest100
+    metric: mean_exec_time_ms
+    thresholds:
+      peak:      { hours: "08-23", warning: 30,  critical: 120 }
+      offpeak:   { hours: "00-07", warning: 60,  critical: 200 }
+    p95:
+      peak:      { hours: "08-23", warning: 80,  critical: 250 }
+      offpeak:   { hours: "00-07", warning: 150, critical: 400 }
+
+  - id: user_management_stats_page0
+    route: /admin/users
+    query_id: user_management_stats:page0
+    metric: mean_exec_time_ms
+    thresholds:
+      peak:      { hours: "08-23", warning: 60,  critical: 250 }
+      offpeak:   { hours: "00-07", warning: 120, critical: 400 }
+    p95:
+      peak:      { hours: "08-23", warning: 150, critical: 500 }
+      offpeak:   { hours: "00-07", warning: 300, critical: 800 }
+    plan_signature:
+      must_use_index: idx_journey_progress_user_completed
+      must_not_contain: ["Sort Key: jp.completed_at", "Seq Scan on journey_progress"]
+
+  - id: user_management_stats_deep_page
+    route: /admin/users
+    query_id: user_management_stats:page5
+    metric: mean_exec_time_ms
+    thresholds:
+      peak:      { hours: "08-23", warning: 90,  critical: 350 }
+      offpeak:   { hours: "00-07", warning: 180, critical: 600 }
+
+# Regras globais (aplicadas a todas as tabelas alvo)
+global_rules:
+  - id: seq_scan_ratio
+    description: "Razão seq_scan/(seq+idx) por tabela — plano regrediu"
+    tables: [app_metrics, journey_progress, spiritual_journal]
+    threshold_pct: 5
+    window_minutes: 30
+    severity: critical
+
+  - id: db_saturation
+    description: "Conexões aguardando IO/Lock em pg_stat_activity"
+    threshold_count: 10
+    window_minutes: 10
+    severity: warning
