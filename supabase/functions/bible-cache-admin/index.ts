@@ -20,6 +20,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -105,10 +106,11 @@ function toCsv(rows: any[], cols: string[]) {
 }
 
 serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4b envelope estrito
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
-  // Shadow helper com cid — call sites `json(...)` inalterados
+  const R = makeResponder(cid);
+  // Shadow helper `json` para respostas de SUCESSO com CID no header
   // deno-lint-ignore no-explicit-any
   const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
     new Response(JSON.stringify(body), {
@@ -116,7 +118,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json', ...cidH, ...extraHeaders },
     });
 
-  if (req.method === 'OPTIONS') return new Response(null, { headers: { ...corsHeaders, ...cidH } });
+  if (req.method === 'OPTIONS') return R.cors();
 
   const authHeader = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
   if (!authHeader) return json({ error: 'missing_authorization' }, 401);
