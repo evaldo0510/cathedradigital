@@ -66,7 +66,7 @@ function fmtDt(dt: string | null): string {
   if (!dt) return '—';
   try { return new Date(dt).toLocaleString('pt-BR'); } catch { return dt; }
 }
-function downloadBlob(name: string, data: string | Uint8Array, mime: string) {
+function downloadBlob(name: string, data: string, mime: string) {
   const blob = new Blob([data], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
