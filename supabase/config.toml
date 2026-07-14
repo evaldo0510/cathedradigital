@@ -21,4 +21,8 @@ verify_jwt = false
 [functions.admin-bulk-seed-saints]
 verify_jwt = false
 
+[functions.admin-incremental-reimport-saints]
+verify_jwt = false
+
+
 
