@@ -1,0 +1,60 @@
+# Config: benchmark de carga por ambiente
+# ---------------------------------------------------------------
+# Consumido por scripts/perf-benchmark-app-metrics.ts (--config=).
+# Cada ambiente define seu próprio mix, amostras e limiar de
+# regressão. O snapshot resultante registra o hash desta config
+# junto com os resultados, garantindo revalidações comparáveis.
+
+version: 1
+
+# Mix compartilhado por todos os ambientes (unidade: peso relativo).
+# Pode ser sobrescrito por ambiente via `mix_overrides:`.
+mix:
+  - id: app_metrics:window30d
+    weight: 40
+    target: app_metrics
+    op: window
+    params: { days: 30, limit: 5000 }
+  - id: app_metrics:latest100
+    weight: 20
+    target: app_metrics
+    op: latest
+    params: { limit: 100 }
+  - id: user_management_stats:page0
+    weight: 25
+    target: user_management_stats
+    op: page
+    params: { from: 0, to: 19 }
+  - id: user_management_stats:page5
+    weight: 15
+    target: user_management_stats
+    op: page
+    params: { from: 100, to: 119 }
+
+# Amostragem mínima por endpoint antes de aceitar o resultado
+# como estatisticamente válido (worker descarta corridas abaixo disso).
+min_samples_per_endpoint: 50
+
+environments:
+  ci:
+    concurrency: 5
+    duration_s: 15
+    regression_p95_pct: 30
+    # Mix mais leve em CI: só as duas queries de dashboard.
+    mix_overrides:
+      app_metrics:window30d: 60
+      app_metrics:latest100: 40
+      user_management_stats:page0: 0
+      user_management_stats:page5: 0
+
+  staging:
+    concurrency: 20
+    duration_s: 30
+    regression_p95_pct: 25
+
+  # Espelho de produção (read-replica ou snapshot restaurado).
+  production_mirror:
+    concurrency: 40
+    duration_s: 60
+    regression_p95_pct: 15
+    min_samples_per_endpoint: 200

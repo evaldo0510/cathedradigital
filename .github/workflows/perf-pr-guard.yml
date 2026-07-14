@@ -1,0 +1,91 @@
+name: perf-pr-guard
+
+on:
+  pull_request:
+    paths:
+      - 'src/hooks/useAdminDashboardData.ts'
+      - 'src/pages/**/TelemetryDashboard*'
+      - 'supabase/migrations/**'
+      - 'docs/perf-baselines/**'
+      - 'docs/perf-benchmark.config.yaml'
+      - 'scripts/perf-*'
+      - '.github/workflows/perf-pr-guard.yml'
+
+concurrency:
+  group: perf-pr-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  revalidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Banco de shadow/staging usado só para EXPLAIN + benchmark curto.
+      PG_URL: ${{ secrets.STAGING_PG_URL }}
+      VITE_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      PERF_BASELINE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+
+      - uses: oven-sh/setup-bun@v1
+        with: { bun-version: latest }
+
+      - name: Skip when secrets ausentes (forks)
+        id: guard
+        run: |
+          if [ -z "$PG_URL" ] || [ -z "$VITE_SUPABASE_URL" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::PR de fork ou secrets não disponíveis; guard pulado."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install deps
+        if: steps.guard.outputs.skip == 'false'
+        run: bun install --frozen-lockfile
+
+      - name: Install pg driver
+        if: steps.guard.outputs.skip == 'false'
+        run: bun add -d pg @types/pg
+
+      - name: Snapshot EXPLAIN atual
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          mkdir -p .perf
+          bunx tsx scripts/perf-baseline-snapshot.ts --env=ci
+          cp docs/perf-baselines/ci/latest.json .perf/current-baseline.json
+
+      - name: Diff vs baseline versionado (staging)
+        if: steps.guard.outputs.skip == 'false'
+        id: diff
+        run: |
+          bunx tsx scripts/perf-baseline-diff-report.ts \
+            --baseline=docs/perf-baselines/staging/latest.json \
+            --current=.perf/current-baseline.json \
+            --out=.perf/diff.md
+
+      - name: Benchmark rápido (perfil CI)
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          bunx tsx scripts/perf-benchmark-app-metrics.ts \
+            --env=ci \
+            --config=docs/perf-benchmark.config.yaml \
+            --baseline=docs/perf-baselines/ci/bench-latest.json \
+            --out=.perf/bench.json
+
+      - name: Comentar no PR
+        if: steps.guard.outputs.skip == 'false' && always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: perf-pr-guard
+          path: .perf/diff.md
+
+      - name: Upload artifacts
+        if: steps.guard.outputs.skip == 'false' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-pr-guard-${{ github.run_id }}
+          path: .perf/
+          retention-days: 14
