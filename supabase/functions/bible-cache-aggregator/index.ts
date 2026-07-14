@@ -5,6 +5,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const _corsBase = {
@@ -111,12 +112,12 @@ async function evaluateRegression(
 }
 
 serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4b envelope estrito
   const _cid = getOrCreateCorrelationId(req);
   const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  const R = makeResponder(_cid);
 
-
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === 'OPTIONS') return R.cors();
   const t0 = Date.now();
 
   try {
@@ -126,9 +127,7 @@ serve(async (req) => {
     });
     if (aggErr) {
       console.error('[bible-cache-aggregator] rpc failed:', aggErr);
-      return new Response(JSON.stringify({ ok: false, error: aggErr.message }), {
-        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return R.error(500, 'internal_error', { stage: 'aggregate_rpc', detail: aggErr.message });
     }
 
     // 2) Carrega thresholds
@@ -213,8 +212,6 @@ serve(async (req) => {
     });
   } catch (e: any) {
     console.error('[bible-cache-aggregator] fatal:', e);
-    return new Response(JSON.stringify({ ok: false, error: String(e?.message || e) }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return R.error(500, 'internal_error', { detail: String(e?.message || e) });
   }
 });
