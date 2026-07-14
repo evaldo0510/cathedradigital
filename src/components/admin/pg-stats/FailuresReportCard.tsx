@@ -126,6 +126,53 @@ export function FailuresReportCard() {
     );
   }, [report]);
 
+  const downloadCsv = useCallback(() => {
+    if (!report) return;
+    const esc = (v: unknown): string => {
+      if (v == null) return '';
+      const s = String(v);
+      return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines: string[] = [];
+    const f = report.filters;
+    // metadados como comentários (BOM + linhas iniciadas por #)
+    lines.push(`# generated_at,${esc(report.generated_at)}`);
+    lines.push(`# from,${esc(f.from)}`);
+    lines.push(`# to,${esc(f.to)}`);
+    lines.push(`# channel,${esc(f.channel ?? 'all')}`);
+    lines.push(`# status,${esc(f.status ?? 'all')}`);
+    lines.push(`# totals,failed=${report.totals.failed};pending=${report.totals.pending};in_flight=${report.totals.in_flight};succeeded=${report.totals.succeeded};total=${report.totals.total}`);
+    lines.push('');
+    // seção 1: taxa de falha por canal
+    lines.push('section,channel,failed,succeeded,total,fail_rate_pct');
+    for (const r of report.fail_rate_by_channel) {
+      lines.push([
+        'fail_rate_by_channel',
+        esc(r.channel), esc(r.failed), esc(r.succeeded), esc(r.total),
+        r.fail_rate == null ? '' : esc(r.fail_rate.toFixed(2)),
+      ].join(','));
+    }
+    lines.push('');
+    // seção 2: agregado por canal e status
+    lines.push('section,channel,status,count,avg_attempts,max_attempts_seen,first_seen,last_seen');
+    for (const r of report.rows) {
+      lines.push([
+        'aggregate',
+        esc(r.channel), esc(r.status), esc(r.count),
+        r.avg_attempts == null ? '' : esc(r.avg_attempts),
+        r.max_attempts_seen == null ? '' : esc(r.max_attempts_seen),
+        esc(r.first_seen), esc(r.last_seen),
+      ].join(','));
+    }
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    downloadBlob(
+      `pg-stat-notif-report-${ts}.csv`,
+      '\uFEFF' + lines.join('\r\n'),
+      'text/csv;charset=utf-8',
+    );
+  }, [report]);
+
+
   const downloadPdf = useCallback(() => {
     if (!report) return;
     const doc = new jsPDF();
@@ -232,7 +279,7 @@ export function FailuresReportCard() {
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <FileText className="h-4 w-4" />
-          Relatório de falhas — JSON / PDF
+          Relatório de falhas — JSON / CSV / PDF
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -300,6 +347,9 @@ export function FailuresReportCard() {
             </Button>
             <Button size="sm" variant="secondary" onClick={downloadJson} disabled={!report}>
               <Download className="h-4 w-4 mr-1" /> JSON
+            </Button>
+            <Button size="sm" variant="secondary" onClick={downloadCsv} disabled={!report}>
+              <Download className="h-4 w-4 mr-1" /> CSV
             </Button>
             <Button size="sm" variant="secondary" onClick={downloadPdf} disabled={!report}>
               <Download className="h-4 w-4 mr-1" /> PDF
