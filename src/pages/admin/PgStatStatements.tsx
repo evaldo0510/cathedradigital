@@ -18,9 +18,11 @@ import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
 import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
 import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
+import { useSnapshotHistory } from '@/components/admin/pg-stats/useSnapshotHistory';
+import { FingerprintDrilldown } from '@/components/admin/pg-stats/FingerprintDrilldown';
 import { Switch } from '@/components/ui/switch';
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
