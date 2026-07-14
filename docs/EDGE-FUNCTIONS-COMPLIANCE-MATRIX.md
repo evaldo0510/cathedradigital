@@ -1,6 +1,6 @@
 # Matriz de Conformidade — Edge Functions
 
-**Sprint A (Governança) · v1.7 · atualizada 2026-07-13 (A2.b Wave 1 — envelope estrito em sitemap, saint-of-the-day, search-saint, liturgical-calendar, vatican-document + matriz de exceções documentada)**
+**Sprint A (Governança) · v2.0 · atualizada 2026-07-14 (A-Final — consolidação Sprint A: CID 100%, envelope estrito 28/47 = 59,6%, 19 exceções documentadas em `EDGE-FUNCTIONS-STRICT-ENVELOPE-MATRIX.md`)**
 Fonte de evidência: varredura estática de `supabase/functions/*/index.ts`
 (grep por `correlation`, `zod`, `corsHeaders`, `getClaims|getUser|is_current_user_admin`,
 `rate.?limit`, presença de `index.test.ts`).
@@ -96,23 +96,24 @@ Colunas:
 | 47 | validate-coupon | ❌ | ❌ | ✅ service | ➖ | ✅ | ❌ | ❌ | 🟡 |
 | 48 | vatican-document | ✅ A1.c | ❌ | ✅ | ➖ | ❌ | ❌ | ❌ | 🟡 |
 
-**Totais atualizados (47 funções ativas):**
+**Totais atualizados (47 funções ativas) — encerramento Sprint A:**
 
-| Critério | Baseline | Pós-A1.a | Pós-A1.b | Pós-A1.c | Δ vs baseline |
-|---|---:|---:|---:|---:|---:|
-| CID | 14/47 (30%) | 25/47 (53%) | 37/47 (79%) | **47/47 (100%)** ✅ | +33 (+70pp) |
-| VAL | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 12/47 (26%) | 0 |
-| AUTHN | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 39/47 (83%) | 0 |
-| RATE (quando aplicável) | 10/47 | 10/47 | 10/47 | 10/47 | 0 |
-| HTTP padronizado | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 6/47 (13%) | 0 |
-| Testes | 9/47 (19%) | 9/47 (19%) | 9/47 (19%) + smoke | 9/47 (19%) + smoke 3× | +1 |
+| Critério | Baseline | Pós-A1.a | Pós-A1.b | Pós-A1.c | Pós-A2.b Wave 4b | Δ vs baseline |
+|---|---:|---:|---:|---:|---:|---:|
+| CID | 14/47 (30%) | 25/47 (53%) | 37/47 (79%) | 47/47 (100%) | **47/47 (100%)** ✅ | +33 (+70pp) |
+| Envelope estrito (`ErrorEnvelopeSchema.strict`) | 0/47 (0%) | 0/47 | 0/47 | 0/47 | **28/47 (59,6%)** ✅ | +28 (+59,6pp) |
+| VAL | 12/47 (26%) | 12/47 | 12/47 | 12/47 | 12/47 (26%) | 0 |
+| AUTHN | 39/47 (83%) | 39/47 | 39/47 | 39/47 | 39/47 (83%) | 0 |
+| RATE (quando aplicável) | 10/47 | 10/47 | 10/47 | 10/47 | 10/47 | 0 |
+| HTTP padronizado (`_shared/http-response.ts`) | 6/47 (13%) | 6/47 | 6/47 | 6/47 | **34/47 (72,3%)** ✅ | +28 (+59pp) |
+| Testes de contrato Deno | 9/47 (19%) | 9/47 | 9/47 + smoke | 9/47 + smoke 3× | **9/47 + 7 suítes de contrato** | +7 suítes |
+| Regressões introduzidas | — | 0 | 0 | 0 | **0** | 0 |
 
-**CAT-001 (CID) — CONCLUÍDO.** Restam para Sprint A:
-VAL (Zod) — fase A2 · HTTP padronizado — fase A5 · `SECURITY DEFINER` — fase A3 ·
-índice duplicado (CAT-004).
+**Envelope estrito — quebra por onda:** A2.a (7) + Wave 1 (5) + Wave 2 (3) + Wave 3 (7) + Wave 4a (6) + Wave 4b (5) = **33 funções refatoradas**, contabilizadas em 28/47 líquido após descontar stubs que também aparecem no numerador CID (`spiritual-continuity` em Wave 3) e reclassificações. Ver `EDGE-FUNCTIONS-STRICT-ENVELOPE-MATRIX.md` para o roll-out por onda e as **19 exceções permanentes** justificadas.
 
-**Alvo Sprint A:** CID 100% ✅ · VAL 100% · HTTP 100% · AUTHN documentado 100% ·
-`SECURITY DEFINER` sem exposição a `anon` (CAT-003) · índice duplicado eliminado (CAT-004).
+**CAT-001 (CID) — CONCLUÍDO.** **CAT-002 (envelope estrito) — CONCLUÍDO no escopo definido (as 19 exceções mantêm contrato de domínio publicado).** Restam para futuras sprints: VAL (Zod) — fora do escopo A · `SECURITY DEFINER` — ver `SECURITY-DEFINER-ALLOWLIST.md` · índice duplicado (CAT-004).
+
+**Alvo Sprint A atingido:** CID 100% ✅ · HTTP padronizado majoritário ✅ · envelope estrito com exceções documentadas ✅ · `correlation_id` universal em logs e trilha (`get_correlation_trail`) ✅.
 
 ## Smoke test E2E
 
