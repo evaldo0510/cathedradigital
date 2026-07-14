@@ -54,6 +54,10 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         last_error_at: row.last_error_at ?? null,
         last_error_message: row.last_error_message ?? null,
         consecutive_failures: row.consecutive_failures ?? 0,
+        notify_webhook_url: row.notify_webhook_url ?? null,
+        notify_slack_webhook_url: row.notify_slack_webhook_url ?? null,
+        last_notified_at: row.last_notified_at ?? null,
+        last_notification_error: row.last_notification_error ?? null,
       });
     } catch (e) {
       toast.error(`Falha ao carregar config: ${e instanceof Error ? e.message : String(e)}`);
