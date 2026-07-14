@@ -166,6 +166,47 @@ export default function PgStatStatements() {
     });
   }, [rows, opFilter, tableFilter]);
 
+  interface DisplayRow extends StatRow {
+    fingerprint: string;
+    variant_count: number;
+  }
+
+  const displayed = useMemo<DisplayRow[]>(() => {
+    if (!groupByFingerprint) {
+      return filtered.map((r) => ({ ...r, fingerprint: fingerprintQuery(r.query), variant_count: 1 }));
+    }
+    const map = new Map<string, DisplayRow>();
+    for (const r of filtered) {
+      const fp = fingerprintQuery(r.query);
+      const cur = map.get(fp);
+      if (!cur) {
+        map.set(fp, { ...r, fingerprint: fp, variant_count: 1 });
+      } else {
+        const totalCalls = cur.calls + r.calls;
+        const totalTime = cur.total_exec_ms + r.total_exec_ms;
+        map.set(fp, {
+          ...cur,
+          calls: totalCalls,
+          total_exec_ms: totalTime,
+          mean_exec_ms: totalCalls > 0 ? totalTime / totalCalls : 0,
+          max_exec_ms: Math.max(cur.max_exec_ms, r.max_exec_ms),
+          min_exec_ms: Math.min(cur.min_exec_ms, r.min_exec_ms),
+          stddev_exec_ms: Math.max(cur.stddev_exec_ms, r.stddev_exec_ms),
+          rows_returned: cur.rows_returned + r.rows_returned,
+          shared_blks_hit: cur.shared_blks_hit + r.shared_blks_hit,
+          shared_blks_read: cur.shared_blks_read + r.shared_blks_read,
+          variant_count: cur.variant_count + 1,
+          query: cur.query, // keep first as example
+        });
+      }
+    }
+    const order = orderBy === 'total_exec_time' ? 'total_exec_ms'
+      : orderBy === 'mean_exec_time' ? 'mean_exec_ms'
+      : orderBy === 'max_exec_time' ? 'max_exec_ms' : 'calls';
+    return [...map.values()].sort((a, b) => (b[order as keyof DisplayRow] as number) - (a[order as keyof DisplayRow] as number));
+  }, [filtered, groupByFingerprint, orderBy]);
+
+
   const toggleExpand = (i: number) => {
     setExpanded((prev) => {
       const next = new Set(prev);
