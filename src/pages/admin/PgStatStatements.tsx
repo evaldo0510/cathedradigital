@@ -706,6 +706,9 @@ export default function PgStatStatements() {
 
       <PendingNotificationsPanel />
 
+      <FailuresReportCard />
+
+
 
       <SnapshotsPanel snapshots={snapshots} loading={snapshotsLoading} reload={reloadSnapshots} />
 
