@@ -187,6 +187,43 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
               </div>
             </div>
 
+            <div className="rounded-md border p-3 space-y-3">
+              <div>
+                <p className="text-sm font-medium">Notificações de falha</p>
+                <p className="text-xs text-muted-foreground">
+                  Ao falhar, um POST JSON é enviado para as URLs configuradas (além do alerta no admin).
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="notify-webhook" className="text-xs">Webhook genérico (POST JSON)</Label>
+                  <Input
+                    id="notify-webhook" type="url" placeholder="https://exemplo.com/hook"
+                    value={cfg.notify_webhook_url ?? ''}
+                    onChange={(e) => setCfg({ ...cfg, notify_webhook_url: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="notify-slack" className="text-xs">Slack Incoming Webhook</Label>
+                  <Input
+                    id="notify-slack" type="url" placeholder="https://hooks.slack.com/services/…"
+                    value={cfg.notify_slack_webhook_url ?? ''}
+                    onChange={(e) => setCfg({ ...cfg, notify_slack_webhook_url: e.target.value })}
+                  />
+                </div>
+              </div>
+              {cfg.last_notification_error && (
+                <p className="text-[11px] text-destructive">
+                  Última notificação falhou: {cfg.last_notification_error}
+                </p>
+              )}
+              {cfg.last_notified_at && !cfg.last_notification_error && (
+                <p className="text-[11px] text-muted-foreground">
+                  Última notificação enviada: {new Date(cfg.last_notified_at).toLocaleString('pt-BR')}
+                </p>
+              )}
+            </div>
+
             <div className="flex items-center gap-2">
               <Button size="sm" onClick={save} disabled={saving}>
                 <Save className="h-4 w-4 mr-2" />
