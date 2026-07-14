@@ -5370,6 +5370,8 @@ export type Database = {
         }[]
       }
       _test_notif_reset: { Args: never; Returns: undefined }
+      _test_notif_retry_snapshot_row: { Args: { p_id: string }; Returns: Json }
+      _test_notif_retry_snapshots: { Args: never; Returns: Json }
       _test_notif_run_all: {
         Args: never
         Returns: {
