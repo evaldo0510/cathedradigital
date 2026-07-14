@@ -24,5 +24,9 @@ verify_jwt = false
 [functions.admin-incremental-reimport-saints]
 verify_jwt = false
 
+[functions.admin-apply-saints-reimport-run]
+verify_jwt = false
+
+
 
 
