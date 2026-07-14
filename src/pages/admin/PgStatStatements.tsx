@@ -98,6 +98,7 @@ export default function PgStatStatements() {
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [explainOpen, setExplainOpen] = useState(false);
   const [explainQuery, setExplainQuery] = useState('');
+  const [groupByFingerprint, setGroupByFingerprint] = useState(false);
 
   const currentView: PgStatViewConfig = {
     orderBy, limit, minCalls, opFilter, tableFilter,
