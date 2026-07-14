@@ -18,9 +18,11 @@ import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
 import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
 import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
+import { useSnapshotHistory } from '@/components/admin/pg-stats/useSnapshotHistory';
+import { FingerprintDrilldown } from '@/components/admin/pg-stats/FingerprintDrilldown';
 import { Switch } from '@/components/ui/switch';
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 type OrderBy = 'total_exec_time' | 'mean_exec_time' | 'max_exec_time' | 'calls';
@@ -87,6 +89,7 @@ const OP_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outl
 };
 
 export default function PgStatStatements() {
+  const { snapshots, loading: snapshotsLoading, reload: reloadSnapshots } = useSnapshotHistory(100);
   const [rows, setRows] = useState<StatRow[]>([]);
   const [orderBy, setOrderBy] = useState<OrderBy>('total_exec_time');
   const [limit, setLimit] = useState<number>(25);
@@ -285,6 +288,112 @@ export default function PgStatStatements() {
     toast.success(`Exportados ${displayed.length} registros (CSV)`);
   };
 
+  // ---- Fingerprint aggregate + evolution across snapshots (respects op/table filters) ----
+  const fingerprintExportRows = useMemo(() => {
+    const passFilters = (q: string) => {
+      if (opFilter !== 'ALL' && inferOp(q) !== opFilter) return false;
+      if (tableFilter && !inferTable(q).toLowerCase().includes(tableFilter.toLowerCase())) return false;
+      return true;
+    };
+    const agg = new Map<string, {
+      fingerprint: string; example: string;
+      calls: number; totalMs: number; meanMs: number; p95Ms: number;
+      evolution: Array<{ taken_at: string; calls: number; mean_ms: number; total_ms: number; p95_ms: number }>;
+    }>();
+    // live rows first (current window)
+    for (const r of rows) {
+      if (!passFilters(r.query)) continue;
+      const fp = fingerprintQuery(r.query);
+      const cur = agg.get(fp) || {
+        fingerprint: fp, example: r.query,
+        calls: 0, totalMs: 0, meanMs: 0, p95Ms: 0, evolution: [],
+      };
+      cur.calls += r.calls;
+      cur.totalMs += r.total_exec_ms;
+      cur.p95Ms = Math.max(cur.p95Ms, r.max_exec_ms);
+      agg.set(fp, cur);
+    }
+    // evolution from snapshot history
+    const sorted = [...snapshots].sort(
+      (a, b) => new Date(a.taken_at).getTime() - new Date(b.taken_at).getTime(),
+    );
+    for (const s of sorted) {
+      const perFp = new Map<string, { calls: number; total: number; max: number }>();
+      for (const r of s.rows || []) {
+        if (!passFilters(r.query)) continue;
+        const fp = fingerprintQuery(r.query);
+        const cur = perFp.get(fp) || { calls: 0, total: 0, max: 0 };
+        cur.calls += r.calls || 0;
+        cur.total += r.total_exec_time || 0;
+        cur.max = Math.max(cur.max, r.max_exec_time || 0);
+        perFp.set(fp, cur);
+      }
+      for (const [fp, v] of perFp) {
+        if (!agg.has(fp)) {
+          agg.set(fp, {
+            fingerprint: fp, example: '',
+            calls: 0, totalMs: 0, meanMs: 0, p95Ms: 0, evolution: [],
+          });
+        }
+        agg.get(fp)!.evolution.push({
+          taken_at: s.taken_at,
+          calls: v.calls,
+          mean_ms: v.calls > 0 ? v.total / v.calls : 0,
+          total_ms: v.total,
+          p95_ms: v.max,
+        });
+      }
+    }
+    for (const v of agg.values()) {
+      v.meanMs = v.calls > 0 ? v.totalMs / v.calls : 0;
+    }
+    return [...agg.values()].sort((a, b) => b.totalMs - a.totalMs);
+  }, [rows, snapshots, opFilter, tableFilter]);
+
+  const exportFingerprintJSON = () => {
+    const payload = {
+      exported_at: new Date().toISOString(),
+      filters: { opFilter, tableFilter },
+      snapshot_count: snapshots.length,
+      rows: fingerprintExportRows,
+    };
+    downloadBlob(
+      `pg_stat_fingerprints_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
+      JSON.stringify(payload, null, 2),
+      'application/json',
+    );
+    toast.success(`${fingerprintExportRows.length} fingerprints exportados (JSON)`);
+  };
+
+  const exportFingerprintCSV = () => {
+    const escape = (v: unknown) => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = [
+      'fingerprint','calls_live','mean_ms_live','p95_ms_live','total_ms_live',
+      'snapshots_present','evolution_json','example',
+    ];
+    const lines = [header.join(',')];
+    for (const r of fingerprintExportRows) {
+      lines.push([
+        r.fingerprint,
+        r.calls, r.meanMs.toFixed(3), r.p95Ms.toFixed(3), r.totalMs.toFixed(3),
+        r.evolution.length,
+        JSON.stringify(r.evolution),
+        r.example,
+      ].map(escape).join(','));
+    }
+    downloadBlob(
+      `pg_stat_fingerprints_${new Date().toISOString().replace(/[:.]/g, '-')}.csv`,
+      lines.join('\n'),
+      'text/csv;charset=utf-8',
+    );
+    toast.success(`${fingerprintExportRows.length} fingerprints exportados (CSV)`);
+  };
+
+
+
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 space-y-4">
@@ -368,8 +477,15 @@ export default function PgStatStatements() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={exportCSV}>CSV</DropdownMenuItem>
-                <DropdownMenuItem onClick={exportJSON}>JSON</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportCSV}>Tabela atual · CSV</DropdownMenuItem>
+                <DropdownMenuItem onClick={exportJSON}>Tabela atual · JSON</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportFingerprintCSV} disabled={fingerprintExportRows.length === 0}>
+                  Fingerprints + evolução · CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportFingerprintJSON} disabled={fingerprintExportRows.length === 0}>
+                  Fingerprints + evolução · JSON
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -416,7 +532,8 @@ export default function PgStatStatements() {
 
       <AutoSnapshotConfigCard />
 
-      <SnapshotsPanel />
+      <SnapshotsPanel snapshots={snapshots} loading={snapshotsLoading} reload={reloadSnapshots} />
+
 
       <Card>
         <CardHeader>
@@ -513,11 +630,28 @@ export default function PgStatStatements() {
                                   <span className="text-muted-foreground">fingerprint:</span> {r.fingerprint}
                                 </pre>
                               )}
-                              <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
-                                {groupByFingerprint && <span className="text-muted-foreground">exemplo: </span>}
-                                {r.query}
-                              </pre>
+                              {groupByFingerprint ? (
+                                <FingerprintDrilldown
+                                  fingerprint={r.fingerprint}
+                                  variants={rows
+                                    .filter((x) => fingerprintQuery(x.query) === r.fingerprint)
+                                    .map((x) => ({
+                                      query: x.query,
+                                      calls: x.calls,
+                                      total_exec_ms: x.total_exec_ms,
+                                      mean_exec_ms: x.mean_exec_ms,
+                                      max_exec_ms: x.max_exec_ms,
+                                    }))
+                                    .sort((a, b) => b.total_exec_ms - a.total_exec_ms)}
+                                  snapshots={snapshots}
+                                />
+                              ) : (
+                                <pre className="text-xs bg-background p-3 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                                  {r.query}
+                                </pre>
+                              )}
                             </div>
+
                           </TableCell>
                         </TableRow>
                       )}

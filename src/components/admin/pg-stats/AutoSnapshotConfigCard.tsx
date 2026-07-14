@@ -6,13 +6,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Save, RefreshCw, Clock } from 'lucide-react';
+import { Save, RefreshCw, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface Config {
   enabled: boolean;
   interval_minutes: number;
   retention_days: number;
   last_run_at: string | null;
+  last_success_at: string | null;
+  last_error_at: string | null;
+  last_error_message: string | null;
+  consecutive_failures: number;
 }
 
 const PRESETS = [
@@ -41,6 +46,10 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         interval_minutes: row.interval_minutes ?? 60,
         retention_days: row.retention_days ?? 30,
         last_run_at: row.last_run_at ?? null,
+        last_success_at: row.last_success_at ?? null,
+        last_error_at: row.last_error_at ?? null,
+        last_error_message: row.last_error_message ?? null,
+        consecutive_failures: row.consecutive_failures ?? 0,
       });
     } catch (e) {
       toast.error(`Falha ao carregar config: ${e instanceof Error ? e.message : String(e)}`);
@@ -90,6 +99,39 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
           <p className="text-sm text-muted-foreground">Carregando…</p>
         ) : (
           <>
+            {cfg.last_error_at && (!cfg.last_success_at
+                || new Date(cfg.last_error_at).getTime() > new Date(cfg.last_success_at).getTime()) && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>
+                  Captura automática falhou
+                  {cfg.consecutive_failures > 1 && <> ({cfg.consecutive_failures}× consecutivas)</>}
+                </AlertTitle>
+                <AlertDescription className="space-y-1">
+                  <div className="text-xs">
+                    Última falha em <strong>{new Date(cfg.last_error_at).toLocaleString('pt-BR')}</strong>
+                    {cfg.last_success_at && (
+                      <> · último sucesso: <strong>{new Date(cfg.last_success_at).toLocaleString('pt-BR')}</strong></>
+                    )}
+                  </div>
+                  {cfg.last_error_message && (
+                    <pre className="text-[11px] whitespace-pre-wrap break-all bg-background/40 border rounded p-2 mt-1">
+                      {cfg.last_error_message}
+                    </pre>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+            {cfg.enabled && cfg.last_success_at
+              && (!cfg.last_error_at
+                  || new Date(cfg.last_success_at).getTime() >= new Date(cfg.last_error_at).getTime()) && (
+              <div className="flex items-center gap-2 text-xs text-primary rounded-md border border-primary/20 bg-primary/5 p-2">
+                <CheckCircle2 className="h-4 w-4" />
+                Última captura bem-sucedida em{' '}
+                <strong>{new Date(cfg.last_success_at).toLocaleString('pt-BR')}</strong>
+              </div>
+            )}
+
             <div className="flex items-center justify-between rounded-md border p-3">
               <div>
                 <p className="text-sm font-medium">Ativa</p>

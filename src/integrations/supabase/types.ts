@@ -2920,31 +2920,43 @@ export type Database = {
       }
       pg_stat_snapshot_config: {
         Row: {
+          consecutive_failures: number
           enabled: boolean
           id: number
           interval_minutes: number
+          last_error_at: string | null
+          last_error_message: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
+          last_success_at: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
         }
         Insert: {
+          consecutive_failures?: number
           enabled?: boolean
           id?: number
           interval_minutes?: number
+          last_error_at?: string | null
+          last_error_message?: string | null
           last_run_at?: string | null
           last_snapshot_id?: string | null
+          last_success_at?: string | null
           retention_days?: number
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
+          consecutive_failures?: number
           enabled?: boolean
           id?: number
           interval_minutes?: number
+          last_error_at?: string | null
+          last_error_message?: string | null
           last_run_at?: string | null
           last_snapshot_id?: string | null
+          last_success_at?: string | null
           retention_days?: number
           updated_at?: string
           updated_by?: string | null
@@ -5171,11 +5183,15 @@ export type Database = {
       admin_get_pg_stat_snapshot_config: {
         Args: never
         Returns: {
+          consecutive_failures: number
           enabled: boolean
           id: number
           interval_minutes: number
+          last_error_at: string | null
+          last_error_message: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
+          last_success_at: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
@@ -5244,11 +5260,15 @@ export type Database = {
           p_retention_days: number
         }
         Returns: {
+          consecutive_failures: number
           enabled: boolean
           id: number
           interval_minutes: number
+          last_error_at: string | null
+          last_error_message: string | null
           last_run_at: string | null
           last_snapshot_id: string | null
+          last_success_at: string | null
           retention_days: number
           updated_at: string
           updated_by: string | null
