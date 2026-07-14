@@ -5542,6 +5542,7 @@ export type Database = {
           year_published: number
         }[]
       }
+      admin_notif_channel_gates_overview: { Args: never; Returns: Json }
       admin_notif_failures_report: {
         Args: {
           p_channel?: string
