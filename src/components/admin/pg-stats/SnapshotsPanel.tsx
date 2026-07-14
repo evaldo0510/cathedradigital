@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,12 @@ import {
 import { Camera, Trash2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { SnapshotTrends } from './SnapshotTrends';
+import { IntervalCompareCard } from './IntervalCompareCard';
+import type { SnapshotHistoryRow } from './useSnapshotHistory';
+
+type SnapshotRow = SnapshotHistoryRow;
+
+
 
 interface SnapshotRow {
   id: string;
