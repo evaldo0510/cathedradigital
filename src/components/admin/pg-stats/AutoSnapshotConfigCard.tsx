@@ -238,23 +238,53 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="notify-webhook" className="text-xs">Webhook genérico (POST JSON)</Label>
-                  <Input
-                    id="notify-webhook" type="url" placeholder="https://exemplo.com/hook"
-                    value={cfg.notify_webhook_url ?? ''}
-                    onChange={(e) => setCfg({ ...cfg, notify_webhook_url: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="notify-slack" className="text-xs">Slack Incoming Webhook</Label>
-                  <Input
-                    id="notify-slack" type="url" placeholder="https://hooks.slack.com/services/…"
-                    value={cfg.notify_slack_webhook_url ?? ''}
-                    onChange={(e) => setCfg({ ...cfg, notify_slack_webhook_url: e.target.value })}
-                  />
-                </div>
+                {(['webhook','slack'] as ChannelKey[]).map((ch) => {
+                  const value = ch === 'webhook' ? cfg.notify_webhook_url : cfg.notify_slack_webhook_url;
+                  const label = ch === 'webhook' ? 'Webhook genérico (POST JSON)' : 'Slack Incoming Webhook';
+                  const placeholder = ch === 'webhook' ? 'https://exemplo.com/hook' : 'https://hooks.slack.com/services/…';
+                  const fb = channelFeedback[ch];
+                  const busy = channelBusy[ch];
+                  const hasUrl = !!(value && value.trim());
+                  return (
+                    <div key={ch} className="space-y-2">
+                      <Label htmlFor={`notify-${ch}`} className="text-xs">{label}</Label>
+                      <Input
+                        id={`notify-${ch}`} type="url" placeholder={placeholder}
+                        value={value ?? ''}
+                        onChange={(e) => setCfg({
+                          ...cfg,
+                          ...(ch === 'webhook' ? { notify_webhook_url: e.target.value } : { notify_slack_webhook_url: e.target.value }),
+                        })}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm" variant="outline" className="h-7 text-xs"
+                          onClick={() => validateChannel(ch)}
+                          disabled={!hasUrl || busy !== null}
+                        >
+                          <ShieldCheck className={`h-3 w-3 mr-1 ${busy === 'validate' ? 'animate-spin' : ''}`} />
+                          Validar
+                        </Button>
+                        <Button
+                          size="sm" variant="outline" className="h-7 text-xs"
+                          onClick={() => sendTest(ch)}
+                          disabled={!hasUrl || busy !== null}
+                          title="Enfileira uma notificação de teste neste canal"
+                        >
+                          <Send className={`h-3 w-3 mr-1 ${busy === 'send' ? 'animate-spin' : ''}`} />
+                          Enviar teste
+                        </Button>
+                      </div>
+                      {fb && (
+                        <p className={`text-[11px] ${fb.kind === 'ok' ? 'text-primary' : 'text-destructive'}`}>
+                          {fb.msg}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+
               {cfg.last_notification_error && (
                 <p className="text-[11px] text-destructive">
                   Última notificação falhou: {cfg.last_notification_error}
