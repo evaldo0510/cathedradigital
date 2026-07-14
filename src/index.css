@@ -636,3 +636,8 @@ header:hover {
   outline: 3px solid hsl(var(--secondary)) !important;
   outline-offset: 3px !important;
 }
+
+/* Hide Lovable badge globally */
+#lovable-badge {
+  display: none !important;
+}
