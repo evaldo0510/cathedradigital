@@ -129,7 +129,9 @@ export function SnapshotsPanel({ snapshots, loading, reload }: SnapshotsPanelPro
   }, [baseId, compareId, snapshots]);
 
   return (
+    <>
     <Card>
+
       <CardHeader>
         <CardTitle className="text-base">Snapshots — tendências entre janelas</CardTitle>
       </CardHeader>
