@@ -448,6 +448,8 @@ export default function PgStatStatements() {
           </div>
         </CardContent>
       </Card>
+
+      <ExplainDialog open={explainOpen} onOpenChange={setExplainOpen} initialQuery={explainQuery} />
     </div>
   );
 }
