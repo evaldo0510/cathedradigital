@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Icons } from '@/constants';
 import SourceAttribution from '@/components/cathedra/SourceAttribution';
 import SaintsAuditPanel from '@/components/admin/SaintsAuditPanel';
+import SaintsReimportRunsPanel from '@/components/admin/SaintsReimportRunsPanel';
 
 interface SaintRow {
   id: string;
@@ -411,6 +412,7 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <SaintsReimportRunsPanel onApplied={load} />
       <SaintsAuditPanel />
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
