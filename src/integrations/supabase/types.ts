@@ -2918,6 +2918,78 @@ export type Database = {
         }
         Relationships: []
       }
+      pg_stat_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          label: string | null
+          note: string | null
+          row_count: number | null
+          rows: Json
+          taken_at: string
+          taken_by: string | null
+          total_calls: number | null
+          total_exec_ms: number | null
+          window_seconds: number | null
+          window_started_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          note?: string | null
+          row_count?: number | null
+          rows: Json
+          taken_at?: string
+          taken_by?: string | null
+          total_calls?: number | null
+          total_exec_ms?: number | null
+          window_seconds?: number | null
+          window_started_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          note?: string | null
+          row_count?: number | null
+          rows?: Json
+          taken_at?: string
+          taken_by?: string | null
+          total_calls?: number | null
+          total_exec_ms?: number | null
+          window_seconds?: number | null
+          window_started_at?: string | null
+        }
+        Relationships: []
+      }
+      pg_stats_admin_views: {
+        Row: {
+          config: Json
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          config: Json
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profile_update_rate: {
         Row: {
           count: number
@@ -5055,6 +5127,14 @@ export type Database = {
       }
     }
     Functions: {
+      admin_capture_pg_stat_snapshot: {
+        Args: { p_label?: string; p_limit?: number; p_note?: string }
+        Returns: string
+      }
+      admin_explain_query: {
+        Args: { p_analyze?: boolean; p_query: string }
+        Returns: string
+      }
       admin_get_pg_stat_statements: {
         Args: { p_limit?: number; p_min_calls?: number; p_order_by?: string }
         Returns: {
