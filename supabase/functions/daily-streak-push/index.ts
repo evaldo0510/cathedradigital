@@ -1,34 +1,21 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
-
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
+import { makeResponder } from "../_shared/http-response.ts";
 
 /**
- * Daily streak push notification.
- * Call this via a cron job (e.g. Supabase pg_cron or external scheduler).
- * It sends a personalized push to all users with push subscriptions.
+ * Daily streak push notification. Cron-triggered.
  */
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Require either the service-role bearer token (used by pg_cron / admin invocations)
-    // or a matching CRON_SECRET header. Reject all other callers.
     const authHeader = req.headers.get("authorization") || "";
     const providedBearer = authHeader.toLowerCase().startsWith("bearer ")
       ? authHeader.slice(7).trim()
@@ -40,29 +27,21 @@ Deno.serve(async (req) => {
     const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
 
     if (!isServiceRole && !isCronSecret) {
-      return new Response(
-        JSON.stringify({ error: "Forbidden" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return R.error(403, "forbidden");
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Get all users with push subscriptions
     const { data: subscriptions } = await supabase
       .from("push_subscriptions")
       .select("user_id");
 
     if (!subscriptions?.length) {
-      return new Response(
-        JSON.stringify({ message: "No subscribers", sent: 0 }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return R.raw({ message: "No subscribers", sent: 0, correlation_id: cid });
     }
 
     const userIds = [...new Set(subscriptions.map((s) => s.user_id))];
 
-    // Get profiles to personalize messages
     const { data: profiles } = await supabase
       .from("profiles")
       .select("id, name, streak")
@@ -70,7 +49,6 @@ Deno.serve(async (req) => {
 
     const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
 
-    // Send push to each user via the send-push function
     let sent = 0;
     for (const userId of userIds) {
       const profile = profileMap.get(userId);
@@ -102,22 +80,17 @@ Deno.serve(async (req) => {
             body,
             url: "/hoje",
           },
+          headers: { "x-correlation-id": cid },
         });
         sent++;
       } catch (err) {
-        console.error(`Failed to send push to ${userId}:`, err);
+        console.error(`Failed to send push to ${userId} cid=${cid}:`, err);
       }
     }
 
-    return new Response(
-      JSON.stringify({ sent, total: userIds.length }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return R.raw({ sent, total: userIds.length, correlation_id: cid });
   } catch (err) {
-    console.error("daily-streak-push error:", err);
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    console.error("daily-streak-push error cid=", cid, err);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });

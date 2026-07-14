@@ -1,15 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
-
-// Rate limiter: max requests per window
 const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT = 10;
 const RATE_WINDOW_MS = 60_000;
@@ -48,39 +40,29 @@ async function logSecurityEvent(supabase: any, event: { type: string, severity: 
 
 /**
  * Intelligent Notifications Edge Function.
- * Triggers based on inactivity, reflections, and progress.
  */
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const clientIP = getClientIP(req);
     if (isRateLimited(clientIP)) {
-      return new Response(
-        JSON.stringify({ error: "Rate limit exceeded" }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
-      );
+      return R.error(429, "rate_limited");
     }
 
     const contentLength = parseInt(req.headers.get("content-length") || "0");
     if (contentLength > 2048) {
-      return new Response(
-        JSON.stringify({ error: "Payload too large" }),
-        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return R.error(413, "invalid_body", { reason: "payload_too_large", size: contentLength });
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Auth check
     const authHeader = req.headers.get("authorization") || "";
     const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
     const cronSecret = Deno.env.get("CRON_SECRET") || "";
@@ -92,14 +74,13 @@ Deno.serve(async (req) => {
         type: "UNAUTHORIZED_ACCESS",
         severity: "critical",
         description: `Unauthorized attempt to call intelligent-notifications from IP: ${clientIP}`,
-        metadata: { ip: clientIP }
+        metadata: { ip: clientIP, correlation_id: cid }
       });
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
+      return R.error(403, "forbidden");
     }
 
     const now = new Date();
 
-    // Get all users who haven't been notified today and have push/whatsapp enabled
     const { data: usersToNotify } = await supabase
       .from("profiles")
       .select("id, name, whatsapp_number, whatsapp_enabled, push_enabled, last_action_at, last_notified_at, notification_settings")
@@ -107,9 +88,7 @@ Deno.serve(async (req) => {
       .limit(50);
 
     if (!usersToNotify || usersToNotify.length === 0) {
-      return new Response(JSON.stringify({ message: "No users to notify today" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return R.raw({ message: "No users to notify today", correlation_id: cid });
     }
 
     let notificationsSent = 0;
@@ -125,7 +104,7 @@ Deno.serve(async (req) => {
           .select("id", { count: "exact", head: true })
           .eq("user_id", user.id)
           .gt("sent_at", user.last_action_at);
-        
+
         if (ignoredCount && ignoredCount >= 3) {
           const daysSinceLastNotify = (now.getTime() - new Date(user.last_notified_at).getTime()) / (1000 * 60 * 60 * 24);
           if (daysSinceLastNotify < 7) continue;
@@ -150,7 +129,7 @@ Deno.serve(async (req) => {
         type = "inactivity_48h";
         title = "🕊️ Algo especial...";
         message = `${firstName}, você não parou por acaso... havia algo sendo construído.`;
-      } 
+      }
       else if (hoursSinceAction >= 24 && hoursSinceAction < 48) {
         type = "inactivity_24h";
         title = "🕊️ Um momento para você";
@@ -181,6 +160,7 @@ Deno.serve(async (req) => {
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${serviceRoleKey}`,
+                "x-correlation-id": cid,
               },
               body: JSON.stringify({
                 user_id: user.id,
@@ -191,15 +171,13 @@ Deno.serve(async (req) => {
             });
             if (pushRes.ok) sentPush = true;
           } catch (e) {
-            console.error(`Failed to send push to ${user.id}:`, e);
+            console.error(`Failed to send push to ${user.id} cid=${cid}:`, e);
           }
         }
 
         if (emailEnabled) {
-           // Lovable Email Placeholder
-           // In a real scenario, we'd use a transactional email tool or edge function
-           console.log(`[EMAIL Placeholder] To: ${user.id} - Msg: ${fullMessage}`);
-           sentEmail = true;
+          console.log(`[EMAIL Placeholder] cid=${cid} To: ${user.id} - Msg: ${fullMessage}`);
+          sentEmail = true;
         }
 
         if (user.whatsapp_enabled && user.whatsapp_number) {
@@ -222,10 +200,10 @@ Deno.serve(async (req) => {
               });
               if (waRes.ok) sentWhatsapp = true;
             } catch (e) {
-              console.error(`Failed to send WhatsApp to ${user.whatsapp_number}:`, e);
+              console.error(`Failed to send WhatsApp to ${user.whatsapp_number} cid=${cid}:`, e);
             }
           } else {
-            console.log(`[WA Placeholder] To: ${user.whatsapp_number} - Msg: ${fullMessage}`);
+            console.log(`[WA Placeholder] cid=${cid} To: ${user.whatsapp_number} - Msg: ${fullMessage}`);
             sentWhatsapp = true;
           }
         }
@@ -237,7 +215,7 @@ Deno.serve(async (req) => {
             channel: sentPush && sentWhatsapp ? "all" : sentEmail ? "email" : sentPush ? "push" : "whatsapp",
             content: fullMessage,
             status: "sent",
-            metadata: { last_route: lastHistory?.route }
+            metadata: { last_route: lastHistory?.route, correlation_id: cid }
           });
 
           await supabase
@@ -250,14 +228,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ notificationsSent }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return R.raw({ notificationsSent, correlation_id: cid });
   } catch (err) {
-    console.error("intelligent-notifications error:", err);
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    console.error("intelligent-notifications error cid=", cid, err);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });

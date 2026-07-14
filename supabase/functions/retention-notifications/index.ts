@@ -1,17 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
-
-// Rate limiter: max requests per window
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 10; // Cron functions usually called once/day, 10 is plenty
+const RATE_LIMIT = 10;
 const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(key: string): boolean {
@@ -47,20 +39,14 @@ async function logSecurityEvent(supabase: any, event: { type: string, severity: 
 }
 
 /**
- * Retention notifications edge function.
- * Triggered daily via pg_cron.
- * 
- * 1. Active journey users → daily reminder to continue
- * 2. Users inactive 3+ days → re-engagement message
+ * Retention notifications edge function. Cron-triggered.
  */
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const clientIP = getClientIP(req);
@@ -73,12 +59,9 @@ Deno.serve(async (req) => {
         type: "RATE_LIMIT_EXCEEDED",
         severity: "warning",
         description: `Rate limit hit for IP: ${clientIP}`,
-        metadata: { ip: clientIP, function: "retention-notifications" }
+        metadata: { ip: clientIP, function: "retention-notifications", correlation_id: cid }
       });
-      return new Response(
-        JSON.stringify({ error: "Rate limit exceeded" }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
-      );
+      return R.error(429, "rate_limited");
     }
 
     const contentLength = parseInt(req.headers.get("content-length") || "0");
@@ -87,15 +70,11 @@ Deno.serve(async (req) => {
         type: "PAYLOAD_TOO_LARGE",
         severity: "critical",
         description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
-        metadata: { ip: clientIP, size: contentLength, function: "retention-notifications" }
+        metadata: { ip: clientIP, size: contentLength, function: "retention-notifications", correlation_id: cid }
       });
-      return new Response(
-        JSON.stringify({ error: "Payload too large" }),
-        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return R.error(413, "invalid_body", { reason: "payload_too_large", size: contentLength });
     }
 
-    // Require service-role bearer or X-Cron-Secret — cron-only endpoint
     const authHeader = req.headers.get("authorization") || "";
     const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
     const cronSecret = Deno.env.get("CRON_SECRET") || "";
@@ -107,12 +86,9 @@ Deno.serve(async (req) => {
         type: "UNAUTHORIZED_ACCESS",
         severity: "critical",
         description: `Unauthorized attempt to call retention-notifications from IP: ${clientIP}`,
-        metadata: { ip: clientIP }
+        metadata: { ip: clientIP, correlation_id: cid }
       });
-      return new Response(
-        JSON.stringify({ error: "Forbidden" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return R.error(403, "forbidden");
     }
 
     const now = new Date();
@@ -120,14 +96,12 @@ Deno.serve(async (req) => {
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
     const todayStr = now.toISOString().split("T")[0];
 
-    // 1. Daily journey reminder: users with active journey progress (visited in last 2 days)
     const { data: activeUsers } = await supabase
       .from("profiles")
       .select("id, name, last_visit")
       .gte("last_visit", threeDaysAgo.toISOString())
       .not("last_visit", "is", null);
 
-    // 2. Inactive users: last visit > 3 days ago
     const { data: inactiveUsers } = await supabase
       .from("profiles")
       .select("id, name, last_visit")
@@ -137,7 +111,6 @@ Deno.serve(async (req) => {
     let sentReminders = 0;
     let sentReengagement = 0;
 
-    // --- Daily journey reminders for active users ---
     if (activeUsers?.length) {
       for (const user of activeUsers) {
         const { data: progress } = await supabase
@@ -190,6 +163,7 @@ Deno.serve(async (req) => {
                   body: `${firstName}, o dia ${stepNumber} te espera. Cada passo conta.`,
                   url: "/jornadas",
                 },
+                headers: { "x-correlation-id": cid },
               });
             } catch (_) { }
 
@@ -199,7 +173,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // --- Re-engagement for inactive users (3+ days) ---
     if (inactiveUsers?.length) {
       for (const user of inactiveUsers) {
         const firstName = user.name?.split(" ")[0] || "";
@@ -243,6 +216,7 @@ Deno.serve(async (req) => {
               body: message,
               url: "/jornadas",
             },
+            headers: { "x-correlation-id": cid },
           });
         } catch (_) { }
 
@@ -250,20 +224,15 @@ Deno.serve(async (req) => {
       }
     }
 
-    return new Response(
-      JSON.stringify({
-        sentReminders,
-        sentReengagement,
-        activeUsers: activeUsers?.length ?? 0,
-        inactiveUsers: inactiveUsers?.length ?? 0,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return R.raw({
+      sentReminders,
+      sentReengagement,
+      activeUsers: activeUsers?.length ?? 0,
+      inactiveUsers: inactiveUsers?.length ?? 0,
+      correlation_id: cid,
+    });
   } catch (err) {
-    console.error("retention-notifications error:", err);
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    console.error("retention-notifications error cid=", cid, err);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });

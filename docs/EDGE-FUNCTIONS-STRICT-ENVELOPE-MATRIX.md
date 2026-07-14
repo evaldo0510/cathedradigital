@@ -1,6 +1,6 @@
 # Matriz — ErrorEnvelopeSchema.strict() nas Edge Functions
 
-_Documento vivo. Última atualização: 2026-07-14 — Fase A2.b Wave 2._
+_Documento vivo. Última atualização: 2026-07-14 — Fase A2.b Wave 3._
 
 ## Contrato canônico
 
@@ -23,7 +23,7 @@ Envelope de erro validado por `_shared/error-envelope-schema.ts`
 | A2.a | Funções auditadas — 7 (pcl-* + nexus-relations) | ✅ concluída |
 | A2.b Wave 1 | `sitemap`, `saint-of-the-day`, `search-saint`, `liturgical-calendar`, `vatican-document` | ✅ concluída (2026-07-13) |
 | A2.b Wave 2 | Diagnóstico/telemetria: `cid-trail`, `cid-compliance-stats`, `bible-abbr-validate` (400/405) | ✅ concluída (2026-07-14) |
-| A2.b Wave 3 | Notificações / stubs: `send-notification`, `send-push`, `daily-streak-push`, `retention-notifications`, `telemetry-notifications`, `intelligent-notifications`, `spiritual-continuity` | ⏳ planejada |
+| A2.b Wave 3 | Notificações / stubs: `send-notification`, `send-push`, `daily-streak-push`, `retention-notifications`, `telemetry-notifications`, `intelligent-notifications`, `spiritual-continuity` | ✅ concluída (2026-07-14) |
 | A2.b Wave 4 | Ferramentas de manutenção Bíblia: `bible-cache-*`, `bible-import-*`, `bible-integrity-check`, `bible-perf-render`, `bible-alerts-reconcile`, `bible-auto-warm-slow`, `bible-availability-report`, `bible-canon-diagnose`, `bible-convert-dump`, `bible-latency-regression-alert` | ⏳ planejada |
 | A2.b Wave 5 | Domínios com contrato próprio publicado — **exceções documentadas** | 🚫 permanecem com envelope custom |
 
@@ -66,6 +66,7 @@ tabela acima **não** liberam a função do CID: só liberam o formato do body.
 | `cid_zod_envelope_test.ts` | 7 funções auditadas (A2.a) — envelope estrito |
 | `cid_strict_wave1_test.ts` | 5 funções da Wave 1 — envelope estrito |
 | `cid_strict_wave2_test.ts` | `cid-trail`, `cid-compliance-stats`, `bible-abbr-validate` — envelope estrito |
+| `cid_strict_wave3_test.ts` | 7 funções de notificação/telemetria — envelope estrito + concorrência de CID |
 | `cid_header_variations_test.ts` | Todas — propagação de CID em variações de header |
 | `cid_concurrency_test.ts` | Todas — sem mistura de CID em requests paralelas |
 | `bible-text-error-schema.spec.ts` (Playwright) | Contrato de domínio `bible-text` |

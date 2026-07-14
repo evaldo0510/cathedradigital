@@ -1,13 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
-
-const _corsBase = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Expose-Headers": "x-correlation-id",
-};
-// Alias módulo-level (helpers fora do handler não conhecem o CID do request)
-const corsHeaders = _corsBase;
+import { makeResponder } from "../_shared/http-response.ts";
 
 const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT = 20;
@@ -63,7 +56,6 @@ async function generateJWT(audience: string): Promise<string> {
   const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
   const payloadB64 = btoa(JSON.stringify(payload)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 
-  // Import private key
   const rawKey = Uint8Array.from(
     atob(VAPID_PRIVATE_KEY.replace(/-/g, "+").replace(/_/g, "/")),
     (c) => c.charCodeAt(0)
@@ -84,16 +76,13 @@ async function generateJWT(audience: string): Promise<string> {
     signingInput
   );
 
-  // Convert DER signature to raw
   const rawSig = derToRaw(new Uint8Array(signature));
   const sigB64 = btoa(String.fromCharCode(...rawSig)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 
   return `${headerB64}.${payloadB64}.${sigB64}`;
 }
 
-// DER encode a raw 32-byte private key into PKCS8
 async function derEncodePrivateKey(raw: Uint8Array): Promise<ArrayBuffer> {
-  // PKCS8 wrapper for EC P-256 private key
   const prefix = new Uint8Array([
     0x30, 0x41, 0x02, 0x01, 0x00, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48,
     0xce, 0x3d, 0x02, 0x01, 0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03,
@@ -106,15 +95,12 @@ async function derEncodePrivateKey(raw: Uint8Array): Promise<ArrayBuffer> {
 }
 
 function derToRaw(der: Uint8Array): Uint8Array {
-  // Simple DER to raw r||s conversion
   const raw = new Uint8Array(64);
   let offset = 2;
-  // r
   let rLen = der[offset + 1];
   let rOffset = offset + 2;
   if (rLen === 33) { rOffset++; rLen = 32; }
   raw.set(der.slice(rOffset, rOffset + Math.min(rLen, 32)), 32 - Math.min(rLen, 32));
-  // s
   offset = rOffset + rLen;
   let sLen = der[offset + 1];
   let sOffset = offset + 2;
@@ -157,11 +143,11 @@ async function sendPushToSubscription(
 }
 
 Deno.serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
-  const _cid = getOrCreateCorrelationId(req);
-  const corsHeaders = { ..._corsBase, 'x-correlation-id': _cid };
+  // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
+  const cid = getOrCreateCorrelationId(req);
+  const R = makeResponder(cid);
 
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return R.cors();
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -173,9 +159,9 @@ Deno.serve(async (req) => {
       type: "RATE_LIMIT_EXCEEDED",
       severity: "warning",
       description: `Rate limit hit for IP: ${clientIP}`,
-      metadata: { ip: clientIP, function: "send-push" }
+      metadata: { ip: clientIP, function: "send-push", correlation_id: cid }
     });
-    return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: corsHeaders });
+    return R.error(429, "rate_limited");
   }
 
   const contentLength = parseInt(req.headers.get("content-length") || "0");
@@ -184,17 +170,16 @@ Deno.serve(async (req) => {
       type: "PAYLOAD_TOO_LARGE",
       severity: "critical",
       description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
-      metadata: { ip: clientIP, size: contentLength, function: "send-push" }
+      metadata: { ip: clientIP, size: contentLength, function: "send-push", correlation_id: cid }
     });
-    return new Response(JSON.stringify({ error: "Payload too large" }), { status: 413, headers: corsHeaders });
+    return R.error(413, "invalid_body", { reason: "payload_too_large", size: contentLength });
   }
 
-  // Auth check
   const authHeader = req.headers.get("authorization") || "";
   const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
   const cronSecret = Deno.env.get("CRON_SECRET") || "";
   const cronSecretHeader = req.headers.get("x-cron-secret") || "";
-  
+
   const isServiceRole = providedBearer.length > 0 && providedBearer === serviceRoleKey;
   const isCronSecret = cronSecret.length > 0 && cronSecretHeader === cronSecret;
   if (!isServiceRole && !isCronSecret) {
@@ -202,9 +187,9 @@ Deno.serve(async (req) => {
       type: "UNAUTHORIZED_ACCESS",
       severity: "critical",
       description: `Unauthorized attempt to call send-push from IP: ${clientIP}`,
-      metadata: { ip: clientIP }
+      metadata: { ip: clientIP, correlation_id: cid }
     });
-    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
+    return R.error(403, "forbidden");
   }
 
   try {
@@ -224,7 +209,7 @@ Deno.serve(async (req) => {
       subscriptions = data || [];
     }
 
-    console.log(`Sending push to ${subscriptions.length} subscriber(s)`);
+    console.log(`Sending push to ${subscriptions.length} subscriber(s) cid=${cid}`);
     const results = await Promise.allSettled(
       subscriptions.map((sub) => sendPushToSubscription(sub, payload))
     );
@@ -232,15 +217,9 @@ Deno.serve(async (req) => {
     const sent = results.filter((r) => r.status === "fulfilled" && r.value).length;
     const failed = results.length - sent;
 
-    return new Response(
-      JSON.stringify({ sent, failed, total: subscriptions.length }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
-    );
+    return R.raw({ sent, failed, total: subscriptions.length, correlation_id: cid });
   } catch (err) {
-    console.error("send-push error:", err);
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    console.error("send-push error:", err, "cid=", cid);
+    return R.error(500, "internal_error", { message: (err as Error).message });
   }
 });
