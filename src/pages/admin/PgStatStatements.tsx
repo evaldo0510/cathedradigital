@@ -361,6 +361,9 @@ export default function PgStatStatements() {
       params.set('tableFilter', tableFilter);
       params.set('groupByFp', groupByFingerprint ? '1' : '0');
       params.set('pageSize', String(pageSize));
+      if (searchText) params.set('q', searchText); else params.delete('q');
+      params.set('sortKey', sortKey);
+      params.set('sortDir', sortDir);
       const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
       await navigator.clipboard.writeText(url);
       window.history.replaceState(null, '', url);
