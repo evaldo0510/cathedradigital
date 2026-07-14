@@ -20,14 +20,15 @@ echo "=== Concurrency test: N=$COUNT workers=$WORKERS rounds=$ROUNDS fail_ratio=
 
 psql -q -c "SELECT public._test_notif_concurrency_seed($COUNT, $FAIL_RATIO);" > /dev/null
 
+WORKER_SQL="SET LOCAL app.notif_test_mode = 'on'; SELECT public.pg_stat_notif_process_queue();"
+
 for r in $(seq 1 "$ROUNDS"); do
   echo "--- rodada $r/$ROUNDS: disparando $WORKERS workers em paralelo ---"
   pids=()
   for w in $(seq 1 "$WORKERS"); do
-    psql -q -c "SELECT public.pg_stat_notif_process_queue();" > /tmp/notif_worker_${w}.log 2>&1 &
+    psql -q -1 -c "$WORKER_SQL" > /tmp/notif_worker_${w}.log 2>&1 &
     pids+=($!)
   done
-  # aguarda todos
   fail=0
   for pid in "${pids[@]}"; do
     if ! wait "$pid"; then
@@ -36,12 +37,13 @@ for r in $(seq 1 "$ROUNDS"); do
   done
   if [ "$fail" -gt 0 ]; then
     echo "AVISO: $fail workers retornaram erro (esperado se lock/backoff)."
+    tail -n 3 /tmp/notif_worker_1.log || true
   fi
 done
 
 # passes finais sequenciais para drenar respostas de qualquer in_flight remanescente
 for i in 1 2 3; do
-  psql -q -c "SELECT public.pg_stat_notif_process_queue();" > /dev/null
+  psql -q -1 -c "$WORKER_SQL" > /dev/null
 done
 
 echo "=== Resultado ==="
