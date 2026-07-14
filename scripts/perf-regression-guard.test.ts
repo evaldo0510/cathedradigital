@@ -78,8 +78,10 @@ const BUDGETS: Budget[] = [
 ];
 
 async function explain(sql: string): Promise<any> {
-  // Import dinâmico para não exigir 'pg' quando o teste é skipado.
-  const { Client } = await import('pg');
+  // Import indireto para não fazer o Vite tentar resolver 'pg' no bundle
+  // quando o teste é pulado (ambiente sem PG_URL / sem driver instalado).
+  const dyn = new Function('m', 'return import(m)') as (m: string) => Promise<any>;
+  const { Client } = await dyn('pg');
   const client = new Client({ connectionString: PG_URL });
   await client.connect();
   try {
