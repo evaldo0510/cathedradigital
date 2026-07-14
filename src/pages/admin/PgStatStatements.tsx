@@ -363,7 +363,7 @@ export default function PgStatStatements() {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="outline" disabled={filtered.length === 0}>
+                <Button size="sm" variant="outline" disabled={displayed.length === 0}>
                   <Download className="h-4 w-4 mr-2" /> Exportar
                 </Button>
               </DropdownMenuTrigger>
@@ -373,6 +373,17 @@ export default function PgStatStatements() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <div className="flex items-center gap-2 ml-2 rounded-md border px-3 py-1.5">
+              <Switch
+                id="group-fp"
+                checked={groupByFingerprint}
+                onCheckedChange={setGroupByFingerprint}
+              />
+              <Label htmlFor="group-fp" className="text-xs cursor-pointer">
+                Agrupar por fingerprint
+              </Label>
+            </div>
+
             {statsSince && (
               <div className="text-xs text-muted-foreground ml-auto">
                 Janela desde <strong>{new Date(statsSince).toLocaleString('pt-BR')}</strong>
@@ -380,10 +391,11 @@ export default function PgStatStatements() {
                   <> ({(windowSeconds / 3600).toFixed(1)} h)</>
                 )}
                 {' · '}
-                Tempo acumulado (top {filtered.length}): <strong>{fmtMs(totalMsAll)}</strong>
+                Tempo acumulado (top {displayed.length}): <strong>{fmtMs(totalMsAll)}</strong>
               </div>
             )}
           </div>
+
 
           <p className="text-xs text-muted-foreground mt-3">
             <strong>Nota:</strong> <code>pg_stat_statements</code> é cumulativo desde o último reset —
