@@ -18,6 +18,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { BIBLE_CANON } from "../_shared/bibleCanon.ts";
 import { getOrCreateCorrelationId, correlationResponseHeader } from "../_shared/correlation.ts";
+import { makeResponder } from "../_shared/http-response.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -271,17 +272,18 @@ function toCsv(rows: Array<Record<string, unknown>>, headers: string[]): string 
 }
 
 serve(async (req) => {
-  // Sprint A / CAT-001 — correlation_id (ADR-009)
+  // Sprint A / CAT-001 CID + CAT-002 Wave 4b envelope estrito
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
-  // Shadow helper com cid — call sites `json(...)` inalterados
+  const R = makeResponder(cid);
+  // Shadow helper `json` para respostas de SUCESSO com CID no header
   const json = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), {
       status,
       headers: { ...corsHeaders, ...cidH, "Content-Type": "application/json" },
     });
 
-  if (req.method === "OPTIONS") return new Response("ok", { headers: { ...corsHeaders, ...cidH } });
+  if (req.method === "OPTIONS") return R.cors();
 
   try {
     const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -301,13 +303,13 @@ serve(async (req) => {
 
     if (!isCron) {
       const authHeader = req.headers.get('Authorization') ?? '';
-      if (!authHeader.startsWith('Bearer ')) return json({ error: 'Unauthorized', code: 'no_token' }, 401);
+      if (!authHeader.startsWith('Bearer ')) return R.error(401, 'unauthorized', { detail: 'no_token' });
       const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { global: { headers: { Authorization: authHeader } } });
       const { data: claims, error: cErr } = await userClient.auth.getClaims(authHeader.replace('Bearer ', ''));
-      if (cErr || !claims?.claims?.sub) return json({ error: 'Unauthorized', code: 'invalid_token' }, 401);
+      if (cErr || !claims?.claims?.sub) return R.error(401, 'unauthorized', { detail: 'invalid_token' });
       userId = claims.claims.sub as string;
       const { data: roleRow } = await admin.from('user_roles').select('role').eq('user_id', userId).eq('role', 'admin').maybeSingle();
-      if (!roleRow) return json({ error: 'Forbidden', code: 'not_admin' }, 403);
+      if (!roleRow) return R.error(403, 'forbidden', { detail: 'not_admin' });
     }
 
     // ----- run -----
@@ -319,7 +321,7 @@ serve(async (req) => {
     // ----- coverage ----- (matriz 73 livros: status, capítulos, versículos, inglês)
     if (action === 'coverage') {
       const { data, error } = await admin.rpc('bible_canonical_coverage');
-      if (error) return json({ error: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'coverage_rpc', detail: error.message });
       const rows = (data ?? []) as Array<{ status: string }>;
       const summary: Record<string, number> = {};
       for (const r of rows) summary[r.status] = (summary[r.status] ?? 0) + 1;
@@ -335,7 +337,7 @@ serve(async (req) => {
         .select('*')
         .order('started_at', { ascending: false })
         .limit(limit);
-      if (error) return json({ error: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'list_runs', detail: error.message });
       return json({ action, rows: data ?? [] });
     }
 
@@ -348,7 +350,7 @@ serve(async (req) => {
       if (params.finding_type) q = q.eq('finding_type', String(params.finding_type));
       if (params.severity) q = q.eq('severity', String(params.severity));
       const { data, error } = await q.limit(5000);
-      if (error) return json({ error: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'findings_query', detail: error.message });
       const rows = (data ?? []) as Array<Record<string, unknown>>;
 
       // Resumos
@@ -379,9 +381,9 @@ serve(async (req) => {
       return json({ action, run_id: runId ?? null, total: rows.length, summary: { by_type: byType, by_book: byBook }, rows });
     }
 
-    return json({ error: `unknown action: ${action}` }, 400);
+    return R.error(400, 'invalid_body', { detail: `unknown action: ${action}` });
   } catch (e) {
     console.error('[bible-canon-diagnose]', e);
-    return json({ error: (e as Error).message ?? 'Internal error' }, 500);
+    return R.error(500, 'internal_error', { detail: (e as Error).message ?? 'Internal error' });
   }
 });
