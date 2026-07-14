@@ -179,6 +179,65 @@ export default function PgStatStatements() {
     }
   };
 
+  const openExplain = (q: string) => {
+    setExplainQuery(q);
+    setExplainOpen(true);
+  };
+
+  const downloadBlob = (name: string, content: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const exportJSON = () => {
+    const payload = {
+      exported_at: new Date().toISOString(),
+      filters: { orderBy, limit, minCalls, opFilter, tableFilter },
+      window_started_at: statsSince ?? null,
+      rows: filtered,
+    };
+    downloadBlob(
+      `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
+      JSON.stringify(payload, null, 2),
+      'application/json',
+    );
+    toast.success(`Exportados ${filtered.length} registros (JSON)`);
+  };
+
+  const exportCSV = () => {
+    const escape = (v: unknown) => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = [
+      'rank','op','table','calls','mean_ms','max_ms','min_ms','stddev_ms',
+      'total_ms','pct_total','rows_returned','cache_hit','cache_read','query',
+    ];
+    const lines = [header.join(',')];
+    filtered.forEach((r, i) => {
+      const pct = totalMsAll > 0 ? (r.total_exec_ms / totalMsAll) * 100 : 0;
+      lines.push([
+        i + 1, inferOp(r.query), inferTable(r.query),
+        r.calls, r.mean_exec_ms.toFixed(3), r.max_exec_ms.toFixed(3),
+        r.min_exec_ms.toFixed(3), r.stddev_exec_ms.toFixed(3),
+        r.total_exec_ms.toFixed(3), pct.toFixed(2),
+        r.rows_returned, r.shared_blks_hit, r.shared_blks_read,
+        r.query.replace(/\s+/g, ' ').trim(),
+      ].map(escape).join(','));
+    });
+    downloadBlob(
+      `pg_stat_statements_${new Date().toISOString().replace(/[:.]/g, '-')}.csv`,
+      lines.join('\n'),
+      'text/csv;charset=utf-8',
+    );
+    toast.success(`Exportados ${filtered.length} registros (CSV)`);
+  };
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 space-y-4">
       <div>
