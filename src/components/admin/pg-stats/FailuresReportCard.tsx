@@ -279,7 +279,7 @@ export function FailuresReportCard() {
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <FileText className="h-4 w-4" />
-          Relatório de falhas — JSON / PDF
+          Relatório de falhas — JSON / CSV / PDF
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
