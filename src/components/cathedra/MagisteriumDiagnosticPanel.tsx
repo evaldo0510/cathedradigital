@@ -61,20 +61,7 @@ const exportDiagReport = (
   buffer: MagisteriumDiagEvent[],
   persisted: MagisteriumDiagEvent[],
 ) => {
-  const lastError = [...buffer, ...persisted].find((ev) =>
-    ['fetch_404', 'fetch_error', 'fetch_thin', 'cache_thin', 'final_error'].includes(ev.step),
-  ) ?? null;
-
-  const report = {
-    generatedAt: new Date().toISOString(),
-    route: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-    counts: { buffer: buffer.length, persisted: persisted.length },
-    lastError,
-    timeline: buffer,
-    persistedErrors: persisted,
-  };
-
+  const report = buildDiagReport(buffer, persisted);
   try {
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -87,6 +74,33 @@ const exportDiagReport = (
     setTimeout(() => URL.revokeObjectURL(url), 0);
   } catch {/* silent */}
 };
+
+const copyDiagReport = async (
+  buffer: MagisteriumDiagEvent[],
+  persisted: MagisteriumDiagEvent[],
+) => {
+  const report = buildDiagReport(buffer, persisted);
+  const text = JSON.stringify(report, null, 2);
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    toast.success('Relatório de diagnóstico copiado');
+  } catch {
+    toast.error('Falha ao copiar relatório');
+  }
+};
+
 
 const MagisteriumDiagnosticPanel: React.FC = () => {
   const location = useLocation();
