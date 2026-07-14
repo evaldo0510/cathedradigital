@@ -35,13 +35,16 @@ const PRESETS = [
 ];
 
 type ChannelKey = 'webhook' | 'slack';
+type Check = { name: string; ok: boolean; detail: string };
+type ValidationResult = { valid: boolean; reason: string; host?: string | null; checks?: Check[] };
+type FeedbackState = { kind: 'ok' | 'error'; msg: string; checks?: Check[]; host?: string };
 
 export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) {
   const [cfg, setCfg] = useState<Config | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [channelBusy, setChannelBusy] = useState<Record<ChannelKey, 'validate' | 'send' | null>>({ webhook: null, slack: null });
-  const [channelFeedback, setChannelFeedback] = useState<Record<ChannelKey, { kind: 'ok' | 'error'; msg: string } | null>>({ webhook: null, slack: null });
+  const [channelFeedback, setChannelFeedback] = useState<Record<ChannelKey, FeedbackState | null>>({ webhook: null, slack: null });
 
   const validateChannel = async (channel: ChannelKey) => {
     if (!cfg) return;
@@ -53,9 +56,17 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
         p_channel: channel, p_url: url ?? '',
       } as never);
       if (error) throw error;
-      const res = data as unknown as { valid: boolean; reason: string };
-      setChannelFeedback((s) => ({ ...s, [channel]: { kind: res.valid ? 'ok' : 'error', msg: res.reason } }));
-      if (res.valid) toast.success(`URL ${channel} válida`);
+      const res = data as unknown as ValidationResult;
+      setChannelFeedback((s) => ({
+        ...s,
+        [channel]: {
+          kind: res.valid ? 'ok' : 'error',
+          msg: res.reason,
+          checks: res.checks ?? [],
+          host: res.host ?? undefined,
+        },
+      }));
+      if (res.valid) toast.success(`URL ${channel} válida${res.host ? ` (${res.host})` : ''}`);
       else toast.error(`URL ${channel}: ${res.reason}`);
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -67,15 +78,34 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
   };
 
   const sendTest = async (channel: ChannelKey) => {
+    if (!cfg) return;
+    const url = channel === 'webhook' ? cfg.notify_webhook_url : cfg.notify_slack_webhook_url;
     setChannelBusy((s) => ({ ...s, [channel]: 'send' }));
+    setChannelFeedback((s) => ({ ...s, [channel]: null }));
     try {
+      // 1. valida URL antes de gastar rede
+      const { data: vData, error: vErr } = await supabase.rpc('admin_notif_validate_channel' as never, {
+        p_channel: channel, p_url: url ?? '',
+      } as never);
+      if (vErr) throw vErr;
+      const v = vData as unknown as ValidationResult;
+      if (!v.valid) {
+        setChannelFeedback((s) => ({ ...s, [channel]: { kind: 'error', msg: `URL inválida: ${v.reason}`, checks: v.checks ?? [] } }));
+        toast.error(`URL inválida: ${v.reason}`);
+        return;
+      }
+
+      // 2. dispara
       const { data, error } = await supabase.rpc('admin_notif_send_test' as never, { p_channel: channel } as never);
       if (error) throw error;
       const res = data as unknown as { notification_id: string };
-      toast.success(`Notificação de teste enfileirada (id ${res.notification_id.slice(0, 8)}). Veja o resultado no painel de notificações abaixo.`);
+      toast.success(`Notificação de teste enfileirada (id ${res.notification_id.slice(0, 8)}). Veja o resultado no painel abaixo.`);
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: 'ok', msg: `Teste enfileirado (id ${res.notification_id.slice(0, 8)})` } }));
       onChange?.();
     } catch (e) {
-      toast.error(`Envio de teste falhou: ${e instanceof Error ? e.message : String(e)}`);
+      const msg = e instanceof Error ? e.message : String(e);
+      setChannelFeedback((s) => ({ ...s, [channel]: { kind: 'error', msg } }));
+      toast.error(`Envio de teste falhou: ${msg}`);
     } finally {
       setChannelBusy((s) => ({ ...s, [channel]: null }));
     }
