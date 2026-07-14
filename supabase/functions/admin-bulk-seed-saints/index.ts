@@ -50,11 +50,11 @@ serve(async (req) => {
     );
     if (valid.length === 0) return json({ error: "bad_request", details: "no valid rows" }, 400);
 
-    // 3) Upsert via service role
-    const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+    // 3) Upsert via service role (reutiliza cliente admin)
     const { error: upErr, count } = await admin
       .from("saints")
       .upsert(valid as any[], { onConflict: "id", count: "exact" });
+
     if (upErr) return json({ error: "upsert_failed", details: upErr.message }, 500);
 
     return json({ ok: true, inserted_or_updated: count ?? valid.length, received: rows.length });
