@@ -259,7 +259,7 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-end gap-2">
           <Button
             size="sm" variant={onlyRegressions ? 'default' : 'outline'}
             onClick={() => setOnlyRegressions((v) => !v)}
@@ -269,9 +269,32 @@ export function IntervalCompareCard({ snapshots }: { snapshots: SnapshotHistoryR
           <Button size="sm" variant="outline" onClick={exportCsv} disabled={rows.length === 0}>
             <Download className="h-4 w-4 mr-2" /> CSV
           </Button>
-          <p className="text-xs text-muted-foreground ml-auto">
-            Regressão: média ≥ +{REGRESSION_MEAN_PCT}% ou p95 ≥ +{REGRESSION_P95_PCT}%
-          </p>
+          <Button size="sm" variant="outline" onClick={copyShareUrl}>
+            <Link2 className="h-4 w-4 mr-2" /> Copiar link
+          </Button>
+          <div className="flex items-center gap-2 ml-auto rounded-md border px-3 py-1.5">
+            <span className="text-xs text-muted-foreground">Limiares REG:</span>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="reg-mean" className="text-[11px]">média ≥</Label>
+              <Input
+                id="reg-mean" type="number" min={1} max={500}
+                className="h-7 w-16 text-xs"
+                value={regMean}
+                onChange={(e) => setRegMean(Math.max(1, Math.min(500, Number(e.target.value) || 0)))}
+              />
+              <span className="text-[11px]">%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="reg-p95" className="text-[11px]">p95 ≥</Label>
+              <Input
+                id="reg-p95" type="number" min={1} max={500}
+                className="h-7 w-16 text-xs"
+                value={regP95}
+                onChange={(e) => setRegP95(Math.max(1, Math.min(500, Number(e.target.value) || 0)))}
+              />
+              <span className="text-[11px]">%</span>
+            </div>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
