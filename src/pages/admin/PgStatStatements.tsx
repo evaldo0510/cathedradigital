@@ -101,17 +101,34 @@ const OP_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outl
 export default function PgStatStatements() {
   const { snapshots, loading: snapshotsLoading, reload: reloadSnapshots } = useSnapshotHistory(100);
   const [rows, setRows] = useState<StatRow[]>([]);
-  const [orderBy, setOrderBy] = useState<OrderBy>('total_exec_time');
-  const [limit, setLimit] = useState<number>(25);
-  const [minCalls, setMinCalls] = useState<number>(1);
-  const [tableFilter, setTableFilter] = useState<string>('');
-  const [opFilter, setOpFilter] = useState<'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE'>('ALL');
+  const [orderBy, setOrderBy] = useState<OrderBy>(() =>
+    getInitialFromUrl<OrderBy>('orderBy', 'total_exec_time',
+      (v) => (['total_exec_time','mean_exec_time','max_exec_time','calls'].includes(v) ? (v as OrderBy) : undefined)));
+  const [limit, setLimit] = useState<number>(() =>
+    getInitialFromUrl<number>('limit', 25, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.min(200, n) : undefined;
+    }));
+  const [minCalls, setMinCalls] = useState<number>(() =>
+    getInitialFromUrl<number>('minCalls', 1, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? n : undefined;
+    }));
+  const [tableFilter, setTableFilter] = useState<string>(() =>
+    getInitialFromUrl<string>('tableFilter', '', (v) => v));
+  const [opFilter, setOpFilter] = useState<'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE'>(() =>
+    getInitialFromUrl('opFilter', 'ALL' as const,
+      (v) => (['ALL','SELECT','INSERT','UPDATE','DELETE'].includes(v) ? v as typeof opFilter : undefined)));
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [explainOpen, setExplainOpen] = useState(false);
   const [explainQuery, setExplainQuery] = useState('');
-  const [groupByFingerprint, setGroupByFingerprint] = useState(false);
+  const [groupByFingerprint, setGroupByFingerprint] = useState(() =>
+    getInitialFromUrl<boolean>('groupByFp', false, (v) => v === '1' || v === 'true'));
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(() =>
+    getInitialFromUrl<number>('pageSize', 25, (v) => {
+      const n = Number(v); return Number.isFinite(n) && n > 0 ? Math.min(500, n) : undefined;
+    }));
 
   const currentView: PgStatViewConfig = {
     orderBy, limit, minCalls, opFilter, tableFilter,
