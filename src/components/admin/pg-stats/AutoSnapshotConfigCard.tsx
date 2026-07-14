@@ -18,6 +18,10 @@ interface Config {
   last_error_at: string | null;
   last_error_message: string | null;
   consecutive_failures: number;
+  notify_webhook_url: string | null;
+  notify_slack_webhook_url: string | null;
+  last_notified_at: string | null;
+  last_notification_error: string | null;
 }
 
 const PRESETS = [
