@@ -121,13 +121,13 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return R.cors();
 
   const authHeader = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
-  if (!authHeader) return json({ error: 'missing_authorization' }, 401);
+  if (!authHeader) return R.error(401, 'unauthorized', { detail: 'missing_authorization' });
 
   const user = await getUserFromJwt(authHeader);
-  if (!user) return json({ error: 'invalid_token' }, 401);
+  if (!user) return R.error(401, 'unauthorized', { detail: 'invalid_token' });
 
   const isAdmin = await assertAdmin(user.id);
-  if (!isAdmin) return json({ error: 'forbidden', detail: 'admin role required' }, 403);
+  if (!isAdmin) return R.error(403, 'forbidden', { detail: 'admin role required' });
 
   let body: any = {};
   try { body = await req.json(); } catch { /* noop */ }
@@ -167,7 +167,7 @@ serve(async (req) => {
       if (status === 'stale') q = q.lte('expires_at', nowIso);
 
       const { data, error, count } = await q;
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
       const now = Date.now();
       const rows = (data || []).map((r: any) => {
         const expMs = r.expires_at ? new Date(r.expires_at).getTime() : 0;
@@ -183,24 +183,24 @@ serve(async (req) => {
     if (action === 'purge') {
       if (body?.cache_key) {
         const { error } = await admin.from('bible_cache_l2').delete().eq('cache_key', body.cache_key);
-        if (error) return json({ error: 'purge_failed', detail: error.message }, 500);
+        if (error) return R.error(500, 'internal_error', { stage: 'purge_failed', detail: error.message });
         await audit({ ...actor, action: 'purge', target: body.cache_key, count: 1, succeeded: 1, failed: 0 });
         return json({ ok: true, purged: body.cache_key });
       }
       if (body?.prefix) {
         const { error, count } = await admin.from('bible_cache_l2').delete({ count: 'exact' }).like('cache_key', `${body.prefix}%`);
-        if (error) return json({ error: 'purge_failed', detail: error.message }, 500);
+        if (error) return R.error(500, 'internal_error', { stage: 'purge_failed', detail: error.message });
         await audit({ ...actor, action: 'purge', target: `prefix:${body.prefix}`, count: count ?? 0, succeeded: count ?? 0, failed: 0, details: { prefix: body.prefix } });
         return json({ ok: true, purged_count: count ?? 0 });
       }
-      return json({ error: 'missing cache_key or prefix' }, 400);
+      return R.error(400, 'invalid_body', { detail: 'missing cache_key or prefix' });
     }
 
     if (action === 'warm') {
       const items = Array.isArray(body?.items)
         ? body.items
         : (body?.abbrev && body?.chapter ? [{ abbrev: body.abbrev, chapter: Number(body.chapter) }] : []);
-      if (items.length === 0) return json({ error: 'missing items' }, 400);
+      if (items.length === 0) return R.error(400, 'invalid_body', { detail: 'missing items' });
       const results: any[] = [];
       for (const it of items.slice(0, 500)) {
         try { results.push(await warmOne(String(it.abbrev), Number(it.chapter))); }
@@ -221,12 +221,12 @@ serve(async (req) => {
       const to = Number(body?.chapter_to);
       const op = String(body?.op || 'warm');
       if (!abbrev || !Number.isFinite(from) || !Number.isFinite(to) || from < 1 || to < from || (to - from) > 200) {
-        return json({ error: 'invalid range', hint: 'abbrev required; 1 <= from <= to; (to-from) <= 200' }, 400);
+        return R.error(400, 'invalid_body', { detail: 'invalid range', hint: 'abbrev required; 1 <= from <= to; (to-from) <= 200' });
       }
       if (op === 'purge') {
         const keys = Array.from({ length: to - from + 1 }, (_, i) => `${abbrev}:${from + i}`);
         const { error, count } = await admin.from('bible_cache_l2').delete({ count: 'exact' }).in('cache_key', keys);
-        if (error) return json({ error: 'purge_failed', detail: error.message }, 500);
+        if (error) return R.error(500, 'internal_error', { stage: 'purge_failed', detail: error.message });
         await audit({ ...actor, action: 'bulk_range', target: `${abbrev}:${from}-${to}`, abbrev, chapter_from: from, chapter_to: to, count: keys.length, succeeded: count ?? 0, failed: 0, details: { op: 'purge' } });
         return json({ ok: true, op: 'purge', range: [from, to], purged_count: count ?? 0 });
       }
@@ -240,7 +240,7 @@ serve(async (req) => {
         await audit({ ...actor, action: 'bulk_range', target: `${abbrev}:${from}-${to}`, abbrev, chapter_from: from, chapter_to: to, count: results.length, succeeded: okCount, failed: results.length - okCount, details: { op: 'warm' } });
         return json({ ok: true, op: 'warm', range: [from, to], total: results.length, succeeded: okCount, failed: results.length - okCount, results });
       }
-      return json({ error: 'unknown op (warm|purge)' }, 400);
+      return R.error(400, 'invalid_body', { detail: 'unknown op (warm|purge)' });
     }
 
     if (action === 'metrics') {
@@ -253,7 +253,7 @@ serve(async (req) => {
       if (until) q = q.lte('bucket_start', until);
       if (body?.abbrev) q = q.eq('abbrev', String(body.abbrev));
       const { data, error } = await q;
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
       return json({ rows: data ?? [], since, until });
     }
 
@@ -265,7 +265,7 @@ serve(async (req) => {
         .gte('bucket_start', since);
       if (until) q = q.lte('bucket_start', until);
       const { data, error } = await q;
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
 
       const perBook = new Map<string, any>();
       const g = { hits: 0, misses: 0, stale: 0, total: 0, sum_ms: 0, bolls_calls: 0, bolls_failures: 0, p95_samples: [] as number[] };
@@ -310,9 +310,9 @@ serve(async (req) => {
     if (action === 'chapter_drilldown') {
       const abbrev = String(body?.abbrev || '');
       const hours = Math.min(Math.max(Number(body?.hours) || 24, 1), 24 * 14);
-      if (!abbrev) return json({ error: 'abbrev required' }, 400);
+      if (!abbrev) return R.error(400, 'invalid_body', { detail: 'abbrev required' });
       const { data, error } = await admin.rpc('bible_chapter_drilldown', { p_abbrev: abbrev, p_hours: hours });
-      if (error) return json({ error: 'rpc_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'rpc_failed', detail: error.message });
       return json({ rows: data ?? [], abbrev, hours });
     }
 
@@ -325,17 +325,17 @@ serve(async (req) => {
         .limit(limit);
       if (onlyOpen) q = q.is('resolved_at', null);
       const { data, error } = await q;
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
       return json({ rows: data ?? [] });
     }
 
     if (action === 'resolve_alert') {
-      if (!body?.id) return json({ error: 'missing id' }, 400);
+      if (!body?.id) return R.error(400, 'invalid_body', { detail: 'missing id' });
       const { error } = await admin.from('bible_cache_alerts').update({
         resolved_at: new Date().toISOString(),
         resolved_by: user.id,
       }).eq('id', body.id);
-      if (error) return json({ error: 'update_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'update_failed', detail: error.message });
       await audit({ ...actor, action: 'resolve_alert', target: String(body.id), count: 1, succeeded: 1, failed: 0 });
       return json({ ok: true });
     }
@@ -350,7 +350,7 @@ serve(async (req) => {
       if (body?.action_filter) q = q.eq('action', String(body.action_filter));
       if (body?.since) q = q.gte('created_at', new Date(String(body.since)).toISOString());
       const { data, error, count } = await q;
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
       return json({ rows: data ?? [], limit, offset, total: count ?? null });
     }
 
@@ -362,7 +362,7 @@ serve(async (req) => {
         .select('bucket_start, abbrev, hits, misses, stale, errors, total, sum_ms, max_ms, p95_ms, bolls_calls, bolls_failures, bolls_sum_ms')
         .gte('bucket_start', since)
         .order('bucket_start', { ascending: true });
-      if (error) return json({ error: 'query_failed', detail: error.message }, 500);
+      if (error) return R.error(500, 'internal_error', { stage: 'query_failed', detail: error.message });
       const filename = `bible-cache-metrics-${hours}h-${new Date().toISOString().slice(0, 10)}`;
       if (format === 'json') {
         return new Response(JSON.stringify({ since, hours, rows: data ?? [] }, null, 2), {
@@ -393,7 +393,7 @@ serve(async (req) => {
       const b = body?.b as { since?: string; until?: string } | undefined;
       const abbrev = body?.abbrev ? String(body.abbrev) : null;
       if (!a?.since || !a?.until || !b?.since || !b?.until) {
-        return json({ error: 'invalid_windows', hint: 'a/b must each include since and until (ISO)' }, 400);
+        return R.error(400, 'invalid_body', { detail: 'invalid_windows', hint: 'a/b must each include since and until (ISO)' });
       }
       const aSince = new Date(a.since).toISOString();
       const aUntil = new Date(a.until).toISOString();
@@ -480,9 +480,9 @@ serve(async (req) => {
       return json({ a: { ...aBooks, since: aSince, until: aUntil }, b: { ...bBooks, since: bSince, until: bUntil }, abbrev, chapters });
     }
 
-    return json({ error: 'unknown_action', action }, 400);
+    return R.error(400, 'invalid_body', { detail: 'unknown_action', action });
   } catch (e: any) {
     console.error('[bible-cache-admin] error:', e);
-    return json({ error: 'internal', detail: String(e?.message || e) }, 500);
+    return R.error(500, 'internal_error', { detail: String(e?.message || e) });
   }
 });
