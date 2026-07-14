@@ -306,9 +306,23 @@ export function AutoSnapshotConfigCard({ onChange }: { onChange?: () => void }) 
                         </Button>
                       </div>
                       {fb && (
-                        <p className={`text-[11px] ${fb.kind === 'ok' ? 'text-primary' : 'text-destructive'}`}>
-                          {fb.msg}
-                        </p>
+                        <div className={`text-[11px] rounded border p-2 space-y-1 ${fb.kind === 'ok' ? 'border-primary/30 bg-primary/5 text-primary' : 'border-destructive/30 bg-destructive/5 text-destructive'}`}>
+                          <p className="font-medium">
+                            {fb.kind === 'ok' ? '✓' : '✗'} {fb.msg}
+                            {fb.host && <span className="opacity-70"> · {fb.host}</span>}
+                          </p>
+                          {fb.checks && fb.checks.length > 0 && (
+                            <ul className="space-y-0.5 pl-1">
+                              {fb.checks.map((c) => (
+                                <li key={c.name} className="flex gap-1.5">
+                                  <span className={c.ok ? 'text-primary' : 'text-destructive'}>{c.ok ? '✓' : '✗'}</span>
+                                  <span className="font-mono opacity-80">{c.name}</span>
+                                  <span className="opacity-70">— {c.detail}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
                       )}
                     </div>
                   );
