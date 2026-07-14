@@ -1,0 +1,225 @@
+[
+    {
+        "before": {
+            "notification": {
+                "status": "failed",
+                "channel": "webhook",
+                "attempts": 4,
+                "target_url": "https://test.local/snap1",
+                "max_attempts": 5,
+                "has_last_error": true,
+                "last_status_code": 500,
+                "succeeded_at_set": false,
+                "has_last_request_id": true,
+                "next_attempt_in_future": true
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "scenario": "S1_failed_reset",
+        "after_reset": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 0,
+                "target_url": "https://test.local/snap1",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        }
+    },
+    {
+        "before": {
+            "notification": {
+                "status": "failed",
+                "channel": "webhook",
+                "attempts": 3,
+                "target_url": "https://test.local/snap2",
+                "max_attempts": 5,
+                "has_last_error": true,
+                "last_status_code": 500,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": true
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "scenario": "S2_failed_reset_success",
+        "after_reset": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 0,
+                "target_url": "https://test.local/snap2",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "after_worker": {
+            "notification": {
+                "status": "succeeded",
+                "channel": "webhook",
+                "attempts": 1,
+                "target_url": "https://test.local/snap2",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": 200,
+                "succeeded_at_set": true,
+                "has_last_request_id": true,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 2,
+            "attempts_by_event": {
+                "succeeded": 1,
+                "dispatched": 1
+            }
+        }
+    },
+    {
+        "before": {
+            "notification": {
+                "status": "failed",
+                "channel": "webhook",
+                "attempts": 3,
+                "target_url": "https://test.local/snap3",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": true
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "scenario": "S3_failed_reset_retry",
+        "after_reset": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 0,
+                "target_url": "https://test.local/snap3",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "after_worker": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 1,
+                "target_url": "https://test.local/snap3",
+                "max_attempts": 5,
+                "has_last_error": true,
+                "last_status_code": 500,
+                "succeeded_at_set": false,
+                "has_last_request_id": true,
+                "next_attempt_in_future": true
+            },
+            "attempts_count": 2,
+            "attempts_by_event": {
+                "dispatched": 1,
+                "retry_scheduled": 1
+            }
+        }
+    },
+    {
+        "before": {
+            "notification": {
+                "status": "in_flight",
+                "channel": "webhook",
+                "attempts": 2,
+                "target_url": "https://test.local/snap4",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": true
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "scenario": "S4_in_flight_reset_preserves_attempts",
+        "after_reset": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 2,
+                "target_url": "https://test.local/snap4",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": false,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        }
+    },
+    {
+        "before": {
+            "notification": {
+                "status": "succeeded",
+                "channel": "webhook",
+                "attempts": 1,
+                "target_url": "https://test.local/snap5",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": true,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        },
+        "scenario": "S5_succeeded_reset",
+        "after_reset": {
+            "notification": {
+                "status": "pending",
+                "channel": "webhook",
+                "attempts": 1,
+                "target_url": "https://test.local/snap5",
+                "max_attempts": 5,
+                "has_last_error": false,
+                "last_status_code": null,
+                "succeeded_at_set": true,
+                "has_last_request_id": false,
+                "next_attempt_in_future": false
+            },
+            "attempts_count": 0,
+            "attempts_by_event": {
+            }
+        }
+    }
+]
