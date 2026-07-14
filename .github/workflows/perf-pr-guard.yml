@@ -60,14 +60,20 @@ jobs:
       - name: Diff vs baseline versionado (staging)
         if: steps.guard.outputs.skip == 'false'
         id: diff
+        continue-on-error: true
         run: |
           bunx tsx scripts/perf-baseline-diff-report.ts \
             --baseline=docs/perf-baselines/staging/latest.json \
             --current=.perf/current-baseline.json \
-            --out=.perf/diff.md
+            --out=.perf/diff.md \
+            --json=.perf/diff.json \
+            --annotations=.perf/annotations.json \
+            --source-hint=docs/perf-baselines/README.md
 
       - name: Benchmark rápido (perfil CI)
         if: steps.guard.outputs.skip == 'false'
+        id: bench
+        continue-on-error: true
         run: |
           bunx tsx scripts/perf-benchmark-app-metrics.ts \
             --env=ci \
@@ -75,7 +81,34 @@ jobs:
             --baseline=docs/perf-baselines/ci/bench-latest.json \
             --out=.perf/bench.json
 
-      - name: Comentar no PR
+      - name: Publicar Check com annotations
+        if: steps.guard.outputs.skip == 'false' && always() && hashFiles('.perf/annotations.json') != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const annotations = JSON.parse(fs.readFileSync('.perf/annotations.json', 'utf8'));
+            const errors = annotations.filter(a => a.annotation_level === 'failure').length;
+            const warnings = annotations.filter(a => a.annotation_level === 'warning').length;
+            const conclusion = errors > 0 ? 'failure' : (warnings > 0 ? 'neutral' : 'success');
+            // GitHub Checks API aceita no máximo 50 annotations por chamada.
+            const chunk = annotations.slice(0, 50);
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'perf-pr-guard: query regressions',
+              head_sha: context.payload.pull_request?.head?.sha ?? context.sha,
+              status: 'completed',
+              conclusion,
+              output: {
+                title: `${errors} regressão(ões), ${warnings} aviso(s)`,
+                summary: fs.readFileSync('.perf/diff.md', 'utf8').slice(0, 60000),
+                annotations: chunk,
+              },
+            });
+
+      - name: Comentar no PR (sticky)
         if: steps.guard.outputs.skip == 'false' && always()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -89,3 +122,9 @@ jobs:
           name: perf-pr-guard-${{ github.run_id }}
           path: .perf/
           retention-days: 14
+
+      - name: Bloquear merge em caso de regressão
+        if: steps.guard.outputs.skip == 'false' && (steps.diff.outcome == 'failure' || steps.bench.outcome == 'failure')
+        run: |
+          echo "::error::perf-pr-guard detectou regressão bloqueante (ver Check 'perf-pr-guard: query regressions')."
+          exit 1
