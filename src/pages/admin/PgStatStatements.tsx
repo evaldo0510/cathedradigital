@@ -17,6 +17,7 @@ import { SavedViewsBar, type PgStatViewConfig } from '@/components/admin/pg-stat
 import { SnapshotsPanel } from '@/components/admin/pg-stats/SnapshotsPanel';
 import { ExplainDialog } from '@/components/admin/pg-stats/ExplainDialog';
 import { AutoSnapshotConfigCard } from '@/components/admin/pg-stats/AutoSnapshotConfigCard';
+import { PendingNotificationsPanel } from '@/components/admin/pg-stats/PendingNotificationsPanel';
 import { fingerprintQuery, shortFingerprint } from '@/components/admin/pg-stats/queryFingerprint';
 import { useSnapshotHistory } from '@/components/admin/pg-stats/useSnapshotHistory';
 import { FingerprintDrilldown } from '@/components/admin/pg-stats/FingerprintDrilldown';
@@ -701,6 +702,9 @@ export default function PgStatStatements() {
       </Card>
 
       <AutoSnapshotConfigCard />
+
+      <PendingNotificationsPanel />
+
 
       <SnapshotsPanel snapshots={snapshots} loading={snapshotsLoading} reload={reloadSnapshots} />
 
