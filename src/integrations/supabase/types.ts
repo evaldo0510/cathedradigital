@@ -5485,6 +5485,10 @@ export type Database = {
         Args: { p_channel: string; p_url: string }
         Returns: Json
       }
+      admin_notif_validate_payload: {
+        Args: { p_channel: string; p_payload: Json }
+        Returns: Json
+      }
       admin_pcl_kpis: {
         Args: never
         Returns: {
