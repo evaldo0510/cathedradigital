@@ -1,0 +1,21 @@
+[
+  {
+    "_comment": "Arquivo de seed para a tabela `saints`. Preencha com dados de fonte oficial (Martirológio Romano, CNBB, vatican.va). NÃO gerar via IA — conteúdo devocional exige revisão. Rode `bun run scripts/seed-saints.ts` para importar.",
+    "_schema": {
+      "id": "string, kebab-case único (ex: 'sao-camilo-de-lellis')",
+      "name": "string obrigatório",
+      "title": "string opcional",
+      "feast_day": "string opcional legível (ex: '14 de Julho')",
+      "feast_month": "integer 1..12 obrigatório",
+      "feast_day_num": "integer 1..31 obrigatório",
+      "bio": "string curta",
+      "full_bio": "string longa",
+      "category": "string",
+      "prayer": "string",
+      "virtues": "string[]",
+      "patron_of": "string[]",
+      "quotes": "string[]",
+      "image": "string url opcional"
+    }
+  }
+]

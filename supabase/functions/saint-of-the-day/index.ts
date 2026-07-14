@@ -8,6 +8,10 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
 const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+function ordinal(month: number, day: number) {
+  return month * 100 + day;
+}
+
 serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const R = makeResponder(cid);
@@ -20,6 +24,7 @@ serve(async (req) => {
     const day = now.getDate();
     const month = now.getMonth() + 1;
 
+    // 1) Tentativa exata para hoje
     const { data: dbSaint, error: dbError } = await supabase
       .from('saints')
       .select('*')
@@ -29,18 +34,50 @@ serve(async (req) => {
       .maybeSingle();
 
     if (dbSaint && !dbError) {
-      // Sucesso: mantém payload de domínio (flat) — contrato pré-existente
       return R.raw({
         ...dbSaint,
         description: dbSaint.bio,
         fullBio: dbSaint.full_bio,
         source: "Cathedra Database",
+        is_fallback: false,
         correlation_id: cid,
       });
     }
 
-    // Sem registro — envelope de erro estrito
-    return R.error(404, 'not_found', { message: 'Nenhum santo cadastrado localmente para esta data.' });
+    // 2) Fallback: próximo santo do calendário (mesmo mês em diante, com wrap para janeiro)
+    const { data: all, error: allErr } = await supabase
+      .from('saints')
+      .select('*')
+      .not('feast_month', 'is', null)
+      .not('feast_day_num', 'is', null);
+
+    if (!allErr && all && all.length > 0) {
+      const todayOrd = ordinal(month, day);
+      // score: dias até a próxima festa (0..365)
+      const withScore = all.map((s: any) => {
+        const so = ordinal(s.feast_month, s.feast_day_num);
+        const delta = so > todayOrd ? so - todayOrd : so - todayOrd + 1231;
+        return { s, delta };
+      });
+      withScore.sort((a, b) => a.delta - b.delta);
+      const next = withScore[0].s;
+
+      log.info?.('fallback_next_saint', { requested: { month, day }, chosen: { m: next.feast_month, d: next.feast_day_num } });
+
+      return R.raw({
+        ...next,
+        description: next.bio,
+        fullBio: next.full_bio,
+        source: "Cathedra Database",
+        is_fallback: true,
+        fallback_reason: "no_saint_for_today",
+        requested_date: { month, day },
+        correlation_id: cid,
+      });
+    }
+
+    // 3) Só falha se a tabela estiver totalmente vazia
+    return R.error(404, 'not_found', { message: 'Base de santos vazia.' });
   } catch (error) {
     log.error('unhandled', { err: String(error) });
     return R.error(500, 'internal_error', { message: 'Erro interno.' });
