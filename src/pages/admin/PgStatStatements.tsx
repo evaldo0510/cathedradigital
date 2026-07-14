@@ -720,6 +720,37 @@ export default function PgStatStatements() {
               </TableBody>
             </Table>
           </div>
+          {displayed.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 border-t px-3 py-2 text-xs">
+              <span className="text-muted-foreground">
+                Mostrando {pageStart + 1}–{Math.min(pageEnd, displayed.length)} de {displayed.length}
+              </span>
+              <div className="flex items-center gap-1 ml-2">
+                <Label htmlFor="page-size" className="text-xs">Por página</Label>
+                <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+                  <SelectTrigger id="page-size" className="h-7 w-20 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[10, 25, 50, 100, 200, 500].map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-1 ml-auto">
+                <Button size="sm" variant="outline" className="h-7 px-2"
+                  disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                  <ChevronLeft className="h-3 w-3" />
+                </Button>
+                <span className="px-2">Página {page} / {totalPages}</span>
+                <Button size="sm" variant="outline" className="h-7 px-2"
+                  disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+                  <ChevronRight className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
