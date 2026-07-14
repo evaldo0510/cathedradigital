@@ -703,6 +703,9 @@ export default function PgStatStatements() {
 
       <AutoSnapshotConfigCard />
 
+      <PendingNotificationsPanel />
+
+
       <SnapshotsPanel snapshots={snapshots} loading={snapshotsLoading} reload={reloadSnapshots} />
 
 
