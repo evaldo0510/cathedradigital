@@ -1,6 +1,6 @@
 # Matriz — ErrorEnvelopeSchema.strict() nas Edge Functions
 
-_Documento vivo. Última atualização: 2026-07-13 — Fase A2.b Wave 1._
+_Documento vivo. Última atualização: 2026-07-14 — Fase A2.b Wave 2._
 
 ## Contrato canônico
 
