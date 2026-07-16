@@ -139,6 +139,7 @@ const BibleTranslationsReadiness = lazy(() => import('./pages/admin/BibleTransla
 const SaintsAdmin = lazy(() => import('./pages/admin/SaintsAdmin'));
 const PgStatStatements = lazy(() => import('./pages/admin/PgStatStatements'));
 const AxeContrastReport = lazy(() => import('./pages/admin/AxeContrastReport'));
+const BibleImportMissing = lazy(() => import('./pages/admin/BibleImportMissing'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
