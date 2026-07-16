@@ -84,20 +84,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
 
-// Helper for Daily Reading
-const getDailyReading = () => {
-  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).filter(b => b.name !== 'Abdias' || b.chapters === 1);
 
-  const date = new Date();
-  const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
-  
-  // Pick a book and chapter deterministically
-  const bookIndex = dayOfYear % allBooks.length;
-  const book = allBooks[bookIndex];
-  const chapter = (dayOfYear % book.chapters) + 1;
-  
-  return { book, chapter };
-};
 
 
 const Bible: React.FC = () => {
