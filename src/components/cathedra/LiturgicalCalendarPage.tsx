@@ -343,8 +343,8 @@ const LiturgicalCalendarPage: React.FC = () => {
         <div className="lg:col-span-2 bg-card border border-border rounded-premium p-spacing-lg">
           {/* Month navigation */}
           <div className="flex items-center justify-between mb-spacing-lg">
-            <Button onClick={() => navigateMonth(-1)} className="p-spacing-xs rounded-premium-full bg-muted hover:bg-primary/10 transition-all">
-              <Icons.ArrowDown className="w-spacing-md h-spacing-md rotate-90 text-foreground" />
+            <Button onClick={() => navigateMonth(-1)} aria-label="Mês anterior" className="p-spacing-xs rounded-premium-full bg-muted hover:bg-primary/10 transition-all">
+              <Icons.ArrowDown className="w-spacing-md h-spacing-md rotate-90 text-foreground" aria-hidden="true" />
             </Button>
             <div className="text-center">
               <h2 className="text-premium-xl font-serif font-bold text-foreground">{MONTH_NAMES[month]} {year}</h2>
@@ -354,8 +354,8 @@ const LiturgicalCalendarPage: React.FC = () => {
                 </Button>
               )}
             </div>
-            <Button onClick={() => navigateMonth(1)} className="p-spacing-xs rounded-premium-full bg-muted hover:bg-primary/10 transition-all">
-              <Icons.ArrowDown className="w-spacing-md h-spacing-md -rotate-90 text-foreground" />
+            <Button onClick={() => navigateMonth(1)} aria-label="Próximo mês" className="p-spacing-xs rounded-premium-full bg-muted hover:bg-primary/10 transition-all">
+              <Icons.ArrowDown className="w-spacing-md h-spacing-md -rotate-90 text-foreground" aria-hidden="true" />
             </Button>
           </div>
 
