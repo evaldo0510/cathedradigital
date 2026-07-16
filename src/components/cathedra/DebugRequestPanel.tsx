@@ -109,13 +109,13 @@ function installInterceptor() {
         try {
           const clone = res.clone();
           const txt = await clone.text();
-          bodyPreview = txt.slice(0, 400);
+          bodyPreview = redactString(txt).slice(0, 400);
         } catch {/* ignore */}
         push({
           id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
           timestamp: Date.now(),
           method,
-          url,
+          url: redactFullUrl(url),
           status: res.status,
           statusText: res.statusText,
           durationMs: Math.round(performance.now() - start),
@@ -128,9 +128,9 @@ function installInterceptor() {
         id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
         timestamp: Date.now(),
         method,
-        url,
+        url: redactFullUrl(url),
         status: 'network',
-        statusText: err?.message || 'Network error',
+        statusText: redactString(err?.message || 'Network error'),
         durationMs: Math.round(performance.now() - start),
       });
       throw err;
