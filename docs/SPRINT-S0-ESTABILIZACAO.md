@@ -264,7 +264,73 @@ Responsável pelo registro:    <preencher>
 Data:                         <preencher>
 ```
 
+### 6.4 Matriz de evidências por caso de teste de assinatura
+
+**Objetivo:** deixar explícito, para cada cenário de validação HMAC, quais campos de §6.1 e §6.2 são obrigatórios e onde coletar cada evidência. Usar esta matriz como mapa de preenchimento — não criar campos fora dos listados.
+
+| Caso de teste | Cenário | Como produzir em sandbox | Campos obrigatórios em §6.1 | Campos obrigatórios em §6.2 | Evidências técnicas obrigatórias | Onde coletar |
+| ------------- | ------- | ------------------------ | --------------------------- | --------------------------- | ---------------------------------- | ------------ |
+| **CT-SIG-01** | Assinatura válida + timestamp dentro da janela (sucesso) | Pagamento aprovado com cartão de teste MP; event source = painel MP | Data/hora, `external_reference`, Evento MP, **Função receptora** (pelo menos um checkbox), App ID sandbox, Executor | ID interno `EV-<NNN>`, Ambiente = `sandbox`, Edge function receptora, Fonte da atribuição, Status HTTP = `200`/`202`, Latência, Linha em `webhook_logs`, `payment_id`, Arquivo do payload mascarado, Hash SHA-256, Header `x-signature` mascarado, Assinatura HMAC válida? = `sim`, Janela de timestamp OK? = `sim`, Idempotência respeitada? = `sim` | (a) Log da função receptora mostrando POST `payment.created`/`payment.updated`; (b) Payload JSON mascarado salvo em `docs/evidencias/mp-sandbox/EV-<NNN>.json` com hash; (c) Header `x-signature` completo (mascarado) no log; (d) Linha correspondente em `public.webhook_logs` | Logs edge function + tabela `webhook_logs` + painel MP (sandbox) |
+| **CT-SIG-02** | Assinatura inválida (secret errado ou payload alterado) | Reenviar o payload de CT-SIG-01 com `x-signature` de outro secret, ou modificar um byte do corpo antes de reenviar via ferramenta manual (curl/simulador) | Data/hora, `external_reference`, Evento MP, **Função receptora**, App ID sandbox, Executor, Observações com classificação | ID interno `EV-<NNN>`, Ambiente = `sandbox`, Edge function receptora, Fonte da atribuição, Status HTTP = `401` (esperado), Latência, Arquivo do payload mascarado, Hash SHA-256, Header `x-signature` mascarado, Assinatura HMAC válida? = `não`, Janela de timestamp OK? = `n-a` ou `sim`, Idempotência respeitada? = `n-a`, Observações com mensagem de erro | (a) Log da função receptora mostrando `signature_invalid` ou `401`; (b) Payload mascarado do evento que falhou; (c) Header `x-signature` usado no teste (mascarado); (d) Print/anotação do método de injeção (curl/simulador) | Logs edge function + ferramenta manual de reenvio |
+| **CT-SIG-03** | Timestamp fora da janela (replay/expirado) | Reenviar payload válido de CT-SIG-01 com `ts` do `x-signature` ajustado para +10 min no futuro ou -10 min no passado | Data/hora, `external_reference`, Evento MP, **Função receptora**, App ID sandbox, Executor, Observações com classificação | ID interno `EV-<NNN>`, Ambiente = `sandbox`, Edge function receptora, Fonte da atribuição, Status HTTP = `403` (esperado), Latência, Arquivo do payload mascarado, Hash SHA-256, Header `x-signature` mascarado com `ts=<timestamp manipulado>`, Assinatura HMAC válida? = `n-a` ou `sim` se HMAC ainda bate, Janela de timestamp OK? = `não`, Idempotência respeitada? = `n-a`, Observações com mensagem de erro | (a) Log da função receptora mostrando `timestamp_out_of_window` ou `403`; (b) Payload mascarado; (c) Header `x-signature` com `ts` manipulado (mascarado); (d) Comparação entre `ts` e horário do log | Logs edge function + ferramenta manual de reenvio |
+
+**Regras de uso da matriz:**
+- Cada linha de §6.1 e cada bloco `EV-<NNN>` de §6.2 deve se encaixar em **um** dos três casos de teste. Marcar o caso no campo `Observações` (ex.: `[CT-SIG-01]`).
+- Para CT-SIG-02 e CT-SIG-03, o pagamento base deve ter sido gerado em sandbox (mesmo `external_reference` de CT-SIG-01) — nunca usar evento de produção.
+- Se um cenário não puder ser reproduzido (ex.: painel MP não permite simular notificação), marcar `n-a` no campo correspondente e explicar em `Observações`. **Não fabricar status HTTP.**
+- A evidência mínima para considerar um caso "testado" é: (1) log da edge function, (2) payload mascarado com hash, (3) header `x-signature` mascarado, (4) status HTTP observado.
+
+### 6.5 Critérios objetivos de aprovação e reprovação por caso de teste
+
+**Objetivo:** definir, para cada cenário de §6.4, quando o teste é aprovado (PASS) ou reprovado (FAIL), e quais valores/condições em §6.1 e §6.2 são esperados. Usar como gatilho para a conclusão do teste em §6.1.
+
+#### CT-SIG-01 — Assinatura válida + timestamp dentro da janela
+
+| Critério | Aprovação (PASS) | Reprovação (FAIL) | Campo(s) de §6.1 / §6.2 que comprovam |
+| ---------- | ---------------- | ------------------- | -------------------------------------- |
+| Status HTTP esperado | `200` ou `202` | `4xx` ou `5xx` | §6.1 → coluna "Função receptora" (status implícito); §6.2 → `Status HTTP retornado` |
+| Assinatura HMAC | Handler loga confirmação de assinatura válida (`signature_ok` ou similar) | Handler loga `signature_invalid`, `missing_signature` ou `secret_not_set` | §6.2 → `Assinatura HMAC válida?` = `sim` |
+| Timestamp | Handler loga timestamp dentro da janela (`timestamp_ok` ou similar) | Handler loga `timestamp_out_of_window` | §6.2 → `Janela de timestamp OK?` = `sim` |
+| Correlação | `external_reference` do webhook bate com o da preferência gerada em sandbox | `external_reference` ausente ou divergente | §6.1 → `external_reference`; §6.2 → `external_reference` |
+| Persistência | Evento registrado em `public.webhook_logs` (quando a função for `mercado-pago-webhook`) | Nenhuma linha em `webhook_logs` para o evento | §6.1 → coluna "Linha em `webhook_logs`?"; §6.2 → `Linha em webhook_logs?` |
+| Idempotência | Reenvio do mesmo evento não cria duplicata funcional | Segunda entrada idêntica em `webhook_logs` sem tratamento | §6.2 → `Idempotência respeitada?` = `sim` |
+| **Veredicto do caso** | Todos os critérios acima PASS | Qualquer um dos critérios acima FAIL | Preencher "Conclusão do teste" em §6.1 |
+
+#### CT-SIG-02 — Assinatura inválida
+
+| Critério | Aprovação (PASS) | Reprovação (FAIL) | Campo(s) de §6.1 / §6.2 que comprovam |
+| ---------- | ---------------- | ------------------- | -------------------------------------- |
+| Status HTTP esperado | `401 Unauthorized` | `200`, `202`, `400`, `5xx` ou qualquer status que não rejeite a assinatura inválida | §6.2 → `Status HTTP retornado` = `401` |
+| Mensagem de erro | Log mostra `signature_invalid` ou equivalente | Log não identifica a falha de assinatura (ex.: erro genérico `500`) | §6.2 → `Observações` com mensagem de erro |
+| Rejeição precoce | Handler rejeita antes de processar/executar lógica de negócio | Handler processa o evento apesar da assinatura inválida | §6.1 → coluna "Linha em `webhook_logs`?" deve ser `não`; §6.2 → `Observações` |
+| Correlação | `external_reference` do payload bate com o evento base de CT-SIG-01 | `external_reference` ausente ou de outro pagamento | §6.2 → `external_reference` |
+| **Veredicto do caso** | Todos os critérios acima PASS | Qualquer um dos critérios acima FAIL | Preencher "Conclusão do teste" em §6.1 |
+
+#### CT-SIG-03 — Timestamp fora da janela
+
+| Critério | Aprovação (PASS) | Reprovação (FAIL) | Campo(s) de §6.1 / §6.2 que comprovam |
+| ---------- | ---------------- | ------------------- | -------------------------------------- |
+| Status HTTP esperado | `403 Forbidden` | `200`, `202`, `400`, `5xx` ou qualquer status que não rejeite o timestamp fora da janela | §6.2 → `Status HTTP retornado` = `403` |
+| Mensagem de erro | Log mostra `timestamp_out_of_window` ou equivalente | Log não identifica a falha de timestamp | §6.2 → `Observações` com mensagem de erro |
+| Janela de tolerância | Handler rejeita `ts` fora do intervalo configurado | Handler aceita `ts` muito distante do horário atual | §6.2 → `Janela de timestamp OK?` = `não` |
+| Correlação | `external_reference` do payload bate com o evento base de CT-SIG-01 | `external_reference` ausente ou de outro pagamento | §6.2 → `external_reference` |
+| **Veredicto do caso** | Todos os critérios acima PASS | Qualquer um dos critérios acima FAIL | Preencher "Conclusão do teste" em §6.1 |
+
+#### Critérios globais de aprovação da seção 6 (sandbox)
+
+Para que o item "Recebimento de webhook MP (sandbox)" da tabela de Smoke Tests seja considerado **aprovado**, todos os itens abaixo devem ser verdadeiros:
+
+1. **CT-SIG-01:** pelo menos 1 evento com assinatura válida aprovado (status `200`/`202`, HMAC `sim`, timestamp `sim`).
+2. **CT-SIG-02:** assinatura inválida rejeitada com `401` (ou evidência de `n-a` justificada se o painel MP não permitir simular).
+3. **CT-SIG-03:** timestamp fora da janela rejeitado com `403` (ou evidência de `n-a` justificada se o painel MP não permitir simular).
+4. **Mínimo de evidências:** no mínimo 3 eventos documentados em §6.1 e §6.2, cobrindo pelo menos CT-SIG-01 + um dos casos de falha (CT-SIG-02 ou CT-SIG-03).
+5. **Nenhuma evidência de produção:** todos os eventos registrados têm `Ambiente` = `sandbox`.
+6. **Nenhuma alteração de código/configuração:** nenhum commit funcional durante o teste.
+
+Se algum dos critérios globais falhar, o teste está **reprovado** e deve ser registrado como incidente em §6.3 ou como backlog em `docs/adrs/ADR-STATUS.md` (ADR-015), sem quebrar o congelamento da S0.
+
 ## 7. Backup
+
 
 ### 7.1 Checklist
 
