@@ -335,12 +335,33 @@ Deno.serve(async (req) => {
     if (cErr || !claims?.claims?.sub) return json({ error: 'invalid_token' }, 401);
     const userId = claims.claims.sub as string;
     const { data: roleRow } = await admin.from('user_roles').select('role').eq('user_id', userId).eq('role', 'admin').maybeSingle();
-    if (!roleRow) return json({ error: 'forbidden' }, 403);
+    if (!roleRow) {
+      return json({ error: 'forbidden', message: 'Apenas administradores podem operar a importação da Bíblia.' }, 403);
+    }
 
     const url = new URL(req.url);
-    const params: any = req.method === 'POST' ? (await req.json().catch(() => ({}))) : Object.fromEntries(url.searchParams);
-    const action = params.action ?? (req.method === 'POST' ? 'start' : 'status');
-    const translation = (params.translation as string) || 'NVIPT';
+    const rawParams: any = req.method === 'POST' ? (await req.json().catch(() => ({}))) : Object.fromEntries(url.searchParams);
+    const action = rawParams.action ?? (req.method === 'POST' ? 'start' : 'status');
+
+    // Ações que precisam de tradução válida
+    let translation = 'NVIPT';
+    if (['validate', 'dry_run', 'preview', 'start'].includes(action)) {
+      try {
+        translation = normalizeTranslation(rawParams.translation ?? 'NVIPT');
+      } catch (e) {
+        return json({ error: 'invalid_translation', message: (e as Error).message }, 400);
+      }
+    }
+
+    if (action === 'validate') {
+      const result = await validateSource(translation);
+      return json(result, result.ok ? 200 : 422);
+    }
+
+    if (action === 'dry_run') {
+      const result = await dryRun(admin, translation);
+      return json(result);
+    }
 
     if (action === 'preview') {
       const plan = await computeMissing(admin, translation);
@@ -353,27 +374,61 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'status') {
-      const jobId = params.job_id as string;
+      const jobId = rawParams.job_id as string;
       if (!jobId) return json({ error: 'missing_job_id' }, 400);
       const { data, error } = await admin.from('bible_import_jobs').select('*').eq('id', jobId).maybeSingle();
       if (error) return json({ error: error.message }, 500);
       return json({ job: data });
     }
 
+    if (action === 'list_jobs') {
+      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 100);
+      const { data, error } = await admin
+        .from('bible_import_jobs')
+        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (error) return json({ error: error.message }, 500);
+      return json({ jobs: data ?? [] });
+    }
+
     if (action === 'start') {
+      // retry_of: reusa a tradução do job original (idempotente — recalcula pendências).
+      let retryOf: string | null = null;
+      if (rawParams.retry_of) {
+        const { data: prev, error: prevErr } = await admin
+          .from('bible_import_jobs')
+          .select('id, status, source_id, bible_translation_sources(code, translation)')
+          .eq('id', rawParams.retry_of).maybeSingle();
+        if (prevErr || !prev) return json({ error: 'retry_source_not_found' }, 404);
+        retryOf = prev.id as string;
+        const originalTranslation = (prev as any)?.bible_translation_sources?.translation;
+        if (originalTranslation) translation = normalizeTranslation(originalTranslation);
+      }
+
+      // Validação prévia obrigatória para não gastar background com fonte quebrada
+      const validation = await validateSource(translation);
+      if (!validation.ok) {
+        return json({
+          error: 'validation_failed',
+          message: 'A fonte informada não é válida — corrija os erros e tente novamente.',
+          validation,
+        }, 422);
+      }
+
       const sourceId = await ensureTranslation(admin, translation);
       const { data: job, error } = await admin.from('bible_import_jobs').insert({
         source_id: sourceId,
         status: 'queued',
         created_by: userId,
-        message: 'Aguardando início…',
+        message: retryOf ? `Reexecução do job ${retryOf.slice(0, 8)}` : 'Aguardando início…',
+        audit_log: retryOf ? [{ event: 'retry_of', job_id: retryOf, at: new Date().toISOString() }] : [],
       }).select('id').single();
       if (error) return json({ error: error.message }, 500);
 
-      // background
       // @ts-ignore EdgeRuntime é fornecido pelo runtime Deno Deploy
       EdgeRuntime.waitUntil(runImport(admin, job.id, sourceId, translation));
-      return json({ ok: true, job_id: job.id });
+      return json({ ok: true, job_id: job.id, retry_of: retryOf });
     }
 
     return json({ error: 'unknown_action' }, 400);
