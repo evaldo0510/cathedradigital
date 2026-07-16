@@ -288,7 +288,17 @@ const MagisteriumViewer: React.FC = () => {
       // Ignore if user is typing or modal is open
       const activeElement = document.activeElement;
       const isTyping = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA' || (activeElement as HTMLElement)?.isContentEditable;
+
+      // STAB-004.3.2 — Ctrl/Cmd+F abre a busca interna do documento,
+      // suprimindo o Find nativo do navegador (funciona mesmo com foco em input).
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'f' && id) {
+        e.preventDefault();
+        setIsSearchOpen(true);
+        return;
+      }
+
       if (isTyping || isNoteModalOpen) return;
+      
       
       // Accessibility: Reading shortcuts
       if (id) {
