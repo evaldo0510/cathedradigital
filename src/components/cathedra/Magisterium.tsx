@@ -562,7 +562,7 @@ const Magisterium: React.FC = () => {
                   <Button
                     variant="ghost"
                     aria-pressed={active}
-                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary border border-primary/10'}`}
+                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
                     onClick={() => toggleTheme(theme)}
                   >
                     {theme}
