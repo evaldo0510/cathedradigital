@@ -127,8 +127,6 @@ const Bible: React.FC = () => {
   
   // New States for Annotations and Progress
   const [lastRead, setLastRead] = useState<any>(null);
-  const [dailyReading, setDailyReading] = useState(getDailyReading());
-  const [isDailyCompleted, setIsDailyCompleted] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string, color?: string, theological_theme?: string } | null>(null);
