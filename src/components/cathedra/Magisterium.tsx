@@ -719,7 +719,7 @@ const Magisterium: React.FC = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/60 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/80 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
                 >
                   <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
                   Limpar tudo
