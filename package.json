@@ -62,7 +62,9 @@
     "test:token-audit": "vitest run scripts/cathedra-audit.test.ts",
     "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe",
     "test:update-baselines": "playwright test --update-snapshots",
-    "ci:validate": "npm run test:a11y && npm run test:report"
+    "ci:validate": "npm run test:a11y && npm run test:report",
+    "axe:contrast": "bunx tsx scripts/axe-contrast-run.ts",
+    "axe:contrast:aggregate": "bunx tsx scripts/axe-contrast-heatmap.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
