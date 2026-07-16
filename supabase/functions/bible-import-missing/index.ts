@@ -3,17 +3,14 @@
  * faltantes do cânon a partir da API pública bolls.life.
  *
  * Ações:
- *   POST { action: 'start', translation?: 'NVIPT' }  → cria job e roda em background
+ *   POST { action: 'validate', translation }         → valida fonte (sem gravar)
+ *   POST { action: 'dry_run',  translation }         → simula import (1 cap/livro)
+ *   POST { action: 'preview',  translation }         → conta pendências (leve)
+ *   POST { action: 'start', translation, retry_of? } → cria job e roda em background
+ *   POST { action: 'list_jobs', limit? }             → lista histórico
  *   GET  ?action=status&job_id=…                     → consulta progresso
- *   GET  ?action=preview                             → lista o que falta (dry-run leve)
- *
- * Fluxo do job:
- *   1) Garante bible_translation_sources para "bolls-<TRANSLATION>"
- *   2) Cria bible_import_jobs (status=running)
- *   3) Para cada livro protocanônico do BIBLE_CANON ausente/incompleto,
- *      busca capítulos no bolls.life e faz upsert idempotente
- *   4) Ao final, invoca bible-canon-diagnose e grava o run_id em verification
  */
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
 
@@ -35,8 +32,20 @@ const SKIP_ABBRS = new Set(['Sl', 'Dn']);
 
 type Admin = ReturnType<typeof createClient>;
 
-interface BollsBook { bookid: number; chapters: number }
+interface BollsBook { bookid: number; chapters: number; name?: string }
 interface BollsVerse { verse: number; text: string; pk?: number }
+
+// Validação de entrada — evita HTTP fetch com valor sujo
+const TRANSLATION_RE = /^[A-Z0-9]{2,10}$/;
+
+function normalizeTranslation(input: unknown): string {
+  const raw = typeof input === 'string' ? input.trim().toUpperCase() : '';
+  if (!TRANSLATION_RE.test(raw)) {
+    throw new Error(`Código de tradução inválido: "${input}". Use letras/dígitos maiúsculos (ex.: NVIPT, NAA, ARA).`);
+  }
+  return raw;
+}
+
 
 async function fetchBollsBooks(translation: string): Promise<Map<number, BollsBook>> {
   const res = await fetch(`${BOLLS_BASE}/get-books/${translation}/`);
@@ -104,6 +113,98 @@ async function computeMissing(admin: Admin, translation: string) {
   }
   return plan;
 }
+
+/**
+ * Valida se a tradução informada existe em bolls.life e cobre os livros
+ * protocanônicos esperados por BIBLE_CANON. Não grava nada.
+ */
+async function validateSource(translation: string) {
+  const issues: Array<{ level: 'error' | 'warning'; code: string; message: string }> = [];
+  let bolls: Map<number, BollsBook>;
+  try {
+    bolls = await fetchBollsBooks(translation);
+  } catch (e) {
+    return {
+      ok: false,
+      translation,
+      reachable: false,
+      issues: [{ level: 'error' as const, code: 'source_unreachable', message: (e as Error).message }],
+    };
+  }
+
+  const expected = BIBLE_CANON.filter((c) => !c.deuterocanonical && !SKIP_ABBRS.has(c.abbr));
+  const mapping: Array<{ abbrev: string; name: string; bollsId: number; found: boolean; chapters_bolls: number | null }> = [];
+  for (const canon of expected) {
+    const b = bolls.get(canon.bollsId);
+    if (!b) {
+      issues.push({ level: 'error', code: 'missing_book', message: `Livro ${canon.abbr} (bollsId ${canon.bollsId}) não existe em ${translation}` });
+    }
+    mapping.push({ abbrev: canon.abbr, name: canon.name, bollsId: canon.bollsId, found: !!b, chapters_bolls: b?.chapters ?? null });
+  }
+
+  // Deutero: informa se a tradução escolhida não cobre (esperado para NVIPT/NAA/etc.)
+  const deuteroFound = BIBLE_CANON.filter((c) => c.deuterocanonical && bolls.get(c.bollsId));
+  if (deuteroFound.length === 0) {
+    issues.push({
+      level: 'warning',
+      code: 'no_deuterocanonical',
+      message: `${translation} não expõe livros deuterocanônicos — mantidos por bible-import-deutero.`,
+    });
+  }
+
+  const errors = issues.filter((i) => i.level === 'error').length;
+  return {
+    ok: errors === 0,
+    translation,
+    reachable: true,
+    bolls_books_total: bolls.size,
+    expected_books: expected.length,
+    covered_books: mapping.filter((m) => m.found).length,
+    issues,
+    mapping,
+  };
+}
+
+/**
+ * Dry-run: para cada livro faltante, baixa 1 capítulo (o primeiro que falta)
+ * de bolls como prova de disponibilidade e mostra sample. Nada é gravado.
+ */
+async function dryRun(admin: Admin, translation: string) {
+  const plan = await computeMissing(admin, translation);
+  const samples: Array<{
+    abbrev: string; name: string; chapters_missing: number; sample_chapter: number;
+    sample_verses: number; first_verse: string | null; error?: string;
+  }> = [];
+  for (const item of plan) {
+    const cap = item.chapters[0];
+    try {
+      const verses = await fetchBollsChapter(translation, item.bookId, cap);
+      samples.push({
+        abbrev: item.canon.abbr, name: item.canon.name,
+        chapters_missing: item.chapters.length, sample_chapter: cap,
+        sample_verses: verses.length, first_verse: verses[0]?.text ?? null,
+      });
+    } catch (e) {
+      samples.push({
+        abbrev: item.canon.abbr, name: item.canon.name,
+        chapters_missing: item.chapters.length, sample_chapter: cap,
+        sample_verses: 0, first_verse: null, error: (e as Error).message,
+      });
+    }
+  }
+  const chapters_missing_total = plan.reduce((s, p) => s + p.chapters.length, 0);
+  return {
+    dry_run: true, translation,
+    books_missing: plan.length,
+    chapters_missing_total,
+    samples,
+    would_write: {
+      new_books: plan.filter((p) => samples.find((s) => s.abbrev === p.canon.abbr))?.length ?? 0,
+      new_chapters: chapters_missing_total,
+    },
+  };
+}
+
 
 async function runImport(admin: Admin, jobId: string, sourceId: string, translation: string) {
   const started = new Date().toISOString();
@@ -236,12 +337,33 @@ Deno.serve(async (req) => {
     if (cErr || !claims?.claims?.sub) return json({ error: 'invalid_token' }, 401);
     const userId = claims.claims.sub as string;
     const { data: roleRow } = await admin.from('user_roles').select('role').eq('user_id', userId).eq('role', 'admin').maybeSingle();
-    if (!roleRow) return json({ error: 'forbidden' }, 403);
+    if (!roleRow) {
+      return json({ error: 'forbidden', message: 'Apenas administradores podem operar a importação da Bíblia.' }, 403);
+    }
 
     const url = new URL(req.url);
-    const params: any = req.method === 'POST' ? (await req.json().catch(() => ({}))) : Object.fromEntries(url.searchParams);
-    const action = params.action ?? (req.method === 'POST' ? 'start' : 'status');
-    const translation = (params.translation as string) || 'NVIPT';
+    const rawParams: any = req.method === 'POST' ? (await req.json().catch(() => ({}))) : Object.fromEntries(url.searchParams);
+    const action = rawParams.action ?? (req.method === 'POST' ? 'start' : 'status');
+
+    // Ações que precisam de tradução válida
+    let translation = 'NVIPT';
+    if (['validate', 'dry_run', 'preview', 'start'].includes(action)) {
+      try {
+        translation = normalizeTranslation(rawParams.translation ?? 'NVIPT');
+      } catch (e) {
+        return json({ error: 'invalid_translation', message: (e as Error).message }, 400);
+      }
+    }
+
+    if (action === 'validate') {
+      const result = await validateSource(translation);
+      return json(result, result.ok ? 200 : 422);
+    }
+
+    if (action === 'dry_run') {
+      const result = await dryRun(admin, translation);
+      return json(result);
+    }
 
     if (action === 'preview') {
       const plan = await computeMissing(admin, translation);
@@ -254,27 +376,61 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'status') {
-      const jobId = params.job_id as string;
+      const jobId = rawParams.job_id as string;
       if (!jobId) return json({ error: 'missing_job_id' }, 400);
       const { data, error } = await admin.from('bible_import_jobs').select('*').eq('id', jobId).maybeSingle();
       if (error) return json({ error: error.message }, 500);
       return json({ job: data });
     }
 
+    if (action === 'list_jobs') {
+      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 100);
+      const { data, error } = await admin
+        .from('bible_import_jobs')
+        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (error) return json({ error: error.message }, 500);
+      return json({ jobs: data ?? [] });
+    }
+
     if (action === 'start') {
+      // retry_of: reusa a tradução do job original (idempotente — recalcula pendências).
+      let retryOf: string | null = null;
+      if (rawParams.retry_of) {
+        const { data: prev, error: prevErr } = await admin
+          .from('bible_import_jobs')
+          .select('id, status, source_id, bible_translation_sources(code, translation)')
+          .eq('id', rawParams.retry_of).maybeSingle();
+        if (prevErr || !prev) return json({ error: 'retry_source_not_found' }, 404);
+        retryOf = prev.id as string;
+        const originalTranslation = (prev as any)?.bible_translation_sources?.translation;
+        if (originalTranslation) translation = normalizeTranslation(originalTranslation);
+      }
+
+      // Validação prévia obrigatória para não gastar background com fonte quebrada
+      const validation = await validateSource(translation);
+      if (!validation.ok) {
+        return json({
+          error: 'validation_failed',
+          message: 'A fonte informada não é válida — corrija os erros e tente novamente.',
+          validation,
+        }, 422);
+      }
+
       const sourceId = await ensureTranslation(admin, translation);
       const { data: job, error } = await admin.from('bible_import_jobs').insert({
         source_id: sourceId,
         status: 'queued',
         created_by: userId,
-        message: 'Aguardando início…',
+        message: retryOf ? `Reexecução do job ${retryOf.slice(0, 8)}` : 'Aguardando início…',
+        audit_log: retryOf ? [{ event: 'retry_of', job_id: retryOf, at: new Date().toISOString() }] : [],
       }).select('id').single();
       if (error) return json({ error: error.message }, 500);
 
-      // background
       // @ts-ignore EdgeRuntime é fornecido pelo runtime Deno Deploy
       EdgeRuntime.waitUntil(runImport(admin, job.id, sourceId, translation));
-      return json({ ok: true, job_id: job.id });
+      return json({ ok: true, job_id: job.id, retry_of: retryOf });
     }
 
     return json({ error: 'unknown_action' }, 400);
