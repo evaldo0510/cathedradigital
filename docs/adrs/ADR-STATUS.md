@@ -4,6 +4,27 @@ Rastreamento de todos os ADRs conhecidos (existentes, ausentes, depreciados).
 
 **Última atualização:** 2026-07-16
 
+---
+
+## 🛑 CATHEDRA STABILIZATION (ativo — substitui Sprint A/B/C como projeto guia)
+
+A partir de 2026-07-16, o projeto guia oficial é **CATHEDRA STABILIZATION**. As Sprints A/B/C de arquitetura ficam **pausadas** até que a estabilização esteja concluída. Nomenclatura antiga (`Sprint A`, `Sprint B`, `Wave 4B` etc.) permanece nos docs históricos apenas como referência.
+
+**Fases:**
+
+| Fase     | Nome                              | Estado     | Documento                          |
+|----------|-----------------------------------|------------|------------------------------------|
+| STAB-001 | Inventário funcional              | ✅ Concluído | [`docs/STAB-001-INVENTORY.md`](../STAB-001-INVENTORY.md) |
+| STAB-002 | Correção dos erros críticos (P0)  | ⏸ Aguardando aprovação | Foco inicial: Magistério viewer + Catecismo `?paragraph` |
+| STAB-003 | Cobertura completa dos módulos    | ⏳ Não iniciado | Segundo passe autenticado + P1 |
+| STAB-004 | Performance                       | ⏳ Não iniciado | Só após STAB-003 verde |
+| STAB-005 | Arquitetura / modularização       | ⏳ Não iniciado | Absorve o backlog ADR-011..017 |
+
+**Regra vigente:** nenhum ADR de arquitetura (ADR-011..017 abaixo) é executado até STAB-002 estar aceito. O congelamento da S0 sandbox MP e o bloqueio do ADR-016 seguem em vigor sob o mesmo espírito.
+
+---
+
+
 ## Legenda de status
 
 - ✅ **VERSIONADO** — arquivo `ADR-NNN-*.md` existe neste repositório
