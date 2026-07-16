@@ -547,8 +547,16 @@ const MagisteriumViewer: React.FC = () => {
         </div>
       </div>
 
+      {/* STAB-004.3.2 — Barra de busca interna (sticky logo abaixo do header) */}
+      <MagisteriumSearchBar
+        containerRef={contentRef}
+        contentVersion={id}
+        open={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
       <div className="flex flex-col gap-spacing-2xl lg:gap-spacing-4xl items-start">
+
 
 
         <motion.div 
