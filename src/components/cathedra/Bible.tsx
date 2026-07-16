@@ -110,6 +110,10 @@ const Bible: React.FC = () => {
     setSelectedBook,
     setSelectedChapter,
     setSearchQuery,
+    selectBook,
+    selectChapter,
+    nextChapter,
+    prevChapter,
   } = useBibleNavigation();
 
   const [verses, setVerses] = useState<any[]>([]);
@@ -880,32 +884,8 @@ const Bible: React.FC = () => {
     }
   };
 
+  // Navegação (selectBook/selectChapter/nextChapter/prevChapter) vive em useBibleNavigation.
 
-
-  const selectBook = (book: BibleBook) => {
-    // useBibleNavigation escreve na URL; nada mais é necessário.
-    setSelectedBook(book);
-  };
-
-  const selectChapter = (ch: number) => {
-    setSelectedChapter(ch);
-    // Scroll context top
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
-
-
-  const nextChapter = useCallback(() => {
-    if (!selectedBook) return;
-    if (selectedChapter < selectedBook.chapters) {
-      selectChapter(selectedChapter + 1);
-    }
-  }, [selectedBook, selectedChapter]);
-
-  const prevChapter = useCallback(() => {
-    if (selectedChapter > 1) {
-      selectChapter(selectedChapter - 1);
-    }
-  }, [selectedChapter]);
 
   const handleDragEnd = (event: any, info: any) => {
     const threshold = 80;

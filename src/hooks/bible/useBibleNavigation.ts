@@ -55,6 +55,14 @@ export interface UseBibleNavigation {
   setSelectedBook: (book: BibleBook | null) => void;
   setSelectedChapter: (chapter: number) => void;
   setSearchQuery: (q: string) => void;
+  /** Seleciona um livro. Alias semântico de setSelectedBook. */
+  selectBook: (book: BibleBook) => void;
+  /** Seleciona um capítulo e rola a janela para o topo. */
+  selectChapter: (chapter: number) => void;
+  /** Avança para o próximo capítulo do livro atual (no-op no último). */
+  nextChapter: () => void;
+  /** Volta ao capítulo anterior (no-op no primeiro). */
+  prevChapter: () => void;
 }
 
 export function useBibleNavigation(): UseBibleNavigation {
@@ -161,6 +169,34 @@ export function useBibleNavigation(): UseBibleNavigation {
     [mutate],
   );
 
+  const selectBook = useCallback(
+    (book: BibleBook) => setSelectedBook(book),
+    [setSelectedBook],
+  );
+
+  const selectChapter = useCallback(
+    (chapter: number) => {
+      setSelectedChapter(chapter);
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      }
+    },
+    [setSelectedChapter],
+  );
+
+  const nextChapter = useCallback(() => {
+    if (!selectedBook) return;
+    if (selectedChapter < selectedBook.chapters) {
+      selectChapter(selectedChapter + 1);
+    }
+  }, [selectedBook, selectedChapter, selectChapter]);
+
+  const prevChapter = useCallback(() => {
+    if (selectedChapter > 1) {
+      selectChapter(selectedChapter - 1);
+    }
+  }, [selectedChapter, selectChapter]);
+
   return {
     viewMode,
     selectedBook,
@@ -170,5 +206,9 @@ export function useBibleNavigation(): UseBibleNavigation {
     setSelectedBook,
     setSelectedChapter,
     setSearchQuery,
+    selectBook,
+    selectChapter,
+    nextChapter,
+    prevChapter,
   };
 }
