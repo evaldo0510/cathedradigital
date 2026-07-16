@@ -771,7 +771,7 @@ const Magisterium: React.FC = () => {
                     <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">
                       {renderHighlighted(doc.title, searchQuery)}
                       {doc.abbr && (
-                        <span className="ml-spacing-2xs text-[9px] font-black text-primary/40 tracking-[0.2em] align-middle">
+                        <span className="ml-spacing-2xs text-[9px] font-black text-primary/70 tracking-[0.2em] align-middle">
                           ({renderHighlighted(doc.abbr, searchQuery)})
                         </span>
                       )}
