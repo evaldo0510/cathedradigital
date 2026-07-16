@@ -194,6 +194,76 @@ Observações:                <preencher>
 - Se algum campo não puder ser observado (ex.: handler que não expõe latência), manter `<preencher>` e anotar o motivo em Observações — não estimar.
 - Nenhuma evidência é aceita sem hash SHA-256 do arquivo de payload.
 
+### 6.3 Troubleshooting da validação de assinatura (sandbox)
+
+**Objetivo:** orientar a investigação quando o log da edge function receptora indicar falha na validação HMAC do webhook MP, sem quebrar o congelamento da S0. **Nenhum código pode ser alterado** — este quadro serve apenas para classificar a causa raiz e decidir se o incidente é configuração no painel MP ou backlog pós-evento.
+
+#### Como interpretar o status HTTP retornado
+
+A edge function receptora pode devolver diferentes status dependendo do ponto de falha. Use a tabela abaixo para classificar o que foi observado no log:
+
+| Status HTTP | Significado provável | Onde olhar primeiro | Implicação para S0 |
+| ----------- | -------------------- | ------------------- | ------------------ |
+| `200 OK` | Assinatura validada e payload processado | Logs de sucesso + `webhook_logs` | Estado saudável — registrar evidência |
+| `202 Accepted` | Recebido, mas processamento delegado ou idempotência atuou | `webhook_logs` e mensagens de log | Verificar se houve duplicata ignorada |
+| `400 Bad Request` | Corpo malformado, header `x-signature` ausente, ou payload não é JSON | Log de erro + payload bruto (mascarar antes de registrar) | Provavelmente teste manual ou configuração errada no painel MP |
+| `401 Unauthorized` | Assinatura inválida ou secret incorreto | Comparar secret configurado no painel MP com o esperado pela edge function | **Não corrigir código** — anotar em Observações e no inventário CAT-DOC-002 |
+| `403 Forbidden` | Timestamp fora da janela de tolerância | Header `x-signature` (parte `ts=...`) vs horário do servidor | Pode ser drift de relógio ou replay fora da janela; documentar |
+| `404 Not Found` | URL da webhook errada ou função inexistente | Painel MP → URL cadastrada | Alimenta diretamente o inventário CAT-DOC-002 §3.1 |
+| `405 Method Not Allowed` | Requisição não é POST | Logs da edge function + método HTTP | Configuração/teste manual incorreto |
+| `408 Request Timeout` | MP não recebeu resposta dentro do timeout | Latência nos logs; verificar se handler travou | Incidente operacional — escalar, não alterar código |
+| `500 Internal Server Error` | Erro dentro do handler após validação (ex.: banco indisponível) | Stack trace no log | Incidente operacional — escalar |
+| `502/503/504` | Gateway/infraestrutura, não a edge function em si | Status do backend / logs de infra | Fora do escopo do teste de assinatura — registrar e escalar |
+
+#### Causas prováveis quando a assinatura falha
+
+| Sintoma observado | Causa provável | Como confirmar em sandbox | Ação permitida durante S0 |
+| ----------------- | -------------- | ------------------------- | -------------------------- |
+| Log mostra `signature_invalid` ou `401` | Secret do webhook no painel MP difere do secret esperado pela edge function | Reimprimir (mascarado) o header `x-signature` e comparar `v1=` com HMAC local calculado offline | Documentar no inventário CAT-DOC-002; **não alterar secret no código** |
+| Log mostra `timestamp_out_of_window` ou `403` | `ts` do header muito distante do `Date`/`created_at` do servidor | Extrair `ts` do `x-signature` e comparar com timestamp do log | Documentar drift; verificar se ambiente está em UTC/BRT correto |
+| Reenvio do mesmo evento gera `401` na segunda vez | Handler pode estar validando assinatura sobre payload modificado (ex.: após parse) | Comparar payload original do POST com payload usado no cálculo de HMAC | Registrar como evidência; tratar como backlog pós-evento (ADR-015) |
+| Apenas uma das duas edge functions valida com sucesso | Cada função pode usar secret/timestamp/janela diferentes | Executar o mesmo pagamento e comparar logs de `mercadopago-webhook` e `mercado-pago-webhook` | Alimenta diretamente CAT-DOC-002 §4 (decisão de consolidação) |
+| `x-signature` ausente no log | Painel MP enviou sem assinatura ou proxy/removeu header | Confirmar no painel MP se a URL cadastrada preserva headers | Documentar no inventário |
+| Evento chega, mas status retornado é `400` | Payload pode conter campo inesperado ou `Content-Type` incorreto | Verificar `Content-Type` e JSON bemformado no log | Registrar; se recorrente, backlog pós-evento |
+
+#### Checklist de diagnóstico (sem alterar código)
+
+1. **Isolar o evento:** anotar `external_reference`, `payment_id`, tipo de evento e horário exato.
+2. **Identificar a função receptora:** usar passos 5–6 do checklist §6.1.
+3. **Coletar o status HTTP exato** retornado pela edge function (não o status do painel MP).
+4. **Extrair o header `x-signature` mascarado** do log/payload (ex.: `ts=...,v1=abcd…<truncado>`).
+5. **Buscar a mensagem de erro** no log: `signature_invalid`, `timestamp_out_of_window`, `missing_signature`, `secret_not_set`, etc.
+6. **Classificar pela tabela acima** e preencher o campo `Observações` do bloco §6.2.
+7. **Se a causa for configuração no painel MP:** anotar no `MP-WEBHOOK-URLS-INVENTORY.md` §3.4 (problemas observados).
+8. **Se a causa exigir mudança de código:** marcar como bloqueado por CAT-DOC-002 e referenciar ADR-015 no `docs/adrs/ADR-STATUS.md`.
+9. **Se for incidente operacional** (5xx, timeout, banco indisponível): escalar pelo canal de plantão, não documentar como evidência de assinatura.
+
+#### O que NUNCA fazer durante a S0
+
+- ❌ Desabilitar a validação HMAC para "fazer funcionar".
+- ❌ Alterar secret, janela de timestamp ou lógica de assinatura em qualquer edge function.
+- ❌ Reenviar eventos de produção para sandbox.
+- ❌ Registrar segredos, tokens ou dados de cartão real nas evidências.
+
+#### Template de registro de incidente de assinatura
+
+Caso a validação falhe de forma consistente (mais de 1 evento com mesmo sintoma), abrir um mini-registro no final de §6.2 ou em `docs/adrs/ADR-STATUS.md` §ADR-015:
+
+```
+── INCIDENTE DE ASSINATURA (SANDBOX) ─────────────────────────────────
+ID do incidente:            INC-<NNN>
+Data/hora primeiro evento:    <preencher>
+Função receptora:             <preencher>
+Status HTTP predominante:     <preencher>
+Mensagem de erro no log:      <preencher>  (signature_invalid | timestamp_out_of_window | ...)
+Causa provável (pelo quadro): <preencher>
+Evidências relacionadas:      EV-<NNN>, EV-<NNN>
+Bloqueado por CAT-DOC-002:    sim
+ADR de acompanhamento:        ADR-015
+Responsável pelo registro:    <preencher>
+Data:                         <preencher>
+```
+
 ## 7. Backup
 
 ### 7.1 Checklist
