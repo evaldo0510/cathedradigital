@@ -100,6 +100,16 @@ const MagisteriumViewer: React.FC = () => {
 
   useEffect(() => { setFailureCount(0); }, [id]);
 
+  // STAB-004.3.1 — Scroll ao topo ao trocar de documento.
+  // Não conflita com o restore de posição salva (linha ~338), que só age
+  // quando existe `cathedra_last_magisterium_scroll_{id}` no localStorage
+  // e roda 800ms depois, sobrepondo este scroll inicial quando aplicável.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+  }, [id]);
+
   // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
   const lastFetchKey = useRef<string | null>(null);
   useEffect(() => {
