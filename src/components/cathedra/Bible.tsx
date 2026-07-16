@@ -1709,13 +1709,22 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             Não conseguimos carregar este capítulo. Verifique sua conexão ou relate o problema.
                           </p>
                         </div>
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setIsFeedbackOpen(true)}
-                          className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest border-primary/10"
-                        >
-                          Relatar Problema
-                        </Button>
+                        <div className="flex flex-wrap items-center justify-center gap-spacing-sm">
+                          <Button
+                            variant="default"
+                            onClick={() => selectedBook && fetchVerses(selectedBook.abbr, selectedChapter)}
+                            className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest"
+                          >
+                            Tentar Novamente
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setIsFeedbackOpen(true)}
+                            className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest border-primary/10"
+                          >
+                            Relatar Problema
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-spacing-lg">
