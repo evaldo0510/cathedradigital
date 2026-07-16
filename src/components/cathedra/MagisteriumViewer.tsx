@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS, MAGISTERIUM_DOCUMENTS } from '@/data/magisterium-urls';
 import MagisteriumDocumentHeader from './MagisteriumDocumentHeader';
 import MagisteriumDocumentNav from './MagisteriumDocumentNav';
+import MagisteriumSearchBar from './MagisteriumSearchBar';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
@@ -58,6 +59,8 @@ const MagisteriumViewer: React.FC = () => {
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
 
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  // STAB-004.3.2 — busca interna do documento
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -285,7 +288,17 @@ const MagisteriumViewer: React.FC = () => {
       // Ignore if user is typing or modal is open
       const activeElement = document.activeElement;
       const isTyping = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA' || (activeElement as HTMLElement)?.isContentEditable;
+
+      // STAB-004.3.2 — Ctrl/Cmd+F abre a busca interna do documento,
+      // suprimindo o Find nativo do navegador (funciona mesmo com foco em input).
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'f' && id) {
+        e.preventDefault();
+        setIsSearchOpen(true);
+        return;
+      }
+
       if (isTyping || isNoteModalOpen) return;
+      
       
       // Accessibility: Reading shortcuts
       if (id) {
@@ -510,6 +523,18 @@ const MagisteriumViewer: React.FC = () => {
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
           <ReadingControlPanel />
+          {/* STAB-004.3.2 — Toggle da busca interna */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen((v) => !v)}
+            aria-pressed={isSearchOpen}
+            aria-label={isSearchOpen ? 'Fechar busca no documento' : 'Buscar neste documento (Ctrl+F)'}
+            title="Buscar neste documento (Ctrl+F)"
+            className={`rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 transition-all ${isSearchOpen ? 'bg-primary text-white' : 'hover:bg-primary/5 text-primary/40'}`}
+          >
+            <Icons.Search className="w-spacing-md h-spacing-md" />
+          </Button>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -522,8 +547,16 @@ const MagisteriumViewer: React.FC = () => {
         </div>
       </div>
 
+      {/* STAB-004.3.2 — Barra de busca interna (sticky logo abaixo do header) */}
+      <MagisteriumSearchBar
+        containerRef={contentRef}
+        contentVersion={id}
+        open={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
       <div className="flex flex-col gap-spacing-2xl lg:gap-spacing-4xl items-start">
+
 
 
         <motion.div 
