@@ -776,10 +776,10 @@ const Magisterium: React.FC = () => {
                         </span>
                       )}
                     </h3>
-                    <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">
+                    <p className="text-[8px] font-black text-primary/70 uppercase tracking-[0.2em]">
                       {renderHighlighted(doc.author, searchQuery)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">
+                    <p className="text-[10px] text-muted-foreground italic line-clamp-spacing-xs leading-relaxed">
                       {renderHighlighted(doc.summary, searchQuery)}
                     </p>
                   </div>
