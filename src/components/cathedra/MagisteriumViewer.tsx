@@ -587,7 +587,8 @@ const MagisteriumViewer: React.FC = () => {
               onScroll={() => {
                 if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
               }}
-              className={`py-spacing-xl md:py-spacing-4xl prose prose-slate dark:prose-invert max-w-none reader-text
+              className={`w-full max-w-[70ch] mx-auto px-spacing-md md:px-spacing-0
+                py-spacing-xl md:py-spacing-4xl prose prose-slate dark:prose-invert reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
                 prose-p:leading-[1.8] prose-p:mb-spacing-xl
                 prose-headings:font-serif prose-headings:text-primary prose-headings:mb-spacing-xl
