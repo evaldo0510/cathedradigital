@@ -355,6 +355,52 @@ const Magisterium: React.FC = () => {
   );
   const visibleDocs = pagination.items;
 
+  // ---------------------------------------------------------------------------
+  // STAB-004.1 · Agrupamento visual opcional (sem alterar filtros/paginação).
+  // `?group=category` agrupa por categoria; `?group=pope` agrupa por autor.
+  // Ausente = grid plana (comportamento atual). Nada é gravado em outro state.
+  // ---------------------------------------------------------------------------
+  const groupBy: 'category' | 'pope' | null = (() => {
+    const g = searchParams.get('group');
+    return g === 'category' || g === 'pope' ? g : null;
+  })();
+
+  const setGroupBy = useCallback(
+    (next: 'category' | 'pope' | null) => {
+      const nextParams = new URLSearchParams(searchParams);
+      if (next) nextParams.set('group', next);
+      else nextParams.delete('group');
+      if (nextParams.toString() !== searchParams.toString()) {
+        setSearchParams(nextParams, { replace: true });
+      }
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const groupedDocs = useMemo(() => {
+    if (!groupBy) return null;
+    const buckets = new Map<string, MagisteriumDocument[]>();
+    for (const d of visibleDocs) {
+      const key = groupBy === 'pope' ? (d.author || '—') : (d.category || '—');
+      const arr = buckets.get(key) ?? [];
+      arr.push(d);
+      buckets.set(key, arr);
+    }
+    const entries = Array.from(buckets.entries()).map(([key, docs]) => ({ key, docs }));
+    if (groupBy === 'category') {
+      entries.sort((a, b) => (CATEGORY_ORDER[a.key] ?? 999) - (CATEGORY_ORDER[b.key] ?? 999));
+    } else {
+      // Papas: ordena pelo documento mais antigo de cada grupo (cronológico).
+      const firstDate = (docs: MagisteriumDocument[]) =>
+        docs.reduce((min, d) => {
+          const k = d.date ?? `${d.year}`;
+          return k < min ? k : min;
+        }, '9999');
+      entries.sort((a, b) => firstDate(a.docs).localeCompare(firstDate(b.docs)));
+    }
+    return entries;
+  }, [groupBy, visibleDocs]);
+
   // Ref para o cabeçalho da lista — recebe foco após scroll ao topo (a11y).
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -542,6 +588,37 @@ const Magisterium: React.FC = () => {
               )}
             </div>
             <div className="flex items-center gap-spacing-xs">
+              {/* STAB-004.1: toggle de agrupamento visual (sem alterar filtros) */}
+              <BubbleHint kind="group" label="Agrupar visualmente os documentos por categoria">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={groupBy === 'category'}
+                  onClick={() => setGroupBy(groupBy === 'category' ? null : 'category')}
+                  className={cn(
+                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    groupBy === 'category' && 'bg-primary/10 text-primary',
+                  )}
+                >
+                  <Icons.Layers className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                  Por Categoria
+                </Button>
+              </BubbleHint>
+              <BubbleHint kind="group" label="Agrupar visualmente os documentos por Papa">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={groupBy === 'pope'}
+                  onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
+                  className={cn(
+                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    groupBy === 'pope' && 'bg-primary/10 text-primary',
+                  )}
+                >
+                  <Icons.User className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                  Por Papa
+                </Button>
+              </BubbleHint>
               <BubbleHint kind="sort" label="Alternar ordenação (canônica → cronológica ↑ → cronológica ↓)">
                 <Button
                   variant="ghost"
@@ -665,10 +742,9 @@ const Magisterium: React.FC = () => {
           Documentos do Magistério
         </h2>
 
-        {/* Documents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
-
-          {visibleDocs.map((doc, idx) => (
+        {/* Documents Grid (plana ou agrupada — ver STAB-004.1) */}
+        {(() => {
+          const renderCard = (doc: MagisteriumDocument, idx: number) => (
             <Link
               key={doc.id}
               to={`/magisterium/${doc.id}`}
@@ -718,8 +794,36 @@ const Magisterium: React.FC = () => {
                 </div>
               </CathedraCard>
             </Link>
-          ))}
-        </div>
+          );
+
+          if (!groupedDocs) {
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+                {visibleDocs.map((doc, idx) => renderCard(doc, idx))}
+              </div>
+            );
+          }
+
+          return (
+            <div className="space-y-spacing-xl w-full">
+              {groupedDocs.map(({ key, docs }) => (
+                <section key={key} aria-label={`${groupBy === 'pope' ? 'Papa' : 'Categoria'}: ${key}`}>
+                  <header className="flex items-baseline justify-between mb-spacing-md border-b border-primary/[0.06] pb-spacing-2xs">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
+                      {key}
+                    </h3>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">
+                      {docs.length} {docs.length === 1 ? 'documento' : 'documentos'}
+                    </span>
+                  </header>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+                    {docs.map((doc, idx) => renderCard(doc, idx))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Paginação */}
         {pagination.totalPages > 1 && (
