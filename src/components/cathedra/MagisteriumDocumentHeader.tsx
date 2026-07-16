@@ -156,7 +156,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           {showPontificate && <MetaRow label="Pontificado" value={doc.pontificate} />}
           <MetaRow label="Data" value={dateLabel} />
           <MetaRow label="Categoria" value={doc.category} />
-          <MetaRow label="Idioma" value="Português (tradução oficial)" />
+          <MetaRow label="Idioma" value="Português" />
         </dl>
 
         {/* Temas */}
