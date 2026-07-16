@@ -58,3 +58,16 @@ _Estes são propostas — nenhum foi aprovado. Requerem análise, discussão e a
 - **ADR-016** exige nova rota, novas queries em `webhook_logs`, controle de acesso admin. Feature nova a poucos dias do evento = risco desnecessário. Reavaliar pós-evento.
 - **ADR-017** não tem escopo mínimo definido. Antes de virar ADR, o usuário deve especificar: (a) o quê refatorar (UI/dados/edge/todos), (b) motivador (bug, dívida técnica, nova feature), (c) critério de aceite.
 
+## Ferramentas de apoio autorizadas dentro do recorte S0 (sandbox webhooks MP)
+
+Dentro da quebra pontual já autorizada (testes/validação de assinatura HMAC em sandbox), foram adicionadas ferramentas **fora do runtime do app** (não impactam código de produto, banco ou edge functions):
+
+| Ferramenta | Caminho | Função |
+| ---------- | ------- | ------ |
+| Dashboard local de incidentes | `docs/evidencias/mp-sandbox/dashboard.html` | HTML estático que lê `INCIDENTES-TEMPLATE.csv` e permite filtrar por status HTTP, delta de timestamp, tipo de falha e caso de teste. Cadastros locais exportam CSV/JSON para colar no template. |
+| Gerador de PDF por incidente | `scripts/generate-incident-pdf.ts` | Emite 1 PDF padronizado por linha do CSV com interpretação dos campos e resumo do caso (CT-SIG-01/02/03 e bordas). |
+| Conferência de SHA-256 | `scripts/verify-incident-hash.ts` | Recalcula SHA-256 do `arquivo_payload_mascarado` e compara com `hash_sha256`. Suporta formato truncado `prefixo…sufixo`. |
+| Validador do template | `scripts/validate-incidents-csv.ts` | Confere colunas obrigatórias (§6.7) e formatos (§6.1/§6.2). Gera `VALIDATION-REPORT.md`. |
+
+**ADR-016 (dashboard interno no app)** permanece bloqueado — o dashboard estático acima não substitui a feature de produto; é apenas ferramenta local de apoio à S0.
+
