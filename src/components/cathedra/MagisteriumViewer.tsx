@@ -523,6 +523,18 @@ const MagisteriumViewer: React.FC = () => {
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
           <ReadingControlPanel />
+          {/* STAB-004.3.2 — Toggle da busca interna */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen((v) => !v)}
+            aria-pressed={isSearchOpen}
+            aria-label={isSearchOpen ? 'Fechar busca no documento' : 'Buscar neste documento (Ctrl+F)'}
+            title="Buscar neste documento (Ctrl+F)"
+            className={`rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 transition-all ${isSearchOpen ? 'bg-primary text-white' : 'hover:bg-primary/5 text-primary/40'}`}
+          >
+            <Icons.Search className="w-spacing-md h-spacing-md" />
+          </Button>
           <Button 
             variant="ghost" 
             size="icon" 
