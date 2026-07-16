@@ -134,20 +134,46 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script>
+<script type="module">
+import { validateRow } from './validation-rules.mjs';
+
 let ALL = [];
 let VIEW = [];
+let ISSUES = []; // {row, incident, field, kind, detail}
+let ISSUES_BY_ROW = new Map(); // rowIndex(1-based data) -> Map(field -> issue)
 
-async function load(){
+async function load(text){
   try{
-    const res = await fetch('./INCIDENTES-TEMPLATE.csv');
-    const txt = await res.text();
+    let txt = text;
+    if(!txt){
+      const res = await fetch('./INCIDENTES-TEMPLATE.csv');
+      txt = await res.text();
+    }
     const parsed = Papa.parse(txt, {header:true, skipEmptyLines:true});
     ALL = parsed.data;
+    revalidate();
     applyFilters();
   }catch(e){
     document.getElementById('list').innerHTML =
-      '<div class="empty">Não consegui carregar o CSV.<br/>Abra este arquivo servindo a pasta <code>docs/evidencias/mp-sandbox/</code> via HTTP (ex: <code>python3 -m http.server</code>) e recarregue.</div>';
+      '<div class="empty">Não consegui carregar o CSV.<br/>Sirva a pasta <code>docs/evidencias/mp-sandbox/</code> via HTTP (ex: <code>python3 -m http.server</code>) ou use o upload acima.</div>';
+  }
+}
+
+function revalidate(){
+  ISSUES = ALL.flatMap((r,i)=>validateRow(r,i));
+  ISSUES_BY_ROW = new Map();
+  for(const it of ISSUES){
+    if(!ISSUES_BY_ROW.has(it.row)) ISSUES_BY_ROW.set(it.row, new Map());
+    ISSUES_BY_ROW.get(it.row).set(it.field, it);
+  }
+  const box = document.getElementById('upload-summary');
+  if(box){
+    if(ISSUES.length===0){ box.innerHTML = `<span style="color:#34d399">✔ ${ALL.length} linha(s) sem problemas</span>`; }
+    else {
+      const miss = ISSUES.filter(i=>i.kind==='missing').length;
+      const fmt = ISSUES.filter(i=>i.kind==='format').length;
+      box.innerHTML = `<span style="color:#fca5a5">⚠ ${ISSUES.length} problema(s) em ${ISSUES_BY_ROW.size} linha(s)</span> · <span style="color:var(--muted)">${miss} faltando · ${fmt} formato</span>`;
+    }
   }
 }
 
@@ -169,7 +195,7 @@ function applyFilters(){
   const dmin = parseFloat(document.getElementById('f-dmin').value);
   const dmax = parseFloat(document.getElementById('f-dmax').value);
 
-  VIEW = ALL.filter(r=>{
+  VIEW = ALL.map((r,i)=>({r, rowIdx:i+2})).filter(({r})=>{
     if(st && String(r.status_http)!==st) return false;
     if(causa && r.causa_provavel!==causa) return false;
     if(caso && r.caso_teste!==caso) return false;
@@ -190,55 +216,70 @@ function clearFilters(){
   applyFilters();
 }
 
+function ddFor(rowIdx, field, value){
+  const err = ISSUES_BY_ROW.get(rowIdx)?.get(field);
+  const v = value===''||value==null ? '—' : value;
+  if(!err) return `<dd>${v}</dd>`;
+  return `<dd class="err">${v}<span class="why">⚠ ${err.kind}: ${err.detail}</span></dd>`;
+}
+
 function render(){
   const stats = document.getElementById('stats');
   const total = VIEW.length;
-  const pass = VIEW.filter(r=>['200','202'].includes(String(r.status_http))).length;
-  const fail = VIEW.filter(r=>{const s=parseInt(r.status_http,10);return s>=400;}).length;
-  const drift = VIEW.filter(r=>r.janela_timestamp_ok==='não'||r.janela_timestamp_ok==='nao').length;
+  const pass = VIEW.filter(({r})=>['200','202'].includes(String(r.status_http))).length;
+  const fail = VIEW.filter(({r})=>{const s=parseInt(r.status_http,10);return s>=400;}).length;
+  const drift = VIEW.filter(({r})=>r.janela_timestamp_ok==='não'||r.janela_timestamp_ok==='nao').length;
+  const errRows = VIEW.filter(({rowIdx})=>ISSUES_BY_ROW.has(rowIdx)).length;
   stats.innerHTML = `
     <div class="stat"><div class="n">${total}</div><div class="l">Incidentes</div></div>
     <div class="stat"><div class="n">${pass}</div><div class="l">2xx (sucesso)</div></div>
     <div class="stat"><div class="n">${fail}</div><div class="l">4xx/5xx (falhas)</div></div>
-    <div class="stat"><div class="n">${drift}</div><div class="l">Timestamp fora</div></div>`;
+    <div class="stat"><div class="n" style="color:${errRows?'#fca5a5':'var(--pri)'}">${errRows}</div><div class="l">Linhas c/ erro</div></div>`;
 
   const list = document.getElementById('list');
   if(!VIEW.length){ list.innerHTML='<div class="empty">Nenhum incidente com esses filtros.</div>'; return; }
-  list.innerHTML = VIEW.map(r=>`
-    <article class="inc">
+  list.innerHTML = VIEW.map(({r,rowIdx})=>{
+    const errs = ISSUES_BY_ROW.get(rowIdx);
+    const errBadge = errs ? `<span class="badge b-err">${errs.size} erro(s)</span>` : '';
+    return `
+    <article class="inc ${errs?'has-issue':''}">
       <div class="inc-head">
         <div>
           <strong>${r.incident_id||'—'}</strong>
           <span class="badge b-none" style="margin-left:6px">${r.caso_teste||'—'}</span>
-          ${badgeFor(r.status_http)}
+          ${badgeFor(r.status_http)} ${errBadge}
         </div>
-        <div class="hint">${r.data_hora_captura_brt||'—'} · ${r.executor||'—'}</div>
+        <div class="hint">${r.data_hora_captura_brt||'—'} · ${r.executor||'—'} · linha ${rowIdx}</div>
       </div>
       <dl class="kv">
-        <dt>evidence_id</dt><dd>${r.evidence_id||'—'}</dd>
+        <dt>evidence_id</dt>${ddFor(rowIdx,'evidence_id',r.evidence_id)}
+        <dt>caso_teste</dt>${ddFor(rowIdx,'caso_teste',r.caso_teste)}
+        <dt>status_http</dt>${ddFor(rowIdx,'status_http',r.status_http)}
+        <dt>ambiente</dt>${ddFor(rowIdx,'ambiente',r.ambiente)}
         <dt>edge function</dt><dd>${r.edge_function_receptora||'—'}</dd>
         <dt>tipo evento</dt><dd>${r.tipo_evento||'—'}</dd>
-        <dt>external_reference</dt><dd>${r.external_reference||'—'}</dd>
-        <dt>payment_id</dt><dd>${r.payment_id||'—'}</dd>
-        <dt>HMAC válida</dt><dd>${r.assinatura_hmac_valida||'—'}</dd>
-        <dt>Timestamp OK</dt><dd>${r.janela_timestamp_ok||'—'} (Δ ${r.delta_timestamp_s||'—'}s / janela ${r.janela_configurada_s||'—'}s)</dd>
-        <dt>Causa provável</dt><dd>${r.causa_provavel||'—'}</dd>
+        <dt>HMAC válida</dt>${ddFor(rowIdx,'assinatura_hmac_valida',r.assinatura_hmac_valida)}
+        <dt>Timestamp OK</dt>${ddFor(rowIdx,'janela_timestamp_ok', `${r.janela_timestamp_ok||'—'} (Δ ${r.delta_timestamp_s||'—'}s / janela ${r.janela_configurada_s||'—'}s)`)}
+        <dt>delta_timestamp_s</dt>${ddFor(rowIdx,'delta_timestamp_s',r.delta_timestamp_s)}
+        <dt>Causa provável</dt>${ddFor(rowIdx,'causa_provavel',r.causa_provavel)}
+        <dt>Executor</dt>${ddFor(rowIdx,'executor',r.executor)}
         <dt>Mensagem no log</dt><dd>${r.mensagem_erro_log||'—'}</dd>
       </dl>
       <div class="ev">
         <h4>Evidências</h4>
         <dl class="kv">
-          <dt>Payload mascarado</dt><dd>${r.arquivo_payload_mascarado||'—'}</dd>
-          <dt>SHA-256</dt><dd>${r.hash_sha256||'—'}</dd>
+          <dt>Payload mascarado</dt>${ddFor(rowIdx,'arquivo_payload_mascarado',r.arquivo_payload_mascarado)}
+          <dt>SHA-256</dt>${ddFor(rowIdx,'hash_sha256',r.hash_sha256)}
           <dt>x-signature</dt><dd>${r.header_x_signature_mascarado||'—'}</dd>
           <dt>x-request-id</dt><dd>${r.header_x_request_id||'—'}</dd>
-          <dt>Linha webhook_logs</dt><dd>${r.linha_webhook_logs||'—'}</dd>
+          <dt>Linha webhook_logs</dt>${ddFor(rowIdx,'linha_webhook_logs',r.linha_webhook_logs)}
           <dt>Máscara aplicada</dt><dd>${r.mascara_aplicada_em||'—'}</dd>
           <dt>Evidências relacionadas</dt><dd>${r.evidencias_relacionadas||'—'}</dd>
         </dl>
         ${r.observacoes?`<div class="hint" style="margin-top:6px"><em>${r.observacoes}</em></div>`:''}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 }
 
 function addIncident(){
@@ -256,6 +297,7 @@ function addIncident(){
   };
   if(!row.incident_id){ alert('incident_id é obrigatório'); return; }
   ALL.unshift(row);
+  revalidate();
   applyFilters();
 }
 
@@ -270,6 +312,28 @@ function exportJson(){
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'INCIDENTES-EXPORT.json'; a.click();
 }
+
+async function handleFile(f){
+  if(!f) return;
+  const txt = await f.text();
+  await load(txt);
+}
+
+// Expor para os onclicks inline
+window.applyFilters = applyFilters;
+window.clearFilters = clearFilters;
+window.addIncident = addIncident;
+window.exportCsv = exportCsv;
+window.exportJson = exportJson;
+
+// Upload wiring
+const drop = document.getElementById('drop-zone');
+const fileInput = document.getElementById('csv-file');
+drop.addEventListener('click', ()=>fileInput.click());
+fileInput.addEventListener('change', e=>handleFile(e.target.files?.[0]));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault();drop.style.borderColor='var(--pri)'}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault();drop.style.borderColor='var(--border)'}));
+drop.addEventListener('drop', e=>{e.preventDefault();handleFile(e.dataTransfer?.files?.[0])});
 
 document.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',applyFilters));
 document.getElementById('f-q').addEventListener('input',applyFilters);
