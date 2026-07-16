@@ -130,9 +130,12 @@ export default function BibleImportMissing() {
             e cânones católicos estendidos (Sl 151, Dn 13-14) NÃO são tocados — mantidos pelo import-deutero.
           </p>
         </div>
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/admin/bible-import-jobs"><History className="w-4 h-4 mr-2" /> Histórico de jobs</Link>
-        </Button>
+        <Link
+          to="/admin/bible-import-jobs"
+          className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+        >
+          <History className="w-4 h-4" /> Histórico de jobs
+        </Link>
       </header>
 
       <Card>
