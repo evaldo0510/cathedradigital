@@ -55,7 +55,7 @@ const ViaCrucis: React.FC = () => {
                 <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-premium-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
                   <p className="font-serif font-bold text-premium-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
-                  <p className="text-premium-xs text-muted-foreground mt-spacing-2xs uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
+                  <p className="text-premium-xs text-muted-foreground mt-spacing-2xs uppercase tracking-widest font-black">{s.scripture}</p>
                 </div>
               </div>
             </Button>
