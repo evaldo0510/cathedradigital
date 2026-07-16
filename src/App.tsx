@@ -607,6 +607,7 @@ const AppLayout: React.FC = () => {
           <PWAInstallPrompt />
         </Suspense>
         <OfflineIndicator />
+        <DebugRequestPanel />
       </div>
     </MotionConfig>
   );
