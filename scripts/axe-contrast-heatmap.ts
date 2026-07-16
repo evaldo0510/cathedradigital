@@ -73,17 +73,8 @@ const reports: RouteReport[] = files
 type Category = 'color' | 'opacity' | 'typography' | 'layout' | 'other';
 
 function classifyClass(cls: string): Category {
-  // opacity utilities
-  if (/^opacity-\d+$/.test(cls)) return 'opacity';
-  // tailwind color+opacity: text-primary/40, text-muted-foreground/60, bg-*/N
-  if (/^(text|bg|placeholder:text|border|ring|from|to|via|fill|stroke)-.+\/\d+$/.test(cls)) {
-    return 'opacity';
-  }
-  // plain color utilities
-  if (/^(text|bg|placeholder:text|border|ring|from|to|via|fill|stroke)-/.test(cls)) {
-    return 'color';
-  }
-  // typography noise
+  // typography FIRST — evita que `text-[9px]`, `text-premium-xs`, `text-center`
+  // sejam confundidos com utilitários de cor.
   if (
     cls === 'uppercase' ||
     cls === 'lowercase' ||
@@ -93,11 +84,22 @@ function classifyClass(cls: string): Category {
     /^font-/.test(cls) ||
     /^tracking-/.test(cls) ||
     /^leading-/.test(cls) ||
-    /^text-\[/.test(cls) ||   // arbitrary font-size
+    /^text-\[/.test(cls) ||                                // arbitrary font-size, ex: text-[9px]
     /^text-(xs|sm|base|lg|xl|\dxl)$/.test(cls) ||
-    /^text-premium-/.test(cls)
+    /^text-premium-/.test(cls) ||                          // custom typography scale
+    /^text-(left|center|right|justify|start|end)$/.test(cls)
   ) {
     return 'typography';
+  }
+  // opacity utilities
+  if (/^opacity-\d+$/.test(cls)) return 'opacity';
+  // tailwind color+opacity: text-primary/40, text-muted-foreground/60, bg-*/N
+  if (/^(text|bg|placeholder:text|border|ring|from|to|via|fill|stroke)-.+\/\d+$/.test(cls)) {
+    return 'opacity';
+  }
+  // plain color utilities
+  if (/^(text|bg|placeholder:text|border|ring|from|to|via|fill|stroke)-/.test(cls)) {
+    return 'color';
   }
   // layout noise
   if (
