@@ -155,6 +155,8 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
               </div>
               <Progress 
                 value={progress} 
+                aria-label={label || 'Progresso da leitura'}
+                aria-valuenow={Math.round(progress)}
                 className="h-spacing-2xs bg-primary/5 cursor-pointer" 
                 onClick={(e) => {
                   if (!onScrollToPercentage) return;
