@@ -843,7 +843,7 @@ const Magisterium: React.FC = () => {
               Anterior
             </Button>
             <span
-              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80"
               aria-live="polite"
               aria-atomic="true"
             >
