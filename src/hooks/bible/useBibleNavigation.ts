@@ -55,6 +55,14 @@ export interface UseBibleNavigation {
   setSelectedBook: (book: BibleBook | null) => void;
   setSelectedChapter: (chapter: number) => void;
   setSearchQuery: (q: string) => void;
+  /** Seleciona um livro. Alias semântico de setSelectedBook. */
+  selectBook: (book: BibleBook) => void;
+  /** Seleciona um capítulo e rola a janela para o topo. */
+  selectChapter: (chapter: number) => void;
+  /** Avança para o próximo capítulo do livro atual (no-op no último). */
+  nextChapter: () => void;
+  /** Volta ao capítulo anterior (no-op no primeiro). */
+  prevChapter: () => void;
 }
 
 export function useBibleNavigation(): UseBibleNavigation {
