@@ -742,10 +742,9 @@ const Magisterium: React.FC = () => {
           Documentos do Magistério
         </h2>
 
-        {/* Documents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
-
-          {visibleDocs.map((doc, idx) => (
+        {/* Documents Grid (plana ou agrupada — ver STAB-004.1) */}
+        {(() => {
+          const renderCard = (doc: MagisteriumDocument, idx: number) => (
             <Link
               key={doc.id}
               to={`/magisterium/${doc.id}`}
@@ -795,8 +794,36 @@ const Magisterium: React.FC = () => {
                 </div>
               </CathedraCard>
             </Link>
-          ))}
-        </div>
+          );
+
+          if (!groupedDocs) {
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+                {visibleDocs.map((doc, idx) => renderCard(doc, idx))}
+              </div>
+            );
+          }
+
+          return (
+            <div className="space-y-spacing-xl w-full">
+              {groupedDocs.map(({ key, docs }) => (
+                <section key={key} aria-label={`${groupBy === 'pope' ? 'Papa' : 'Categoria'}: ${key}`}>
+                  <header className="flex items-baseline justify-between mb-spacing-md border-b border-primary/[0.06] pb-spacing-2xs">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
+                      {key}
+                    </h3>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">
+                      {docs.length} {docs.length === 1 ? 'documento' : 'documentos'}
+                    </span>
+                  </header>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+                    {docs.map((doc, idx) => renderCard(doc, idx))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Paginação */}
         {pagination.totalPages > 1 && (
