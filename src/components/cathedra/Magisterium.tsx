@@ -632,7 +632,7 @@ const Magisterium: React.FC = () => {
                           : 'canonical',
                     )
                   }
-                  className="text-[9px] font-black uppercase tracking-[0.2em]"
+                  className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
                 >
                   <Icons.ArrowDown
                     className={cn(
