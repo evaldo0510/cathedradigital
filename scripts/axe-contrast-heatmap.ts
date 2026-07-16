@@ -22,6 +22,8 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { spawnSync } from 'child_process';
+import { TOKEN_REGISTRY, ruleFor } from './axe-contrast-token-registry';
 
 type NodeReport = {
   target: string[];
@@ -225,36 +227,98 @@ const trackedCleaned = perRoute.filter((r) => r.tier === 'tracked' && r.nodes ==
 const trackedDirty = perRoute.filter((r) => r.tier === 'tracked' && r.nodes > 0);
 const totalNodes = perRoute.reduce((n, r) => n + r.nodes, 0);
 
+// ---------- lookup arquivo:linha (best-effort via ripgrep) ----------
+// Para cada classe causal, tenta localizar ocorrências em src/**. Retorna
+// no máximo N matches por classe. Ripgrep é usado para não travar em repos
+// grandes; se não estiver disponível, cai para retorno vazio.
+type SrcMatch = { file: string; line: number; text: string };
+
+function rgFindClass(cls: string, maxMatches = 20): SrcMatch[] {
+  // Escape para regex: barra normal, colchete, ponto.
+  const escaped = cls
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\//g, '\\/');
+  // Match dentro de className/class atributos ou strings TS.
+  const pattern = `(?:className|class)=["\`\\{][^"\`]*\\b${escaped}\\b|["\`\\s]${escaped}["\`\\s]`;
+  const r = spawnSync(
+    'rg',
+    ['--json', '--max-count', String(maxMatches), '-t', 'typescript', pattern, 'src'],
+    { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 },
+  );
+  if (r.status !== 0 && r.status !== 1) return [];
+  const out: SrcMatch[] = [];
+  for (const line of r.stdout.split('\n')) {
+    if (!line.trim()) continue;
+    try {
+      const evt = JSON.parse(line);
+      if (evt.type === 'match') {
+        out.push({
+          file: evt.data.path.text,
+          line: evt.data.line_number,
+          text: (evt.data.lines.text ?? '').trim().slice(0, 200),
+        });
+      }
+    } catch {
+      /* skip */
+    }
+  }
+  return out;
+}
+
+const srcIndex = new Map<string, SrcMatch[]>();
+for (const cls of new Set([...causalBuckets.keys(), ...Object.keys(TOKEN_REGISTRY)])) {
+  srcIndex.set(cls, rgFindClass(cls));
+}
+
 // ---------- write summary.json ----------
+const summaryPayload = {
+  generatedAt: new Date().toISOString(),
+  totals: {
+    routes: perRoute.length,
+    nodes: totalNodes,
+    enforcedFailing: enforcedFailing.length,
+    trackedCleaned: trackedCleaned.length,
+    trackedDirty: trackedDirty.length,
+  },
+  perRoute,
+  trackedDirty,
+  trackedCleaned,
+  enforcedFailing,
+  topCausalClasses: topCausal.map((b) => {
+    const rule = ruleFor(b.key);
+    return {
+      class: b.key,
+      category: b.category,
+      count: b.count,
+      routes: Array.from(b.routes),
+      sample: b.sample,
+      rule: rule
+        ? {
+            replacement: rule.replacement,
+            reason: rule.reason,
+            confidence: rule.confidence,
+          }
+        : null,
+      srcMatches: srcIndex.get(b.key) ?? [],
+    };
+  }),
+  perRouteDetail: Object.fromEntries(perRouteDetail),
+};
+
 fs.writeFileSync(
   path.join(REPORT_DIR, 'summary.json'),
-  JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      totals: {
-        routes: perRoute.length,
-        nodes: totalNodes,
-        enforcedFailing: enforcedFailing.length,
-        trackedCleaned: trackedCleaned.length,
-        trackedDirty: trackedDirty.length,
-      },
-      perRoute,
-      trackedDirty,
-      trackedCleaned,
-      enforcedFailing,
-      topCausalClasses: topCausal.map((b) => ({
-        class: b.key,
-        category: b.category,
-        count: b.count,
-        routes: Array.from(b.routes),
-        sample: b.sample,
-      })),
-      perRouteDetail: Object.fromEntries(perRouteDetail),
-    },
-    null,
-    2,
-  ),
+  JSON.stringify(summaryPayload, null, 2),
 );
+
+// Também expõe para a página admin (buscada via fetch).
+const PUBLIC_COPY = path.join(process.cwd(), 'public', 'reports', 'axe-contrast');
+fs.mkdirSync(PUBLIC_COPY, { recursive: true });
+fs.writeFileSync(
+  path.join(PUBLIC_COPY, 'summary.json'),
+  JSON.stringify(summaryPayload, null, 2),
+);
+
+
 
 // ---------- helpers de link ----------
 function jsonLink(file: string) {
@@ -302,11 +366,49 @@ s += `\n## Heatmap · classes causais (color/opacity)\n\n`;
 if (topCausal.length === 0) {
   s += `_Nenhuma classe causal detectada — auditar failureSummary manualmente._\n`;
 } else {
-  s += `| Classe | Categoria | Ocorrências | Rotas |\n|---|---|---:|---|\n`;
+  s += `| Classe | Categoria | Ocorrências | Rotas | Sugestão (registry) | Confidence |\n|---|---|---:|---|---|---|\n`;
   for (const b of topCausal) {
-    s += `| <a id="hm-${anchor(b.key)}"></a>\`${b.key}\` | ${b.category} | ${b.count} | ${Array.from(b.routes).map((r) => `\`${r}\``).join(', ')} |\n`;
+    const rule = ruleFor(b.key);
+    const suggestion = rule
+      ? rule.replacement === null
+        ? '**remover**'
+        : rule.replacement === undefined
+          ? `_${rule.reason}_`
+          : `→ \`${rule.replacement}\``
+      : '—';
+    const conf = rule ? rule.confidence : '—';
+    s += `| <a id="hm-${anchor(b.key)}"></a>\`${b.key}\` | ${b.category} | ${b.count} | ${Array.from(b.routes).map((r) => `\`${r}\``).join(', ')} | ${suggestion} | ${conf} |\n`;
   }
 }
+
+// Diff sugerido por arquivo (ripgrep matches × registry)
+s += `\n## Diff sugerido (dry-run)\n\n`;
+s += `Execute \`bun run axe:contrast:autofix -- --apply\` para aplicar as regras marcadas como \`safe\`. As \`review\` exigem inspeção manual.\n\n`;
+const suggestedByFile = new Map<string, Array<{ cls: string; rule: import('./axe-contrast-token-registry').TokenRule; line: number; text: string }>>();
+for (const b of topCausal) {
+  const rule = ruleFor(b.key);
+  if (!rule) continue;
+  const matches = srcIndex.get(b.key) ?? [];
+  for (const m of matches) {
+    const arr = suggestedByFile.get(m.file) ?? [];
+    arr.push({ cls: b.key, rule, line: m.line, text: m.text });
+    suggestedByFile.set(m.file, arr);
+  }
+}
+if (suggestedByFile.size === 0) {
+  s += `_Nenhuma ocorrência encontrada em \`src/\` para as classes causais._\n`;
+} else {
+  for (const [file, items] of Array.from(suggestedByFile.entries()).sort()) {
+    s += `<details><summary><code>${file}</code> — ${items.length} ocorrência(s)</summary>\n\n`;
+    for (const it of items.sort((a, b) => a.line - b.line)) {
+      const target = it.rule.replacement === null ? '(remover classe)' : it.rule.replacement === undefined ? '(revisar)' : `→ \`${it.rule.replacement}\``;
+      s += `- **L${it.line}** \`${it.cls}\` ${target} · _${it.rule.reason}_ · ${it.rule.confidence}\n`;
+      s += `  \`${it.text.slice(0, 160)}\`\n`;
+    }
+    s += `\n</details>\n\n`;
+  }
+}
+
 
 // detalhamento por rota (colapsado)
 s += `\n## Detalhes por rota\n\n`;
