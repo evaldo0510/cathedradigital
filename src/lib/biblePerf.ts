@@ -30,7 +30,7 @@ export interface BiblePerfRun {
   versesCount?: number;
   connectionsCount?: number;
   cacheHit?: boolean;
-  status?: 'ok' | 'error' | '404' | '304' | 'empty';
+  status?: 'ok' | 'error' | '400' | '404' | '304' | 'empty';
 }
 
 const MAX_RUNS = 50;
