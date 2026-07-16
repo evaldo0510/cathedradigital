@@ -55,7 +55,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
             </div>
           )}
           {subtitle && (
-            <p aria-hidden="true" className="text-[8px] md:text-[10px] font-semibold uppercase text-primary/10 mb-spacing-sm md:mb-spacing-lg tracking-premium-widest md:tracking-[1.2em] transition-all duration-1000">
+            <p aria-hidden="true" className="text-[8px] md:text-[10px] font-semibold uppercase text-primary/70 mb-spacing-sm md:mb-spacing-lg tracking-premium-widest md:tracking-[1.2em] transition-all duration-1000">
               {subtitle}
             </p>
           )}
