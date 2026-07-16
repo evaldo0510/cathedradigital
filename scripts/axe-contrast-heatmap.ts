@@ -242,7 +242,7 @@ function rgFindClass(cls: string, maxMatches = 20): SrcMatch[] {
   const pattern = `(?:className|class)=["\`\\{][^"\`]*\\b${escaped}\\b|["\`\\s]${escaped}["\`\\s]`;
   const r = spawnSync(
     'rg',
-    ['--json', '--max-count', String(maxMatches), '-t', 'tsx', '-t', 'ts', pattern, 'src'],
+    ['--json', '--max-count', String(maxMatches), '-t', 'typescript', pattern, 'src'],
     { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 },
   );
   if (r.status !== 0 && r.status !== 1) return [];
