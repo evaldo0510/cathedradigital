@@ -15,7 +15,7 @@ const DocLink: React.FC<{ doc: MagisteriumDocument; hint?: string }> = ({ doc, h
     className="group block rounded-premium border border-primary/10 bg-primary/[0.02] p-spacing-md hover:border-primary/30 hover:bg-primary/[0.04] transition-colors"
   >
     {hint && (
-      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 mb-spacing-2xs">
+      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-spacing-2xs">
         {hint}
       </p>
     )}
@@ -97,7 +97,7 @@ const MagisteriumDocumentNav: React.FC<MagisteriumDocumentNavProps> = ({ current
             >
               <Icons.ArrowLeft className="w-spacing-md h-spacing-md text-primary/60 mt-spacing-3xs shrink-0" aria-hidden="true" />
               <div className="min-w-0">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 mb-spacing-2xs">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-spacing-2xs">
                   Documento anterior
                 </p>
                 <p className="font-serif text-premium-base text-primary leading-snug group-hover:underline truncate">
@@ -114,7 +114,7 @@ const MagisteriumDocumentNav: React.FC<MagisteriumDocumentNavProps> = ({ current
               className="group flex items-start gap-spacing-sm rounded-premium border border-primary/10 bg-primary/[0.02] p-spacing-md hover:border-primary/30 hover:bg-primary/[0.04] transition-colors sm:text-right"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 mb-spacing-2xs">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-spacing-2xs">
                   Próximo documento
                 </p>
                 <p className="font-serif text-premium-base text-primary leading-snug group-hover:underline truncate">

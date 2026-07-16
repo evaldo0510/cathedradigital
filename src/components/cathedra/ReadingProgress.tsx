@@ -146,7 +146,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
           {!isSubtle && (
             <div className="w-full pointer-events-auto bg-background/40 backdrop-blur-xl border border-primary/5 rounded-premium-full p-spacing-2xs shadow-premium overflow-hidden">
               <div className="flex items-center justify-between px-spacing-md mb-spacing-2xs">
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">
                   {label || 'Progresso da Alma'}
                 </span>
                 <span className="text-[10px] font-bold text-primary/60">
