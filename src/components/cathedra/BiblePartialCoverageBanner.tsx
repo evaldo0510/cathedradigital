@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldAlert, X } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import { useBibleReadGate } from '@/hooks/useBibleReadGate';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 
