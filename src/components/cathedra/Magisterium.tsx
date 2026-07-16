@@ -588,6 +588,37 @@ const Magisterium: React.FC = () => {
               )}
             </div>
             <div className="flex items-center gap-spacing-xs">
+              {/* STAB-004.1: toggle de agrupamento visual (sem alterar filtros) */}
+              <BubbleHint kind="group" label="Agrupar visualmente os documentos por categoria">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={groupBy === 'category'}
+                  onClick={() => setGroupBy(groupBy === 'category' ? null : 'category')}
+                  className={cn(
+                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    groupBy === 'category' && 'bg-primary/10 text-primary',
+                  )}
+                >
+                  <Icons.Layers className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                  Por Categoria
+                </Button>
+              </BubbleHint>
+              <BubbleHint kind="group" label="Agrupar visualmente os documentos por Papa">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={groupBy === 'pope'}
+                  onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
+                  className={cn(
+                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    groupBy === 'pope' && 'bg-primary/10 text-primary',
+                  )}
+                >
+                  <Icons.User className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                  Por Papa
+                </Button>
+              </BubbleHint>
               <BubbleHint kind="sort" label="Alternar ordenação (canônica → cronológica ↑ → cronológica ↓)">
                 <Button
                   variant="ghost"
