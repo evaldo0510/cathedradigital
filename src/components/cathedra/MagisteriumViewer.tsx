@@ -520,6 +520,9 @@ const MagisteriumViewer: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex-1 w-full relative"
         >
+            {/* STAB-004.2: Ficha rica do documento (só renderiza campos existentes) */}
+            {docMeta && <MagisteriumDocumentHeader doc={docMeta} />}
+
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (
               <motion.div 
