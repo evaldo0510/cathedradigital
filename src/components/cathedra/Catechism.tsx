@@ -16,6 +16,7 @@ import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getParagraphParam } from '@/lib/queryParams';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
@@ -311,11 +312,11 @@ const Catechism: React.FC = memo(() => {
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<ViewMode>(() => searchParams.get('p') ? 'reading' : 'parts');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getParagraphParam(searchParams) ? 'reading' : 'parts');
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(() => {
-    const p = searchParams.get('p');
+    const p = getParagraphParam(searchParams);
     return p ? parseInt(p) : 1;
   });
   const [lastFocusedElement, setLastFocusedElement] = useState<string | null>(null);
