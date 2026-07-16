@@ -461,6 +461,10 @@ let s = `## axe-core · color-contrast · resumo por rota\n\n`;
 s += `**Totais:** ${perRoute.length} rotas · ${totalNodes} nó(s) · `;
 s += `${enforcedFailing.length} enforced falhando · ${trackedDirty.length} tracked com violações · `;
 s += `${trackedCleaned.length} tracked prontas para promoção\n\n`;
+if (ARTIFACT_HINT) {
+  s += `📎 [Artifacts do run](${ARTIFACT_HINT}) — baixe \`axe-color-contrast-report.zip\` para acessar \`heatmap.md\` e os JSONs por rota.\n\n`;
+}
+
 
 if (enforcedFailing.length > 0) {
   s += `> ❌ **Regressão em rota enforced:** ${enforcedFailing.map((r) => `\`${r.route}\``).join(', ')}\n\n`;
