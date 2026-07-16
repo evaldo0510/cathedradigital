@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
@@ -606,6 +607,7 @@ const AppLayout: React.FC = () => {
           <PWAInstallPrompt />
         </Suspense>
         <OfflineIndicator />
+        <DebugRequestPanel />
       </div>
     </MotionConfig>
   );
