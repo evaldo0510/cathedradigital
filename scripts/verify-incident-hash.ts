@@ -1,79 +1,76 @@
 /**
- * Recalcula SHA-256 dos payloads mascarados listados no INCIDENTES-TEMPLATE.csv
- * e compara com o valor da coluna `hash_sha256`. Gera relatório de conferência.
+ * Recalcula SHA-256 dos payloads mascarados e compara com hash_sha256 do CSV.
  *
  * Uso:  bun scripts/verify-incident-hash.ts [caminho.csv]
- * Saída: docs/evidencias/mp-sandbox/HASH-CHECK-REPORT.md (+ código 0/1).
- *
- * Regra: se `hash_sha256` estiver no formato "prefixo...sufixo", compara apenas as pontas.
+ * Saída: docs/evidencias/mp-sandbox/HASH-CHECK-REPORT.md + exit 0/1.
  */
 import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import Papa from 'papaparse';
+// @ts-expect-error — ESM puro
+import { compareHash, isPlaceholder } from '../docs/evidencias/mp-sandbox/validation-rules.mjs';
 
-const CSV_PATH = process.argv[2] ?? 'docs/evidencias/mp-sandbox/INCIDENTES-TEMPLATE.csv';
-const OUT = 'docs/evidencias/mp-sandbox/HASH-CHECK-REPORT.md';
+export type Row = Record<string, string>;
+export type Status = 'OK' | 'MISMATCH' | 'FILE_MISSING' | 'NO_HASH' | 'NO_FILE' | 'PLACEHOLDER';
+export interface Result {
+  incident: string; file: string; expected: string; actual: string; status: Status; detail?: string;
+}
 
-type Row = Record<string, string>;
-type Result = {
-  incident: string; file: string; expected: string; actual: string;
-  status: 'OK' | 'MISMATCH' | 'FILE_MISSING' | 'NO_HASH' | 'NO_FILE' | 'PLACEHOLDER';
-  detail?: string;
+export interface FileReader {
+  exists(path: string): boolean;
+  read(path: string): Buffer;
+}
+const nodeReader: FileReader = {
+  exists: (p) => existsSync(resolve(p)),
+  read: (p) => readFileSync(resolve(p)),
 };
 
-function isPlaceholder(v?: string) {
-  const s = (v ?? '').trim();
-  return s === '' || s === '<preencher>' || s === '—';
-}
-
-function compare(expected: string, actual: string): boolean {
-  if (/^[0-9a-f]{64}$/i.test(expected)) return expected.toLowerCase() === actual;
-  // formato "prefixo...sufixo"
-  const m = expected.match(/^([0-9a-f]+)\.{2,3}([0-9a-f]+)$/i);
-  if (m) return actual.startsWith(m[1].toLowerCase()) && actual.endsWith(m[2].toLowerCase());
-  return false;
-}
-
-const raw = readFileSync(resolve(CSV_PATH), 'utf-8');
-const parsed = Papa.parse<Row>(raw, { header: true, skipEmptyLines: true });
-const results: Result[] = [];
-
-for (const r of parsed.data) {
+export function verifyRow(r: Row, reader: FileReader = nodeReader): Result {
   const incident = r.incident_id || '(sem id)';
   const file = r.arquivo_payload_mascarado || '';
   const expected = (r.hash_sha256 || '').trim();
 
-  if (isPlaceholder(file) && isPlaceholder(expected)) {
-    results.push({ incident, file, expected, actual: '', status: 'PLACEHOLDER', detail: 'linha modelo (sem payload/hash)' });
-    continue;
-  }
-  if (isPlaceholder(file)) { results.push({ incident, file, expected, actual: '', status: 'NO_FILE' }); continue; }
-  if (isPlaceholder(expected)) { results.push({ incident, file, expected, actual: '', status: 'NO_HASH' }); continue; }
+  if (isPlaceholder(file) && isPlaceholder(expected))
+    return { incident, file, expected, actual: '', status: 'PLACEHOLDER', detail: 'linha modelo' };
+  if (isPlaceholder(file)) return { incident, file, expected, actual: '', status: 'NO_FILE' };
+  if (isPlaceholder(expected)) return { incident, file, expected, actual: '', status: 'NO_HASH' };
+  if (!reader.exists(file)) return { incident, file, expected, actual: '', status: 'FILE_MISSING' };
 
-  const abs = resolve(file);
-  if (!existsSync(abs)) { results.push({ incident, file, expected, actual: '', status: 'FILE_MISSING' }); continue; }
-
-  const buf = readFileSync(abs);
+  const buf = reader.read(file);
   const actual = createHash('sha256').update(buf).digest('hex');
-  const ok = compare(expected, actual);
-  results.push({ incident, file, expected, actual, status: ok ? 'OK' : 'MISMATCH' });
+  return { incident, file, expected, actual, status: compareHash(expected, actual) ? 'OK' : 'MISMATCH' };
 }
 
-const summary = results.reduce<Record<string, number>>((a, r) => (a[r.status] = (a[r.status] ?? 0) + 1, a), {});
-const lines: string[] = [
-  '# Conferência de SHA-256 — Payloads mascarados',
-  '',
-  `- CSV: \`${CSV_PATH}\``,
-  `- Total: ${results.length}`,
-  `- Resumo: ${Object.entries(summary).map(([k, v]) => `${k}=${v}`).join(' · ')}`,
-  '',
-  '| Incident | Arquivo | Esperado | Calculado | Status |',
-  '| -------- | ------- | -------- | --------- | ------ |',
-  ...results.map(r => `| ${r.incident} | \`${r.file || '—'}\` | \`${r.expected || '—'}\` | \`${r.actual || '—'}\` | **${r.status}**${r.detail ? ` (${r.detail})` : ''} |`),
-];
-writeFileSync(OUT, lines.join('\n') + '\n');
+export function verifyCsv(raw: string, reader: FileReader = nodeReader): Result[] {
+  const parsed = Papa.parse<Row>(raw, { header: true, skipEmptyLines: true });
+  return parsed.data.map((r) => verifyRow(r, reader));
+}
 
-const fail = results.filter(r => r.status === 'MISMATCH' || r.status === 'FILE_MISSING').length;
-console.log(`Relatório salvo em ${OUT} — ${fail} falha(s) críticas`);
-process.exit(fail === 0 ? 0 : 1);
+export function renderReport(results: Result[], csvPath: string): string {
+  const summary = results.reduce<Record<string, number>>((a, r) => (a[r.status] = (a[r.status] ?? 0) + 1, a), {});
+  return [
+    '# Conferência de SHA-256 — Payloads mascarados',
+    '',
+    `- CSV: \`${csvPath}\``,
+    `- Total: ${results.length}`,
+    `- Resumo: ${Object.entries(summary).map(([k, v]) => `${k}=${v}`).join(' · ') || '—'}`,
+    '',
+    '| Incident | Arquivo | Esperado | Calculado | Status |',
+    '| -------- | ------- | -------- | --------- | ------ |',
+    ...results.map(r => `| ${r.incident} | \`${r.file || '—'}\` | \`${r.expected || '—'}\` | \`${r.actual || '—'}\` | **${r.status}**${r.detail ? ` (${r.detail})` : ''} |`),
+  ].join('\n') + '\n';
+}
+
+// CLI
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const csvPath = process.argv[2] ?? 'docs/evidencias/mp-sandbox/INCIDENTES-TEMPLATE.csv';
+  const out = 'docs/evidencias/mp-sandbox/HASH-CHECK-REPORT.md';
+  const raw = readFileSync(resolve(csvPath), 'utf-8');
+  const results = verifyCsv(raw);
+  writeFileSync(out, renderReport(results, csvPath));
+  const fail = results.filter(r => r.status === 'MISMATCH' || r.status === 'FILE_MISSING').length;
+  // eslint-disable-next-line no-console
+  console.log(`Relatório salvo em ${out} — ${fail} falha(s) críticas`);
+  process.exit(fail === 0 ? 0 : 1);
+}
