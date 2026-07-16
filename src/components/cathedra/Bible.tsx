@@ -883,16 +883,16 @@ const Bible: React.FC = () => {
 
 
   const selectBook = (book: BibleBook) => {
+    // useBibleNavigation escreve na URL; nada mais é necessário.
     setSelectedBook(book);
-    navigate(`/bible?book=${encodeURIComponent(book.abbr)}`);
   };
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
-    navigate(`/bible?book=${encodeURIComponent(selectedBook!.abbr)}&ch=${ch}`);
     // Scroll context top
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
+
 
   const nextChapter = useCallback(() => {
     if (!selectedBook) return;
