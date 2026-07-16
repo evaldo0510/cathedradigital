@@ -238,3 +238,76 @@ Combine códigos para descrever o escopo real de um item:
 5. **Fonte da verdade.** Este documento é canônico. Qualquer divergência em ADR, ticket ou código-fonte é corrigida para bater com ele.
 
 _Versão 1.0 — padrão oficial de arquitetura do Cathedra._
+
+---
+
+## Estrutura de diretórios — `src/`
+
+Snapshot da árvore real (profundidade 3). Atualizar sempre que criar/mover subpastas.
+
+```text
+src/
+├── assets/
+│   ├── covers/
+│   └── thumbnails/
+├── components/
+│   ├── __tests__/
+│   ├── admin/
+│   │   └── pg-stats/
+│   ├── auth/
+│   ├── bible-perf/
+│   ├── cathedra/
+│   │   ├── __tests__/
+│   │   ├── admin/
+│   │   ├── encyclopedia/
+│   │   ├── layout/
+│   │   └── lectio/
+│   ├── dev/
+│   ├── landing/
+│   └── ui/
+│       └── __snapshots__/
+├── config/
+├── constants/
+├── contexts/
+├── data/
+├── hooks/
+│   ├── __tests__/
+│   └── bible/
+│       └── __tests__/
+├── integrations/
+│   ├── lovable/
+│   └── supabase/
+│       └── __tests__/
+├── lib/
+│   ├── __tests__/
+│   └── bible/
+│       └── __tests__/
+├── pages/
+│   ├── __test/
+│   ├── __tests__/
+│   ├── admin/
+│   └── landing/
+│       ├── __tests__/
+│       └── hero/
+├── scripts/
+│   └── history/
+├── services/
+├── shared/
+├── test/
+└── utils/
+```
+
+### Mapeamento rápido para códigos ARC
+
+| Diretório                        | Códigos ARC principais                     |
+| -------------------------------- | ------------------------------------------ |
+| `src/components/ui/`             | ARC-102, ARC-107, ARC-108                  |
+| `src/components/cathedra/`       | ARC-102 + CAT-001…CAT-010                  |
+| `src/components/admin/`          | ARC-102 + CAT-010, CAT-012                 |
+| `src/hooks/`                     | ARC-103                                    |
+| `src/contexts/`                  | ARC-104                                    |
+| `src/pages/`                     | ARC-106                                    |
+| `src/lib/`, `src/shared/`        | ARC-202 (equivalente no frontend)          |
+| `src/integrations/supabase/`     | ARC-201, ARC-301, ARC-901                  |
+| `src/services/`                  | ARC-208                                    |
+| `src/test/`, `**/__tests__/`     | ARC-005 (documentação de qualidade)        |
