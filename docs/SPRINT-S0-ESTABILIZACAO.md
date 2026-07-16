@@ -563,9 +563,242 @@ flowchart TD
 - Se o caminho não se encaixar em nenhum ramo, **não improvisar**: registrar em §6.3 como `CAUSA-NAO-CLASSIFICADA` com todos os artefatos do checklist §6.7 e escalar via ADR-015.
 - Nenhuma folha autoriza alterar código de edge function durante S0.
 
+### 6.10 Template CSV para registro de incidentes de sandbox
 
+**Arquivo:** [`docs/evidencias/mp-sandbox/INCIDENTES-TEMPLATE.csv`](./evidencias/mp-sandbox/INCIDENTES-TEMPLATE.csv)
+
+Planilha em CSV (compatível com Excel, LibreOffice, Google Sheets) com **uma coluna por artefato/campo exigido** em §6.1, §6.2, §6.3 e §6.7. Cada linha = um incidente `INC-<NNN>` correlacionado a uma evidência `EV-<NNN>`.
+
+**Como usar:**
+1. Copiar o arquivo para uso local — não editar o template versionado.
+2. Preencher **uma linha por evidência**. Se o mesmo incidente cobre múltiplas evidências, repetir o `incident_id` em várias linhas e variar o `evidence_id`.
+3. Nunca deixar célula em branco: usar `<preencher>` quando o valor ainda não foi observado ou `n-a` quando o campo não se aplica (com justificativa em `observacoes`).
+4. Ao consolidar, exportar o CSV preenchido para `docs/evidencias/mp-sandbox/INC-<NNN>.csv` e referenciar em §6.3 (campo `Evidências relacionadas`).
+
+**Mapeamento coluna → seção do doc:**
+
+| Coluna CSV | Alimenta em |
+| --- | --- |
+| `incident_id`, `causa_provavel`, `evidencias_relacionadas`, `bloqueado_por_cat_doc_002`, `adr_acompanhamento` | §6.3 (registro de incidente) |
+| `evidence_id`, `data_hora_captura_brt`, `ambiente`, `app_id_mp_sandbox`, `external_reference`, `payment_id`, `tipo_evento`, `edge_function_receptora`, `fonte_atribuicao`, `status_http`, `latencia_ms`, `linha_webhook_logs`, `arquivo_payload_mascarado`, `hash_sha256`, `mascara_aplicada_em`, `header_x_signature_mascarado`, `header_x_request_id`, `assinatura_hmac_valida`, `janela_timestamp_ok`, `idempotencia_respeitada`, `executor`, `observacoes` | §6.2 (bloco `EV-<NNN>`) |
+| `data_hora_captura_brt`, `external_reference`, `tipo_evento`, `edge_function_receptora`, `linha_webhook_logs`, `app_id_mp_sandbox`, `executor`, `observacoes` | §6.1 (linha da tabela) |
+| `caso_teste` (`CT-SIG-01` / `02` / `03`), `mensagem_erro_log`, `metodo_injecao` | §6.4 e §6.5 (classificação e veredicto) |
+| `delta_timestamp_s`, `janela_configurada_s` | §6.7 item 8 (obrigatório em CT-SIG-03) |
+
+O template já inclui 3 linhas de exemplo (`INC-001` a `INC-003`) cobrindo CT-SIG-01/02/03, seguindo os valores fictícios de §6.6. Apagar as linhas de exemplo antes do preenchimento real.
+
+### 6.11 Glossário de termos e campos usados na validação
+
+Para padronizar a interpretação dos campos ao longo de §6.1–§6.10. Não introduzir sinônimos fora desta lista.
+
+| Termo | Definição | Exemplo curto | Onde aparece |
+| --- | --- | --- | --- |
+| **Payload mascarado** | Corpo JSON do webhook MP com dados sensíveis substituídos por marcadores. É o único formato aceito para versionar. | `{"payer":{"email":"u***@***.com"}}` | §6.2 → `Arquivo do payload mascarado`; §6.7 item 1 |
+| **Hash SHA-256** | Digest hexadecimal de 64 caracteres do **arquivo** de payload mascarado (não do payload em memória). Identifica de forma única o artefato salvo em disco. | `3f9c2e1a7b5d4e0f...9a8b7c6d` | §6.2 → `Hash SHA-256 do arquivo`; §6.7 item 2 |
+| **Delta de tempo (`\|now - ts\|`)** | Diferença absoluta, em segundos, entre o horário do log da edge function (`now`) e o `ts` declarado no header `x-signature`. Comparar contra a janela configurada. | `delta=602s, janela=300s` → fora da janela | §6.7 item 8; CT-SIG-03 |
+| **Janela configurada** | Tolerância máxima, em segundos, aceita pelo handler para o `ts` do `x-signature`. Valor fixo na edge function; não alterar durante S0. | `300s` (5 min) | §6.7 item 8; §6.5 CT-SIG-03 |
+| **Header `x-signature`** | Cabeçalho HTTP enviado pelo MP contendo `ts=<epoch>` e `v1=<hmac_sha256>` separados por vírgula. O handler valida os dois. | `ts=1752686530,v1=a1b2c3...` | §6.2; §6.7 item 5 |
+| **`ts` (timestamp do header)** | Epoch em segundos (UTC) declarado no `x-signature`. Base para o cálculo de delta. | `1752686530` = `2026-07-16 17:22:10 UTC` | §6.7 item 8 |
+| **`v1` (assinatura HMAC)** | HMAC-SHA256 do payload (com secret do app) codificado em hex, transportado no `x-signature`. Nunca colar bruto — mascarar com primeiros 4 chars + `…<truncado>`. | `v1=a1b2…<truncado>` | §6.2; §6.7 item 5 |
+| **Status HTTP** | Código retornado pela edge function ao MP. Fonte da verdade para PASS/FAIL dos casos de teste. | `200` (PASS CT-SIG-01), `401` (PASS CT-SIG-02), `403` (PASS CT-SIG-03) | §6.5; §6.7 item 3 |
+| **`external_reference`** | ID gerado pelo app na criação da preferência MP; usado como chave de correlação entre preferência, pagamento e webhook. | `upgrade_pro_user_9f3a_1758` | §6.1; §6.2 |
+| **`payment_id`** | ID do pagamento no MP (numérico). Aparece no corpo do webhook. | `1319876543` | §6.2 |
+| **`x-request-id`** | ID de request do MP para rastreamento cruzado com o painel MP. | `req_9f3a1e7c…<truncado>` | §6.2 |
+| **Fonte da atribuição** | Como se determinou qual edge function recebeu o evento. Valores válidos: `edge_function_logs`, `webhook_logs`, `ambos`. | `edge_function_logs+webhook_logs` | §6.2 |
+| **Idempotência respeitada** | Se o reenvio do MESMO evento não gerou duplicata funcional em `webhook_logs`. `n-a` quando o handler rejeitou antes de persistir. | `sim` (uma linha), `n-a` (rejeitado no 401) | §6.2; §6.5 CT-SIG-01 |
+| **CT-SIG-01 / 02 / 03** | Casos de teste padronizados: 01 = sucesso; 02 = assinatura inválida; 03 = timestamp fora da janela. | `[CT-SIG-02]` em `Observações` | §6.4; §6.5 |
+| **EV-`<NNN>`** | ID sequencial da evidência (§6.2). Um por evento observado. | `EV-001` | §6.2; §6.7 |
+| **INC-`<NNN>`** | ID sequencial de incidente (§6.3). Aberto quando ≥2 evidências apresentam o mesmo sintoma. | `INC-001` | §6.3; §6.10 |
+
+### 6.12 Casos de borda — exemplos preenchidos (fictícios)
+
+Complementa §6.6 cobrindo cenários que não se encaixam limpo em CT-SIG-01/02/03 mas ainda são possíveis em sandbox. Todos os valores são **fictícios**.
+
+#### EV-004 — Header `x-signature` ausente [FICTÍCIO]
+
+```
+ID interno da evidência:    EV-004                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T15:02:11-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+Tipo de evento:             payment.updated (reenviado via curl SEM header x-signature)
+
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      401
+Linha em webhook_logs?      não
+
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-004.json
+Hash SHA-256 do arquivo:      c4d5e6f7a8b9...0d1e2f          [FICTÍCIO]
+Header x-signature (mascarado): <ausente>
+Header x-request-id:            req_edge_missing_sig…<truncado>
+
+Assinatura HMAC válida?     não
+Janela de timestamp OK?     n-a  (sem ts para avaliar)
+Idempotência respeitada?    n-a
+Observações:                [BORDA-01 header ausente] Log: "missing_signature".
+                            Classificar como variação de CT-SIG-02 (assinatura inválida por ausência).
+                            PASS se status = 401; FAIL se 200/500.
+```
+
+**Interpretação dos campos:**
+- `Header x-signature = <ausente>` é literal — não usar `<preencher>` nem string vazia. Sinaliza que o request chegou sem o header.
+- `Assinatura HMAC válida? = não` e `Janela de timestamp OK? = n-a` são obrigatórios juntos: sem header, não há como avaliar o `ts`.
+- `Status = 401` é o esperado. `400` também é aceitável se o handler tratar como request malformado — anotar em Observações e não classificar como FAIL só pela diferença.
+
+#### EV-005 — `x-signature` com formato inválido (parser não consegue extrair `ts` ou `v1`) [FICTÍCIO]
+
+```
+ID interno da evidência:    EV-005                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T15:14:47-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+Tipo de evento:             payment.updated (reenviado via curl com header malformado)
+
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      400
+Linha em webhook_logs?      não
+
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-005.json
+Hash SHA-256 do arquivo:      d5e6f7a8b9c0...1e2f3a          [FICTÍCIO]
+Header x-signature (mascarado): "v1only_no_ts_no_comma"     [FICTÍCIO — sem ts=, sem vírgula]
+Header x-request-id:            req_edge_malformed_sig…<truncado>
+
+Assinatura HMAC válida?     n-a  (não avaliada — parser falhou antes)
+Janela de timestamp OK?     n-a
+Idempotência respeitada?    n-a
+Observações:                [BORDA-02 formato inválido] Log: "signature_parse_error".
+                            Diferente de BORDA-01: header está presente, mas não segue o formato "ts=..,v1=..".
+                            PASS se status = 400 (request malformado) OU 401 (rejeição de segurança).
+```
+
+**Interpretação dos campos:**
+- `Header x-signature` **presente** mas sem `ts=`/`v1=` distingue este caso de BORDA-01.
+- `Status = 400` é semanticamente mais correto (request malformado) que `401`; ambos são aceitáveis desde que o handler não avance para lógica de negócio.
+- `Assinatura HMAC válida? = n-a` (e não `não`) porque a validação HMAC nunca chegou a ser executada.
+
+#### EV-006 — Payload com tamanho inesperado (JSON muito grande ou truncado) [FICTÍCIO]
+
+```
+ID interno da evidência:    EV-006                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T15:28:03-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+Tipo de evento:             payment.updated (payload inflado a 512KB via curl)
+
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      413                             [FICTÍCIO — Payload Too Large]
+Linha em webhook_logs?      não
+
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-006.json
+Hash SHA-256 do arquivo:      e6f7a8b9c0d1...2f3a4b          [FICTÍCIO]
+Tamanho do payload (bytes):   524288                        [FICTÍCIO]
+Header x-signature (mascarado): ts=1752690483,v1=a1b2…<truncado>  [FICTÍCIO]
+
+Assinatura HMAC válida?     n-a  (rejeitado por tamanho antes do HMAC)
+Janela de timestamp OK?     n-a
+Idempotência respeitada?    n-a
+Observações:                [BORDA-03 tamanho inesperado] Log: "payload_too_large: 524288 > limit".
+                            Registrar o tamanho em bytes em Observações (campo novo, não estruturado em §6.2).
+                            PASS se status ∈ {400, 413}; FAIL se 200 (aceitou payload anômalo).
+```
+
+**Interpretação dos campos:**
+- `Tamanho do payload (bytes)` **não** é campo padrão de §6.2 — colocar em `Observações` para não poluir o template.
+- `Status = 413` é ideal; `400` é aceitável. Qualquer `2xx` é FAIL crítico (aceitar payload gigante sem validar é vetor de DoS).
+- `Hash SHA-256` continua obrigatório — mesmo payload anômalo precisa ser rastreável.
+
+#### EV-007 — Alteração mínima no payload (1 byte trocado) [FICTÍCIO]
+
+```
+ID interno da evidência:    EV-007                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T15:41:29-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+Tipo de evento:             payment.updated (payload com 1 byte alterado, x-signature original de EV-001)
+
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      401
+Linha em webhook_logs?      não
+
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-007.json
+Hash SHA-256 do arquivo:      f7a8b9c0d1e2...3a4b5c          [FICTÍCIO — DIFERE de EV-001 apesar da alteração mínima]
+Hash SHA-256 de referência:   3f9c2e1a7b5d4e0f...9a8b7c6d    [FICTÍCIO — EV-001]
+Header x-signature (mascarado): ts=1752686530,v1=a1b2…<truncado>  [FICTÍCIO — MESMO de EV-001]
+
+Assinatura HMAC válida?     não
+Janela de timestamp OK?     sim  (ts reusado dentro da janela)
+Idempotência respeitada?    n-a
+Observações:                [BORDA-04 alteração mínima] Log: "signature_invalid: HMAC mismatch".
+                            Este é o teste mais forte de integridade: 1 byte diferente → hash SHA-256 do
+                            arquivo muda completamente E o HMAC v1 não bate. Referenciar EV-001 como base.
+                            PASS se status = 401; FAIL se 200 (handler ignora corpo).
+```
+
+**Interpretação dos campos:**
+- Registrar **os dois hashes** (do payload alterado e do original de referência) em Observações — é a única forma de comprovar que a alteração foi mínima e não substituição completa.
+- `Header x-signature` intencionalmente idêntico ao de EV-001: prova que o HMAC valida o **corpo**, não só o header.
+- `Janela de timestamp OK? = sim` só é possível se o teste rodar dentro da janela (`ts` original ainda válido). Se rodar depois, vira mistura CT-SIG-02 + CT-SIG-03 — anotar e registrar como incidente separado.
+
+### 6.13 Passo a passo — como recalcular o hash SHA-256 do payload mascarado
+
+**Objetivo:** conferir se o valor de `Hash SHA-256 do arquivo` em §6.2 corresponde ao arquivo entregue em `docs/evidencias/mp-sandbox/EV-<NNN>.json`. Usado tanto para gerar o hash na primeira vez quanto para revalidar em auditoria.
+
+**Inputs necessários (nada além disso):**
+1. O **arquivo** de payload mascarado (`.json`) já salvo em disco — não o payload em memória, não a string colada no doc.
+2. Encoding do arquivo: **UTF-8 sem BOM**. Se o editor tiver salvado com BOM, o hash muda.
+3. Terminador de linha: manter o que o editor gerou (`LF` no Linux/macOS, `CRLF` no Windows). Não converter após salvar — qualquer conversão muda o hash.
+
+**Passos:**
+
+1. **Salvar o payload mascarado** em `docs/evidencias/mp-sandbox/EV-<NNN>.json`. Não editar depois de calcular o hash — se editar, recalcular.
+2. **Calcular o hash** com uma das opções abaixo (todas produzem o mesmo valor para o mesmo arquivo):
+
+   ```bash
+   # Linux / macOS (coreutils)
+   sha256sum docs/evidencias/mp-sandbox/EV-001.json
+   # Saída: 3f9c2e1a7b5d4e0f...9a8b7c6d  docs/evidencias/mp-sandbox/EV-001.json
+
+   # macOS alternativo
+   shasum -a 256 docs/evidencias/mp-sandbox/EV-001.json
+
+   # Windows PowerShell
+   Get-FileHash -Algorithm SHA256 docs/evidencias/mp-sandbox/EV-001.json
+
+   # Node (se coreutils indisponível)
+   node -e "console.log(require('crypto').createHash('sha256').update(require('fs').readFileSync('docs/evidencias/mp-sandbox/EV-001.json')).digest('hex'))"
+   ```
+
+3. **Copiar o digest** (64 chars hex, minúsculos) para o campo `Hash SHA-256 do arquivo` em §6.2. Não truncar — colar completo.
+4. **Conferir** rodando o comando de novo depois de 1 min. Se o valor mudou sem edição, algo alterou o arquivo (auto-format do editor, plugin) — investigar antes de aceitar o hash.
+5. **Registrar no CSV** (§6.10, coluna `hash_sha256`) o mesmo valor.
+
+**Como validar em auditoria (terceiro conferindo):**
+
+1. Baixar o arquivo `docs/evidencias/mp-sandbox/EV-<NNN>.json` da versão do repo indicada.
+2. Rodar `sha256sum` (ou equivalente) sobre o arquivo.
+3. Comparar **byte a byte** com o valor em §6.2 — deve ser idêntico. Divergência de qualquer caractere = evidência rejeitada.
+
+**Erros comuns e como interpretar:**
+
+| Sintoma | Causa provável | Correção |
+| --- | --- | --- |
+| Hash muda a cada execução sem editar | Editor salvando com timestamp/metadata (não deveria acontecer em JSON), ou script de watch reformatando | Fechar editor, desabilitar auto-format, recalcular |
+| Hash local ≠ hash em §6.2 | BOM adicionado no salvamento OU terminadores de linha convertidos (LF↔CRLF) | Reabrir arquivo em modo binário, salvar UTF-8 sem BOM, recalcular |
+| Hash idêntico entre 2 evidências diferentes | Mesmo arquivo salvo com nomes diferentes — evidência duplicada | Regerar payload a partir do log correto do evento |
+| `sha256sum: comando não encontrado` | Ambiente sem coreutils | Usar `shasum -a 256` (macOS) ou o snippet Node acima |
+| Digest com letras maiúsculas | Ferramenta diferente | Normalizar para minúsculas antes de salvar (padrão do doc) |
+
+**Regras invioláveis:**
+- Nunca calcular hash do payload **em memória** (variável Python, string colada no chat) — sempre do **arquivo em disco**. Só o arquivo é o que fica versionado e auditável.
+- Nunca "arrumar" o arquivo depois de calcular o hash. Se precisar corrigir (ex.: mascarar campo esquecido), recalcular e substituir o hash em §6.2 e no CSV.
+- Nunca aceitar hash truncado (menos de 64 chars) em §6.2 — evidência inválida.
 
 ## 7. Backup
+
 
 
 ### 7.1 Checklist
