@@ -186,7 +186,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           <>
             <div className="my-spacing-lg border-t border-primary/10" />
             <div className="flex flex-wrap items-center gap-spacing-md">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 Fonte oficial
               </p>
               <a
