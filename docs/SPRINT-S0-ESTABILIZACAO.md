@@ -120,6 +120,50 @@
 - Responsável pela conclusão: `<preencher>`
 - Data: `<preencher>`
 
+### 6.2 Template padronizado de evidência (por evento capturado)
+
+Copiar este bloco para cada evento registrado em §6.1. **Não inventar valores** — usar `<preencher>` para o que não puder ser observado. Nunca colar segredos ou dados de cartão real.
+
+```
+── EVIDÊNCIA DE WEBHOOK MP (SANDBOX) ────────────────────────────────
+ID interno da evidência:    EV-<NNN>
+Data/hora captura (BRT):    <preencher>  (ISO 8601: 2026-07-DDTHH:MM:SS-03:00)
+Ambiente:                   sandbox      (NUNCA "production")
+App ID MP (sandbox):        <preencher>
+external_reference:         <preencher>
+payment_id (MP):            <preencher>
+Tipo de evento:             <preencher>  (payment.created | payment.updated | merchant_order | ...)
+
+── HANDLER OBSERVADO ────────────────────────────────────────────────
+Edge function receptora:    <preencher>  (mercadopago-webhook | mercado-pago-webhook)
+Fonte da atribuição:        <preencher>  (edge_function_logs | webhook_logs | ambos)
+Status HTTP retornado:      <preencher>  (200 | 4xx | 5xx)
+Latência (ms):              <preencher>
+Linha em webhook_logs?      <preencher>  (sim/não + id da linha se sim)
+
+── PAYLOAD ─────────────────────────────────────────────────────────
+Arquivo do payload mascarado: <preencher>  (caminho relativo, ex.: docs/evidencias/mp-sandbox/EV-001.json)
+Hash SHA-256 do arquivo:      <preencher>
+Máscara aplicada em:          payer.email, payer.identification, card.*, tokens de acesso
+Header x-signature (mascarado): <preencher>  (ex.: "ts=...,v1=abcd…<truncado>")
+Header x-request-id:           <preencher>
+
+── VALIDAÇÃO ────────────────────────────────────────────────────────
+Assinatura HMAC válida?     <preencher>  (sim/não/n-a — n-a se handler não valida)
+Janela de timestamp OK?     <preencher>  (sim/não/n-a)
+Idempotência respeitada?    <preencher>  (sim/não — checar duplicata em webhook_logs)
+Executor:                   <preencher>
+Observações:                <preencher>
+─────────────────────────────────────────────────────────────────────
+```
+
+**Regras de preenchimento:**
+- Um bloco por evento. Numerar `EV-001`, `EV-002`, …
+- Salvar arquivos de payload em `docs/evidencias/mp-sandbox/` (criar diretório na hora do teste). Não versionar payloads brutos — apenas mascarados.
+- Máscara mínima obrigatória: e-mail → `u***@***.com`; documento → `***`; tokens → primeiros 4 chars + `…<truncado>`.
+- Se algum campo não puder ser observado (ex.: handler que não expõe latência), manter `<preencher>` e anotar o motivo em Observações — não estimar.
+- Nenhuma evidência é aceita sem hash SHA-256 do arquivo de payload.
+
 ## 7. Backup
 
 ### 7.1 Checklist
