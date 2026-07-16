@@ -355,6 +355,52 @@ const Magisterium: React.FC = () => {
   );
   const visibleDocs = pagination.items;
 
+  // ---------------------------------------------------------------------------
+  // STAB-004.1 · Agrupamento visual opcional (sem alterar filtros/paginação).
+  // `?group=category` agrupa por categoria; `?group=pope` agrupa por autor.
+  // Ausente = grid plana (comportamento atual). Nada é gravado em outro state.
+  // ---------------------------------------------------------------------------
+  const groupBy: 'category' | 'pope' | null = (() => {
+    const g = searchParams.get('group');
+    return g === 'category' || g === 'pope' ? g : null;
+  })();
+
+  const setGroupBy = useCallback(
+    (next: 'category' | 'pope' | null) => {
+      const nextParams = new URLSearchParams(searchParams);
+      if (next) nextParams.set('group', next);
+      else nextParams.delete('group');
+      if (nextParams.toString() !== searchParams.toString()) {
+        setSearchParams(nextParams, { replace: true });
+      }
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const groupedDocs = useMemo(() => {
+    if (!groupBy) return null;
+    const buckets = new Map<string, MagisteriumDocument[]>();
+    for (const d of visibleDocs) {
+      const key = groupBy === 'pope' ? (d.author || '—') : (d.category || '—');
+      const arr = buckets.get(key) ?? [];
+      arr.push(d);
+      buckets.set(key, arr);
+    }
+    const entries = Array.from(buckets.entries()).map(([key, docs]) => ({ key, docs }));
+    if (groupBy === 'category') {
+      entries.sort((a, b) => (CATEGORY_ORDER[a.key] ?? 999) - (CATEGORY_ORDER[b.key] ?? 999));
+    } else {
+      // Papas: ordena pelo documento mais antigo de cada grupo (cronológico).
+      const firstDate = (docs: MagisteriumDocument[]) =>
+        docs.reduce((min, d) => {
+          const k = d.date ?? `${d.year}`;
+          return k < min ? k : min;
+        }, '9999');
+      entries.sort((a, b) => firstDate(a.docs).localeCompare(firstDate(b.docs)));
+    }
+    return entries;
+  }, [groupBy, visibleDocs]);
+
   // Ref para o cabeçalho da lista — recebe foco após scroll ao topo (a11y).
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
 
