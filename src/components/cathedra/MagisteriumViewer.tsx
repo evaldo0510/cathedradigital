@@ -678,6 +678,11 @@ const MagisteriumViewer: React.FC = () => {
         </div>
       )}
 
+      {/* STAB-004.3: Navegação entre documentos (derivada de MAGISTERIUM_DOCUMENTS) */}
+      {id && <MagisteriumDocumentNav currentId={id} />}
+
+
+
 
       <div className="mt-spacing-4xl pt-spacing-3xl border-t border-primary/5 flex flex-col items-center gap-spacing-2xl">
         <div className="text-center space-y-spacing-md">
