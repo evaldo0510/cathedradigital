@@ -762,7 +762,7 @@ const MagisteriumViewer: React.FC = () => {
         <Button 
           variant="ghost" 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="rounded-premium-full px-spacing-xl py-spacing-lg text-muted-foreground/40 hover:text-primary transition-all group"
+          className="rounded-premium-full px-spacing-xl py-spacing-lg text-muted-foreground hover:text-primary transition-all group"
         >
           <Icons.ChevronUp className="w-spacing-md h-spacing-md mr-spacing-xs group-hover:-translate-y-1 transition-transform" /> 
           Voltar ao Topo do Documento
