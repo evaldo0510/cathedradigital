@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
