@@ -3,17 +3,14 @@
  * faltantes do cânon a partir da API pública bolls.life.
  *
  * Ações:
- *   POST { action: 'start', translation?: 'NVIPT' }  → cria job e roda em background
+ *   POST { action: 'validate', translation }         → valida fonte (sem gravar)
+ *   POST { action: 'dry_run',  translation }         → simula import (1 cap/livro)
+ *   POST { action: 'preview',  translation }         → conta pendências (leve)
+ *   POST { action: 'start', translation, retry_of? } → cria job e roda em background
+ *   POST { action: 'list_jobs', limit? }             → lista histórico
  *   GET  ?action=status&job_id=…                     → consulta progresso
- *   GET  ?action=preview                             → lista o que falta (dry-run leve)
- *
- * Fluxo do job:
- *   1) Garante bible_translation_sources para "bolls-<TRANSLATION>"
- *   2) Cria bible_import_jobs (status=running)
- *   3) Para cada livro protocanônico do BIBLE_CANON ausente/incompleto,
- *      busca capítulos no bolls.life e faz upsert idempotente
- *   4) Ao final, invoca bible-canon-diagnose e grava o run_id em verification
  */
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
 
