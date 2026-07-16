@@ -164,7 +164,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           <>
             <div className="my-spacing-lg border-t border-primary/10" />
             <div className="space-y-spacing-sm">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 Temas
               </p>
               <div className="flex flex-wrap gap-spacing-2xs">
