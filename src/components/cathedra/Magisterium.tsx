@@ -526,7 +526,7 @@ const Magisterium: React.FC = () => {
             <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
               <Button
                 variant="ghost"
-                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                 onClick={() => setSelectedCategory(null)}
               >
                 Todas as Categorias
@@ -540,7 +540,7 @@ const Magisterium: React.FC = () => {
               >
                 <Button
                   variant="ghost"
-                  className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                  className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                   onClick={() => setSelectedCategory(cat.name)}
                 >
                   {cat.name}
@@ -562,7 +562,7 @@ const Magisterium: React.FC = () => {
                   <Button
                     variant="ghost"
                     aria-pressed={active}
-                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary border border-primary/10'}`}
+                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
                     onClick={() => toggleTheme(theme)}
                   >
                     {theme}
@@ -574,7 +574,7 @@ const Magisterium: React.FC = () => {
 
           {/* Ordenação + reset */}
           <div className="flex items-center justify-between gap-spacing-md">
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
               {pagination.totalItems === 0 ? (
                 <>0 documentos</>
               ) : (
@@ -596,7 +596,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'category'}
                   onClick={() => setGroupBy(groupBy === 'category' ? null : 'category')}
                   className={cn(
-                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    'text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
                     groupBy === 'category' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -611,7 +611,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'pope'}
                   onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
                   className={cn(
-                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    'text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
                     groupBy === 'pope' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -632,7 +632,7 @@ const Magisterium: React.FC = () => {
                           : 'canonical',
                     )
                   }
-                  className="text-[9px] font-black uppercase tracking-[0.2em]"
+                  className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
                 >
                   <Icons.ArrowDown
                     className={cn(
@@ -669,7 +669,7 @@ const Magisterium: React.FC = () => {
               role="region"
               aria-label="Filtros ativos"
             >
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30 mr-spacing-2xs">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/70 mr-spacing-2xs">
                 Filtros ativos:
               </span>
 
@@ -719,7 +719,7 @@ const Magisterium: React.FC = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/60 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/80 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
                 >
                   <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
                   Limpar tudo
@@ -764,29 +764,29 @@ const Magisterium: React.FC = () => {
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                       {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                     </div>
-                    <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
+                    <span className="text-[8px] font-black text-secondary tracking-widest">{doc.year}</span>
                   </div>
 
                   <div className="space-y-spacing-xs flex-1">
                     <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">
                       {renderHighlighted(doc.title, searchQuery)}
                       {doc.abbr && (
-                        <span className="ml-spacing-2xs text-[9px] font-black text-primary/40 tracking-[0.2em] align-middle">
+                        <span className="ml-spacing-2xs text-[9px] font-black text-primary/70 tracking-[0.2em] align-middle">
                           ({renderHighlighted(doc.abbr, searchQuery)})
                         </span>
                       )}
                     </h3>
-                    <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">
+                    <p className="text-[8px] font-black text-primary/70 uppercase tracking-[0.2em]">
                       {renderHighlighted(doc.author, searchQuery)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">
+                    <p className="text-[10px] text-muted-foreground italic line-clamp-spacing-xs leading-relaxed">
                       {renderHighlighted(doc.summary, searchQuery)}
                     </p>
                   </div>
 
                   <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
                     {doc.themes.map(t => (
-                      <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-premium-full">
+                      <span key={t} className="text-[6px] font-black text-primary/70 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-premium-full">
                         {t}
                       </span>
                     ))}
@@ -837,13 +837,13 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page <= 1}
               onClick={() => setPage(p => Math.max(1, p - 1))}
               aria-label="Página anterior"
-              className="text-[9px] font-black uppercase tracking-[0.2em]"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
               Anterior
             </Button>
             <span
-              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80"
               aria-live="polite"
               aria-atomic="true"
             >
@@ -855,7 +855,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page >= pagination.totalPages}
               onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
               aria-label="Próxima página"
-              className="text-[9px] font-black uppercase tracking-[0.2em]"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               Próxima
               <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />

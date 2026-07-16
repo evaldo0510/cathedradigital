@@ -319,6 +319,7 @@ const Footer: React.FC = React.memo(() => {
               {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
                 <React.Fragment key={item.label}>
                   <Button 
+                    variant="ghost"
                     onClick={() => navigate(item.path)} 
                     className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-spacing-sm py-spacing-2xs rounded"
                     aria-label={item.label}

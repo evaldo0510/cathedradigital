@@ -30,7 +30,7 @@ const MetaRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, 
   if (!value) return null;
   return (
     <div className="flex items-baseline gap-spacing-sm py-spacing-2xs">
-      <dt className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 min-w-[92px]">
+      <dt className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground min-w-[92px]">
         {label}
       </dt>
       <dd className="text-premium-sm text-foreground/90 font-medium">{value}</dd>
@@ -134,7 +134,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
         <div className="space-y-spacing-xs">
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
             {doc.type}
-            {doc.abbr && <span className="text-muted-foreground/60"> · {doc.abbr}</span>}
+            {doc.abbr && <span className="text-muted-foreground"> · {doc.abbr}</span>}
           </p>
           <h1 className="font-serif text-premium-3xl md:text-premium-4xl text-primary leading-tight">
             {doc.title}
@@ -164,7 +164,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           <>
             <div className="my-spacing-lg border-t border-primary/10" />
             <div className="space-y-spacing-sm">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 Temas
               </p>
               <div className="flex flex-wrap gap-spacing-2xs">
@@ -186,7 +186,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           <>
             <div className="my-spacing-lg border-t border-primary/10" />
             <div className="flex flex-wrap items-center gap-spacing-md">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                 Fonte oficial
               </p>
               <a

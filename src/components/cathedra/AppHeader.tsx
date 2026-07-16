@@ -66,7 +66,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           >
             <Icons.Logo className="w-spacing-lg h-spacing-lg md:w-spacing-lg md:h-spacing-lg transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60" variant={isDark ? "light" : "dark"} aria-hidden="true" />
             <div className="flex flex-col items-start min-w-spacing-0">
-              <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/10 leading-none transition-all group-hover:text-primary group-hover:tracking-[0.8em] duration-700">
+              <span aria-hidden="true" className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/70 leading-none transition-all group-hover:text-primary group-hover:tracking-[0.8em] duration-700">
                 Cathedra
               </span>
             </div>
