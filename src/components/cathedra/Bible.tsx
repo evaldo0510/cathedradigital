@@ -110,6 +110,10 @@ const Bible: React.FC = () => {
     setSelectedBook,
     setSelectedChapter,
     setSearchQuery,
+    selectBook,
+    selectChapter,
+    nextChapter,
+    prevChapter,
   } = useBibleNavigation();
 
   const [verses, setVerses] = useState<any[]>([]);
