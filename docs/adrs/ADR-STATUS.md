@@ -46,5 +46,15 @@ Decisões que **precisam** de ADR próprio antes de execução (extraído de `do
 | ADR-012      | Modularização de `src/` em `modules/*` + `shared/` + `core/`     | `FRONTEND.md` / `MODULES.md`                 |
 | ADR-013      | Schemas dedicados no Postgres (`bible.*`, `nexus.*`) vs prefixo  | `DATABASE.md`                                |
 | ADR-014      | Reorganização física de edge functions em subpastas por domínio  | `EDGE-FUNCTIONS.md`                          |
+| ADR-015      | Suite de testes de verificação de assinatura HMAC nos webhooks MP (sandbox), incluindo casos de falha (assinatura inválida, timestamp fora da janela) | Solicitação S0 — **bloqueado por CAT-DOC-002 e pelo congelamento da Sprint S0** |
+| ADR-016      | Página interna de auditoria de webhooks MP (lista de eventos, filtros por tipo, export de evidências, correlação com edge function receptora) | Solicitação S0 — **bloqueado pelo congelamento da Sprint S0** (feature nova pré-evento) |
+| ADR-017      | Refatoração do módulo Magisterium (escopo a definir: UI, dados, edge functions `vatican-document` / `vatican_cache`) | Solicitação S0 — **bloqueado pelo congelamento da Sprint S0** e por falta de escopo definido |
 
 _Estes são propostas — nenhum foi aprovado. Requerem análise, discussão e aceitação formal via ADR antes de qualquer execução._
+
+### Notas sobre ADR-015, ADR-016 e ADR-017
+
+- **ADR-015** só pode iniciar após: (a) inventário CAT-DOC-002 preenchido, (b) sandbox MP validado, (c) ADR-011 aceito. Testes de assinatura tocam código das edge functions bloqueadas.
+- **ADR-016** exige nova rota, novas queries em `webhook_logs`, controle de acesso admin. Feature nova a poucos dias do evento = risco desnecessário. Reavaliar pós-evento.
+- **ADR-017** não tem escopo mínimo definido. Antes de virar ADR, o usuário deve especificar: (a) o quê refatorar (UI/dados/edge/todos), (b) motivador (bug, dívida técnica, nova feature), (c) critério de aceite.
+
