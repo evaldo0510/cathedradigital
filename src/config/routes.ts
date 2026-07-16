@@ -57,18 +57,30 @@ export const APP_ROUTES: RouteConfig[] = [
 ];
 
 export const getRouteByPath = (path: string) => {
-  return APP_ROUTES.find(r => r.path === path || (r.path !== '/' && path.startsWith(r.path)));
+  // STAB-003D: preferir match exato antes de fallback por prefixo, evitando
+  // que `/admin/audit` e `/magisterium/:id` retornem duas vezes o pai e gerem
+  // chaves duplicadas no breadcrumb do AppHeader.
+  return (
+    APP_ROUTES.find(r => r.path === path) ||
+    APP_ROUTES.find(r => r.path !== '/' && path.startsWith(r.path + '/')) ||
+    APP_ROUTES.find(r => r.path !== '/' && path.startsWith(r.path))
+  );
 };
 
 export const getBreadcrumbs = (path: string) => {
   const parts = path.split('/').filter(Boolean);
-  const breadcrumbs = [];
+  const breadcrumbs: RouteConfig[] = [];
+  const seen = new Set<string>();
   let currentPath = '';
 
   for (const part of parts) {
     currentPath += `/${part}`;
     const route = getRouteByPath(currentPath);
-    if (route) {
+    // STAB-003D: deduplica por path para evitar chaves repetidas quando
+    // um segmento filho (ex.: `/magisterium/dce`) não tem rota própria e
+    // cai no pai (`/magisterium`).
+    if (route && !seen.has(route.path)) {
+      seen.add(route.path);
       breadcrumbs.push(route);
     }
   }

@@ -40,6 +40,10 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
     setError(false);
     
     const img = new Image();
+    // STAB-003C: Wikimedia (upload.wikimedia.org) bloqueia parte das
+    // requisições cross-origin com ERR_BLOCKED_BY_ORB quando o Referer é
+    // enviado. `no-referrer` evita o bloqueio sem alterar o fallback.
+    (img as any).referrerPolicy = 'no-referrer';
     const timeout = setTimeout(() => {
       if (!isLoaded) {
         handleImageError();
@@ -98,6 +102,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
           src={mainSrc}
           alt={alt}
           loading={priority ? "eager" : "lazy"}
+          referrerPolicy="no-referrer"
           className={`relative z-[2] w-full h-full object-cover transition-all ${isLoaded ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-105 blur-md'}`}
           style={{ transitionDuration: '2000ms' }}
         />
