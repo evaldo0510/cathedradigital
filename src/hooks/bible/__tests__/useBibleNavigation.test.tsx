@@ -1,10 +1,13 @@
 /** @vitest-environment jsdom */
 import React from 'react';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { act, renderHook } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { MemoryRouter, BrowserRouter, useLocation } from 'react-router-dom';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { useBibleNavigation } from '../useBibleNavigation';
+
+// jsdom não implementa scrollTo — selectChapter chama window.scrollTo.
+vi.stubGlobal('scrollTo', vi.fn());
 
 const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
   .flat()
@@ -13,8 +16,8 @@ const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
 const genesis = ALL_BOOKS.find((b) => b.abbr === 'Gn')!;
 const exodus = ALL_BOOKS.find((b) => b.abbr === 'Ex')!;
 
-/** Wrapper que também expõe a location atual para asserções sobre a URL. */
-function makeWrapper(initial = '/bible') {
+/** Wrapper MemoryRouter — isolado, mas não integra com window.history. */
+function makeMemoryWrapper(initial = '/bible') {
   let currentLocation: ReturnType<typeof useLocation> | null = null;
 
   const LocationSpy: React.FC = () => {
@@ -36,13 +39,37 @@ function makeWrapper(initial = '/bible') {
   };
 }
 
+/** Wrapper BrowserRouter — integra com window.history (permite back/forward). */
+function makeBrowserWrapper(initial = '/bible') {
+  window.history.replaceState(null, '', initial);
+  let currentLocation: ReturnType<typeof useLocation> | null = null;
+
+  const LocationSpy: React.FC = () => {
+    currentLocation = useLocation();
+    return null;
+  };
+
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <BrowserRouter>
+      <LocationSpy />
+      {children}
+    </BrowserRouter>
+  );
+
+  return {
+    Wrapper,
+    getSearch: () => currentLocation?.search ?? '',
+    getPathname: () => currentLocation?.pathname ?? '',
+  };
+}
+
 describe('useBibleNavigation', () => {
   beforeEach(() => {
-    // MemoryRouter isola histórico entre testes; nada a limpar.
+    window.history.replaceState(null, '', '/');
   });
 
   it('estado inicial derivado da URL vazia = home', () => {
-    const { Wrapper } = makeWrapper('/bible');
+    const { Wrapper } = makeMemoryWrapper('/bible');
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     expect(result.current.viewMode).toBe('home');
@@ -52,7 +79,7 @@ describe('useBibleNavigation', () => {
   });
 
   it('selectBook grava o livro na URL e transiciona para "chapters"', () => {
-    const { Wrapper, getSearch } = makeWrapper('/bible');
+    const { Wrapper, getSearch } = makeMemoryWrapper('/bible');
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     act(() => result.current.selectBook(genesis));
@@ -64,7 +91,9 @@ describe('useBibleNavigation', () => {
   });
 
   it('selectChapter grava ch= na URL e move para "reading"', () => {
-    const { Wrapper, getSearch } = makeWrapper(`/bible?book=${encodeURIComponent('Gn')}`);
+    const { Wrapper, getSearch } = makeMemoryWrapper(
+      `/bible?book=${encodeURIComponent('Gn')}`,
+    );
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     act(() => result.current.selectChapter(5));
@@ -75,7 +104,9 @@ describe('useBibleNavigation', () => {
   });
 
   it('nextChapter avança o capítulo respeitando o limite superior', () => {
-    const { Wrapper } = makeWrapper(`/bible?book=${encodeURIComponent('Gn')}&ch=49`);
+    const { Wrapper } = makeMemoryWrapper(
+      `/bible?book=${encodeURIComponent('Gn')}&ch=49`,
+    );
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     expect(result.current.selectedChapter).toBe(49);
@@ -83,13 +114,14 @@ describe('useBibleNavigation', () => {
     act(() => result.current.nextChapter());
     expect(result.current.selectedChapter).toBe(genesis.chapters); // 50
 
-    // No-op no último capítulo.
     act(() => result.current.nextChapter());
     expect(result.current.selectedChapter).toBe(genesis.chapters);
   });
 
   it('prevChapter volta o capítulo respeitando o limite inferior (1)', () => {
-    const { Wrapper } = makeWrapper(`/bible?book=${encodeURIComponent('Gn')}&ch=2`);
+    const { Wrapper } = makeMemoryWrapper(
+      `/bible?book=${encodeURIComponent('Gn')}&ch=2`,
+    );
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     expect(result.current.selectedChapter).toBe(2);
@@ -97,13 +129,12 @@ describe('useBibleNavigation', () => {
     act(() => result.current.prevChapter());
     expect(result.current.selectedChapter).toBe(1);
 
-    // No-op no primeiro capítulo.
     act(() => result.current.prevChapter());
     expect(result.current.selectedChapter).toBe(1);
   });
 
   it('nextChapter é no-op quando não há livro selecionado', () => {
-    const { Wrapper, getSearch } = makeWrapper('/bible');
+    const { Wrapper, getSearch } = makeMemoryWrapper('/bible');
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     act(() => result.current.nextChapter());
@@ -113,7 +144,7 @@ describe('useBibleNavigation', () => {
   });
 
   it('trocar de livro via selectBook reseta capítulo (ch/v removidos)', () => {
-    const { Wrapper, getSearch } = makeWrapper(
+    const { Wrapper, getSearch } = makeMemoryWrapper(
       `/bible?book=${encodeURIComponent('Gn')}&ch=10&v=3`,
     );
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
@@ -128,8 +159,8 @@ describe('useBibleNavigation', () => {
     expect(result.current.selectedChapter).toBe(1);
   });
 
-  it('botão Voltar do navegador restaura o estado anterior (URL como fonte de verdade)', () => {
-    const { Wrapper, getSearch } = makeWrapper('/bible');
+  it('botão Voltar do navegador restaura o estado anterior (URL como fonte de verdade)', async () => {
+    const { Wrapper, getSearch } = makeBrowserWrapper('/bible');
     const { result } = renderHook(() => useBibleNavigation(), { wrapper: Wrapper });
 
     // Home → chapters (Gn) → reading (Gn 3) → reading (Gn 4)
@@ -140,27 +171,27 @@ describe('useBibleNavigation', () => {
     expect(result.current.selectedChapter).toBe(4);
     expect(result.current.viewMode).toBe('reading');
 
-    // Back: volta para Gn 3
+    // Back → Gn 3
     act(() => {
       window.history.back();
     });
-    expect(result.current.selectedChapter).toBe(3);
+    await waitFor(() => expect(result.current.selectedChapter).toBe(3));
     expect(getSearch()).toContain('ch=3');
     expect(result.current.viewMode).toBe('reading');
 
-    // Back: volta para chapters (sem ch)
+    // Back → chapters (sem ch)
     act(() => {
       window.history.back();
     });
-    expect(result.current.viewMode).toBe('chapters');
+    await waitFor(() => expect(result.current.viewMode).toBe('chapters'));
     expect(result.current.selectedBook?.abbr).toBe('Gn');
     expect(getSearch()).not.toContain('ch=');
 
-    // Back: volta para home
+    // Back → home
     act(() => {
       window.history.back();
     });
-    expect(result.current.viewMode).toBe('home');
+    await waitFor(() => expect(result.current.viewMode).toBe('home'));
     expect(result.current.selectedBook).toBeNull();
   });
 });
