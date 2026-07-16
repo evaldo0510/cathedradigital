@@ -837,7 +837,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page <= 1}
               onClick={() => setPage(p => Math.max(1, p - 1))}
               aria-label="Página anterior"
-              className="text-[9px] font-black uppercase tracking-[0.2em]"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
               Anterior
