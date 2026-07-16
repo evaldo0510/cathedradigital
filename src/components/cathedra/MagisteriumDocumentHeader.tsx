@@ -30,7 +30,7 @@ const MetaRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, 
   if (!value) return null;
   return (
     <div className="flex items-baseline gap-spacing-sm py-spacing-2xs">
-      <dt className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 min-w-[92px]">
+      <dt className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground min-w-[92px]">
         {label}
       </dt>
       <dd className="text-premium-sm text-foreground/90 font-medium">{value}</dd>
