@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -99,9 +100,18 @@ const Bible: React.FC = () => {
   const { enabled: highContrast, toggle: toggleHighContrast } = useHighContrast();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes' | 'monthly_recap'>('home');
-  const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
-  const [selectedChapter, setSelectedChapter] = useState<number>(1);
+  // R1.2.2 Onda 7 — URL como fonte única de verdade para navegação.
+  const {
+    viewMode,
+    selectedBook,
+    selectedChapter,
+    searchQuery,
+    setViewMode,
+    setSelectedBook,
+    setSelectedChapter,
+    setSearchQuery,
+  } = useBibleNavigation();
+
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
@@ -110,7 +120,7 @@ const Bible: React.FC = () => {
   const [cacheSyncVersion, setCacheSyncVersion] = useState(8); // Bumped to v8 for AI Translation stabilization
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
-  const [searchQuery, setSearchQuery] = useState('');
+
   
   // New States for Annotations and Progress
   const [lastRead, setLastRead] = useState<any>(null);
@@ -357,34 +367,16 @@ const Bible: React.FC = () => {
     return () => clearInterval(timer);
   }, [location.pathname, user, cacheSyncVersion]);
 
-  // Sync with URL continued
+  // R1.2.2 Onda 7 — viewMode/selectedBook/selectedChapter agora derivam da URL
+  // (useBibleNavigation). O único side-effect residual aqui é disparar o
+  // fetchVerses quando o par (livro, capítulo) muda em modo leitura.
   useEffect(() => {
-    const bookAbbr = searchParams.get('book');
-    const chapter = searchParams.get('ch');
-
-    if (bookAbbr && chapter) {
-      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const decodedAbbr = decodeURIComponent(bookAbbr);
-      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
-      if (book) {
-        setSelectedBook(book);
-        setSelectedChapter(parseInt(chapter));
-        setViewMode('reading');
-        // Usar chapter original para fetch e parsear v depois se necessário
-        fetchVerses(book.abbr, parseInt(chapter));
-      }
-    } else if (bookAbbr) {
-      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const decodedAbbr = decodeURIComponent(bookAbbr);
-      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
-      if (book) {
-        setSelectedBook(book);
-        setViewMode('chapters');
-      }
-    } else {
-      setViewMode('home');
+    if (viewMode === 'reading' && selectedBook) {
+      fetchVerses(selectedBook.abbr, selectedChapter);
     }
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, selectedBook?.abbr, selectedChapter]);
+
 
   // Re-busca o capítulo quando o usuário troca a tradução ou alterna a
   // modernização ortográfica (chave de cache muda no servidor).
@@ -891,16 +883,16 @@ const Bible: React.FC = () => {
 
 
   const selectBook = (book: BibleBook) => {
+    // useBibleNavigation escreve na URL; nada mais é necessário.
     setSelectedBook(book);
-    navigate(`/bible?book=${encodeURIComponent(book.abbr)}`);
   };
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
-    navigate(`/bible?book=${encodeURIComponent(selectedBook!.abbr)}&ch=${ch}`);
     // Scroll context top
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
+
 
   const nextChapter = useCallback(() => {
     if (!selectedBook) return;
