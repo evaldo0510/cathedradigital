@@ -764,7 +764,7 @@ const Magisterium: React.FC = () => {
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                       {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                     </div>
-                    <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
+                    <span className="text-[8px] font-black text-secondary tracking-widest">{doc.year}</span>
                   </div>
 
                   <div className="space-y-spacing-xs flex-1">
