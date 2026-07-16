@@ -372,6 +372,8 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <Button
               key={i}
               onClick={() => setCurrentSlide(i)}
+              aria-label={`Ir para slide ${i + 1} de ${SLIDES.length}`}
+              aria-current={i === currentSlide ? 'step' : undefined}
               className={`w-spacing-xs h-spacing-xs rounded-premium-full transition-all ${
                 i === currentSlide ? 'bg-primary w-spacing-lg' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
               }`}

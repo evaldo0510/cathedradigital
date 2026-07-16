@@ -155,7 +155,7 @@ const TemasPage = () => {
               isSearching={isSearchPending}
             />
             
-            <div className="flex items-center gap-spacing-2xs overflow-x-auto w-full sm:w-auto px-spacing-xs pb-spacing-xs sm:pb-spacing-0 scrollbar-none scroll-smooth">
+            <div role="tablist" aria-label="Filtrar temas por categoria" className="flex items-center gap-spacing-2xs overflow-x-auto w-full sm:w-auto px-spacing-xs pb-spacing-xs sm:pb-spacing-0 scrollbar-none scroll-smooth">
               {categories.map((cat, idx) => (
                 <motion.button
                   key={cat}

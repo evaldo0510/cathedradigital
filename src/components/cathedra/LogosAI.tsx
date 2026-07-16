@@ -284,7 +284,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-premium-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-sm h-spacing-sm" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Logos AI" className="rounded-premium-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-sm h-spacing-sm" />} />
               </div>
 
               <div className="flex items-center justify-between mb-spacing-lg md:mb-spacing-xl opacity-30">
@@ -456,7 +456,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-premium-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-md h-spacing-md" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Logos AI" className="rounded-premium-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-md h-spacing-md" />} />
               </div>
             </div>
 
