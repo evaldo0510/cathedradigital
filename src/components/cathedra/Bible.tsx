@@ -100,9 +100,18 @@ const Bible: React.FC = () => {
   const { enabled: highContrast, toggle: toggleHighContrast } = useHighContrast();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<'home' | 'chapters' | 'reading' | 'search' | 'notes' | 'monthly_recap'>('home');
-  const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
-  const [selectedChapter, setSelectedChapter] = useState<number>(1);
+  // R1.2.2 Onda 7 — URL como fonte única de verdade para navegação.
+  const {
+    viewMode,
+    selectedBook,
+    selectedChapter,
+    searchQuery,
+    setViewMode,
+    setSelectedBook,
+    setSelectedChapter,
+    setSearchQuery,
+  } = useBibleNavigation();
+
   const [verses, setVerses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
@@ -111,7 +120,7 @@ const Bible: React.FC = () => {
   const [cacheSyncVersion, setCacheSyncVersion] = useState(8); // Bumped to v8 for AI Translation stabilization
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
-  const [searchQuery, setSearchQuery] = useState('');
+
   
   // New States for Annotations and Progress
   const [lastRead, setLastRead] = useState<any>(null);
