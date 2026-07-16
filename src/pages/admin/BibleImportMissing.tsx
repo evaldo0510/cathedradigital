@@ -3,6 +3,7 @@
  * e revalida o gate automaticamente ao final.
  */
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/cathedra/CathedraCard";
 import { CathedraButton as Button } from "@/components/cathedra/CathedraButton";
@@ -10,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History } from "lucide-react";
 import { toast } from "sonner";
 
 interface PreviewDetail { abbrev: string; name: string; chapters: number }
@@ -20,21 +21,56 @@ interface Job {
   current_book: string | null; message: string | null; error: string | null;
   verification: any; audit_log: any; started_at: string | null; finished_at: string | null;
 }
+interface Validation {
+  ok: boolean; translation: string; reachable: boolean;
+  bolls_books_total?: number; expected_books?: number; covered_books?: number;
+  issues: Array<{ level: 'error' | 'warning'; code: string; message: string }>;
+}
+interface DryRun {
+  dry_run: true; translation: string; books_missing: number; chapters_missing_total: number;
+  samples: Array<{ abbrev: string; name: string; chapters_missing: number; sample_chapter: number; sample_verses: number; first_verse: string | null; error?: string }>;
+}
 
 async function invoke(action: string, body: Record<string, unknown> = {}) {
   const { data, error } = await supabase.functions.invoke("bible-import-missing", {
     body: { action, ...body },
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    // supabase-js embute o body em `context` quando o status >= 400
+    let detail = "";
+    try {
+      const ctx = (error as any).context;
+      if (ctx?.body) detail = ` — ${typeof ctx.body === 'string' ? ctx.body : JSON.stringify(ctx.body)}`;
+    } catch { /* noop */ }
+    throw new Error(`${error.message}${detail}`);
+  }
   return data;
 }
 
 export default function BibleImportMissing() {
   const [translation, setTranslation] = useState("NVIPT");
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [validation, setValidation] = useState<Validation | null>(null);
+  const [dryRun, setDryRun] = useState<DryRun | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  const [loadingValidation, setLoadingValidation] = useState(false);
+  const [loadingDryRun, setLoadingDryRun] = useState(false);
   const [job, setJob] = useState<Job | null>(null);
   const [starting, setStarting] = useState(false);
+
+  async function runValidation() {
+    setLoadingValidation(true); setValidation(null);
+    try { setValidation(await invoke("validate", { translation })); }
+    catch (e: any) { toast.error(e.message); }
+    finally { setLoadingValidation(false); }
+  }
+
+  async function runDryRun() {
+    setLoadingDryRun(true); setDryRun(null);
+    try { setDryRun(await invoke("dry_run", { translation })); toast.success("Dry-run concluído — nada foi gravado."); }
+    catch (e: any) { toast.error(e.message); }
+    finally { setLoadingDryRun(false); }
+  }
 
   async function loadPreview() {
     setLoadingPreview(true);
