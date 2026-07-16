@@ -231,7 +231,7 @@ const AparicoesPage: React.FC = () => {
                   <span className="text-premium-xs font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
                 </div>
               </div>
-            </motion.button>
+            </motion.div>
           );
         })}
       </div>
