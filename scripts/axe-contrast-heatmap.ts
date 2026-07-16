@@ -318,6 +318,132 @@ fs.writeFileSync(
   JSON.stringify(summaryPayload, null, 2),
 );
 
+// ---------- CSV exports (para download no admin) ----------
+const EXPORT_DIR = path.join(PUBLIC_COPY, 'exports');
+fs.mkdirSync(EXPORT_DIR, { recursive: true });
+
+function csvEscape(v: unknown): string {
+  const s = v === null || v === undefined ? '' : String(v);
+  return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+function toCsv(rows: Record<string, unknown>[]): string {
+  if (rows.length === 0) return '';
+  const cols = Object.keys(rows[0]);
+  const head = cols.join(',');
+  const body = rows.map((r) => cols.map((c) => csvEscape(r[c])).join(',')).join('\n');
+  return `${head}\n${body}\n`;
+}
+
+// summary.csv — 1 linha por rota + top classes
+const summaryCsvRows = perRoute.map((r) => {
+  const details = perRouteDetail.get(r.route) ?? [];
+  const utils = new Map<string, number>();
+  for (const d of details) {
+    if (d.utilityCategory === 'color' || d.utilityCategory === 'opacity') {
+      for (const u of d.utility) utils.set(u, (utils.get(u) ?? 0) + 1);
+    }
+  }
+  const top = Array.from(utils.entries()).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  return {
+    route: r.route,
+    tier: r.tier,
+    violations: r.violations,
+    nodes: r.nodes,
+    top_class_1: top[0]?.[0] ?? '',
+    top_class_1_count: top[0]?.[1] ?? '',
+    top_class_2: top[1]?.[0] ?? '',
+    top_class_2_count: top[1]?.[1] ?? '',
+    top_class_3: top[2]?.[0] ?? '',
+    top_class_3_count: top[2]?.[1] ?? '',
+    report_file: r.reportFile,
+  };
+});
+fs.writeFileSync(path.join(EXPORT_DIR, 'summary.csv'), toCsv(summaryCsvRows));
+
+// heatmap.csv — 1 linha por (rota, classe causal)
+const heatmapCsvRows: Record<string, unknown>[] = [];
+for (const [route, details] of perRouteDetail) {
+  const utils = new Map<string, { count: number; cat: Category }>();
+  for (const d of details) {
+    if (d.utilityCategory !== 'color' && d.utilityCategory !== 'opacity') continue;
+    for (const u of d.utility) {
+      const cur = utils.get(u) ?? { count: 0, cat: d.utilityCategory };
+      cur.count += 1;
+      utils.set(u, cur);
+    }
+  }
+  for (const [cls, info] of utils) {
+    const rule = ruleFor(cls);
+    heatmapCsvRows.push({
+      route,
+      utility_class: cls,
+      category: info.cat,
+      occurrences: info.count,
+      suggested_replacement:
+        rule?.replacement === null ? '(remove)' : rule?.replacement ?? '',
+      confidence: rule?.confidence ?? '',
+      files_matched: (srcIndex.get(cls) ?? []).length,
+    });
+  }
+}
+fs.writeFileSync(path.join(EXPORT_DIR, 'heatmap.csv'), toCsv(heatmapCsvRows));
+
+// ---------- Snapshot histórico (para diff temporal) ----------
+const HISTORY_DIR = path.join(PUBLIC_COPY, 'history');
+fs.mkdirSync(HISTORY_DIR, { recursive: true });
+const ts = new Date().toISOString().replace(/[:.]/g, '-');
+const snapshot = {
+  generatedAt: summaryPayload.generatedAt,
+  totals: summaryPayload.totals,
+  perRoute,
+  topCausalClasses: summaryPayload.topCausalClasses.map((c) => ({
+    class: c.class,
+    category: c.category,
+    count: c.count,
+    routes: c.routes,
+  })),
+  perRouteTopUtils: Object.fromEntries(
+    Array.from(perRouteDetail.entries()).map(([route, details]) => {
+      const utils = new Map<string, number>();
+      for (const d of details) {
+        if (d.utilityCategory === 'color' || d.utilityCategory === 'opacity') {
+          for (const u of d.utility) utils.set(u, (utils.get(u) ?? 0) + 1);
+        }
+      }
+      return [route, Object.fromEntries(utils)];
+    }),
+  ),
+};
+const snapshotFile = `${ts}.json`;
+fs.writeFileSync(path.join(HISTORY_DIR, snapshotFile), JSON.stringify(snapshot));
+
+// Atualiza index.json mantendo até 20 snapshots.
+const indexFile = path.join(HISTORY_DIR, 'index.json');
+type HistIdx = { file: string; generatedAt: string; nodes: number; routes: number };
+let history: HistIdx[] = [];
+if (fs.existsSync(indexFile)) {
+  try {
+    history = JSON.parse(fs.readFileSync(indexFile, 'utf8'));
+  } catch { /* reset */ }
+}
+history.push({
+  file: snapshotFile,
+  generatedAt: snapshot.generatedAt,
+  nodes: snapshot.totals.nodes,
+  routes: snapshot.totals.routes,
+});
+history.sort((a, b) => a.generatedAt.localeCompare(b.generatedAt));
+if (history.length > 20) {
+  const drop = history.slice(0, history.length - 20);
+  for (const d of drop) {
+    try { fs.unlinkSync(path.join(HISTORY_DIR, d.file)); } catch { /* skip */ }
+  }
+  history = history.slice(-20);
+}
+fs.writeFileSync(indexFile, JSON.stringify(history, null, 2));
+
+
+
 
 
 // ---------- helpers de link ----------
@@ -335,6 +461,10 @@ let s = `## axe-core · color-contrast · resumo por rota\n\n`;
 s += `**Totais:** ${perRoute.length} rotas · ${totalNodes} nó(s) · `;
 s += `${enforcedFailing.length} enforced falhando · ${trackedDirty.length} tracked com violações · `;
 s += `${trackedCleaned.length} tracked prontas para promoção\n\n`;
+if (ARTIFACT_HINT) {
+  s += `📎 [Artifacts do run](${ARTIFACT_HINT}) — baixe \`axe-color-contrast-report.zip\` para acessar \`heatmap.md\` e os JSONs por rota.\n\n`;
+}
+
 
 if (enforcedFailing.length > 0) {
   s += `> ❌ **Regressão em rota enforced:** ${enforcedFailing.map((r) => `\`${r.route}\``).join(', ')}\n\n`;
