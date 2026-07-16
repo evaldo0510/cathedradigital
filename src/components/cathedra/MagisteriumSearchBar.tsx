@@ -83,14 +83,15 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
           onKeyDown={handleKeyDown}
           placeholder="Buscar neste documento"
           aria-label="Buscar neste documento"
-          className="flex-1 bg-transparent border-0 outline-none text-premium-sm text-foreground placeholder:text-muted-foreground/60 min-w-0"
+          className="flex-1 bg-transparent border-0 outline-none text-premium-sm text-foreground placeholder:text-muted-foreground min-w-0 focus-visible:outline-none"
           autoComplete="off"
           spellCheck={false}
         />
         {debounced.length >= 2 && (
           <span
+            role="status"
             aria-live="polite"
-            className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 whitespace-nowrap"
+            className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap"
           >
             {total > 0 ? `${current} / ${total}` : '0 ocorrências'}
           </span>
