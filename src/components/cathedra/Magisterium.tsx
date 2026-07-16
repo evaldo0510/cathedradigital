@@ -669,7 +669,7 @@ const Magisterium: React.FC = () => {
               role="region"
               aria-label="Filtros ativos"
             >
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30 mr-spacing-2xs">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/70 mr-spacing-2xs">
                 Filtros ativos:
               </span>
 
