@@ -1,8 +1,10 @@
 name: axe color-contrast regression
 
-# Bloqueia PRs que reintroduzam violações `color-contrast` (WCAG 2.1 AA)
-# em rotas já saneadas. Escopo restrito à regra color-contrast para não
-# se sobrepor aos workflows a11y/contrast existentes.
+# Escopo: regra `color-contrast` (WCAG 2.1 AA) em todas as rotas públicas.
+# - ENFORCED_ROUTES: falha o build em qualquer violação.
+# - TRACKED_ROUTES: monitora e falha quando atinge 0 nós (força promoção
+#   para ENFORCED_ROUTES no mesmo PR).
+# Publica resumo agregado, heatmap por classe CSS e abre issues em `main`.
 
 on:
   pull_request:
@@ -11,6 +13,7 @@ on:
       - 'tailwind.config.ts'
       - 'index.html'
       - 'tests/e2e/axe-color-contrast-regression.spec.ts'
+      - 'scripts/axe-contrast-heatmap.ts'
       - '.github/workflows/axe-color-contrast.yml'
   push:
     branches: [main]
@@ -19,6 +22,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 jobs:
   axe-color-contrast:
@@ -53,19 +57,143 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
           CI: 'true'
+        # Aggregator/comment/issues devem rodar mesmo com testes falhando.
+        continue-on-error: true
         run: |
           bunx playwright test tests/e2e/axe-color-contrast-regression.spec.ts \
             --reporter=list,html
+        id: pwtest
+
+      - name: Aggregate axe reports (summary + heatmap)
+        if: always()
+        env:
+          ARTIFACT_BASE_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: bunx tsx scripts/axe-contrast-heatmap.ts
 
       - name: Stop preview server
         if: always()
         run: |
           if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
 
-      - name: Upload Playwright report
+      - name: Append summary to job step
+        if: always()
+        run: |
+          if [ -f reports/axe-contrast/summary.md ]; then
+            cat reports/axe-contrast/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Sticky PR comment (axe color-contrast summary)
+        if: github.event_name == 'pull_request' && always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: axe-color-contrast-report
+          path: reports/axe-contrast/summary.md
+
+      - name: Upload axe reports + Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: axe-color-contrast-report
-          path: playwright-report
-          retention-days: 14
+          path: |
+            reports/axe-contrast
+            playwright-report
+          retention-days: 30
+
+      # Abre/atualiza issues para rotas tracked com violações > THRESHOLD.
+      # Só em push para main, para não spammar a cada PR.
+      # Deduplica por título; se já existir aberta, atualiza o corpo.
+      - name: Open/refresh issues for tracked routes with violations
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && always()
+        uses: actions/github-script@v7
+        env:
+          # Threshold mínimo de nós para abrir/manter issue.
+          AXE_ISSUE_MIN_NODES: '1'
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const summaryPath = path.join(process.env.GITHUB_WORKSPACE, 'reports/axe-contrast/summary.json');
+            if (!fs.existsSync(summaryPath)) {
+              core.warning('summary.json not found; skipping issue sync');
+              return;
+            }
+            const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+            const min = parseInt(process.env.AXE_ISSUE_MIN_NODES || '1', 10);
+            const runUrl = process.env.RUN_URL;
+            const label = 'axe-color-contrast';
+
+            // ensure label exists
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: label });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  ...context.repo, name: label, color: 'd93f0b',
+                  description: 'axe-core color-contrast violation (auto)',
+                });
+              }
+            }
+
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              ...context.repo, state: 'open', labels: label, per_page: 100,
+            });
+
+            const dirty = summary.trackedDirty.filter(r => r.nodes >= min);
+            const cleaned = new Set(summary.trackedCleaned.map(r => r.route));
+
+            for (const row of dirty) {
+              const title = `axe color-contrast · ${row.route} (${row.nodes} nó/s)`;
+              const genericTitle = `axe color-contrast · ${row.route}`;
+              const body = [
+                `**Rota:** \`${row.route}\``,
+                `**Tier:** ${row.tier}`,
+                `**Violations:** ${row.violations}`,
+                `**Nós:** ${row.nodes}`,
+                ``,
+                `Relatório: \`reports/axe-contrast/${row.reportFile}\` (artifact do workflow)`,
+                `Run: ${runUrl}`,
+                ``,
+                `Ao corrigir, o próximo run vai FALHAR neste PR pedindo para mover a rota `,
+                `de \`TRACKED_ROUTES\` para \`ENFORCED_ROUTES\` em `,
+                `\`tests/e2e/axe-color-contrast-regression.spec.ts\`.`,
+              ].join('\n');
+
+              const existing = openIssues.find(i => i.title.startsWith(genericTitle));
+              if (existing) {
+                await github.rest.issues.update({
+                  ...context.repo, issue_number: existing.number,
+                  title, body,
+                });
+                core.info(`updated #${existing.number} for ${row.route}`);
+              } else {
+                const created = await github.rest.issues.create({
+                  ...context.repo, title, body, labels: [label],
+                });
+                core.info(`created #${created.data.number} for ${row.route}`);
+              }
+            }
+
+            // Fecha issues de rotas que ficaram limpas.
+            for (const issue of openIssues) {
+              const match = issue.title.match(/axe color-contrast · (\S+)/);
+              if (!match) continue;
+              const route = match[1];
+              if (cleaned.has(route)) {
+                await github.rest.issues.createComment({
+                  ...context.repo, issue_number: issue.number,
+                  body: `✅ Rota \`${route}\` está com 0 nós de color-contrast neste run (${runUrl}).\nPromova para \`ENFORCED_ROUTES\` para bloquear regressão futura.`,
+                });
+                await github.rest.issues.update({
+                  ...context.repo, issue_number: issue.number, state: 'closed',
+                });
+                core.info(`closed #${issue.number} — ${route} cleaned`);
+              }
+            }
+
+      # Reproduz o status do playwright: se falhou, o job também falha.
+      - name: Enforce test outcome
+        if: always() && steps.pwtest.outcome == 'failure'
+        run: |
+          echo "axe color-contrast tests failed — see summary above"
+          exit 1
