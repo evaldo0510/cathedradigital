@@ -97,6 +97,36 @@
 6. Se **ambas** as funções receberem o mesmo evento: registrar as duas na coluna "Função receptora" e sinalizar em Observações — significa que o painel MP tem as duas URLs cadastradas.
 7. Se **nenhuma** receber: pagamento não gerou callback → problema de configuração no painel MP; registrar e não avançar consolidação.
 
+#### Checklist passo a passo (execução guiada)
+
+Rodar **em ordem**. Cada passo indica **onde coletar** a evidência correspondente. Nenhum passo altera código, configuração das funções ou dados de produção.
+
+| # | Passo                                                                 | Onde executar                                        | Onde coletar a evidência                                                                                              | Campo alimentado (§6.1 / §6.2)                            |
+| - | --------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| 0 | Confirmar credenciais **sandbox** ativas (chaves `TEST-…`)             | Painel MP → Credenciais de teste                     | Screenshot com "Modo de teste" visível (mascarar tokens)                                                              | §6.2 → `App ID MP (sandbox)`, `Ambiente`                  |
+| 1 | Confirmar URL(s) de webhook registradas no painel MP                   | Painel MP → Suas integrações → Webhooks              | Anotar URL exata cadastrada                                                                                           | Inventário CAT-DOC-002 §3.1 / §6.2 → `Handler`            |
+| 2 | Anotar `git rev-parse HEAD` do ambiente atual                          | Terminal do repo                                     | Copiar SHA                                                                                                            | §6.2 → `Observações` (referência de release)              |
+| 3 | Gerar preferência: `UpgradePage` → botão "Assinar" em modo sandbox     | App (browser)                                        | DevTools → Network → resposta de `mercadopago-create-preference`: copiar `external_reference` e `preference_id`       | §6.1 → `external_reference`; §6.2 → `external_reference`  |
+| 4 | Concluir checkout com cartão de teste MP (**nunca cartão real**)        | Fluxo padrão MP                                      | Screenshot da tela "Pagamento aprovado" (sandbox)                                                                     | §6.1 → `#` linha; §6.2 → `payment_id`                     |
+| 5 | Aguardar 30s. Consultar logs da edge function `mercadopago-webhook`    | Ferramenta de logs de edge functions                 | Filtrar por `external_reference` do passo 3. Anotar: presença/ausência de POST, status HTTP, latência                 | §6.1 → coluna "Função receptora"; §6.2 → `Status HTTP`, `Latência` |
+| 6 | Repetir passo 5 para `mercado-pago-webhook`                            | Ferramenta de logs de edge functions                 | Mesmos campos do passo 5                                                                                              | §6.1 → coluna "Função receptora"; §6.2 → `Status HTTP`    |
+| 7 | Consultar `public.webhook_logs`                                        | Ferramenta de banco (read-only)                      | `SELECT id, event_type, status, created_at FROM webhook_logs WHERE provider='mercado_pago' ORDER BY created_at DESC LIMIT 20;` — localizar linha correlacionada | §6.1 → coluna "Linha em `webhook_logs`?"; §6.2 → `id`     |
+| 8 | Extrair payload cru do log da função receptora                         | Logs da edge function identificada nos passos 5–6    | Copiar corpo JSON do POST                                                                                             | Base para o payload mascarado do próximo passo            |
+| 9 | Mascarar payload (e-mail, documento, tokens, `x-signature`)            | Editor local                                         | Salvar como `docs/evidencias/mp-sandbox/EV-<NNN>.json` (criar diretório na hora); calcular `sha256sum` do arquivo     | §6.2 → `Arquivo do payload mascarado`, `Hash SHA-256`     |
+| 10| Verificar validação de assinatura HMAC no log (mensagens do handler)   | Logs da edge function receptora                      | Anotar se o handler logou `signature_ok` / `signature_invalid` / `timestamp_out_of_window` (ou equivalente)           | §6.2 → `Assinatura HMAC válida?`, `Janela de timestamp OK?` |
+| 11| Verificar idempotência: disparar novo `payment.updated` do MESMO pagamento (via "Simular notificação" no painel MP, se disponível) | Painel MP → Webhooks → Simular    | Confirmar em `webhook_logs` se surgiu duplicata ou se foi ignorada por idempotência                                   | §6.2 → `Idempotência respeitada?`                         |
+| 12| Preencher a linha da tabela §6.1 e um bloco §6.2 completo              | Editor do doc                                        | —                                                                                                                     | §6.1 (linha) + §6.2 (bloco `EV-<NNN>`)                    |
+| 13| Repetir passos 3–12 até ter no mínimo 3 evidências (critério de sucesso) | —                                                  | —                                                                                                                     | §6.1 (linhas 1–3+)                                        |
+| 14| Preencher "Conclusão do teste" ao final de §6.1                        | Editor do doc                                        | Consolidar função receptora predominante e divergências                                                               | §6.1 → bloco "Conclusão do teste"                         |
+
+**Regras invioláveis do checklist:**
+- Nunca executar em produção. Se em algum passo houver dúvida sobre o ambiente, abortar e registrar em Observações.
+- Nunca colar valores brutos de `x-signature`, tokens ou dados de cartão nas evidências — sempre mascarar conforme §6.2.
+- Se um passo não puder ser executado (ex.: painel MP sem "Simular notificação"), marcar `n-a` e explicar em Observações. **Não pular sem registrar.**
+- Nenhum passo autoriza alterar código das edge functions — o bloqueio CAT-DOC-002 continua ativo.
+
+
+
 **Critérios objetivos de sucesso:**
 - Pelo menos 3 eventos capturados com função receptora identificada.
 - 100% dos eventos com correlação inequívoca a um `external_reference`.
