@@ -611,7 +611,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'pope'}
                   onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
                   className={cn(
-                    'text-[9px] font-black uppercase tracking-[0.2em]',
+                    'text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
                     groupBy === 'pope' && 'bg-primary/10 text-primary',
                   )}
                 >
