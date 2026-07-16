@@ -48,9 +48,13 @@ export function formatNexusContent(data: any, type: string): TagContent {
 /**
  * Fetches and formats content for a specific tag.
  */
-export async function fetchNexusTagContent(tag: { label: string; slug: string }, signal?: AbortSignal): Promise<TagContent[]> {
+// STAB-003A: aceita apenas UUID v1-v5 para evitar `theme_id=eq.undefined`
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const isValidUuid = (v: unknown): v is string => typeof v === 'string' && UUID_RE.test(v);
+
+export async function fetchNexusTagContent(tag: { label: string; slug: string; id?: string }, signal?: AbortSignal): Promise<TagContent[]> {
   const searchTerms = getSearchTermsForTag(tag);
-  
+
   const spiritualQuery = supabase
     .from('spiritual_contents')
     .select('*')
@@ -63,23 +67,24 @@ export async function fetchNexusTagContent(tag: { label: string; slug: string },
     .overlaps('tags', searchTerms)
     .limit(10);
 
-  // New query for themes table contents
-  const themeContentQuery = supabase
-    .from('theme_contents')
-    .select('*')
-    .eq('theme_id', (tag as any).id)
-    .limit(10);
+  // STAB-003A: só consulta theme_contents quando há theme_id UUID válido.
+  // Antes: `.eq('theme_id', (tag as any).id)` disparava `theme_id=eq.undefined`
+  // no viewer do Magistério, gerando 400/22P02 em `/rest/v1/theme_contents`.
+  const themeId = (tag as any).id;
+  const themeContentQuery = isValidUuid(themeId)
+    ? supabase.from('theme_contents').select('*').eq('theme_id', themeId).limit(10)
+    : null;
 
   if (signal) {
     spiritualQuery.abortSignal(signal);
     journeyQuery.abortSignal(signal);
-    themeContentQuery.abortSignal(signal);
+    themeContentQuery?.abortSignal(signal);
   }
 
   const [spiritualResponse, journeyResponse, themeContentResponse] = await Promise.all([
     spiritualQuery,
     journeyQuery,
-    themeContentQuery
+    themeContentQuery ?? Promise.resolve({ data: [], error: null } as { data: any[]; error: null }),
   ]);
 
   if (spiritualResponse.error) throw spiritualResponse.error;
