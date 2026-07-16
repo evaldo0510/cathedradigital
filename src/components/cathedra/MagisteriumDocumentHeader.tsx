@@ -134,7 +134,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
         <div className="space-y-spacing-xs">
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
             {doc.type}
-            {doc.abbr && <span className="text-muted-foreground/60"> · {doc.abbr}</span>}
+            {doc.abbr && <span className="text-muted-foreground"> · {doc.abbr}</span>}
           </p>
           <h1 className="font-serif text-premium-3xl md:text-premium-4xl text-primary leading-tight">
             {doc.title}
