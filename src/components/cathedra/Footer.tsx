@@ -250,6 +250,7 @@ const Footer: React.FC = React.memo(() => {
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
+                aria-label={lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}
                 className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full px-spacing-md py-spacing-xs text-premium-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
                 <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
