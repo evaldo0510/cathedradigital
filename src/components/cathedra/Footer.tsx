@@ -250,6 +250,7 @@ const Footer: React.FC = React.memo(() => {
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
+                aria-label={lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}
                 className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full px-spacing-md py-spacing-xs text-premium-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
                 <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
@@ -284,6 +285,7 @@ const Footer: React.FC = React.memo(() => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
+                  aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
                   className="absolute right-spacing-xs top-spacing-xs bottom-spacing-xs px-spacing-md bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   {isSubmitting ? (
