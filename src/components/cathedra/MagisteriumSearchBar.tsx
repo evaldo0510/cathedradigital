@@ -83,14 +83,15 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
           onKeyDown={handleKeyDown}
           placeholder="Buscar neste documento"
           aria-label="Buscar neste documento"
-          className="flex-1 bg-transparent border-0 outline-none text-premium-sm text-foreground placeholder:text-muted-foreground/60 min-w-0"
+          className="flex-1 bg-transparent border-0 outline-none text-premium-sm text-foreground placeholder:text-muted-foreground min-w-0 focus-visible:outline-none"
           autoComplete="off"
           spellCheck={false}
         />
         {debounced.length >= 2 && (
           <span
+            role="status"
             aria-live="polite"
-            className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 whitespace-nowrap"
+            className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap"
           >
             {total > 0 ? `${current} / ${total}` : '0 ocorrências'}
           </span>
@@ -101,7 +102,7 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
             onClick={goPrev}
             disabled={total === 0}
             aria-label="Ocorrência anterior"
-            className="p-spacing-2xs rounded-premium-full hover:bg-primary/10 text-primary/70 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="min-h-11 min-w-11 flex items-center justify-center rounded-premium-full hover:bg-primary/10 text-primary disabled:opacity-40 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
             <Icons.ChevronUp className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </button>
@@ -110,7 +111,7 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
             onClick={goNext}
             disabled={total === 0}
             aria-label="Próxima ocorrência"
-            className="p-spacing-2xs rounded-premium-full hover:bg-primary/10 text-primary/70 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="min-h-11 min-w-11 flex items-center justify-center rounded-premium-full hover:bg-primary/10 text-primary disabled:opacity-40 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
             <Icons.ChevronDown className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </button>
@@ -119,7 +120,7 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
               type="button"
               onClick={clear}
               aria-label="Limpar busca"
-              className="p-spacing-2xs rounded-premium-full hover:bg-primary/10 text-primary/70"
+              className="min-h-11 min-w-11 flex items-center justify-center rounded-premium-full hover:bg-primary/10 text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
             >
               <Icons.X className="w-spacing-md h-spacing-md" aria-hidden="true" />
             </button>
@@ -128,7 +129,7 @@ const MagisteriumSearchBar: React.FC<MagisteriumSearchBarProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Fechar busca"
-            className="ml-spacing-2xs p-spacing-2xs rounded-premium-full hover:bg-destructive/10 text-muted-foreground"
+            className="ml-spacing-2xs min-h-11 min-w-11 flex items-center justify-center rounded-premium-full hover:bg-destructive/10 text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
             <Icons.X className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </button>

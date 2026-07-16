@@ -208,7 +208,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
             type="button"
             onClick={handleCopyLink}
             disabled={busy === 'link'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
             aria-label="Copiar link do documento"
           >
             <Icons.Link className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
@@ -218,7 +218,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
             type="button"
             onClick={handleCopyReference}
             disabled={busy === 'ref'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
             aria-label="Copiar referência bibliográfica"
           >
             <Icons.Quote className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
@@ -228,7 +228,7 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
             type="button"
             onClick={handleShare}
             disabled={busy === 'share'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
             aria-label="Compartilhar documento"
           >
             <Icons.Share2 className="w-spacing-sm h-spacing-sm" aria-hidden="true" />

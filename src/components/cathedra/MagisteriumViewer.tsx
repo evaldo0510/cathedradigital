@@ -507,19 +507,20 @@ const MagisteriumViewer: React.FC = () => {
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)}
-            className="rounded-premium-full hover:bg-primary/5 h-spacing-xl w-spacing-xl shrink-0"
+            aria-label="Voltar"
+            className="rounded-premium-full hover:bg-primary/5 min-h-11 min-w-11 shrink-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
-            <Icons.ArrowLeft className="w-spacing-md h-spacing-md" />
+            <Icons.ArrowLeft className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </Button>
           <div className="min-w-spacing-0">
-            <h1 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 truncate leading-none mb-spacing-2xs">{content.title}</h1>
-            <p className="text-[8px] text-muted-foreground/60 uppercase tracking-widest font-bold">Magistério</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary truncate leading-none mb-spacing-2xs">{content.title}</p>
+            <p className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold">Magistério</p>
           </div>
         </div>
         
         <div className="flex items-center gap-spacing-2xs shrink-0">
           <div className="hidden sm:flex items-center gap-spacing-2xs mr-spacing-xs">
-            <AudioButton variant="outline" className="rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 border-primary/10" />
+            <AudioButton variant="outline" className="rounded-premium-full min-h-11 min-w-11 p-spacing-0 border-primary/10" />
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
           <ReadingControlPanel />
@@ -531,18 +532,20 @@ const MagisteriumViewer: React.FC = () => {
             aria-pressed={isSearchOpen}
             aria-label={isSearchOpen ? 'Fechar busca no documento' : 'Buscar neste documento (Ctrl+F)'}
             title="Buscar neste documento (Ctrl+F)"
-            className={`rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 transition-all ${isSearchOpen ? 'bg-primary text-white' : 'hover:bg-primary/5 text-primary/40'}`}
+            className={`rounded-premium-full min-h-11 min-w-11 p-spacing-0 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${isSearchOpen ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/5 text-primary/70'}`}
           >
-            <Icons.Search className="w-spacing-md h-spacing-md" />
+            <Icons.Search className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => setShowLogosAI(!showLogosAI)}
-            className={`rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 transition-all ${showLogosAI ? 'bg-primary text-white scale-110' : 'hover:bg-primary/5 text-primary/40'}`}
+            aria-pressed={showLogosAI}
+            aria-label={showLogosAI ? 'Fechar Logos IA' : 'Abrir Logos IA'}
+            className={`rounded-premium-full min-h-11 min-w-11 p-spacing-0 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${showLogosAI ? 'bg-primary text-primary-foreground scale-110' : 'hover:bg-primary/5 text-primary/70'}`}
             title="Logos IA"
           >
-            <Icons.Sparkles className="w-spacing-md h-spacing-md" />
+            <Icons.Sparkles className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </Button>
         </div>
       </div>
