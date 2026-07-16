@@ -28,15 +28,19 @@
   .stat .n{font-size:24px;font-weight:800;color:var(--pri)}
   .stat .l{font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:1px}
   .inc{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+  .inc.has-issue{border-color:var(--danger);box-shadow:0 0 0 1px rgba(239,68,68,.15)}
   .inc-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
   .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
   .b-200,.b-202{background:#052e1f;color:#34d399;border:1px solid #10b981}
   .b-401,.b-403,.b-4xx{background:#3b0e0e;color:#fca5a5;border:1px solid var(--danger)}
   .b-5xx{background:#3f2a12;color:#fbbf24;border:1px solid var(--warn)}
   .b-none{background:#1f2937;color:var(--muted);border:1px solid var(--border)}
+  .b-err{background:#3b0e0e;color:#fca5a5;border:1px solid var(--danger)}
   .kv{display:grid;grid-template-columns:180px 1fr;gap:6px 12px;font-size:12px}
   .kv dt{color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding-top:2px}
   .kv dd{margin:0;font-family:ui-monospace,Menlo,monospace;word-break:break-all}
+  .kv dd.err{background:rgba(239,68,68,.12);border-left:3px solid var(--danger);padding:2px 6px;border-radius:4px}
+  .kv dd.err .why{display:block;color:#fca5a5;font-family:inherit;font-size:10px;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
   .ev{background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:10px}
   .ev h4{margin:0 0 6px;color:var(--pri);font-size:11px;text-transform:uppercase;letter-spacing:1px}
   .hint{font-size:11px;color:var(--muted);margin-top:4px}
