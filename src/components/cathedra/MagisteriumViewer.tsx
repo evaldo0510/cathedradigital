@@ -59,6 +59,8 @@ const MagisteriumViewer: React.FC = () => {
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
 
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  // STAB-004.3.2 — busca interna do documento
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
