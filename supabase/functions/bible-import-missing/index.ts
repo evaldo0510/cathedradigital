@@ -114,6 +114,96 @@ async function computeMissing(admin: Admin, translation: string) {
   return plan;
 }
 
+/**
+ * Valida se a tradução informada existe em bolls.life e cobre os livros
+ * protocanônicos esperados por BIBLE_CANON. Não grava nada.
+ */
+async function validateSource(translation: string) {
+  const issues: Array<{ level: 'error' | 'warning'; code: string; message: string }> = [];
+  let bolls: Map<number, BollsBook>;
+  try {
+    bolls = await fetchBollsBooks(translation);
+  } catch (e) {
+    return {
+      ok: false,
+      translation,
+      reachable: false,
+      issues: [{ level: 'error' as const, code: 'source_unreachable', message: (e as Error).message }],
+    };
+  }
+
+  const expected = BIBLE_CANON.filter((c) => !c.deuterocanonical && !SKIP_ABBRS.has(c.abbr));
+  const mapping: Array<{ abbrev: string; name: string; bollsId: number; found: boolean; chapters_bolls: number | null }> = [];
+  for (const canon of expected) {
+    const b = bolls.get(canon.bollsId);
+    if (!b) {
+      issues.push({ level: 'error', code: 'missing_book', message: `Livro ${canon.abbr} (bollsId ${canon.bollsId}) não existe em ${translation}` });
+    }
+    mapping.push({ abbrev: canon.abbr, name: canon.name, bollsId: canon.bollsId, found: !!b, chapters_bolls: b?.chapters ?? null });
+  }
+
+  // Deutero: informa se a tradução escolhida não cobre (esperado para NVIPT/NAA/etc.)
+  const deuteroFound = BIBLE_CANON.filter((c) => c.deuterocanonical && bolls.get(c.bollsId));
+  if (deuteroFound.length === 0) {
+    issues.push({
+      level: 'warning',
+      code: 'no_deuterocanonical',
+      message: `${translation} não expõe livros deuterocanônicos — mantidos por bible-import-deutero.`,
+    });
+  }
+
+  const errors = issues.filter((i) => i.level === 'error').length;
+  return {
+    ok: errors === 0,
+    translation,
+    reachable: true,
+    bolls_books_total: bolls.size,
+    expected_books: expected.length,
+    covered_books: mapping.filter((m) => m.found).length,
+    issues,
+    mapping,
+  };
+}
+
+/**
+ * Dry-run: para cada livro faltante, baixa 1 capítulo (o primeiro que falta)
+ * de bolls como prova de disponibilidade e mostra sample. Nada é gravado.
+ */
+async function dryRun(admin: Admin, translation: string) {
+  const plan = await computeMissing(admin, translation);
+  const samples: Array<{
+    abbrev: string; name: string; chapters_missing: number; sample_chapter: number;
+    sample_verses: number; first_verse: string | null; error?: string;
+  }> = [];
+  for (const item of plan) {
+    const cap = item.chapters[0];
+    try {
+      const verses = await fetchBollsChapter(translation, item.bookId, cap);
+      samples.push({
+        abbrev: item.canon.abbr, name: item.canon.name,
+        chapters_missing: item.chapters.length, sample_chapter: cap,
+        sample_verses: verses.length, first_verse: verses[0]?.text ?? null,
+      });
+    } catch (e) {
+      samples.push({
+        abbrev: item.canon.abbr, name: item.canon.name,
+        chapters_missing: item.chapters.length, sample_chapter: cap,
+        sample_verses: 0, first_verse: null, error: (e as Error).message,
+      });
+    }
+  }
+  const chapters_missing_total = plan.reduce((s, p) => s + p.chapters.length, 0);
+  return {
+    dry_run: true, translation,
+    books_missing: plan.length,
+    chapters_missing_total,
+    samples,
+    would_write: {
+      new_books: plan.filter((p) => samples.find((s) => s.abbrev === p.canon.abbr))?.length ?? 0,
+      new_chapters: chapters_missing_total,
+    },
+  };
+
 async function runImport(admin: Admin, jobId: string, sourceId: string, translation: string) {
   const started = new Date().toISOString();
   await admin.from('bible_import_jobs').update({
