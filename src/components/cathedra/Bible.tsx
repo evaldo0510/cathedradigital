@@ -714,6 +714,21 @@ const Bible: React.FC = () => {
         return;
       }
 
+      if (response?.status === 400) {
+        const errorData: any = data || {};
+        const reason = typeof errorData.reason === 'string'
+          ? errorData.reason
+          : (typeof errorData.error === 'string' ? errorData.error : 'Requisição inválida.');
+        toast.error('Não foi possível carregar o capítulo', {
+          description: reason,
+          id: `bible-text-400-${abbr}-${chapter}`,
+        });
+        setSourceInfo(`Erro 400 — ${reason}`);
+        setIsLoading(false);
+        biblePerf.end(runId, { status: '400', source: '400' });
+        return;
+      }
+
       if (error) throw error;
 
       const serverEtag = response?.headers.get('ETag');
