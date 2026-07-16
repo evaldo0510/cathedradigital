@@ -415,9 +415,7 @@ const Bible: React.FC = () => {
     const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
     if (savedLastRead) setLastRead(JSON.parse(savedLastRead));
 
-    const today = new Date().toISOString().split('T')[0];
-    const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
-    if (dailyStatus === 'completed') setIsDailyCompleted(true);
+    const savedHighlights = localStorage.getItem('cathedra_bible_highlights');
     const savedHighlights = localStorage.getItem('cathedra_bible_highlights');
     if (savedHighlights) setHighlights(JSON.parse(savedHighlights));
   }, []);
