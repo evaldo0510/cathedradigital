@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
-import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
+import { MAGISTERIUM_URLS, MAGISTERIUM_DOCUMENTS } from '@/data/magisterium-urls';
+import MagisteriumDocumentHeader from './MagisteriumDocumentHeader';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
@@ -80,6 +81,12 @@ const MagisteriumViewer: React.FC = () => {
     if (!id) return [];
     return docNotes.filter(n => n.content_id === id || n.content_id.startsWith(`${id}:`));
   }, [docNotes, id]);
+
+  // STAB-004.2: metadados canônicos do documento (sem chamadas de rede).
+  const docMeta = useMemo(
+    () => (id ? MAGISTERIUM_DOCUMENTS.find((d) => d.id === id) : undefined),
+    [id]
+  );
 
 
   useEffect(() => {
@@ -513,6 +520,9 @@ const MagisteriumViewer: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex-1 w-full relative"
         >
+            {/* STAB-004.2: Ficha rica do documento (só renderiza campos existentes) */}
+            {docMeta && <MagisteriumDocumentHeader doc={docMeta} />}
+
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (
               <motion.div 
