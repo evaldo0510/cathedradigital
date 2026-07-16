@@ -227,36 +227,98 @@ const trackedCleaned = perRoute.filter((r) => r.tier === 'tracked' && r.nodes ==
 const trackedDirty = perRoute.filter((r) => r.tier === 'tracked' && r.nodes > 0);
 const totalNodes = perRoute.reduce((n, r) => n + r.nodes, 0);
 
+// ---------- lookup arquivo:linha (best-effort via ripgrep) ----------
+// Para cada classe causal, tenta localizar ocorrências em src/**. Retorna
+// no máximo N matches por classe. Ripgrep é usado para não travar em repos
+// grandes; se não estiver disponível, cai para retorno vazio.
+type SrcMatch = { file: string; line: number; text: string };
+
+function rgFindClass(cls: string, maxMatches = 20): SrcMatch[] {
+  // Escape para regex: barra normal, colchete, ponto.
+  const escaped = cls
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\//g, '\\/');
+  // Match dentro de className/class atributos ou strings TS.
+  const pattern = `(?:className|class)=["\`\\{][^"\`]*\\b${escaped}\\b|["\`\\s]${escaped}["\`\\s]`;
+  const r = spawnSync(
+    'rg',
+    ['--json', '--max-count', String(maxMatches), '-t', 'tsx', '-t', 'ts', pattern, 'src'],
+    { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 },
+  );
+  if (r.status !== 0 && r.status !== 1) return [];
+  const out: SrcMatch[] = [];
+  for (const line of r.stdout.split('\n')) {
+    if (!line.trim()) continue;
+    try {
+      const evt = JSON.parse(line);
+      if (evt.type === 'match') {
+        out.push({
+          file: evt.data.path.text,
+          line: evt.data.line_number,
+          text: (evt.data.lines.text ?? '').trim().slice(0, 200),
+        });
+      }
+    } catch {
+      /* skip */
+    }
+  }
+  return out;
+}
+
+const srcIndex = new Map<string, SrcMatch[]>();
+for (const cls of new Set([...causalBuckets.keys(), ...Object.keys(TOKEN_REGISTRY)])) {
+  srcIndex.set(cls, rgFindClass(cls));
+}
+
 // ---------- write summary.json ----------
+const summaryPayload = {
+  generatedAt: new Date().toISOString(),
+  totals: {
+    routes: perRoute.length,
+    nodes: totalNodes,
+    enforcedFailing: enforcedFailing.length,
+    trackedCleaned: trackedCleaned.length,
+    trackedDirty: trackedDirty.length,
+  },
+  perRoute,
+  trackedDirty,
+  trackedCleaned,
+  enforcedFailing,
+  topCausalClasses: topCausal.map((b) => {
+    const rule = ruleFor(b.key);
+    return {
+      class: b.key,
+      category: b.category,
+      count: b.count,
+      routes: Array.from(b.routes),
+      sample: b.sample,
+      rule: rule
+        ? {
+            replacement: rule.replacement,
+            reason: rule.reason,
+            confidence: rule.confidence,
+          }
+        : null,
+      srcMatches: srcIndex.get(b.key) ?? [],
+    };
+  }),
+  perRouteDetail: Object.fromEntries(perRouteDetail),
+};
+
 fs.writeFileSync(
   path.join(REPORT_DIR, 'summary.json'),
-  JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      totals: {
-        routes: perRoute.length,
-        nodes: totalNodes,
-        enforcedFailing: enforcedFailing.length,
-        trackedCleaned: trackedCleaned.length,
-        trackedDirty: trackedDirty.length,
-      },
-      perRoute,
-      trackedDirty,
-      trackedCleaned,
-      enforcedFailing,
-      topCausalClasses: topCausal.map((b) => ({
-        class: b.key,
-        category: b.category,
-        count: b.count,
-        routes: Array.from(b.routes),
-        sample: b.sample,
-      })),
-      perRouteDetail: Object.fromEntries(perRouteDetail),
-    },
-    null,
-    2,
-  ),
+  JSON.stringify(summaryPayload, null, 2),
 );
+
+// Também expõe para a página admin (buscada via fetch).
+const PUBLIC_COPY = path.join(process.cwd(), 'public', 'reports', 'axe-contrast');
+fs.mkdirSync(PUBLIC_COPY, { recursive: true });
+fs.writeFileSync(
+  path.join(PUBLIC_COPY, 'summary.json'),
+  JSON.stringify(summaryPayload, null, 2),
+);
+
+
 
 // ---------- helpers de link ----------
 function jsonLink(file: string) {
