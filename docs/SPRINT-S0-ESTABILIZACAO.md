@@ -329,6 +329,242 @@ Para que o item "Recebimento de webhook MP (sandbox)" da tabela de Smoke Tests s
 
 Se algum dos critérios globais falhar, o teste está **reprovado** e deve ser registrado como incidente em §6.3 ou como backlog em `docs/adrs/ADR-STATUS.md` (ADR-015), sem quebrar o congelamento da S0.
 
+### 6.6 Exemplos preenchidos (fictícios) para cada caso de teste
+
+> **Aviso:** todos os valores abaixo são **fictícios** e servem apenas como referência de formato. `external_reference`, `payment_id`, hashes, timestamps e IDs **não devem ser copiados** para o preenchimento real — substituir integralmente pelos valores observados em sandbox. Marcadores `[FICTÍCIO]` reforçam o caráter ilustrativo.
+
+#### Exemplo §6.1 — 3 linhas cobrindo CT-SIG-01, CT-SIG-02 e CT-SIG-03
+
+| # | Data/hora (BRT) | `external_reference` | Evento MP | Função receptora (via logs) | Linha em `webhook_logs`? | App ID sandbox | Executor | Observações |
+| - | --------------- | -------------------- | --------- | --------------------------- | ------------------------ | -------------- | -------- | ----------- |
+| 1 | `2026-07-16T14:22:10-03:00` [FICTÍCIO] | `upgrade_pro_user_9f3a_1758` [FICTÍCIO] | `payment.updated` | ☒ `mercado-pago-webhook`  ☐ `mercadopago-webhook` | ☒ sim (`id=1042`) | `TEST-1234567890` [FICTÍCIO] | `<nome>` | `[CT-SIG-01]` fluxo normal, aprovado. |
+| 2 | `2026-07-16T14:35:04-03:00` [FICTÍCIO] | `upgrade_pro_user_9f3a_1758` [FICTÍCIO] | `payment.updated` | ☒ `mercado-pago-webhook`  ☐ `mercadopago-webhook` | ☐ sim  ☒ não | `TEST-1234567890` [FICTÍCIO] | `<nome>` | `[CT-SIG-02]` reenviado via curl com `v1=` de outro secret; log `signature_invalid`, `401`. |
+| 3 | `2026-07-16T14:47:41-03:00` [FICTÍCIO] | `upgrade_pro_user_9f3a_1758` [FICTÍCIO] | `payment.updated` | ☒ `mercado-pago-webhook`  ☐ `mercadopago-webhook` | ☐ sim  ☒ não | `TEST-1234567890` [FICTÍCIO] | `<nome>` | `[CT-SIG-03]` `ts` do header adiantado em +10min; log `timestamp_out_of_window`, `403`. |
+
+#### Exemplo §6.2 — EV-001 (CT-SIG-01, sucesso) [FICTÍCIO]
+
+```
+── EVIDÊNCIA DE WEBHOOK MP (SANDBOX) ────────────────────────────────
+ID interno da evidência:    EV-001                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T14:22:10-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+App ID MP (sandbox):        TEST-1234567890                 [FICTÍCIO]
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+payment_id (MP):            1319876543                      [FICTÍCIO]
+Tipo de evento:             payment.updated
+
+── HANDLER OBSERVADO ────────────────────────────────────────────────
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs + webhook_logs
+Status HTTP retornado:      200
+Latência (ms):              184
+Linha em webhook_logs?      sim (id=1042)                   [FICTÍCIO]
+
+── PAYLOAD ─────────────────────────────────────────────────────────
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-001.json
+Hash SHA-256 do arquivo:      3f9c2e1a7b5d4e0f...9a8b7c6d      [FICTÍCIO]
+Máscara aplicada em:          payer.email, payer.identification, card.*, tokens
+Header x-signature (mascarado): ts=1752686530,v1=a1b2…<truncado>   [FICTÍCIO]
+Header x-request-id:            req_9f3a1e7c…<truncado>            [FICTÍCIO]
+
+── VALIDAÇÃO ────────────────────────────────────────────────────────
+Assinatura HMAC válida?     sim
+Janela de timestamp OK?     sim
+Idempotência respeitada?    sim  (reenvio manual não gerou 2ª linha em webhook_logs)
+Executor:                   <nome>
+Observações:                [CT-SIG-01] fluxo padrão; PASS em todos os critérios de §6.5.
+─────────────────────────────────────────────────────────────────────
+```
+
+**Como interpretar os campos-chave (CT-SIG-01):**
+- `Status HTTP = 200` + `Assinatura HMAC válida? = sim` + `Janela de timestamp OK? = sim` → PASS conforme §6.5.
+- `Linha em webhook_logs? = sim` confirma que o handler `mercado-pago-webhook` persistiu o evento (comportamento esperado — só ele grava na tabela).
+- `Idempotência respeitada? = sim` só é válido se o reenvio manual (passo 11 do checklist) foi efetivamente executado; caso contrário, marcar `n-a`.
+
+#### Exemplo §6.2 — EV-002 (CT-SIG-02, assinatura inválida) [FICTÍCIO]
+
+```
+── EVIDÊNCIA DE WEBHOOK MP (SANDBOX) ────────────────────────────────
+ID interno da evidência:    EV-002                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T14:35:04-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+App ID MP (sandbox):        TEST-1234567890                 [FICTÍCIO]
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+payment_id (MP):            1319876543                      [FICTÍCIO]
+Tipo de evento:             payment.updated (reenviado via curl)
+
+── HANDLER OBSERVADO ────────────────────────────────────────────────
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      401
+Latência (ms):              22
+Linha em webhook_logs?      não  (rejeitado antes de persistir — esperado)
+
+── PAYLOAD ─────────────────────────────────────────────────────────
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-002.json
+Hash SHA-256 do arquivo:      7d1e4c9f2a3b8e5d...1c0d2e3f      [FICTÍCIO]
+Máscara aplicada em:          payer.email, payer.identification, card.*, tokens
+Header x-signature (mascarado): ts=1752687304,v1=deadbeef…<truncado>  [FICTÍCIO — v1 de outro secret]
+Header x-request-id:            req_manual_ct_sig_02…<truncado>       [FICTÍCIO]
+
+── VALIDAÇÃO ────────────────────────────────────────────────────────
+Assinatura HMAC válida?     não
+Janela de timestamp OK?     sim  (ts atual, só v1 foi trocado)
+Idempotência respeitada?    n-a  (evento rejeitado, não chegou à camada de persistência)
+Executor:                   <nome>
+Observações:                [CT-SIG-02] Log: "signature_invalid: HMAC mismatch".
+                            Método de injeção: curl com Header v1 gerado por secret arbitrário.
+                            PASS conforme §6.5 (rejeição precoce + 401 + mensagem clara).
+─────────────────────────────────────────────────────────────────────
+```
+
+**Como interpretar os campos-chave (CT-SIG-02):**
+- `Status HTTP = 401` é o **critério primário** de PASS. Qualquer outro status (200, 400, 500) indica que o handler não distinguiu assinatura inválida — FAIL.
+- `Assinatura HMAC válida? = não` deve estar acompanhada de mensagem `signature_invalid` (ou equivalente) em `Observações`. Sem mensagem, considerar FAIL por evidência incompleta.
+- `Linha em webhook_logs? = não` é **obrigatório** — se o handler persistiu apesar da assinatura inválida, é FAIL crítico (registrar incidente).
+- `Janela de timestamp OK? = sim` porque o teste variou apenas `v1`; se o `ts` também estivesse alterado, o caso viraria CT-SIG-03.
+
+#### Exemplo §6.2 — EV-003 (CT-SIG-03, timestamp fora da janela) [FICTÍCIO]
+
+```
+── EVIDÊNCIA DE WEBHOOK MP (SANDBOX) ────────────────────────────────
+ID interno da evidência:    EV-003                          [FICTÍCIO]
+Data/hora captura (BRT):    2026-07-16T14:47:41-03:00       [FICTÍCIO]
+Ambiente:                   sandbox
+App ID MP (sandbox):        TEST-1234567890                 [FICTÍCIO]
+external_reference:         upgrade_pro_user_9f3a_1758      [FICTÍCIO]
+payment_id (MP):            1319876543                      [FICTÍCIO]
+Tipo de evento:             payment.updated (reenviado via curl com ts manipulado)
+
+── HANDLER OBSERVADO ────────────────────────────────────────────────
+Edge function receptora:    mercado-pago-webhook
+Fonte da atribuição:        edge_function_logs
+Status HTTP retornado:      403
+Latência (ms):              19
+Linha em webhook_logs?      não  (rejeitado antes de persistir — esperado)
+
+── PAYLOAD ─────────────────────────────────────────────────────────
+Arquivo do payload mascarado: docs/evidencias/mp-sandbox/EV-003.json
+Hash SHA-256 do arquivo:      b2c8e0d3a6f1c4e7...5f6a7b8c      [FICTÍCIO]
+Máscara aplicada em:          payer.email, payer.identification, card.*, tokens
+Header x-signature (mascarado): ts=1752688061,v1=a1b2…<truncado>  [FICTÍCIO — ts adiantado +10min vs. horário do log]
+Header x-request-id:            req_manual_ct_sig_03…<truncado>   [FICTÍCIO]
+
+── VALIDAÇÃO ────────────────────────────────────────────────────────
+Assinatura HMAC válida?     n-a  (não avaliada — rejeitado por timestamp antes do HMAC)
+Janela de timestamp OK?     não
+Idempotência respeitada?    n-a
+Executor:                   <nome>
+Observações:                [CT-SIG-03] Log: "timestamp_out_of_window: |now-ts|=602s > 300s".
+                            Delta observado: ts do header = horário do log + 10min02s.
+                            PASS conforme §6.5 (403 + mensagem clara + rejeição antes da persistência).
+─────────────────────────────────────────────────────────────────────
+```
+
+**Como interpretar os campos-chave (CT-SIG-03):**
+- `Status HTTP = 403` é o critério primário. `401` neste caso indica que o handler tratou o timestamp fora da janela como assinatura inválida — anotar em `Observações` e classificar como FAIL (falta de distinção entre causas).
+- `Janela de timestamp OK? = não` **deve** vir acompanhada, em `Observações`, do delta calculado (`|now - ts|`) e do limite configurado. Sem o delta, marcar FAIL por evidência incompleta.
+- `Assinatura HMAC válida? = n-a` é aceitável quando o handler valida timestamp antes do HMAC. Se o handler validar HMAC primeiro, o campo pode vir `sim` — o veredicto continua PASS desde que o status seja `403`.
+
+### 6.7 Checklist de artefatos obrigatórios por registro de incidente
+
+Para todo `INC-<NNN>` aberto conforme §6.3, os artefatos abaixo **devem** ser anexados (ou o incidente é rejeitado por evidência incompleta). Marcar cada item ao consolidar o incidente.
+
+| # | Artefato | Formato/local | Obrigatório em | Como coletar |
+| - | -------- | ------------- | -------------- | ------------ |
+| 1 | Payload mascarado do evento | Arquivo `docs/evidencias/mp-sandbox/EV-<NNN>.json` | Todos os casos (CT-SIG-01/02/03) | Passo 8–9 do checklist §6.1 (copiar do log, mascarar em editor local) |
+| 2 | Hash SHA-256 do arquivo de payload | String hex de 64 chars, campo `Hash SHA-256 do arquivo` em §6.2 | Todos os casos | `sha256sum docs/evidencias/mp-sandbox/EV-<NNN>.json` |
+| 3 | Status HTTP retornado | Campo `Status HTTP retornado` em §6.2 (`200`/`401`/`403`/…) | Todos os casos | Log da edge function receptora, mesma requisição do payload |
+| 4 | Timestamp da captura (BRT, ISO 8601) | Campo `Data/hora captura (BRT)` em §6.2 e coluna Data/hora em §6.1 | Todos os casos | Horário do log da edge function, convertido para `-03:00` |
+| 5 | Header `x-signature` mascarado | Campo `Header x-signature (mascarado)` em §6.2 | CT-SIG-01, CT-SIG-02, CT-SIG-03 | Log do handler (mascarar `v1=` mantendo primeiros 4 chars + `…<truncado>`; manter `ts=` visível) |
+| 6 | Header `x-request-id` | Campo `Header x-request-id` em §6.2 | Todos os casos (quando presente) | Log do handler |
+| 7 | Mensagem de erro do handler | Campo `Mensagem de erro no log` em §6.3 e `Observações` em §6.2 | CT-SIG-02, CT-SIG-03 e qualquer FAIL de CT-SIG-01 | Log textual da edge function (`signature_invalid`, `timestamp_out_of_window`, etc.) |
+| 8 | Delta de timestamp (`|now - ts|`) e janela configurada | Texto em `Observações` de §6.2 (ex.: `delta=602s, janela=300s`) | CT-SIG-03 | Calcular a partir de `ts` do header e horário do log |
+| 9 | Método de injeção (quando aplicável) | Texto em `Observações` de §6.2 (`curl` / `simulador do painel MP` / `fluxo normal`) | CT-SIG-02, CT-SIG-03 | Registrar comando/ferramenta usada, sem colar tokens |
+| 10 | Verificação em `public.webhook_logs` | Campo `Linha em webhook_logs?` em §6.2 (`sim id=<n>` ou `não`) | Todos os casos | Consulta read-only descrita no passo 7 do checklist §6.1 |
+| 11 | IDs de evidências correlacionadas | Campo `Evidências relacionadas` em §6.3 (`EV-<NNN>, EV-<NNN>`) | Todos os incidentes | Referenciar os `EV-<NNN>` de §6.2 que originaram o incidente |
+| 12 | Confirmação de ambiente sandbox | Campo `Ambiente = sandbox` em §6.2 + `App ID MP (sandbox)` preenchido | Todos os casos | Painel MP → Credenciais de teste (screenshot, tokens mascarados) |
+
+**Regras:**
+- Nenhum incidente é aceito sem os itens 1, 2, 3 e 4 preenchidos — são o mínimo comum a todos os casos.
+- Itens 7 e 8 são o que **distingue** CT-SIG-02 de CT-SIG-03 na revisão; sem eles, o incidente vira "causa não identificada".
+- Se um artefato não puder ser coletado, marcar `n-a` no campo correspondente e explicar em `Observações`. **Nunca** deixar campo em branco nem preencher com valor estimado.
+
+### 6.8 FAQ — erros comuns durante a execução em sandbox
+
+Respostas curtas para dúvidas recorrentes na coleta de evidências. Não substitui §6.3 (troubleshooting completo) nem §6.5 (critérios de aprovação).
+
+**1. O handler retornou `401` no CT-SIG-01 (fluxo normal). O que verificar primeiro?**
+Confirmar no painel MP se as credenciais ativas são `TEST-…` e se o secret configurado na edge function bate com o do app sandbox. Não alterar código: registrar como incidente CT-SIG-01 FAIL e escalar via ADR-015.
+
+**2. O handler retornou `403` no CT-SIG-01 sem eu ter manipulado `ts`. O que aconteceu?**
+Provável drift de relógio entre o cliente MP e o servidor da edge function. Anotar o delta `|now - ts|` observado no log e comparar com a janela configurada. Registrar como incidente (não é falha do teste — é sinal de configuração).
+
+**3. Nenhuma das duas edge functions recebeu o POST. O que fazer?**
+Não é falha de assinatura — é configuração no painel MP. Verificar em Painel MP → Suas integrações → Webhooks se a(s) URL(s) estão ativas e apontam para o ambiente correto. Registrar em Observações de §6.1 e não avançar consolidação (item 7 do procedimento §6.1).
+
+**4. As duas edge functions receberam o mesmo evento. Isso é PASS ou FAIL?**
+É PASS para CT-SIG-01 (o handler validou corretamente), mas indica que o painel MP tem as duas URLs cadastradas — alimenta CAT-DOC-002 §4 (nome canônico). Marcar as duas na coluna "Função receptora" e explicitar em Observações.
+
+**5. O log mostra `signature_invalid` mas o status é `500`, não `401`. É PASS de CT-SIG-02?**
+Não. §6.5 exige `401`. `500` significa que o handler não tratou a rejeição de forma controlada. FAIL — abrir incidente em §6.3 com o traceback (mascarado) e classificar como bug pós-evento.
+
+**6. O reenvio via "Simular notificação" do painel MP não está disponível. Como cumprir CT-SIG-02/03?**
+Usar `curl` local reproduzindo o request do log (com payload mascarado do CT-SIG-01 e headers manipulados). Se nem `curl` for viável, marcar CT-SIG-02/03 como `n-a` em §6.1 e justificar em Observações — §6.5 aceita `n-a` com justificativa.
+
+**7. O payload no log tem dados sensíveis (e-mail, documento). Posso salvar bruto e mascarar depois?**
+Não. Mascarar **antes** de salvar em disco. Se salvar bruto por engano, deletar o arquivo, esvaziar a lixeira e refazer a coleta. Registrar o incidente de vazamento em Observações.
+
+**8. O `x-signature` no log aparece truncado. Como calcular o hash e comparar?**
+Não recalcular assinatura fora do handler durante S0 (bloqueio CAT-DOC-002). Registrar o valor truncado como está e marcar `Assinatura HMAC válida?` conforme o log do próprio handler (`signature_ok` / `signature_invalid`) — a fonte da verdade é o log, não o cálculo local.
+
+**9. `webhook_logs` mostra a linha, mas o log da edge function não aparece. O que registrar?**
+`Fonte da atribuição = webhook_logs` (§6.2). O log pode ter sido rotacionado. Registrar em Observações "log da edge function indisponível — atribuição via webhook_logs" e prosseguir. Não classificar como FAIL só por isso.
+
+**10. Recebi o webhook em produção por engano durante o teste. O que fazer?**
+Parar imediatamente. Não registrar em §6.1/§6.2 (a seção é sandbox-only). Abrir incidente em §6.3 com a marcação `AMBIENTE-INCORRETO`, notificar responsável e reiniciar a coleta após revalidar credenciais.
+
+### 6.9 Fluxograma de decisão — investigação de falha de assinatura
+
+Usar quando o log da edge function receptora indicar falha (status ≠ `200`/`202` ou mensagem de erro). Objetivo: classificar em CT-SIG-01 FAIL / CT-SIG-02 PASS / CT-SIG-03 PASS / incidente de configuração — sem alterar código.
+
+```mermaid
+flowchart TD
+    A[Falha detectada no log da edge function MP] --> B{Ambiente confirmado sandbox?}
+    B -- Não --> Z1[PARAR: registrar AMBIENTE-INCORRETO §6.3 e reiniciar]
+    B -- Sim --> C{Status HTTP retornado?}
+
+    C -- 200 ou 202 --> D{Log indica signature_ok e timestamp_ok?}
+    D -- Sim --> E[CT-SIG-01 PASS: preencher EV §6.2 e seguir]
+    D -- Não --> F[Registrar incidente §6.3: status OK mas validação ausente]
+
+    C -- 401 --> G{Foi injeção manual CT-SIG-02?}
+    G -- Sim --> H{Log contém signature_invalid?}
+    H -- Sim --> I[CT-SIG-02 PASS: preencher EV §6.2]
+    H -- Não --> J[FAIL: 401 sem mensagem clara — incidente §6.3]
+    G -- Não --> K[CT-SIG-01 FAIL: verificar secret/credenciais no painel MP; incidente §6.3]
+
+    C -- 403 --> L{Foi injeção manual CT-SIG-03?}
+    L -- Sim --> M{Log contém timestamp_out_of_window?}
+    M -- Sim --> N[CT-SIG-03 PASS: registrar delta e janela em Observações]
+    M -- Não --> O[FAIL: 403 sem mensagem clara — incidente §6.3]
+    L -- Não --> P[Drift de relógio suspeito: anotar delta e abrir incidente §6.3]
+
+    C -- 4xx outro --> Q[Incidente §6.3: classificar mensagem do handler]
+    C -- 5xx --> R[Incidente operacional §6.3: coletar traceback mascarado e escalar]
+    C -- Sem resposta --> S{Alguma edge function recebeu POST?}
+    S -- Não --> T[Configuração do painel MP: verificar URLs §3.1 do inventário]
+    S -- Sim outra função --> U[Duas URLs ativas: marcar ambas em §6.1 e alimentar CAT-DOC-002 §4]
+```
+
+**Como usar o fluxograma:**
+- Entrar sempre pelo nó A após identificar a falha no log.
+- Cada folha terminal indica exatamente qual seção preencher (§6.2 EV, §6.3 incidente, §6.1 Observações).
+- Se o caminho não se encaixar em nenhum ramo, **não improvisar**: registrar em §6.3 como `CAUSA-NAO-CLASSIFICADA` com todos os artefatos do checklist §6.7 e escalar via ADR-015.
+- Nenhuma folha autoriza alterar código de edge function durante S0.
+
+
+
 ## 7. Backup
 
 
