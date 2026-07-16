@@ -57,6 +57,11 @@
   <strong>S0 congelada.</strong> Este dashboard é HTML estático que lê <code>INCIDENTES-TEMPLATE.csv</code> localmente.
   Cadastros feitos aqui são exportados como CSV/JSON para você anexar ao template — nenhuma escrita automática.
 </div>
+<div id="drop-zone" style="margin:16px 24px;padding:14px;border:2px dashed var(--border);border-radius:12px;text-align:center;color:var(--muted);font-size:12px;cursor:pointer">
+  <strong style="color:var(--pri)">Arraste seu CSV aqui</strong> ou <label style="color:var(--pri);text-decoration:underline;cursor:pointer">selecione um arquivo<input id="csv-file" type="file" accept=".csv,text/csv" hidden /></label>
+  · valida contra §6.7/§6.1/§6.2 e destaca linhas inconsistentes
+  <div id="upload-summary" style="margin-top:6px;font-size:11px"></div>
+</div>
 
 <main>
   <aside>
