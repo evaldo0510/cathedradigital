@@ -855,7 +855,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page >= pagination.totalPages}
               onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
               aria-label="Próxima página"
-              className="text-[9px] font-black uppercase tracking-[0.2em]"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               Próxima
               <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
