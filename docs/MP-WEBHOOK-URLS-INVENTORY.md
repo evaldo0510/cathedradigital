@@ -1,5 +1,11 @@
 # Inventário de URLs de webhook do Mercado Pago
 
+> 🔒 **BLOQUEIO ARQUITETURAL — CAT-DOC-002**
+>
+> Nenhuma alteração, renomeação, consolidação ou remoção das edge functions `mercadopago-webhook` e `mercado-pago-webhook` poderá ocorrer até que este inventário esteja **completo e validado** (seções 3.1–3.3 e 4 preenchidas).
+>
+> Violar este bloqueio = risco de desativar pagamentos em produção.
+
 Pré-requisito para consolidar `mercado-pago-webhook` ↔ `mercadopago-webhook` sem desativar pagamentos em produção. **Preencher antes de qualquer mudança nas edge functions.**
 
 Códigos relacionados: `ARC-403` (PCL), `CAT-013` (Financeiro), `ARC-501/509` (Segurança/Compliance).
