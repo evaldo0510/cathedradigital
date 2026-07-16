@@ -285,6 +285,7 @@ const Footer: React.FC = React.memo(() => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
+                  aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
                   className="absolute right-spacing-xs top-spacing-xs bottom-spacing-xs px-spacing-md bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   {isSubmitting ? (
