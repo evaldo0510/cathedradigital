@@ -367,34 +367,16 @@ const Bible: React.FC = () => {
     return () => clearInterval(timer);
   }, [location.pathname, user, cacheSyncVersion]);
 
-  // Sync with URL continued
+  // R1.2.2 Onda 7 — viewMode/selectedBook/selectedChapter agora derivam da URL
+  // (useBibleNavigation). O único side-effect residual aqui é disparar o
+  // fetchVerses quando o par (livro, capítulo) muda em modo leitura.
   useEffect(() => {
-    const bookAbbr = searchParams.get('book');
-    const chapter = searchParams.get('ch');
-
-    if (bookAbbr && chapter) {
-      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const decodedAbbr = decodeURIComponent(bookAbbr);
-      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
-      if (book) {
-        setSelectedBook(book);
-        setSelectedChapter(parseInt(chapter));
-        setViewMode('reading');
-        // Usar chapter original para fetch e parsear v depois se necessário
-        fetchVerses(book.abbr, parseInt(chapter));
-      }
-    } else if (bookAbbr) {
-      const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
-      const decodedAbbr = decodeURIComponent(bookAbbr);
-      const book = allBooks.find(b => b.abbr === decodedAbbr || b.name === decodedAbbr);
-      if (book) {
-        setSelectedBook(book);
-        setViewMode('chapters');
-      }
-    } else {
-      setViewMode('home');
+    if (viewMode === 'reading' && selectedBook) {
+      fetchVerses(selectedBook.abbr, selectedChapter);
     }
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, selectedBook?.abbr, selectedChapter]);
+
 
   // Re-busca o capítulo quando o usuário troca a tradução ou alterna a
   // modernização ortográfica (chave de cache muda no servidor).
