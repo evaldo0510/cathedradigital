@@ -169,6 +169,34 @@ export function useBibleNavigation(): UseBibleNavigation {
     [mutate],
   );
 
+  const selectBook = useCallback(
+    (book: BibleBook) => setSelectedBook(book),
+    [setSelectedBook],
+  );
+
+  const selectChapter = useCallback(
+    (chapter: number) => {
+      setSelectedChapter(chapter);
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      }
+    },
+    [setSelectedChapter],
+  );
+
+  const nextChapter = useCallback(() => {
+    if (!selectedBook) return;
+    if (selectedChapter < selectedBook.chapters) {
+      selectChapter(selectedChapter + 1);
+    }
+  }, [selectedBook, selectedChapter, selectChapter]);
+
+  const prevChapter = useCallback(() => {
+    if (selectedChapter > 1) {
+      selectChapter(selectedChapter - 1);
+    }
+  }, [selectedChapter, selectChapter]);
+
   return {
     viewMode,
     selectedBook,
@@ -178,5 +206,9 @@ export function useBibleNavigation(): UseBibleNavigation {
     setSelectedBook,
     setSelectedChapter,
     setSearchQuery,
+    selectBook,
+    selectChapter,
+    nextChapter,
+    prevChapter,
   };
 }
