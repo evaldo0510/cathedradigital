@@ -122,7 +122,11 @@ Duas funções ativas com implementações divergentes:
 | Testes                    | 4 arquivos                           | 0                                    |
 | Chamada por               | `mercado-pago-retry`                 | `mercadopago-create-preference`      |
 
-**Ação bloqueada até:** preenchimento de [`../MP-WEBHOOK-URLS-INVENTORY.md`](../MP-WEBHOOK-URLS-INVENTORY.md). Sem saber qual URL está cadastrada no painel Mercado Pago, consolidar = desativar pagamentos.
+> 🔒 **BLOQUEIO ARQUITETURAL — CAT-DOC-002**
+>
+> Nenhuma alteração, renomeação, consolidação ou remoção destas duas funções pode ocorrer até que [`../MP-WEBHOOK-URLS-INVENTORY.md`](../MP-WEBHOOK-URLS-INVENTORY.md) esteja preenchido e validado. Consolidar sem inventário = desativar pagamentos em produção.
+
+**Ação bloqueada até:** preenchimento de [`../MP-WEBHOOK-URLS-INVENTORY.md`](../MP-WEBHOOK-URLS-INVENTORY.md).
 
 ## Estado homologado
 
