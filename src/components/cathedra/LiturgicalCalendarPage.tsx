@@ -37,9 +37,9 @@ interface ApiDayData {
 const LITURGICAL_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
   verde: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/20', label: 'Verde' },
   roxo: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/20', label: 'Roxo' },
-  branco: { bg: 'bg-secondary/20', text: 'text-secondary', border: 'border-secondary/30', label: 'Branco' },
+  branco: { bg: 'bg-secondary/20', text: 'text-foreground', border: 'border-secondary/30', label: 'Branco' },
   vermelho: { bg: 'bg-primary/20', text: 'text-primary font-bold', border: 'border-primary/40', label: 'Vermelho' },
-  rosa: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/20', label: 'Rosa' },
+  rosa: { bg: 'bg-secondary/10', text: 'text-foreground', border: 'border-secondary/20', label: 'Rosa' },
 };
 
 const COLOUR_TO_PT: Record<string, string> = {
@@ -415,6 +415,7 @@ const LiturgicalCalendarPage: React.FC = () => {
 
               return (
                 <Button
+                  variant="ghost"
                   key={date.toISOString()}
                   onClick={() => setSelectedDay(date)}
                   className={`
@@ -536,6 +537,7 @@ const LiturgicalCalendarPage: React.FC = () => {
             <div className="space-y-spacing-sm">
               {upcomingCelebrations.map((c, i) => (
                 <Button
+                  variant="ghost"
                   key={i}
                   onClick={() => {
                     setYear(c.date.getFullYear());

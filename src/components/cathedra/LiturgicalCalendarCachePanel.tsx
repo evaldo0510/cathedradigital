@@ -364,7 +364,7 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
                   <span className="font-mono text-foreground/80 flex-1 text-center">
                     <span className="text-primary">{e.stats.hits}h</span>
                     <span className="text-muted-foreground/60"> · </span>
-                    <span className="text-amber-600 dark:text-amber-400">{e.stats.misses}m</span>
+                    <span className="text-amber-700 dark:text-amber-400">{e.stats.misses}m</span>
                     {e.stats.staleHits > 0 && (
                       <>
                         <span className="text-muted-foreground/60"> · </span>
@@ -375,7 +375,7 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
                   </span>
                   <span
                     className={`font-mono text-[10px] uppercase tracking-wider ${
-                      e.isStale ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'
+                      e.isStale ? 'text-amber-700 dark:text-amber-400' : 'text-muted-foreground'
                     }`}
                     title={`Cacheado em ${new Date(e.cachedAt).toLocaleString('pt-BR')}`}
                   >
@@ -421,7 +421,7 @@ const LiturgicalCalendarCachePanel: React.FC<Props> = ({ meta, onAfterClear }) =
             })}
           </ul>
         )}
-        <p className="text-[10px] text-muted-foreground/70 italic">
+        <p className="text-[10px] text-muted-foreground italic">
           h = hits · m = misses · s = stale hits
         </p>
       </div>

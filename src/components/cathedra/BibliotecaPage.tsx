@@ -150,7 +150,7 @@ const BibliotecaPage: React.FC = () => {
           {filtered.map((group, groupIdx) => (
             <div key={group.category} className="space-y-spacing-xl">
               <div className="flex items-center gap-spacing-lg">
-                <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/70 whitespace-nowrap">
                   {group.category}
                 </h2>
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
@@ -170,7 +170,7 @@ const BibliotecaPage: React.FC = () => {
                     </div>
                     <div className="space-y-[2px] md:space-y-spacing-xs flex-1">
                       <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-[9px] md:text-premium-base tracking-tight leading-tight">{item.title}</h3>
-                      <p className="text-[7px] md:text-premium-xs leading-tight text-muted-foreground/30 line-clamp-1 italic hidden md:block">{item.description}</p>
+                      <p className="text-[7px] md:text-premium-xs leading-tight text-muted-foreground line-clamp-1 italic hidden md:block">{item.description}</p>
                     </div>
                   </CathedraCard>
                 ))}
