@@ -82,6 +82,12 @@ const MagisteriumViewer: React.FC = () => {
     return docNotes.filter(n => n.content_id === id || n.content_id.startsWith(`${id}:`));
   }, [docNotes, id]);
 
+  // STAB-004.2: metadados canônicos do documento (sem chamadas de rede).
+  const docMeta = useMemo(
+    () => (id ? MAGISTERIUM_DOCUMENTS.find((d) => d.id === id) : undefined),
+    [id]
+  );
+
 
   useEffect(() => {
     const fetchLastRead = async () => {
