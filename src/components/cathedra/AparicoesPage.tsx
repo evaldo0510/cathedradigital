@@ -194,13 +194,16 @@ const AparicoesPage: React.FC = () => {
         {APPARITIONS.map((apparition, index) => {
           const isFav = isFavorite('aparicao', apparition.title);
           return (
-            <motion.button
+            <motion.div
               key={apparition.id}
+              role="button"
+              tabIndex={0}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
               onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
-              className={`text-left rounded-premium-full bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedApparition(apparition); setActiveTab('historia'); } }}
+              className={`cursor-pointer text-left rounded-premium-full bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40`}
             >
               <div className="relative">
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-spacing-4xl object-cover" loading="lazy" />
