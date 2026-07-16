@@ -9,7 +9,7 @@
  *
  * O heatmap categoriza cada classe encontrada em:
  *   color    → tokens de cor (text-*, bg-*, placeholder:text-*)
- *   opacity  → modificadores de opacidade (`opacity-N`, `text-*/N`)
+ *   opacity  → modificadores de opacidade (opacity-N, text-primary com /N)
  *   typography (ruído — presença correlacionada mas não causal)
  *   layout   (idem)
  *
