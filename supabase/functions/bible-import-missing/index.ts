@@ -32,8 +32,20 @@ const SKIP_ABBRS = new Set(['Sl', 'Dn']);
 
 type Admin = ReturnType<typeof createClient>;
 
-interface BollsBook { bookid: number; chapters: number }
+interface BollsBook { bookid: number; chapters: number; name?: string }
 interface BollsVerse { verse: number; text: string; pk?: number }
+
+// Validação de entrada — evita HTTP fetch com valor sujo
+const TRANSLATION_RE = /^[A-Z0-9]{2,10}$/;
+
+function normalizeTranslation(input: unknown): string {
+  const raw = typeof input === 'string' ? input.trim().toUpperCase() : '';
+  if (!TRANSLATION_RE.test(raw)) {
+    throw new Error(`Código de tradução inválido: "${input}". Use letras/dígitos maiúsculos (ex.: NVIPT, NAA, ARA).`);
+  }
+  return raw;
+}
+
 
 async function fetchBollsBooks(translation: string): Promise<Map<number, BollsBook>> {
   const res = await fetch(`${BOLLS_BASE}/get-books/${translation}/`);
