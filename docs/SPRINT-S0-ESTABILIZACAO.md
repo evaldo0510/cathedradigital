@@ -71,8 +71,54 @@
 | Magisterium — categoria e documento     | Lista e detalhe carregam                                        | <preencher> | ☐      | Screenshot             |             |
 | Liturgia do dia                         | Cálculo Computus correto para hoje                              | <preencher> | ☐      | Comparação vatican.va  |             |
 | Checkout Mercado Pago (sandbox)         | Preferência gerada + webhook recebido + upgrade aplicado        | <preencher> | ☐      | Log do webhook         | **Não testar em produção** |
+| Recebimento de webhook MP (sandbox)     | Registrar qual edge function (`mercadopago-webhook` vs. `mercado-pago-webhook`) recebeu cada evento — ver §6.1 | <preencher> | ☐      | Tabela §6.1 preenchida | Alimenta CAT-DOC-002 |
 | Logos AI (usuário free)                 | Responde e respeita cap 5 msgs/dia                              | <preencher> | ☐      | Screenshot             |             |
 | Mobile (viewport 375px)                 | Todos os fluxos acima renderizam sem overflow                   | <preencher> | ☐      | Screenshots            |             |
+
+### 6.1 Teste de recebimento de webhook MP em sandbox (evidência CAT-DOC-002)
+
+**Objetivo:** para cada evento disparado em sandbox, registrar qual das duas edge functions o Mercado Pago realmente invocou. Alimenta o inventário [`MP-WEBHOOK-URLS-INVENTORY.md`](./MP-WEBHOOK-URLS-INVENTORY.md) §3.1–3.3 sem alterar código.
+
+**Pré-condições:**
+- Aplicação Mercado Pago em modo **sandbox** (credenciais `TEST-`) — nunca produção.
+- Cartão de teste MP oficial (nunca cartão real).
+- Acesso a logs das edge functions (`mercadopago-webhook` e `mercado-pago-webhook`).
+- Acesso à tabela `public.webhook_logs` (via ferramenta de banco).
+
+**Procedimento (executar 1x por evento):**
+
+1. Gerar preferência em sandbox pelo fluxo normal do app (`UpgradePage` → checkout).
+2. Concluir o pagamento com cartão de teste MP.
+3. Aguardar ~30s.
+4. Coletar evidência em **dois lugares**, em ordem:
+   - **Logs das edge functions:** identificar em qual das duas funções apareceu um POST com `payment.created` / `payment.updated` correlacionado ao `external_reference` da preferência.
+   - **Tabela `public.webhook_logs`:** consultar por `provider = 'mercado_pago'` e o `external_reference` da preferência; se houver linha, o handler foi `mercado-pago-webhook` (só ele grava nesta tabela — ver `docs/MP-WEBHOOK-AUDIT.md` §3).
+5. Anotar resultado na tabela abaixo.
+6. Se **ambas** as funções receberem o mesmo evento: registrar as duas na coluna "Função receptora" e sinalizar em Observações — significa que o painel MP tem as duas URLs cadastradas.
+7. Se **nenhuma** receber: pagamento não gerou callback → problema de configuração no painel MP; registrar e não avançar consolidação.
+
+**Critérios objetivos de sucesso:**
+- Pelo menos 3 eventos capturados com função receptora identificada.
+- 100% dos eventos com correlação inequívoca a um `external_reference`.
+- Nenhum acesso a produção durante o teste.
+- Nenhuma alteração de código ou de configuração das funções.
+
+**Tabela de evidências (preencher durante execução):**
+
+| # | Data/hora (BRT) | `external_reference` | Evento MP           | Função receptora (via logs)                        | Linha em `webhook_logs`? | App ID sandbox | Executor       | Observações |
+| - | --------------- | -------------------- | ------------------- | -------------------------------------------------- | ------------------------ | -------------- | -------------- | ----------- |
+| 1 | `<preencher>`   | `<preencher>`        | `payment.created`   | ☐ `mercadopago-webhook`  ☐ `mercado-pago-webhook`  | ☐ sim  ☐ não             | `<preencher>`  | `<preencher>`  | `<preencher>` |
+| 2 | `<preencher>`   | `<preencher>`        | `payment.updated`   | ☐ `mercadopago-webhook`  ☐ `mercado-pago-webhook`  | ☐ sim  ☐ não             | `<preencher>`  | `<preencher>`  | `<preencher>` |
+| 3 | `<preencher>`   | `<preencher>`        | `payment.updated`   | ☐ `mercadopago-webhook`  ☐ `mercado-pago-webhook`  | ☐ sim  ☐ não             | `<preencher>`  | `<preencher>`  | `<preencher>` |
+| 4 | `<preencher>`   | `<preencher>`        | `<preencher>`       | ☐ `mercadopago-webhook`  ☐ `mercado-pago-webhook`  | ☐ sim  ☐ não             | `<preencher>`  | `<preencher>`  | `<preencher>` |
+
+**Conclusão do teste (preencher ao final):**
+- Função receptora predominante em sandbox: `<preencher>`
+- Coincide com a URL cadastrada no painel MP (seção 3.1 do inventário)? `<preencher>` (sim/não)
+- Divergências detectadas: `<preencher>`
+- Recomendação para CAT-DOC-002 §4 (nome canônico): `<preencher>`
+- Responsável pela conclusão: `<preencher>`
+- Data: `<preencher>`
 
 ## 7. Backup
 
