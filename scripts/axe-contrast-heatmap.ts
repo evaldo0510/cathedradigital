@@ -366,11 +366,49 @@ s += `\n## Heatmap · classes causais (color/opacity)\n\n`;
 if (topCausal.length === 0) {
   s += `_Nenhuma classe causal detectada — auditar failureSummary manualmente._\n`;
 } else {
-  s += `| Classe | Categoria | Ocorrências | Rotas |\n|---|---|---:|---|\n`;
+  s += `| Classe | Categoria | Ocorrências | Rotas | Sugestão (registry) | Confidence |\n|---|---|---:|---|---|---|\n`;
   for (const b of topCausal) {
-    s += `| <a id="hm-${anchor(b.key)}"></a>\`${b.key}\` | ${b.category} | ${b.count} | ${Array.from(b.routes).map((r) => `\`${r}\``).join(', ')} |\n`;
+    const rule = ruleFor(b.key);
+    const suggestion = rule
+      ? rule.replacement === null
+        ? '**remover**'
+        : rule.replacement === undefined
+          ? `_${rule.reason}_`
+          : `→ \`${rule.replacement}\``
+      : '—';
+    const conf = rule ? rule.confidence : '—';
+    s += `| <a id="hm-${anchor(b.key)}"></a>\`${b.key}\` | ${b.category} | ${b.count} | ${Array.from(b.routes).map((r) => `\`${r}\``).join(', ')} | ${suggestion} | ${conf} |\n`;
   }
 }
+
+// Diff sugerido por arquivo (ripgrep matches × registry)
+s += `\n## Diff sugerido (dry-run)\n\n`;
+s += `Execute \`bun run axe:contrast:autofix -- --apply\` para aplicar as regras marcadas como \`safe\`. As \`review\` exigem inspeção manual.\n\n`;
+const suggestedByFile = new Map<string, Array<{ cls: string; rule: import('./axe-contrast-token-registry').TokenRule; line: number; text: string }>>();
+for (const b of topCausal) {
+  const rule = ruleFor(b.key);
+  if (!rule) continue;
+  const matches = srcIndex.get(b.key) ?? [];
+  for (const m of matches) {
+    const arr = suggestedByFile.get(m.file) ?? [];
+    arr.push({ cls: b.key, rule, line: m.line, text: m.text });
+    suggestedByFile.set(m.file, arr);
+  }
+}
+if (suggestedByFile.size === 0) {
+  s += `_Nenhuma ocorrência encontrada em \`src/\` para as classes causais._\n`;
+} else {
+  for (const [file, items] of Array.from(suggestedByFile.entries()).sort()) {
+    s += `<details><summary><code>${file}</code> — ${items.length} ocorrência(s)</summary>\n\n`;
+    for (const it of items.sort((a, b) => a.line - b.line)) {
+      const target = it.rule.replacement === null ? '(remover classe)' : it.rule.replacement === undefined ? '(revisar)' : `→ \`${it.rule.replacement}\``;
+      s += `- **L${it.line}** \`${it.cls}\` ${target} · _${it.rule.reason}_ · ${it.rule.confidence}\n`;
+      s += `  \`${it.text.slice(0, 160)}\`\n`;
+    }
+    s += `\n</details>\n\n`;
+  }
+}
+
 
 // detalhamento por rota (colapsado)
 s += `\n## Detalhes por rota\n\n`;
