@@ -6,6 +6,7 @@ import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS, MAGISTERIUM_DOCUMENTS } from '@/data/magisterium-urls';
 import MagisteriumDocumentHeader from './MagisteriumDocumentHeader';
+import MagisteriumDocumentNav from './MagisteriumDocumentNav';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
