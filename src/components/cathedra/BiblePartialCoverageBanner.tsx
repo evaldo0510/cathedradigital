@@ -13,12 +13,10 @@ import { useIsAdmin } from '@/hooks/useIsAdmin';
 export const BiblePartialCoverageBanner: React.FC = () => {
   const { gate, isLoading } = useBibleReadGate();
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
-  const [dismissed, setDismissed] = React.useState(false);
 
   if (isLoading || roleLoading) return null;
   if (isAdmin) return null;
   if (!gate?.blocked) return null;
-  if (dismissed) return null;
 
   return (
     <div
@@ -41,14 +39,6 @@ export const BiblePartialCoverageBanner: React.FC = () => {
         >
           Ler o Catecismo
         </Link>
-        <button
-          type="button"
-          onClick={() => setDismissed(true)}
-          aria-label="Fechar aviso de cobertura parcial"
-          className="shrink-0 rounded p-1 hover:bg-amber-100 dark:hover:bg-amber-900/40"
-        >
-          <X className="h-4 w-4" aria-hidden />
-        </button>
       </div>
     </div>
   );
