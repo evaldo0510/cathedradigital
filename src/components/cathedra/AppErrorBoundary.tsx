@@ -13,6 +13,9 @@ interface Props {
 interface State {
   hasError: boolean;
   errorId?: string;
+  errorMessage?: string;
+  errorStack?: string;
+  componentStack?: string;
 }
 
 
@@ -21,22 +24,44 @@ class AppErrorBoundary extends Component<Props, State> {
     hasError: false
   };
 
-  public static getDerivedStateFromError(_: Error): State {
-    return { hasError: true };
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, errorMessage: error?.message, errorStack: error?.stack };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const errorId = trackNavigationError(error, { componentStack: errorInfo.componentStack });
-    this.setState({ errorId });
-    
-    Sentry.captureException(error, { 
-      extra: { 
+    // Nunca mascarar: mantém no console para debugging do usuário e do time.
+    // eslint-disable-next-line no-console
+    console.error('[AppErrorBoundary]', error, errorInfo);
+    this.setState({ errorId, componentStack: errorInfo.componentStack ?? undefined });
+
+    Sentry.captureException(error, {
+      extra: {
         componentStack: errorInfo.componentStack,
-        ...errorInfo 
-      } 
+        ...errorInfo
+      }
     });
   }
 
+  private copyDetails = async () => {
+    const { errorId, errorMessage, errorStack, componentStack } = this.state;
+    const payload = [
+      `Ref: ${errorId ?? '(sem id)'}`,
+      `URL: ${typeof window !== 'undefined' ? window.location.href : '-'}`,
+      `Mensagem: ${errorMessage ?? '(sem mensagem)'}`,
+      '',
+      'Stack:',
+      errorStack ?? '(sem stack)',
+      '',
+      'Component stack:',
+      componentStack ?? '(sem component stack)',
+    ].join('\n');
+    try {
+      await navigator.clipboard.writeText(payload);
+    } catch {
+      // fallback silencioso — usuário ainda pode ver os detalhes na tela
+    }
+  };
 
   public render() {
     if (this.state.hasError) {
@@ -53,11 +78,28 @@ class AppErrorBoundary extends Component<Props, State> {
               Santuário em <span className="italic font-serif text-secondary/60">Manutenção</span>
             </h1>
             <p className="text-premium-xs font-serif italic text-muted-foreground leading-relaxed">
-              Pedimos desculpas, peregrino. Algo interrompeu esta seção da sua jornada espiritual. 
+              Pedimos desculpas, peregrino. Algo interrompeu esta seção da sua jornada espiritual.
               Nossos guardiões técnicos já foram alertados.
             </p>
+
+            {this.state.errorMessage && (
+              <details className="text-left mt-spacing-md rounded border border-border/30 bg-background/60 p-3">
+                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Detalhes técnicos
+                </summary>
+                <p className="mt-2 text-xs font-mono text-destructive break-words">
+                  {this.state.errorMessage}
+                </p>
+                {this.state.errorStack && (
+                  <pre className="mt-2 max-h-40 overflow-auto text-[10px] font-mono text-muted-foreground whitespace-pre-wrap">
+                    {this.state.errorStack}
+                  </pre>
+                )}
+              </details>
+            )}
+
             {this.state.errorId && (
-              <p className="text-[9px] font-mono opacity-20 uppercase tracking-widest mt-spacing-md">
+              <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest mt-spacing-md">
                 Ref ID: {this.state.errorId}
               </p>
             )}
@@ -74,7 +116,15 @@ class AppErrorBoundary extends Component<Props, State> {
             >
               Tentar Novamente
             </Button>
-            
+
+            <Button
+              variant="outline"
+              onClick={this.copyDetails}
+              className="text-[9px] font-bold uppercase tracking-widest"
+            >
+              Copiar detalhes do erro
+            </Button>
+
             <Button
               variant="ghost"
               onClick={async () => {
