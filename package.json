@@ -64,7 +64,9 @@
     "test:update-baselines": "playwright test --update-snapshots",
     "ci:validate": "npm run test:a11y && npm run test:report",
     "axe:contrast": "bunx tsx scripts/axe-contrast-run.ts",
-    "axe:contrast:aggregate": "bunx tsx scripts/axe-contrast-heatmap.ts"
+    "axe:contrast:aggregate": "bunx tsx scripts/axe-contrast-heatmap.ts",
+    "axe:contrast:tracked-all": "bunx tsx scripts/axe-contrast-run.ts --all-tracked --aggregate",
+    "axe:contrast:autofix": "bunx tsx scripts/axe-contrast-run.ts --autofix --aggregate"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
