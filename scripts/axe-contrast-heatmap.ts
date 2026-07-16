@@ -22,6 +22,8 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { spawnSync } from 'child_process';
+import { TOKEN_REGISTRY, ruleFor } from './axe-contrast-token-registry';
 
 type NodeReport = {
   target: string[];
