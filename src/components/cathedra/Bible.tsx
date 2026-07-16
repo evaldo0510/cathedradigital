@@ -488,7 +488,6 @@ const Bible: React.FC = () => {
 
     const today = new Date().toISOString().split('T')[0];
     localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
-    setIsDailyCompleted(true);
     toast.success('Leitura do dia concluída!');
   };
 
