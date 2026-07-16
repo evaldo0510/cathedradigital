@@ -37,13 +37,61 @@ function push(entry: FailedRequest) {
   notify();
 }
 
-function shortUrl(u: string) {
+/**
+ * Redaction automática de tokens e PII antes de exibir ou exportar.
+ * Aplicada em URL (querystring), body preview e mensagens.
+ */
+const SENSITIVE_QS_KEYS = /^(authorization|auth|token|access_token|refresh_token|id_token|apikey|api_key|key|secret|password|passwd|pwd|session|sig|signature)$/i;
+const SENSITIVE_JSON_KEYS = /(authorization|auth|token|access_token|refresh_token|id_token|apikey|api_key|secret|password|passwd|pwd|session|cookie|set-cookie|bearer)/i;
+
+function redactString(input: string): string {
+  if (!input) return input;
+  let s = input;
+  // JWT (3 segmentos base64url separados por ponto)
+  s = s.replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, '[JWT_REDACTED]');
+  // Bearer / Basic tokens
+  s = s.replace(/\b(Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+/gi, '$1 [REDACTED]');
+  // Emails
+  s = s.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL_REDACTED]');
+  // Chaves longas (>=32 chars) hex/base64-ish soltas
+  s = s.replace(/\b[A-Za-z0-9_-]{40,}\b/g, (m) =>
+    /^[0-9]+$/.test(m) ? m : '[TOKEN_REDACTED]'
+  );
+  // JSON: "chave_sensivel":"valor"
+  s = s.replace(
+    /"([^"]+)"\s*:\s*"([^"]*)"/g,
+    (full, k, v) => (SENSITIVE_JSON_KEYS.test(k) ? `"${k}":"[REDACTED]"` : full)
+  );
+  return s;
+}
+
+function redactUrl(rawUrl: string): string {
   try {
-    const url = new URL(u, window.location.origin);
-    return url.pathname + (url.search ? url.search.slice(0, 60) : '');
+    const url = new URL(rawUrl, window.location.origin);
+    url.searchParams.forEach((val, key) => {
+      if (SENSITIVE_QS_KEYS.test(key)) url.searchParams.set(key, '[REDACTED]');
+    });
+    // Preserva host completo? Não — só path+search suficiente pra debug.
+    return url.pathname + (url.search ? url.search.slice(0, 200) : '');
   } catch {
-    return u.slice(0, 120);
+    return redactString(rawUrl).slice(0, 200);
   }
+}
+
+function redactFullUrl(rawUrl: string): string {
+  try {
+    const url = new URL(rawUrl, window.location.origin);
+    url.searchParams.forEach((val, key) => {
+      if (SENSITIVE_QS_KEYS.test(key)) url.searchParams.set(key, '[REDACTED]');
+    });
+    return url.toString();
+  } catch {
+    return redactString(rawUrl);
+  }
+}
+
+function shortUrl(u: string) {
+  return redactUrl(u);
 }
 
 function installInterceptor() {
@@ -61,13 +109,13 @@ function installInterceptor() {
         try {
           const clone = res.clone();
           const txt = await clone.text();
-          bodyPreview = txt.slice(0, 400);
+          bodyPreview = redactString(txt).slice(0, 400);
         } catch {/* ignore */}
         push({
           id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
           timestamp: Date.now(),
           method,
-          url,
+          url: redactFullUrl(url),
           status: res.status,
           statusText: res.statusText,
           durationMs: Math.round(performance.now() - start),
@@ -80,9 +128,9 @@ function installInterceptor() {
         id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
         timestamp: Date.now(),
         method,
-        url,
+        url: redactFullUrl(url),
         status: 'network',
-        statusText: err?.message || 'Network error',
+        statusText: redactString(err?.message || 'Network error'),
         durationMs: Math.round(performance.now() - start),
       });
       throw err;
