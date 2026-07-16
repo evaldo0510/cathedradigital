@@ -84,20 +84,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
 
-// Helper for Daily Reading
-const getDailyReading = () => {
-  const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books).filter(b => b.name !== 'Abdias' || b.chapters === 1);
 
-  const date = new Date();
-  const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
-  
-  // Pick a book and chapter deterministically
-  const bookIndex = dayOfYear % allBooks.length;
-  const book = allBooks[bookIndex];
-  const chapter = (dayOfYear % book.chapters) + 1;
-  
-  return { book, chapter };
-};
 
 
 const Bible: React.FC = () => {
@@ -127,8 +114,6 @@ const Bible: React.FC = () => {
   
   // New States for Annotations and Progress
   const [lastRead, setLastRead] = useState<any>(null);
-  const [dailyReading, setDailyReading] = useState(getDailyReading());
-  const [isDailyCompleted, setIsDailyCompleted] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string, color?: string, theological_theme?: string } | null>(null);
@@ -417,9 +402,6 @@ const Bible: React.FC = () => {
     const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
     if (savedLastRead) setLastRead(JSON.parse(savedLastRead));
 
-    const today = new Date().toISOString().split('T')[0];
-    const dailyStatus = localStorage.getItem(`cathedra_bible_daily_${today}`);
-    if (dailyStatus === 'completed') setIsDailyCompleted(true);
     const savedHighlights = localStorage.getItem('cathedra_bible_highlights');
     if (savedHighlights) setHighlights(JSON.parse(savedHighlights));
   }, []);
@@ -493,7 +475,6 @@ const Bible: React.FC = () => {
 
     const today = new Date().toISOString().split('T')[0];
     localStorage.setItem(`cathedra_bible_daily_${today}`, 'completed');
-    setIsDailyCompleted(true);
     toast.success('Leitura do dia concluída!');
   };
 
