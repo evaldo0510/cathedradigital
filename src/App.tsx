@@ -140,6 +140,7 @@ const SaintsAdmin = lazy(() => import('./pages/admin/SaintsAdmin'));
 const PgStatStatements = lazy(() => import('./pages/admin/PgStatStatements'));
 const AxeContrastReport = lazy(() => import('./pages/admin/AxeContrastReport'));
 const BibleImportMissing = lazy(() => import('./pages/admin/BibleImportMissing'));
+const BibleGatePendencies = lazy(() => import('./pages/admin/BibleGatePendencies'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
@@ -564,6 +565,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/bible-import" element={<BibleImportAdmin />} />
                       <Route path="/bible-import" element={<BibleImportAdmin />} />
                       <Route path="/admin/bible-import-missing" element={<BibleImportMissing />} />
+                      <Route path="/admin/bible-gate-pendencies" element={<BibleGatePendencies />} />
                       <Route path="/admin/bible-sprint1" element={<BibleSprint1Admin />} />
                       <Route path="/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo-status" element={<SEOStatusPage />} />
