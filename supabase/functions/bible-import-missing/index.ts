@@ -203,6 +203,8 @@ async function dryRun(admin: Admin, translation: string) {
       new_chapters: chapters_missing_total,
     },
   };
+}
+
 
 async function runImport(admin: Admin, jobId: string, sourceId: string, translation: string) {
   const started = new Date().toISOString();
