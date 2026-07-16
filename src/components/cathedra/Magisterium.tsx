@@ -526,7 +526,7 @@ const Magisterium: React.FC = () => {
             <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
               <Button
                 variant="ghost"
-                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                 onClick={() => setSelectedCategory(null)}
               >
                 Todas as Categorias
