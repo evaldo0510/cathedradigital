@@ -157,7 +157,7 @@ function rgClass(cls: string): Array<{ file: string; line: number; text: string 
   const pattern = `(?:className|class)=["\`\\{][^"\`]*\\b${escaped}\\b|["\`\\s]${escaped}["\`\\s]`;
   const r = spawnSync(
     'rg',
-    ['--json', '-t', 'tsx', '-t', 'ts', pattern, 'src'],
+    ['--json', '-t', 'typescript', pattern, 'src'],
     { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 },
   );
   if (r.status !== 0 && r.status !== 1) return [];
