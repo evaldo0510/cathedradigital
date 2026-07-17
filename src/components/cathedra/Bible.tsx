@@ -11,6 +11,8 @@ import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn, getElementSelector } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -55,12 +57,27 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
     );
   }
 
+  if (!data?.content) {
+    return (
+      <div className="space-y-spacing-xs">
+        <p className="text-xs text-primary/50 italic">Conteúdo ainda não indexado no banco oficial.</p>
+        <a
+          href={`/catechism?p=${pNum}`}
+          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
+        >
+          Abrir §{pNum} no Catecismo →
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
-      {data?.content || 'Conteúdo não disponível.'}
+      {data.content}
     </div>
   );
 };
+
 
 // Knowledge Connection System (Mock for development, will be replaced by DB)
 const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
@@ -158,58 +175,8 @@ const Bible: React.FC = () => {
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
   const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const nexusSheetPanelRef = useRef<HTMLDivElement>(null);
-  const nexusSheetTriggerRef = useRef<HTMLElement | null>(null);
 
-  // A11y do bottom-sheet Nexus: Escape fecha, foco vai pro painel, Tab fica preso.
-  useEffect(() => {
-    if (!expandedConnection) return;
-    const panel = nexusSheetPanelRef.current;
-    if (!panel) return;
 
-    nexusSheetTriggerRef.current = (document.activeElement as HTMLElement) ?? null;
-
-    const focusables = () =>
-      Array.from(
-        panel.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => el.offsetParent !== null);
-
-    const first = focusables()[0];
-    (first ?? panel).focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setExpandedConnection(null);
-        return;
-      }
-      if (e.key === 'Tab') {
-        const nodes = focusables();
-        if (nodes.length === 0) {
-          e.preventDefault();
-          panel.focus();
-          return;
-        }
-        const firstEl = nodes[0];
-        const lastEl = nodes[nodes.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-        if (e.shiftKey && (active === firstEl || !panel.contains(active))) {
-          e.preventDefault();
-          lastEl.focus();
-        } else if (!e.shiftKey && (active === lastEl || !panel.contains(active))) {
-          e.preventDefault();
-          firstEl.focus();
-        }
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      nexusSheetTriggerRef.current?.focus?.();
-    };
-  }, [expandedConnection]);
 
 
 
@@ -1879,45 +1846,95 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   };
                                   const meta = typeMeta[conn.type] || typeMeta.theology;
                                   return (
-                                    <motion.button
-                                      key={idx}
-                                      data-testid="nexus-connection-card"
-                                      initial={{ opacity: 0, y: 4 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      transition={{ delay: idx * 0.03 }}
-                                      aria-label={`${meta.kicker}: ${conn.label}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        console.info('[Nexus] click', {
-                                          book: selectedBook.abbr,
-                                          chapter: selectedChapter,
-                                          verse: v.number,
-                                          type: conn.type,
-                                          label: conn.label,
-                                          id: conn.id,
-                                        });
-                                        try {
-                                          window.dispatchEvent(new CustomEvent('nexus:click', {
-                                            detail: { book: selectedBook.abbr, chapter: selectedChapter, verse: v.number, ...conn }
-                                          }));
-                                        } catch {}
-                                        setExpandedConnection(conn);
-                                      }}
-                                      className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
-                                    >
-                                      <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
-                                      <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
-                                        <div className="flex items-center gap-spacing-xs.5">
-                                          <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
-                                          <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
-                                            {meta.kicker}
-                                          </span>
+                                    <Popover key={idx}>
+                                      <PopoverTrigger asChild>
+                                        <motion.button
+                                          data-testid="nexus-connection-card"
+                                          initial={{ opacity: 0, y: 4 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          transition={{ delay: idx * 0.03 }}
+                                          aria-label={`${meta.kicker}: ${conn.label}`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.info('[Nexus] click', {
+                                              book: selectedBook.abbr,
+                                              chapter: selectedChapter,
+                                              verse: v.number,
+                                              type: conn.type,
+                                              label: conn.label,
+                                              id: conn.id,
+                                            });
+                                            try {
+                                              window.dispatchEvent(new CustomEvent('nexus:click', {
+                                                detail: { book: selectedBook.abbr, chapter: selectedChapter, verse: v.number, ...conn }
+                                              }));
+                                            } catch {}
+                                            setExpandedConnection(conn);
+                                          }}
+                                          className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
+                                        >
+                                          <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
+                                          <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
+                                            <div className="flex items-center gap-spacing-xs.5">
+                                              <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
+                                              <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
+                                                {meta.kicker}
+                                              </span>
+                                            </div>
+                                            <span className="text-[11px] font-bold text-primary dark:text-foreground leading-tight truncate">
+                                              {conn.label}
+                                            </span>
+                                          </div>
+                                        </motion.button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        side="top"
+                                        align="center"
+                                        sideOffset={8}
+                                        collisionPadding={12}
+                                        data-testid="nexus-connection-popover"
+                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-md rounded-2xl border border-primary/10 bg-card shadow-premium"
+                                      >
+                                        <div className="space-y-spacing-sm">
+                                          <div className="flex items-start gap-spacing-xs">
+                                            <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
+                                            <div className="min-w-0">
+                                              <p className={cn("text-[9px] font-black uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
+                                              <h4 className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
+                                            </div>
+                                          </div>
+                                          <p className="text-xs font-serif italic text-primary/70 leading-relaxed">
+                                            {conn.summary}
+                                          </p>
+                                          {conn.type === 'catechism' && (
+                                            <div className="pt-spacing-sm border-t border-primary/5">
+                                              <CatechismParagraphPreview paragraphId={conn.id} />
+                                            </div>
+                                          )}
+                                          <div className="pt-spacing-sm border-t border-primary/5">
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              data-testid="nexus-popover-nav-link"
+                                              onClick={() => {
+                                                console.info('[Nexus] navigate', { from: 'bible', to: conn.type, id: conn.id });
+                                                if (conn.type === 'catechism') navigate(`/catechism?p=${conn.id}`);
+                                                else if (conn.type === 'document') navigate(`/magisterium?doc=${conn.id}`);
+                                                else if (conn.type === 'bible' || conn.type === 'cross_ref') {
+                                                  const parts = String(conn.id).split('-');
+                                                  if (parts.length >= 2) navigate(`/bible?book=${parts[0]}&ch=${parts[1]}${parts[2] ? `&v=${parts[2]}` : ''}`);
+                                                }
+                                              }}
+                                              className="w-full h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                            >
+                                              <Icons.BookOpen className="w-3.5 h-3.5 mr-spacing-xs text-secondary" />
+                                              Abrir referência
+                                            </Button>
+                                          </div>
                                         </div>
-                                        <span className="text-[11px] font-bold text-primary dark:text-foreground leading-tight truncate">
-                                          {conn.label}
-                                        </span>
-                                      </div>
-                                    </motion.button>
+                                      </PopoverContent>
+                                    </Popover>
+
                                   );
                                 })}
                               </div>
@@ -2070,108 +2087,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
       />
 
 
-      <AnimatePresence>
-        {expandedConnection && (
-          <div data-testid="nexus-bottom-sheet" className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-spacing-lg pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setExpandedConnection(null)}
-              className="absolute inset-0 bg-background/20 backdrop-blur-[2px] pointer-events-auto"
-            />
-            
-            <motion.div
-              ref={nexusSheetPanelRef}
-              data-testid="nexus-bottom-sheet-panel"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="nexus-sheet-title"
-              aria-describedby="nexus-sheet-desc"
-              tabIndex={-1}
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden focus:outline-none"
-            >
+      {/* Nexus connections now open as anchored Popover on each card (see nexus-connection-popover). */}
 
-              {/* Drag handle for mobile-first feel */}
-              <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-spacing-lg lg:hidden" />
-              
-              <div className="flex items-center justify-between mb-spacing-lg">
-                <div className="space-y-spacing-xs">
-                  <div className="flex items-center gap-spacing-xs">
-                    <div className={cn("w-2 h-2 rounded-full animate-pulse", expandedConnection.color)} />
-                    <h3 id="nexus-sheet-title" className="text-xl font-display font-bold text-primary uppercase tracking-widest">
-                      {expandedConnection.label}
-                    </h3>
-                  </div>
-                  <span id="nexus-sheet-desc" className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
-                    {expandedConnection.theological_theme || 'Conexão Teológica'}
-                  </span>
-
-                </div>
-                
-                <div className="flex items-center gap-spacing-xs">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => setExpandedConnection(null)} 
-                    aria-label="Fechar conexão Nexus"
-                    data-testid="nexus-bottom-sheet-close"
-                    className="rounded-full w-10 h-10 bg-primary/5 hover:bg-primary/10"
-                  >
-                    <Icons.X className="w-5 h-5 opacity-40" />
-                  </Button>
-
-                </div>
-              </div>
-              
-              <div className="bg-primary/[0.02] border border-primary/5 rounded-3xl p-spacing-lg md:p-spacing-xl mb-spacing-xl space-y-spacing-md">
-                <p className="text-lg font-serif italic text-primary/80 leading-relaxed">
-                  {expandedConnection.summary}
-                </p>
-                
-                {expandedConnection.type === 'catechism' && (
-                  <div className="pt-4 border-t border-primary/5">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-spacing-sm">Parágrafo Relacionado</p>
-                    <CatechismParagraphPreview paragraphId={expandedConnection.id} />
-                  </div>
-                )}
-              </div>
-              
-              <div className="grid grid-cols-2 gap-spacing-md">
-                <Button 
-                  variant="outline"
-                  data-testid="nexus-sheet-nav-link"
-                  onClick={() => {
-                    console.info('[Nexus] navigate', { from: 'bible', to: expandedConnection.type, id: expandedConnection.id });
-                    if (expandedConnection.type === 'catechism') {
-                      navigate(`/catechism?p=${expandedConnection.id}`);
-                    } else if (expandedConnection.type === 'document') {
-                      navigate(`/magisterium?doc=${expandedConnection.id}`);
-                    }
-                    setExpandedConnection(null);
-                  }}
-                  className="h-16 rounded-2xl text-[9px] font-black uppercase tracking-widest border-primary/10 hover:bg-primary/5"
-                >
-                  <Icons.BookOpen className="w-4 h-4 mr-spacing-xs text-secondary" /> 
-                  Ler no {expandedConnection.type === 'catechism' ? 'Catecismo' : 'Documento'}
-
-                </Button>
-
-                <Button 
-                  onClick={() => setExpandedConnection(null)}
-                  className="h-16 bg-primary text-primary-foreground rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
-                >
-                  Continuar Leitura
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <AnimatePresence>
         {isGraphOpen && (
