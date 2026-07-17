@@ -294,17 +294,20 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </div>
           )}
 
-      {/* Quote */}
-      <motion.div 
-        className="text-center space-y-spacing-md max-w-spacing-3xl mx-auto mb-spacing-2xl"
+      {/* Cabeçalho editorial — alinhado à linguagem do Reader */}
+      <motion.section
+        className="editorial-column text-center space-y-spacing-md mb-spacing-2xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
       >
-        <p className="text-muted-foreground font-serif italic text-premium-lg md:text-premium-xl leading-relaxed">
+        
+        <p className="editorial-display text-2xl md:text-3xl font-serif italic text-muted-foreground leading-relaxed">
           "Caminhai enquanto tendes a luz, para que as trevas não vos surpreendam." — João 12,35
         </p>
-      </motion.div>
+        <hr className="editorial-rule editorial-rule--hair" />
+      </motion.section>
+
 
       {/* Stats bar */}
       {stats.started > 0 && (

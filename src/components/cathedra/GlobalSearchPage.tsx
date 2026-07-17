@@ -101,7 +101,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-spacing-md md:space-y-spacing-2xl">
+      <div ref={ref} className="editorial-column space-y-spacing-md md:space-y-spacing-2xl">
         <motion.div 
           className={cn(
             "text-center space-y-spacing-sm md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
@@ -111,66 +111,34 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center justify-center gap-3" aria-hidden="true">
-            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
-            <span
-              className="text-[9px] md:text-[10px] uppercase"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-            >
-              Logos
-            </span>
-            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+            <span className="h-px w-10 md:w-16 bg-secondary" />
+            <span className="editorial-meta text-secondary">Logos</span>
+            <span className="h-px w-10 md:w-16 bg-secondary" />
           </div>
           <h2
-            className="leading-none"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontWeight: 500,
-              fontSize: 'clamp(2rem, 6vw, 3.75rem)',
-              letterSpacing: '0.02em',
-            }}
+            className="editorial-display leading-none text-primary"
+            style={{ fontSize: 'clamp(2rem, 6vw, 3.75rem)' }}
           >
-            Logos<span style={{ color: '#c9a84c' }}>.</span> IA
+            Logos<span className="text-secondary">.</span> IA
           </h2>
-          <p
-            className="mx-auto hidden md:block"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: '1.05rem',
-              color: 'hsl(var(--muted-foreground))',
-              maxWidth: '42ch',
-              lineHeight: 1.6,
-            }}
-          >
+          <p className="mx-auto hidden md:block font-serif italic text-muted-foreground text-lg leading-relaxed max-w-[42ch]">
             "No princípio era o Verbo." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
+
 
         {/* LOGOS IA CHAT INTERFACE - STICKY SEARCH ON MOBILE */}
         <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none mb-spacing-md">
           <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium space-y-spacing-xs md:space-y-spacing-xl">
              <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
                 <div className="flex items-center gap-2">
-                   <span
-                     className="text-[9px] md:text-[10px] uppercase"
-                     style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-                   >
-                     Conversa com Logos
-                   </span>
+                   <span className="editorial-meta text-secondary">Conversa com Logos</span>
                 </div>
-                <p
-                  className="hidden sm:block"
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontStyle: 'italic',
-                    fontSize: '0.95rem',
-                    color: 'hsl(var(--muted-foreground))',
-                    lineHeight: 1.6,
-                  }}
-                >
+                <p className="hidden sm:block font-serif italic text-muted-foreground leading-relaxed">
                   Logos é o seu assistente teológico. Pergunte sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
                 </p>
              </div>
+
              
              <FuzzySearchInput
               value={query}
@@ -191,14 +159,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           id="search-results-container"
         >
           <div className="flex items-center gap-3 md:gap-5">
-            <span
-              className="whitespace-nowrap uppercase text-[9px] md:text-[10px]"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-            >
+            <span className="editorial-meta text-secondary whitespace-nowrap">
               {anyPending ? 'Buscando sabedoria' : 'Resultados'}
             </span>
-            <div className="h-px flex-1" style={{ backgroundColor: '#c9a84c', opacity: 0.35 }} />
+            <div className="h-px flex-1 bg-secondary/35" />
           </div>
+
+
 
         {anyPending && (
           <div className="mt-spacing-lg">
@@ -222,18 +189,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             className="text-center py-spacing-2xl space-y-4"
           >
             <span
-              className="block mx-auto"
-              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              className="block mx-auto w-px h-10 bg-secondary/50"
               aria-hidden="true"
             />
-            <p
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontStyle: 'italic',
-                fontSize: '1.35rem',
-                color: 'hsl(var(--foreground))',
-              }}
-            >
+            <p className="editorial-display text-2xl italic text-foreground">
               Nenhum resultado encontrado.
             </p>
             <p className="text-premium-sm text-muted-foreground/70">
@@ -241,6 +200,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </p>
           </motion.div>
         )}
+
 
 
         {hasQuery && !isAllEmpty && (
@@ -354,22 +314,15 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         {!hasQuery && (
           <div className="text-center py-spacing-2xl space-y-4">
             <span
-              className="block mx-auto"
-              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              className="block mx-auto w-px h-10 bg-secondary/50"
               aria-hidden="true"
             />
-            <p
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontStyle: 'italic',
-                fontSize: '1.05rem',
-                color: 'hsl(var(--muted-foreground))',
-              }}
-            >
+            <p className="font-serif italic text-lg text-muted-foreground">
               Digite ao menos 2 caracteres para começar.
             </p>
           </div>
         )}
+
       </div>
     </ContemplativeLayout>
   );
