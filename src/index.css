@@ -99,6 +99,17 @@
     /* 7. Transitions */
     --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
     --transition-fast: 200ms ease;
+
+    /* 9. Editorial Tokens (Conceito C — Logos 2030) */
+    --reading-column: 68ch;
+    --reading-column-narrow: 58ch;
+    --space-editorial: 6rem;
+    --space-editorial-lg: 9rem;
+    --rule-gold: 43 45% 54%;
+    --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
+    --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
+    --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
   }
 
   .dark, [data-theme='dark'] {
