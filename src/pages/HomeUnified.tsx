@@ -219,6 +219,103 @@ const HomeUnified: React.FC = () => {
         </div>
       </section>
 
+      {/* ══════ EDITORIAL MONASTIC — Leitura do dia + Jornada + CIC ══════ */}
+      {(featured || resume.length > 0) && (
+        <section className="relative w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-12">
+            {/* Featured — Leitura do dia */}
+            {featured && (
+              <article className="group md:col-span-8">
+                <div
+                  className="relative mb-6 flex aspect-[16/9] items-end overflow-hidden border p-8 md:p-10"
+                  style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        'radial-gradient(ellipse 90% 60% at 20% 90%, rgba(201,168,76,0.10) 0%, transparent 65%)',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <Eyebrow className="mb-3">Leitura do dia</Eyebrow>
+                    <h2
+                      className="text-3xl md:text-5xl"
+                      style={{ fontFamily: 'var(--font-display)', fontWeight: 400, color: 'var(--gold-light)', letterSpacing: '0.005em' }}
+                    >
+                      {featured.label}
+                    </h2>
+                  </div>
+                </div>
+                {featured.short && (
+                  <p
+                    className="max-w-xl text-sm leading-relaxed md:text-base"
+                    style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
+                  >
+                    {featured.short}
+                  </p>
+                )}
+              </article>
+            )}
+
+            {/* Sidebar — Jornada em curso + CIC */}
+            <aside className="flex flex-col gap-10 md:col-span-4">
+              {resume[0] && (
+                <div className="border-l pl-6 py-1" style={{ borderColor: 'var(--noir-line-strong)' }}>
+                  <Eyebrow className="mb-3">Jornada em curso</Eyebrow>
+                  <h3
+                    className="mb-3 text-2xl"
+                    style={{ fontFamily: 'var(--font-display)', fontWeight: 500, color: 'var(--noir-text)' }}
+                  >
+                    {resume[0].label}
+                  </h3>
+                  {typeof resume[0].progressPct === 'number' && (
+                    <>
+                      <div className="h-px w-full" style={{ background: 'rgba(201,168,76,0.15)' }}>
+                        <div className="h-full" style={{ background: 'var(--gold)', width: `${resume[0].progressPct}%` }} />
+                      </div>
+                      <p
+                        className="mt-2 text-right text-[10px] uppercase tracking-[0.28em]"
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-body)' }}
+                      >
+                        {resume[0].progressPct}% concluído
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+
+              <div
+                className="border p-6 text-center"
+                style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
+              >
+                <Eyebrow className="mb-4">Catecismo</Eyebrow>
+                <span
+                  className="mb-3 block text-4xl italic"
+                  style={{ fontFamily: 'var(--font-display)', color: 'var(--gold-light)' }}
+                >
+                  § 142
+                </span>
+                <p
+                  className="text-sm leading-relaxed italic"
+                  style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-display)' }}
+                >
+                  "Pela sua revelação, Deus invisível apela aos homens como a amigos…"
+                </p>
+                <Link
+                  to="/catechism?p=142"
+                  className="mt-5 inline-block text-[10px] uppercase tracking-[0.3em] transition-colors"
+                  style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
+                >
+                  Abrir § 142 →
+                </Link>
+              </div>
+            </aside>
+          </div>
+        </section>
+      )}
+
       {/* ══════ 5 AMBIENTES CANÔNICOS ══════ */}
       <section className="relative w-full border-t px-0 py-24 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
         <div className="mx-auto max-w-6xl px-6 md:px-12">
