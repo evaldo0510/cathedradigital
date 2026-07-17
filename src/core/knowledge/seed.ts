@@ -7,7 +7,14 @@
  */
 
 import type { KnowledgeNode, KnowledgeRelation } from './types';
-import type { KnowledgeCollectionDescriptor } from './KnowledgeCollection';
+
+/** Descritor de coleção (duplicado do tipo público para evitar ciclo). */
+interface SeedCollection {
+  id: string;
+  label: string;
+  summary?: string;
+  members: string[];
+}
 
 export const SEED_NODES: KnowledgeNode[] = [
   // Temas
