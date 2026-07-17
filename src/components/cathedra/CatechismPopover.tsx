@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Popover,
   PopoverContent,
@@ -83,16 +84,14 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
               <p className="text-premium-xs text-muted-foreground italic">
                 Texto ainda não importado para o banco oficial.
               </p>
-              <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(`CIC §${paragraph} site:vatican.va`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to={`/catechism?paragraph=${paragraph}`}
                 className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline"
-                data-testid="catechism-vatican-fallback"
+                data-testid="catechism-open-internal"
               >
                 <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
-                Ler §{paragraph} no Vatican.va
-              </a>
+                Abrir §{paragraph} no Catecismo
+              </Link>
             </div>
           )}
 
