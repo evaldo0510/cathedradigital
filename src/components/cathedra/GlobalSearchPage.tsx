@@ -189,18 +189,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             className="text-center py-spacing-2xl space-y-4"
           >
             <span
-              className="block mx-auto"
-              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              className="block mx-auto w-px h-10 bg-secondary/50"
               aria-hidden="true"
             />
-            <p
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontStyle: 'italic',
-                fontSize: '1.35rem',
-                color: 'hsl(var(--foreground))',
-              }}
-            >
+            <p className="editorial-display text-2xl italic text-foreground">
               Nenhum resultado encontrado.
             </p>
             <p className="text-premium-sm text-muted-foreground/70">
@@ -208,6 +200,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </p>
           </motion.div>
         )}
+
 
 
         {hasQuery && !isAllEmpty && (
