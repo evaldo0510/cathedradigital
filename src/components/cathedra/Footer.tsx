@@ -253,15 +253,18 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-lg flex items-center gap-spacing-xs">
-              <span className="text-premium-lg">🏛️</span> Santa Sé
+            <h4
+              className="mb-spacing-lg"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+            >
+              — Santa Sé
             </h4>
-            <ul className="flex flex-col gap-spacing-md" role="list">
+            <ul className="flex flex-col gap-3" role="list">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-spacing-0 h-auto gap-spacing-xs group decoration-transparent">
+                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground hover:text-[#c9a84c] transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      <span className="w-1 h-1 rounded-none bg-[#c9a84c]/40 group-hover:bg-[#c9a84c] transition-colors" />
                       {link.title}
                     </a>
                   </Button>
@@ -271,15 +274,18 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-lg flex items-center gap-spacing-xs">
-              <span className="text-premium-lg">🇧🇷</span> CNBB
+            <h4
+              className="mb-spacing-lg"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+            >
+              — CNBB
             </h4>
-            <ul className="flex flex-col gap-spacing-md" role="list">
+            <ul className="flex flex-col gap-3" role="list">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-spacing-0 h-auto gap-spacing-xs group decoration-transparent">
+                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground hover:text-[#c9a84c] transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      <span className="w-1 h-1 rounded-none bg-[#c9a84c]/40 group-hover:bg-[#c9a84c] transition-colors" />
                       {link.title}
                     </a>
                   </Button>
@@ -290,12 +296,18 @@ const Footer: React.FC = React.memo(() => {
 
           <div className="flex flex-col gap-spacing-xl">
             <div>
-              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-md">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
+              <h4
+                className="mb-spacing-md"
+                style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+              >
+                — {lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}
+              </h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
                 aria-label={lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full px-spacing-md py-spacing-xs text-premium-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
+                className="w-full bg-transparent px-0 py-2 text-premium-sm text-foreground focus:outline-none transition-colors cursor-pointer appearance-none"
+                style={{ borderBottom: '1px solid rgba(201,168,76,0.4)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
               >
                 <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
                 {DIOCESES_BR.map(d => (
@@ -303,44 +315,57 @@ const Footer: React.FC = React.memo(() => {
                 ))}
               </select>
               {dioceseUrl && (
-                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-spacing-xs mt-spacing-sm p-spacing-0 h-auto text-premium-xs text-primary hover:underline">
+                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-premium-xs hover:underline" style={{ color: '#c9a84c' }}>
                   <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
-                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-spacing-sm h-spacing-sm opacity-100" />
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
                   </a>
                 </Button>
               )}
             </div>
             <div>
-              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-md">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
-              <p className="text-premium-xs text-muted-foreground mb-spacing-md leading-relaxed">
+              <h4
+                className="mb-spacing-md"
+                style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+              >
+                — {lang === 'pt' ? 'Boletim' : 'Newsletter'}
+              </h4>
+              <p
+                className="mb-3"
+                style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '0.85rem', color: 'hsl(var(--muted-foreground))', lineHeight: 1.6 }}
+              >
                 {lang === 'pt' 
-                  ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
-                  : 'Receive theological reflections and platform updates in your email.'}
+                  ? 'Reflexões teológicas e atualizações da plataforma em seu e-mail.'
+                  : 'Theological reflections and platform updates in your email.'}
               </p>
-              <form onSubmit={handleSubscribe} className="relative">
+              <form onSubmit={handleSubscribe} className="relative flex items-stretch gap-0">
                 <input 
                   type="email" 
-                  placeholder={lang === 'pt' ? "Seu melhor e-mail" : "Your best email"}
+                  placeholder={lang === 'pt' ? "Seu e-mail" : "Your email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full pl-spacing-md pr-spacing-3xl py-spacing-sm text-premium-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  className="flex-1 bg-transparent px-0 py-2 pr-3 text-premium-sm focus:outline-none transition-colors"
+                  style={{ borderBottom: '1px solid rgba(201,168,76,0.4)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
                 />
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
                   aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
-                  className="absolute right-spacing-xs top-spacing-xs bottom-spacing-xs px-spacing-md bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="rounded-none bg-transparent transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] px-3 flex items-center justify-center"
+                  style={{ border: '1px solid #c9a84c', color: '#c9a84c' }}
+                  onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
                 >
                   {isSubmitting ? (
-                    <div className="w-spacing-md h-spacing-md border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#c9a84c] border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <Icons.ArrowDown className="-rotate-90 opacity-100 text-primary-foreground" />
+                    <Icons.ArrowDown className="-rotate-90" />
                   )}
                 </Button>
               </form>
             </div>
           </div>
+        </div>
         </div>
 
         <div className="pt-spacing-3xl border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-spacing-xl">
