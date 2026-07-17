@@ -92,32 +92,37 @@ export default function BibleImportJobs() {
                   <TableHead>Job</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Progresso</TableHead>
+                  <TableHead>Duração</TableHead>
+                  <TableHead>Versos</TableHead>
+                  <TableHead>Revalidação</TableHead>
                   <TableHead>Início</TableHead>
-                  <TableHead>Fim</TableHead>
                   <TableHead>Mensagem</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(q.data ?? []).map((j) => (
-                  <TableRow key={j.id}>
-                    <TableCell>
-                      <Link to={`/admin/bible-import-jobs/${j.id}`} className="font-mono text-xs text-primary hover:underline">
-                        {j.id.slice(0, 8)}
-                      </Link>
-                    </TableCell>
-                    <TableCell><Badge variant={STATUS_VARIANT[j.status] ?? "outline"}>{j.status}</Badge></TableCell>
-                    <TableCell className="text-xs">{j.progress}/{j.total}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {j.started_at ? new Date(j.started_at).toLocaleString("pt-BR") : "—"}
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {j.finished_at ? new Date(j.finished_at).toLocaleString("pt-BR") : "—"}
-                    </TableCell>
-                    <TableCell className="text-xs max-w-md truncate">
-                      {j.error ? <span className="text-destructive">{j.error}</span> : j.message ?? "—"}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {(q.data ?? []).map((j) => {
+                  const reval = revalidationLabel(j.verification);
+                  return (
+                    <TableRow key={j.id}>
+                      <TableCell>
+                        <Link to={`/admin/bible-import-jobs/${j.id}`} className="font-mono text-xs text-primary hover:underline">
+                          {j.id.slice(0, 8)}
+                        </Link>
+                      </TableCell>
+                      <TableCell><Badge variant={STATUS_VARIANT[j.status] ?? "outline"}>{j.status}</Badge></TableCell>
+                      <TableCell className="text-xs">{j.progress}/{j.total}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{formatDuration(j.started_at, j.finished_at)}</TableCell>
+                      <TableCell className="text-xs">{versesFromAudit(j.audit_log).toLocaleString("pt-BR")}</TableCell>
+                      <TableCell><Badge variant={reval.variant} className="text-[10px]">{reval.label}</Badge></TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {j.started_at ? new Date(j.started_at).toLocaleString("pt-BR") : "—"}
+                      </TableCell>
+                      <TableCell className="text-xs max-w-md truncate">
+                        {j.error ? <span className="text-destructive">{j.error}</span> : j.message ?? "—"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}
