@@ -493,13 +493,51 @@ const Catechism: React.FC = memo(() => {
   }
 
   return (
-    <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
+    <ContemplativeLayout maxW="max-w-5xl w-full">
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
-      <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
-        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md py-spacing-sm -mx-spacing-md px-spacing-md mb-spacing-md">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+      <div className="w-full space-y-8 md:space-y-14 pb-spacing-2xl md:pb-spacing-4xl">
+        {/* HERO Noir & Gold */}
+        <div className="text-center space-y-4 pt-spacing-sm md:pt-spacing-xl">
+          <div className="flex items-center justify-center gap-3" aria-hidden="true">
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+            <span
+              className="text-[9px] md:text-[10px] uppercase"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+            >
+              Sacra Doctrina
+            </span>
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+          </div>
+          <h1
+            className="leading-none"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 500,
+              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              letterSpacing: '0.01em',
+            }}
+          >
+            Catecismo<span style={{ color: '#c9a84c' }}>.</span>
+          </h1>
+          <p
+            className="mx-auto"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)',
+              color: 'hsl(var(--muted-foreground))',
+              maxWidth: '48ch',
+              lineHeight: 1.65,
+            }}
+          >
+            A doutrina da Igreja em quatro partes — <span style={{ color: '#c9a84c' }}>Credo</span>, <span style={{ color: '#c9a84c' }}>Sacramentos</span>, <span style={{ color: '#c9a84c' }}>Vida em Cristo</span> e <span style={{ color: '#c9a84c' }}>Oração</span>.
+          </p>
+        </div>
+
+        {/* BUSCA */}
+        <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-md py-3 -mx-spacing-md px-spacing-md">
+          <div className="relative group max-w-2xl mx-auto">
+            <Icons.Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: '#c9a84c', opacity: 0.6 }} />
             <input 
               type="text" 
               placeholder="Buscar por parágrafo (§) ou tema..." 
@@ -507,32 +545,68 @@ const Catechism: React.FC = memo(() => {
               value={searchQuery} 
               onChange={(e) => setSearchQuery(e.target.value)} 
               onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} 
-              className="search-input-premium pl-spacing-3xl bg-background/50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none" 
+              className="w-full bg-transparent border-0 border-b py-3 pl-12 pr-4 focus:outline-none focus:ring-0"
+              style={{
+                borderBottomColor: '#c9a84c',
+                borderBottomWidth: 1,
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '1rem',
+                color: 'hsl(var(--foreground))',
+              }}
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+
+        {/* CARDS DE PARTES */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
           {CIC_SECTIONS.map((part, idx) => (
             <div 
               key={part.part} 
               id={`part-card-${idx}`}
               onClick={() => { setLastFocusedElement(`part-card-${idx}`); setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-spacing-lg flex flex-col justify-between h-full space-y-spacing-md text-left transition-all duration-700 hover:bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] hover:border-primary/[0.08] focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              className="group cursor-pointer p-6 md:p-8 flex flex-col justify-between min-h-[180px] text-left transition-all duration-500 rounded-none focus-visible:outline-none"
+              style={{
+                border: '1px solid rgba(201, 168, 76, 0.35)',
+                background: 'transparent',
+              }}
               tabIndex={0}
               role="button"
               aria-label={`Ver ${part.part}: ${part.title}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`part-card-${idx}`); setSelectedPart(part); setViewMode('sections'); } }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#c9a84c'; e.currentTarget.style.background = 'rgba(201, 168, 76, 0.04)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.35)'; e.currentTarget.style.background = 'transparent'; }}
             >
-              <div className="space-y-spacing-sm">
-                <div className="flex items-center gap-spacing-sm">
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30 shrink-0">{part.part}</span>
-                  <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    className="text-[10px] uppercase shrink-0"
+                    style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+                  >
+                    {part.part}
+                  </span>
+                  <div className="h-px flex-1" style={{ backgroundColor: '#c9a84c', opacity: 0.4 }} />
                 </div>
-                <h2 className="text-premium-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight break-words">{part.title}</h2>
+                <h2
+                  className="leading-tight break-words"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 400,
+                    fontSize: 'clamp(1.35rem, 2.4vw, 1.75rem)',
+                    color: 'hsl(var(--foreground))',
+                  }}
+                >
+                  {part.title}
+                </h2>
               </div>
-              <div className="flex items-center justify-between pt-spacing-xs opacity-40 group-hover:opacity-100 transition-all duration-500">
-                 <p className="text-[9px] text-muted-foreground/60 italic uppercase tracking-widest">{part.sections.length} Seções</p>
-                 <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/20" />
+              <div className="flex items-center justify-between pt-6">
+                <p
+                  className="text-[10px] uppercase"
+                  style={{ color: 'hsl(var(--muted-foreground))', fontFamily: 'Inter, sans-serif', letterSpacing: '0.28em' }}
+                >
+                  {part.sections.length} seções
+                </p>
+                <Icons.ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: '#c9a84c' }} />
               </div>
             </div>
           ))}
