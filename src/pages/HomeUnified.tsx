@@ -337,124 +337,139 @@ const HomeUnified: React.FC = () => {
 
 
       {/* ══════ CONTINUAR CAMINHADA ══════ */}
-      <section className="w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-12 flex items-baseline justify-between">
-            <div>
-              <Eyebrow className="mb-3">Continuar minha caminhada</Eyebrow>
-              <h2
-                className="text-3xl md:text-4xl"
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontWeight: 400,
-                  color: 'var(--noir-text)',
-                }}
-              >
-                Onde você parou.
-              </h2>
-            </div>
-          </div>
-
-          <ol className="space-y-0">
-            {RESUME_ITEMS.map((item, i) => (
-              <li key={item.href}>
-                {i > 0 && <Divider />}
-                <Link
-                  to={item.href}
-                  className="group flex items-center justify-between gap-6 py-7 transition-colors md:py-8"
+      {/* ══════ CONTINUAR CAMINHADA ══════ */}
+      {resume.length > 0 && (
+        <section className="w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 flex items-baseline justify-between">
+              <div>
+                <Eyebrow className="mb-3">Continuar minha caminhada</Eyebrow>
+                <h2
+                  className="text-3xl md:text-4xl"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 400,
+                    color: 'var(--noir-text)',
+                  }}
                 >
-                  <div className="flex items-center gap-6 md:gap-10">
-                    <span
-                      className="text-xs tracking-[0.28em]"
-                      style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div>
-                      <div
-                        className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                        style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {item.kind}
-                      </div>
-                      <div
-                        className="text-xl transition-colors md:text-2xl"
-                        style={{
-                          fontFamily: "'Playfair Display', serif",
-                          color: 'var(--noir-text)',
-                        }}
-                      >
-                        {item.title}
-                      </div>
-                    </div>
-                  </div>
-                  <ArrowUpRight
-                    className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
-                    style={{ color: 'var(--gold)' }}
-                    aria-hidden
-                  />
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+                  Onde você parou.
+                </h2>
+              </div>
+            </div>
 
-      {/* ══════ NOVIDADES + LITURGIA ══════ */}
-      <section
-        className="w-full border-t px-6 py-20 md:px-12 md:py-24"
-        style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
-      >
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-24">
-          <div>
-            <Eyebrow className="mb-6">Novidades</Eyebrow>
-            <ul className="space-y-6">
-              {NEWS.map((n) => (
-                <li key={n.href}>
-                  <Link to={n.href} className="group block">
-                    <div
-                      className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                      style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {n.date}
+            <ol className="space-y-0">
+              {resume.slice(0, 3).map((item, i) => (
+                <li key={item.id}>
+                  {i > 0 && <Divider />}
+                  <Link
+                    to={item.targetPath}
+                    className="group flex items-center justify-between gap-6 py-7 transition-colors md:py-8"
+                  >
+                    <div className="flex items-center gap-6 md:gap-10">
+                      <span
+                        className="text-xs tracking-[0.28em]"
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <div
+                          className="mb-1 text-[10px] uppercase tracking-[0.28em]"
+                          style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+                        >
+                          {RESUME_KIND_LABEL[item.kind] ?? item.kind}
+                          {typeof item.progressPct === 'number' && (
+                            <span style={{ color: 'var(--noir-text-faint)' }}> · {item.progressPct}%</span>
+                          )}
+                        </div>
+                        <div
+                          className="text-xl transition-colors md:text-2xl"
+                          style={{
+                            fontFamily: "'Playfair Display', serif",
+                            color: 'var(--noir-text)',
+                          }}
+                        >
+                          {item.label}
+                        </div>
+                      </div>
                     </div>
-                    <div
-                      className="text-lg leading-snug transition-colors md:text-xl"
-                      style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text)')}
-                    >
-                      {n.title}
-                    </div>
+                    <ArrowUpRight
+                      className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+                      style={{ color: 'var(--gold)' }}
+                      aria-hidden
+                    />
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
+        </section>
+      )}
 
-          <div>
-            <Eyebrow className="mb-6">Liturgia do dia</Eyebrow>
-            <div
-              className="text-lg italic leading-relaxed md:text-xl"
-              style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
-            >
-              {LITURGY.day} · {LITURGY.season}
-            </div>
-            <div
-              className="mt-4 text-2xl md:text-3xl"
-              style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
-            >
-              {LITURGY.saint}
-            </div>
-            <div
-              className="mt-2 text-sm"
-              style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
-            >
-              Leitura: {LITURGY.reading}
-            </div>
+      {/* ══════ NOVIDADES + LITURGIA ══════ */}
+      {(news.length > 0 || liturgy) && (
+        <section
+          className="w-full border-t px-6 py-20 md:px-12 md:py-24"
+          style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
+        >
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-24">
+            {news.length > 0 && (
+              <div>
+                <Eyebrow className="mb-6">Novidades</Eyebrow>
+                <ul className="space-y-6">
+                  {news.slice(0, 4).map((n) => (
+                    <li key={n.id}>
+                      <div
+                        className="mb-1 text-[10px] uppercase tracking-[0.28em]"
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {formatRelativeDate(n.publishedAt)}
+                      </div>
+                      <div
+                        className="text-lg leading-snug md:text-xl"
+                        style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                      >
+                        {n.label}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {liturgy && (
+              <div>
+                <Eyebrow className="mb-6">Liturgia do dia</Eyebrow>
+                <div
+                  className="text-lg italic leading-relaxed md:text-xl"
+                  style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+                >
+                  {capitalize(liturgy.weekday)} · {liturgy.season}
+                </div>
+                {liturgy.saintOfDay && (
+                  <>
+                    <div
+                      className="mt-4 text-2xl md:text-3xl"
+                      style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                    >
+                      {liturgy.saintOfDay.name}
+                    </div>
+                    {liturgy.saintOfDay.title && (
+                      <div
+                        className="mt-2 text-sm"
+                        style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {liturgy.saintOfDay.title}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
 
       {/* ══════ FOOTER ══════ */}
       <footer className="w-full border-t px-6 py-12 md:px-12" style={{ borderColor: 'var(--noir-line)' }}>
