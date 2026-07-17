@@ -43,6 +43,7 @@ import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
+import PassageActions from '@/components/shared/PassageActions';
 import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
