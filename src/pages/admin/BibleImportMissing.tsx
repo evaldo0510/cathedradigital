@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History } from "lucide-react";
 import { toast } from "sonner";
 
-interface PreviewDetail { abbrev: string; name: string; chapters: number }
+interface PreviewDetail { abbrev: string; name: string; chapters: number; chapter_numbers?: number[] }
 interface Preview { translation: string; books_missing: number; chapters_missing: number; detail: PreviewDetail[] }
 interface Job {
   id: string; status: string; progress: number; total: number;
