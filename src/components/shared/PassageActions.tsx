@@ -185,11 +185,16 @@ const PassageActions: React.FC<PassageActionsProps> = ({
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
   const renderIcon = (key: ActionKey, Icon: React.ComponentType<any>) => {
-    if (loading === key) {
+    if (loadingMap[key]) {
       return <Icons.Loader className={cn(iconSize, 'animate-spin')} aria-hidden="true" />;
+    }
+    if (successMap[key]) {
+      return <Icons.Check className={cn(iconSize, 'text-primary')} aria-hidden="true" />;
     }
     return <Icon className={iconSize} aria-hidden="true" />;
   };
+
+  const firstError = (Object.entries(errorMap).find(([, v]) => !!v) ?? []) as [ActionKey?, string?];
 
   return (
     <div
@@ -208,8 +213,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleCopyText}
         className={btnBase}
         aria-label={`Copiar trecho de ${reference}`}
-        aria-busy={loading === 'text' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.text || undefined}
+        disabled={!!loadingMap.text}
       >
         {renderIcon('text', Icons.Quote)}
         <span>Copiar trecho</span>
@@ -220,8 +225,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleCopyReference}
         className={btnBase}
         aria-label={`Copiar referência ${reference}`}
-        aria-busy={loading === 'reference' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.reference || undefined}
+        disabled={!!loadingMap.reference}
       >
         {renderIcon('reference', Icons.Link)}
         <span>Copiar referência</span>
@@ -232,8 +237,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleShare}
         className={btnBase}
         aria-label={`Compartilhar ${reference}`}
-        aria-busy={loading === 'share' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.share || undefined}
+        disabled={!!loadingMap.share}
       >
         {renderIcon('share', Icons.Share)}
         <span>Compartilhar</span>
@@ -245,17 +250,17 @@ const PassageActions: React.FC<PassageActionsProps> = ({
           onClick={handleHighlight}
           className={btnBase}
           aria-label={`Destacar ${reference} no leitor`}
-          aria-busy={loading === 'highlight' || undefined}
-          disabled={loading !== null}
+          aria-busy={loadingMap.highlight || undefined}
+          disabled={!!loadingMap.highlight}
         >
           {renderIcon('highlight', Icons.Highlighter)}
           <span>Destacar</span>
         </button>
       )}
 
-      {error && (
+      {firstError[0] && (
         <span role="alert" className="sr-only">
-          Erro em {error.key}: {error.message}
+          Erro em {firstError[0]}: {firstError[1]}
         </span>
       )}
     </div>
