@@ -68,6 +68,7 @@ const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
+const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
