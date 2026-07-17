@@ -338,6 +338,14 @@ const Catechism: React.FC = memo(() => {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
 
   useEffect(() => {
+    if (initialParagraph === 'invalid') {
+      toast.error('Referência inválida do Catecismo — abrindo o índice.', { duration: 4000 });
+    }
+    // Só notifica uma vez por mudança de query.
+  }, [initialParagraph]);
+
+
+  useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (viewMode === 'reading') {
