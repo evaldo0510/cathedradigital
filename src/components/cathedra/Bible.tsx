@@ -59,10 +59,13 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
   if (!data?.content) {
     return (
-      <div className="space-y-spacing-xs">
-        <p className="text-xs text-primary/50 italic">Conteúdo ainda não indexado no banco oficial.</p>
+      <div className="space-y-spacing-xs" data-testid="catechism-preview-empty">
+        <p className="text-xs text-primary/50 italic" data-testid="catechism-preview-empty-message">
+          Conteúdo ainda não indexado no banco oficial.
+        </p>
         <a
           href={`/catechism?p=${pNum}`}
+          data-testid="catechism-preview-empty-link"
           className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
         >
           Abrir §{pNum} no Catecismo →
@@ -70,6 +73,7 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
       </div>
     );
   }
+
 
   return (
     <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
@@ -1893,6 +1897,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                         sideOffset={8}
                                         collisionPadding={12}
                                         data-testid="nexus-connection-popover"
+                                        aria-labelledby={`nexus-popover-title-${v.number}-${idx}`}
+                                        aria-describedby={`nexus-popover-desc-${v.number}-${idx}`}
                                         className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-md rounded-2xl border border-primary/10 bg-card shadow-premium"
                                       >
                                         <div className="space-y-spacing-sm">
@@ -1900,12 +1906,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                             <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
                                             <div className="min-w-0">
                                               <p className={cn("text-[9px] font-black uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
-                                              <h4 className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
+                                              <h4 id={`nexus-popover-title-${v.number}-${idx}`} className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
                                             </div>
                                           </div>
-                                          <p className="text-xs font-serif italic text-primary/70 leading-relaxed">
+                                          <p id={`nexus-popover-desc-${v.number}-${idx}`} className="text-xs font-serif italic text-primary/70 leading-relaxed">
                                             {conn.summary}
                                           </p>
+
                                           {conn.type === 'catechism' && (
                                             <div className="pt-spacing-sm border-t border-primary/5">
                                               <CatechismParagraphPreview paragraphId={conn.id} />
