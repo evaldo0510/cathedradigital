@@ -314,22 +314,15 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         {!hasQuery && (
           <div className="text-center py-spacing-2xl space-y-4">
             <span
-              className="block mx-auto"
-              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              className="block mx-auto w-px h-10 bg-secondary/50"
               aria-hidden="true"
             />
-            <p
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontStyle: 'italic',
-                fontSize: '1.05rem',
-                color: 'hsl(var(--muted-foreground))',
-              }}
-            >
+            <p className="font-serif italic text-lg text-muted-foreground">
               Digite ao menos 2 caracteres para começar.
             </p>
           </div>
         )}
+
       </div>
     </ContemplativeLayout>
   );
