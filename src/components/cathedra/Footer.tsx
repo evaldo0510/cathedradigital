@@ -369,49 +369,56 @@ const Footer: React.FC = React.memo(() => {
 
 
 
-        <div className="pt-spacing-3xl border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-spacing-xl">
-          <div className="flex flex-col items-center md:items-start gap-spacing-md">
-            <p className="text-premium-small font-black uppercase tracking-[0.4em] text-muted-foreground/60 dark:text-muted-foreground/70">
-              © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
+        <div className="pt-spacing-3xl flex flex-col md:flex-row items-center justify-between gap-spacing-xl" style={{ borderTop: '1px solid rgba(201,168,76,0.25)' }}>
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <p
+              style={{ color: 'hsl(var(--muted-foreground))', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+            >
+              © {new Date().getFullYear()} <span style={{ color: '#c9a84c' }}>●</span> Cathedra <span style={{ color: '#c9a84c' }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
-            <p className="text-premium-base font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-spacing-xs tracking-widest">
+            <p
+              className="flex items-center gap-2"
+              style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '0.85rem', color: 'hsl(var(--muted-foreground))' }}
+            >
               {lang === 'pt' ? 'Criado por' : 'Created by'}
               <Button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+                className="cursor-pointer select-none p-0 h-auto bg-transparent hover:bg-transparent transition-colors"
+                style={{ color: '#c9a84c', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
               >
                 Evaldo.os
               </Button>
             </p>
           </div>
-          <div className="flex items-center gap-spacing-xl">
+          <div className="flex items-center gap-6">
             <nav className="flex items-center" aria-label="Links institucionais">
               {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
                 <React.Fragment key={item.label}>
                   <Button 
                     variant="ghost"
                     onClick={() => navigate(item.path)} 
-                    className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-spacing-sm py-spacing-2xs rounded"
+                    className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none px-2 py-1 rounded-none bg-transparent hover:bg-transparent"
+                    style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.28em', textTransform: 'uppercase' }}
                     aria-label={item.label}
                   >
                     {item.label}
                   </Button>
-
                   {index < array.length - 1 && (
-                    <span className="mx-spacing-sm text-muted-foreground/60 font-light select-none">|</span>
+                    <span className="mx-1 select-none" style={{ color: '#c9a84c', opacity: 0.5 }}>·</span>
                   )}
                 </React.Fragment>
               ))}
-
             </nav>
             <Button 
               onClick={scrollToTop} 
-              className="p-spacing-xs bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-premium-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-2 bg-transparent rounded-none transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none"
+              style={{ border: '1px solid rgba(201,168,76,0.4)', color: '#c9a84c' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
               aria-label="Voltar ao topo"
             >
-              <Icons.ArrowDown className="rotate-180 opacity-100 group-hover:text-primary-foreground" />
+              <Icons.ArrowDown className="rotate-180 w-4 h-4" />
             </Button>
-
           </div>
         </div>
       </div>
