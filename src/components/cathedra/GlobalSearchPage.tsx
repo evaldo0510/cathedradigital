@@ -89,9 +89,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   return (
     <ContemplativeLayout
-      subtitle="O Verbo de Deus"
-      title="Logos IA"
-      maxW="max-w-spacing-4xl"
+      maxW="max-w-4xl w-full"
     >
       <SEOHead 
         title="Logos IA | Sabedoria Teológica e Espiritual" 
