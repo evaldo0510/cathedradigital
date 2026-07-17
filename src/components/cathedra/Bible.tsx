@@ -38,6 +38,8 @@ import { HighlightMenu } from './HighlightMenu';
 import { BibleKnowledgeAudit } from './BibleKnowledgeAudit';
 import { KnowledgeGraph } from './KnowledgeGraph';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { buildPassageUrl } from '@/lib/passageUrl';
+import { useShare } from '@/hooks/useShare';
 import { useHighContrast } from '@/hooks/useHighContrast';
 import biblePerf from '@/lib/biblePerf';
 import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
