@@ -19,6 +19,7 @@
  */
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -110,6 +111,16 @@ const HomeUnified: React.FC = () => {
 
   return (
     <div className="cathedra-noir min-h-screen w-full">
+      <Helmet>
+        <title>Cathedra — Habite a profundidade do silêncio</title>
+        <meta name="description" content="Cathedra: um espaço editorial e silencioso para estudar, rezar, formar-se, pesquisar e caminhar na tradição católica." />
+        <meta property="og:title" content="Cathedra — Habite a profundidade do silêncio" />
+        <meta property="og:description" content="Estudo, oração, formação e pesquisa em um só lugar. Uma catedral digital para a vida interior." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="canonical" href="/" />
+      </Helmet>
+
       {/* ══════ HERO (100vh) ══════ */}
       <section className="relative flex min-h-[92vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
         {/* Halo dourado sutil */}
