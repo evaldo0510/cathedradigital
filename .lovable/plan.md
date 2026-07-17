@@ -1,352 +1,276 @@
 
-# Cathedra 2.0 — Projeto Arquitetônico
+# Cathedra 2.0 — Revisão Crítica + Plano v2 (por experiências)
 
-Reconstrução conceitual, sem código. Foco: **ambientes de uso**, não listas de features. Toda funcionalidade atual é preservada e redistribuída.
-
----
-
-## 1. Princípio Fundador
-
-O Cathedra deixa de ser um **catálogo de módulos** (Bíblia, Catecismo, Santos, Liturgia, Orações, Jornadas…) e passa a ser uma **casa com cômodos**. Cada cômodo é um *estado interior* do usuário, não uma categoria de conteúdo.
-
-> **Justificativa UX:** o usuário não acorda pensando "quero abrir o módulo Magistério". Ele acorda com uma intenção: *rezar, estudar, buscar direção, cumprir um dever diário*. A arquitetura deve espelhar intenções, não taxonomias eclesiais.
+Sem código. Revisão do `.lovable/plan.md` v1 sob AI, UX, Design de Produto e Formação Católica, seguida da versão 2.0 reorganizada por experiências (verbos do usuário), preservando toda funcionalidade.
 
 ---
 
-## 2. Os 5 Ambientes (Information Architecture)
+## Parte I — Revisão Crítica do v1
 
-Toda a plataforma cabe em **5 ambientes**. Nenhum outro nível de topo existe.
+### Redundâncias
+- **Enciclopédia + A-Z Faith + Glossário + Dogmas + Temas** disputam o mesmo espaço mental ("verbete curto"). Hoje são 5 rotas; no v1 continuam 5 abas dentro do Scriptorium.
+- **Jornadas + Itinerários + Trilhas** são três nomes para a mesma coisa (formação sequencial guiada).
+- **Missal + Breviário + Liturgia + Calendário Litúrgico** — quatro entradas para "o que a Igreja reza hoje".
+- **Santos + Papas + Aparições** foram jogados no Oratório, mas são conteúdo de *estudo/testemunho*, não de oração.
+- **Busca (⌘K) + Nexus** operam camadas separadas fazendo trabalho parecido: descobrir conexões.
+
+### Módulos excessivos
+- `/design-system`, `/guia-modulos`, `/a11y-audit`, `/security-audit`, `/visual-audit`, `/telemetry`, `/cache-manager`, `/offline`, `/diagnostico`, `/bible-recovery`, `/catechism-health`, `/seo-verify` — **12+ rotas técnicas tratadas como rotas de produto**. Poluem o mapa mental. Devem morar dentro de `/admin/*`.
+- `/upgrade`, `/pricing`, `/checkout`, `/transactions` — três estágios do mesmo funil, expostos como rotas independentes.
+
+### Lacunas de navegação
+- **Não existe entrada por tema/assunto.** Só por fonte (livro bíblico, número do CIC…). Quem quer estudar *perdão*, *sofrimento*, *casamento* não tem porta.
+- **Não existe modo "estudo composto"** — a experiência de um tema atravessando Bíblia → CIC → Padres → Concílios → Aplicação, que é *o* diferencial do Cathedra.
+- **Padres da Igreja e Concílios** não aparecem nem no v1 nem no código atual.
+- **Continuidade** existe só no Átrio. Deveria ser universal (barra flutuante "retomar").
+- **Modo offline / leitura sem rede** existe como rota, não como estado de UI.
+
+### Inconsistências de fluxo
+- **Logos IA** vive em Caminho (v1), mas é invocado no Scriptorium (dúvidas), Oratório (guiar oração) e Átrio (sugestões). É camada, não cômodo.
+- **Nexus** o v1 já reconhece como camada, mas ainda o pinta como popover só do Scriptorium. Precisa ser primeira classe em todo lugar.
+- **Diário** foi para Cela, mas o gesto de "escrever no diário" nasce no Oratório e no Scriptorium. É destino transversal, não cômodo isolado.
+
+### Oportunidades de simplificação
+- Colapsar Enciclopédia/A-Z/Glossário/Dogmas em uma entidade única: **Verbete** (unidade atômica de conhecimento).
+- Colapsar Jornadas/Itinerários/Trilhas em **Formação**.
+- Colapsar Missal/Breviário/Liturgia/Calendário em **Ofício**.
+- Mover Santos/Papas/Aparições para Estudar → Testemunhos.
+- Fundir Busca ⌘K + Nexus em um único **Sistema de Conexões** (mesma engine, duas superfícies).
+
+---
+
+## Parte II — Plano v2 (por experiências)
+
+### Fase 1 — Manifesto
+
+**O que é o Cathedra?**
+Uma casa digital onde a fé católica é vivida como um só ato: rezar, estudar, formar-se e testemunhar. Não é um app de Bíblia, nem de orações, nem de cursos — é o lugar onde essas coisas deixam de ser separadas.
+
+**Para quem existe?**
+- **Peregrino** — chega buscando, não sabe por onde começar.
+- **Discípulo** — já reza, quer ritmo diário.
+- **Estudioso** — quer profundidade sem sair da unidade da fé.
+
+**Qual transformação entrega?**
+Deixar de consumir conteúdo religioso solto e passar a viver uma **vida interior organizada**: ritmo diário, um tema por vez, todas as fontes convergindo, memória do caminho.
+
+**Pilares inegociáveis:**
+1. **Unidade** — Escritura, Tradição, Magistério, Cânon, Padres, Concílios são *uma só voz*.
+2. **Ritmo** — o dia litúrgico dita a experiência, não o cardápio de features.
+3. **Profundidade sem fricção** — clique não interrompe oração; verbete não substitui estudo.
+4. **Soberania** — banco local é fonte da verdade; nada depende de terceiro para funcionar.
+5. **Mobile primeiro, silêncio depois** — projetado para o polegar e para o silêncio (sem gamificação na entrada).
+
+---
+
+### Fase 2 — Arquitetura da Informação
+
+Cinco **experiências**, não módulos. Nome de cada cômodo é o verbo que o usuário usa.
 
 ```text
 CATHEDRA
-├── ⛪ ÁTRIO         → Entrada. Hoje. Ritmo diário.
-├── 📖 SCRIPTORIUM   → Estudo. Fontes. Leitura profunda.
-├── 🕯️ ORATÓRIO     → Oração. Liturgia. Devoção.
-├── 🧭 CAMINHO       → Formação. Jornadas. Progresso.
-└── 👤 CELA          → Perfil. Diário. Ajustes. Comunidade.
+│
+├── HOJE            — "quero começar / retomar"
+│   ├── Ritual do Dia (Escuta · Leitura · Exame)
+│   ├── Ofício de hoje (Missa · Horas)
+│   ├── Santo & tempo litúrgico
+│   ├── Continuidade (retomar leitura/oração/jornada)
+│   └── Sugestão do Nexus
+│
+├── ESTUDAR         — "quero entender"
+│   ├── Por Tema           (perdão, sofrimento, casamento…)   ← porta principal
+│   ├── Por Fonte
+│   │   ├── Bíblia
+│   │   ├── Catecismo
+│   │   ├── Magistério
+│   │   ├── Código Canônico
+│   │   ├── Padres da Igreja      (novo)
+│   │   ├── Concílios              (novo)
+│   │   └── Suma / Aquino
+│   ├── Testemunhos        (Santos · Papas · Aparições)
+│   └── Verbete            (Enciclopédia + A-Z + Glossário + Dogmas unificados)
+│
+├── REZAR           — "quero rezar"
+│   ├── Ofício (Missa · Laudes · Vésperas · Completas)
+│   ├── Rosário · Via-Sacra · Ladainhas
+│   ├── Orações tradicionais
+│   ├── Lectio Divina
+│   ├── Exame de consciência · Confissão
+│   └── Adoração silenciosa (timer)
+│
+├── FORMAR-SE       — "quero crescer"
+│   ├── Jornadas ativas
+│   ├── Jornadas recomendadas
+│   ├── Certamen (quiz semanal)
+│   ├── Progresso e conquistas
+│   └── Logos como tutor guiado
+│
+└── MINHA JORNADA   — "meu caminho / minhas coisas"
+    ├── Diário espiritual
+    ├── Favoritos
+    ├── Notas
+    ├── Histórico e continuidade
+    ├── Perfil & assinatura
+    └── Comunidade
 ```
 
-**Por que 5 e não 8+ como hoje:** Lei de Miller (7±2) aplicada com folga. 5 é memorizável, cabe em bottom-nav mobile sem *overflow*, e cada ambiente tem identidade sensorial distinta (cor, tipografia de destaque, som opcional).
+**Camadas transversais (não são cômodos, atravessam todos):**
 
-### Mapeamento das funcionalidades atuais → ambientes
+- **⌘K Conexões** — busca unificada + Nexus fundidos. Um só campo, uma só engine, presente em qualquer tela.
+- **Logos IA** — invocável em qualquer contexto ("explique", "guie", "monte estudo sobre X"). Nunca rota.
+- **Diário rápido** — botão flutuante "anotar" após qualquer leitura ou oração.
+- **Modo Prece** — quando o usuário reza, a interface silencia (esconde bottom-nav, escurece cromia, desativa popovers).
+- **Console técnico** — todas as 12+ rotas de auditoria/health colapsam em `/admin` com abas internas. Fora do mapa do usuário.
 
-| Ambiente | Absorve (funcionalidades existentes) |
+#### Mapeamento antigo → novo (nada removido)
+
+| Rotas atuais | Novo endereço |
 |---|---|
-| **Átrio** | `/hoje`, dashboard, ritual do dia, liturgia do dia, santo do dia, versículo do dia, continuidade espiritual, notificações |
-| **Scriptorium** | `/bible`, `/catechism`, `/magisterium`, `/aquinas`, Código de Direito Canônico *(novo cômodo)*, `/dogmas`, `/glossary`, `/encyclopedia`, `/az-faith`, `/temas`, busca global, **Nexus Theologicus** |
-| **Oratório** | `/liturgia`, `/missal`, `/breviary`, `/calendar`, `/rosary`, `/viacrucis`, `/litanies`, `/oracao`, `/lectio`, `/confession`, `/santos`, `/papas`, `/aparicoes` |
-| **Caminho** | `/jornadas`, `/itineraria`, `/trilhas`, `/quiz` (Certamen), `/achievements`, Logos IA como tutor guiado, `/guia-modulos` |
-| **Cela** | `/profile`, `/diario`, `/favorites`, `/notes`, `/settings`, `/community`, `/partners`, `/transparencia`, `/pricing`, `/about`, admin |
+| `/hoje`, `/dashboard` | HOJE |
+| `/bible`, `/catechism`, `/magisterium`, `/aquinas` | ESTUDAR → Por Fonte |
+| `/dogmas`, `/glossary`, `/encyclopedia`, `/az-faith` | ESTUDAR → Verbete (unificado) |
+| `/temas` | ESTUDAR → Por Tema (promovido a porta principal) |
+| `/santos`, `/papas`, `/aparicoes` | ESTUDAR → Testemunhos |
+| *(novo)* Padres, Concílios | ESTUDAR → Por Fonte |
+| `/liturgia`, `/missal`, `/breviary`, `/calendar` | REZAR → Ofício |
+| `/rosary`, `/viacrucis`, `/litanies`, `/oracao`, `/lectio`, `/confession` | REZAR |
+| `/jornadas`, `/itineraria`, `/trilhas`, `/quiz`, `/achievements` | FORMAR-SE |
+| `/logos` | camada transversal |
+| `/buscar`, `/search` | ⌘K Conexões (transversal) |
+| `/profile`, `/diario`, `/favorites`, `/notes`, `/community`, `/pricing`, `/upgrade`, `/checkout`, `/transactions`, `/partners`, `/transparencia`, `/about`, `/terms`, `/privacy` | MINHA JORNADA |
+| `/admin/*`, `/telemetry`, `/security`, `/design-system`, `/guia-modulos`, `/a11y-audit`, `/visual-audit`, `/cache-manager`, `/offline`, `/diagnostico`, `/bible-recovery`, `/catechism-health`, `/seo-verify` | Console técnico |
 
-Nada é removido. Tudo é *reendereçado* semanticamente.
-
----
-
-## 3. Jornada do Usuário (3 arquétipos)
-
-Desenhar para 3 perfis reais em vez de "usuário genérico".
-
-### A. Peregrino (novo, buscando)
-`Entrada → Átrio (hoje) → oração curta guiada → 1 versículo com Nexus → convite a Jornada iniciante → Cela salva progresso`
-
-### B. Discípulo (fiel diário)
-`Notificação → Átrio → cumpre ritual (Ofício + Leitura + Exame) → marca no Diário → Nexus sugere aprofundamento no Scriptorium`
-
-### C. Estudioso (formação séria)
-`Busca unificada → Scriptorium → passagem bíblica ↔ CIC ↔ ST (Aquino) ↔ Cânon ↔ documento magisterial via Nexus → salva citação em Notas → exporta`
-
-**Justificativa:** os 3 arquétipos cobrem 95% dos casos e ditam prioridades de UI (Peregrino = simplicidade, Discípulo = velocidade/hábito, Estudioso = profundidade/cross-ref).
+**Diferença crítica vs. v1:** o v1 tinha "Scriptorium" como fonte-primeiro. O v2 tem **Estudar por Tema** como porta principal e "Por Fonte" como porta secundária. É a diferença entre biblioteca (v1) e formação (v2).
 
 ---
 
-## 4. Fluxo Principal (Golden Path)
+### Fase 3 — Jornadas do Usuário
 
-```text
-Login/Anônimo
-   │
-   ▼
-ÁTRIO (default landing)
-   │  ── Ritual do Dia (3 passos: Escuta / Leitura / Exame)
-   │  ── Continuidade (retomar onde parou)
-   │  ── Sugestão contextual (litúrgica + perfil)
-   │
-   ├──► Oratório  (se intenção = rezar)
-   ├──► Scriptorium (se intenção = estudar / buscar)
-   ├──► Caminho    (se intenção = crescer / aprender)
-   └──► Cela       (se intenção = registrar / configurar)
+#### 3.1 Primeiro acesso (Peregrino)
+```
+Abre app
+   ↓
+HOJE (sem login) — Ritual do Dia genérico + tempo litúrgico
+   ↓
+Toca "Iniciar Escuta" → 1 salmo curto guiado
+   ↓
+Ao final: "Quer salvar seu caminho?" → login opcional
+   ↓
+Sugestão: Jornada de 7 dias "Introdução à Fé"
+```
+Zero decisão obrigatória para experimentar.
+
+#### 3.2 Primeiro estudo (Estudioso) — experiência-assinatura
+```
+Abre app → ESTUDAR
+   ↓
+Escolhe "Por Tema" → digita "perdão"
+   ↓
+Cathedra monta automaticamente:
+   • Bíblia:   Mt 18, 21-35 · Lc 15
+   • CIC:      §§ 1422-1470
+   • Padres:   Agostinho, Sermão 83
+   • Concílio: Trento, ses. XIV
+   • Magist.:  Misericordiae Vultus §§ 21-22
+   • Cânon:    cân. 959-964
+   • Aplicação: reflexão + convite ao Sacramento
+   ↓
+Barra lateral: [Salvar estudo] [Anotar no diário] [Compartilhar]
+   ↓
+"Continuar amanhã?" → vira Jornada personalizada
 ```
 
-Um usuário nunca precisa de mais de **2 toques** para chegar a qualquer conteúdo a partir do Átrio.
-
----
-
-## 5. Navegação Global
-
-### Mobile (primário)
-**Bottom-nav de 5 ícones fixos** — um por ambiente. Sempre visível, exceto em modo Oração e modo Leitura Imersiva (auto-hide já existente é reaproveitado).
-
-### Desktop
-**Sidebar colapsável à esquerda** com os mesmos 5 ambientes. Ao expandir um ambiente, mostra subnavegação contextual (não uma lista plana global).
-
-### Cabeçalho (universal)
-`[Logo Cathedra] ······················ [Busca ⌘K] [Nexus 🔗] [Perfil]`
-
-- **Busca ⌘K:** único ponto de entrada de busca em toda a plataforma (ver §9).
-- **Nexus 🔗:** ativa/desativa popovers de cross-reference globalmente (respeita "não quebrar contexto de leitura/oração").
-- **Perfil:** atalho para Cela.
-
-**Justificativa:** remove a poluição atual (`APP_ROUTES` com ~40 rotas no menu). Menos escolha = mais uso.
-
----
-
-## 6. Navegação Contextual
-
-Cada ambiente tem sua própria gramática de subnav. Não há um padrão único imposto de cima.
-
-- **Átrio:** sem subnav. É um fluxo linear vertical (Ritual → Continuidade → Sugestões).
-- **Scriptorium:** subnav em **abas de fonte** (Bíblia · Catecismo · Magistério · Cânon · Aquino · Enciclopédia). Persistência de última fonte aberta.
-- **Oratório:** subnav em **momentos do dia** (Manhã · Missa · Meio-dia · Vésperas · Noite) + acesso lateral a Rosário/Via-Sacra/Ladainhas/Santos.
-- **Caminho:** subnav em **estado da jornada** (Em andamento · Recomendadas · Concluídas · Conquistas).
-- **Cela:** subnav em **acordeão vertical** (Perfil · Diário · Favoritos · Notas · Comunidade · Ajustes · Assinatura).
-
-**Justificativa:** cada ambiente tem uma *forma temporal* diferente (contínuo, discreto, cíclico, progressivo, arquivístico). Forçar um padrão único empobrece.
-
----
-
-## 7. Wireframes de Baixa Fidelidade
-
-### 7.1 Átrio (mobile)
-```text
-┌──────────────────────────────┐
-│ Cathedra    ⌘K  🔗  👤       │
-├──────────────────────────────┤
-│                              │
-│   Pax et bonum, João         │  ← saudação + tempo litúrgico
-│   Tempo Comum · 3ª semana    │
-│                              │
-│  ╭──────────────────────╮    │
-│  │  RITUAL DO DIA       │    │  ← card único, foco total
-│  │  ● Escuta  (Sl 23)   │    │
-│  │  ○ Leitura (Jo 15)   │    │
-│  │  ○ Exame             │    │
-│  │  [ Iniciar ]         │    │
-│  ╰──────────────────────╯    │
-│                              │
-│  Retomar → CIC §1234         │  ← continuidade
-│  Santo do dia → S. Boaventura│
-│  Nexus sugere → "Videira"    │
-│                              │
-├──────────────────────────────┤
-│ ⛪   📖   🕯️   🧭   👤        │  ← bottom-nav 5 ambientes
-└──────────────────────────────┘
+#### 3.3 Primeira oração (Discípulo)
+```
+Notificação 6h → HOJE
+   ↓
+Toca "Laudes" → tela entra em Modo Prece (bottom-nav some, cromia escurece)
+   ↓
+Reza (áudio opcional)
+   ↓
+Ao terminar: botão único "Anotar" → 1 frase no diário
+   ↓
+Volta ao HOJE com Ritual marcado ✓
 ```
 
-### 7.2 Scriptorium — leitor bíblico com Nexus
-```text
-┌──────────────────────────────┐
-│ ← Scriptorium    ⌘K  🔗  👤 │
-├──────────────────────────────┤
-│ [Bíblia][CIC][Mag][Cân][ST] │  ← abas de fonte
-├──────────────────────────────┤
-│ João 15                      │
-│                              │
-│  1 Eu sou a videira°         │  ← ° = âncora Nexus
-│    verdadeira, e meu Pai...  │
-│                              │
-│  ┌── popover Nexus ─────┐    │
-│  │ Ver também:           │    │
-│  │ • CIC §755-757        │    │
-│  │ • Lumen Gentium 6     │    │
-│  │ • ST III q.8          │    │
-│  │ • Cân. 204            │    │
-│  └───────────────────────┘    │
-│                              │
-│ [◀ Jo 14]        [Jo 16 ▶]  │
-├──────────────────────────────┤
-│ ⛪   📖   🕯️   🧭   👤        │
-└──────────────────────────────┘
+#### 3.4 Pesquisa (⌘K)
+```
+Qualquer tela → ⌘K
+   ↓
+Digita "videira verdadeira"
+   ↓
+Resultados agrupados: Bíblia(3) · CIC(2) · Padres(4) · Magist.(1) · Orações(1)
+   ↓
+Toca resultado → abre no leitor com Nexus já ativo mostrando as outras fontes
 ```
 
-### 7.3 Oratório — momento litúrgico
-```text
-┌──────────────────────────────┐
-│ ← Oratório       ⌘K  🔗  👤 │
-├──────────────────────────────┤
-│ [Manhã][Missa][Vésp][Noite] │
-├──────────────────────────────┤
-│  Laudes — 6ª feira           │
-│  Salmo 51 · Cântico Zac.     │
-│  [ Rezar agora ]             │
-│                              │
-│  ─── ou ───                  │
-│                              │
-│  Rosário · Mistérios Dolor.  │
-│  Via-Sacra                   │
-│  Ladainha de N.Sra.          │
-│  Adoração silenciosa (⏱)     │
-├──────────────────────────────┤
-│ ⛪   📖   🕯️   🧭   👤        │
-└──────────────────────────────┘
+#### 3.5 Favoritos e continuidade
 ```
-
-### 7.4 Caminho — jornada em andamento
-```text
-┌──────────────────────────────┐
-│ ← Caminho        ⌘K  🔗  👤 │
-├──────────────────────────────┤
-│ [Ativas][Sugeridas][Feitas] │
-├──────────────────────────────┤
-│  Iniciação à Fé · dia 4/14   │
-│  ████████░░░░░░  28%         │
-│  Próx: Credo, artigo 3       │
-│  [ Continuar ]               │
-│                              │
-│  Logos (tutor) disponível    │
-│  Certamen semanal: 8 quest.  │
-│  Conquistas: 3 novas         │
-├──────────────────────────────┤
-│ ⛪   📖   🕯️   🧭   👤        │
-└──────────────────────────────┘
-```
-
-### 7.5 Cela
-```text
-┌──────────────────────────────┐
-│ ← Cela           ⌘K  🔗  👤 │
-├──────────────────────────────┤
-│  João · Peregrino desde 2024 │
-│  ▸ Diário espiritual         │
-│  ▸ Favoritos (42)            │
-│  ▸ Notas (17)                │
-│  ▸ Comunidade                │
-│  ▸ Ajustes                   │
-│  ▸ Assinatura & Doação       │
-│  ▸ Sobre & Transparência     │
-├──────────────────────────────┤
-│ ⛪   📖   🕯️   🧭   👤        │
-└──────────────────────────────┘
+Qualquer conteúdo tem 🤍 (favoritar) e ↩ (retomar depois)
+   ↓
+HOJE sempre mostra "Retomar: [último item]"
+   ↓
+MINHA JORNADA agrupa favoritos por fonte e por tema
 ```
 
 ---
 
-## 8. Sistema de Menus (resumo)
+### Fase 4 — Design System (princípios, valores exatos na fase seguinte)
 
-| Nível | Elemento | Onde | Comportamento |
-|---|---|---|---|
-| 0 | Bottom-nav / Sidebar | Global | 5 ambientes fixos |
-| 1 | Header ⌘K + Nexus + Perfil | Global | Ações transversais |
-| 2 | Abas contextuais | Dentro do ambiente | Muda por ambiente |
-| 3 | Ações locais (◀ ▶, salvar, compartilhar) | Dentro da tela | Padrão consistente |
-| 4 | Popover Nexus | Sob demanda | Nunca modal fullscreen |
-
-**Regra dura:** nunca mais de 3 níveis visíveis ao mesmo tempo.
-
----
-
-## 9. Busca Unificada (⌘K)
-
-Um único campo, um único índice lógico. Substitui `/buscar`, `/search`, buscas internas por módulo.
-
-**Comportamento:**
-1. **Sem query:** mostra atalhos ("Hoje", "Retomar", "Rosário agora").
-2. **Com query:** resultados **agrupados por fonte** e ordenados por relevância litúrgica + histórico do usuário.
-   ```
-   Bíblia (12)   Catecismo (5)   Magistério (3)
-   Cânon (1)     Aquino (2)      Santos (4)
-   Orações (2)   Jornadas (1)
-   ```
-3. **Sintaxe rápida:**
-   - `jo 15` → João 15
-   - `cic 1234` → CIC §1234
-   - `st iii q8` → Suma
-   - `cân 204` → Direito Canônico
-   - `"videira verdadeira"` → busca literal cross-source
-4. **Nexus embutido:** cada resultado mostra ícones das fontes que o referenciam.
-
-**Justificativa:** hoje há dispersão (busca por módulo, `/buscar`, `/search`). Um só campo reduz carga cognitiva e torna a plataforma *pesquisável como uma biblioteca única*.
+- **Grid:** base 4pt, container fluido, breakpoints 360 · 768 · 1024 · 1440.
+- **Tipografia:** um par — serifada de leitura litúrgica para corpos longos, sem-serifa geométrica para UI. Nunca Inter/Poppins. Escala modular 1.25.
+- **Cores:** primária `#0B1F3A`, secundária `#C8A96A` (memória do projeto). Cada experiência com *acento sutil* (temperatura, não paleta): Hoje = quente, Estudar = neutra, Rezar = fria/escura, Formar-se = âmbar, Minha Jornada = neutra.
+- **Cor litúrgica:** *ambient light* (linha superior 2px), nunca fundo dominante.
+- **Espaçamento:** xs/sm/md/lg/xl/2xl. Nada arbitrário.
+- **Cartões:** dois tipos apenas — **Leitura** (foco no texto, sem sombra) e **Ação** (foco em toque, sombra sutil).
+- **Ícones:** Lucide solid, um peso, tamanho por contexto.
+- **Navegação:** bottom-nav 5 (mobile) / sidebar 5 (desktop) / header universal com ⌘K + Nexus toggle + Perfil.
+- **Modo Prece:** contraste reduzido, bottom-nav oculto, toques secundários desabilitados, sem notificações.
+- **Acessibilidade:** contraste AAA em corpo litúrgico; foco visível sempre; teclado obrigatório.
+- **Tokens:** todos semânticos (`--surface-reading`, `--accent-prayer`, `--liturgical-color`) — nunca cor crua em componente.
 
 ---
 
-## 10. Nexus Theologicus — Estratégia de Integração
+### Fase 5 — Wireframes (ordem de maior ROI)
 
-O Nexus é o **sistema nervoso** da Cathedra 2.0. Não é uma feature, é uma camada.
-
-### Grafo canônico de fontes
-```text
-                 ┌──────────────┐
-                 │   BÍBLIA     │
-                 └──────┬───────┘
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-   ┌─────────┐   ┌────────────┐   ┌──────────┐
-   │CATECISMO│◄──┤ MAGISTÉRIO ├──►│  CÂNON   │
-   └────┬────┘   └──────┬─────┘   └────┬─────┘
-        └───────────────┼───────────────┘
-                        ▼
-                 ┌──────────────┐
-                 │   AQUINO     │  (Summa, Opera)
-                 └──────┬───────┘
-                        ▼
-                 ┌──────────────┐
-                 │ SANTOS/PAPAS │  (testemunho vivido)
-                 └──────────────┘
-```
-
-**Regras de integração:**
-1. **Toda passagem bíblica** carrega âncoras para: CIC (via índice bíblico do Catecismo), documentos magisteriais que a citam, Suma que a comenta, Cânones que a fundamentam, orações que a incorporam.
-2. **Todo parágrafo do CIC** carrega âncoras reversas para Bíblia, Magistério, Cânon.
-3. **Todo cânone** aponta para o CIC correspondente e fundamento bíblico/magisterial.
-4. **Todo santo/papa** carrega obras, citações e documentos vinculados.
-5. **Popover é sempre não-modal**, não interrompe leitura/oração, e pode ser desativado globalmente pelo botão 🔗 no header.
-
-**Justificativa doutrinal:** o Nexus materializa o princípio católico de que Escritura, Tradição e Magistério formam **um único depósito da fé** (DV 10). A arquitetura reflete a teologia.
-
-**Novo:** o **Código de Direito Canônico** ganha cômodo próprio no Scriptorium (hoje ausente ou disperso). Necessário para completude e para Estudioso.
+1. **HOJE** — ritual + continuidade + ofício + sugestão.
+2. **ESTUDAR por Tema** — busca de tema + tela de estudo composto (experiência-assinatura).
+3. **Leitor universal** — bíblia/CIC/magistério/padres com Nexus lateral, igual em toda fonte.
+4. **⌘K Conexões** — overlay global.
+5. **REZAR — Ofício** — laudes/missa/vésperas/completas num só fluxo.
+6. **FORMAR-SE — Jornada em curso** — dia N/M, próximo passo.
+7. **MINHA JORNADA** — diário + favoritos + histórico.
+8. **Modo Prece** — estado da UI, não tela nova.
 
 ---
 
-## 11. Dashboard Inicial (Átrio) — decisões-chave
+## Parte III — v1 × v2
 
-- **Uma coisa em foco por vez:** o Ritual do Dia domina a tela. Continuidade e sugestões são secundárias.
-- **Sem métricas vaidosas na entrada:** streak/XP moram no Caminho, não no Átrio. Entrada espiritual não é gamificada.
-- **Contexto litúrgico sempre visível** (tempo, cor litúrgica sutil no fundo, santo do dia).
-- **Zero configuração para começar:** anônimo vê Ritual do Dia genérico; logado vê personalizado.
-
----
-
-## 12. Organização dos Módulos — antes × depois
-
-| Hoje | Cathedra 2.0 |
-|---|---|
-| ~40 rotas de topo em `APP_ROUTES` | 5 ambientes + rotas internas |
-| Módulos concorrem no menu | Módulos vivem dentro de ambientes |
-| Busca fragmentada | ⌘K único |
-| Nexus como feature de página | Nexus como camada global |
-| Admin misturado a rotas de usuário | Admin isolado em Cela → área restrita |
-| Cânon Canônico ausente/disperso | Aba própria no Scriptorium |
-| Dashboard = catálogo de portas | Átrio = ritual + continuidade |
+| Dimensão | v1 (atual) | v2 (esta revisão) |
+|---|---|---|
+| Organização de topo | 5 ambientes (Átrio/Scriptorium/Oratório/Caminho/Cela) | 5 experiências (Hoje/Estudar/Rezar/Formar-se/Minha Jornada) — verbos |
+| Porta do estudo | Por fonte | Por tema primeiro, por fonte segundo |
+| Enciclopédia/Glossário/A-Z/Dogmas | 4 abas | 1: Verbete |
+| Jornadas/Itinerários/Trilhas | 3 nomes | 1: Formar-se |
+| Missal/Breviário/Liturgia/Calendário | 4 abas | 1: Ofício |
+| Santos/Papas/Aparições | Oratório | Estudar → Testemunhos |
+| Logos IA | cômodo | camada transversal |
+| Nexus + Busca | 2 sistemas | 1: ⌘K Conexões |
+| Diário | cômodo | destino transversal + Minha Jornada |
+| Rotas admin/audit/health | misturadas ao topo | Console Técnico fora do mapa |
+| Padres e Concílios | ausentes | primeira classe em Estudar |
+| Modo Prece | mencionado | estado global especificado |
+| Estudo composto (tema atravessa fontes) | ausente | experiência-assinatura |
 
 ---
 
-## 13. Justificativas transversais
+## Parte IV — Próximos passos
 
-- **Simplicidade radical:** 5 ambientes forçam decisões editoriais. Nada entra sem morar em algum cômodo.
-- **Profundidade preservada:** nada é removido — Scriptorium comporta Aquino, Enciclopédia, Glossário, Temas, Dogmas sem poluir o topo.
-- **Mobile-first honesto:** bottom-nav de 5 respeita polegar; sem menus hambúrguer profundos.
-- **Experiência espiritual acima da tecnologia:** Nexus e telemetria nunca interrompem Oratório em curso; modo Oração continua com auto-hide.
-- **Soberania de dados intacta:** a arquitetura não muda a fonte da verdade (banco local); apenas reorganiza a superfície.
-- **Compatibilidade com redirects:** os `_redirects` atuais (`/biblia → /bible`, etc.) continuam válidos; adicionamos apenas novos redirects `/dashboard → /atrio`, `/bible → /scriptorium/biblia`, etc.
+1. Aprovar/ajustar este v2.
+2. ADR-011 "Cathedra 2.0 — 5 experiências" registrando a decisão.
+3. Mapa rota-a-rota (`ARC-MAP-v2.md`) com redirects de cada rota atual → novo endereço.
+4. Design System v2 com valores concretos (tokens, escala, tipografia escolhida).
+5. Wireframes na ordem acima.
+6. Só então: implementação incremental — sprint 1 = HOJE + ⌘K, sprint 2 = Estudar por Tema, etc.
 
----
-
-## 14. Próximos passos (não executar agora)
-
-1. Aprovação da IA acima.
-2. ADR retroativo "Cathedra 2.0 — 5 Ambientes".
-3. Mapa detalhado rota-a-rota (`ARC-MAP-v2.md`) — cada rota atual → novo endereço.
-4. Design tokens por ambiente (cor de acento sutil, ícone, microcopy).
-5. Só então: implementação incremental, um ambiente por sprint, começando pelo **Átrio** (maior ROI de UX).
-
----
-
-**Nada foi codificado. Nenhuma funcionalidade foi perdida. Toda a plataforma cabe em 5 cômodos.**
+Nada foi codificado. Nada foi removido. Tudo foi renomeado pelo verbo do usuário.
