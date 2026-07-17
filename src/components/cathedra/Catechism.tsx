@@ -17,6 +17,7 @@ import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getParagraphParam } from '@/lib/queryParams';
+import { isValidCatechismParagraph } from '@/lib/nexusNavigation';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
@@ -312,13 +313,20 @@ const Catechism: React.FC = memo(() => {
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<ViewMode>(() => getParagraphParam(searchParams) ? 'reading' : 'parts');
+  const initialParagraph = useMemo(() => {
+    const raw = getParagraphParam(searchParams);
+    if (raw == null) return null;
+    const n = parseInt(raw, 10);
+    return isValidCatechismParagraph(n) ? n : 'invalid' as const;
+  }, [searchParams]);
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    typeof initialParagraph === 'number' ? 'reading' : 'parts',
+  );
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
-  const [currentParagraph, setCurrentParagraph] = useState(() => {
-    const p = getParagraphParam(searchParams);
-    return p ? parseInt(p) : 1;
-  });
+  const [currentParagraph, setCurrentParagraph] = useState(() =>
+    typeof initialParagraph === 'number' ? initialParagraph : 1,
+  );
   const [lastFocusedElement, setLastFocusedElement] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showLogosAI, setShowLogosAI] = useState(false);
