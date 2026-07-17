@@ -47,6 +47,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
   showArrow = true,
   className,
   index = 0,
+  actions,
 }, ref) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if ((e.key === 'Enter' || e.key === ' ') && onClick) {
