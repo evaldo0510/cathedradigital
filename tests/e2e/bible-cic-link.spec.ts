@@ -20,6 +20,13 @@ test('CIC link a partir de Jo 6 navega para /catechism?p=N com conteúdo', async
     }
   });
 
+  // Nenhuma nova aba/popup deve ser aberta durante todo o fluxo
+  const popups: string[] = [];
+  context.on('page', (p) => popups.push(p.url()));
+  page.on('popup', (p) => popups.push('popup:' + p.url()));
+
+
+
   const startPath = '/bible?book=Jo&ch=6';
   await page.goto(startPath);
   await page.waitForLoadState('domcontentloaded');
