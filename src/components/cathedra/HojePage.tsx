@@ -157,6 +157,81 @@ const HojePage: React.FC = () => {
           <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
+        {/* CAMADA EDITORIAL — progresso + recomendação em tipografia contemplativa */}
+        <motion.section
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 0.35 }}
+          className="editorial-column editorial-section"
+          aria-label="Sua jornada em curso"
+        >
+          <p className="editorial-meta text-center mb-spacing-lg">
+            {activeJourney ? 'Jornada em curso' : 'Sugerido para você'}
+          </p>
+          <h2 className="editorial-display text-3xl md:text-5xl text-center text-primary mb-spacing-lg">
+            {activeJourney?.title || recommendedJourney?.title || 'O silêncio prepara o próximo passo.'}
+          </h2>
+          {(activeJourney?.description || recommendedJourney?.description) && (
+            <p className="text-center font-serif italic text-primary/70 text-lg md:text-xl leading-relaxed">
+              {activeJourney?.description || recommendedJourney?.description}
+            </p>
+          )}
+
+          {activeJourney && journeyProgress.total > 0 && (
+            <div className="mt-spacing-2xl">
+              <div className="flex items-baseline justify-between mb-spacing-sm">
+                <span className="editorial-meta">Progresso</span>
+                <span className="editorial-meta text-secondary">
+                  {journeyProgress.completed} / {journeyProgress.total}
+                </span>
+              </div>
+              <div className="h-[2px] bg-primary/10 relative overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.round((journeyProgress.completed / journeyProgress.total) * 100)}%` }}
+                  transition={{ duration: 1.4, ease: 'easeOut' }}
+                  className="absolute inset-y-0 left-0 bg-secondary"
+                />
+              </div>
+              {journeyStep && (
+                <p className="mt-spacing-lg text-center text-primary/60 font-serif italic">
+                  Próximo passo — <span className="text-primary/90">{journeyStep.title}</span>
+                </p>
+              )}
+            </div>
+          )}
+
+          <div className="mt-spacing-2xl flex items-center justify-center gap-spacing-lg">
+            {activeJourney ? (
+              <button
+                type="button"
+                onClick={() => navigate(`/jornadas/${activeJourney.id}`)}
+                className="text-[11px] uppercase tracking-[0.3em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+              >
+                Retomar jornada
+              </button>
+            ) : recommendedJourney ? (
+              <button
+                type="button"
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
+                className="text-[11px] uppercase tracking-[0.3em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+              >
+                Começar esta jornada
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate('/jornadas')}
+                className="text-[11px] uppercase tracking-[0.3em] text-primary/60 border-b border-primary/40 pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+              >
+                Explorar jornadas
+              </button>
+            )}
+          </div>
+          <hr className="editorial-rule editorial-rule--hair mt-spacing-2xl" />
+        </motion.section>
+
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl">
           <div className="lg:col-span-8 space-y-spacing-3xl md:space-y-spacing-4xl">
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
