@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { catechismInternalPath } from '@/lib/nexusNavigation';
 
 interface CatechismPopoverProps {
   paragraph: number;
