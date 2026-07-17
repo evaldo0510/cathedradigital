@@ -75,26 +75,39 @@ async function assertAnchoredToTrigger(page: Page, trigger: Locator) {
   }
 }
 
-test.describe('Nexus popovers — ancoragem no elemento clicado', () => {
-  test('BibleVersePopover abre ancorado na referência cruzada', async ({ page }) => {
-    const trigger = await findChapterWithTrigger(page, 'bible-verse-popover-trigger');
-    test.skip(
-      !trigger,
-      'Nenhum capítulo candidato tinha BibleVersePopover renderizado — adicione um capítulo com referência cruzada em CANDIDATE_CHAPTERS.'
-    );
-    if (!trigger) return;
-    await trigger.click();
-    await assertAnchoredToTrigger(page, trigger);
-  });
+const VIEWPORTS = [
+  { name: 'mobile-360', width: 360, height: 800 },
+  { name: 'mobile-390', width: 390, height: 844 },
+  { name: 'tablet-768', width: 768, height: 1024 },
+  { name: 'desktop-1280', width: 1280, height: 800 },
+  { name: 'desktop-1920', width: 1920, height: 1080 },
+] as const;
 
-  test('BibleDictionaryPopover abre ancorado no termo do dicionário', async ({ page }) => {
-    const trigger = await findChapterWithTrigger(page, 'bible-dictionary-popover-trigger');
-    test.skip(
-      !trigger,
-      'Nenhum capítulo candidato tinha BibleDictionaryPopover renderizado — adicione um capítulo com termo do glossário em CANDIDATE_CHAPTERS.'
-    );
-    if (!trigger) return;
-    await trigger.click();
-    await assertAnchoredToTrigger(page, trigger);
+for (const vp of VIEWPORTS) {
+  test.describe(`Nexus popovers — ancoragem @ ${vp.name} (${vp.width}x${vp.height})`, () => {
+    test.use({ viewport: { width: vp.width, height: vp.height } });
+
+    test(`BibleVersePopover abre ancorado @ ${vp.name}`, async ({ page }) => {
+      const trigger = await findChapterWithTrigger(page, 'bible-verse-popover-trigger');
+      test.skip(
+        !trigger,
+        `Nenhum capítulo candidato tinha BibleVersePopover renderizado @ ${vp.name} — adicione um em CANDIDATE_CHAPTERS.`
+      );
+      if (!trigger) return;
+      await trigger.click();
+      await assertAnchoredToTrigger(page, trigger);
+    });
+
+    test(`BibleDictionaryPopover abre ancorado @ ${vp.name}`, async ({ page }) => {
+      const trigger = await findChapterWithTrigger(page, 'bible-dictionary-popover-trigger');
+      test.skip(
+        !trigger,
+        `Nenhum capítulo candidato tinha BibleDictionaryPopover renderizado @ ${vp.name} — adicione um em CANDIDATE_CHAPTERS.`
+      );
+      if (!trigger) return;
+      await trigger.click();
+      await assertAnchoredToTrigger(page, trigger);
+    });
   });
-});
+}
+
