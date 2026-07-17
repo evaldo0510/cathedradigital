@@ -158,6 +158,60 @@ const Bible: React.FC = () => {
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
   const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const nexusSheetPanelRef = useRef<HTMLDivElement>(null);
+  const nexusSheetTriggerRef = useRef<HTMLElement | null>(null);
+
+  // A11y do bottom-sheet Nexus: Escape fecha, foco vai pro painel, Tab fica preso.
+  useEffect(() => {
+    if (!expandedConnection) return;
+    const panel = nexusSheetPanelRef.current;
+    if (!panel) return;
+
+    nexusSheetTriggerRef.current = (document.activeElement as HTMLElement) ?? null;
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+
+    const first = focusables()[0];
+    (first ?? panel).focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setExpandedConnection(null);
+        return;
+      }
+      if (e.key === 'Tab') {
+        const nodes = focusables();
+        if (nodes.length === 0) {
+          e.preventDefault();
+          panel.focus();
+          return;
+        }
+        const firstEl = nodes[0];
+        const lastEl = nodes[nodes.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && (active === firstEl || !panel.contains(active))) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && (active === lastEl || !panel.contains(active))) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      nexusSheetTriggerRef.current?.focus?.();
+    };
+  }, [expandedConnection]);
+
+
 
 
 
@@ -2028,13 +2082,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             />
             
             <motion.div
+              ref={nexusSheetPanelRef}
               data-testid="nexus-bottom-sheet-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="nexus-sheet-title"
+              aria-describedby="nexus-sheet-desc"
+              tabIndex={-1}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden"
+              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden focus:outline-none"
             >
+
               {/* Drag handle for mobile-first feel */}
               <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-spacing-lg lg:hidden" />
               
@@ -2042,13 +2103,14 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 <div className="space-y-spacing-xs">
                   <div className="flex items-center gap-spacing-xs">
                     <div className={cn("w-2 h-2 rounded-full animate-pulse", expandedConnection.color)} />
-                    <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">
+                    <h3 id="nexus-sheet-title" className="text-xl font-display font-bold text-primary uppercase tracking-widest">
                       {expandedConnection.label}
                     </h3>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
+                  <span id="nexus-sheet-desc" className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
                     {expandedConnection.theological_theme || 'Conexão Teológica'}
                   </span>
+
                 </div>
                 
                 <div className="flex items-center gap-spacing-xs">
@@ -2056,10 +2118,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setExpandedConnection(null)} 
+                    aria-label="Fechar conexão Nexus"
+                    data-testid="nexus-bottom-sheet-close"
                     className="rounded-full w-10 h-10 bg-primary/5 hover:bg-primary/10"
                   >
                     <Icons.X className="w-5 h-5 opacity-40" />
                   </Button>
+
                 </div>
               </div>
               
@@ -2079,6 +2144,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               <div className="grid grid-cols-2 gap-spacing-md">
                 <Button 
                   variant="outline"
+                  data-testid="nexus-sheet-nav-link"
                   onClick={() => {
                     console.info('[Nexus] navigate', { from: 'bible', to: expandedConnection.type, id: expandedConnection.id });
                     if (expandedConnection.type === 'catechism') {
@@ -2092,6 +2158,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 >
                   <Icons.BookOpen className="w-4 h-4 mr-spacing-xs text-secondary" /> 
                   Ler no {expandedConnection.type === 'catechism' ? 'Catecismo' : 'Documento'}
+
                 </Button>
 
                 <Button 
