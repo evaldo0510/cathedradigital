@@ -53,6 +53,7 @@
     "test:nexus-hardening:update": "playwright test tests/e2e/nexus-popover-hardening.spec.ts --update-snapshots",
     "test:bible-selection": "playwright test tests/e2e/bible-selection-keyboard.spec.ts",
     "test:bible-selection:update": "playwright test tests/e2e/bible-selection-keyboard.spec.ts --update-snapshots",
+    "test:bible-selection-a11y": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts",
 
 
 
