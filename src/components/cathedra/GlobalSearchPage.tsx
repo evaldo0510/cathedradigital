@@ -201,22 +201,58 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
         )}
 
-        {isAllEmpty && !anyPending && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            className="text-center py-spacing-2xl space-y-4"
+        {hasError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            role="alert"
+            aria-live="assertive"
+            className="text-center py-spacing-2xl space-y-spacing-md"
           >
-            <span
-              className="block mx-auto w-px h-10 bg-secondary/50"
-              aria-hidden="true"
-            />
+            <span className="block mx-auto w-px h-10 bg-destructive/50" aria-hidden="true" />
             <p className="editorial-display text-2xl italic text-foreground">
-              Nenhum resultado encontrado.
+              A busca não pôde ser concluída.
             </p>
-            <p className="text-premium-sm text-muted-foreground/70">
-              Tente termos mais genéricos ou verifique a ortografia.
+            <p className="text-premium-sm text-muted-foreground/70 max-w-[42ch] mx-auto">
+              {errors[0]?.message?.slice(0, 160) || 'Ocorreu um erro ao consultar a sabedoria. Tente novamente em instantes.'}
             </p>
+            <div className="flex items-center justify-center gap-spacing-sm flex-wrap pt-spacing-xs">
+              <Button onClick={retryAll} variant="default" className="min-h-11">
+                <Icons.RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+                Tentar novamente
+              </Button>
+              <Button onClick={clearSearch} variant="ghost" className="min-h-11">
+                Limpar busca
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {isAllEmpty && !hasError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            role="status"
+            aria-live="polite"
+            className="text-center py-spacing-2xl space-y-spacing-md"
+          >
+            <span className="block mx-auto w-px h-10 bg-secondary/50" aria-hidden="true" />
+            <p className="editorial-display text-2xl italic text-foreground">
+              Nenhum resultado para <span className="text-secondary">"{query.trim()}"</span>.
+            </p>
+            <p className="text-premium-sm text-muted-foreground/70 max-w-[42ch] mx-auto">
+              Tente termos mais genéricos, verifique a ortografia ou explore uma nova busca.
+            </p>
+            <div className="flex items-center justify-center gap-spacing-sm flex-wrap pt-spacing-xs">
+              <Button onClick={clearSearch} variant="default" className="min-h-11">
+                <Icons.X className="w-4 h-4 mr-2" aria-hidden="true" />
+                Limpar busca
+              </Button>
+              <Button onClick={retryAll} variant="ghost" className="min-h-11">
+                <Icons.RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+                Tentar novamente
+              </Button>
+            </div>
           </motion.div>
         )}
 
