@@ -1539,17 +1539,34 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     <div key={cat.name} className="space-y-spacing-xs">
                       <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 ml-spacing-xs mb-spacing-xs block">{cat.name}</span>
                       <div className="divide-y divide-primary/[0.03]">
-                        {cat.books.map((book: BibleBook) => (
+                        {cat.books.map((book: BibleBook) => {
+                          const isActive = selectedBook?.abbr === book.abbr;
+                          return (
                           <button 
                             key={book.abbr}
                             onClick={() => selectBook(book)}
-                            className="w-full h-14 flex items-center justify-between active:bg-primary/[0.02] transition-colors px-spacing-xs group"
+                            aria-current={isActive ? 'page' : undefined}
+                            className={cn(
+                              "w-full h-14 flex items-center justify-between transition-colors px-spacing-sm rounded-lg group",
+                              "hover:bg-primary/[0.03] active:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60",
+                              isActive
+                                ? "bg-secondary/10 border-l-2 border-secondary shadow-sm"
+                                : "border-l-2 border-transparent"
+                            )}
                           >
-                            <span className="font-serif text-lg text-primary/70 group-active:text-primary transition-colors">{book.name}</span>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary/20">{book.abbr}</span>
+                            <span className={cn(
+                              "font-serif text-lg transition-colors",
+                              isActive ? "text-secondary font-semibold" : "text-primary/70 group-hover:text-primary"
+                            )}>{book.name}</span>
+                            <span className={cn(
+                              "text-[10px] font-black uppercase tracking-widest transition-colors",
+                              isActive ? "text-secondary/80" : "text-primary/20 group-hover:text-primary/40"
+                            )}>{book.abbr}</span>
                           </button>
-                        ))}
+                          );
+                        })}
                       </div>
+
                     </div>
                   ))}
                 </section>
@@ -1596,16 +1613,18 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   onClick={() => { if (!missing) selectChapter(ch); }}
                   disabled={missing}
                   aria-disabled={missing}
+                  aria-current={selectedChapter === ch ? 'page' : undefined}
                   title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-1",
                     missing
                       ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
                       : selectedChapter === ch
-                        ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
+                        ? "bg-secondary/15 border-secondary ring-2 ring-secondary/30 shadow-md scale-[1.03]" 
                         : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                          ? "bg-secondary/5 border-secondary/20"
-                          : "bg-white border-primary/5 hover:border-secondary/30"
+                          ? "bg-secondary/5 border-secondary/20 hover:border-secondary/40 hover:bg-secondary/10"
+                          : "bg-white border-primary/5 hover:border-secondary/40 hover:bg-secondary/[0.04]"
                   )}
 
                 >
@@ -1613,8 +1632,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     "text-lg font-display transition-colors",
                     missing
                       ? "text-primary/40 line-through decoration-primary/30"
-                      : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                      : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-hover:text-secondary group-active:text-secondary"
                   )}>{ch}</span>
+
                   <div className="flex items-center gap-spacing-xs mt-spacing-xs">
                     {missing && (
                       <span className="text-[9px] uppercase tracking-wider text-primary/40">
