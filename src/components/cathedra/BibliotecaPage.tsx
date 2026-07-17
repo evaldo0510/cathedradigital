@@ -129,7 +129,39 @@ const BibliotecaPage: React.FC = () => {
 
   return (
     <ContemplativeLayout title="Biblioteca" subtitle="Sacrum Archivum" icon={Icons.Compass}>
-      <div className="w-full pb-spacing-4xl">
+      <div className="w-full pb-spacing-4xl" data-biblioteca-theme={theme}>
+        {/* Seletor de tema — validação de conceito Logos 2030 */}
+        <div
+          role="radiogroup"
+          aria-label="Tema visual da Biblioteca"
+          className="mb-spacing-lg flex flex-wrap items-center gap-spacing-sm"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em] text-primary/40 mr-spacing-sm">
+            Tema
+          </span>
+          {themeOptions.map((opt) => {
+            const active = theme === opt.key;
+            return (
+              <button
+                key={opt.key}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                title={opt.hint}
+                onClick={() => setTheme(opt.key)}
+                className={cn(
+                  'text-[11px] uppercase tracking-[0.2em] px-spacing-md py-[6px] border transition-colors',
+                  active
+                    ? 'border-secondary text-secondary bg-secondary/5'
+                    : 'border-primary/15 text-primary/60 hover:border-secondary/60 hover:text-secondary',
+                )}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Busca soberana + eixo */}
         <form
           onSubmit={submitSearch}
