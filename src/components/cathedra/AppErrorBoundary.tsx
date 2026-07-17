@@ -135,9 +135,17 @@ class AppErrorBoundary extends Component<Props, State> {
             )}
 
             {this.state.errorId && (
-              <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest mt-spacing-md">
-                Ref ID: {this.state.errorId}
-              </p>
+              <div className="mt-spacing-md space-y-1">
+                <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest">
+                  Ref ID: {this.state.errorId}
+                </p>
+                <a
+                  href={`/admin/client-errors?ref=${encodeURIComponent(this.state.errorId)}`}
+                  className="text-[9px] font-mono text-primary/60 hover:text-primary underline uppercase tracking-widest"
+                >
+                  Investigar no admin
+                </a>
+              </div>
             )}
           </div>
 
