@@ -354,9 +354,22 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </div>
 
         {!hasQuery && (
-          <div className="text-center py-spacing-2xl text-muted-foreground">
-            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto opacity-20 mb-spacing-md" />
-            <p className="text-premium-sm">Digite pelo menos 2 caracteres para buscar</p>
+          <div className="text-center py-spacing-2xl space-y-4">
+            <span
+              className="block mx-auto"
+              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              aria-hidden="true"
+            />
+            <p
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '1.05rem',
+                color: 'hsl(var(--muted-foreground))',
+              }}
+            >
+              Digite ao menos 2 caracteres para começar.
+            </p>
           </div>
         )}
       </div>
