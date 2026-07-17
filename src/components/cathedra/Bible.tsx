@@ -1539,17 +1539,34 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     <div key={cat.name} className="space-y-spacing-xs">
                       <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 ml-spacing-xs mb-spacing-xs block">{cat.name}</span>
                       <div className="divide-y divide-primary/[0.03]">
-                        {cat.books.map((book: BibleBook) => (
+                        {cat.books.map((book: BibleBook) => {
+                          const isActive = selectedBook?.abbr === book.abbr;
+                          return (
                           <button 
                             key={book.abbr}
                             onClick={() => selectBook(book)}
-                            className="w-full h-14 flex items-center justify-between active:bg-primary/[0.02] transition-colors px-spacing-xs group"
+                            aria-current={isActive ? 'page' : undefined}
+                            className={cn(
+                              "w-full h-14 flex items-center justify-between transition-colors px-spacing-sm rounded-lg group",
+                              "hover:bg-primary/[0.03] active:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60",
+                              isActive
+                                ? "bg-secondary/10 border-l-2 border-secondary shadow-sm"
+                                : "border-l-2 border-transparent"
+                            )}
                           >
-                            <span className="font-serif text-lg text-primary/70 group-active:text-primary transition-colors">{book.name}</span>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary/20">{book.abbr}</span>
+                            <span className={cn(
+                              "font-serif text-lg transition-colors",
+                              isActive ? "text-secondary font-semibold" : "text-primary/70 group-hover:text-primary"
+                            )}>{book.name}</span>
+                            <span className={cn(
+                              "text-[10px] font-black uppercase tracking-widest transition-colors",
+                              isActive ? "text-secondary/80" : "text-primary/20 group-hover:text-primary/40"
+                            )}>{book.abbr}</span>
                           </button>
-                        ))}
+                          );
+                        })}
                       </div>
+
                     </div>
                   ))}
                 </section>
