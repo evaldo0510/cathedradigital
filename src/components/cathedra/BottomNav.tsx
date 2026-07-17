@@ -190,7 +190,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/80 backdrop-blur-xl border-t border-primary/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
+        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/85 backdrop-blur-xl border-t border-[#c9a84c]/25 bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
         "min-h-[64px]", 
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
