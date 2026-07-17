@@ -15,6 +15,9 @@ interface AuditRow {
   url: string;
   score: number | null;
   findings: Array<{ type: string; severity: string; message: string }>;
+  meta_tags: { title?: string; description?: string; canonical?: string; ogTitle?: string; ogImage?: string; twitterCard?: string; http_status?: number } | null;
+  headings: { h1?: string[]; h2_count?: number } | null;
+  links: { checked?: number; broken?: Array<{ url: string; status: number }> } | null;
   created_at: string;
 }
 
