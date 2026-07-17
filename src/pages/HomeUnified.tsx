@@ -250,13 +250,13 @@ const HomeUnified: React.FC = () => {
               <Link
                 key={env.key}
                 to={`/${env.key === 'formar-se' ? 'formacao' : env.key === 'pesquisar' ? 'buscar' : env.key === 'minha-jornada' ? 'jornadas' : env.key === 'estudar' ? 'bible' : env.key}`}
-                className="group relative flex min-h-[280px] flex-col justify-between p-8 transition-colors duration-500 md:min-h-[360px] md:p-10"
+                data-testid="atrium-block"
+                data-atrium-key={env.key}
+                className="group relative flex min-h-[280px] flex-col justify-between p-8 transition-colors duration-500 md:min-h-[360px] md:p-10 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-[var(--gold)] focus-visible:z-10 hover:bg-[var(--noir-surface)] active:bg-[var(--noir-surface)] active:brightness-110"
                 style={{
                   borderRight: '1px solid var(--noir-line)',
                   borderBottom: '1px solid var(--noir-line)',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--noir-surface)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
                 <div className="flex items-start justify-between">
                   <Icon className="h-7 w-7 transition-colors" style={{ color: 'var(--gold)' }} aria-hidden />
