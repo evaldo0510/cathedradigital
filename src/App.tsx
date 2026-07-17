@@ -412,7 +412,7 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && (
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
@@ -633,7 +633,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
         </AppErrorBoundary>
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
 
