@@ -63,6 +63,8 @@ export interface UseFuzzySearchResult<TRow> {
   isPending: boolean;
   /** Last RPC error, if any. */
   error: Error | null;
+  /** Re-executes the last query, useful after a transient backend error. */
+  refetch: () => void;
 }
 
 export function useFuzzySearch<TRow>(
