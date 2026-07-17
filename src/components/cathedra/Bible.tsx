@@ -2118,10 +2118,13 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setExpandedConnection(null)} 
+                    aria-label="Fechar conexão Nexus"
+                    data-testid="nexus-bottom-sheet-close"
                     className="rounded-full w-10 h-10 bg-primary/5 hover:bg-primary/10"
                   >
                     <Icons.X className="w-5 h-5 opacity-40" />
                   </Button>
+
                 </div>
               </div>
               
