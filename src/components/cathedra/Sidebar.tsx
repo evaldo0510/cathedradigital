@@ -280,22 +280,22 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-300 outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-[9px] font-medium transition-all duration-300 outline-none h-auto min-h-[40px] border
                                   ${isActive
-                                    ? 'bg-primary/10 dark:bg-white/10 text-primary shadow-premium-none'
-                                    : 'text-primary/75 dark:text-white/80 hover:bg-primary/5 dark:hover:bg-white/5 hover:text-primary'}`}
+                                    ? 'bg-[#c9a84c]/[0.08] text-[#c9a84c] border-[#c9a84c]/40'
+                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[#c9a84c] border-transparent hover:border-[#c9a84c]/20'}`}
                               >
-                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-90'}`}>
+                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
                                   </span>
-                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-95'}`}>{item.label}</span>
+                                <span className="tracking-[0.18em] uppercase truncate">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
+                                  <span className="ml-auto text-[8px] font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
                                   </span>
                                 )}
-                                {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-spacing-2xs py-spacing-3xs rounded flex-shrink-0">PRO</span>}
-                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-spacing-3xs h-spacing-3xs rounded-premium-full bg-primary/40 flex-shrink-0" />}
+                                {(item as any).pro && <span className="ml-auto text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 flex-shrink-0" style={{ color: '#c9a84c', border: '1px solid rgba(201,168,76,0.4)' }}>PRO</span>}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 flex-shrink-0" style={{ background: '#c9a84c' }} />}
                               </Button>
                             </li>
                           );
