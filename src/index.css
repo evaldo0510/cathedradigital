@@ -179,6 +179,29 @@
   .font-reader { font-family: 'Lora', serif; font-weight: 400; }
   .font-ui { font-family: 'Inter', sans-serif; }
 
+  /* =====================================================================
+   * Cathedra Noir & Gold — escopo local da Home unificada.
+   * Não afeta nenhum outro módulo; só ativa dentro de .cathedra-noir.
+   * Palette: #0d0d0d / #1a1a1a / #c9a84c / #f0d78c
+   * ===================================================================== */
+  .cathedra-noir {
+    --noir-bg: #0a0a0a;
+    --noir-surface: #131313;
+    --noir-surface-2: #1a1a1a;
+    --noir-line: rgba(201, 168, 76, 0.14);
+    --noir-line-strong: rgba(201, 168, 76, 0.32);
+    --noir-text: #f0ebe0;
+    --noir-text-muted: rgba(240, 235, 224, 0.55);
+    --noir-text-faint: rgba(240, 235, 224, 0.32);
+    --gold: #c9a84c;
+    --gold-light: #f0d78c;
+    background-color: var(--noir-bg);
+    color: var(--noir-text);
+  }
+  .cathedra-noir ::selection { background: rgba(201, 168, 76, 0.35); color: #0a0a0a; }
+
+
+
 
   * {
     @apply border-border;
