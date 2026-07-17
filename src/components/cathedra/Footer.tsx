@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { useLang } from '@/hooks/useLang';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 import { APP_ROUTES } from '@/config/routes';
+
 
 
 const DIOCESES_BR = [
@@ -126,9 +128,11 @@ const DIOCESE_URLS: Record<string, string> = {
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const { t, lang } = useLang();
+  const { isAdmin } = useIsAdmin();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican)', url: EXTERNAL_URLS.VATICAN },
@@ -391,7 +395,7 @@ const Footer: React.FC = React.memo(() => {
             </p>
           </div>
           <div className="flex items-center gap-6">
-            <nav className="flex items-center" aria-label="Links institucionais">
+            <nav className="flex items-center flex-wrap" aria-label="Links institucionais">
               {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
                 <React.Fragment key={item.label}>
                   <Button 
@@ -403,12 +407,25 @@ const Footer: React.FC = React.memo(() => {
                   >
                     {item.label}
                   </Button>
-                  {index < array.length - 1 && (
+                  {(index < array.length - 1 || isAdmin) && (
                     <span className="mx-1 select-none" style={{ color: '#c9a84c', opacity: 0.5 }}>·</span>
                   )}
                 </React.Fragment>
               ))}
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  data-testid="footer-admin-link"
+                  onClick={() => navigate('/admin/seo')}
+                  className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none px-2 py-1 rounded-none bg-transparent hover:bg-transparent"
+                  style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.28em', textTransform: 'uppercase' }}
+                  aria-label="Painel administrativo"
+                >
+                  Admin
+                </Button>
+              )}
             </nav>
+
             <Button 
               onClick={scrollToTop} 
               className="p-2 bg-transparent rounded-none transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none"
