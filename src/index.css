@@ -741,3 +741,37 @@ header:hover {
 .editorial-rule--hair { border-top-color: var(--rule-gold-hair); }
 .editorial-section { padding-block: var(--space-editorial); }
 .editorial-section--lg { padding-block: var(--space-editorial-lg); }
+
+/* === Biblioteca — variantes de tema (Logos 2030 theme switcher) === */
+/* Escolha de linguagem visual da Biblioteca, alternável no cabeçalho da página. */
+[data-biblioteca-theme='vaticana'] {
+  --biblio-accent: hsl(var(--secondary));
+  --biblio-rule: var(--rule-gold-soft);
+  font-family: var(--font-display);
+  letter-spacing: 0.005em;
+}
+[data-biblioteca-theme='vaticana'] .editorial-display { letter-spacing: 0; }
+[data-biblioteca-theme='vaticana'] input[placeholder] { font-style: italic; }
+
+[data-biblioteca-theme='apple'] {
+  --biblio-accent: hsl(var(--primary));
+  --biblio-rule: hsl(var(--border));
+  font-family: var(--font-body);
+  letter-spacing: -0.005em;
+}
+[data-biblioteca-theme='apple'] .editorial-display {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+[data-biblioteca-theme='apple'] .editorial-rule { border-top-color: hsl(var(--border)); }
+
+[data-biblioteca-theme='logos'] {
+  --biblio-accent: hsl(var(--secondary));
+  --biblio-rule: var(--rule-gold-hair);
+  font-family: var(--font-body);
+}
+[data-biblioteca-theme='logos'] .editorial-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
