@@ -108,6 +108,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
         <Button
+          data-testid="bible-verse-popover-trigger"
           className="px-spacing-xs py-spacing-2xs rounded-premium-full bg-card border border-border text-premium-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {safeLabel}
