@@ -180,7 +180,7 @@ const BibliotecaPage: React.FC = () => {
             {tab === 'autores' && <PlaceholderView to={`${AppRoute.BUSCAR}?tipo=autores`} label="Explorar autores" description="Padres, Doutores, Santos e teólogos — organizados por período e tradição." />}
             {tab === 'colecoes' && <PlaceholderView to={`${AppRoute.BUSCAR}?tipo=colecoes`} label="Ver coleções" description="Coleções editoriais curadas: Patrística, Doutrina Social, Espiritualidade Clássica." />}
             {tab === 'favoritos' && <PlaceholderView to={AppRoute.FAVORITES} label="Abrir favoritos" description="Suas leituras salvas, marcadores e anotações pessoais." />}
-            {tab === 'recentes' && <PlaceholderView to={AppRoute.HISTORY} label="Ver histórico" description="Retome de onde parou nas últimas leituras." />}
+            {tab === 'recentes' && <PlaceholderView to={AppRoute.JORNADAS} label="Ver histórico" description="Retome de onde parou nas últimas leituras." />}
           </motion.section>
         </AnimatePresence>
       </div>
