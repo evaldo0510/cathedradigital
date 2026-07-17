@@ -81,11 +81,12 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         </div>
       )}
       <div className="flex-1 min-w-spacing-0">
-        <p className="font-semibold text-premium-sm text-foreground truncate">{title}</p>
+        <p className="editorial-display text-lg text-foreground truncate leading-snug">{title}</p>
         {subtitle && (
-          <p className="text-premium-xs text-muted-foreground line-clamp-spacing-2xs">{subtitle}</p>
+          <p className="font-serif italic text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{subtitle}</p>
         )}
       </div>
+
       <div className="flex items-center gap-spacing-xs flex-shrink-0">
         <RelevanceBadge score={score} size="xs" />
         {showArrow && (
