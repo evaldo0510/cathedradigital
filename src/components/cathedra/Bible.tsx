@@ -1846,45 +1846,95 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   };
                                   const meta = typeMeta[conn.type] || typeMeta.theology;
                                   return (
-                                    <motion.button
-                                      key={idx}
-                                      data-testid="nexus-connection-card"
-                                      initial={{ opacity: 0, y: 4 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      transition={{ delay: idx * 0.03 }}
-                                      aria-label={`${meta.kicker}: ${conn.label}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        console.info('[Nexus] click', {
-                                          book: selectedBook.abbr,
-                                          chapter: selectedChapter,
-                                          verse: v.number,
-                                          type: conn.type,
-                                          label: conn.label,
-                                          id: conn.id,
-                                        });
-                                        try {
-                                          window.dispatchEvent(new CustomEvent('nexus:click', {
-                                            detail: { book: selectedBook.abbr, chapter: selectedChapter, verse: v.number, ...conn }
-                                          }));
-                                        } catch {}
-                                        setExpandedConnection(conn);
-                                      }}
-                                      className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
-                                    >
-                                      <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
-                                      <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
-                                        <div className="flex items-center gap-spacing-xs.5">
-                                          <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
-                                          <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
-                                            {meta.kicker}
-                                          </span>
+                                    <Popover key={idx}>
+                                      <PopoverTrigger asChild>
+                                        <motion.button
+                                          data-testid="nexus-connection-card"
+                                          initial={{ opacity: 0, y: 4 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          transition={{ delay: idx * 0.03 }}
+                                          aria-label={`${meta.kicker}: ${conn.label}`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.info('[Nexus] click', {
+                                              book: selectedBook.abbr,
+                                              chapter: selectedChapter,
+                                              verse: v.number,
+                                              type: conn.type,
+                                              label: conn.label,
+                                              id: conn.id,
+                                            });
+                                            try {
+                                              window.dispatchEvent(new CustomEvent('nexus:click', {
+                                                detail: { book: selectedBook.abbr, chapter: selectedChapter, verse: v.number, ...conn }
+                                              }));
+                                            } catch {}
+                                            setExpandedConnection(conn);
+                                          }}
+                                          className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
+                                        >
+                                          <div className={cn("absolute left-0 top-0 bottom-0 w-[3px]", meta.stripe)} />
+                                          <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
+                                            <div className="flex items-center gap-spacing-xs.5">
+                                              <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
+                                              <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
+                                                {meta.kicker}
+                                              </span>
+                                            </div>
+                                            <span className="text-[11px] font-bold text-primary dark:text-foreground leading-tight truncate">
+                                              {conn.label}
+                                            </span>
+                                          </div>
+                                        </motion.button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        side="top"
+                                        align="center"
+                                        sideOffset={8}
+                                        collisionPadding={12}
+                                        data-testid="nexus-connection-popover"
+                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-md rounded-2xl border border-primary/10 bg-card shadow-premium"
+                                      >
+                                        <div className="space-y-spacing-sm">
+                                          <div className="flex items-start gap-spacing-xs">
+                                            <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
+                                            <div className="min-w-0">
+                                              <p className={cn("text-[9px] font-black uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
+                                              <h4 className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
+                                            </div>
+                                          </div>
+                                          <p className="text-xs font-serif italic text-primary/70 leading-relaxed">
+                                            {conn.summary}
+                                          </p>
+                                          {conn.type === 'catechism' && (
+                                            <div className="pt-spacing-sm border-t border-primary/5">
+                                              <CatechismParagraphPreview paragraphId={conn.id} />
+                                            </div>
+                                          )}
+                                          <div className="pt-spacing-sm border-t border-primary/5">
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              data-testid="nexus-popover-nav-link"
+                                              onClick={() => {
+                                                console.info('[Nexus] navigate', { from: 'bible', to: conn.type, id: conn.id });
+                                                if (conn.type === 'catechism') navigate(`/catechism?p=${conn.id}`);
+                                                else if (conn.type === 'document') navigate(`/magisterium?doc=${conn.id}`);
+                                                else if (conn.type === 'bible' || conn.type === 'cross_ref') {
+                                                  const parts = String(conn.id).split('-');
+                                                  if (parts.length >= 2) navigate(`/bible?book=${parts[0]}&ch=${parts[1]}${parts[2] ? `&v=${parts[2]}` : ''}`);
+                                                }
+                                              }}
+                                              className="w-full h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                            >
+                                              <Icons.BookOpen className="w-3.5 h-3.5 mr-spacing-xs text-secondary" />
+                                              Abrir referência
+                                            </Button>
+                                          </div>
                                         </div>
-                                        <span className="text-[11px] font-bold text-primary dark:text-foreground leading-tight truncate">
-                                          {conn.label}
-                                        </span>
-                                      </div>
-                                    </motion.button>
+                                      </PopoverContent>
+                                    </Popover>
+
                                   );
                                 })}
                               </div>
