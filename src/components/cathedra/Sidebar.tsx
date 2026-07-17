@@ -256,9 +256,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-premium transition-all">
-                      <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/70 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
-                      <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/50 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} />
+                    <button className="w-full flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all">
+                      <h3 style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: '#c9a84c' }} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
