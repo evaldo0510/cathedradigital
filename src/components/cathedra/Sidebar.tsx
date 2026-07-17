@@ -209,23 +209,31 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            {/* Mobile Header - Cinematic extension of the atmosphere */}
-            <header className="flex items-center justify-between mb-spacing-md pb-spacing-xs border-b border-primary/[0.01] dark:border-white/[0.01]">
+            {/* Mobile Header — Noir & Gold wordmark */}
+            <header className="flex items-center justify-between mb-4 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
               <div 
-                className="flex items-center gap-spacing-md cursor-pointer group outline-none" 
+                className="flex items-baseline gap-2 cursor-pointer group outline-none" 
                 onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
-                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-spacing-xs group-hover:scale-105 transition-transform duration-2000">
-                  <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} aria-hidden="true" />
-                </div>
-                <div className="space-y-spacing-3xs">
-                  <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[6.5px] font-bold uppercase text-primary/10 tracking-[0.6em]">
+                <span style={{ color: '#c9a84c', fontSize: '10px' }} aria-hidden="true">●</span>
+                <div className="flex flex-col leading-none gap-1">
+                  <h1
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontWeight: 500,
+                      fontSize: '1rem',
+                      letterSpacing: '0.18em',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  >
+                    CATHEDRA
+                  </h1>
+                  <span style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
                     Sacrum Archivum
-                  </p>
+                  </span>
                 </div>
               </div>
 
@@ -234,10 +242,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-premium-full w-spacing-xl h-spacing-xl text-primary/70 hover:text-primary hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="rounded-none w-10 h-10 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
+                style={{ border: '1px solid rgba(201,168,76,0.35)', color: '#c9a84c' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-spacing-sm h-spacing-sm" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </header>
 
