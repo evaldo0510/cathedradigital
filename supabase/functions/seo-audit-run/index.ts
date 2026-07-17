@@ -76,18 +76,24 @@ Deno.serve(async (req) => {
       try {
         const res = await fetch(url, { headers: { "User-Agent": "CathedraSEOAudit/1.0" } });
         const html = await res.text();
-        const data = extract(html);
+        const data = extract(html, url);
+        const broken = await checkLinks(data.links);
         const { findings, score } = analyze(url, data);
+        if (broken.length > 0) {
+          findings.push({ type: "broken_links", severity: broken.length > 3 ? "high" : "medium", message: `${broken.length} link(s) quebrado(s)` });
+        }
+        const weight = { high: 25, medium: 10, low: 3 } as const;
+        const adjustedScore = Math.max(0, 100 - findings.reduce((s, f) => s + weight[f.severity], 0));
         const { data: inserted, error } = await supabase.from("seo_audits").insert({
           url,
-          score,
+          score: adjustedScore,
           findings,
           meta_tags: { title: data.title, description: data.description, canonical: data.canonical, ogTitle: data.ogTitle, ogImage: data.ogImage, twitterCard: data.twitterCard, http_status: res.status },
           headings: { h1: data.h1s, h2_count: data.h2Count },
-          links: [],
+          links: { checked: data.links.length, broken },
         }).select().single();
         if (error) throw error;
-        results.push({ url, score, findings: findings.length, id: inserted.id });
+        results.push({ url, score: adjustedScore, findings: findings.length, id: inserted.id });
       } catch (err) {
         results.push({ url, error: err instanceof Error ? err.message : String(err) });
       }
