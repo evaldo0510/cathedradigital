@@ -1,16 +1,18 @@
-import type { ThemeAdapter, ThemeEntry } from '../types';
+/**
+ * ThemeAdapterMock — Fase 4A.
+ * Origem única: ThemeRegistry (Core). O adapter apenas projeta o
+ * ThemeDescriptor no formato ThemeEntry esperado pelo componente.
+ */
 
-const THEMES: ThemeEntry[] = [
-  { slug: 'eucaristia',   label: 'Eucaristia',    short: 'Fonte e cume' },
-  { slug: 'trindade',     label: 'Trindade',      short: 'Deus Uno e Trino' },
-  { slug: 'graca',        label: 'Graça',         short: 'Dom sobrenatural' },
-  { slug: 'oracao',       label: 'Oração',        short: 'Colóquio com Deus' },
-  { slug: 'escatologia',  label: 'Últimas coisas', short: 'Céu, juízo, eternidade' },
-  { slug: 'liturgia',     label: 'Liturgia',      short: 'Culto público da Igreja' },
-];
+import type { ThemeAdapter } from '../types';
+import { ThemeRegistry } from '@/core/navigation';
 
 export const ThemeAdapterMock: ThemeAdapter = {
   async getFeatured() {
-    return THEMES;
+    return ThemeRegistry.featured(6).map((t) => ({
+      slug: t.slug,
+      label: t.label,
+      short: t.short,
+    }));
   },
 };
