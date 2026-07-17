@@ -99,8 +99,60 @@ Nenhum destes aparece no Átrio, em nenhuma condição:
 | **Modo Prece ativo** | flag global | Átrio não renderiza header/nav; fundo escurece; saída única "Sair da prece" |
 | **Offline** | sem rede | Saudação + Ritual em cache; "Retomar" com dados locais; sem Nexus sugerido |
 | **Erro** | falha de fetch | Saudação + mensagem sóbria "Estamos em silêncio hoje"; link único para `/pesquisar` |
+| **E9. Continuar minha caminhada** | usuário recorrente com ao menos 1 atividade não concluída em qualquer ambiente | **Primeiro bloco visível**, acima do Ritual do Dia. Rótulo único "Continuar minha caminhada". Verbos contextuais: *Continue João 6* · *Continue o estudo "Esperança"* · *Continue a Formação "Cristologia"* · *Continue a Lectio Divina* · *Continue sua anotação* · *Continue sua oração*. Máx. 3 itens, ordem por recência × proximidade da conclusão. |
 
 Toda outra combinação é bug.
+
+### Regra do Estado 9
+
+- Só existe para usuário **recorrente autenticado**. Anônimo não vê.
+- Substitui o antigo bloco "Retomar" quando ativo — não convivem.
+- Cada item leva direto ao ponto exato (parágrafo do leitor, passo da jornada, campo do diário aberto).
+- Se todas as atividades estão concluídas, o bloco some (não vira "Comece algo novo" — isso já é o Ritual do Dia).
+- Origem dos dados: mesmo `user_events` da Continuidade (§11), enriquecido com tipo de atividade e progresso.
+
+---
+
+## 6b. Personalização por perfil (missão, não estética)
+
+O Átrio **muda de missão** conforme o perfil declarado do usuário. O **layout permanece o mesmo**; muda apenas a **ordem de prioridade dos blocos** (§6c) e os rótulos das CTAs.
+
+| Perfil | Sinal técnico | Blocos priorizados (topo → base) |
+|---|---|---|
+| **Visitante** (E1) | sem sessão | Conheça o Cathedra · Comece um estudo · Liturgia do dia |
+| **Recorrente** | sessão + histórico | Continuar minha caminhada (E9) · Recomendações · Pesquisa |
+| **Catequista** | perfil `catequista` | Preparar encontro · Biblioteca · Formação |
+| **Sacerdote** | perfil `sacerdote` | Liturgia · Magistério · Homilia · Código Canônico |
+| **Seminarista** | perfil `seminarista` | Estudos · Leituras · Nexus |
+
+Regras:
+
+- Perfil é declarado em `Minha Jornada > Perfil`. Enquanto não declarado, cai em **Recorrente** (autenticado) ou **Visitante** (anônimo).
+- Nunca há perfil "detectado por comportamento" nesta sprint. Somente auto-declarado.
+- Zero conteúdo removido por perfil — apenas reordenado. Todo bloco continua acessível via bottom-nav.
+- Perfis Catequista/Sacerdote/Seminarista **entram como stubs de ordem** na 2.0.1; a superfície real (ex.: "Preparar encontro") é entregue nas sprints dos respectivos ambientes.
+
+---
+
+## 6c. Prioridade dos blocos (contrato de ordenação)
+
+Toda decisão futura sobre "onde entra o novo recurso X no Átrio" consulta esta tabela. Nada entra fora dela.
+
+| Prioridade | Bloco | Exige |
+|---|---|---|
+| **P0** | Continuar minha caminhada (E9) | sessão + histórico |
+| **P1** | Pesquisa Universal (⌘K) | sempre visível (header) |
+| **P2** | Entrada por Tema | sempre visível |
+| **P3** | Liturgia do Dia (Ritual + Ofício + Santo) | sempre visível |
+| **P4** | Cinco Ambientes (bottom-nav) | sempre visível |
+| **P5** | Recomendações (Nexus sugere) | opt-in global respeitado |
+| **P6** | Novidades / avisos institucionais | apenas quando houver, máx. 1 por sessão |
+
+Regras de aplicação:
+
+- A ordem visual **é exatamente** P0 → P6 quando todos os blocos aplicáveis estão presentes.
+- Perfil (§6b) só **reordena entre P2, P3 e P5** — nunca altera P0, P1, P4.
+- Novo recurso proposto que não caiba em nenhuma prioridade **não entra no Átrio** — vai para o ambiente correspondente.
 
 ---
 
