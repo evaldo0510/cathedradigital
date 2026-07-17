@@ -104,8 +104,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
     'text-muted-foreground hover:text-primary',
     'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
     size === 'sm'
-      ? 'px-2.5 py-1 text-[11px] min-h-[36px] md:min-h-0'
-      : 'px-3 py-1.5 text-xs min-h-[44px] md:min-h-0'
+      ? 'px-2.5 py-1 text-[11px] min-h-[44px]'
+      : 'px-3 py-1.5 text-xs min-h-[44px]'
   );
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
