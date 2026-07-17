@@ -51,9 +51,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
       >
         <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
 
-          {/* Logo Section */}
+          {/* Logo Section — assinatura editorial Playfair (Sprint Visual 3.0) */}
           <div 
-            className="flex items-center gap-spacing-xs md:gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-premium-full" 
+            className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-premium-full" 
             role="link" 
             aria-label="Ir para a página inicial"
             tabIndex={0} 
@@ -64,13 +64,24 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               window.scrollTo({ top: 0, behavior: 'instant' });
             }}
           >
-            <Icons.Logo className="w-spacing-lg h-spacing-lg md:w-spacing-lg md:h-spacing-lg transition-all group-hover:scale-110 opacity-30 group-hover:opacity-60" variant={isDark ? "light" : "dark"} aria-hidden="true" />
-            <div className="flex flex-col items-start min-w-spacing-0">
-              <span aria-hidden="true" className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/70 leading-none transition-all group-hover:text-primary group-hover:tracking-[0.8em] duration-700">
-                Cathedra
-              </span>
-            </div>
+            <span
+              aria-hidden="true"
+              className="inline-block h-[6px] w-[6px] rounded-full transition-all group-hover:h-[8px] group-hover:w-[8px]"
+              style={{ background: '#c9a84c' }}
+            />
+            <span
+              className="leading-none text-primary/90 group-hover:text-primary transition-colors"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 500,
+                fontSize: 'clamp(1.05rem, 2vw, 1.35rem)',
+                letterSpacing: '0.18em',
+              }}
+            >
+              CATHEDRA
+            </span>
           </div>
+
 
           {/* Breadcrumbs for desktop */}
           {!isDashboard && (
@@ -148,11 +159,14 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   ) : (
                     <Button 
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.LOGIN)} 
-                      className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-premium-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
+                      variant="ghost"
+                      className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-none border text-[9px] md:text-[10px] uppercase tracking-[0.28em] md:tracking-[0.32em] transition-all bg-transparent hover:bg-[#c9a84c] hover:text-[#0a0a0a]"
+                      style={{ borderColor: '#c9a84c', color: '#c9a84c', fontFamily: 'Inter, sans-serif' }}
                     >
                       {t('enter')}
                     </Button>
                   )}
+
                 </div>
               </div>
             </div>
