@@ -29,6 +29,11 @@ export interface SearchResultCardProps {
   className?: string;
   /** Animation stagger index (used for staggered entry). */
   index?: number;
+  /**
+   * Slot para ações contextuais (ex.: <PassageActions />).
+   * Renderizado como rodapé do card, isolado do onClick principal.
+   */
+  actions?: React.ReactNode;
 }
 
 
@@ -42,6 +47,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
   showArrow = true,
   className,
   index = 0,
+  actions,
 }, ref) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if ((e.key === 'Enter' || e.key === ' ') && onClick) {
@@ -94,6 +100,13 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         )}
       </div>
     </div>
+    {actions && (
+      <div className="px-spacing-sm pb-spacing-sm pt-0 -mt-1 border-t border-border/10">
+        <div className="pt-spacing-sm">
+          {actions}
+        </div>
+      </div>
+    )}
     </CathedraCard>
   );
 });

@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
 import SearchResultCard from './SearchResultCard';
+import PassageActions from '@/components/shared/PassageActions';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
@@ -253,6 +254,14 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(AppRoute.GLOSSARY)}
                   index={i}
+                  actions={
+                    <PassageActions
+                      text={g.definition ?? ''}
+                      reference={g.term}
+                      url={`${window.location.origin}/glossario#${encodeURIComponent(g.term)}`}
+                      title={`Cathedra — ${g.term}`}
+                    />
+                  }
                 />
               ))}
               </AnimatePresence>
@@ -271,6 +280,14 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   icon={<Icons.MessageCircle className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(AppRoute.COMMUNITY)}
                   index={i}
+                  actions={
+                    <PassageActions
+                      text={p.content}
+                      reference={p.title || 'Discussão da comunidade'}
+                      url={`${window.location.origin}/comunidade#${p.id}`}
+                      title={`Cathedra — ${p.title || 'Comunidade'}`}
+                    />
+                  }
                 />
               ))}
               </AnimatePresence>
