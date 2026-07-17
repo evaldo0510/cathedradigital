@@ -414,18 +414,21 @@ Deno.serve(async (req) => {
       return json(result, result.ok ? 200 : 422);
     }
 
+    const selection = normalizeSelection(rawParams.selection);
+
     if (action === 'dry_run') {
-      const result = await dryRun(admin, translation);
-      return json(result);
+      const result = await dryRun(admin, translation, selection);
+      return json({ ...result, selection_applied: !!selection });
     }
 
     if (action === 'preview') {
-      const plan = await computeMissing(admin, translation);
+      const plan = await computeMissing(admin, translation, selection);
       return json({
         translation,
         books_missing: plan.length,
         chapters_missing: plan.reduce((s, p) => s + p.chapters.length, 0),
-        detail: plan.map((p) => ({ abbrev: p.canon.abbr, name: p.canon.name, chapters: p.chapters.length })),
+        detail: plan.map((p) => ({ abbrev: p.canon.abbr, name: p.canon.name, chapters: p.chapters.length, chapter_numbers: p.chapters })),
+        selection_applied: !!selection,
       });
     }
 
