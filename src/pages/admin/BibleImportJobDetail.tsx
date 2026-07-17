@@ -106,11 +106,35 @@ export default function BibleImportJobDetail() {
           <h1 className="text-2xl font-serif mt-1">Job <span className="font-mono">{job.id.slice(0, 8)}</span></h1>
           <p className="text-sm text-muted-foreground">Criado em {new Date(job.created_at).toLocaleString("pt-BR")}</p>
         </div>
-        <Button onClick={retry} disabled={!canRetry || retrying}>
-          {retrying
-            ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Reexecutando…</>
-            : <><RefreshCw className="w-4 h-4 mr-2" /> Reexecutar (recalcula pendências)</>}
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" onClick={() => {
+            downloadBlob(`bible-import-job-${job.id.slice(0, 8)}.json`, "application/json",
+              JSON.stringify({ generated_at: new Date().toISOString(), job }, null, 2));
+            toast.success("JSON exportado");
+          }}>
+            <Download className="w-4 h-4 mr-2" /> JSON
+          </Button>
+          <Button variant="outline" onClick={() => {
+            const rows = (Array.isArray(job.audit_log) ? job.audit_log : []).map((e: any) => ({
+              job_id: job.id, status: job.status, translation: (job as any)?.translation ?? "",
+              at: e.at ?? "", event: e.event ?? "book",
+              abbrev: e.abbrev ?? "", name: e.name ?? "",
+              chapters: e.chapters ?? "", chapters_written: e.chapters_written ?? "",
+              verses: e.verses ?? "", duration_ms: e.duration_ms ?? "",
+              retry_job_id: e.event === "retry_of" ? e.job_id : "",
+            }));
+            const csv = toCSV(rows);
+            downloadBlob(`bible-import-job-${job.id.slice(0, 8)}-audit.csv`, "text/csv;charset=utf-8", csv);
+            toast.success(`${rows.length} etapas exportadas`);
+          }} disabled={!Array.isArray(job.audit_log) || job.audit_log.length === 0}>
+            <Download className="w-4 h-4 mr-2" /> CSV
+          </Button>
+          <Button onClick={retry} disabled={!canRetry || retrying}>
+            {retrying
+              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Reexecutando…</>
+              : <><RefreshCw className="w-4 h-4 mr-2" /> Reexecutar (recalcula pendências)</>}
+          </Button>
+        </div>
       </header>
 
       <Card>
