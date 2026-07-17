@@ -66,10 +66,17 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
         <a
           href={`/catechism?p=${pNum}`}
           data-testid="catechism-preview-empty-link"
-          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
+          data-cic-paragraph={pNum}
+          data-cic-origin="bible-preview-empty"
+          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary rounded-sm"
+          onClick={(e) => {
+            const href = `/catechism?p=${pNum}`;
+            // Instrumentação: origem + destino do link do CIC
+            console.info('[CIC link click]', { origin: 'Bible/CatechismPreview', paragraph: pNum, href, from: window.location.pathname + window.location.search });
+            e.preventDefault();
+            navigate(href);
+          }}
         >
-          Abrir §{pNum} no Catecismo →
-        </a>
       </div>
     );
   }
