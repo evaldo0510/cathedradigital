@@ -175,58 +175,8 @@ const Bible: React.FC = () => {
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
   const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const nexusSheetPanelRef = useRef<HTMLDivElement>(null);
-  const nexusSheetTriggerRef = useRef<HTMLElement | null>(null);
 
-  // A11y do bottom-sheet Nexus: Escape fecha, foco vai pro painel, Tab fica preso.
-  useEffect(() => {
-    if (!expandedConnection) return;
-    const panel = nexusSheetPanelRef.current;
-    if (!panel) return;
 
-    nexusSheetTriggerRef.current = (document.activeElement as HTMLElement) ?? null;
-
-    const focusables = () =>
-      Array.from(
-        panel.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => el.offsetParent !== null);
-
-    const first = focusables()[0];
-    (first ?? panel).focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setExpandedConnection(null);
-        return;
-      }
-      if (e.key === 'Tab') {
-        const nodes = focusables();
-        if (nodes.length === 0) {
-          e.preventDefault();
-          panel.focus();
-          return;
-        }
-        const firstEl = nodes[0];
-        const lastEl = nodes[nodes.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-        if (e.shiftKey && (active === firstEl || !panel.contains(active))) {
-          e.preventDefault();
-          lastEl.focus();
-        } else if (!e.shiftKey && (active === lastEl || !panel.contains(active))) {
-          e.preventDefault();
-          firstEl.focus();
-        }
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      nexusSheetTriggerRef.current?.focus?.();
-    };
-  }, [expandedConnection]);
 
 
 
