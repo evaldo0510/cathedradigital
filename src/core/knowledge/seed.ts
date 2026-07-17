@@ -112,3 +112,44 @@ export const SEED_RELATIONS: KnowledgeRelation[] = [
   { from: 'theme:eucaristia', to: 'theme:graca', kind: 'related-to', weight: 0.5 },
   { from: 'father:santo-agostinho', to: 'saint:santa-teresinha', kind: 'related-to', weight: 0.3 },
 ];
+
+/**
+ * Coleções canônicas seed (Sprint 2.0.4A).
+ * Agrupamentos curados; coexistem com relações do grafo.
+ */
+export const SEED_COLLECTIONS: SeedCollection[] = [
+  {
+    id: 'collection:enciclicas',
+    label: 'Encíclicas',
+    summary: 'Documentos maiores do Magistério pontifício.',
+    members: [
+      'magisterium:spe-salvi',
+      'magisterium:ecclesia-de-eucharistia',
+    ],
+  },
+  {
+    id: 'collection:evangelhos',
+    label: 'Evangelhos',
+    summary: 'Os quatro Evangelhos canônicos.',
+    members: [
+      'bible:joao:6',
+    ],
+  },
+  {
+    id: 'collection:padres-latinos',
+    label: 'Padres Latinos',
+    summary: 'Padres da Igreja de tradição latina.',
+    members: [
+      'father:santo-agostinho',
+    ],
+  },
+  {
+    id: 'collection:doutores-carmelitas',
+    label: 'Doutores Carmelitas',
+    summary: 'Santos doutores da tradição carmelita.',
+    members: [
+      'saint:santa-teresa-de-avila',
+      'saint:santa-teresinha',
+    ],
+  },
+];
