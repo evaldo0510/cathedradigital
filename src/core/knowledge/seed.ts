@@ -7,6 +7,7 @@
  */
 
 import type { KnowledgeNode, KnowledgeRelation } from './types';
+import type { KnowledgeCollectionDescriptor } from './KnowledgeCollection';
 
 export const SEED_NODES: KnowledgeNode[] = [
   // Temas
