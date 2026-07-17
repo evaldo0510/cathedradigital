@@ -29,7 +29,7 @@ interface Validation {
 }
 interface DryRun {
   dry_run: true; translation: string; books_missing: number; chapters_missing_total: number;
-  samples: Array<{ abbrev: string; name: string; chapters_missing: number; sample_chapter: number; sample_verses: number; first_verse: string | null; error?: string }>;
+  samples: Array<{ abbrev: string; name: string; chapters_missing: number; chapter_numbers?: number[]; sample_chapter: number; sample_verses: number; first_verse: string | null; error?: string }>;
 }
 
 async function invoke(action: string, body: Record<string, unknown> = {}) {
