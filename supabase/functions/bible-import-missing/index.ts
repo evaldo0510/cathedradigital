@@ -441,14 +441,19 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'list_jobs') {
-      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 100);
+      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 200);
       const { data, error } = await admin
         .from('bible_import_jobs')
-        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification, audit_log')
+        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification, audit_log, bible_translation_sources(code, translation)')
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) return json({ error: error.message }, 500);
-      return json({ jobs: data ?? [] });
+      const jobs = (data ?? []).map((j: any) => ({
+        ...j,
+        source_code: j?.bible_translation_sources?.code ?? null,
+        translation: j?.bible_translation_sources?.translation ?? null,
+      }));
+      return json({ jobs });
     }
 
     if (action === 'start') {
