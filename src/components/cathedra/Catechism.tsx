@@ -281,16 +281,20 @@ const LazyParagraph: React.FC<{
         <div className="flex items-center gap-spacing-sm">
           <span id={`heading-p${p}`} className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
           <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-            <Button 
-              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} 
-              className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })}
+              className="rounded-premium-full hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
               aria-label={`${isFavorite('catechism', `CIC §${p}`) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'} - Parágrafo ${p}`}
             >
               <Icons.Heart className={`w-spacing-sm h-spacing-sm transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
             </Button>
-            <Button 
-              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} 
-              className="p-spacing-2xs rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))}
+              className="rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
               aria-label={`Perguntar à Logos IA sobre o Parágrafo ${p}`}
             >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
