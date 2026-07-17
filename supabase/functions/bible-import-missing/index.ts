@@ -476,18 +476,23 @@ Deno.serve(async (req) => {
       }
 
       const sourceId = await ensureTranslation(admin, translation);
+      const initialAudit: any[] = [];
+      if (retryOf) initialAudit.push({ event: 'retry_of', job_id: retryOf, at: new Date().toISOString() });
+      if (selection) initialAudit.push({ event: 'selection', selection, at: new Date().toISOString() });
       const { data: job, error } = await admin.from('bible_import_jobs').insert({
         source_id: sourceId,
         status: 'queued',
         created_by: userId,
-        message: retryOf ? `Reexecução do job ${retryOf.slice(0, 8)}` : 'Aguardando início…',
-        audit_log: retryOf ? [{ event: 'retry_of', job_id: retryOf, at: new Date().toISOString() }] : [],
+        message: retryOf
+          ? `Reexecução do job ${retryOf.slice(0, 8)}`
+          : selection ? `Seleção manual: ${selection.length} livros` : 'Aguardando início…',
+        audit_log: initialAudit,
       }).select('id').single();
       if (error) return json({ error: error.message }, 500);
 
       // @ts-ignore EdgeRuntime é fornecido pelo runtime Deno Deploy
-      EdgeRuntime.waitUntil(runImport(admin, job.id, sourceId, translation));
-      return json({ ok: true, job_id: job.id, retry_of: retryOf });
+      EdgeRuntime.waitUntil(runImport(admin, job.id, sourceId, translation, selection));
+      return json({ ok: true, job_id: job.id, retry_of: retryOf, selection_applied: !!selection });
     }
 
     return json({ error: 'unknown_action' }, 400);
