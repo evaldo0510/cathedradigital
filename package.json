@@ -61,6 +61,8 @@
     "test:atrium-history": "playwright test tests/e2e/atrium-history.spec.ts",
     "test:atrium-footer": "playwright test tests/e2e/atrium-footer.spec.ts",
     "test:atrium-suite": "playwright test tests/e2e/atrium-menu-navigation.spec.ts tests/e2e/atrium-landmarks-a11y.spec.ts tests/e2e/atrium-history.spec.ts tests/e2e/atrium-footer.spec.ts --reporter=list,html,json",
+    "test:atrium-menu-keyboard": "playwright test tests/e2e/atrium-menu-keyboard.spec.ts",
+    "test:bible-internal-a11y": "playwright test tests/e2e/bible-internal-a11y.spec.ts",
 
 
 
