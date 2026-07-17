@@ -223,6 +223,7 @@ export default function BibleImportJobs() {
                           {j.id.slice(0, 8)}
                         </Link>
                       </TableCell>
+                      <TableCell className="text-xs">{j.translation ?? "—"}</TableCell>
                       <TableCell><Badge variant={STATUS_VARIANT[j.status] ?? "outline"}>{j.status}</Badge></TableCell>
                       <TableCell className="text-xs">{j.progress}/{j.total}</TableCell>
                       <TableCell className="text-xs text-muted-foreground">{formatDuration(j.started_at, j.finished_at)}</TableCell>
