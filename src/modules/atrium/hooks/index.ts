@@ -1,17 +1,70 @@
 /**
- * Hooks do Ambiente Átrio.
- * Fase 1: apenas o esqueleto. Estados reais e integração vêm nas Fases 4 e 6.
+ * Hooks internos do Ambiente Átrio.
+ *
+ * Regra: componentes-bloco chamam apenas estes hooks.
+ * Nada de React Query, fetch ou Supabase — quem conversa com o mundo é o adapter.
  */
 
-import { useMemo } from 'react';
-import type { AtriumSnapshot } from '../types';
+import { useEffect, useState } from 'react';
+import { atriumAdapters } from '../adapters';
+import type { AtriumProfile } from '../types';
+import type {
+  AnnouncementItem,
+  AtriumUser,
+  RecommendationItem,
+  SearchSuggestion,
+  ThemeEntry,
+} from '../adapters/types';
+import type { LiturgicalContext, ResumeItem } from '../types';
 
-/**
- * Fonte única de estado para o AtriumPage.
- * Fase 1: retorna null (nada renderizado ainda além do esqueleto).
- * Fase 4: retornará snapshot mockado por estado.
- * Fase 6: consumirá `AtriumService`.
- */
-export function useAtriumState(): AtriumSnapshot | null {
-  return useMemo(() => null, []);
+function useAsync<T>(loader: () => Promise<T>, initial: T, deps: unknown[] = []): T {
+  const [value, setValue] = useState<T>(initial);
+  useEffect(() => {
+    let alive = true;
+    loader().then((v) => { if (alive) setValue(v); }).catch(() => {});
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return value;
 }
+
+export function useAtriumProfile(): AtriumUser {
+  return useAsync<AtriumUser>(
+    () => atriumAdapters.profile.getCurrent(),
+    { profile: 'recurrent', isAuthenticated: true },
+  );
+}
+
+export function useResume(): ResumeItem[] {
+  return useAsync(() => atriumAdapters.journey.getResume(), []);
+}
+
+export function useSearchSuggestions(): SearchSuggestion[] {
+  return useAsync(() => atriumAdapters.search.getSuggestions(), []);
+}
+
+export function useFeaturedThemes(): ThemeEntry[] {
+  return useAsync(() => atriumAdapters.theme.getFeatured(), []);
+}
+
+export function useLiturgyToday(): LiturgicalContext | null {
+  return useAsync<LiturgicalContext | null>(
+    () => atriumAdapters.liturgy.getToday(),
+    null,
+  );
+}
+
+export function useRecommendations(profile: AtriumProfile): RecommendationItem[] {
+  return useAsync(
+    () => atriumAdapters.recommendation.getForProfile(profile),
+    [],
+    [profile],
+  );
+}
+
+export function useAnnouncements(): AnnouncementItem[] {
+  return useAsync(() => atriumAdapters.announcement.getRecent(), []);
+}
+
+// Placeholder da Fase 1 mantido para compat:
+export function useAtriumState() { return null; }
