@@ -1604,7 +1604,32 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               <div className="w-12 h-px bg-secondary/20 mx-auto" />
             </header>
 
-            <div className="grid grid-cols-4 gap-spacing-sm">
+            <div
+              className="grid grid-cols-4 gap-spacing-sm"
+              data-testid="chapter-grid"
+              role="grid"
+              aria-label={`Capítulos de ${selectedBook.name}`}
+              onKeyDown={(e) => {
+                const keys = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+                if (!keys.includes(e.key)) return;
+                const target = e.target as HTMLElement;
+                if (!target.matches('[data-chapter-btn]')) return;
+                e.preventDefault();
+                const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[data-chapter-btn]'));
+                const idx = btns.indexOf(target as HTMLButtonElement);
+                if (idx < 0) return;
+                const cols = 4;
+                let next = idx;
+                if (e.key === 'ArrowRight') next = Math.min(idx + 1, btns.length - 1);
+                else if (e.key === 'ArrowLeft') next = Math.max(idx - 1, 0);
+                else if (e.key === 'ArrowDown') next = Math.min(idx + cols, btns.length - 1);
+                else if (e.key === 'ArrowUp') next = Math.max(idx - cols, 0);
+                else if (e.key === 'Home') next = 0;
+                else if (e.key === 'End') next = btns.length - 1;
+                btns[next]?.focus();
+              }}
+            >
+
               {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch) => {
                 const missing = isChapterMissing(selectedBook.abbr, ch);
                 return (
