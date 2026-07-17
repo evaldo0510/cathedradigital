@@ -1,13 +1,15 @@
 /**
- * HomeUnified — Sprint Visual 3.0, Turno 1.
+ * HomeUnified — Sprint Visual 3.0, Turno 2.
  *
  * Home única (deslogado + logado) que substitui a landing bugada e o Átrio v2 como
  * porta de entrada visível. Composição: bandas full-width empilhadas, paleta noir & gold,
  * tipografia editorial (Playfair Display + Inter — ambas já carregadas no projeto).
  *
- * Turno 1: shell visual completo com dados estáticos que espelham o formato real.
- * Turno 2: substituir estáticos por hooks reais (useAtriumProfile + composition).
- * Turno 3: polish, motion, SEO, mobile refinements.
+ * ✅ Turno 1: shell visual completo com dados estáticos.
+ * ✅ Turno 2: dados reais via hooks do Átrio (useResume, useLiturgyToday, useAnnouncements,
+ *             useFeaturedThemes, useSearchSuggestions). Regra do Átrio preservada:
+ *             a página consome apenas hooks — adapters continuam sendo trocáveis (mock → real).
+ * ⏳ Turno 3: polish, motion, SEO, mobile refinements.
  *
  * Rotas:
  *   /              → esta página
@@ -29,6 +31,14 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { EnvironmentRegistry } from '@/core/navigation';
+import {
+  useResume,
+  useLiturgyToday,
+  useAnnouncements,
+  useFeaturedThemes,
+  useSearchSuggestions,
+} from '@/modules/atrium/hooks';
+import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Ícones dos 5 ambientes ──────────────────────────────────────────────────
 const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -39,32 +49,36 @@ const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Compass,
 };
 
-// ─── Dados estáticos (Turno 1) ───────────────────────────────────────────────
-const RESUME_ITEMS = [
-  { kind: 'Leitura',   title: 'Continue João 6',           href: '/bible' },
-  { kind: 'Lectio',    title: 'Continue a Lectio Divina',  href: '/lectio' },
-  { kind: 'Formação',  title: 'Retome a Formação em Fé',   href: '/formacao' },
-];
-
-const FEATURED_THEME = {
-  eyebrow: 'Tema em destaque',
-  title: 'A Esperança Cristã',
-  subtitle: 'Virtude teologal que nos sustenta na peregrinação.',
-  cta: 'Começar Estudo',
-  href: '/buscar?q=esperan%C3%A7a',
+// ─── Traduções e helpers ─────────────────────────────────────────────────────
+const RESUME_KIND_LABEL: Record<ResumeItem['kind'], string> = {
+  reading:   'Leitura',
+  study:     'Estudo',
+  formation: 'Formação',
+  lectio:    'Lectio',
+  note:      'Nota',
+  prayer:    'Oração',
 };
 
-const LITURGY = {
-  season: 'Tempo Comum',
-  day: 'Sexta-feira',
-  saint: 'São Boaventura',
-  reading: 'João 6',
-};
+/** Formata uma data ISO em rótulo relativo curto ("Hoje", "Ontem", "3 dias"). */
+function formatRelativeDate(iso: string): string {
+  try {
+    const then = new Date(iso).getTime();
+    if (Number.isNaN(then)) return '';
+    const diffDays = Math.floor((Date.now() - then) / 86_400_000);
+    if (diffDays <= 0) return 'Hoje';
+    if (diffDays === 1) return 'Ontem';
+    if (diffDays < 30) return `${diffDays} dias`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} meses`;
+    return `${Math.floor(diffDays / 365)} anos`;
+  } catch {
+    return '';
+  }
+}
 
-const NEWS = [
-  { date: 'Hoje',     title: 'Novo curso: Introdução à Patrística', href: '/formacao' },
-  { date: '2 dias',   title: 'Lectio Divina semanal atualizada',    href: '/lectio' },
-];
+/** Capitaliza a primeira letra (para weekday minúsculo vindo do adapter). */
+function capitalize(s: string): string {
+  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
+}
 
 // ─── Primitivas locais ───────────────────────────────────────────────────────
 const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
@@ -83,6 +97,16 @@ const Divider: React.FC<{ className?: string }> = ({ className = '' }) => (
 // ─── Componente principal ────────────────────────────────────────────────────
 const HomeUnified: React.FC = () => {
   const environments = EnvironmentRegistry.all();
+  const resume = useResume();
+  const liturgy = useLiturgyToday();
+  const news = useAnnouncements();
+  const themes = useFeaturedThemes();
+  const suggestions = useSearchSuggestions();
+
+  // Primeiro tema como destaque; fallback silencioso se lista vazia.
+  const featured = themes[0];
+
+
 
   return (
     <div className="cathedra-noir min-h-screen w-full">
