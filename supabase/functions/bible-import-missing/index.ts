@@ -79,25 +79,6 @@ async function ensureTranslation(admin: Admin, translation: string): Promise<str
   return data.id as string;
 }
 
-type Selection = Array<{ abbrev: string; chapters?: number[] }>;
-
-function normalizeSelection(input: unknown): Selection | null {
-  if (!Array.isArray(input) || input.length === 0) return null;
-  const out: Selection = [];
-  for (const it of input) {
-    if (!it || typeof it !== 'object') continue;
-    const abbrev = String((it as any).abbrev ?? '').trim();
-    if (!abbrev) continue;
-    const rawCh = (it as any).chapters;
-    let chapters: number[] | undefined;
-    if (Array.isArray(rawCh)) {
-      chapters = rawCh.map((n) => Number(n)).filter((n) => Number.isInteger(n) && n > 0);
-      if (chapters.length === 0) chapters = undefined;
-    }
-    out.push({ abbrev, chapters });
-  }
-  return out.length > 0 ? out : null;
-}
 
 async function computeMissing(admin: Admin, translation: string, selection: Selection | null = null) {
   const bolls = await fetchBollsBooks(translation);
