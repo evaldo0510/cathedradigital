@@ -132,9 +132,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[8px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
+        "text-[8px] md:text-[9.5px] font-medium uppercase tracking-[0.28em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
-        isActive ? 'text-primary font-bold' : 'text-muted-foreground/40 font-medium'
+        isActive ? 'text-[#c9a84c] font-semibold' : 'text-muted-foreground/40'
       )}
     >
       {label}
@@ -144,7 +144,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <motion.div 
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
-        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-primary rounded-premium-full z-10" 
+        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-[#c9a84c] rounded-premium-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
