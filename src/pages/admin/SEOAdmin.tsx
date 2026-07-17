@@ -98,6 +98,29 @@ export default function SEOAdmin() {
       .slice(0, 15);
   }, [audits]);
 
+  const checklist = useMemo(() => {
+    const byUrl = new Map<string, AuditRow>();
+    for (const a of audits) if (!byUrl.has(a.url)) byUrl.set(a.url, a);
+    return [...byUrl.values()].map(a => {
+      const t = a.meta_tags?.title || "";
+      const d = a.meta_tags?.description || "";
+      const h1 = a.headings?.h1 || [];
+      const canonical = a.meta_tags?.canonical || "";
+      const broken = a.links?.broken || [];
+      const checks = {
+        title: !!t && t.length >= 20 && t.length <= 65,
+        description: !!d && d.length >= 50 && d.length <= 165,
+        heading: h1.length === 1,
+        canonical: !!canonical,
+        links: broken.length === 0,
+      };
+      const failed = Object.values(checks).filter(v => !v).length;
+      return { row: a, checks, failed, broken };
+    }).sort((a, b) => b.failed - a.failed);
+  }, [audits]);
+
+
+
   const runAudit = async () => {
     setRunning(true);
     try {
