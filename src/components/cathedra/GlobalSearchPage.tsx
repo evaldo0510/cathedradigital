@@ -89,9 +89,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   return (
     <ContemplativeLayout
-      subtitle="O Verbo de Deus"
-      title="Logos IA"
-      maxW="max-w-spacing-4xl"
+      maxW="max-w-4xl w-full"
     >
       <SEOHead 
         title="Logos IA | Sabedoria Teológica e Espiritual" 
@@ -106,18 +104,45 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <div ref={ref} className="space-y-spacing-md md:space-y-spacing-2xl">
         <motion.div 
           className={cn(
-            "text-center space-y-spacing-xs md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
+            "text-center space-y-spacing-sm md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
             hasQuery && "hidden md:block"
           )} 
           initial={{ opacity: 0, y: -10 }} 
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="w-spacing-xl h-spacing-xl md:w-spacing-3xl md:h-spacing-3xl rounded-[1rem] md:rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
-            <Icons.Search className="w-spacing-sm h-spacing-sm md:w-spacing-xl md:h-spacing-xl text-white" />
+          <div className="flex items-center justify-center gap-3" aria-hidden="true">
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+            <span
+              className="text-[9px] md:text-[10px] uppercase"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+            >
+              Logos
+            </span>
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
           </div>
-          <h2 className="text-premium-xl md:text-premium-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
-          <p className="text-muted-foreground font-serif italic text-premium-sm md:text-premium-lg max-w-spacing-lg mx-auto leading-relaxed hidden md:block">
-            "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
+          <h2
+            className="leading-none"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 500,
+              fontSize: 'clamp(2rem, 6vw, 3.75rem)',
+              letterSpacing: '0.02em',
+            }}
+          >
+            Logos<span style={{ color: '#c9a84c' }}>.</span> IA
+          </h2>
+          <p
+            className="mx-auto hidden md:block"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: 'italic',
+              fontSize: '1.05rem',
+              color: 'hsl(var(--muted-foreground))',
+              maxWidth: '42ch',
+              lineHeight: 1.6,
+            }}
+          >
+            "No princípio era o Verbo." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
 
@@ -125,14 +150,25 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none mb-spacing-md">
           <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium space-y-spacing-xs md:space-y-spacing-xl">
              <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
-                <div className="flex items-center gap-spacing-sm">
-                   <div className="w-spacing-lg h-spacing-lg md:w-spacing-xl md:h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
-                      <Icons.Sparkles className="w-spacing-sm h-spacing-sm md:w-spacing-md md:h-spacing-md text-primary" />
-                   </div>
-                   <h2 className="text-[10px] md:text-premium-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                <div className="flex items-center gap-2">
+                   <span
+                     className="text-[9px] md:text-[10px] uppercase"
+                     style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+                   >
+                     Conversa com Logos
+                   </span>
                 </div>
-                <p className="text-[11px] md:text-premium-sm text-muted-foreground leading-relaxed hidden sm:block">
-                  Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
+                <p
+                  className="hidden sm:block"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontStyle: 'italic',
+                    fontSize: '0.95rem',
+                    color: 'hsl(var(--muted-foreground))',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Logos é o seu assistente teológico. Pergunte sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
                 </p>
              </div>
              
@@ -154,11 +190,14 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           style={{ minHeight: '50vh' }}
           id="search-results-container"
         >
-          <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
-            <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
-              {anyPending ? 'Buscando Sabedoria...' : 'Resultados da Pesquisa'}
-            </h2>
-            <div className="h-px flex-1 bg-border/30" />
+          <div className="flex items-center gap-3 md:gap-5">
+            <span
+              className="whitespace-nowrap uppercase text-[9px] md:text-[10px]"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+            >
+              {anyPending ? 'Buscando sabedoria' : 'Resultados'}
+            </span>
+            <div className="h-px flex-1" style={{ backgroundColor: '#c9a84c', opacity: 0.35 }} />
           </div>
 
         {anyPending && (
@@ -180,13 +219,26 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
-            className="text-center py-spacing-2xl space-y-spacing-md"
+            className="text-center py-spacing-2xl space-y-4"
           >
-            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto text-muted-foreground opacity-20" />
-            <div className="space-y-spacing-xs">
-              <p className="text-premium-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
-              <p className="text-premium-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
-            </div>
+            <span
+              className="block mx-auto"
+              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              aria-hidden="true"
+            />
+            <p
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '1.35rem',
+                color: 'hsl(var(--foreground))',
+              }}
+            >
+              Nenhum resultado encontrado.
+            </p>
+            <p className="text-premium-sm text-muted-foreground/70">
+              Tente termos mais genéricos ou verifique a ortografia.
+            </p>
           </motion.div>
         )}
 
@@ -300,9 +352,22 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </div>
 
         {!hasQuery && (
-          <div className="text-center py-spacing-2xl text-muted-foreground">
-            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto opacity-20 mb-spacing-md" />
-            <p className="text-premium-sm">Digite pelo menos 2 caracteres para buscar</p>
+          <div className="text-center py-spacing-2xl space-y-4">
+            <span
+              className="block mx-auto"
+              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              aria-hidden="true"
+            />
+            <p
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '1.05rem',
+                color: 'hsl(var(--muted-foreground))',
+              }}
+            >
+              Digite ao menos 2 caracteres para começar.
+            </p>
           </div>
         )}
       </div>
