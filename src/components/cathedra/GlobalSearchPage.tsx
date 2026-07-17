@@ -159,14 +159,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           id="search-results-container"
         >
           <div className="flex items-center gap-3 md:gap-5">
-            <span
-              className="whitespace-nowrap uppercase text-[9px] md:text-[10px]"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-            >
+            <span className="editorial-meta text-secondary whitespace-nowrap">
               {anyPending ? 'Buscando sabedoria' : 'Resultados'}
             </span>
-            <div className="h-px flex-1" style={{ backgroundColor: '#c9a84c', opacity: 0.35 }} />
+            <div className="h-px flex-1 bg-secondary/35" />
           </div>
+
+
 
         {anyPending && (
           <div className="mt-spacing-lg">
