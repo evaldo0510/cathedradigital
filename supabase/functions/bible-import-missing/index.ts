@@ -39,8 +39,7 @@ type Admin = ReturnType<typeof createClient>;
 interface BollsBook { bookid: number; chapters: number; name?: string }
 interface BollsVerse { verse: number; text: string; pk?: number }
 
-  return raw;
-}
+
 
 
 async function fetchBollsBooks(translation: string): Promise<Map<number, BollsBook>> {
