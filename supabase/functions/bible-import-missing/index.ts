@@ -3,12 +3,15 @@
  * faltantes do cânon a partir da API pública bolls.life.
  *
  * Ações:
- *   POST { action: 'validate', translation }         → valida fonte (sem gravar)
- *   POST { action: 'dry_run',  translation }         → simula import (1 cap/livro)
- *   POST { action: 'preview',  translation }         → conta pendências (leve)
- *   POST { action: 'start', translation, retry_of? } → cria job e roda em background
- *   POST { action: 'list_jobs', limit? }             → lista histórico
- *   GET  ?action=status&job_id=…                     → consulta progresso
+ *   POST { action: 'validate', translation }                    → valida fonte (sem gravar)
+ *   POST { action: 'dry_run',  translation, selection? }        → simula import
+ *   POST { action: 'preview',  translation, selection? }        → conta pendências (leve)
+ *   POST { action: 'start', translation, retry_of?, selection?} → cria job e roda em background
+ *   POST { action: 'list_jobs', limit? }                        → lista histórico
+ *   GET  ?action=status&job_id=…                                → consulta progresso
+ *
+ *   selection: Array<{ abbrev: string, chapters?: number[] }> — filtra o plano
+ *              (omitido = tudo faltante). chapters omitido = livro inteiro.
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
