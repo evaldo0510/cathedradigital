@@ -183,10 +183,11 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <div className="mt-spacing-lg">
             <Tabs defaultValue="santos" className="mt-spacing-lg">
               <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-premium-full opacity-60">
-                <TabsTrigger value="santos" disabled className="text-premium-xs flex-1">Santos (...)</TabsTrigger>
-                <TabsTrigger value="glossario" disabled className="text-premium-xs flex-1">Glossário (...)</TabsTrigger>
-                <TabsTrigger value="comunidade" disabled className="text-premium-xs flex-1">Comunidade (...)</TabsTrigger>
+                <TabsTrigger value="santos" disabled className="text-premium-xs flex-1 min-h-11">Santos (...)</TabsTrigger>
+                <TabsTrigger value="glossario" disabled className="text-premium-xs flex-1 min-h-11">Glossário (...)</TabsTrigger>
+                <TabsTrigger value="comunidade" disabled className="text-premium-xs flex-1 min-h-11">Comunidade (...)</TabsTrigger>
               </TabsList>
+
               <div className="mt-spacing-md">
                 <SearchResultSkeleton count={3} />
               </div>
@@ -218,12 +219,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-spacing-lg">
             <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-premium-full">
-              <TabsTrigger value="santos" className="text-premium-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
-              <TabsTrigger value="glossario" className="text-premium-xs flex-1 min-w-[80px]">Glossário ({counts.glossario})</TabsTrigger>
-              <TabsTrigger value="comunidade" className="text-premium-xs flex-1 min-w-[80px]">Comunidade ({counts.comunidade})</TabsTrigger>
-              <TabsTrigger value="temas" className="text-premium-xs flex-1 min-w-[80px]">Temas ({counts.temas})</TabsTrigger>
-              <TabsTrigger value="jornadas" className="text-premium-xs flex-1 min-w-[80px]">Jornadas ({counts.jornadas})</TabsTrigger>
+              <TabsTrigger value="santos" className="text-premium-xs flex-1 min-w-[80px] min-h-11">Santos ({counts.santos})</TabsTrigger>
+              <TabsTrigger value="glossario" className="text-premium-xs flex-1 min-w-[80px] min-h-11">Glossário ({counts.glossario})</TabsTrigger>
+              <TabsTrigger value="comunidade" className="text-premium-xs flex-1 min-w-[80px] min-h-11">Comunidade ({counts.comunidade})</TabsTrigger>
+              <TabsTrigger value="temas" className="text-premium-xs flex-1 min-w-[80px] min-h-11">Temas ({counts.temas})</TabsTrigger>
+              <TabsTrigger value="jornadas" className="text-premium-xs flex-1 min-w-[80px] min-h-11">Jornadas ({counts.jornadas})</TabsTrigger>
             </TabsList>
+
 
             <TabsContent value="santos" className="space-y-spacing-xs mt-spacing-md">
               <AnimatePresence mode="popLayout">

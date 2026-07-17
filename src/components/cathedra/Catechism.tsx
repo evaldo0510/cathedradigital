@@ -344,6 +344,19 @@ const Catechism: React.FC = memo(() => {
     // Só notifica uma vez por mudança de query.
   }, [initialParagraph]);
 
+  // Deep-link ?p=N: resolve part+section para entrar em modo leitura.
+  useEffect(() => {
+    if (typeof initialParagraph !== 'number') return;
+    const part = CIC_SECTIONS.find(pt => pt.sections.some(s => initialParagraph >= s.paragraphs[0] && initialParagraph <= s.paragraphs[1]));
+    if (!part) return;
+    const section = part.sections.find(s => initialParagraph >= s.paragraphs[0] && initialParagraph <= s.paragraphs[1]) || null;
+    setSelectedPart(part);
+    setSelectedSection(section);
+    setViewMode('reading');
+    setCurrentParagraph(initialParagraph);
+  }, [initialParagraph]);
+
+
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
