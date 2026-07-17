@@ -1,0 +1,102 @@
+name: átrio menu e2e (multi-browser)
+
+# Executa a suíte E2E do menu do Átrio em Chromium, Firefox e WebKit.
+# Cobre: navegação por clique, conteúdo válido, landmarks/axe,
+# history back/forward e presença do CathedralFooter.
+
+on:
+  pull_request:
+    paths:
+      - 'src/App.tsx'
+      - 'src/core/navigation/**'
+      - 'src/modules/atrium/**'
+      - 'src/pages/NotFound.tsx'
+      - 'src/components/cathedra/Footer.tsx'
+      - 'src/components/cathedra/RouteSkeletons.tsx'
+      - 'tests/e2e/atrium-*.spec.ts'
+      - '.github/workflows/atrium-menu-e2e.yml'
+      - 'playwright.config.ts'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  atrium-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    name: atrium-e2e (${{ matrix.browser }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright browser (${{ matrix.browser }})
+        run: bunx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Build app
+        run: bun run build
+
+      - name: Start preview server
+        run: |
+          bunx vite preview --port 8080 --strictPort &
+          echo $! > /tmp/preview.pid
+          for i in $(seq 1 60); do
+            if curl -sSf http://localhost:8080/ > /dev/null; then echo "preview ready"; break; fi
+            sleep 1
+          done
+
+      - name: Run Átrio E2E suite on ${{ matrix.browser }}
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/atrium-menu-navigation.spec.ts \
+            tests/e2e/atrium-landmarks-a11y.spec.ts \
+            tests/e2e/atrium-history.spec.ts \
+            tests/e2e/atrium-footer.spec.ts \
+            --project=${{ matrix.browser }} \
+            --reporter=list,html,json
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
+
+      - name: Append summary
+        if: always()
+        run: |
+          echo "## Átrio E2E · ${{ matrix.browser }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f playwright-report/results.json ]; then
+            node -e "
+              const r = require('./playwright-report/results.json');
+              const s = r.stats || {};
+              console.log('- Expected: ' + (s.expected||0));
+              console.log('- Unexpected: ' + (s.unexpected||0));
+              console.log('- Flaky: ' + (s.flaky||0));
+              console.log('- Skipped: ' + (s.skipped||0));
+            " >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atrium-e2e-report-${{ matrix.browser }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 30
