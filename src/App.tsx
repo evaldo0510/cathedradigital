@@ -154,6 +154,17 @@ const AuditDashboard = lazy(() => import('./pages/AuditDashboard'));
 const IntegrityReport = lazy(() => import('./pages/IntegrityReport'));
 const SecurityAlertsPage = lazy(() => import('./components/cathedra/SecurityAlertsPage'));
 
+// Cathedra 2.0 — Protótipo navegável (isolado)
+const PrototypeIndex = lazy(() => import('./pages/prototype-2.0/PrototypeIndex'));
+const PrototypeAtrio = lazy(() => import('./pages/prototype-2.0/screens/Atrio'));
+const PrototypeBiblioteca = lazy(() => import('./pages/prototype-2.0/screens/Biblioteca'));
+const PrototypeEstudoComposto = lazy(() => import('./pages/prototype-2.0/screens/EstudoComposto'));
+const PrototypeLeitor = lazy(() => import('./pages/prototype-2.0/screens/Leitor'));
+const PrototypePesquisa = lazy(() => import('./pages/prototype-2.0/screens/Pesquisa'));
+const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Formacao'));
+const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
+const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
+
 
 
 
@@ -397,7 +408,7 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
@@ -410,7 +421,7 @@ const AppLayout: React.FC = () => {
             />
           )}
         
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && (
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
           <CathedralSidebar 
             isOpen={isSidebarOpen}
             user={authUserAdapter}
@@ -595,16 +606,28 @@ const AppLayout: React.FC = () => {
                 <Route path="/__test/theological-text" element={<Suspense fallback={<LoadingFallback />}><TheologicalTextFixture /></Suspense>} />
               )}
 
+              {/* Cathedra 2.0 — Protótipo navegável (isolado, sem chrome do app 1.0) */}
+              <Route path="/prototype-2.0" element={<Suspense fallback={<LoadingFallback />}><PrototypeIndex /></Suspense>} />
+              <Route path="/prototype-2.0/atrio" element={<Suspense fallback={<LoadingFallback />}><PrototypeAtrio /></Suspense>} />
+              <Route path="/prototype-2.0/estudar" element={<Suspense fallback={<LoadingFallback />}><PrototypeBiblioteca /></Suspense>} />
+              <Route path="/prototype-2.0/estudar/tema/:slug" element={<Suspense fallback={<LoadingFallback />}><PrototypeEstudoComposto /></Suspense>} />
+              <Route path="/prototype-2.0/leitor" element={<Suspense fallback={<LoadingFallback />}><PrototypeLeitor /></Suspense>} />
+              <Route path="/prototype-2.0/pesquisar" element={<Suspense fallback={<LoadingFallback />}><PrototypePesquisa /></Suspense>} />
+              <Route path="/prototype-2.0/formar-se" element={<Suspense fallback={<LoadingFallback />}><PrototypeFormacao /></Suspense>} />
+              <Route path="/prototype-2.0/rezar" element={<Suspense fallback={<LoadingFallback />}><PrototypeRezar /></Suspense>} />
+              <Route path="/prototype-2.0/minha-jornada" element={<Suspense fallback={<LoadingFallback />}><PrototypeMinhaJornada /></Suspense>} />
+
               <Route path="*" element={<Navigate to="/" replace />} />
+
 
             </Routes>
             </AnimatePresence>
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
         </AppErrorBoundary>
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 
