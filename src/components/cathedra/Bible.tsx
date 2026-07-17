@@ -1530,7 +1530,26 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
 
             {/* Vertical Book List */}
-            <div className="space-y-spacing-2xl">
+            <div
+              className="space-y-spacing-2xl"
+              data-testid="book-list"
+              onKeyDown={(e) => {
+                if (!['ArrowUp','ArrowDown','Home','End'].includes(e.key)) return;
+                const target = e.target as HTMLElement;
+                if (!target.matches('[data-book-btn]')) return;
+                e.preventDefault();
+                const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[data-book-btn]'));
+                const idx = btns.indexOf(target as HTMLButtonElement);
+                if (idx < 0) return;
+                let next = idx;
+                if (e.key === 'ArrowDown') next = Math.min(idx + 1, btns.length - 1);
+                else if (e.key === 'ArrowUp') next = Math.max(idx - 1, 0);
+                else if (e.key === 'Home') next = 0;
+                else if (e.key === 'End') next = btns.length - 1;
+                btns[next]?.focus();
+              }}
+            >
+
               {Object.entries(filteredBooks).map(([testament, categories]: any) => (
                 <section key={testament} className="space-y-spacing-lg">
                   <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary/50 border-b border-primary/5 pb-2">{testament}</h2>
