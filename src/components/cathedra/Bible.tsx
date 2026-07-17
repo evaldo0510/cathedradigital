@@ -1613,16 +1613,18 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   onClick={() => { if (!missing) selectChapter(ch); }}
                   disabled={missing}
                   aria-disabled={missing}
+                  aria-current={selectedChapter === ch ? 'page' : undefined}
                   title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-1",
                     missing
                       ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
                       : selectedChapter === ch
-                        ? "bg-secondary/10 border-secondary/40 ring-2 ring-secondary/20" 
+                        ? "bg-secondary/15 border-secondary ring-2 ring-secondary/30 shadow-md scale-[1.03]" 
                         : notes.some(n => n.book_abbr === selectedBook.abbr && n.chapter === ch)
-                          ? "bg-secondary/5 border-secondary/20"
-                          : "bg-white border-primary/5 hover:border-secondary/30"
+                          ? "bg-secondary/5 border-secondary/20 hover:border-secondary/40 hover:bg-secondary/10"
+                          : "bg-white border-primary/5 hover:border-secondary/40 hover:bg-secondary/[0.04]"
                   )}
 
                 >
@@ -1630,8 +1632,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     "text-lg font-display transition-colors",
                     missing
                       ? "text-primary/40 line-through decoration-primary/30"
-                      : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-active:text-secondary"
+                      : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-hover:text-secondary group-active:text-secondary"
                   )}>{ch}</span>
+
                   <div className="flex items-center gap-spacing-xs mt-spacing-xs">
                     {missing && (
                       <span className="text-[9px] uppercase tracking-wider text-primary/40">
