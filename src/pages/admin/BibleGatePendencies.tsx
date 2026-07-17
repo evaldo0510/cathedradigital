@@ -58,6 +58,8 @@ export default function BibleGatePendencies() {
 
   const gateQ = useQuery({
     queryKey: ["bible-read-gate"],
+    refetchInterval: 15_000,
+    refetchOnWindowFocus: true,
     queryFn: async (): Promise<Gate> => {
       const { data, error } = await supabase.rpc("bible_read_gate_status");
       if (error) throw error;
