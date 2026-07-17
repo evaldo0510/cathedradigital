@@ -301,7 +301,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
       >
-        <p className="editorial-meta text-secondary">Itinerarium Mentis</p>
+        
         <p className="editorial-display text-2xl md:text-3xl font-serif italic text-muted-foreground leading-relaxed">
           "Caminhai enquanto tendes a luz, para que as trevas não vos surpreendam." — João 12,35
         </p>
