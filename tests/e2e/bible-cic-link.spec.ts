@@ -47,11 +47,28 @@ test('CIC link a partir de Jo 6 navega para /catechism?p=N com conteúdo', async
 
   const pagesBefore = context.pages().length;
 
+  // Sentinela SPA: se o documento recarregar, esta flag é perdida.
+  // Também escutamos o evento `beforeunload` para detectar full reload.
+  await page.evaluate(() => {
+    (window as any).__SPA_SENTINEL__ = 'jo6-cic-' + Date.now();
+    (window as any).__SPA_UNLOADED__ = false;
+    window.addEventListener('beforeunload', () => {
+      (window as any).__SPA_UNLOADED__ = true;
+    });
+  });
+  const sentinelBefore = await page.evaluate(() => (window as any).__SPA_SENTINEL__);
+
   await cicLink.click();
   await page.waitForURL(new RegExp(`/catechism\\?p=${paragraph}`), { timeout: 10_000 });
 
   // Não abriu nova aba
   expect(context.pages().length).toBe(pagesBefore);
+
+  // Mesmo documento: sentinela preserva valor e beforeunload não disparou
+  const sentinelAfter = await page.evaluate(() => (window as any).__SPA_SENTINEL__);
+  const unloaded = await page.evaluate(() => (window as any).__SPA_UNLOADED__);
+  expect(sentinelAfter, 'documento SPA preservado (sem reload)').toBe(sentinelBefore);
+  expect(unloaded, 'nenhum beforeunload disparou').toBe(false);
 
   // Conteúdo válido: main não vazio
   const mainText = await page.locator('main').first().innerText();
