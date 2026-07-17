@@ -165,6 +165,9 @@ const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Forma
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
 
+// Cathedra 2.0 — Ambiente Átrio (Sprint 2.0.1, preview isolado)
+const AtriumPageV2 = lazy(() => import('./modules/atrium').then(m => ({ default: m.AtriumPage })));
+
 
 
 
@@ -616,6 +619,8 @@ const AppLayout: React.FC = () => {
               <Route path="/prototype-2.0/formar-se" element={<Suspense fallback={<LoadingFallback />}><PrototypeFormacao /></Suspense>} />
               <Route path="/prototype-2.0/rezar" element={<Suspense fallback={<LoadingFallback />}><PrototypeRezar /></Suspense>} />
               <Route path="/prototype-2.0/minha-jornada" element={<Suspense fallback={<LoadingFallback />}><PrototypeMinhaJornada /></Suspense>} />
+              {/* Preview isolado do Ambiente Átrio (Sprint 2.0.1). Rota / continua no 1.x até 2.0.6. */}
+              <Route path="/prototype-2.0/atrium-v2" element={<Suspense fallback={<LoadingFallback />}><AtriumPageV2 /></Suspense>} />
 
               <Route path="*" element={<Navigate to="/" replace />} />
 
