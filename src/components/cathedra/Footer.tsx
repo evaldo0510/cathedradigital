@@ -128,9 +128,11 @@ const DIOCESE_URLS: Record<string, string> = {
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const { t, lang } = useLang();
+  const { isAdmin } = useIsAdmin();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican)', url: EXTERNAL_URLS.VATICAN },
