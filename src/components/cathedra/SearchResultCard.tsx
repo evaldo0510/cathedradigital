@@ -29,6 +29,11 @@ export interface SearchResultCardProps {
   className?: string;
   /** Animation stagger index (used for staggered entry). */
   index?: number;
+  /**
+   * Slot para ações contextuais (ex.: <PassageActions />).
+   * Renderizado como rodapé do card, isolado do onClick principal.
+   */
+  actions?: React.ReactNode;
 }
 
 
