@@ -709,3 +709,35 @@ header:hover {
 #lovable-badge {
   display: none !important;
 }
+
+/* === Editorial utilities (Conceito C) === */
+/* Aplicar como classes em wrappers de páginas para adotar a linguagem "biblioteca viva". */
+.editorial-column {
+  max-width: var(--reading-column);
+  margin-inline: auto;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.editorial-column--narrow { max-width: var(--reading-column-narrow); }
+.editorial-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.editorial-meta {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.editorial-rule {
+  border: 0;
+  border-top: 1px solid var(--rule-gold-soft);
+  margin-block: var(--space-editorial);
+}
+.editorial-rule--hair { border-top-color: var(--rule-gold-hair); }
+.editorial-section { padding-block: var(--space-editorial); }
+.editorial-section--lg { padding-block: var(--space-editorial-lg); }
