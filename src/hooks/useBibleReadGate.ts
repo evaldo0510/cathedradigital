@@ -17,7 +17,10 @@ export type BibleGateStatus = {
 export function useBibleReadGate() {
   const query = useQuery({
     queryKey: ['bible-read-gate'],
-    staleTime: 1000 * 60, // 1 min — diagnose roda no máx 1x/dia
+    // Reduz stale para o banner atualizar após revalidações/jobs sem reload.
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
     queryFn: async (): Promise<BibleGateStatus> => {
       const { data, error } = await supabase.rpc('bible_read_gate_status');
       if (error) throw error;

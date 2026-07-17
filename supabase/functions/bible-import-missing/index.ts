@@ -16,6 +16,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
+import { normalizeTranslation, normalizeSelection, type Selection } from './helpers.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -38,16 +39,7 @@ type Admin = ReturnType<typeof createClient>;
 interface BollsBook { bookid: number; chapters: number; name?: string }
 interface BollsVerse { verse: number; text: string; pk?: number }
 
-// Validação de entrada — evita HTTP fetch com valor sujo
-const TRANSLATION_RE = /^[A-Z0-9]{2,10}$/;
 
-function normalizeTranslation(input: unknown): string {
-  const raw = typeof input === 'string' ? input.trim().toUpperCase() : '';
-  if (!TRANSLATION_RE.test(raw)) {
-    throw new Error(`Código de tradução inválido: "${input}". Use letras/dígitos maiúsculos (ex.: NVIPT, NAA, ARA).`);
-  }
-  return raw;
-}
 
 
 async function fetchBollsBooks(translation: string): Promise<Map<number, BollsBook>> {
@@ -87,25 +79,6 @@ async function ensureTranslation(admin: Admin, translation: string): Promise<str
   return data.id as string;
 }
 
-type Selection = Array<{ abbrev: string; chapters?: number[] }>;
-
-function normalizeSelection(input: unknown): Selection | null {
-  if (!Array.isArray(input) || input.length === 0) return null;
-  const out: Selection = [];
-  for (const it of input) {
-    if (!it || typeof it !== 'object') continue;
-    const abbrev = String((it as any).abbrev ?? '').trim();
-    if (!abbrev) continue;
-    const rawCh = (it as any).chapters;
-    let chapters: number[] | undefined;
-    if (Array.isArray(rawCh)) {
-      chapters = rawCh.map((n) => Number(n)).filter((n) => Number.isInteger(n) && n > 0);
-      if (chapters.length === 0) chapters = undefined;
-    }
-    out.push({ abbrev, chapters });
-  }
-  return out.length > 0 ? out : null;
-}
 
 async function computeMissing(admin: Admin, translation: string, selection: Selection | null = null) {
   const bolls = await fetchBollsBooks(translation);
@@ -202,8 +175,8 @@ async function validateSource(translation: string) {
 async function dryRun(admin: Admin, translation: string, selection: Selection | null = null) {
   const plan = await computeMissing(admin, translation, selection);
   const samples: Array<{
-    abbrev: string; name: string; chapters_missing: number; sample_chapter: number;
-    sample_verses: number; first_verse: string | null; error?: string;
+    abbrev: string; name: string; chapters_missing: number; chapter_numbers: number[];
+    sample_chapter: number; sample_verses: number; first_verse: string | null; error?: string;
   }> = [];
   for (const item of plan) {
     const cap = item.chapters[0];
@@ -211,13 +184,15 @@ async function dryRun(admin: Admin, translation: string, selection: Selection | 
       const verses = await fetchBollsChapter(translation, item.bookId, cap);
       samples.push({
         abbrev: item.canon.abbr, name: item.canon.name,
-        chapters_missing: item.chapters.length, sample_chapter: cap,
+        chapters_missing: item.chapters.length, chapter_numbers: item.chapters,
+        sample_chapter: cap,
         sample_verses: verses.length, first_verse: verses[0]?.text ?? null,
       });
     } catch (e) {
       samples.push({
         abbrev: item.canon.abbr, name: item.canon.name,
-        chapters_missing: item.chapters.length, sample_chapter: cap,
+        chapters_missing: item.chapters.length, chapter_numbers: item.chapters,
+        sample_chapter: cap,
         sample_verses: 0, first_verse: null, error: (e as Error).message,
       });
     }
@@ -441,14 +416,19 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'list_jobs') {
-      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 100);
+      const limit = Math.min(Math.max(1, Number(rawParams.limit) || 30), 200);
       const { data, error } = await admin
         .from('bible_import_jobs')
-        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification, audit_log')
+        .select('id, source_id, status, progress, total, current_book, message, error, started_at, finished_at, created_at, created_by, verification, audit_log, bible_translation_sources(code, translation)')
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) return json({ error: error.message }, 500);
-      return json({ jobs: data ?? [] });
+      const jobs = (data ?? []).map((j: any) => ({
+        ...j,
+        source_code: j?.bible_translation_sources?.code ?? null,
+        translation: j?.bible_translation_sources?.translation ?? null,
+      }));
+      return json({ jobs });
     }
 
     if (action === 'start') {
