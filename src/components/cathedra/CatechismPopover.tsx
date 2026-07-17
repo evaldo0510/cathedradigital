@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { catechismInternalPath } from '@/lib/nexusNavigation';
 
 interface CatechismPopoverProps {
   paragraph: number;
@@ -85,7 +86,7 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
                 Texto ainda não importado para o banco oficial.
               </p>
               <Link
-                to={`/catechism?paragraph=${paragraph}`}
+                to={catechismInternalPath(paragraph)}
                 className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline"
                 data-testid="catechism-open-internal"
               >
