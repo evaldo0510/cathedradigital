@@ -73,8 +73,10 @@ const PassageActions: React.FC<PassageActionsProps> = ({
 }) => {
   const share = useShare();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<ActionKey | null>(null);
-  const [error, setError] = useState<{ key: ActionKey; message: string } | null>(null);
+  // Estados INDEPENDENTES por ação (loading/success/error) — nunca globais.
+  const [loadingMap, setLoadingMap] = useState<Partial<Record<ActionKey, boolean>>>({});
+  const [successMap, setSuccessMap] = useState<Partial<Record<ActionKey, boolean>>>({});
+  const [errorMap, setErrorMap] = useState<Partial<Record<ActionKey, string>>>({});
   const [status, setStatus] = useState<string>('');
 
   // URL efetiva: prop direta ou derivada de `passage`.
@@ -85,18 +87,24 @@ const PassageActions: React.FC<PassageActionsProps> = ({
 
   const run = useCallback(
     async (key: ActionKey, fn: () => Promise<void>, successMsg?: string) => {
-      setLoading(key);
-      setError(null);
+      setLoadingMap((m) => ({ ...m, [key]: true }));
+      setErrorMap((m) => ({ ...m, [key]: undefined }));
+      setSuccessMap((m) => ({ ...m, [key]: false }));
       try {
         await fn();
         if (successMsg) setStatus(successMsg);
+        setSuccessMap((m) => ({ ...m, [key]: true }));
+        // limpa o "success" transiente após 1.6s
+        window.setTimeout(() => {
+          setSuccessMap((m) => ({ ...m, [key]: false }));
+        }, 1600);
       } catch (err: any) {
         const message = err?.message ?? 'Ação falhou';
-        setError({ key, message });
+        setErrorMap((m) => ({ ...m, [key]: message }));
         setStatus(`Erro: ${message}`);
         toast.error(message);
       } finally {
-        setLoading(null);
+        setLoadingMap((m) => ({ ...m, [key]: false }));
       }
     },
     [],
@@ -177,11 +185,16 @@ const PassageActions: React.FC<PassageActionsProps> = ({
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
   const renderIcon = (key: ActionKey, Icon: React.ComponentType<any>) => {
-    if (loading === key) {
+    if (loadingMap[key]) {
       return <Icons.Loader className={cn(iconSize, 'animate-spin')} aria-hidden="true" />;
+    }
+    if (successMap[key]) {
+      return <Icons.Check className={cn(iconSize, 'text-primary')} aria-hidden="true" />;
     }
     return <Icon className={iconSize} aria-hidden="true" />;
   };
+
+  const firstError = (Object.entries(errorMap).find(([, v]) => !!v) ?? []) as [ActionKey?, string?];
 
   return (
     <div
@@ -200,8 +213,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleCopyText}
         className={btnBase}
         aria-label={`Copiar trecho de ${reference}`}
-        aria-busy={loading === 'text' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.text || undefined}
+        disabled={!!loadingMap.text}
       >
         {renderIcon('text', Icons.Quote)}
         <span>Copiar trecho</span>
@@ -212,8 +225,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleCopyReference}
         className={btnBase}
         aria-label={`Copiar referência ${reference}`}
-        aria-busy={loading === 'reference' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.reference || undefined}
+        disabled={!!loadingMap.reference}
       >
         {renderIcon('reference', Icons.Link)}
         <span>Copiar referência</span>
@@ -224,8 +237,8 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         onClick={handleShare}
         className={btnBase}
         aria-label={`Compartilhar ${reference}`}
-        aria-busy={loading === 'share' || undefined}
-        disabled={loading !== null}
+        aria-busy={loadingMap.share || undefined}
+        disabled={!!loadingMap.share}
       >
         {renderIcon('share', Icons.Share)}
         <span>Compartilhar</span>
@@ -237,17 +250,17 @@ const PassageActions: React.FC<PassageActionsProps> = ({
           onClick={handleHighlight}
           className={btnBase}
           aria-label={`Destacar ${reference} no leitor`}
-          aria-busy={loading === 'highlight' || undefined}
-          disabled={loading !== null}
+          aria-busy={loadingMap.highlight || undefined}
+          disabled={!!loadingMap.highlight}
         >
           {renderIcon('highlight', Icons.Highlighter)}
           <span>Destacar</span>
         </button>
       )}
 
-      {error && (
+      {firstError[0] && (
         <span role="alert" className="sr-only">
-          Erro em {error.key}: {error.message}
+          Erro em {firstError[0]}: {firstError[1]}
         </span>
       )}
     </div>
