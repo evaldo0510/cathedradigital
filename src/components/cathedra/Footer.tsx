@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { useLang } from '@/hooks/useLang';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 import { APP_ROUTES } from '@/config/routes';
+
 
 
 const DIOCESES_BR = [
