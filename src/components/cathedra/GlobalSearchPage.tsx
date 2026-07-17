@@ -100,7 +100,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     jornadas: journeys.results?.length ?? 0,
   };
   const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
-  
+  const errors = [saints.error, glossary.error, community.error, tags.error, journeys.error].filter(Boolean) as Error[];
+  const hasError = hasQuery && !anyPending && errors.length > 0;
+  const retryAll = () => {
+    saints.refetch(); glossary.refetch(); community.refetch(); tags.refetch(); journeys.refetch();
+  };
+  const clearSearch = () => setQuery('');
+
   const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0, tagsRef);
 
   const EmptyState = ({ text }: { text: string }) => (
