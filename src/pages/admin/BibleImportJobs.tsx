@@ -14,13 +14,39 @@ interface Job {
   id: string; status: string; progress: number; total: number;
   current_book: string | null; message: string | null; error: string | null;
   started_at: string | null; finished_at: string | null; created_at: string;
-  verification: any;
+  verification: any; audit_log?: any;
 }
 
 const STATUS_VARIANT: Record<string, "default" | "destructive" | "secondary" | "outline"> = {
   succeeded: "default", running: "secondary", queued: "outline",
   failed: "destructive", cancelled: "outline",
 };
+
+function formatDuration(startISO: string | null, endISO: string | null): string {
+  if (!startISO) return "—";
+  const start = new Date(startISO).getTime();
+  const end = endISO ? new Date(endISO).getTime() : Date.now();
+  const ms = Math.max(0, end - start);
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const rs = s % 60;
+  return rs === 0 ? `${m}min` : `${m}min ${rs}s`;
+}
+
+function versesFromAudit(audit: any): number {
+  if (!Array.isArray(audit)) return 0;
+  return audit.reduce((sum: number, e: any) => sum + (typeof e?.verses === "number" ? e.verses : 0), 0);
+}
+
+function revalidationLabel(v: any): { label: string; variant: "default" | "secondary" | "destructive" | "outline" } {
+  if (!v) return { label: "—", variant: "outline" };
+  const retry = v?.revalidation_retry;
+  if (retry?.pending) return { label: "imediata · retry pendente", variant: "secondary" };
+  if (retry?.ran) return { label: "imediata + 3min", variant: "default" };
+  if (v?.ran) return { label: "imediata", variant: "default" };
+  return { label: "—", variant: "outline" };
+}
 
 async function invoke(action: string, body: Record<string, unknown> = {}) {
   const { data, error } = await supabase.functions.invoke("bible-import-missing", {
