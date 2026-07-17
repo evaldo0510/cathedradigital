@@ -17,7 +17,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
 import { normalizeTranslation, normalizeSelection, type Selection } from './helpers.ts';
-import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -40,14 +39,6 @@ type Admin = ReturnType<typeof createClient>;
 interface BollsBook { bookid: number; chapters: number; name?: string }
 interface BollsVerse { verse: number; text: string; pk?: number }
 
-// Validação de entrada — evita HTTP fetch com valor sujo
-const TRANSLATION_RE = /^[A-Z0-9]{2,10}$/;
-
-function normalizeTranslation(input: unknown): string {
-  const raw = typeof input === 'string' ? input.trim().toUpperCase() : '';
-  if (!TRANSLATION_RE.test(raw)) {
-    throw new Error(`Código de tradução inválido: "${input}". Use letras/dígitos maiúsculos (ex.: NVIPT, NAA, ARA).`);
-  }
   return raw;
 }
 
