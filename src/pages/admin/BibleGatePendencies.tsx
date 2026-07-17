@@ -74,6 +74,7 @@ export default function BibleGatePendencies() {
 
   const coverageQ = useQuery({
     queryKey: ["bible-canonical-coverage"],
+    refetchInterval: 30_000,
     queryFn: async (): Promise<CoverageRow[]> => {
       const { data, error } = await supabase.rpc("bible_canonical_coverage");
       if (error) throw error;
