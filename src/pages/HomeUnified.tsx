@@ -85,7 +85,7 @@ function capitalize(s: string): string {
 const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <span
     className={`inline-block text-[10px] font-medium tracking-[0.28em] uppercase ${className}`}
-    style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+    style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
   >
     {children}
   </span>
@@ -140,7 +140,7 @@ const HomeUnified: React.FC = () => {
             data-rise="1"
             className="mb-6 leading-[0.95] tracking-[0.06em]"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--font-display)",
               fontWeight: 500,
               fontSize: 'clamp(3.5rem, 12vw, 9rem)',
               color: 'var(--noir-text)',
@@ -152,7 +152,7 @@ const HomeUnified: React.FC = () => {
           <p
             data-rise="2"
             className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
-            style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+            style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
           >
             Habite a profundidade do silêncio,<br className="hidden md:inline" />
             {' '}contemple a clareza da Verdade.
@@ -177,7 +177,7 @@ const HomeUnified: React.FC = () => {
                 className="w-full bg-transparent text-base outline-none placeholder:italic md:text-lg"
                 style={{
                   color: 'var(--noir-text)',
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "var(--font-display)",
                 }}
               />
               <kbd
@@ -185,7 +185,7 @@ const HomeUnified: React.FC = () => {
                 style={{
                   borderColor: 'var(--noir-line)',
                   color: 'var(--noir-text-faint)',
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'var(--font-body)',
                 }}
               >
                 ⌘K
@@ -200,7 +200,7 @@ const HomeUnified: React.FC = () => {
                     key={s.id}
                     to={`/buscar?q=${encodeURIComponent(s.label)}`}
                     className="rounded-full border px-3 py-1.5 text-xs tracking-wide transition-colors"
-                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
                   >
@@ -227,7 +227,7 @@ const HomeUnified: React.FC = () => {
             <h2
               className="text-3xl md:text-5xl"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "var(--font-display)",
                 fontWeight: 400,
                 color: 'var(--noir-text)',
                 letterSpacing: '0.01em',
@@ -262,7 +262,7 @@ const HomeUnified: React.FC = () => {
                   <Icon className="h-7 w-7 transition-colors" style={{ color: 'var(--gold)' }} aria-hidden />
                   <span
                     className="text-xs tracking-[0.3em]"
-                    style={{ color: 'var(--noir-text-faint)', fontFamily: "'Playfair Display', serif" }}
+                    style={{ color: 'var(--noir-text-faint)', fontFamily: "var(--font-display)" }}
                   >
                     {roman}
                   </span>
@@ -272,7 +272,7 @@ const HomeUnified: React.FC = () => {
                   <h3
                     className="mb-3 text-2xl md:text-3xl"
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "var(--font-display)",
                       fontWeight: 500,
                       color: 'var(--noir-text)',
                     }}
@@ -281,13 +281,13 @@ const HomeUnified: React.FC = () => {
                   </h3>
                   <p
                     className="mb-6 text-sm leading-relaxed"
-                    style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
                   >
                     {env.description}
                   </p>
                   <span
                     className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] transition-transform group-hover:translate-x-1"
-                    style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+                    style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
                   >
                     Entrar <ArrowRight className="h-3 w-3" aria-hidden />
                   </span>
@@ -306,7 +306,7 @@ const HomeUnified: React.FC = () => {
             <h2
               className="mb-8"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "var(--font-display)",
                 fontWeight: 400,
                 fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
                 lineHeight: 1.05,
@@ -319,7 +319,7 @@ const HomeUnified: React.FC = () => {
             {featured.short && (
               <p
                 className="mb-12 max-w-2xl text-lg italic md:text-2xl"
-                style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+                style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
               >
                 {featured.short}
               </p>
@@ -330,7 +330,7 @@ const HomeUnified: React.FC = () => {
               style={{
                 borderColor: 'var(--gold)',
                 color: 'var(--gold)',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'var(--font-body)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'var(--gold)';
@@ -353,7 +353,7 @@ const HomeUnified: React.FC = () => {
                     key={t.slug}
                     to={`/buscar?q=${encodeURIComponent(t.label)}`}
                     className="rounded-full border px-4 py-2 text-xs tracking-widest transition-colors"
-                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
                   >
@@ -379,7 +379,7 @@ const HomeUnified: React.FC = () => {
                 <h2
                   className="text-3xl md:text-4xl"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: "var(--font-display)",
                     fontWeight: 400,
                     color: 'var(--noir-text)',
                   }}
@@ -400,14 +400,14 @@ const HomeUnified: React.FC = () => {
                     <div className="flex items-center gap-6 md:gap-10">
                       <span
                         className="text-xs tracking-[0.28em]"
-                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-body)' }}
                       >
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <div>
                         <div
                           className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                          style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+                          style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
                         >
                           {RESUME_KIND_LABEL[item.kind] ?? item.kind}
                           {typeof item.progressPct === 'number' && (
@@ -417,7 +417,7 @@ const HomeUnified: React.FC = () => {
                         <div
                           className="text-xl transition-colors md:text-2xl"
                           style={{
-                            fontFamily: "'Playfair Display', serif",
+                            fontFamily: "var(--font-display)",
                             color: 'var(--noir-text)',
                           }}
                         >
@@ -453,13 +453,13 @@ const HomeUnified: React.FC = () => {
                     <li key={n.id}>
                       <div
                         className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-body)' }}
                       >
                         {formatRelativeDate(n.publishedAt)}
                       </div>
                       <div
                         className="text-lg leading-snug md:text-xl"
-                        style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                        style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text)' }}
                       >
                         {n.label}
                       </div>
@@ -474,7 +474,7 @@ const HomeUnified: React.FC = () => {
                 <Eyebrow className="mb-6">Liturgia do dia</Eyebrow>
                 <div
                   className="text-lg italic leading-relaxed md:text-xl"
-                  style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+                  style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
                 >
                   {capitalize(liturgy.weekday)} · {liturgy.season}
                 </div>
@@ -482,14 +482,14 @@ const HomeUnified: React.FC = () => {
                   <>
                     <div
                       className="mt-4 text-2xl md:text-3xl"
-                      style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                      style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text)' }}
                     >
                       {liturgy.saintOfDay.name}
                     </div>
                     {liturgy.saintOfDay.title && (
                       <div
                         className="mt-2 text-sm"
-                        style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                        style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
                       >
                         {liturgy.saintOfDay.title}
                       </div>
@@ -505,7 +505,7 @@ const HomeUnified: React.FC = () => {
 
       {/* ══════ FOOTER ══════ */}
       <footer className="w-full border-t px-6 py-12 md:px-12" style={{ borderColor: 'var(--noir-line)' }}>
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-[10px] uppercase tracking-[0.32em] md:flex-row" style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}>
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-[10px] uppercase tracking-[0.32em] md:flex-row" style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-body)' }}>
           <span>Ad Maiorem Dei Gloriam</span>
           <span>Cathedra · MMXXVI</span>
         </div>
