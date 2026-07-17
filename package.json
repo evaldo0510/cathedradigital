@@ -54,6 +54,8 @@
     "test:bible-selection": "playwright test tests/e2e/bible-selection-keyboard.spec.ts",
     "test:bible-selection:update": "playwright test tests/e2e/bible-selection-keyboard.spec.ts --update-snapshots",
     "test:bible-selection-a11y": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts",
+    "test:bible-selection-focus": "playwright test tests/e2e/bible-selection-focus.spec.ts",
+    "test:bible-selection-ci": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts tests/e2e/bible-selection-keyboard.spec.ts tests/e2e/bible-selection-focus.spec.ts --reporter=list,html,json",
 
 
 
