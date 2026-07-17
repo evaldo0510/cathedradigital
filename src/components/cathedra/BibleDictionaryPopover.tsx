@@ -63,6 +63,7 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
     <Popover>
       <PopoverTrigger asChild>
         <button 
+          data-testid="bible-dictionary-popover-trigger"
           className="underline decoration-primary/20 decoration-dotted underline-offset-4 hover:decoration-primary transition-all cursor-help text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-sm"
           aria-haspopup="true"
         >
