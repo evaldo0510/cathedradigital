@@ -713,13 +713,35 @@ header:hover {
 /* === Editorial utilities (Conceito C) === */
 /* Aplicar como classes em wrappers de páginas para adotar a linguagem "biblioteca viva". */
 .editorial-column {
-  max-width: var(--reading-column);
+  max-width: min(56ch, 100%);
   margin-inline: auto;
+  padding-inline: 1.25rem;
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.75;
 }
-.editorial-column--narrow { max-width: var(--reading-column-narrow); }
+@media (min-width: 768px) {
+  .editorial-column {
+    max-width: min(62ch, 100%);
+    padding-inline: 1.5rem;
+    font-size: 1.0625rem;
+  }
+}
+@media (min-width: 1024px) {
+  .editorial-column {
+    max-width: var(--reading-column);
+    padding-inline: 0;
+  }
+}
+.editorial-column--narrow { max-width: min(var(--reading-column-narrow), 100%); }
+/* Touch targets ≥ 44px em toque para links/botões dentro da coluna editorial */
+@media (max-width: 767px) {
+  .editorial-column a[href],
+  .editorial-column button:not(.no-touch-min),
+  .touch-target {
+    min-height: 44px;
+  }
+}
 .editorial-display {
   font-family: var(--font-display);
   font-weight: 400;

@@ -1,61 +1,78 @@
-# Plano: Nexus 100% interno + QA visual do tema Noir & Gold
+# Plano — Sprint Editorial (continuação)
 
-Escopo dividido em 3 blocos independentes. Peço confirmação de **quais blocos executar** (posso rodar todos em sequência ou só o que priorizar).
+Quatro pedidos empacotados em uma única mensagem. Vou executá-los na ordem que respeita a sequência que combinamos (tipografia primeiro, validação antes de novas features, Formação por último por ser a maior refatoração), e entrego cada etapa com validação antes de avançar para a próxima.
 
----
+## Etapa 1 — Tipografia responsiva (Reader, /buscar, Formação)
+Base para as demais etapas: sem isso, refatorar Formação em mobile viraria retrabalho.
 
-## Bloco 1 — Nexus sempre interno (código + guarda)
+- Criar utilitário `.editorial-column-responsive` em `src/index.css` derivado do `--reading-column` atual:
+  - `max-width: min(68ch, 100%)` no desktop
+  - `max-width: min(62ch, 100%)` no tablet (`md`)
+  - `max-width: min(56ch, 100%)` + padding lateral `1.25rem` no mobile
+- Ajustar escalas tipográficas:
+  - Reader: `text-lg md:text-xl` no corpo, `leading-relaxed` → `leading-[1.75]` no mobile
+  - `/buscar`: mesma escala do Reader nos títulos dos cards; subtítulos serifa itálica
+  - Formação: aplicar o mesmo wrapper
+- Touch targets: revisar botões e links do Reader, `/buscar` e nav do Átrio para garantir `min-h-[44px] min-w-[44px]` em `< md`.
 
-**Objetivo:** garantir que qualquer clique em referência do Nexus/Catecismo abra em rota interna `/catechism?paragraph=N` (ou rota Cathedra equivalente), nunca em URL externa.
+Arquivos: `src/index.css`, `src/pages/Catechism.tsx`, `src/pages/Bible.tsx`, `src/pages/GlobalSearchPage.tsx`, `src/components/search/SearchResultCard.tsx`.
 
-1. **Handler único de navegação interna**
-   - Criar `src/lib/nexusNavigation.ts` exportando:
-     - `catechismInternalPath(paragraph: number): string` → valida faixa (1–2865), retorna `/catechism?paragraph=N` ou `/catechism` se inválido.
-     - `openNexusRef(navigate, ref)` — decide destino conforme tipo (`catechism`, `bible`, `tag`, `saint`) usando rotas de `AppRoute`.
-   - Refatorar `CatechismPopover.tsx`, `NexusBubbles.tsx`, `CrossReferencePanel.tsx` para usar esse handler (elimina `navigate(...)` espalhado).
+Validação: Playwright em 375×812 (mobile) e 768×1024 (tablet), screenshots do Reader (`/catechism?p=1`), `/buscar?q=Maria` e `/formacao`.
 
-2. **Validação do query `?paragraph=`**
-   - Em `Catechism.tsx`, envolver `getParagraphParam` com `Number.isFinite`, faixa 1–2865. Inválido → limpar query e cair em `viewMode='parts'` com toast informativo (fallback seguro, sem crash).
+## Etapa 2 — Validar /buscar com termo real
+Antes de plugar novas ações, confirmo que a Etapa 1 ficou correta.
 
-3. **Regra anti-URL-externa no Nexus**
-   - Adicionar teste de lint custom simples: script `scripts/check-nexus-internal.mjs` que faz `rg 'href="http|window\.open|target="_blank"'` em `NexusBubbles.tsx`, `CatechismPopover.tsx`, `CrossReferencePanel.tsx` e falha se encontrar. Rodar no `prebuild` (opcional) ou só como test.
+- Abrir `/buscar?q=Maria` via Playwright, capturar mobile + desktop.
+- Checklist: hierarquia (título display > subtítulo itálico > trecho), respiro entre cards, largura de leitura.
+- Se algo estiver fora, ajusto antes de seguir.
 
-## Bloco 2 — Testes automatizados
+## Etapa 3 — Ações compartilhadas no /buscar
+Reaproveitar o mesmo componente já usado no Reader.
 
-1. **Vitest (unit)** — `src/components/cathedra/CatechismPopover.test.tsx`:
-   - Fallback quando `content` vazio → link com `to="/catechism?paragraph=123"`.
-   - Botão "Abrir completo" chama `onNavigate(paragraph)`.
-   - Nenhum `<a target="_blank">` renderizado.
-2. **Vitest (unit)** — `src/lib/nexusNavigation.test.ts`:
-   - `catechismInternalPath(0|-1|NaN|3000)` → `/catechism` fallback.
-   - `catechismInternalPath(123)` → `/catechism?paragraph=123`.
-3. **Playwright (via shell)** — desktop 1280×1800 e mobile 390×844:
-   - Abrir `/catechism`, entrar em modo leitura, clicar bolha do Nexus → esperar `page.url()` começar com `http://localhost:8080/` (mesmo origin) e conter parâmetro esperado.
-   - Verificar ausência de novas abas: `context.on('page', ...)` deve permanecer em zero.
+- Localizar o componente de ações do Reader (provavelmente `ReaderActions` ou similar dentro de `src/components/reader/`).
+- Se hoje ele estiver acoplado ao contexto do Reader, extrair para `src/components/shared/PassageActions.tsx` com props:
+  - `reference: string`
+  - `text: string`
+  - `sourceUrl: string`
+  - Ações: copiar trecho, copiar referência, destacar, compartilhar (Web Share API com fallback).
+- Substituir uso interno no Reader por esse componente.
+- Adicionar em `SearchResultCard.tsx` no rodapé de cada card.
+- Persistência de destaque: reutilizar `useReadingMarks` se aplicável ao contexto de busca; caso contrário, destaque local + toast.
 
-## Bloco 3 — Regressão visual do tema (BottomNav, Footer, Sidebar)
+Validação: teste manual via Playwright (copiar → checar clipboard, compartilhar → checar chamada da API, destacar → checar persistência).
 
-1. **Snapshots Playwright** em `/tmp/browser/theme-snapshots/`:
-   - Rotas logadas: `/`, `/catechism`, `/buscar`.
-   - Capturas isoladas via `locator.screenshot`: `[data-testid="bottom-nav"]`, `<footer>`, sidebar aberta.
-   - Comparação pixel-a-pixel com baseline (armazenar em `tests/visual/baseline/`).
-   - Tolerância: pixelmatch com `threshold 0.1`. Diff sobe artefato para inspeção.
-2. **Checagem manual guiada** (executo eu via Playwright):
-   - Verificar que Footer não sobrepõe BottomNav em mobile (padding-bottom no `<main>`).
-   - Verificar que o botão "voltar ao topo" fica acima do BottomNav (z-index e offset) em mobile.
-   - Sidebar aberta em desktop não empurra conteúdo além do viewport.
+## Etapa 4 — Formação como “Estudo Composto”
+Refatoração da seção `/formacao` seguindo a hierarquia do Reader.
 
----
+Estrutura por unidade de estudo:
+```text
+┌─────────────────────────────────────────┐
+│ KICKER   (série · nº unidade)           │
+│ TÍTULO   (display serif)                │
+│ SUBTÍTULO (serifa itálica)              │
+├─────────────────────────────────────────┤
+│ Citação de abertura (blockquote)        │
+│ Corpo editorial (coluna 62ch)           │
+│ Fontes primárias vinculadas             │
+│   → Cards de Bíblia / Catecismo / Mag.  │
+│ Nexus lateral (referências cruzadas)    │
+│ Ação: “Continuar leitura” (Reader)      │
+└─────────────────────────────────────────┘
+```
 
-## Detalhes técnicos
+- Consumir dados via `KnowledgeEngine` (referências temáticas) e `ReaderService` (previews de trechos), sem duplicar fetch.
+- Cards de fonte primária clicáveis abrindo o Reader correspondente na mesma aba, preservando `ref` de retorno.
+- Nexus lateral usando o Popover existente.
+- Remover cards antigos que não seguem essa hierarquia.
 
-- Handler central evita divergência: hoje `NexusBubbles` já usa `navigate(AppRoute.TEMAS/...)`, mas `CatechismPopover` acabou de sair do `vatican.va` — centralizar previne recaída.
-- Testes Playwright rodam no sandbox contra `localhost:8080` (dev server já ativo).
-- Snapshot visual é ruído se rodar em CI sem fontes fixas; começo salvando baselines locais e documento como regenerar (`UPDATE_SNAPSHOTS=1`).
+Arquivos previstos: `src/pages/Formacao.tsx` (ou equivalente), novos `src/components/formacao/StudyUnit.tsx`, `PrimarySourceCard.tsx`.
 
----
+Validação: screenshots desktop + mobile, checar que "Continuar leitura" navega para Reader com `ref` e que Nexus abre ancorado.
 
-## Confirmar antes de executar
+## Ordem de entrega
+1. Etapa 1 → screenshots antes/depois
+2. Etapa 2 → screenshot `/buscar?q=Maria`
+3. Etapa 3 → demo das 4 ações
+4. Etapa 4 → screenshots da nova Formação
 
-- **Executar tudo (Bloco 1+2+3)?** ou só um? Bloco 3 (regressão visual) é o mais custoso e frágil — recomendo pular se você não pretende integrar em CI ainda.
-- Se pular Bloco 3, entrego Blocos 1+2 numa tacada só.
+Confirma essa ordem para eu começar pela Etapa 1?
