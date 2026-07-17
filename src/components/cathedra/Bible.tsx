@@ -1554,8 +1554,12 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 <div
                   data-testid="book-list-empty"
                   role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-label={searchQuery ? `Nenhum livro encontrado para "${searchQuery}"` : 'Nenhum livro disponível no momento'}
                   className="text-center py-spacing-2xl px-spacing-lg space-y-spacing-md"
                 >
+
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/5 border border-secondary/10">
                     <Icons.BookOpen className="w-6 h-6 text-secondary/40" aria-hidden="true" />
                   </div>
