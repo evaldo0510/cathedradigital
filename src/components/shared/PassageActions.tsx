@@ -176,11 +176,11 @@ const PassageActions: React.FC<PassageActionsProps> = ({
   );
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
-  const renderIcon = (key: ActionKey, Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>) => {
+  const renderIcon = (key: ActionKey, Icon: React.ComponentType<any>) => {
     if (loading === key) {
-      return <Icons.Loader className={cn(iconSize, 'animate-spin')} aria-hidden={true} />;
+      return <Icons.Loader className={cn(iconSize, 'animate-spin')} aria-hidden="true" />;
     }
-    return <Icon className={iconSize} aria-hidden={true} />;
+    return <Icon className={iconSize} aria-hidden="true" />;
   };
 
   return (
