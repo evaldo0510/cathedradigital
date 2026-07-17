@@ -32,7 +32,7 @@ function useRipple() {
     ripple.style.cssText = `
       position:absolute;left:${x - size / 2}px;top:${y - size / 2}px;
       width:${size}px;height:${size}px;border-radius:50%;
-      background:hsl(var(--primary)/.15);
+      background:rgba(201,168,76,0.18);
       transform:scale(0);animation:ripple-expand .45s ease-out forwards;
       pointer-events:none;
     `;
@@ -86,18 +86,18 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-current={isActive ? 'page' : undefined}
     data-testid={dataTestId}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
+      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-[#c9a84c]/[0.08] focus-visible:ring-1 focus-visible:ring-[#c9a84c]/30 outline-none",
       "min-w-[48px] min-h-[48px]", 
       isActive 
-        ? 'text-primary' 
-        : 'text-muted-foreground/40 hover:text-primary/60'
+        ? 'text-[#c9a84c]' 
+        : 'text-muted-foreground/40 hover:text-[#c9a84c]/70'
     )}
   >
     {isActive && (
       <motion.div
         layoutId="bottom-nav-active-bg"
         data-testid="bottom-nav-active-bg"
-        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-premium-full z-0"
+        className="absolute inset-x-1.5 inset-y-1.5 bg-[#c9a84c]/[0.06] rounded-none border border-[#c9a84c]/25 z-0"
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
       />
     )}
@@ -115,7 +115,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-300",
-          isActive ? "text-primary opacity-100 scale-110" : "text-muted-foreground/30 group-hover:text-primary/50 group-active:scale-95"
+          isActive ? "text-[#c9a84c] opacity-100 scale-110" : "text-muted-foreground/30 group-hover:text-[#c9a84c]/60 group-active:scale-95"
         )}
         size={18}
         strokeWidth={isActive ? 1.5 : 1.2}
@@ -132,9 +132,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[8px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
+        "text-[8px] md:text-[9.5px] font-medium uppercase tracking-[0.28em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
-        isActive ? 'text-primary font-bold' : 'text-muted-foreground/40 font-medium'
+        isActive ? 'text-[#c9a84c] font-semibold' : 'text-muted-foreground/40'
       )}
     >
       {label}
@@ -144,7 +144,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <motion.div 
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
-        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-primary rounded-premium-full z-10" 
+        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-[#c9a84c] rounded-premium-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
@@ -190,7 +190,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/80 backdrop-blur-xl border-t border-primary/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
+        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/85 backdrop-blur-xl border-t border-[#c9a84c]/25 bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
         "min-h-[64px]", 
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 

@@ -209,23 +209,31 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            {/* Mobile Header - Cinematic extension of the atmosphere */}
-            <header className="flex items-center justify-between mb-spacing-md pb-spacing-xs border-b border-primary/[0.01] dark:border-white/[0.01]">
+            {/* Mobile Header — Noir & Gold wordmark */}
+            <header className="flex items-center justify-between mb-4 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
               <div 
-                className="flex items-center gap-spacing-md cursor-pointer group outline-none" 
+                className="flex items-baseline gap-2 cursor-pointer group outline-none" 
                 onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
-                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-spacing-xs group-hover:scale-105 transition-transform duration-2000">
-                  <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} aria-hidden="true" />
-                </div>
-                <div className="space-y-spacing-3xs">
-                  <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[6.5px] font-bold uppercase text-primary/10 tracking-[0.6em]">
+                <span style={{ color: '#c9a84c', fontSize: '10px' }} aria-hidden="true">●</span>
+                <div className="flex flex-col leading-none gap-1">
+                  <h1
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontWeight: 500,
+                      fontSize: '1rem',
+                      letterSpacing: '0.18em',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  >
+                    CATHEDRA
+                  </h1>
+                  <span style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
                     Sacrum Archivum
-                  </p>
+                  </span>
                 </div>
               </div>
 
@@ -234,10 +242,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-premium-full w-spacing-xl h-spacing-xl text-primary/70 hover:text-primary hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="rounded-none w-10 h-10 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
+                style={{ border: '1px solid rgba(201,168,76,0.35)', color: '#c9a84c' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-spacing-sm h-spacing-sm" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </header>
 
@@ -245,9 +256,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-premium transition-all">
-                      <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/70 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
-                      <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/50 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} />
+                    <button className="w-full flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all">
+                      <h3 style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: '#c9a84c' }} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -269,22 +280,22 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-300 outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-[9px] font-medium transition-all duration-300 outline-none h-auto min-h-[40px] border
                                   ${isActive
-                                    ? 'bg-primary/10 dark:bg-white/10 text-primary shadow-premium-none'
-                                    : 'text-primary/75 dark:text-white/80 hover:bg-primary/5 dark:hover:bg-white/5 hover:text-primary'}`}
+                                    ? 'bg-[#c9a84c]/[0.08] text-[#c9a84c] border-[#c9a84c]/40'
+                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[#c9a84c] border-transparent hover:border-[#c9a84c]/20'}`}
                               >
-                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-90'}`}>
+                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
                                   </span>
-                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-95'}`}>{item.label}</span>
+                                <span className="tracking-[0.18em] uppercase truncate">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
+                                  <span className="ml-auto text-[8px] font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
                                   </span>
                                 )}
-                                {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-spacing-2xs py-spacing-3xs rounded flex-shrink-0">PRO</span>}
-                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-spacing-3xs h-spacing-3xs rounded-premium-full bg-primary/40 flex-shrink-0" />}
+                                {(item as any).pro && <span className="ml-auto text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 flex-shrink-0" style={{ color: '#c9a84c', border: '1px solid rgba(201,168,76,0.4)' }}>PRO</span>}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 flex-shrink-0" style={{ background: '#c9a84c' }} />}
                               </Button>
                             </li>
                           );
