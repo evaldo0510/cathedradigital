@@ -188,7 +188,16 @@ Definição operacional:
 
 **Se qualquer fluxo exigir ≥4 interações, o release é bloqueado.**
 
-### KPIs secundários
+### KPIs adicionais (bloqueantes)
+
+Acrescentados na aprovação da abertura da sprint:
+
+- **A1. Propósito em 5 segundos.** Ao apresentar o Átrio (mobile, primeiro acesso, sem contexto) a 5 pessoas fora do projeto, ≥ 4 devem descrever a missão do Cathedra em suas palavras em ≤ 5 s.
+- **A2. Iniciar um estudo em ≤ 3 interações.** Coberto pelos fluxos F1 e F5 do §9.
+- **A3. Retomar atividade anterior em ≤ 2 interações.** Coberto pelos fluxos F2 e F6 do §9 (E9 obrigatório).
+- **A4. Nenhum elemento pertencente a outro ambiente.** Auditoria manual + automatizada da whitelist §4 e blacklist §5. Zero componente de Estudar/Rezar/Formar/Pesquisar/Minha Jornada renderizado dentro do corpo do Átrio.
+
+### KPIs secundários (não bloqueantes, mas monitorados)
 
 | Métrica | Meta | Instrumentação |
 |---|---|---|
