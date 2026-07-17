@@ -237,6 +237,16 @@ const CatechismContent: React.FC<{
           }}>{seg.value}</ReactMarkdown>
         )
       )}
+      {data?.content && (
+        <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
+          <PassageActions
+            text={data.content}
+            reference={`CIC §${paragraph}`}
+            title={`Cathedra — CIC §${paragraph}`}
+            passage={{ kind: 'catechism', paragraph }}
+          />
+        </div>
+      )}
     </div>
   );
 };
