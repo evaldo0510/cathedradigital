@@ -606,24 +606,24 @@ const Bible: React.FC = () => {
     reader.readAsText(file);
   };
 
+  const share = useShare();
   const handleShareVerse = useCallback(() => {
     if (!activeVerse || !selectedBook) return;
-    
+
     const title = selectedBook.chapterTitles?.[selectedChapter] || '';
-    const text = `"${activeVerse.text}" — ${selectedBook.name} ${selectedChapter}:${activeVerse.number}${title ? ` (${title})` : ''}`;
-    const url = `${window.location.origin}/bible?book=${encodeURIComponent(selectedBook.abbr)}&ch=${selectedChapter}&v=${activeVerse.number}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: 'Cathedra Bible',
-        text: text,
-        url: url,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(`${text}\n\nLeia mais no Cathedra: ${url}`);
-      toast.success('Link do versículo copiado!');
-    }
-  }, [activeVerse, selectedBook, selectedChapter]);
+    const reference = `${selectedBook.name} ${selectedChapter}:${activeVerse.number}${title ? ` (${title})` : ''}`;
+    const text = `"${activeVerse.text}" — ${reference}`;
+    // URL canônica sempre via helper — nenhuma construção manual.
+    const url = buildPassageUrl({
+      kind: 'bible',
+      ref: `${selectedBook.abbr} ${selectedChapter}:${activeVerse.number}`,
+      highlight: reference,
+    });
+
+    share({ title: 'Cathedra Bible', text, url }).catch(() => {
+      /* useShare já faz fallback para clipboard + toast */
+    });
+  }, [activeVerse, selectedBook, selectedChapter, share]);
 
   const fetchVerses = async (abbr: string, chapter: number) => {
     const runId = `${abbr}-${chapter}-${Date.now()}`;
