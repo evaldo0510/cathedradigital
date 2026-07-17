@@ -1563,8 +1563,11 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           return (
                           <button 
                             key={book.abbr}
+                            data-book-btn
+                            data-testid={`book-btn-${book.abbr}`}
                             onClick={() => selectBook(book)}
                             aria-current={isActive ? 'page' : undefined}
+
                             className={cn(
                               "w-full h-14 flex items-center justify-between transition-colors px-spacing-sm rounded-lg group",
                               "hover:bg-primary/[0.03] active:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60",
