@@ -180,27 +180,71 @@ const Footer: React.FC = React.memo(() => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-3xl lg:gap-spacing-4xl mb-spacing-4xl">
           
           <div className="flex flex-col gap-spacing-xl">
-             <div className="flex items-center gap-spacing-lg">
-               <Icons.Logo className="w-spacing-2xl h-spacing-2xl flex-shrink-0" variant="blue" />
-               <div>
-                 <h3 className="text-premium-2xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-premium-small font-black uppercase text-primary tracking-[0.4em]">Digital Sanctuarium</p>
+             <div className="flex flex-col gap-2">
+               <div className="flex items-baseline gap-2">
+                 <span className="text-[10px]" style={{ color: '#c9a84c' }} aria-hidden="true">●</span>
+                 <span
+                   style={{
+                     fontFamily: "'Playfair Display', serif",
+                     fontWeight: 500,
+                     fontSize: 'clamp(1.5rem, 2.5vw, 2rem)',
+                     letterSpacing: '0.14em',
+                     color: 'hsl(var(--foreground))',
+                     lineHeight: 1,
+                   }}
+                 >
+                   CATHEDRA
+                 </span>
                </div>
+               <span
+                 className="pl-4"
+                 style={{
+                   color: '#c9a84c',
+                   fontFamily: 'Inter, sans-serif',
+                   fontSize: '9px',
+                   letterSpacing: '0.4em',
+                   textTransform: 'uppercase',
+                 }}
+               >
+                 Digital Sanctuarium
+               </span>
             </div>
-            <p className="text-premium-base text-muted-foreground leading-relaxed">
+            <p
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '0.95rem',
+                color: 'hsl(var(--muted-foreground))',
+                lineHeight: 1.65,
+              }}
+            >
               {lang === 'pt' 
-                ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica, unindo a tradição milenar à tecnologia moderna.'
+                ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica — unindo a tradição milenar à tecnologia moderna.'
                 : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}
             </p>
-            <div className="flex gap-spacing-sm">
+            <div className="flex gap-3">
               {[
                 { icon: <Icons.Instagram />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
                 { icon: <Icons.Youtube />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
                 { icon: <Icons.Whatsapp />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
-
               ].map((social, i) => (
-                <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-premium-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-spacing-xl h-spacing-xl p-spacing-0 flex items-center justify-center">
-                  <a href={social.url} target="_blank" rel="noopener noreferrer" onClick={() => handleSocialClick(social.platform, social.url)} aria-label={social.platform}>
+                <Button
+                  key={i}
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="rounded-none w-11 h-11 p-0 flex items-center justify-center transition-all"
+                  style={{ border: '1px solid rgba(201,168,76,0.35)', color: '#c9a84c' }}
+                >
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleSocialClick(social.platform, social.url)}
+                    aria-label={social.platform}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
+                  >
                     {social.icon}
                   </a>
                 </Button>
