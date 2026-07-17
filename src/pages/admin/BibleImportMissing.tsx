@@ -59,6 +59,50 @@ export default function BibleImportMissing() {
   const [job, setJob] = useState<Job | null>(null);
   const [starting, setStarting] = useState(false);
 
+  // Seleção manual: Map<abbrev, Set<chapter>|null>. null = livro inteiro.
+  const [selection, setSelection] = useState<Map<string, Set<number> | null>>(new Map());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [useSelection, setUseSelection] = useState(false);
+
+  function buildSelectionPayload(): Array<{ abbrev: string; chapters?: number[] }> | undefined {
+    if (!useSelection || selection.size === 0) return undefined;
+    return Array.from(selection.entries()).map(([abbrev, chapters]) => ({
+      abbrev,
+      chapters: chapters ? Array.from(chapters).sort((a, b) => a - b) : undefined,
+    }));
+  }
+
+  function toggleBook(abbrev: string, all: number[]) {
+    setSelection((prev) => {
+      const next = new Map(prev);
+      if (next.has(abbrev)) next.delete(abbrev);
+      else next.set(abbrev, null); // livro inteiro por padrão
+      return next;
+    });
+  }
+
+  function toggleChapter(abbrev: string, chapter: number, all: number[]) {
+    setSelection((prev) => {
+      const next = new Map(prev);
+      const cur = next.get(abbrev);
+      const set = new Set<number>(cur ? Array.from(cur) : all); // null vira "todos"
+      if (set.has(chapter)) set.delete(chapter);
+      else set.add(chapter);
+      if (set.size === 0) next.delete(abbrev);
+      else if (set.size === all.length) next.set(abbrev, null);
+      else next.set(abbrev, set);
+      return next;
+    });
+  }
+
+  function toggleExpand(abbrev: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.has(abbrev) ? next.delete(abbrev) : next.add(abbrev);
+      return next;
+    });
+  }
+
   async function runValidation() {
     setLoadingValidation(true); setValidation(null);
     try { setValidation(await invoke("validate", { translation })); }
@@ -68,7 +112,11 @@ export default function BibleImportMissing() {
 
   async function runDryRun() {
     setLoadingDryRun(true); setDryRun(null);
-    try { setDryRun(await invoke("dry_run", { translation })); toast.success("Dry-run concluído — nada foi gravado."); }
+    try {
+      const sel = buildSelectionPayload();
+      setDryRun(await invoke("dry_run", { translation, selection: sel }));
+      toast.success(sel ? `Dry-run da seleção (${sel.length} livros) — nada gravado.` : "Dry-run concluído — nada foi gravado.");
+    }
     catch (e: any) { toast.error(e.message); }
     finally { setLoadingDryRun(false); }
   }
@@ -85,9 +133,10 @@ export default function BibleImportMissing() {
   async function start() {
     setStarting(true);
     try {
-      const res = await invoke("start", { translation });
+      const sel = buildSelectionPayload();
+      const res = await invoke("start", { translation, selection: sel });
       if (!res?.job_id) throw new Error("Job não iniciado");
-      toast.success("Importação iniciada");
+      toast.success(sel ? `Importação da seleção iniciada (${sel.length} livros)` : "Importação iniciada");
       pollJob(res.job_id);
     } catch (e: any) { toast.error(e.message); setStarting(false); }
   }
