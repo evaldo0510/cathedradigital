@@ -106,18 +106,45 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <div ref={ref} className="space-y-spacing-md md:space-y-spacing-2xl">
         <motion.div 
           className={cn(
-            "text-center space-y-spacing-xs md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
+            "text-center space-y-spacing-sm md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
             hasQuery && "hidden md:block"
           )} 
           initial={{ opacity: 0, y: -10 }} 
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="w-spacing-xl h-spacing-xl md:w-spacing-3xl md:h-spacing-3xl rounded-[1rem] md:rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
-            <Icons.Search className="w-spacing-sm h-spacing-sm md:w-spacing-xl md:h-spacing-xl text-white" />
+          <div className="flex items-center justify-center gap-3" aria-hidden="true">
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+            <span
+              className="text-[9px] md:text-[10px] uppercase"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+            >
+              Logos
+            </span>
+            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
           </div>
-          <h2 className="text-premium-xl md:text-premium-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
-          <p className="text-muted-foreground font-serif italic text-premium-sm md:text-premium-lg max-w-spacing-lg mx-auto leading-relaxed hidden md:block">
-            "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
+          <h2
+            className="leading-none"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 500,
+              fontSize: 'clamp(2rem, 6vw, 3.75rem)',
+              letterSpacing: '0.02em',
+            }}
+          >
+            Logos<span style={{ color: '#c9a84c' }}>.</span> IA
+          </h2>
+          <p
+            className="mx-auto hidden md:block"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: 'italic',
+              fontSize: '1.05rem',
+              color: 'hsl(var(--muted-foreground))',
+              maxWidth: '42ch',
+              lineHeight: 1.6,
+            }}
+          >
+            "No princípio era o Verbo." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
 
