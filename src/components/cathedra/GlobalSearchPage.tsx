@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
 import SearchResultCard from './SearchResultCard';
+import PassageActions from '@/components/shared/PassageActions';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
