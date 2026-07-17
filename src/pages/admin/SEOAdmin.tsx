@@ -62,11 +62,11 @@ export default function SEOAdmin() {
   const loadAudits = async () => {
     const { data, error } = await supabase
       .from("seo_audits")
-      .select("id,url,score,findings,created_at")
+      .select("id,url,score,findings,meta_tags,headings,links,created_at")
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) { toast.error("Falha ao carregar auditorias: " + error.message); return; }
-    setAudits((data || []) as AuditRow[]);
+    setAudits((data || []) as unknown as AuditRow[]);
   };
 
   const loadSettings = async () => {
