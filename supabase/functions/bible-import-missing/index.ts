@@ -87,7 +87,27 @@ async function ensureTranslation(admin: Admin, translation: string): Promise<str
   return data.id as string;
 }
 
-async function computeMissing(admin: Admin, translation: string) {
+type Selection = Array<{ abbrev: string; chapters?: number[] }>;
+
+function normalizeSelection(input: unknown): Selection | null {
+  if (!Array.isArray(input) || input.length === 0) return null;
+  const out: Selection = [];
+  for (const it of input) {
+    if (!it || typeof it !== 'object') continue;
+    const abbrev = String((it as any).abbrev ?? '').trim();
+    if (!abbrev) continue;
+    const rawCh = (it as any).chapters;
+    let chapters: number[] | undefined;
+    if (Array.isArray(rawCh)) {
+      chapters = rawCh.map((n) => Number(n)).filter((n) => Number.isInteger(n) && n > 0);
+      if (chapters.length === 0) chapters = undefined;
+    }
+    out.push({ abbrev, chapters });
+  }
+  return out.length > 0 ? out : null;
+}
+
+async function computeMissing(admin: Admin, translation: string, selection: Selection | null = null) {
   const bolls = await fetchBollsBooks(translation);
   const { data: books } = await admin.from('bible_books').select('id, abbrev, chapters_count');
   const bookByAbbrev = new Map((books ?? []).map((b: any) => [b.abbrev, b]));
@@ -100,16 +120,23 @@ async function computeMissing(admin: Admin, translation: string) {
     chaptersByBook.set(c.book_id as string, set);
   }
 
+  const selMap = selection
+    ? new Map(selection.map((s) => [s.abbrev, s.chapters ? new Set(s.chapters) : null]))
+    : null;
+
   const plan: Array<{ canon: typeof BIBLE_CANON[number]; bookId: number; chapters: number[] }> = [];
   for (const canon of BIBLE_CANON) {
     if (canon.deuterocanonical) continue;
     if (SKIP_ABBRS.has(canon.abbr)) continue;
+    if (selMap && !selMap.has(canon.abbr)) continue;
     const bolls_ = bolls.get(canon.bollsId);
     if (!bolls_) continue;
     const existing = bookByAbbrev.get(canon.abbr) as any;
     const existingChapters = existing ? (chaptersByBook.get(existing.id) ?? new Set<number>()) : new Set<number>();
+    const wanted = selMap?.get(canon.abbr) ?? null; // Set<number> | null
     const missing: number[] = [];
     for (let n = 1; n <= bolls_.chapters; n++) {
+      if (wanted && !wanted.has(n)) continue;
       if (!existingChapters.has(n)) missing.push(n);
     }
     if (missing.length > 0) plan.push({ canon, bookId: canon.bollsId, chapters: missing });
