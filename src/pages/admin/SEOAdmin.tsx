@@ -15,6 +15,9 @@ interface AuditRow {
   url: string;
   score: number | null;
   findings: Array<{ type: string; severity: string; message: string }>;
+  meta_tags: { title?: string; description?: string; canonical?: string; ogTitle?: string; ogImage?: string; twitterCard?: string; http_status?: number } | null;
+  headings: { h1?: string[]; h2_count?: number } | null;
+  links: { checked?: number; broken?: Array<{ url: string; status: number }> } | null;
   created_at: string;
 }
 
@@ -59,11 +62,11 @@ export default function SEOAdmin() {
   const loadAudits = async () => {
     const { data, error } = await supabase
       .from("seo_audits")
-      .select("id,url,score,findings,created_at")
+      .select("id,url,score,findings,meta_tags,headings,links,created_at")
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) { toast.error("Falha ao carregar auditorias: " + error.message); return; }
-    setAudits((data || []) as AuditRow[]);
+    setAudits((data || []) as unknown as AuditRow[]);
   };
 
   const loadSettings = async () => {
@@ -94,6 +97,29 @@ export default function SEOAdmin() {
       .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))
       .slice(0, 15);
   }, [audits]);
+
+  const checklist = useMemo(() => {
+    const byUrl = new Map<string, AuditRow>();
+    for (const a of audits) if (!byUrl.has(a.url)) byUrl.set(a.url, a);
+    return [...byUrl.values()].map(a => {
+      const t = a.meta_tags?.title || "";
+      const d = a.meta_tags?.description || "";
+      const h1 = a.headings?.h1 || [];
+      const canonical = a.meta_tags?.canonical || "";
+      const broken = a.links?.broken || [];
+      const checks = {
+        title: !!t && t.length >= 20 && t.length <= 65,
+        description: !!d && d.length >= 50 && d.length <= 165,
+        heading: h1.length === 1,
+        canonical: !!canonical,
+        links: broken.length === 0,
+      };
+      const failed = Object.values(checks).filter(v => !v).length;
+      return { row: a, checks, failed, broken };
+    }).sort((a, b) => b.failed - a.failed);
+  }, [audits]);
+
+
 
   const runAudit = async () => {
     setRunning(true);
@@ -302,6 +328,59 @@ export default function SEOAdmin() {
       )}
 
       <Card>
+        <CardHeader>
+          <CardTitle>Checklist on-page por página</CardTitle>
+          <CardDescription>Title, description, heading (H1), canonical e links quebrados. Páginas com qualquer falha ficam marcadas como "precisa de ajuste".</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="text-sm text-muted-foreground flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Carregando…</div>
+          ) : checklist.length === 0 ? (
+            <div className="text-sm text-muted-foreground">Nenhuma auditoria ainda. Rode uma acima.</div>
+          ) : (
+            <div className="space-y-2">
+              {checklist.map(({ row, checks, failed, broken }) => {
+                const Item = ({ ok, label }: { ok: boolean; label: string }) => (
+                  <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded border ${ok ? "text-emerald-700 border-emerald-200 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30 dark:border-emerald-900" : "text-destructive border-destructive/30 bg-destructive/5"}`}>
+                    {ok ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />} {label}
+                  </span>
+                );
+                return (
+                  <div key={row.id} className="p-3 rounded-lg border bg-card">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <a href={row.url} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline break-all">{row.url}</a>
+                      {failed > 0
+                        ? <Badge variant="destructive">precisa de ajuste ({failed})</Badge>
+                        : <Badge variant="secondary">OK</Badge>}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      <Item ok={checks.title} label="title" />
+                      <Item ok={checks.description} label="description" />
+                      <Item ok={checks.heading} label="H1" />
+                      <Item ok={checks.canonical} label="canonical" />
+                      <Item ok={checks.links} label={`links${broken.length ? ` (${broken.length} quebrados)` : ""}`} />
+                    </div>
+                    {broken.length > 0 && (
+                      <ul className="mt-2 text-xs text-muted-foreground space-y-0.5">
+                        {broken.slice(0, 5).map((b, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <Badge variant="outline" className="text-[10px] shrink-0">{b.status || "erro"}</Badge>
+                            <span className="break-all">{b.url}</span>
+                          </li>
+                        ))}
+                        {broken.length > 5 && <li className="text-[11px]">+ {broken.length - 5} outros</li>}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+
         <CardHeader>
           <CardTitle>Principais URLs com problemas</CardTitle>
           <CardDescription>Baseado na última auditoria salva em <code>seo_audits</code>.</CardDescription>
