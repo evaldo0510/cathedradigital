@@ -95,4 +95,49 @@ test('CIC link a partir de Jo 6 navega para /catechism?p=N com conteúdo', async
   expect(String(payload!.from || '')).toContain('/bible');
   expect(String(payload!.from || '')).toContain('book=Jo');
   expect(String(payload!.from || '')).toContain('ch=6');
+
+  // Landmarks + heading corretos em /catechism?p=N
+  await expect(page.locator('main')).toHaveCount(1);
+  await expect(page.locator('nav').first()).toBeVisible();
+  const headings = page.locator('h1, h2');
+  await expect(headings.first()).toBeVisible();
+  const headingText = (await headings.allInnerTexts()).join(' \n ');
+  expect(headingText).toMatch(new RegExp(`(§\\s*)?${paragraph}\\b|Catecismo`, 'i'));
+
+  // Parágrafo N visível na página (marcador semântico ou texto)
+  const paragraphMarker = page
+    .locator(
+      `[data-paragraph="${paragraph}"], [data-cic-paragraph="${paragraph}"], #p-${paragraph}, #paragraph-${paragraph}`
+    )
+    .first();
+  if (await paragraphMarker.count()) {
+    await expect(paragraphMarker).toBeVisible();
+  } else {
+    await expect(page.locator('main')).toContainText(new RegExp(`§\\s*${paragraph}\\b`));
+  }
+
+  // Nenhuma nova aba/popup foi aberta em todo o fluxo até aqui
+  expect(popups, 'nenhum popup/nova aba durante o fluxo').toEqual([]);
+  expect(context.pages().length).toBe(pagesBefore);
+
+  // Reload preserva o parágrafo N e não emite novo log de [CIC link click]
+  const logsBeforeReload = logs.length;
+  await page.reload();
+  await page.waitForLoadState('domcontentloaded');
+  await expect(page).toHaveURL(new RegExp(`/catechism\\?p=${paragraph}`));
+
+  const markerAfter = page
+    .locator(
+      `[data-paragraph="${paragraph}"], [data-cic-paragraph="${paragraph}"], #p-${paragraph}, #paragraph-${paragraph}`
+    )
+    .first();
+  if (await markerAfter.count()) {
+    await expect(markerAfter).toBeVisible();
+  } else {
+    await expect(page.locator('main')).toContainText(new RegExp(`§\\s*${paragraph}\\b`));
+  }
+
+  // Nenhum novo log de clique CIC após o reload (não houve novo clique)
+  await page.waitForTimeout(500);
+  expect(logs.length, 'nenhum [CIC link click] extra após reload').toBe(logsBeforeReload);
 });
