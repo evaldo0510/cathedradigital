@@ -178,7 +178,26 @@ const HomeUnified: React.FC = () => {
                 ⌘K
               </kbd>
             </div>
+
+            {/* Sugestões (chips) — vindas do SearchAdapter */}
+            {suggestions.length > 0 && (
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {suggestions.slice(0, 6).map((s) => (
+                  <Link
+                    key={s.id}
+                    to={`/buscar?q=${encodeURIComponent(s.label)}`}
+                    className="rounded-full border px-3 py-1.5 text-xs tracking-wide transition-colors"
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
+
 
           {/* Chevron descend */}
           <div className="mt-16 opacity-40 md:mt-24">
