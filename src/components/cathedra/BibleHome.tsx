@@ -15,6 +15,7 @@ interface BibleHomeProps {
 }
 
 export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery, setSearchQuery }) => {
+  const navigate = useNavigate();
   const lastReadRaw = localStorage.getItem('cathedra_bible_last_read');
   const lastRead = React.useMemo(() => lastReadRaw ? JSON.parse(lastReadRaw) : null, [lastReadRaw]);
 
