@@ -199,8 +199,8 @@ async function validateSource(translation: string) {
  * Dry-run: para cada livro faltante, baixa 1 capítulo (o primeiro que falta)
  * de bolls como prova de disponibilidade e mostra sample. Nada é gravado.
  */
-async function dryRun(admin: Admin, translation: string) {
-  const plan = await computeMissing(admin, translation);
+async function dryRun(admin: Admin, translation: string, selection: Selection | null = null) {
+  const plan = await computeMissing(admin, translation, selection);
   const samples: Array<{
     abbrev: string; name: string; chapters_missing: number; sample_chapter: number;
     sample_verses: number; first_verse: string | null; error?: string;
