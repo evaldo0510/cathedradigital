@@ -236,14 +236,48 @@ async function dryRun(admin: Admin, translation: string, selection: Selection | 
 }
 
 
-async function runImport(admin: Admin, jobId: string, sourceId: string, translation: string) {
+async function runCanonDiagnose(): Promise<any> {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/bible-canon-diagnose`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SERVICE_KEY}`,
+        'x-cron-secret': Deno.env.get('CRON_SECRET') ?? '',
+      },
+      body: JSON.stringify({ action: 'run' }),
+    });
+    const body = await res.json().catch(() => ({}));
+    return { ran: true, ok: res.ok, run_id: body?.run_id ?? null, status: body?.status ?? null, total_findings: body?.total_findings ?? null, at: new Date().toISOString() };
+  } catch (e) {
+    return { ran: false, error: String((e as any)?.message || e), at: new Date().toISOString() };
+  }
+}
+
+/**
+ * Agenda uma segunda revalidação após um delay (default 3min) para pegar
+ * eventual propagação de cache/materialized views. Faz merge em verification.
+ */
+async function scheduleRevalidation(admin: Admin, jobId: string, delayMs = 180_000) {
+  await new Promise((r) => setTimeout(r, delayMs));
+  const diag = await runCanonDiagnose();
+  const { data: gate } = await admin.rpc('bible_read_gate_status').catch(() => ({ data: null }));
+  const { data: current } = await admin.from('bible_import_jobs').select('verification').eq('id', jobId).maybeSingle();
+  const merged = {
+    ...(current?.verification ?? {}),
+    revalidation_retry: { ...diag, gate },
+  };
+  await admin.from('bible_import_jobs').update({ verification: merged }).eq('id', jobId);
+}
+
+async function runImport(admin: Admin, jobId: string, sourceId: string, translation: string, selection: Selection | null = null) {
   const started = new Date().toISOString();
   await admin.from('bible_import_jobs').update({
     status: 'running', started_at: started, message: 'Coletando plano de importação…',
   }).eq('id', jobId);
 
   try {
-    const plan = await computeMissing(admin, translation);
+    const plan = await computeMissing(admin, translation, selection);
     const totalChapters = plan.reduce((s, p) => s + p.chapters.length, 0);
     await admin.from('bible_import_jobs').update({
       total: totalChapters,
@@ -255,6 +289,7 @@ async function runImport(admin: Admin, jobId: string, sourceId: string, translat
 
     for (const item of plan) {
       const { canon, bookId, chapters } = item;
+      const stepStarted = Date.now();
       // 1. book
       let { data: book } = await admin.from('bible_books').select('id').eq('abbrev', canon.abbr).maybeSingle();
       if (!book) {
@@ -275,6 +310,7 @@ async function runImport(admin: Admin, jobId: string, sourceId: string, translat
 
       // 2. chapters em paralelo controlado
       let bookVerses = 0;
+      let chaptersWritten = 0;
       for (let i = 0; i < chapters.length; i += CHAPTER_CONCURRENCY) {
         const batch = chapters.slice(i, i + CHAPTER_CONCURRENCY);
         const results = await Promise.all(batch.map(async (n) => {
@@ -294,44 +330,28 @@ async function runImport(admin: Admin, jobId: string, sourceId: string, translat
               .upsert(rows, { onConflict: 'chapter_id,translation_id,number' });
             if (vUp.error) throw new Error(`verses ${canon.abbr} ${n}: ${vUp.error.message}`);
             bookVerses += rows.length;
+            chaptersWritten++;
           }
           done++;
         }
         await admin.from('bible_import_jobs').update({ progress: done }).eq('id', jobId);
       }
-      auditLog.push({ abbrev: canon.abbr, chapters: chapters.length, verses: bookVerses });
+      auditLog.push({
+        abbrev: canon.abbr, name: canon.name,
+        chapters: chapters.length, chapters_written: chaptersWritten,
+        verses: bookVerses, duration_ms: Date.now() - stepStarted,
+        at: new Date().toISOString(),
+      });
     }
 
-    // 3. Revalidação automática do gate
+    // 3. Revalidação imediata
     await admin.from('bible_import_jobs').update({
       message: 'Import concluído. Revalidando cânon…',
     }).eq('id', jobId);
 
-    let verification: any = { ran: false };
-    try {
-      const diagRes = await fetch(`${SUPABASE_URL}/functions/v1/bible-canon-diagnose`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SERVICE_KEY}`,
-          'x-cron-secret': Deno.env.get('CRON_SECRET') ?? '',
-        },
-        body: JSON.stringify({ action: 'run' }),
-      });
-      const diagBody = await diagRes.json();
-      verification = {
-        ran: true,
-        ok: diagRes.ok,
-        run_id: diagBody?.run_id ?? null,
-        status: diagBody?.status ?? null,
-        total_findings: diagBody?.total_findings ?? null,
-      };
-      // Gate atual
-      const { data: gate } = await admin.rpc('bible_read_gate_status');
-      verification.gate = gate;
-    } catch (e) {
-      verification = { ran: false, error: String((e as any)?.message || e) };
-    }
+    const immediate = await runCanonDiagnose();
+    const { data: gate } = await admin.rpc('bible_read_gate_status').catch(() => ({ data: null }));
+    const verification = { ...immediate, gate, revalidation_retry: { pending: true, scheduled_in_ms: 180_000 } };
 
     await admin.from('bible_import_jobs').update({
       status: 'succeeded',
@@ -342,6 +362,10 @@ async function runImport(admin: Admin, jobId: string, sourceId: string, translat
       verification,
       audit_log: auditLog,
     }).eq('id', jobId);
+
+    // 4. Retry de revalidação em 3min (background, não bloqueia)
+    // @ts-ignore EdgeRuntime é fornecido pelo runtime Deno Deploy
+    EdgeRuntime.waitUntil(scheduleRevalidation(admin, jobId, 180_000));
   } catch (e) {
     await admin.from('bible_import_jobs').update({
       status: 'failed',
