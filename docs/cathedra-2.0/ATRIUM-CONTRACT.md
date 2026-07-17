@@ -1,5 +1,9 @@
 # Sprint 2.0.1 — Contrato do Ambiente Átrio
 
+> **Marco arquitetônico.** Esta sprint não é "mais uma sprint". Ela define o padrão de qualidade que **todas as demais** (2.0.2 Biblioteca, 2.0.3 Leitor Universal, 2.0.4 Pesquisa, 2.0.5 Nexus, 2.0.6 Minha Jornada) devem seguir. Simples, clara, orientada à missão.
+
+**Status:** 🟢 Aprovado. Sprint autorizada a abrir sob este contrato (v1.1, ajustes do arquiteto integrados: Estado 9, personalização por perfil, prioridade de blocos P0–P6, KPIs A1–A4).
+
 Documento assinado antes de qualquer componente. Governa o que o Átrio **é**, **faz** e **recusa fazer**.
 Fonte de verdade da Sprint 2.0.1. Se algo aqui e no código divergem, o código está errado.
 
