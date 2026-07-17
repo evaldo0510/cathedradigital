@@ -30,3 +30,9 @@ verify_jwt = false
 
 
 
+
+[functions.seo-audit-run]
+verify_jwt = true
+
+[functions.seo-validate-assets]
+verify_jwt = true
