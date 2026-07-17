@@ -17,14 +17,23 @@ const Header: React.FC = () => {
           <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">2.0</span>
         </div>
         <div className="flex items-center gap-1 text-muted-foreground">
-          <button aria-label="Buscar" className="p-2 rounded-md hover:bg-muted transition">
-            <Search className="w-4 h-4" />
+          <button
+            aria-label="Buscar"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
+          >
+            <Search aria-hidden="true" className="w-4 h-4" />
           </button>
-          <button aria-label="Retomar" className="p-2 rounded-md hover:bg-muted transition">
-            <RotateCcw className="w-4 h-4" />
+          <button
+            aria-label="Retomar"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
+          >
+            <RotateCcw aria-hidden="true" className="w-4 h-4" />
           </button>
-          <button aria-label="Perfil" className="p-2 rounded-md hover:bg-muted transition">
-            <User className="w-4 h-4" />
+          <button
+            aria-label="Perfil"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
+          >
+            <User aria-hidden="true" className="w-4 h-4" />
           </button>
         </div>
       </div>
