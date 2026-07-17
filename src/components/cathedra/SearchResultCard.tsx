@@ -100,6 +100,13 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         )}
       </div>
     </div>
+    {actions && (
+      <div className="px-spacing-sm pb-spacing-sm pt-0 -mt-1 border-t border-border/10">
+        <div className="pt-spacing-sm">
+          {actions}
+        </div>
+      </div>
+    )}
     </CathedraCard>
   );
 });
