@@ -1,13 +1,15 @@
 /**
- * HomeUnified — Sprint Visual 3.0, Turno 1.
+ * HomeUnified — Sprint Visual 3.0, Turno 2.
  *
  * Home única (deslogado + logado) que substitui a landing bugada e o Átrio v2 como
  * porta de entrada visível. Composição: bandas full-width empilhadas, paleta noir & gold,
  * tipografia editorial (Playfair Display + Inter — ambas já carregadas no projeto).
  *
- * Turno 1: shell visual completo com dados estáticos que espelham o formato real.
- * Turno 2: substituir estáticos por hooks reais (useAtriumProfile + composition).
- * Turno 3: polish, motion, SEO, mobile refinements.
+ * ✅ Turno 1: shell visual completo com dados estáticos.
+ * ✅ Turno 2: dados reais via hooks do Átrio (useResume, useLiturgyToday, useAnnouncements,
+ *             useFeaturedThemes, useSearchSuggestions). Regra do Átrio preservada:
+ *             a página consome apenas hooks — adapters continuam sendo trocáveis (mock → real).
+ * ⏳ Turno 3: polish, motion, SEO, mobile refinements.
  *
  * Rotas:
  *   /              → esta página
@@ -29,6 +31,14 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { EnvironmentRegistry } from '@/core/navigation';
+import {
+  useResume,
+  useLiturgyToday,
+  useAnnouncements,
+  useFeaturedThemes,
+  useSearchSuggestions,
+} from '@/modules/atrium/hooks';
+import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Ícones dos 5 ambientes ──────────────────────────────────────────────────
 const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -39,32 +49,36 @@ const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Compass,
 };
 
-// ─── Dados estáticos (Turno 1) ───────────────────────────────────────────────
-const RESUME_ITEMS = [
-  { kind: 'Leitura',   title: 'Continue João 6',           href: '/bible' },
-  { kind: 'Lectio',    title: 'Continue a Lectio Divina',  href: '/lectio' },
-  { kind: 'Formação',  title: 'Retome a Formação em Fé',   href: '/formacao' },
-];
-
-const FEATURED_THEME = {
-  eyebrow: 'Tema em destaque',
-  title: 'A Esperança Cristã',
-  subtitle: 'Virtude teologal que nos sustenta na peregrinação.',
-  cta: 'Começar Estudo',
-  href: '/buscar?q=esperan%C3%A7a',
+// ─── Traduções e helpers ─────────────────────────────────────────────────────
+const RESUME_KIND_LABEL: Record<ResumeItem['kind'], string> = {
+  reading:   'Leitura',
+  study:     'Estudo',
+  formation: 'Formação',
+  lectio:    'Lectio',
+  note:      'Nota',
+  prayer:    'Oração',
 };
 
-const LITURGY = {
-  season: 'Tempo Comum',
-  day: 'Sexta-feira',
-  saint: 'São Boaventura',
-  reading: 'João 6',
-};
+/** Formata uma data ISO em rótulo relativo curto ("Hoje", "Ontem", "3 dias"). */
+function formatRelativeDate(iso: string): string {
+  try {
+    const then = new Date(iso).getTime();
+    if (Number.isNaN(then)) return '';
+    const diffDays = Math.floor((Date.now() - then) / 86_400_000);
+    if (diffDays <= 0) return 'Hoje';
+    if (diffDays === 1) return 'Ontem';
+    if (diffDays < 30) return `${diffDays} dias`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} meses`;
+    return `${Math.floor(diffDays / 365)} anos`;
+  } catch {
+    return '';
+  }
+}
 
-const NEWS = [
-  { date: 'Hoje',     title: 'Novo curso: Introdução à Patrística', href: '/formacao' },
-  { date: '2 dias',   title: 'Lectio Divina semanal atualizada',    href: '/lectio' },
-];
+/** Capitaliza a primeira letra (para weekday minúsculo vindo do adapter). */
+function capitalize(s: string): string {
+  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
+}
 
 // ─── Primitivas locais ───────────────────────────────────────────────────────
 const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
@@ -83,6 +97,16 @@ const Divider: React.FC<{ className?: string }> = ({ className = '' }) => (
 // ─── Componente principal ────────────────────────────────────────────────────
 const HomeUnified: React.FC = () => {
   const environments = EnvironmentRegistry.all();
+  const resume = useResume();
+  const liturgy = useLiturgyToday();
+  const news = useAnnouncements();
+  const themes = useFeaturedThemes();
+  const suggestions = useSearchSuggestions();
+
+  // Primeiro tema como destaque; fallback silencioso se lista vazia.
+  const featured = themes[0];
+
+
 
   return (
     <div className="cathedra-noir min-h-screen w-full">
@@ -154,7 +178,26 @@ const HomeUnified: React.FC = () => {
                 ⌘K
               </kbd>
             </div>
+
+            {/* Sugestões (chips) — vindas do SearchAdapter */}
+            {suggestions.length > 0 && (
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {suggestions.slice(0, 6).map((s) => (
+                  <Link
+                    key={s.id}
+                    to={`/buscar?q=${encodeURIComponent(s.label)}`}
+                    className="rounded-full border px-3 py-1.5 text-xs tracking-wide transition-colors"
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
+
 
           {/* Chevron descend */}
           <div className="mt-16 opacity-40 md:mt-24">
@@ -243,170 +286,209 @@ const HomeUnified: React.FC = () => {
       </section>
 
       {/* ══════ TEMA EM DESTAQUE ══════ */}
-      <section className="relative w-full px-6 py-28 md:px-12 md:py-40" style={{ background: 'var(--noir-surface)' }}>
-        <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
-          <Eyebrow className="mb-6">{FEATURED_THEME.eyebrow}</Eyebrow>
-          <h2
-            className="mb-8"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontWeight: 400,
-              fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
-              lineHeight: 1.05,
-              color: 'var(--noir-text)',
-              letterSpacing: '0.01em',
-            }}
-          >
-            {FEATURED_THEME.title}
-          </h2>
-          <p
-            className="mb-12 max-w-2xl text-lg italic md:text-2xl"
-            style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
-          >
-            {FEATURED_THEME.subtitle}
-          </p>
-          <Link
-            to={FEATURED_THEME.href}
-            className="group inline-flex items-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.28em] transition-all hover:gap-5"
-            style={{
-              borderColor: 'var(--gold)',
-              color: 'var(--gold)',
-              fontFamily: 'Inter, sans-serif',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--gold)';
-              e.currentTarget.style.color = '#0a0a0a';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = 'var(--gold)';
-            }}
-          >
-            {FEATURED_THEME.cta}
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
-        </div>
-      </section>
+      {featured && (
+        <section className="relative w-full px-6 py-28 md:px-12 md:py-40" style={{ background: 'var(--noir-surface)' }}>
+          <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
+            <Eyebrow className="mb-6">Tema em destaque</Eyebrow>
+            <h2
+              className="mb-8"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 400,
+                fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
+                lineHeight: 1.05,
+                color: 'var(--noir-text)',
+                letterSpacing: '0.01em',
+              }}
+            >
+              {featured.label}
+            </h2>
+            {featured.short && (
+              <p
+                className="mb-12 max-w-2xl text-lg italic md:text-2xl"
+                style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+              >
+                {featured.short}
+              </p>
+            )}
+            <Link
+              to={`/buscar?q=${encodeURIComponent(featured.label)}`}
+              className="group inline-flex items-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.28em] transition-all hover:gap-5"
+              style={{
+                borderColor: 'var(--gold)',
+                color: 'var(--gold)',
+                fontFamily: 'Inter, sans-serif',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--gold)';
+                e.currentTarget.style.color = '#0a0a0a';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = 'var(--gold)';
+              }}
+            >
+              Começar Estudo
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+
+            {/* Chips com outros temas em destaque (se houver) */}
+            {themes.length > 1 && (
+              <div className="mt-10 flex flex-wrap justify-center gap-3">
+                {themes.slice(1, 6).map((t) => (
+                  <Link
+                    key={t.slug}
+                    to={`/buscar?q=${encodeURIComponent(t.label)}`}
+                    className="rounded-full border px-4 py-2 text-xs tracking-widest transition-colors"
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+
 
       {/* ══════ CONTINUAR CAMINHADA ══════ */}
-      <section className="w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-12 flex items-baseline justify-between">
-            <div>
-              <Eyebrow className="mb-3">Continuar minha caminhada</Eyebrow>
-              <h2
-                className="text-3xl md:text-4xl"
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontWeight: 400,
-                  color: 'var(--noir-text)',
-                }}
-              >
-                Onde você parou.
-              </h2>
-            </div>
-          </div>
-
-          <ol className="space-y-0">
-            {RESUME_ITEMS.map((item, i) => (
-              <li key={item.href}>
-                {i > 0 && <Divider />}
-                <Link
-                  to={item.href}
-                  className="group flex items-center justify-between gap-6 py-7 transition-colors md:py-8"
+      {/* ══════ CONTINUAR CAMINHADA ══════ */}
+      {resume.length > 0 && (
+        <section className="w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 flex items-baseline justify-between">
+              <div>
+                <Eyebrow className="mb-3">Continuar minha caminhada</Eyebrow>
+                <h2
+                  className="text-3xl md:text-4xl"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 400,
+                    color: 'var(--noir-text)',
+                  }}
                 >
-                  <div className="flex items-center gap-6 md:gap-10">
-                    <span
-                      className="text-xs tracking-[0.28em]"
-                      style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div>
-                      <div
-                        className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                        style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {item.kind}
-                      </div>
-                      <div
-                        className="text-xl transition-colors md:text-2xl"
-                        style={{
-                          fontFamily: "'Playfair Display', serif",
-                          color: 'var(--noir-text)',
-                        }}
-                      >
-                        {item.title}
-                      </div>
-                    </div>
-                  </div>
-                  <ArrowUpRight
-                    className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
-                    style={{ color: 'var(--gold)' }}
-                    aria-hidden
-                  />
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+                  Onde você parou.
+                </h2>
+              </div>
+            </div>
 
-      {/* ══════ NOVIDADES + LITURGIA ══════ */}
-      <section
-        className="w-full border-t px-6 py-20 md:px-12 md:py-24"
-        style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
-      >
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-24">
-          <div>
-            <Eyebrow className="mb-6">Novidades</Eyebrow>
-            <ul className="space-y-6">
-              {NEWS.map((n) => (
-                <li key={n.href}>
-                  <Link to={n.href} className="group block">
-                    <div
-                      className="mb-1 text-[10px] uppercase tracking-[0.28em]"
-                      style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
-                    >
-                      {n.date}
+            <ol className="space-y-0">
+              {resume.slice(0, 3).map((item, i) => (
+                <li key={item.id}>
+                  {i > 0 && <Divider />}
+                  <Link
+                    to={item.targetPath}
+                    className="group flex items-center justify-between gap-6 py-7 transition-colors md:py-8"
+                  >
+                    <div className="flex items-center gap-6 md:gap-10">
+                      <span
+                        className="text-xs tracking-[0.28em]"
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <div
+                          className="mb-1 text-[10px] uppercase tracking-[0.28em]"
+                          style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+                        >
+                          {RESUME_KIND_LABEL[item.kind] ?? item.kind}
+                          {typeof item.progressPct === 'number' && (
+                            <span style={{ color: 'var(--noir-text-faint)' }}> · {item.progressPct}%</span>
+                          )}
+                        </div>
+                        <div
+                          className="text-xl transition-colors md:text-2xl"
+                          style={{
+                            fontFamily: "'Playfair Display', serif",
+                            color: 'var(--noir-text)',
+                          }}
+                        >
+                          {item.label}
+                        </div>
+                      </div>
                     </div>
-                    <div
-                      className="text-lg leading-snug transition-colors md:text-xl"
-                      style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text)')}
-                    >
-                      {n.title}
-                    </div>
+                    <ArrowUpRight
+                      className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+                      style={{ color: 'var(--gold)' }}
+                      aria-hidden
+                    />
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
+        </section>
+      )}
 
-          <div>
-            <Eyebrow className="mb-6">Liturgia do dia</Eyebrow>
-            <div
-              className="text-lg italic leading-relaxed md:text-xl"
-              style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
-            >
-              {LITURGY.day} · {LITURGY.season}
-            </div>
-            <div
-              className="mt-4 text-2xl md:text-3xl"
-              style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
-            >
-              {LITURGY.saint}
-            </div>
-            <div
-              className="mt-2 text-sm"
-              style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
-            >
-              Leitura: {LITURGY.reading}
-            </div>
+      {/* ══════ NOVIDADES + LITURGIA ══════ */}
+      {(news.length > 0 || liturgy) && (
+        <section
+          className="w-full border-t px-6 py-20 md:px-12 md:py-24"
+          style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
+        >
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-24">
+            {news.length > 0 && (
+              <div>
+                <Eyebrow className="mb-6">Novidades</Eyebrow>
+                <ul className="space-y-6">
+                  {news.slice(0, 4).map((n) => (
+                    <li key={n.id}>
+                      <div
+                        className="mb-1 text-[10px] uppercase tracking-[0.28em]"
+                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {formatRelativeDate(n.publishedAt)}
+                      </div>
+                      <div
+                        className="text-lg leading-snug md:text-xl"
+                        style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                      >
+                        {n.label}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {liturgy && (
+              <div>
+                <Eyebrow className="mb-6">Liturgia do dia</Eyebrow>
+                <div
+                  className="text-lg italic leading-relaxed md:text-xl"
+                  style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+                >
+                  {capitalize(liturgy.weekday)} · {liturgy.season}
+                </div>
+                {liturgy.saintOfDay && (
+                  <>
+                    <div
+                      className="mt-4 text-2xl md:text-3xl"
+                      style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text)' }}
+                    >
+                      {liturgy.saintOfDay.name}
+                    </div>
+                    {liturgy.saintOfDay.title && (
+                      <div
+                        className="mt-2 text-sm"
+                        style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                      >
+                        {liturgy.saintOfDay.title}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
 
       {/* ══════ FOOTER ══════ */}
       <footer className="w-full border-t px-6 py-12 md:px-12" style={{ borderColor: 'var(--noir-line)' }}>
