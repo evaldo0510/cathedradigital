@@ -1,9 +1,14 @@
 /**
  * Constantes do Ambiente Átrio.
  * Fonte: docs/cathedra-2.0/ATRIUM-CONTRACT.md §6b, §6c.
+ *
+ * Fase 4A: `ENVIRONMENT_ROUTES` deixa de duplicar rotas — agora delega
+ * para EnvironmentRegistry + RouteRegistry (Core). A API para o componente
+ * é preservada, então nenhum componente muda.
  */
 
 import type { AtriumBlock, AtriumProfile, AtriumExit } from '../types';
+import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
 
 /** §6c — ordem base P0 → P6. */
 export const BLOCK_PRIORITY: AtriumBlock[] = [
@@ -67,11 +72,12 @@ export const PROFILE_BLOCK_ORDER: Record<AtriumProfile, AtriumBlock[]> = {
   ],
 };
 
-/** §3 — cinco saídas oficiais do Átrio (rotas destino do 2.0). */
-export const ENVIRONMENT_ROUTES: Record<AtriumExit, string> = {
-  'estudar': '/estudar',
-  'rezar': '/rezar',
-  'formar-se': '/formar-se',
-  'pesquisar': '/pesquisar',
-  'minha-jornada': '/minha-jornada',
-};
+/**
+ * §3 — cinco saídas oficiais do Átrio.
+ * Delega para os registries; se a rota de um ambiente mudar, ninguém precisa
+ * editar o Átrio.
+ */
+export const ENVIRONMENT_ROUTES: Record<AtriumExit, string> = Object.fromEntries(
+  EnvironmentRegistry.all().map((e) => [e.key, RouteRegistry.resolve(e.route)]),
+) as Record<AtriumExit, string>;
+
