@@ -329,6 +329,59 @@ export default function SEOAdmin() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Checklist on-page por página</CardTitle>
+          <CardDescription>Title, description, heading (H1), canonical e links quebrados. Páginas com qualquer falha ficam marcadas como "precisa de ajuste".</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="text-sm text-muted-foreground flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Carregando…</div>
+          ) : checklist.length === 0 ? (
+            <div className="text-sm text-muted-foreground">Nenhuma auditoria ainda. Rode uma acima.</div>
+          ) : (
+            <div className="space-y-2">
+              {checklist.map(({ row, checks, failed, broken }) => {
+                const Item = ({ ok, label }: { ok: boolean; label: string }) => (
+                  <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded border ${ok ? "text-emerald-700 border-emerald-200 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30 dark:border-emerald-900" : "text-destructive border-destructive/30 bg-destructive/5"}`}>
+                    {ok ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />} {label}
+                  </span>
+                );
+                return (
+                  <div key={row.id} className="p-3 rounded-lg border bg-card">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <a href={row.url} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline break-all">{row.url}</a>
+                      {failed > 0
+                        ? <Badge variant="destructive">precisa de ajuste ({failed})</Badge>
+                        : <Badge variant="secondary">OK</Badge>}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      <Item ok={checks.title} label="title" />
+                      <Item ok={checks.description} label="description" />
+                      <Item ok={checks.heading} label="H1" />
+                      <Item ok={checks.canonical} label="canonical" />
+                      <Item ok={checks.links} label={`links${broken.length ? ` (${broken.length} quebrados)` : ""}`} />
+                    </div>
+                    {broken.length > 0 && (
+                      <ul className="mt-2 text-xs text-muted-foreground space-y-0.5">
+                        {broken.slice(0, 5).map((b, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <Badge variant="outline" className="text-[10px] shrink-0">{b.status || "erro"}</Badge>
+                            <span className="break-all">{b.url}</span>
+                          </li>
+                        ))}
+                        {broken.length > 5 && <li className="text-[11px]">+ {broken.length - 5} outros</li>}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+
+        <CardHeader>
           <CardTitle>Principais URLs com problemas</CardTitle>
           <CardDescription>Baseado na última auditoria salva em <code>seo_audits</code>.</CardDescription>
         </CardHeader>
