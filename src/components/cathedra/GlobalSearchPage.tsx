@@ -192,11 +192,14 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           style={{ minHeight: '50vh' }}
           id="search-results-container"
         >
-          <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
-            <h2 className="text-[10px] md:text-premium-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.5em] text-primary/60 whitespace-nowrap">
-              {anyPending ? 'Buscando Sabedoria...' : 'Resultados da Pesquisa'}
-            </h2>
-            <div className="h-px flex-1 bg-border/30" />
+          <div className="flex items-center gap-3 md:gap-5">
+            <span
+              className="whitespace-nowrap uppercase text-[9px] md:text-[10px]"
+              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+            >
+              {anyPending ? 'Buscando sabedoria' : 'Resultados'}
+            </span>
+            <div className="h-px flex-1" style={{ backgroundColor: '#c9a84c', opacity: 0.35 }} />
           </div>
 
         {anyPending && (
