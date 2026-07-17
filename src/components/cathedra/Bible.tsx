@@ -57,12 +57,27 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
     );
   }
 
+  if (!data?.content) {
+    return (
+      <div className="space-y-spacing-xs">
+        <p className="text-xs text-primary/50 italic">Conteúdo ainda não indexado no banco oficial.</p>
+        <a
+          href={`/catechism?p=${pNum}`}
+          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
+        >
+          Abrir §{pNum} no Catecismo →
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
-      {data?.content || 'Conteúdo não disponível.'}
+      {data.content}
     </div>
   );
 };
+
 
 // Knowledge Connection System (Mock for development, will be replaced by DB)
 const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | 'bible' | 'theology' | 'cross_ref', label: string, color: string, id: string, summary: string }[]> = {
