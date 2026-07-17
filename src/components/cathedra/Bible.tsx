@@ -1635,7 +1635,10 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 return (
                 <button 
                   key={ch}
+                  data-chapter-btn
+                  data-testid={`chapter-btn-${ch}`}
                   onClick={() => { if (!missing) selectChapter(ch); }}
+
                   disabled={missing}
                   aria-disabled={missing}
                   aria-current={selectedChapter === ch ? 'page' : undefined}
