@@ -145,10 +145,11 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div 
 
-          className="space-y-spacing-lg pb-spacing-4xl transition-all duration-300"
+          className="editorial-section space-y-spacing-lg pb-spacing-4xl transition-all duration-300"
           style={{ minHeight: '50vh' }}
           id="search-results-container"
         >
+
           <div className="flex items-center gap-3 md:gap-5">
             <span className="editorial-meta text-secondary whitespace-nowrap">
               {anyPending ? 'Buscando sabedoria' : 'Resultados'}
