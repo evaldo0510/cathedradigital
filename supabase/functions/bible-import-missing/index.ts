@@ -16,6 +16,8 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
+import { normalizeTranslation, normalizeSelection, type Selection } from './helpers.ts';
+import { BIBLE_CANON } from '../_shared/bibleCanon.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
