@@ -7,7 +7,7 @@ const DEFAULT_PATHS = ["/", "/catechism", "/buscar", "/biblia", "/jornadas", "/s
 
 interface Finding { type: string; severity: "low" | "medium" | "high"; message: string }
 
-function extract(html: string) {
+function extract(html: string, pageUrl: string) {
   const pick = (re: RegExp) => (html.match(re)?.[1] ?? "").trim();
   const title = pick(/<title[^>]*>([\s\S]*?)<\/title>/i);
   const description = pick(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i);
@@ -17,7 +17,34 @@ function extract(html: string) {
   const twitterCard = pick(/<meta[^>]+name=["']twitter:card["'][^>]+content=["']([^"']+)["']/i);
   const h1s = [...html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi)].map(m => m[1].replace(/<[^>]+>/g, "").trim());
   const h2Count = (html.match(/<h2\b/gi) || []).length;
-  return { title, description, canonical, ogTitle, ogImage, twitterCard, h1s, h2Count };
+  const hrefs = [...html.matchAll(/<a[^>]+href=["']([^"'#?]+)["']/gi)].map(m => m[1]);
+  const origin = new URL(pageUrl).origin;
+  const links = Array.from(new Set(
+    hrefs
+      .filter(h => h && !h.startsWith("mailto:") && !h.startsWith("tel:") && !h.startsWith("javascript:"))
+      .map(h => { try { return new URL(h, pageUrl).toString(); } catch { return null; } })
+      .filter((u): u is string => !!u && u.startsWith(origin))
+  )).slice(0, 20);
+  return { title, description, canonical, ogTitle, ogImage, twitterCard, h1s, h2Count, links };
+}
+
+async function checkLinks(urls: string[]): Promise<Array<{ url: string; status: number }>> {
+  const broken: Array<{ url: string; status: number }> = [];
+  await Promise.all(urls.map(async (u) => {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 5000);
+      let res = await fetch(u, { method: "HEAD", redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": "CathedraSEOAudit/1.0" } });
+      if (res.status === 405 || res.status === 403) {
+        res = await fetch(u, { method: "GET", redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": "CathedraSEOAudit/1.0" } });
+      }
+      clearTimeout(t);
+      if (res.status >= 400) broken.push({ url: u, status: res.status });
+    } catch {
+      broken.push({ url: u, status: 0 });
+    }
+  }));
+  return broken;
 }
 
 function analyze(url: string, data: ReturnType<typeof extract>) {
