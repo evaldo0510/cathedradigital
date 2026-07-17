@@ -69,23 +69,124 @@ async function invoke(action: string, body: Record<string, unknown> = {}) {
 export default function BibleImportJobs() {
   const q = useQuery({
     queryKey: ["bible-import-jobs"],
-    queryFn: async (): Promise<Job[]> => (await invoke("list_jobs", { limit: 50 }))?.jobs ?? [],
+    queryFn: async (): Promise<Job[]> => (await invoke("list_jobs", { limit: 200 }))?.jobs ?? [],
     refetchInterval: 5000,
   });
+
+  const [status, setStatus] = useState<string>("all");
+  const [source, setSource] = useState<string>("all");
+  const [period, setPeriod] = useState<Period>("all");
+  const [search, setSearch] = useState<string>("");
+
+  const all = q.data ?? [];
+
+  const sources = useMemo(() => {
+    const set = new Set<string>();
+    for (const j of all) if (j.translation) set.add(j.translation);
+    return Array.from(set).sort();
+  }, [all]);
+
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: all.length };
+    for (const j of all) c[j.status] = (c[j.status] ?? 0) + 1;
+    return c;
+  }, [all]);
+
+  const filtered = useMemo(() => {
+    const cutoff = PERIOD_MS[period] ? Date.now() - (PERIOD_MS[period] as number) : null;
+    const term = search.trim().toLowerCase();
+    return all.filter((j) => {
+      if (status !== "all" && j.status !== status) return false;
+      if (source !== "all" && j.translation !== source) return false;
+      if (cutoff && new Date(j.created_at).getTime() < cutoff) return false;
+      if (term) {
+        const hay = `${j.id} ${j.message ?? ""} ${j.error ?? ""} ${j.current_book ?? ""} ${j.translation ?? ""}`.toLowerCase();
+        if (!hay.includes(term)) return false;
+      }
+      return true;
+    });
+  }, [all, status, source, period, search]);
+
+  const hasFilter = status !== "all" || source !== "all" || period !== "all" || search.trim() !== "";
 
   return (
     <div className="container mx-auto max-w-6xl py-8 space-y-6">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-serif">Histórico de importações</h1>
-          <p className="text-sm text-muted-foreground mt-1">Últimos 50 jobs de <code>bible-import-missing</code>.</p>
+          <p className="text-sm text-muted-foreground mt-1">Últimos 200 jobs de <code>bible-import-missing</code>.</p>
         </div>
         <Link to="/admin/bible-import-missing" className="text-sm text-primary hover:underline">← Nova importação</Link>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Jobs</CardTitle>
+          <CardTitle className="text-lg">Filtros</CardTitle>
+          <CardDescription>
+            Total: <strong>{counts.all ?? 0}</strong> ·{" "}
+            {["succeeded", "running", "queued", "failed", "cancelled"].map((s) => (
+              <span key={s} className="mr-2">
+                {s}: <strong>{counts[s] ?? 0}</strong>
+              </span>
+            ))}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div>
+            <Label htmlFor="f-status" className="text-xs">Status</Label>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger id="f-status"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos ({counts.all ?? 0})</SelectItem>
+                <SelectItem value="succeeded">succeeded ({counts.succeeded ?? 0})</SelectItem>
+                <SelectItem value="running">running ({counts.running ?? 0})</SelectItem>
+                <SelectItem value="queued">queued ({counts.queued ?? 0})</SelectItem>
+                <SelectItem value="failed">failed ({counts.failed ?? 0})</SelectItem>
+                <SelectItem value="cancelled">cancelled ({counts.cancelled ?? 0})</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="f-source" className="text-xs">Fonte (tradução)</Label>
+            <Select value={source} onValueChange={setSource}>
+              <SelectTrigger id="f-source"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                {sources.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="f-period" className="text-xs">Período</Label>
+            <Select value={period} onValueChange={(v) => setPeriod(v as Period)}>
+              <SelectTrigger id="f-period"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="24h">Últimas 24h</SelectItem>
+                <SelectItem value="7d">Últimos 7 dias</SelectItem>
+                <SelectItem value="30d">Últimos 30 dias</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="f-search" className="text-xs">Busca (id, mensagem, livro)</Label>
+            <div className="relative">
+              <Input id="f-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="ex.: Gn, err, retry…" />
+              {search && (
+                <button type="button" onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            Jobs {hasFilter && <span className="text-sm text-muted-foreground font-normal">— {filtered.length} de {all.length}</span>}
+          </CardTitle>
           <CardDescription>Atualiza a cada 5s.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -93,8 +194,10 @@ export default function BibleImportJobs() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" /> Carregando…
             </div>
-          ) : (q.data ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nenhum job executado ainda.</p>
+          ) : filtered.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {hasFilter ? "Nenhum job corresponde aos filtros." : "Nenhum job executado ainda."}
+            </p>
           ) : (
             <Table>
               <TableHeader>
