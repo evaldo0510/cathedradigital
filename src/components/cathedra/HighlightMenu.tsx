@@ -2,12 +2,20 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
+import PassageActions from '@/components/shared/PassageActions';
+import type { PassageDescriptor } from '@/lib/passageUrl';
 
 interface HighlightMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectColor: (color: string) => void;
   onAddNote: () => void;
+  /** Mantido por compatibilidade; se ausente, PassageActions cuida do compartilhamento. */
+  onShare?: () => void;
+  /** Dados do trecho para o PassageActions (copiar/compartilhar/destacar). */
+  verseText?: string;
+  reference?: string;
+  passage?: PassageDescriptor;
 }
 
 const COLORS = [
@@ -17,20 +25,14 @@ const COLORS = [
   { name: 'red', bg: 'bg-red-200', label: 'Vermelho' },
 ];
 
-interface HighlightMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelectColor: (color: string) => void;
-  onAddNote: () => void;
-  onShare: () => void;
-}
-
-export const HighlightMenu: React.FC<HighlightMenuProps> = ({ 
-  isOpen, 
-  onClose, 
+export const HighlightMenu: React.FC<HighlightMenuProps> = ({
+  isOpen,
+  onClose,
   onSelectColor,
   onAddNote,
-  onShare
+  verseText,
+  reference,
+  passage,
 }) => {
   return (
     <AnimatePresence>
@@ -48,11 +50,19 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
             className="fixed bottom-0 left-0 right-0 z-[160] bg-white rounded-t-[2.5rem] shadow-2xl p-8 pb-12"
+            role="dialog"
+            aria-label="Destaque e ações do versículo"
           >
             <div className="max-w-md mx-auto space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Destaque & Reflexão</h3>
-                <button onClick={onClose} className="p-2 text-primary/20">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">
+                  Destaque & Reflexão
+                </h3>
+                <button
+                  onClick={onClose}
+                  className="min-h-11 min-w-11 flex items-center justify-center text-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+                  aria-label="Fechar menu de destaque"
+                >
                   <Icons.X className="w-5 h-5" />
                 </button>
               </div>
@@ -62,36 +72,44 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                   <button
                     key={color.name}
                     onClick={() => onSelectColor(color.name)}
-                    className="flex flex-col items-center gap-2 group"
+                    className="flex flex-col items-center gap-2 group min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+                    aria-label={`Destacar em ${color.label}`}
                   >
-                    <div className={cn(
-                      "w-12 h-12 rounded-full shadow-sm border border-primary/5 transition-transform group-active:scale-90",
-                      color.bg
-                    )} />
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/30">{color.label}</span>
+                    <div
+                      className={cn(
+                        'w-12 h-12 rounded-full shadow-sm border border-primary/5 transition-transform group-active:scale-90',
+                        color.bg,
+                      )}
+                    />
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/30">
+                      {color.label}
+                    </span>
                   </button>
                 ))}
               </div>
 
               <div className="h-px bg-primary/5" />
 
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={onAddNote}
-                  className="flex items-center justify-center gap-2 p-4 bg-primary text-white rounded-2xl shadow-lg active:scale-[0.98] transition-all"
-                >
-                  <Icons.PenLine className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Meditar</span>
-                </button>
+              <button
+                onClick={onAddNote}
+                className="w-full flex items-center justify-center gap-2 p-4 bg-primary text-white rounded-2xl shadow-lg active:scale-[0.98] transition-all min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                <Icons.PenLine className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Meditar</span>
+              </button>
 
-                <button
-                  onClick={onShare}
-                  className="flex items-center justify-center gap-2 p-4 bg-secondary/10 text-secondary rounded-2xl border border-secondary/20 active:scale-[0.98] transition-all"
-                >
-                  <Icons.Share2 className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Partilhar</span>
-                </button>
-              </div>
+              {verseText && reference && (
+                <div className="pt-2">
+                  <PassageActions
+                    text={verseText}
+                    reference={reference}
+                    title={`Cathedra — ${reference}`}
+                    passage={passage}
+                    size="md"
+                    className="justify-center"
+                  />
+                </div>
+              )}
             </div>
           </motion.div>
         </>

@@ -2206,7 +2206,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
           setIsHighlightMenuOpen(false);
           setIsNoteModalOpen(true);
         }}
-        onShare={handleShareVerse}
+        verseText={activeVerse?.text}
+        reference={
+          activeVerse && selectedBook
+            ? `${selectedBook.name} ${selectedChapter}:${activeVerse.number}`
+            : undefined
+        }
+        passage={
+          activeVerse && selectedBook
+            ? {
+                kind: 'bible',
+                ref: `${selectedBook.abbr} ${selectedChapter}:${activeVerse.number}`,
+              }
+            : undefined
+        }
       />
 
 

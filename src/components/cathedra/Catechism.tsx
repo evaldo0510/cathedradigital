@@ -43,6 +43,7 @@ import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
 import { cn } from '@/lib/utils';
+import PassageActions from '@/components/shared/PassageActions';
 import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
@@ -235,6 +236,16 @@ const CatechismContent: React.FC<{
             },
           }}>{seg.value}</ReactMarkdown>
         )
+      )}
+      {data?.content && (
+        <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
+          <PassageActions
+            text={data.content}
+            reference={`CIC §${paragraph}`}
+            title={`Cathedra — CIC §${paragraph}`}
+            passage={{ kind: 'catechism', paragraph }}
+          />
+        </div>
       )}
     </div>
   );
