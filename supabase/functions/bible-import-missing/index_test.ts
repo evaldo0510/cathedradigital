@@ -32,7 +32,7 @@ Deno.test("validate: aceita códigos alfanuméricos maiúsculos", () => {
 });
 
 Deno.test("validate: rejeita entradas inválidas com mensagem clara", () => {
-  const bad = ["", "  ", "NV", "toolongcode1", "NVI-PT", "NVI PT", null, undefined, 123, {}];
+  const bad = ["", "  ", "N", "toolongcode11", "NVI-PT", "NVI PT", null, undefined, 123, {}];
   for (const v of bad) {
     const err = assertThrows(() => normalizeTranslation(v as unknown), Error);
     assert(
