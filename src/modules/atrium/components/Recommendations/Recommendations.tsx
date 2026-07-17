@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { useAtriumProfile, useRecommendations } from '../../hooks';
+import { useRecommendations } from '../../hooks';
 
 const KIND_LABEL: Record<string, string> = {
   reading: 'Leitura',
@@ -11,8 +11,7 @@ const KIND_LABEL: Record<string, string> = {
 };
 
 const Recommendations: React.FC = () => {
-  const user = useAtriumProfile();
-  const items = useRecommendations(user.profile);
+  const items = useRecommendations();
   if (!items.length) return null;
 
   return (

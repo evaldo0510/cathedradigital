@@ -7,7 +7,6 @@
 
 import { useEffect, useState } from 'react';
 import { atriumAdapters } from '../adapters';
-import type { AtriumProfile } from '../types';
 import type {
   AnnouncementItem,
   AtriumUser,
@@ -54,11 +53,17 @@ export function useLiturgyToday(): LiturgicalContext | null {
   );
 }
 
-export function useRecommendations(profile: AtriumProfile): RecommendationItem[] {
+/**
+ * Recomendações do usuário atual.
+ * O hook resolve o perfil internamente — componentes NUNCA passam perfil.
+ * (Exigência 1: só `composition.ts` conhece perfil.)
+ */
+export function useRecommendations(): RecommendationItem[] {
+  const user = useAtriumProfile();
   return useAsync(
-    () => atriumAdapters.recommendation.getForProfile(profile),
+    () => atriumAdapters.recommendation.getForProfile(user.profile),
     [],
-    [profile],
+    [user.profile],
   );
 }
 
