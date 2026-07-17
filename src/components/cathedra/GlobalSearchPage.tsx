@@ -152,14 +152,25 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none mb-spacing-md">
           <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium space-y-spacing-xs md:space-y-spacing-xl">
              <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
-                <div className="flex items-center gap-spacing-sm">
-                   <div className="w-spacing-lg h-spacing-lg md:w-spacing-xl md:h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
-                      <Icons.Sparkles className="w-spacing-sm h-spacing-sm md:w-spacing-md md:h-spacing-md text-primary" />
-                   </div>
-                   <h2 className="text-[10px] md:text-premium-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                <div className="flex items-center gap-2">
+                   <span
+                     className="text-[9px] md:text-[10px] uppercase"
+                     style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+                   >
+                     Conversa com Logos
+                   </span>
                 </div>
-                <p className="text-[11px] md:text-premium-sm text-muted-foreground leading-relaxed hidden sm:block">
-                  Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
+                <p
+                  className="hidden sm:block"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontStyle: 'italic',
+                    fontSize: '0.95rem',
+                    color: 'hsl(var(--muted-foreground))',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Logos é o seu assistente teológico. Pergunte sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
                 </p>
              </div>
              
