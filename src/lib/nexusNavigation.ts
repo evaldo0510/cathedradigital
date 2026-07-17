@@ -51,7 +51,7 @@ export function openNexusRef(navigate: NavigateFunction, ref: NexusRef): void {
       navigate(`${AppRoute.TEMAS}/${ref.slug}`);
       return;
     case 'saint':
-      navigate(`${AppRoute.SANTOS}/${ref.slug}`);
+      navigate(`${AppRoute.SAINTS}/${ref.slug}`);
       return;
     case 'bible': {
       const verse = ref.verse ? `:${ref.verse}` : '';
