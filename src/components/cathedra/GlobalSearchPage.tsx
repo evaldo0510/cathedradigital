@@ -33,7 +33,26 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   useRenderPerf('Logos Search', 20);
 
   useAutoFocus();
-  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
+
+  // Sincroniza URL ↔ estado: mudanças externas (link, back/forward) hidratam o input.
+  useEffect(() => {
+    const urlQ = searchParams.get('q') ?? '';
+    if (urlQ !== query) setQuery(urlQ);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // Reflete o que o usuário digita na URL (replace = sem poluir histórico).
+  useEffect(() => {
+    const current = searchParams.get('q') ?? '';
+    if (query === current) return;
+    const next = new URLSearchParams(searchParams);
+    if (query.trim().length >= 2) next.set('q', query);
+    else next.delete('q');
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
   const viewportHeight = useVisualViewport();
   const [lastHeight, setLastHeight] = useState(viewportHeight);
   const [savedScroll, setSavedScroll] = useState(0);
