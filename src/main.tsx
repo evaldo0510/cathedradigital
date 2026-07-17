@@ -12,7 +12,15 @@ initLiturgicalPrefetchGuard();
 initSentry();
 
 if (import.meta.env.DEV) {
-  import("./lib/devInspector").then((m) => m.initDevInspector());
+  const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
+  const isPreview =
+    window.location.hostname.includes("lovableproject.com") ||
+    window.location.hostname.includes("lovable.app") ||
+    window.location.hostname.includes("id-preview--");
+  const forceEnable = new URLSearchParams(window.location.search).has("inspector");
+  if (forceEnable || (!inIframe && !isPreview)) {
+    import("./lib/devInspector").then((m) => m.initDevInspector());
+  }
 }
 import { telemetry } from "./utils/navigation-telemetry";
 
