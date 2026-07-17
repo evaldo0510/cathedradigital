@@ -1,29 +1,35 @@
 /**
- * AtriumPage — entry point do Ambiente Átrio (Cathedra 2.0).
+ * AtriumPage — orquestrador do Ambiente Átrio.
  *
- * Sprint 2.0.1 · Fase 1 — Estrutura.
- * Sem visual definitivo. Apenas confirma que o módulo nasceu isolado
- * e é renderizável quando (e se) for wired na Fase 6.
+ * Responsabilidades:
+ *   1. Ler perfil (mock na Fase 2 · real na Fase 6).
+ *   2. Pedir a composição para `composition.ts`.
+ *   3. Entregar a lista ao `AtriumShell`.
+ *
+ * NÃO conhece: CSS, layout, ordem de blocos, dados de bloco.
  *
  * Fundamentação: docs/cathedra-2.0/ATRIUM-CONTRACT.md v1.1
  */
 
 import React from 'react';
-import { useAtriumState } from './hooks';
+import AtriumShell from './AtriumShell';
+import { AtriumHeader, resolveComposition } from './composition';
+import type { AtriumProfile } from './types';
 
 const AtriumPage: React.FC = () => {
-  const snapshot = useAtriumState();
+  // Fase 2: perfil fixo em "recurrent" (padrão do contrato §6b para autenticados sem declaração).
+  // Fase 4: virá do useAtriumProfile mockado por estado.
+  // Fase 6: virá do ProfileProvider.
+  const profile: AtriumProfile = 'recurrent';
+  const blocks = resolveComposition(profile);
 
   return (
-    <main
-      data-ambiente="atrio"
-      data-sprint="2.0.1"
-      data-fase="1-estrutura"
-      className="min-h-dvh"
-    >
-      {/* Fase 2 renderizará aqui os 7 blocos na ordem definida por §6c. */}
-      {snapshot === null ? null : null}
-    </main>
+    <AtriumShell>
+      <AtriumHeader />
+      {blocks.map((Block, i) => (
+        <Block key={i} />
+      ))}
+    </AtriumShell>
   );
 };
 
