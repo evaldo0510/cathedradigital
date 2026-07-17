@@ -2103,13 +2103,14 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 <div className="space-y-spacing-xs">
                   <div className="flex items-center gap-spacing-xs">
                     <div className={cn("w-2 h-2 rounded-full animate-pulse", expandedConnection.color)} />
-                    <h3 className="text-xl font-display font-bold text-primary uppercase tracking-widest">
+                    <h3 id="nexus-sheet-title" className="text-xl font-display font-bold text-primary uppercase tracking-widest">
                       {expandedConnection.label}
                     </h3>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
+                  <span id="nexus-sheet-desc" className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/80">
                     {expandedConnection.theological_theme || 'Conexão Teológica'}
                   </span>
+
                 </div>
                 
                 <div className="flex items-center gap-spacing-xs">
