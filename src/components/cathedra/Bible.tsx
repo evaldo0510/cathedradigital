@@ -1550,7 +1550,36 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               }}
             >
 
+              {Object.keys(filteredBooks).length === 0 && (
+                <div
+                  data-testid="book-list-empty"
+                  role="status"
+                  className="text-center py-spacing-2xl px-spacing-lg space-y-spacing-md"
+                >
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/5 border border-secondary/10">
+                    <Icons.BookOpen className="w-6 h-6 text-secondary/40" aria-hidden="true" />
+                  </div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary/60">
+                    Nenhum livro encontrado
+                  </p>
+                  <p className="text-sm font-serif italic text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                    {searchQuery
+                      ? `Nada corresponde a "${searchQuery}". Tente outra busca.`
+                      : 'A lista aparecerá aqui assim que o cânone for carregado.'}
+                  </p>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="text-xs font-bold uppercase tracking-widest text-secondary hover:underline"
+                    >
+                      Limpar busca
+                    </button>
+                  )}
+                </div>
+              )}
+
               {Object.entries(filteredBooks).map(([testament, categories]: any) => (
+
                 <section key={testament} className="space-y-spacing-lg">
                   <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary/50 border-b border-primary/5 pb-2">{testament}</h2>
                   
