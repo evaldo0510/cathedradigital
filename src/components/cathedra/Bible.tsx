@@ -2018,7 +2018,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
       <AnimatePresence>
         {expandedConnection && (
-          <div className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-spacing-lg pointer-events-none">
+          <div data-testid="nexus-bottom-sheet" className="fixed inset-0 z-[200] flex flex-col justify-end lg:justify-center lg:p-spacing-lg pointer-events-none">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2028,6 +2028,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             />
             
             <motion.div
+              data-testid="nexus-bottom-sheet-panel"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
