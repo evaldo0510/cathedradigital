@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -63,13 +63,24 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
         <p className="text-xs text-primary/50 italic" data-testid="catechism-preview-empty-message">
           Conteúdo ainda não indexado no banco oficial.
         </p>
-        <a
-          href={`/catechism?p=${pNum}`}
+        <Link
+          to={`/catechism?p=${pNum}`}
           data-testid="catechism-preview-empty-link"
-          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
+          data-cic-paragraph={pNum}
+          data-cic-origin="bible-preview-empty"
+          className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary rounded-sm"
+          onClick={() => {
+            // Instrumentação: origem + destino do link do CIC
+            console.info('[CIC link click]', {
+              origin: 'Bible/CatechismPreview',
+              paragraph: pNum,
+              href: `/catechism?p=${pNum}`,
+              from: typeof window !== 'undefined' ? window.location.pathname + window.location.search : '',
+            });
+          }}
         >
           Abrir §{pNum} no Catecismo →
-        </a>
+        </Link>
       </div>
     );
   }

@@ -87,8 +87,18 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
               </p>
               <Link
                 to={catechismInternalPath(paragraph)}
-                className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline"
+                className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-sm"
                 data-testid="catechism-open-internal"
+                data-cic-paragraph={paragraph}
+                data-cic-origin="nexus-popover"
+                onClick={() => {
+                  console.info('[CIC link click]', {
+                    origin: 'CatechismPopover',
+                    paragraph,
+                    href: catechismInternalPath(paragraph),
+                    from: typeof window !== 'undefined' ? window.location.pathname + window.location.search : '',
+                  });
+                }}
               >
                 <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
                 Abrir §{paragraph} no Catecismo
