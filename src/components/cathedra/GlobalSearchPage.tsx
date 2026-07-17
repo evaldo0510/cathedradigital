@@ -221,13 +221,26 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
-            className="text-center py-spacing-2xl space-y-spacing-md"
+            className="text-center py-spacing-2xl space-y-4"
           >
-            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto text-muted-foreground opacity-20" />
-            <div className="space-y-spacing-xs">
-              <p className="text-premium-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
-              <p className="text-premium-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
-            </div>
+            <span
+              className="block mx-auto"
+              style={{ width: 1, height: 40, backgroundColor: '#c9a84c', opacity: 0.5 }}
+              aria-hidden="true"
+            />
+            <p
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: 'italic',
+                fontSize: '1.35rem',
+                color: 'hsl(var(--foreground))',
+              }}
+            >
+              Nenhum resultado encontrado.
+            </p>
+            <p className="text-premium-sm text-muted-foreground/70">
+              Tente termos mais genéricos ou verifique a ortografia.
+            </p>
           </motion.div>
         )}
 
