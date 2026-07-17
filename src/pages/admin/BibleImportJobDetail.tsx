@@ -10,8 +10,28 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { CathedraButton as Button } from "@/components/cathedra/CathedraButton";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, RefreshCw, AlertTriangle } from "lucide-react";
+import { Loader2, RefreshCw, AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
+
+function downloadBlob(name: string, mime: string, data: string) {
+  const blob = new Blob([data], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function toCSV(rows: Record<string, unknown>[]): string {
+  if (rows.length === 0) return "";
+  const cols = Array.from(rows.reduce((s, r) => { Object.keys(r).forEach((k) => s.add(k)); return s; }, new Set<string>()));
+  const esc = (v: unknown) => {
+    if (v === null || v === undefined) return "";
+    const s = typeof v === "string" ? v : JSON.stringify(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => esc((r as any)[c])).join(","))].join("\n");
+}
 
 interface Job {
   id: string; source_id: string; status: string; progress: number; total: number;
