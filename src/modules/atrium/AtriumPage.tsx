@@ -2,11 +2,11 @@
  * AtriumPage — orquestrador do Ambiente Átrio.
  *
  * Responsabilidades:
- *   1. Ler perfil (mock na Fase 2 · real na Fase 6).
+ *   1. Ler perfil via useAtriumProfile (adapter mockado na Fase 3, real na 2.0.6).
  *   2. Pedir a composição para `composition.ts`.
  *   3. Entregar a lista ao `AtriumShell`.
  *
- * NÃO conhece: CSS, layout, ordem de blocos, dados de bloco.
+ * NÃO conhece: CSS, layout, dados de bloco, infraestrutura.
  *
  * Fundamentação: docs/cathedra-2.0/ATRIUM-CONTRACT.md v1.1
  */
@@ -14,14 +14,11 @@
 import React from 'react';
 import AtriumShell from './AtriumShell';
 import { AtriumHeader, resolveComposition } from './composition';
-import type { AtriumProfile } from './types';
+import { useAtriumProfile } from './hooks';
 
 const AtriumPage: React.FC = () => {
-  // Fase 2: perfil fixo em "recurrent" (padrão do contrato §6b para autenticados sem declaração).
-  // Fase 4: virá do useAtriumProfile mockado por estado.
-  // Fase 6: virá do ProfileProvider.
-  const profile: AtriumProfile = 'recurrent';
-  const blocks = resolveComposition(profile);
+  const user = useAtriumProfile();
+  const blocks = resolveComposition(user.profile);
 
   return (
     <AtriumShell>
