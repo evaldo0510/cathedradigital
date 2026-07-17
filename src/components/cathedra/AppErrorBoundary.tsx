@@ -3,6 +3,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
 import * as Sentry from "@sentry/react";
 import { trackNavigationError } from '@/lib/telemetry';
+import { supabase } from '@/integrations/supabase/client';
 
 
 
@@ -41,6 +42,41 @@ class AppErrorBoundary extends Component<Props, State> {
         ...errorInfo
       }
     });
+
+    // Persistência no admin: analytics_events (INSERT exige auth.uid = user_id;
+    // ignora silenciosamente para usuários anônimos — Sentry já cobre esse caso).
+    void this.persistClientError(errorId, error, errorInfo);
+  }
+
+  private async persistClientError(errorId: string, error: Error, errorInfo: ErrorInfo) {
+    try {
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth?.user?.id;
+      if (!uid) return; // RLS bloqueia anônimo — Sentry já registrou.
+      const loc = typeof window !== 'undefined' ? window.location : null;
+      // Sanitiza query params — não gravar tokens/segredos que possam vir na URL.
+      const rawQuery = loc?.search ?? '';
+      const safeQuery = rawQuery.replace(/([?&](?:access_token|token|apikey|key|secret|password)=)[^&]+/gi, '$1[REDACTED]');
+      await supabase.from('analytics_events').insert({
+        event_name: 'client_error',
+        user_id: uid,
+        session_id: sessionStorage.getItem('sid') ?? null,
+        url: loc?.pathname ?? null,
+        properties: {
+          ref_id: errorId,
+          route: loc?.pathname ?? null,
+          query: safeQuery,
+          hash: loc?.hash ?? null,
+          message: error?.message ?? null,
+          stack: (error?.stack ?? '').slice(0, 4000),
+          component_stack: (errorInfo.componentStack ?? '').slice(0, 4000),
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+        },
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('[AppErrorBoundary] persistência ignorada:', (e as Error)?.message);
+    }
   }
 
   private copyDetails = async () => {
@@ -99,9 +135,17 @@ class AppErrorBoundary extends Component<Props, State> {
             )}
 
             {this.state.errorId && (
-              <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest mt-spacing-md">
-                Ref ID: {this.state.errorId}
-              </p>
+              <div className="mt-spacing-md space-y-1">
+                <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest">
+                  Ref ID: {this.state.errorId}
+                </p>
+                <a
+                  href={`/admin/client-errors?ref=${encodeURIComponent(this.state.errorId)}`}
+                  className="text-[9px] font-mono text-primary/60 hover:text-primary underline uppercase tracking-widest"
+                >
+                  Investigar no admin
+                </a>
+              </div>
             )}
           </div>
 

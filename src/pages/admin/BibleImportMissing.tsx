@@ -11,10 +11,11 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
-interface PreviewDetail { abbrev: string; name: string; chapters: number }
+interface PreviewDetail { abbrev: string; name: string; chapters: number; chapter_numbers?: number[] }
 interface Preview { translation: string; books_missing: number; chapters_missing: number; detail: PreviewDetail[] }
 interface Job {
   id: string; status: string; progress: number; total: number;
@@ -58,6 +59,50 @@ export default function BibleImportMissing() {
   const [job, setJob] = useState<Job | null>(null);
   const [starting, setStarting] = useState(false);
 
+  // Seleção manual: Map<abbrev, Set<chapter>|null>. null = livro inteiro.
+  const [selection, setSelection] = useState<Map<string, Set<number> | null>>(new Map());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [useSelection, setUseSelection] = useState(false);
+
+  function buildSelectionPayload(): Array<{ abbrev: string; chapters?: number[] }> | undefined {
+    if (!useSelection || selection.size === 0) return undefined;
+    return Array.from(selection.entries()).map(([abbrev, chapters]) => ({
+      abbrev,
+      chapters: chapters ? Array.from(chapters).sort((a, b) => a - b) : undefined,
+    }));
+  }
+
+  function toggleBook(abbrev: string, all: number[]) {
+    setSelection((prev) => {
+      const next = new Map(prev);
+      if (next.has(abbrev)) next.delete(abbrev);
+      else next.set(abbrev, null); // livro inteiro por padrão
+      return next;
+    });
+  }
+
+  function toggleChapter(abbrev: string, chapter: number, all: number[]) {
+    setSelection((prev) => {
+      const next = new Map(prev);
+      const cur = next.get(abbrev);
+      const set = new Set<number>(cur ? Array.from(cur) : all); // null vira "todos"
+      if (set.has(chapter)) set.delete(chapter);
+      else set.add(chapter);
+      if (set.size === 0) next.delete(abbrev);
+      else if (set.size === all.length) next.set(abbrev, null);
+      else next.set(abbrev, set);
+      return next;
+    });
+  }
+
+  function toggleExpand(abbrev: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.has(abbrev) ? next.delete(abbrev) : next.add(abbrev);
+      return next;
+    });
+  }
+
   async function runValidation() {
     setLoadingValidation(true); setValidation(null);
     try { setValidation(await invoke("validate", { translation })); }
@@ -67,7 +112,11 @@ export default function BibleImportMissing() {
 
   async function runDryRun() {
     setLoadingDryRun(true); setDryRun(null);
-    try { setDryRun(await invoke("dry_run", { translation })); toast.success("Dry-run concluído — nada foi gravado."); }
+    try {
+      const sel = buildSelectionPayload();
+      setDryRun(await invoke("dry_run", { translation, selection: sel }));
+      toast.success(sel ? `Dry-run da seleção (${sel.length} livros) — nada gravado.` : "Dry-run concluído — nada foi gravado.");
+    }
     catch (e: any) { toast.error(e.message); }
     finally { setLoadingDryRun(false); }
   }
@@ -84,9 +133,10 @@ export default function BibleImportMissing() {
   async function start() {
     setStarting(true);
     try {
-      const res = await invoke("start", { translation });
+      const sel = buildSelectionPayload();
+      const res = await invoke("start", { translation, selection: sel });
       if (!res?.job_id) throw new Error("Job não iniciado");
-      toast.success("Importação iniciada");
+      toast.success(sel ? `Importação da seleção iniciada (${sel.length} livros)` : "Importação iniciada");
       pollJob(res.job_id);
     } catch (e: any) { toast.error(e.message); setStarting(false); }
   }
@@ -238,19 +288,87 @@ export default function BibleImportMissing() {
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-4 max-h-64 overflow-auto">
-                  {preview.detail.map((d) => (
-                    <div key={d.abbrev} className="flex justify-between border rounded px-2 py-1">
-                      <span className="font-medium">{d.abbrev}</span>
-                      <span className="text-muted-foreground">{d.chapters} cap</span>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <Checkbox checked={useSelection} onCheckedChange={(v) => setUseSelection(!!v)} />
+                    Importar apenas selecionados
+                    {useSelection && selection.size > 0 && (
+                      <Badge variant="secondary">{selection.size} livros</Badge>
+                    )}
+                  </label>
+                  {useSelection && selection.size > 0 && (
+                    <button type="button" className="text-xs text-muted-foreground hover:text-primary underline"
+                      onClick={() => setSelection(new Map())}>Limpar seleção</button>
+                  )}
                 </div>
-                <Button onClick={start} disabled={starting || (job?.status === "running")}>
-                  {starting || job?.status === "running"
-                    ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Importando…</>
-                    : <><PlayCircle className="w-4 h-4 mr-2" /> Importar tudo faltante</>}
-                </Button>
+
+                <div className="border rounded divide-y max-h-72 overflow-auto mb-4">
+                  {preview.detail.map((d) => {
+                    const all = d.chapter_numbers ?? Array.from({ length: d.chapters }, (_, i) => i + 1);
+                    const sel = selection.get(d.abbrev);
+                    const isSelected = selection.has(d.abbrev);
+                    const selectedCount = sel ? sel.size : (isSelected ? all.length : 0);
+                    const isOpen = expanded.has(d.abbrev);
+                    return (
+                      <div key={d.abbrev} className="text-sm">
+                        <div className="flex items-center gap-2 px-2 py-1.5">
+                          {useSelection && (
+                            <Checkbox checked={isSelected} onCheckedChange={() => toggleBook(d.abbrev, all)} />
+                          )}
+                          <button type="button" onClick={() => toggleExpand(d.abbrev)} className="flex items-center gap-1 flex-1 text-left">
+                            {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                            <span className="font-medium">{d.abbrev}</span>
+                            <span className="text-muted-foreground text-xs">— {d.name}</span>
+                          </button>
+                          <span className="text-xs text-muted-foreground">
+                            {useSelection && isSelected ? `${selectedCount}/${d.chapters}` : `${d.chapters} cap`}
+                          </span>
+                        </div>
+                        {isOpen && (
+                          <div className="px-6 pb-2 pt-1 flex flex-wrap gap-1">
+                            {all.map((n) => {
+                              const chapSelected = useSelection && (sel === null ? isSelected : !!sel?.has(n));
+                              return (
+                                <button
+                                  key={n}
+                                  type="button"
+                                  disabled={!useSelection}
+                                  onClick={() => toggleChapter(d.abbrev, n, all)}
+                                  className={`text-[10px] font-mono border rounded px-1.5 py-0.5 ${
+                                    chapSelected ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted"
+                                  } ${!useSelection ? "opacity-70 cursor-not-allowed" : ""}`}
+                                >
+                                  {n}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex gap-2 flex-wrap">
+                  <Button onClick={start} disabled={starting || (job?.status === "running") || (useSelection && selection.size === 0)}>
+                    {starting || job?.status === "running"
+                      ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Importando…</>
+                      : <><PlayCircle className="w-4 h-4 mr-2" />
+                          {useSelection ? `Importar ${selection.size} livros selecionados` : "Importar tudo faltante"}
+                        </>}
+                  </Button>
+                  {useSelection && (
+                    <Button variant="outline" onClick={runDryRun} disabled={loadingDryRun || selection.size === 0}>
+                      {loadingDryRun ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FlaskConical className="w-4 h-4 mr-2" />}
+                      Dry-run da seleção
+                    </Button>
+                  )}
+                </div>
+                {useSelection && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Ao finalizar, o gate é revalidado imediatamente e novamente 3min depois.
+                  </p>
+                )}
               </>
             )}
           </CardContent>

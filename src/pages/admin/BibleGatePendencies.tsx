@@ -10,8 +10,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CathedraButton as Button } from "@/components/cathedra/CathedraButton";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, RefreshCw, ShieldCheck, ShieldAlert, ChevronDown, ChevronRight } from "lucide-react";
+import { Loader2, RefreshCw, ShieldCheck, ShieldAlert, ChevronDown, ChevronRight, Download } from "lucide-react";
 import { toast } from "sonner";
+
+function downloadBlob(name: string, mime: string, data: string) {
+  const blob = new Blob([data], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function toCSV(rows: Record<string, unknown>[]): string {
+  if (rows.length === 0) return "";
+  const cols = Array.from(rows.reduce((s, r) => { Object.keys(r).forEach((k) => s.add(k)); return s; }, new Set<string>()));
+  const esc = (v: unknown) => {
+    if (v === null || v === undefined) return "";
+    const s = typeof v === "string" ? v : JSON.stringify(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => esc((r as any)[c])).join(","))].join("\n");
+}
 
 interface Finding {
   id: string; abbrev: string; book_name: string | null; chapter: number | null;
@@ -138,11 +158,45 @@ export default function BibleGatePendencies() {
             pública quando há livros ou capítulos faltantes.
           </p>
         </div>
-        <Button onClick={revalidate} disabled={revalidating}>
-          {revalidating
-            ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Revalidando…</>
-            : <><RefreshCw className="w-4 h-4 mr-2" /> Revalidar diagnose</>}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => {
+            const findings = findingsQ.data ?? [];
+            const groupedRows = grouped.map((g) => ({
+              abbrev: g.abbrev, book_name: g.book_name, total: g.items.length,
+              ...Object.fromEntries(Object.entries(g.counts).map(([k, v]) => [`count_${k}`, v])),
+            }));
+            const payload = {
+              generated_at: new Date().toISOString(),
+              gate,
+              totals_by_type: totalsByType,
+              coverage_summary: { covered, total: coverage.length },
+              coverage,
+              grouped: groupedRows,
+              findings,
+            };
+            downloadBlob(`bible-diagnose-${gate?.run_id?.slice(0, 8) ?? "current"}.json`, "application/json", JSON.stringify(payload, null, 2));
+            toast.success("JSON exportado");
+          }} disabled={findingsQ.isLoading}>
+            <Download className="w-4 h-4 mr-2" /> JSON
+          </Button>
+          <Button variant="outline" onClick={() => {
+            const findings = findingsQ.data ?? [];
+            const csv = toCSV(findings.map((f) => ({
+              run_id: gate?.run_id ?? "",
+              abbrev: f.abbrev, book_name: f.book_name ?? "", chapter: f.chapter ?? "",
+              finding_type: f.finding_type, severity: f.severity, message: f.message,
+            })));
+            downloadBlob(`bible-findings-${gate?.run_id?.slice(0, 8) ?? "current"}.csv`, "text/csv;charset=utf-8", csv);
+            toast.success(`${findings.length} findings exportados`);
+          }} disabled={findingsQ.isLoading}>
+            <Download className="w-4 h-4 mr-2" /> CSV
+          </Button>
+          <Button onClick={revalidate} disabled={revalidating}>
+            {revalidating
+              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Revalidando…</>
+              : <><RefreshCw className="w-4 h-4 mr-2" /> Revalidar diagnose</>}
+          </Button>
+        </div>
       </header>
 
       <Card>
