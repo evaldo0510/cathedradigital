@@ -202,8 +202,8 @@ async function validateSource(translation: string) {
 async function dryRun(admin: Admin, translation: string, selection: Selection | null = null) {
   const plan = await computeMissing(admin, translation, selection);
   const samples: Array<{
-    abbrev: string; name: string; chapters_missing: number; sample_chapter: number;
-    sample_verses: number; first_verse: string | null; error?: string;
+    abbrev: string; name: string; chapters_missing: number; chapter_numbers: number[];
+    sample_chapter: number; sample_verses: number; first_verse: string | null; error?: string;
   }> = [];
   for (const item of plan) {
     const cap = item.chapters[0];
@@ -211,13 +211,15 @@ async function dryRun(admin: Admin, translation: string, selection: Selection | 
       const verses = await fetchBollsChapter(translation, item.bookId, cap);
       samples.push({
         abbrev: item.canon.abbr, name: item.canon.name,
-        chapters_missing: item.chapters.length, sample_chapter: cap,
+        chapters_missing: item.chapters.length, chapter_numbers: item.chapters,
+        sample_chapter: cap,
         sample_verses: verses.length, first_verse: verses[0]?.text ?? null,
       });
     } catch (e) {
       samples.push({
         abbrev: item.canon.abbr, name: item.canon.name,
-        chapters_missing: item.chapters.length, sample_chapter: cap,
+        chapters_missing: item.chapters.length, chapter_numbers: item.chapters,
+        sample_chapter: cap,
         sample_verses: 0, first_verse: null, error: (e as Error).message,
       });
     }
