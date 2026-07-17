@@ -203,6 +203,7 @@ export default function BibleImportJobs() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Job</TableHead>
+                  <TableHead>Fonte</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Progresso</TableHead>
                   <TableHead>Duração</TableHead>
@@ -213,7 +214,7 @@ export default function BibleImportJobs() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(q.data ?? []).map((j) => {
+                {filtered.map((j) => {
                   const reval = revalidationLabel(j.verification);
                   return (
                     <TableRow key={j.id}>
