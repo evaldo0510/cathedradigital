@@ -129,17 +129,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         {/* LOGOS IA CHAT INTERFACE - STICKY SEARCH ON MOBILE */}
         <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none mb-spacing-md">
-          <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium space-y-spacing-xs md:space-y-spacing-xl">
-             <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
-                <div className="flex items-center gap-2">
-                   <span className="editorial-meta text-secondary">Conversa com Logos</span>
-                </div>
-                <p className="hidden sm:block font-serif italic text-muted-foreground leading-relaxed">
-                  Logos é o seu assistente teológico. Pergunte sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
-                </p>
-             </div>
-
-             
+          <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium">
              <FuzzySearchInput
               value={query}
               onChange={setQuery}
@@ -150,6 +140,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             />
           </div>
         </div>
+
 
 
         <div 
