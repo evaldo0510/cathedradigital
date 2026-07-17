@@ -73,8 +73,10 @@ const PassageActions: React.FC<PassageActionsProps> = ({
 }) => {
   const share = useShare();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<ActionKey | null>(null);
-  const [error, setError] = useState<{ key: ActionKey; message: string } | null>(null);
+  // Estados INDEPENDENTES por ação (loading/success/error) — nunca globais.
+  const [loadingMap, setLoadingMap] = useState<Partial<Record<ActionKey, boolean>>>({});
+  const [successMap, setSuccessMap] = useState<Partial<Record<ActionKey, boolean>>>({});
+  const [errorMap, setErrorMap] = useState<Partial<Record<ActionKey, string>>>({});
   const [status, setStatus] = useState<string>('');
 
   // URL efetiva: prop direta ou derivada de `passage`.
@@ -85,18 +87,24 @@ const PassageActions: React.FC<PassageActionsProps> = ({
 
   const run = useCallback(
     async (key: ActionKey, fn: () => Promise<void>, successMsg?: string) => {
-      setLoading(key);
-      setError(null);
+      setLoadingMap((m) => ({ ...m, [key]: true }));
+      setErrorMap((m) => ({ ...m, [key]: undefined }));
+      setSuccessMap((m) => ({ ...m, [key]: false }));
       try {
         await fn();
         if (successMsg) setStatus(successMsg);
+        setSuccessMap((m) => ({ ...m, [key]: true }));
+        // limpa o "success" transiente após 1.6s
+        window.setTimeout(() => {
+          setSuccessMap((m) => ({ ...m, [key]: false }));
+        }, 1600);
       } catch (err: any) {
         const message = err?.message ?? 'Ação falhou';
-        setError({ key, message });
+        setErrorMap((m) => ({ ...m, [key]: message }));
         setStatus(`Erro: ${message}`);
         toast.error(message);
       } finally {
-        setLoading(null);
+        setLoadingMap((m) => ({ ...m, [key]: false }));
       }
     },
     [],
