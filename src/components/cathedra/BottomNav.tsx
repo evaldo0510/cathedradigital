@@ -86,11 +86,11 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-current={isActive ? 'page' : undefined}
     data-testid={dataTestId}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 outline-none",
+      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-[#c9a84c]/[0.08] focus-visible:ring-1 focus-visible:ring-[#c9a84c]/30 outline-none",
       "min-w-[48px] min-h-[48px]", 
       isActive 
-        ? 'text-primary' 
-        : 'text-muted-foreground/40 hover:text-primary/60'
+        ? 'text-[#c9a84c]' 
+        : 'text-muted-foreground/40 hover:text-[#c9a84c]/70'
     )}
   >
     {isActive && (
