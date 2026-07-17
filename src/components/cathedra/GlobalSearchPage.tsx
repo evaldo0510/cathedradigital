@@ -132,26 +132,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <div className="bg-card/50 md:bg-card md:border border-border/40 md:rounded-[2.5rem] rounded-b-[1.5rem] p-spacing-sm md:p-spacing-2xl md:shadow-premium space-y-spacing-xs md:space-y-spacing-xl">
              <div className={cn("flex flex-col gap-spacing-xs md:gap-spacing-md", hasQuery && "hidden md:flex")}>
                 <div className="flex items-center gap-2">
-                   <span
-                     className="text-[9px] md:text-[10px] uppercase"
-                     style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-                   >
-                     Conversa com Logos
-                   </span>
+                   <span className="editorial-meta text-secondary">Conversa com Logos</span>
                 </div>
-                <p
-                  className="hidden sm:block"
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontStyle: 'italic',
-                    fontSize: '0.95rem',
-                    color: 'hsl(var(--muted-foreground))',
-                    lineHeight: 1.6,
-                  }}
-                >
+                <p className="hidden sm:block font-serif italic text-muted-foreground leading-relaxed">
                   Logos é o seu assistente teológico. Pergunte sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
                 </p>
              </div>
+
              
              <FuzzySearchInput
               value={query}
