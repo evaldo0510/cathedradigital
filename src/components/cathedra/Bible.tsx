@@ -59,10 +59,13 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
   if (!data?.content) {
     return (
-      <div className="space-y-spacing-xs">
-        <p className="text-xs text-primary/50 italic">Conteúdo ainda não indexado no banco oficial.</p>
+      <div className="space-y-spacing-xs" data-testid="catechism-preview-empty">
+        <p className="text-xs text-primary/50 italic" data-testid="catechism-preview-empty-message">
+          Conteúdo ainda não indexado no banco oficial.
+        </p>
         <a
           href={`/catechism?p=${pNum}`}
+          data-testid="catechism-preview-empty-link"
           className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
         >
           Abrir §{pNum} no Catecismo →
@@ -70,6 +73,7 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
       </div>
     );
   }
+
 
   return (
     <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
