@@ -101,7 +101,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-spacing-md md:space-y-spacing-2xl">
+      <div ref={ref} className="editorial-column space-y-spacing-md md:space-y-spacing-2xl">
         <motion.div 
           className={cn(
             "text-center space-y-spacing-sm md:space-y-spacing-md pt-spacing-sm md:pt-spacing-xl transition-all duration-500",
@@ -111,40 +111,21 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center justify-center gap-3" aria-hidden="true">
-            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
-            <span
-              className="text-[9px] md:text-[10px] uppercase"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
-            >
-              Logos
-            </span>
-            <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
+            <span className="h-px w-10 md:w-16 bg-secondary" />
+            <span className="editorial-meta text-secondary">Logos</span>
+            <span className="h-px w-10 md:w-16 bg-secondary" />
           </div>
           <h2
-            className="leading-none"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontWeight: 500,
-              fontSize: 'clamp(2rem, 6vw, 3.75rem)',
-              letterSpacing: '0.02em',
-            }}
+            className="editorial-display leading-none text-primary"
+            style={{ fontSize: 'clamp(2rem, 6vw, 3.75rem)' }}
           >
-            Logos<span style={{ color: '#c9a84c' }}>.</span> IA
+            Logos<span className="text-secondary">.</span> IA
           </h2>
-          <p
-            className="mx-auto hidden md:block"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: '1.05rem',
-              color: 'hsl(var(--muted-foreground))',
-              maxWidth: '42ch',
-              lineHeight: 1.6,
-            }}
-          >
+          <p className="mx-auto hidden md:block font-serif italic text-muted-foreground text-lg leading-relaxed max-w-[42ch]">
             "No princípio era o Verbo." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
+
 
         {/* LOGOS IA CHAT INTERFACE - STICKY SEARCH ON MOBILE */}
         <div className="sticky top-0 z-[100] -mx-spacing-md md:mx-0 px-spacing-md md:px-0 bg-background/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none transition-all duration-300 border-b border-border/10 md:border-none shadow-sm md:shadow-none mb-spacing-md">
