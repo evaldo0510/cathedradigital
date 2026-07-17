@@ -366,7 +366,8 @@ const Footer: React.FC = React.memo(() => {
             </div>
           </div>
         </div>
-        </div>
+
+
 
         <div className="pt-spacing-3xl border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-spacing-xl">
           <div className="flex flex-col items-center md:items-start gap-spacing-md">
