@@ -247,25 +247,74 @@ export default function BibleImportMissing() {
       {dryRun && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Dry-run · {dryRun.translation}</CardTitle>
+            <CardTitle className="text-lg flex items-center gap-2">
+              Dry-run · {dryRun.translation}
+              <Badge variant="outline">simulação</Badge>
+            </CardTitle>
             <CardDescription>
-              {dryRun.books_missing} livros seriam criados/completados · {dryRun.chapters_missing_total} capítulos gravados.
-              Amostra de 1 capítulo por livro (nenhuma escrita).
+              Nenhuma escrita foi feita. Confira o plano antes de confirmar a importação.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="max-h-72 overflow-auto text-xs space-y-1">
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div className="border rounded p-3">
+                <div className="text-muted-foreground text-xs">Livros</div>
+                <div className="text-xl font-semibold">{dryRun.books_missing}</div>
+              </div>
+              <div className="border rounded p-3">
+                <div className="text-muted-foreground text-xs">Capítulos</div>
+                <div className="text-xl font-semibold">{dryRun.chapters_missing_total}</div>
+              </div>
+              <div className="border rounded p-3">
+                <div className="text-muted-foreground text-xs">Amostras OK</div>
+                <div className="text-xl font-semibold">{dryRun.samples.filter((s) => !s.error).length}</div>
+              </div>
+              <div className="border rounded p-3">
+                <div className="text-muted-foreground text-xs">Amostras com erro</div>
+                <div className={`text-xl font-semibold ${dryRun.samples.some((s) => s.error) ? "text-destructive" : ""}`}>
+                  {dryRun.samples.filter((s) => s.error).length}
+                </div>
+              </div>
+            </div>
+
+            <div className="max-h-96 overflow-auto text-xs space-y-2">
               {dryRun.samples.map((s) => (
-                <div key={s.abbrev} className="border rounded p-2">
-                  <div className="flex justify-between">
+                <div key={s.abbrev} className="border rounded p-2 space-y-1">
+                  <div className="flex justify-between items-start gap-2">
                     <span className="font-medium">{s.abbrev} · {s.name}</span>
-                    <span className="text-muted-foreground">{s.chapters_missing} caps · sample cap {s.sample_chapter} → {s.sample_verses} vv</span>
+                    <span className="text-muted-foreground shrink-0">
+                      {s.chapters_missing} caps · amostra cap {s.sample_chapter} → {s.sample_verses} vv
+                    </span>
                   </div>
+                  {s.chapter_numbers && s.chapter_numbers.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {s.chapter_numbers.slice(0, 30).map((n) => (
+                        <span key={n} className={`font-mono text-[10px] px-1.5 py-0.5 rounded border ${
+                          n === s.sample_chapter ? "bg-primary/10 border-primary/40 text-primary" : "text-muted-foreground"
+                        }`}>{n}</span>
+                      ))}
+                      {s.chapter_numbers.length > 30 && (
+                        <span className="text-[10px] text-muted-foreground">+{s.chapter_numbers.length - 30}</span>
+                      )}
+                    </div>
+                  )}
                   {s.error
-                    ? <div className="text-destructive mt-1">{s.error}</div>
-                    : <div className="text-muted-foreground mt-1 italic line-clamp-2">"{s.first_verse ?? '—'}"</div>}
+                    ? <div className="text-destructive">⚠ {s.error}</div>
+                    : <div className="text-muted-foreground italic line-clamp-2">
+                        <span className="not-italic font-medium text-foreground/70">Amostra v1: </span>
+                        "{s.first_verse ?? '—'}"
+                      </div>}
                 </div>
               ))}
+            </div>
+
+            <div className="flex gap-2 flex-wrap pt-2 border-t">
+              <Button onClick={start} disabled={starting || (job?.status === "running") || dryRun.books_missing === 0}>
+                {starting || job?.status === "running"
+                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Importando…</>
+                  : <><PlayCircle className="w-4 h-4 mr-2" /> Confirmar e importar</>}
+              </Button>
+              <Button variant="outline" onClick={() => setDryRun(null)}>Descartar prévia</Button>
             </div>
           </CardContent>
         </Card>
