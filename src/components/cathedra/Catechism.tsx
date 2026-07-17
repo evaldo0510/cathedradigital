@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import SEOHead from '@/components/SEOHead';
-import ShareButton from './ShareButton';
+
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import Relatio from './Relatio';
