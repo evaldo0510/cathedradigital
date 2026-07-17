@@ -1838,7 +1838,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                     </div>
                   )}
 
-                  <div className="space-y-spacing-xl">
+                  <div className="space-y-spacing-xl editorial-column">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-spacing-2xl text-center space-y-spacing-lg bg-primary/[0.02] rounded-3xl border border-primary/5 p-spacing-xl">
                         <Icons.AlertCircle className="w-12 h-12 text-secondary/40 mx-auto" />
