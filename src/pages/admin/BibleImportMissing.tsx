@@ -288,19 +288,87 @@ export default function BibleImportMissing() {
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-4 max-h-64 overflow-auto">
-                  {preview.detail.map((d) => (
-                    <div key={d.abbrev} className="flex justify-between border rounded px-2 py-1">
-                      <span className="font-medium">{d.abbrev}</span>
-                      <span className="text-muted-foreground">{d.chapters} cap</span>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <Checkbox checked={useSelection} onCheckedChange={(v) => setUseSelection(!!v)} />
+                    Importar apenas selecionados
+                    {useSelection && selection.size > 0 && (
+                      <Badge variant="secondary">{selection.size} livros</Badge>
+                    )}
+                  </label>
+                  {useSelection && selection.size > 0 && (
+                    <button type="button" className="text-xs text-muted-foreground hover:text-primary underline"
+                      onClick={() => setSelection(new Map())}>Limpar seleção</button>
+                  )}
                 </div>
-                <Button onClick={start} disabled={starting || (job?.status === "running")}>
-                  {starting || job?.status === "running"
-                    ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Importando…</>
-                    : <><PlayCircle className="w-4 h-4 mr-2" /> Importar tudo faltante</>}
-                </Button>
+
+                <div className="border rounded divide-y max-h-72 overflow-auto mb-4">
+                  {preview.detail.map((d) => {
+                    const all = d.chapter_numbers ?? Array.from({ length: d.chapters }, (_, i) => i + 1);
+                    const sel = selection.get(d.abbrev);
+                    const isSelected = selection.has(d.abbrev);
+                    const selectedCount = sel ? sel.size : (isSelected ? all.length : 0);
+                    const isOpen = expanded.has(d.abbrev);
+                    return (
+                      <div key={d.abbrev} className="text-sm">
+                        <div className="flex items-center gap-2 px-2 py-1.5">
+                          {useSelection && (
+                            <Checkbox checked={isSelected} onCheckedChange={() => toggleBook(d.abbrev, all)} />
+                          )}
+                          <button type="button" onClick={() => toggleExpand(d.abbrev)} className="flex items-center gap-1 flex-1 text-left">
+                            {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                            <span className="font-medium">{d.abbrev}</span>
+                            <span className="text-muted-foreground text-xs">— {d.name}</span>
+                          </button>
+                          <span className="text-xs text-muted-foreground">
+                            {useSelection && isSelected ? `${selectedCount}/${d.chapters}` : `${d.chapters} cap`}
+                          </span>
+                        </div>
+                        {isOpen && (
+                          <div className="px-6 pb-2 pt-1 flex flex-wrap gap-1">
+                            {all.map((n) => {
+                              const chapSelected = useSelection && (sel === null ? isSelected : !!sel?.has(n));
+                              return (
+                                <button
+                                  key={n}
+                                  type="button"
+                                  disabled={!useSelection}
+                                  onClick={() => toggleChapter(d.abbrev, n, all)}
+                                  className={`text-[10px] font-mono border rounded px-1.5 py-0.5 ${
+                                    chapSelected ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted"
+                                  } ${!useSelection ? "opacity-70 cursor-not-allowed" : ""}`}
+                                >
+                                  {n}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex gap-2 flex-wrap">
+                  <Button onClick={start} disabled={starting || (job?.status === "running") || (useSelection && selection.size === 0)}>
+                    {starting || job?.status === "running"
+                      ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Importando…</>
+                      : <><PlayCircle className="w-4 h-4 mr-2" />
+                          {useSelection ? `Importar ${selection.size} livros selecionados` : "Importar tudo faltante"}
+                        </>}
+                  </Button>
+                  {useSelection && (
+                    <Button variant="outline" onClick={runDryRun} disabled={loadingDryRun || selection.size === 0}>
+                      {loadingDryRun ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FlaskConical className="w-4 h-4 mr-2" />}
+                      Dry-run da seleção
+                    </Button>
+                  )}
+                </div>
+                {useSelection && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Ao finalizar, o gate é revalidado imediatamente e novamente 3min depois.
+                  </p>
+                )}
               </>
             )}
           </CardContent>
