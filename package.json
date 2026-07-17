@@ -57,6 +57,10 @@
     "test:bible-selection-focus": "playwright test tests/e2e/bible-selection-focus.spec.ts",
     "test:bible-selection-ci": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts tests/e2e/bible-selection-keyboard.spec.ts tests/e2e/bible-selection-focus.spec.ts --reporter=list,html,json",
     "test:atrium-menu": "playwright test tests/e2e/atrium-menu-navigation.spec.ts",
+    "test:atrium-landmarks": "playwright test tests/e2e/atrium-landmarks-a11y.spec.ts",
+    "test:atrium-history": "playwright test tests/e2e/atrium-history.spec.ts",
+    "test:atrium-footer": "playwright test tests/e2e/atrium-footer.spec.ts",
+    "test:atrium-suite": "playwright test tests/e2e/atrium-menu-navigation.spec.ts tests/e2e/atrium-landmarks-a11y.spec.ts tests/e2e/atrium-history.spec.ts tests/e2e/atrium-footer.spec.ts --reporter=list,html,json",
 
 
 
