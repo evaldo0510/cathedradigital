@@ -1827,6 +1827,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   return (
                                     <motion.button
                                       key={idx}
+                                      data-testid="nexus-connection-card"
                                       initial={{ opacity: 0, y: 4 }}
                                       animate={{ opacity: 1, y: 0 }}
                                       transition={{ delay: idx * 0.03 }}
