@@ -2,18 +2,19 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 
 export const BibleSkeleton = () => (
-  <div className="w-full max-w-7xl mx-auto space-y-spacing-2xl py-spacing-xl animate-in fade-in duration-700">
-    <div className="space-y-spacing-lg text-center">
-      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 border border-primary/10 mx-auto animate-pulse" />
-      <div className="h-spacing-xl w-spacing-4xl bg-muted/40 rounded-premium-full mx-auto animate-pulse" />
-      <div className="h-spacing-md w-spacing-4xl bg-muted/20 rounded-premium-full mx-auto animate-pulse" />
-    </div>
-    
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-lg">
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-        <Card key={i} className="h-spacing-4xl rounded-premium bg-muted/20 border-border/20 animate-pulse duration-700" />
-      ))}
-    </div>
+  <div
+    role="status"
+    aria-live="polite"
+    aria-label="Carregando Bíblia"
+    className="w-full max-w-lg mx-auto min-h-[50vh] flex flex-col items-center justify-center gap-spacing-md py-spacing-2xl px-4 animate-in fade-in duration-500"
+  >
+    <div className="w-10 h-10 rounded-full border-2 border-secondary/20 border-t-secondary animate-spin" />
+    <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary/60">
+      Abrindo Cânone Sagrado
+    </p>
+    <p className="text-xs font-serif italic text-muted-foreground">
+      um instante…
+    </p>
   </div>
 );
 
