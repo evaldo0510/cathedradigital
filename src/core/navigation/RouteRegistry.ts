@@ -20,11 +20,11 @@ interface RouteEntry {
 
 const ROUTES: Record<RouteKey, RouteEntry> = {
   'atrium':               { template: '/' },
-  'env.estudar':          { template: '/estudar' },
-  'env.rezar':            { template: '/rezar' },
-  'env.formar-se':        { template: '/formar-se' },
-  'env.pesquisar':        { template: '/pesquisar' },
-  'env.minha-jornada':    { template: '/minha-jornada' },
+  'env.estudar':          { template: '/bible' },
+  'env.rezar':            { template: '/oracao' },
+  'env.formar-se':        { template: '/jornadas' },
+  'env.pesquisar':        { template: '/buscar' },
+  'env.minha-jornada':    { template: '/hoje' },
   'study.composed':       { template: '/estudar/tema/:slug',                requires: ['slug'] },
   'study.bible':          { template: '/estudar/biblia/:book/:chapter',    requires: ['book', 'chapter'] },
   'study.catechism':      { template: '/estudar/catecismo/:paragraph',     requires: ['paragraph'] },
