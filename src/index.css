@@ -200,6 +200,37 @@
   }
   .cathedra-noir ::selection { background: rgba(201, 168, 76, 0.35); color: #0a0a0a; }
 
+  /* Reset agressivo dos estilos globais dentro do escopo Noir.
+     O sistema global força uppercase/tracking/blur em h1-h3 e altera line-height.
+     Aqui neutralizamos para que Playfair Display respire como tipografia editorial. */
+  .cathedra-noir h1,
+  .cathedra-noir h2,
+  .cathedra-noir h3,
+  .cathedra-noir h4 {
+    text-transform: none !important;
+    letter-spacing: normal;
+    filter: none !important;
+    text-shadow: none !important;
+    color: inherit;
+    font-weight: inherit;
+  }
+  .cathedra-noir p { color: inherit; font-family: inherit; }
+  .cathedra-noir a:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; box-shadow: none; }
+  .cathedra-noir input:focus-visible { outline: none; box-shadow: none; }
+
+  @keyframes cathedra-noir-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .cathedra-noir [data-rise] { animation: cathedra-noir-rise 900ms cubic-bezier(0.2,0.7,0.2,1) both; }
+  .cathedra-noir [data-rise="1"] { animation-delay: 80ms; }
+  .cathedra-noir [data-rise="2"] { animation-delay: 220ms; }
+  .cathedra-noir [data-rise="3"] { animation-delay: 380ms; }
+  .cathedra-noir [data-rise="4"] { animation-delay: 560ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .cathedra-noir [data-rise] { animation: none; }
+  }
+
 
 
 

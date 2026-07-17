@@ -19,6 +19,7 @@
  */
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -110,6 +111,16 @@ const HomeUnified: React.FC = () => {
 
   return (
     <div className="cathedra-noir min-h-screen w-full">
+      <Helmet>
+        <title>Cathedra — Habite a profundidade do silêncio</title>
+        <meta name="description" content="Cathedra: um espaço editorial e silencioso para estudar, rezar, formar-se, pesquisar e caminhar na tradição católica." />
+        <meta property="og:title" content="Cathedra — Habite a profundidade do silêncio" />
+        <meta property="og:description" content="Estudo, oração, formação e pesquisa em um só lugar. Uma catedral digital para a vida interior." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="canonical" href="/" />
+      </Helmet>
+
       {/* ══════ HERO (100vh) ══════ */}
       <section className="relative flex min-h-[92vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
         {/* Halo dourado sutil */}
@@ -123,9 +134,10 @@ const HomeUnified: React.FC = () => {
         />
 
         <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
-          <Eyebrow className="mb-6 md:mb-8">Sanctuarium Spiritus</Eyebrow>
+          <div data-rise><Eyebrow className="mb-6 md:mb-8">Sanctuarium Spiritus</Eyebrow></div>
 
           <h1
+            data-rise="1"
             className="mb-6 leading-[0.95] tracking-[0.06em]"
             style={{
               fontFamily: "'Playfair Display', serif",
@@ -138,6 +150,7 @@ const HomeUnified: React.FC = () => {
           </h1>
 
           <p
+            data-rise="2"
             className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
             style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
           >
@@ -146,7 +159,7 @@ const HomeUnified: React.FC = () => {
           </p>
 
           {/* Busca Spotlight-like */}
-          <div className="mt-14 w-full max-w-2xl md:mt-20">
+          <div data-rise="3" className="mt-14 w-full max-w-2xl md:mt-20">
             <label htmlFor="home-search" className="sr-only">Pesquisar</label>
             <div
               className="group flex items-center gap-3 rounded-full border px-6 py-4 transition-colors md:py-5"
