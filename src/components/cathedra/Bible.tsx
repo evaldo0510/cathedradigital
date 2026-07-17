@@ -2144,6 +2144,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
               <div className="grid grid-cols-2 gap-spacing-md">
                 <Button 
                   variant="outline"
+                  data-testid="nexus-sheet-nav-link"
                   onClick={() => {
                     console.info('[Nexus] navigate', { from: 'bible', to: expandedConnection.type, id: expandedConnection.id });
                     if (expandedConnection.type === 'catechism') {
@@ -2157,6 +2158,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 >
                   <Icons.BookOpen className="w-4 h-4 mr-spacing-xs text-secondary" /> 
                   Ler no {expandedConnection.type === 'catechism' ? 'Catecismo' : 'Documento'}
+
                 </Button>
 
                 <Button 
