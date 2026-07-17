@@ -443,17 +443,38 @@ const Catechism: React.FC = memo(() => {
                     disabled={selectedSection.id <= 1}
                     onClick={() => {
                       const prev = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
-                      if (prev) { setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0,0); }
+                      if (prev) {
+                        console.info('[CIC section nav]', {
+                          origin: 'Catechism.section-nav',
+                          direction: 'prev',
+                          from: { section: selectedSection.id, paragraph: currentParagraph },
+                          to: { section: prev.id, paragraph: prev.paragraphs[0] },
+                          href: `/catechism?p=${prev.paragraphs[0]}`,
+                        });
+                        setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0,0);
+                      }
                     }}
+                    data-testid="catechism-section-prev"
                     variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
                   <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
                   <Button 
                     disabled={selectedSection.id >= 10}
                     onClick={() => {
                       const next = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
-                      if (next) { setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0,0); }
+                      if (next) {
+                        console.info('[CIC section nav]', {
+                          origin: 'Catechism.section-nav',
+                          direction: 'next',
+                          from: { section: selectedSection.id, paragraph: currentParagraph },
+                          to: { section: next.id, paragraph: next.paragraphs[0] },
+                          href: `/catechism?p=${next.paragraphs[0]}`,
+                        });
+                        setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0,0);
+                      }
                     }}
+                    data-testid="catechism-section-next"
                     variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Próxima</Button>
+
                </div>
                <ReadingControlPanel />
             </div>
