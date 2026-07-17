@@ -46,6 +46,8 @@
     "test:clicabilidade": "playwright test tests/e2e/catecismo-clicabilidade.spec.ts",
     "test:nexus-anchor": "playwright test tests/e2e/nexus-popover-anchor.spec.ts",
     "test:nexus-keyboard": "playwright test tests/e2e/nexus-popover-keyboard.spec.ts",
+    "test:nexus-suite": "playwright test tests/e2e/nexus-popover-suite.spec.ts",
+
 
 
 
