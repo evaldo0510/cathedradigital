@@ -11,7 +11,8 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, PlayCircle, Search, CheckCircle2, AlertTriangle, ShieldCheck, FlaskConical, History, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 interface PreviewDetail { abbrev: string; name: string; chapters: number; chapter_numbers?: number[] }
