@@ -2082,13 +2082,20 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             />
             
             <motion.div
+              ref={nexusSheetPanelRef}
               data-testid="nexus-bottom-sheet-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="nexus-sheet-title"
+              aria-describedby="nexus-sheet-desc"
+              tabIndex={-1}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden"
+              className="relative w-full max-w-lg mx-auto bg-card border-t lg:border border-primary/10 rounded-t-[2.5rem] lg:rounded-[2.5rem] shadow-premium p-spacing-xl pb-[calc(2rem+env(safe-area-inset-bottom,20px))] lg:pb-10 pointer-events-auto max-h-[85vh] overflow-y-auto overflow-x-hidden focus:outline-none"
             >
+
               {/* Drag handle for mobile-first feel */}
               <div className="w-12 h-1 bg-primary/10 rounded-full mx-auto mb-spacing-lg lg:hidden" />
               
