@@ -19,7 +19,13 @@ interface Job {
   current_book: string | null; message: string | null; error: string | null;
   started_at: string | null; finished_at: string | null; created_at: string;
   verification: any; audit_log?: any;
+  source_code?: string | null; translation?: string | null;
 }
+
+type Period = "all" | "24h" | "7d" | "30d";
+const PERIOD_MS: Record<Period, number | null> = {
+  all: null, "24h": 24 * 3600_000, "7d": 7 * 86400_000, "30d": 30 * 86400_000,
+};
 
 const STATUS_VARIANT: Record<string, "default" | "destructive" | "secondary" | "outline"> = {
   succeeded: "default", running: "secondary", queued: "outline",
