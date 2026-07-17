@@ -267,50 +267,74 @@ const HomeUnified: React.FC = () => {
       </section>
 
       {/* ══════ TEMA EM DESTAQUE ══════ */}
-      <section className="relative w-full px-6 py-28 md:px-12 md:py-40" style={{ background: 'var(--noir-surface)' }}>
-        <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
-          <Eyebrow className="mb-6">{FEATURED_THEME.eyebrow}</Eyebrow>
-          <h2
-            className="mb-8"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontWeight: 400,
-              fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
-              lineHeight: 1.05,
-              color: 'var(--noir-text)',
-              letterSpacing: '0.01em',
-            }}
-          >
-            {FEATURED_THEME.title}
-          </h2>
-          <p
-            className="mb-12 max-w-2xl text-lg italic md:text-2xl"
-            style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
-          >
-            {FEATURED_THEME.subtitle}
-          </p>
-          <Link
-            to={FEATURED_THEME.href}
-            className="group inline-flex items-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.28em] transition-all hover:gap-5"
-            style={{
-              borderColor: 'var(--gold)',
-              color: 'var(--gold)',
-              fontFamily: 'Inter, sans-serif',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--gold)';
-              e.currentTarget.style.color = '#0a0a0a';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = 'var(--gold)';
-            }}
-          >
-            {FEATURED_THEME.cta}
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
-        </div>
-      </section>
+      {featured && (
+        <section className="relative w-full px-6 py-28 md:px-12 md:py-40" style={{ background: 'var(--noir-surface)' }}>
+          <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
+            <Eyebrow className="mb-6">Tema em destaque</Eyebrow>
+            <h2
+              className="mb-8"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 400,
+                fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
+                lineHeight: 1.05,
+                color: 'var(--noir-text)',
+                letterSpacing: '0.01em',
+              }}
+            >
+              {featured.label}
+            </h2>
+            {featured.short && (
+              <p
+                className="mb-12 max-w-2xl text-lg italic md:text-2xl"
+                style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+              >
+                {featured.short}
+              </p>
+            )}
+            <Link
+              to={`/buscar?q=${encodeURIComponent(featured.label)}`}
+              className="group inline-flex items-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.28em] transition-all hover:gap-5"
+              style={{
+                borderColor: 'var(--gold)',
+                color: 'var(--gold)',
+                fontFamily: 'Inter, sans-serif',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--gold)';
+                e.currentTarget.style.color = '#0a0a0a';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = 'var(--gold)';
+              }}
+            >
+              Começar Estudo
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+
+            {/* Chips com outros temas em destaque (se houver) */}
+            {themes.length > 1 && (
+              <div className="mt-10 flex flex-wrap justify-center gap-3">
+                {themes.slice(1, 6).map((t) => (
+                  <Link
+                    key={t.slug}
+                    to={`/buscar?q=${encodeURIComponent(t.label)}`}
+                    className="rounded-full border px-4 py-2 text-xs tracking-widest transition-colors"
+                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+
 
       {/* ══════ CONTINUAR CAMINHADA ══════ */}
       <section className="w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
