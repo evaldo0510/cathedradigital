@@ -26,6 +26,7 @@ import { initGA4AutoTracking } from './lib/analytics';
 import CathedralSidebar from './components/cathedra/Sidebar';
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 import CathedralFooter from './components/cathedra/Footer';
+import NotFound from './pages/NotFound';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -627,7 +628,7 @@ const AppLayout: React.FC = () => {
               {/* Preview isolado do Ambiente Átrio (Sprint 2.0.1). Rota / continua no 1.x até 2.0.6. */}
               <Route path="/prototype-2.0/atrium-v2" element={<Suspense fallback={<LoadingFallback />}><AtriumPageV2 /></Suspense>} />
 
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
 
 
             </Routes>
@@ -637,7 +638,7 @@ const AppLayout: React.FC = () => {
 
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
         </AppErrorBoundary>
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && <CathedralFooter />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && <CathedralFooter />}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 
