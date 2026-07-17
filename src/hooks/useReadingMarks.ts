@@ -45,7 +45,8 @@ export function useReadingMarks() {
     if (!user) return;
 
     const channel = supabase
-      .channel('reading_marks_realtime')
+      .channel(`reading_marks_realtime:${user.id}:${Math.random().toString(36).slice(2, 10)}`)
+
       .on(
         'postgres_changes',
         {
