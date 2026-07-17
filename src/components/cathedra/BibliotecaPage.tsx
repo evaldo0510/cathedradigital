@@ -80,11 +80,26 @@ function resolveSearchTarget(query: string, axis: AxisFilter): string {
   }
 }
 
+type BibliotecaTheme = 'vaticana' | 'apple' | 'logos';
+const THEME_KEY = 'cathedra.biblioteca.theme';
+const themeOptions: { key: BibliotecaTheme; label: string; hint: string }[] = [
+  { key: 'vaticana', label: 'Vaticana', hint: 'Clássico contemplativo' },
+  { key: 'apple', label: 'Apple Books', hint: 'Minimalismo silencioso' },
+  { key: 'logos', label: 'Logos 2030', hint: 'Pesquisa como âncora' },
+];
+
 const BibliotecaPage: React.FC = () => {
   const navigate = useNavigate();
   const { query, axis, tab, setQuery, setAxis, setTab } = useBibliotecaState();
   const { recents, pushRecent, clearRecents, removeRecent } = useBibliotecaRecents();
   const { favorites, removeFavorite } = useFavorites('biblioteca');
+  const [theme, setTheme] = useState<BibliotecaTheme>(() => {
+    if (typeof window === 'undefined') return 'logos';
+    return (localStorage.getItem(THEME_KEY) as BibliotecaTheme) || 'logos';
+  });
+  useEffect(() => {
+    try { localStorage.setItem(THEME_KEY, theme); } catch {}
+  }, [theme]);
 
   const filteredEscritos = useMemo(() => {
     const q = query.trim().toLowerCase();
