@@ -511,10 +511,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {narrativeSections.map((section, sIdx) => (
                 <motion.section
                   key={section.kind}
+                  ref={(el) => { sectionRefs.current[section.kind] = el as unknown as HTMLElement | null; }}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: sIdx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   aria-label={section.preset.eyebrow}
+                  aria-current={sIdx === activeSectionIdx ? 'true' : undefined}
                 >
                   <header className="mb-spacing-md">
                     <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
