@@ -137,5 +137,23 @@ for (const vp of MOBILE_VIEWPORTS) {
       );
       expect(focusedTestId, `data-testid do elemento focado em ${vp.label}`).toBe('menu-trigger');
     });
+
+    test(`focus trap: Tab/Shift+Tab não escapam do dialog (${vp.label})`, async ({ page }) => {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      const { dialog } = await openSidebar(page);
+      await page.waitForTimeout(300);
+
+      for (let i = 0; i < 25; i++) {
+        await page.keyboard.press('Tab');
+        const inside = await dialog.evaluate((el) => el.contains(document.activeElement));
+        expect(inside, `[${vp.label}] foco escapou do dialog no Tab #${i + 1}`).toBe(true);
+      }
+
+      for (let i = 0; i < 10; i++) {
+        await page.keyboard.press('Shift+Tab');
+        const inside = await dialog.evaluate((el) => el.contains(document.activeElement));
+        expect(inside, `[${vp.label}] foco escapou do dialog no Shift+Tab #${i + 1}`).toBe(true);
+      }
+    });
   });
 }
