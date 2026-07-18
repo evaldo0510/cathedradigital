@@ -1,78 +1,77 @@
-# Plano — Sprint Editorial (continuação)
+# Onda 2 — Fase C: JourneyService (arquitetura congelada)
 
-Quatro pedidos empacotados em uma única mensagem. Vou executá-los na ordem que respeita a sequência que combinamos (tipografia primeiro, validação antes de novas features, Formação por último por ser a maior refatoração), e entrego cada etapa com validação antes de avançar para a próxima.
+## Regra-mãe
 
-## Etapa 1 — Tipografia responsiva (Reader, /buscar, Formação)
-Base para as demais etapas: sem isso, refatorar Formação em mobile viraria retrabalho.
+Nenhuma nova camada arquitetural. Nenhum novo Registry/Manager/Controller/Provider/Engine/Facade. Só se cria o que está nesta fase; a partir daqui, todo esforço é integração das telas ao que já existe.
 
-- Criar utilitário `.editorial-column-responsive` em `src/index.css` derivado do `--reading-column` atual:
-  - `max-width: min(68ch, 100%)` no desktop
-  - `max-width: min(62ch, 100%)` no tablet (`md`)
-  - `max-width: min(56ch, 100%)` + padding lateral `1.25rem` no mobile
-- Ajustar escalas tipográficas:
-  - Reader: `text-lg md:text-xl` no corpo, `leading-relaxed` → `leading-[1.75]` no mobile
-  - `/buscar`: mesma escala do Reader nos títulos dos cards; subtítulos serifa itálica
-  - Formação: aplicar o mesmo wrapper
-- Touch targets: revisar botões e links do Reader, `/buscar` e nav do Átrio para garantir `min-h-[44px] min-w-[44px]` em `< md`.
+## 1. Localização e contrato
 
-Arquivos: `src/index.css`, `src/pages/Catechism.tsx`, `src/pages/Bible.tsx`, `src/pages/GlobalSearchPage.tsx`, `src/components/search/SearchResultCard.tsx`.
-
-Validação: Playwright em 375×812 (mobile) e 768×1024 (tablet), screenshots do Reader (`/catechism?p=1`), `/buscar?q=Maria` e `/formacao`.
-
-## Etapa 2 — Validar /buscar com termo real
-Antes de plugar novas ações, confirmo que a Etapa 1 ficou correta.
-
-- Abrir `/buscar?q=Maria` via Playwright, capturar mobile + desktop.
-- Checklist: hierarquia (título display > subtítulo itálico > trecho), respiro entre cards, largura de leitura.
-- Se algo estiver fora, ajusto antes de seguir.
-
-## Etapa 3 — Ações compartilhadas no /buscar
-Reaproveitar o mesmo componente já usado no Reader.
-
-- Localizar o componente de ações do Reader (provavelmente `ReaderActions` ou similar dentro de `src/components/reader/`).
-- Se hoje ele estiver acoplado ao contexto do Reader, extrair para `src/components/shared/PassageActions.tsx` com props:
-  - `reference: string`
-  - `text: string`
-  - `sourceUrl: string`
-  - Ações: copiar trecho, copiar referência, destacar, compartilhar (Web Share API com fallback).
-- Substituir uso interno no Reader por esse componente.
-- Adicionar em `SearchResultCard.tsx` no rodapé de cada card.
-- Persistência de destaque: reutilizar `useReadingMarks` se aplicável ao contexto de busca; caso contrário, destaque local + toast.
-
-Validação: teste manual via Playwright (copiar → checar clipboard, compartilhar → checar chamada da API, destacar → checar persistência).
-
-## Etapa 4 — Formação como “Estudo Composto”
-Refatoração da seção `/formacao` seguindo a hierarquia do Reader.
-
-Estrutura por unidade de estudo:
 ```text
-┌─────────────────────────────────────────┐
-│ KICKER   (série · nº unidade)           │
-│ TÍTULO   (display serif)                │
-│ SUBTÍTULO (serifa itálica)              │
-├─────────────────────────────────────────┤
-│ Citação de abertura (blockquote)        │
-│ Corpo editorial (coluna 62ch)           │
-│ Fontes primárias vinculadas             │
-│   → Cards de Bíblia / Catecismo / Mag.  │
-│ Nexus lateral (referências cruzadas)    │
-│ Ação: “Continuar leitura” (Reader)      │
-└─────────────────────────────────────────┘
+src/core/journey/
+├── JourneyService.ts   # API pública (objeto único)
+├── JourneyAdapter.ts   # itineraria → journeys + fallback content.html ↔ interpretation
+├── types.ts            # Journey, JourneyStep, JourneyProgress, JourneyRecommendation, Filters
+├── index.ts            # barrel: exporta APENAS JourneyService + types públicos
+└── README.md           # contrato, regras de uso, o que NÃO fazer
 ```
 
-- Consumir dados via `KnowledgeEngine` (referências temáticas) e `ReaderService` (previews de trechos), sem duplicar fetch.
-- Cards de fonte primária clicáveis abrindo o Reader correspondente na mesma aba, preservando `ref` de retorno.
-- Nexus lateral usando o Popover existente.
-- Remover cards antigos que não seguem essa hierarquia.
+**Export:** named export `JourneyService` (objeto único, padrão do projeto). Adapter e helpers permanecem internos.
+**Import único autorizado nas telas:** `import { JourneyService } from "@/core/journey"`.
+**Proibido:** UI chamando o backend direto para `journeys | journey_steps | journey_progress | itineraria | itineraria_steps | itineraria_progress`.
 
-Arquivos previstos: `src/pages/Formacao.tsx` (ou equivalente), novos `src/components/formacao/StudyUnit.tsx`, `PrimarySourceCard.tsx`.
+## 2. Fluxo obrigatório
 
-Validação: screenshots desktop + mobile, checar que "Continuar leitura" navega para Reader com `ref` e que Nexus abre ancorado.
+```text
+UI → JourneyService → JourneyAdapter → journeys (backend)
+```
 
-## Ordem de entrega
-1. Etapa 1 → screenshots antes/depois
-2. Etapa 2 → screenshot `/buscar?q=Maria`
-3. Etapa 3 → demo das 4 ações
-4. Etapa 4 → screenshots da nova Formação
+Adapter absorve `itineraria*` durante a compatibilidade. Quando todos os consumidores migrarem (Fase D), `itineraria*` é removido — sem tocar nada agora.
 
-Confirma essa ordem para eu começar pela Etapa 1?
+## 3. Métodos (20, derivados do CAT-031)
+
+- **Leitura (7):** `list`, `getBySlug`, `getById`, `listSteps`, `getStep`, `getFirstStep`, `getRelated`.
+- **Progresso (6):** `getProgress`, `startJourney`, `completeStep`, `resumeJourney`, `listUserJourneys`, `resetProgress`.
+- **Admin (4):** `createJourney`, `updateJourney`, `upsertStep`, `deleteJourney`.
+- **Stats/Nexus (3):** `getStats`, `getGlobalStats`, `getNexusForStep`.
+
+Retorno padronizado `{ data, error }`. Sem novos hooks nesta fase — hooks existentes passam a chamar o service.
+
+## 4. Adapter de compatibilidade
+
+- `JourneyAdapter.fromItineraria(row)` / `.fromItinerariaStep(row)`: mapeia campos e prefixa IDs de itineraria com `itin:` para evitar colisão.
+- `JourneyAdapter.normalizeContent(content)`: se falta `interpretation` e existe `html`, copia; e vice-versa (para admin).
+- `getBySlug` consulta `journeys` primeiro; se ausente, tenta `itineraria` via adapter. Deep links `/jornadas/:slug` seguem funcionando sem redirect.
+- Escrita no path adaptado é bloqueada nesta fase (admin edita só `journeys` reais).
+
+## 5. Ordem de integração (revisada)
+
+Sprint A (agora): criar `src/core/journey/*` + testes.
+Sprint B: **Formação** migrada 100% para `JourneyService`.
+Sprint C: **Hoje** migrado.
+Sprint D: **Biblioteca** (`ContinueReadingHero`, cards, "Descubra") migrada.
+Sprint E: Reader.
+Sprint F: Nexus.
+Sprint G: Admin + Edge Functions.
+
+Regra por sprint: só se remove import direto do backend quando o arquivo estiver 100% no service. Typecheck + E2E entre sprints. Nenhuma sprint avança sem homologação sua.
+
+## 6. Nomenclatura congelada (só strings de UI)
+
+- Menu/navegação: **"Formação"**.
+- Unidade individual: **"Caminho"/"Caminhos"** (título de "Minha Jornada" passa a "Meus Caminhos").
+- Rotas, tabelas e domínio interno (`Journey`, `JourneyService`, `journeys`) permanecem.
+
+Aplicada apenas nas telas tocadas em cada sprint — não faço varredura global agora.
+
+## 7. Entregáveis desta Sprint A
+
+1. `src/core/journey/{JourneyService.ts,JourneyAdapter.ts,types.ts,index.ts,README.md}`.
+2. Testes unitários dos 20 métodos + adapter (`itineraria` → `Journey`, fallback de content).
+3. Typecheck limpo. Zero mudança em telas (contrato disponível, migração começa na Sprint B).
+4. Relatório curto `docs/ONDA-02-FASE-C-SPRINT-A.md` com API pública e checklist para as sprints seguintes.
+
+## 8. Fora de escopo
+
+- Migração de qualquer tela (Sprints B–G).
+- Alteração de schema, remoção de `itineraria*`, novos hooks, novas rotas.
+- Qualquer novo Registry/Manager/Provider/Engine.
