@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 /* Shell — canvas base editorial                                      */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialShellProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialShellProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Aplica textura de pergaminho sutil por cima (opacity 0.05). */
   parchment?: boolean;
 }
@@ -58,7 +58,7 @@ EditorialShell.displayName = 'EditorialShell';
 /* Divider — filete horizontal                                         */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialDividerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialDividerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   variant?: 'hair' | 'gold' | 'gold-fade';
 }
 
@@ -86,7 +86,7 @@ export const EditorialDivider: React.FC<EditorialDividerProps> = ({
 /* Hero — abertura editorial                                          */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialHeroProps extends React.HTMLAttributes<HTMLElement> {
+export interface EditorialHeroProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   kicker?: React.ReactNode;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
@@ -133,7 +133,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
 /* Section — bloco tipográfico com kicker + título                    */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialSectionProps extends React.HTMLAttributes<HTMLElement> {
+export interface EditorialSectionProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   kicker?: React.ReactNode;
   title?: React.ReactNode;
   action?: React.ReactNode;
@@ -162,7 +162,7 @@ export const EditorialSection: React.FC<EditorialSectionProps> = ({
 /* Header — cabeçalho compacto de seção                               */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   kicker?: React.ReactNode;
   title?: React.ReactNode;
   action?: React.ReactNode;
@@ -203,7 +203,7 @@ export const EditorialHeader: React.FC<EditorialHeaderProps> = ({
 /* Surface — superfície-cartão base                                   */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialSurfaceProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   tier?: 'lowest' | 'low' | 'base' | 'high' | 'highest';
   interactive?: boolean;
   as?: 'div' | 'article' | 'section';
@@ -245,7 +245,7 @@ EditorialSurface.displayName = 'EditorialSurface';
 /* Card — cartão de conteúdo (com variantes)                          */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   kicker?: React.ReactNode;
   title: React.ReactNode;
   meta?: React.ReactNode;
@@ -369,7 +369,7 @@ export const EditorialCard: React.FC<EditorialCardProps> = ({
 /* Grid — layout responsivo neutro                                    */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialGridProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialGridProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   cols?: 1 | 2 | 3 | 4;
 }
 
@@ -402,7 +402,7 @@ export const EditorialGrid: React.FC<EditorialGridProps> = ({
 /* Shelf — carrossel horizontal (estante)                             */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialShelfProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorialShelfProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Largura mínima de cada item na estante. */
   itemMinWidth?: string;
 }
@@ -442,7 +442,7 @@ export const EditorialShelf: React.FC<EditorialShelfProps> = ({
 /* Footer — rodapé minimalista                                        */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialFooterProps extends React.HTMLAttributes<HTMLElement> {
+export interface EditorialFooterProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   kicker?: React.ReactNode;
   note?: React.ReactNode;
   action?: React.ReactNode;
