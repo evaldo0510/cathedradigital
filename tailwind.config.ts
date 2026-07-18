@@ -47,6 +47,61 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* Stitch namespace — Sprint R0 reskin foundation.
+         * Uso: bg-stitch-primary, text-stitch-on-surface, border-stitch-outline-variant.
+         * NÃO substitui os tokens semânticos existentes (background, primary, etc.).
+         */
+        stitch: {
+          primary: {
+            DEFAULT: "hsl(var(--stitch-primary))",
+            foreground: "hsl(var(--stitch-on-primary))",
+            container: "hsl(var(--stitch-primary-container))",
+            "on-container": "hsl(var(--stitch-on-primary-container))",
+            fixed: "hsl(var(--stitch-primary-fixed))",
+            inverse: "hsl(var(--stitch-inverse-primary))",
+          },
+          secondary: {
+            DEFAULT: "hsl(var(--stitch-secondary))",
+            foreground: "hsl(var(--stitch-on-secondary))",
+            container: "hsl(var(--stitch-secondary-container))",
+            "on-container": "hsl(var(--stitch-on-secondary-container))",
+            fixed: "hsl(var(--stitch-secondary-fixed))",
+            "fixed-dim": "hsl(var(--stitch-secondary-fixed-dim))",
+          },
+          tertiary: {
+            DEFAULT: "hsl(var(--stitch-tertiary))",
+            fixed: "hsl(var(--stitch-tertiary-fixed))",
+            "on-fixed": "hsl(var(--stitch-on-tertiary-fixed))",
+          },
+          background: "hsl(var(--stitch-background))",
+          "on-background": "hsl(var(--stitch-on-background))",
+          surface: {
+            DEFAULT: "hsl(var(--stitch-surface))",
+            dim: "hsl(var(--stitch-surface-dim))",
+            bright: "hsl(var(--stitch-surface-bright))",
+            variant: "hsl(var(--stitch-surface-variant))",
+            tint: "hsl(var(--stitch-surface-tint))",
+          },
+          "on-surface": "hsl(var(--stitch-on-surface))",
+          "on-surface-variant": "hsl(var(--stitch-on-surface-variant))",
+          "surface-container-lowest": "hsl(var(--stitch-surface-container-lowest))",
+          "surface-container-low": "hsl(var(--stitch-surface-container-low))",
+          "surface-container": "hsl(var(--stitch-surface-container))",
+          "surface-container-high": "hsl(var(--stitch-surface-container-high))",
+          "surface-container-highest": "hsl(var(--stitch-surface-container-highest))",
+          outline: {
+            DEFAULT: "hsl(var(--stitch-outline))",
+            variant: "hsl(var(--stitch-outline-variant))",
+          },
+          "inverse-surface": "hsl(var(--stitch-inverse-surface))",
+          "inverse-on-surface": "hsl(var(--stitch-inverse-on-surface))",
+          error: {
+            DEFAULT: "hsl(var(--stitch-error))",
+            foreground: "hsl(var(--stitch-on-error))",
+            container: "hsl(var(--stitch-error-container))",
+            "on-container": "hsl(var(--stitch-on-error-container))",
+          },
+        },
       },
       spacing: {
         'spacing-0': '0px',
@@ -76,6 +131,15 @@ export default {
         'premium-7xl': '4.5rem',
         'premium-8xl': '6rem',
         'premium-9xl': '8rem',
+        /* Stitch M3 scale (R0) */
+        'stitch-label-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.08em', fontWeight: '700' }],
+        'stitch-label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' }],
+        'stitch-body-md': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+        'stitch-body-lg': ['20px', { lineHeight: '32px', fontWeight: '400' }],
+        'stitch-headline-sm': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+        'stitch-headline-md': ['32px', { lineHeight: '40px', fontWeight: '400' }],
+        'stitch-display-lg-mobile': ['32px', { lineHeight: '40px', fontWeight: '500' }],
+        'stitch-display-lg': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '500' }],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -103,6 +167,10 @@ export default {
         serif: ['Playfair Display', 'serif'],
         reader: ['Merriweather', 'serif'],
         ui: ['Inter', 'sans-serif'],
+        /* Stitch (R0) */
+        'stitch-display': ['EB Garamond', 'Cormorant Garamond', 'ui-serif', 'Georgia', 'serif'],
+        'stitch-body': ['EB Garamond', 'ui-serif', 'Georgia', 'serif'],
+        'stitch-label': ['Karla', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontWeight: {
         'light': 'var(--font-weight-light)',
