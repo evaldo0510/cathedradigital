@@ -239,8 +239,8 @@ const BibliotecaPage: React.FC = () => {
         </form>
 
         {/* Navegação editorial (abas) */}
-        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-xl">
-          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-md">
+        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-lg">
+          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-sm">
             {tabs.map((t) => {
               const active = tab === t.key;
               const count =
@@ -270,6 +270,11 @@ const BibliotecaPage: React.FC = () => {
           </ul>
         </nav>
 
+        {/* Hero "Continuar lendo" — âncora da primeira dobra (A.5) */}
+        <div className="mt-spacing-xl">
+          <ContinueReadingHero recents={recents} />
+        </div>
+
         {/* Área principal */}
         <AnimatePresence mode="wait">
           <motion.section
@@ -278,7 +283,7 @@ const BibliotecaPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="mt-spacing-2xl"
+            className="mt-spacing-lg"
           >
             {tab === 'escritos' && (
               <EscritosView escritos={filteredEscritos} onOpen={openEscrito} recents={recents} />
