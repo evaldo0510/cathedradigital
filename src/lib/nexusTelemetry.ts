@@ -55,10 +55,17 @@ type NexusPayload =
   | NexusFailedPayload;
 
 const emit = async (event: NexusTelemetryEvent, payload: NexusPayload) => {
-  // Dev: log estruturado para facilitar E2E e debugging local.
+  // Dev/E2E: log estruturado + mirror em window para asserções determinísticas.
   if (import.meta.env.DEV) {
     // eslint-disable-next-line no-console
     console.log(`[Nexus] ${event}`, payload);
+  }
+  if (typeof window !== 'undefined') {
+    const w = window as unknown as {
+      __nexusEvents__?: Array<{ event: NexusTelemetryEvent; payload: NexusPayload; t: number }>;
+    };
+    if (!w.__nexusEvents__) w.__nexusEvents__ = [];
+    w.__nexusEvents__.push({ event, payload, t: Date.now() });
   }
   try {
     const { data: userData } = await supabase.auth.getUser();
