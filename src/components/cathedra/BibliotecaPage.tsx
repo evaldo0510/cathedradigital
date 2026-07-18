@@ -312,17 +312,41 @@ const BibliotecaPage: React.FC = () => {
  * Sem imagens externas — capas 100% tipográficas com tokens semânticos.
  */
 
+/** Paleta neutra usada pelo hero quando não há paleta explícita. */
+const DEFAULT_PALETTE: CoverPalette = { bg: '#111111', fg: '#F4E9D0', accent: '#C9A24C', grain: 'ink' };
+
+/**
+ * Textura de papel MUITO discreta via gradientes radiais.
+ * 'paper' aplica pontos escuros em multiply; 'ink' aplica pontos claros em screen.
+ * Nenhuma imagem — apenas CSS. Efeito quase imperceptível, apenas quebra a chapadão.
+ */
+const grainStyle = (mode: CoverPalette['grain']): React.CSSProperties =>
+  mode === 'paper'
+    ? {
+        backgroundImage:
+          'radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
+        backgroundSize: '3px 3px, 7px 7px',
+        backgroundPosition: '0 0, 1px 2px',
+        mixBlendMode: 'multiply',
+      }
+    : {
+        backgroundImage:
+          'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px)',
+        backgroundSize: '3px 3px, 7px 7px',
+        backgroundPosition: '0 0, 1px 2px',
+        mixBlendMode: 'screen',
+      };
+
 const BookCover: React.FC<{
   kicker: string;
   title: string;
   spine: string;
-  tone: 'paper' | 'noir';
+  palette: CoverPalette;
   to: string;
   onOpen?: () => void;
   size?: 'md' | 'lg';
-}> = ({ kicker, title, spine, tone, to, onOpen, size = 'md' }) => {
+}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md' }) => {
   const dims = size === 'lg' ? 'w-[168px] md:w-[192px]' : 'w-[144px] md:w-[160px]';
-  const isNoir = tone === 'noir';
   return (
     <Link
       to={to}
@@ -333,33 +357,29 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 */}
+      {/* Capa 2:3 — cor da obra aplicada via style; tokens do design system ficam intocados. */}
       <div
         className={cn(
           'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500',
-          'border shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
+          'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
           'group-hover:-translate-y-[3px] group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.08),0_18px_32px_-14px_rgba(0,0,0,0.45)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
-          isNoir
-            ? 'bg-primary text-primary-foreground border-primary/70'
-            : 'bg-card text-primary border-primary/15',
         )}
+        style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
-        {/* Moldura interna fina */}
+        {/* Grão de papel — sutil, apenas quebra a chapadão. */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
+        {/* Moldura interna fina, na cor de acento. */}
         <div
           aria-hidden
-          className={cn(
-            'absolute inset-[6px] border pointer-events-none',
-            isNoir ? 'border-secondary/25' : 'border-primary/10',
-          )}
+          className="absolute inset-[6px] pointer-events-none"
+          style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
         />
         {/* Conteúdo tipográfico */}
         <div className="absolute inset-0 flex flex-col justify-between p-spacing-md">
           <span
-            className={cn(
-              'text-[9px] uppercase tracking-[0.28em] font-medium',
-              isNoir ? 'text-secondary/85' : 'text-secondary',
-            )}
+            className="text-[9px] uppercase tracking-[0.28em] font-medium"
+            style={{ color: palette.accent }}
           >
             {kicker}
           </span>
@@ -374,10 +394,8 @@ const BookCover: React.FC<{
             </h3>
           </div>
           <span
-            className={cn(
-              'text-[8px] uppercase tracking-[0.22em] text-center truncate',
-              isNoir ? 'text-primary-foreground/45' : 'text-primary/40',
-            )}
+            className="text-[8px] uppercase tracking-[0.22em] text-center truncate"
+            style={{ color: palette.accent, opacity: 0.7 }}
           >
             {spine}
           </span>
@@ -388,6 +406,7 @@ const BookCover: React.FC<{
     </Link>
   );
 };
+
 
 const ContinueReadingHero: React.FC<{
   recents: ReturnType<typeof useBibliotecaRecents>['recents'];
