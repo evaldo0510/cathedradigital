@@ -128,6 +128,26 @@ const statusMeta: Record<Status, { label: string; className: string; icon: typeo
 };
 
 export default function IntegrationsStatus() {
+  const [results, setResults] = useState<Record<string, TestResult>>({});
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
+
+  const runTest = async (id: string) => {
+    setLoading((s) => ({ ...s, [id]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke("integrations-test", { body: { id } });
+      if (error) throw error;
+      const r = data as TestResult;
+      setResults((s) => ({ ...s, [id]: r }));
+      r.ok ? toast.success(`${id}: ${r.message}`) : toast.error(`${id}: ${r.message}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Falha no teste";
+      setResults((s) => ({ ...s, [id]: { ok: false, message: msg } }));
+      toast.error(`${id}: ${msg}`);
+    } finally {
+      setLoading((s) => ({ ...s, [id]: false }));
+    }
+  };
+
   const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
