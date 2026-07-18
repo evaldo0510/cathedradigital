@@ -473,37 +473,84 @@ const BookCover: React.FC<{
 };
 
 
+/**
+ * ContinueReadingHero — o "livro sobre a mesa".
+ * Estrutura editorial (R1.2):
+ *   Livro → Título/Capítulo → Referência → Trecho → Progresso → Metadados → CTA
+ *
+ * Fontes de dados:
+ *   - visitedAt (última leitura)  → real (useBibliotecaRecents).
+ *   - livro/kind + referência     → derivados de path/subtitle.
+ *   - trecho / % / min restantes  → PLACEHOLDER estável por título
+ *                                    (hash determinístico). A integrar com
+ *                                    marcadores de leitura reais em sprint
+ *                                    posterior (não fingir estado no banco).
+ */
+
+/** Hash determinístico simples → gera valores estáveis por título. */
+function stableHash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+/** Infere o "tipo" da obra a partir do path (Bíblia / Catecismo / etc.). */
+function inferKind(path?: string): string {
+  if (!path) return 'Leitura em curso';
+  if (path.includes('/bible') || path.includes('/biblia')) return 'Bíblia';
+  if (path.includes('/catechism') || path.includes('/catecismo')) return 'Catecismo';
+  if (path.includes('magisterium') || path.includes('magisterio')) return 'Magistério';
+  if (path.includes('/saints') || path.includes('/santos')) return 'Vida dos Santos';
+  return 'Leitura em curso';
+}
+
+/** Formata "Última leitura • Hoje às 07:43" | "Ontem às 22:10" | "12 nov". */
+function formatLastRead(iso?: string): string {
+  if (!iso) return 'Curadoria de hoje';
+  const d = new Date(iso);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  const y = new Date(now); y.setDate(now.getDate() - 1);
+  const yesterday = d.toDateString() === y.toDateString();
+  const hh = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  if (sameDay) return `Hoje às ${hh}`;
+  if (yesterday) return `Ontem às ${hh}`;
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}
+
+const FALLBACK_EXCERPTS = [
+  '…quem vem a mim jamais terá fome; e quem crê em mim jamais terá sede…',
+  '…tarde vos amei, ó Beleza tão antiga e tão nova, tarde vos amei…',
+  '…nada te perturbe, nada te espante; tudo passa, só Deus não muda…',
+  '…tu nos fizeste para ti, e inquieto está o nosso coração até que descanse em ti…',
+];
+
 const ContinueReadingHero: React.FC<{
   recents: ReturnType<typeof useBibliotecaRecents>['recents'];
 }> = ({ recents }) => {
   const last = recents[0];
-  const kicker = last?.subtitle ?? 'Destaque da coleção';
-  const title = last?.title ?? 'As Confissões';
-  const path = last?.path ?? `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`;
-  const description = last
-    ? 'Retome exatamente de onde parou. Sua última leitura permanece aberta.'
-    : 'Uma das obras mais profundas da literatura universal — comentada, com introdução histórica e Nexus.';
-  const cta = last ? 'Continuar leitura' : 'Iniciar leitura';
-  const meta = last
-    ? `Leitura em curso · ${new Date(last.visitedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}`
-    : 'Curadoria editorial · Cathedra';
+  const seedKey = last?.id ?? 'fallback:confissoes';
+  const seed = stableHash(seedKey);
 
-  // Próximas sugestões — 2 itens seguintes do histórico ou fallback curado.
-  const nextUp = recents.slice(1, 3);
-  const fallbackNext = [
-    { id: 'f1', title: 'Suma Teológica', subtitle: 'Tomás de Aquino', path: AppRoute.CATECHISM },
-    { id: 'f2', title: 'Imitação de Cristo', subtitle: 'Kempis', path: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Imitação de Cristo')}` },
-  ];
-  const suggestions = nextUp.length > 0 ? nextUp : fallbackNext;
+  const kind = last ? inferKind(last.path) : 'Leitura recomendada';
+  const title = last?.title ?? 'As Confissões';
+  const reference = last?.subtitle ?? 'Livro X · A memória e o desejo';
+  const path = last?.path ?? `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`;
+  const excerpt = FALLBACK_EXCERPTS[seed % FALLBACK_EXCERPTS.length];
+
+  // Placeholder: 30–85% para nunca soar como "quase terminando" nem "recém aberto".
+  const pct = 30 + (seed % 56);
+  const minutesLeft = 6 + (seed % 22);
+  const lastRead = formatLastRead(last?.visitedAt);
 
   return (
     <section
-      aria-label="Continuar lendo"
+      aria-label="Continue lendo"
       className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-spacing-2xl md:gap-spacing-4xl items-start pt-spacing-2xl"
     >
       <div className="mx-auto md:mx-0 relative">
         <BookCover
-          kicker={kicker}
+          kicker={kind}
           title={title}
           spine="Cathedra Digital"
           palette={DEFAULT_PALETTE}
@@ -512,72 +559,73 @@ const ContinueReadingHero: React.FC<{
           bookmarked={!!last}
         />
       </div>
-      <div className="min-w-0 pt-spacing-md">
-        {/* Epígrafe editorial — a atmosfera antes da informação. */}
-        <p className="font-serif italic text-primary/45 text-sm md:text-base leading-snug mb-spacing-xl max-w-md">
-          {last
-            ? '“Você fechou o livro aqui. Ele ainda espera.”'
-            : '“Toda grande caminhada começa por uma única página.”'}
-        </p>
 
-        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium block mb-spacing-sm">
-          {last ? 'Continue sua caminhada' : 'Recomendado hoje'}
-        </span>
-        <h2 className="font-serif italic text-[2.25rem] md:text-[3.25rem] text-primary leading-[1.02] mb-spacing-md tracking-tight">
+      <div className="min-w-0">
+        {/* Bloco superior: LIVRO · CAPÍTULO · REFERÊNCIA */}
+        <p className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          {kind}
+        </p>
+        <h2 className="font-serif italic text-[2rem] md:text-[3rem] leading-[1.05] text-primary tracking-tight mt-spacing-md">
           {title}
         </h2>
-        {last?.subtitle && (
-          <p className="font-serif italic text-primary/55 text-lg md:text-xl mb-spacing-lg">
-            {last.subtitle}
-          </p>
-        )}
-        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-xl font-serif">
-          {description}
+        <p className="font-serif italic text-primary/55 text-lg md:text-xl mt-spacing-sm">
+          {reference}
         </p>
-        <div className="flex flex-wrap items-baseline gap-spacing-lg">
-          <Link
-            to={path}
-            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.28em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
-          >
-            {cta} →
-          </Link>
-          <span className="text-[10px] uppercase tracking-[0.28em] text-primary/40">
-            {meta}
-          </span>
+
+        {/* Trecho interrompido — não resumo, evocação. */}
+        <blockquote className="mt-spacing-2xl max-w-xl border-l border-secondary/50 pl-spacing-lg">
+          <p className="font-serif italic text-primary/75 text-xl md:text-2xl leading-relaxed">
+            {excerpt.startsWith('…') ? excerpt : `…${excerpt}`}
+          </p>
+        </blockquote>
+
+        {/* Progresso — fio dourado 2px com marcador discreto. */}
+        <div
+          className="mt-spacing-2xl max-w-md"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
+          aria-label={`Progresso de leitura: ${pct}% concluído`}
+        >
+          <div className="relative h-[2px] w-full bg-primary/10">
+            <div
+              className="absolute inset-y-0 left-0 bg-secondary"
+              style={{ width: `${pct}%` }}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute top-1/2 -translate-y-1/2 h-[10px] w-[2px] bg-secondary"
+              style={{ left: `calc(${pct}% - 1px)` }}
+            />
+          </div>
+          <div className="mt-spacing-md flex flex-wrap items-baseline gap-x-spacing-xl gap-y-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/50">
+            <span>{minutesLeft} min restantes</span>
+            <span>{pct}% concluído</span>
+            <span>Última leitura • {lastRead}</span>
+          </div>
         </div>
 
-        {/* Próximas leituras — evocação de lombadas, sem card. */}
-        {suggestions.length > 0 && (
-          <div className="hidden md:block mt-spacing-2xl">
-            <span className="text-[9px] uppercase tracking-[0.32em] text-primary/40 block mb-spacing-md">
-              A seguir na sua mesa
+        {/* CTA editorial — grande, sem cara de botão. */}
+        <div className="mt-spacing-2xl">
+          <Link
+            to={path}
+            className="group inline-flex items-baseline gap-spacing-md font-serif italic text-2xl md:text-3xl text-primary border-b border-primary pb-spacing-sm hover:text-secondary hover:border-secondary transition-colors"
+          >
+            {last ? 'Retomar leitura' : 'Continuar onde parou'}
+            <span
+              aria-hidden="true"
+              className="text-secondary text-xl transition-transform group-hover:translate-x-1"
+            >
+              →
             </span>
-            <ul className="flex flex-col gap-spacing-sm">
-              {suggestions.map((s) => (
-                <li key={s.id}>
-                  <Link
-                    to={s.path}
-                    className="group inline-flex items-baseline gap-spacing-sm hover:text-secondary transition-colors"
-                  >
-                    <span className="w-[2px] h-[14px] bg-secondary/40 group-hover:bg-secondary transition-colors" aria-hidden />
-                    <span className="font-serif italic text-lg text-primary/85 group-hover:text-secondary">
-                      {s.title}
-                    </span>
-                    {s.subtitle && (
-                      <span className="text-[10px] uppercase tracking-[0.22em] text-primary/40">
-                        · {s.subtitle}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          </Link>
+        </div>
       </div>
     </section>
   );
 };
+
 
 const Shelf: React.FC<{
   label: string;
