@@ -259,7 +259,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     setOpen(val);
     if (!val) {
       writePersistedState(null);
-      setLiveMessage('Painel fechado. Trecho anterior restaurado.');
+      setLiveMessage(closedLiveMessage());
+      setFocusMode(false);
+      // limpa hash de deep-link ao fechar
+      if (window.location.hash && window.location.hash.includes('nexus=')) {
+        const url = window.location.pathname + window.location.search;
+        window.history.replaceState(null, '', url);
+      }
     }
   }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
 
