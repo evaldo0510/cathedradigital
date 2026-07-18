@@ -1125,6 +1125,13 @@ export type Database = {
             referencedRelation: "bible_books"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bible_chapters_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "nexus_chapter_coverage"
+            referencedColumns: ["book_id"]
+          },
         ]
       }
       bible_chapters_read: {
@@ -1153,45 +1160,80 @@ export type Database = {
       }
       bible_connections: {
         Row: {
+          approved_from_contribution: string | null
+          book_abbr: string | null
           category: string
+          chapter: number | null
           created_at: string
+          created_by: string | null
+          editor_notes: string | null
           id: string
           reference_id: string | null
           reference_title: string
           relevance_level: string | null
           relevance_score: number | null
+          source: string
+          source_batch_id: string | null
           summary: string | null
           theological_theme: string | null
           updated_at: string
+          updated_by: string | null
+          verse: number | null
           verse_id: string
         }
         Insert: {
+          approved_from_contribution?: string | null
+          book_abbr?: string | null
           category: string
+          chapter?: number | null
           created_at?: string
+          created_by?: string | null
+          editor_notes?: string | null
           id?: string
           reference_id?: string | null
           reference_title: string
           relevance_level?: string | null
           relevance_score?: number | null
+          source?: string
+          source_batch_id?: string | null
           summary?: string | null
           theological_theme?: string | null
           updated_at?: string
+          updated_by?: string | null
+          verse?: number | null
           verse_id: string
         }
         Update: {
+          approved_from_contribution?: string | null
+          book_abbr?: string | null
           category?: string
+          chapter?: number | null
           created_at?: string
+          created_by?: string | null
+          editor_notes?: string | null
           id?: string
           reference_id?: string | null
           reference_title?: string
           relevance_level?: string | null
           relevance_score?: number | null
+          source?: string
+          source_batch_id?: string | null
           summary?: string | null
           theological_theme?: string | null
           updated_at?: string
+          updated_by?: string | null
+          verse?: number | null
           verse_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "bible_connections_approved_from_contribution_fkey"
+            columns: ["approved_from_contribution"]
+            isOneToOne: false
+            referencedRelation: "nexus_contributions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bible_diagnostic_findings: {
         Row: {
@@ -1430,6 +1472,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "bible_books"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bible_integrity_reports_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "nexus_chapter_coverage"
+            referencedColumns: ["book_id"]
           },
         ]
       }
@@ -2877,6 +2926,48 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           verse?: number | null
+        }
+        Relationships: []
+      }
+      nexus_import_batches: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          error_rows: number
+          errors: Json | null
+          filename: string | null
+          id: string
+          inserted_rows: number
+          notes: string | null
+          skipped_rows: number
+          source: string
+          total_rows: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          error_rows?: number
+          errors?: Json | null
+          filename?: string | null
+          id?: string
+          inserted_rows?: number
+          notes?: string | null
+          skipped_rows?: number
+          source: string
+          total_rows?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          error_rows?: number
+          errors?: Json | null
+          filename?: string | null
+          id?: string
+          inserted_rows?: number
+          notes?: string | null
+          skipped_rows?: number
+          source?: string
+          total_rows?: number
         }
         Relationships: []
       }
@@ -5236,6 +5327,19 @@ export type Database = {
       }
     }
     Views: {
+      nexus_chapter_coverage: {
+        Row: {
+          book_abbr: string | null
+          book_id: string | null
+          book_name: string | null
+          chapter: number | null
+          chapters_count: number | null
+          connections_count: number | null
+          is_empty: boolean | null
+          testament: string | null
+        }
+        Relationships: []
+      }
       public_partners: {
         Row: {
           created_at: string | null
@@ -5720,6 +5824,10 @@ export type Database = {
         Args: { p_since?: string }
         Returns: number
       }
+      approve_nexus_contribution: {
+        Args: { _contribution_id: string; _reviewer_notes?: string }
+        Returns: string
+      }
       audit_security_definer_privileges: {
         Args: never
         Returns: {
@@ -6002,6 +6110,10 @@ export type Database = {
       pg_stat_snapshot_auto_run: { Args: never; Returns: undefined }
       purge_user_bible_cache: {
         Args: { p_book_abbr?: string; p_user_id: string }
+        Returns: undefined
+      }
+      reject_nexus_contribution: {
+        Args: { _contribution_id: string; _reviewer_notes?: string }
         Returns: undefined
       }
       run_manual_security_scan: { Args: never; Returns: string }
