@@ -19,6 +19,7 @@ import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { useIsMobile } from '@/hooks/use-mobile';
 import BibleVersePopover from './BibleVersePopover';
 import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
+import NexusInlinePreview from './nexus/NexusInlinePreview';
 import { NEXUS_KIND_PRESETS, NEXUS_HEADER, NEXUS_EMPTY, NEXUS_ERROR, type NexusKind } from './nexus/nexusPresets';
 import {
   NEXUS_STATE_KEY,
@@ -890,40 +891,21 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                               {[c.metadata?.author, c.metadata?.year || c.metadata?.date].filter(Boolean).join(' · ')}
                             </p>
                           )}
-                          {c.content_text && (
-                            <p className="font-serif italic text-primary/65 text-base leading-relaxed mb-spacing-md">
-                              {c.content_text}
-                            </p>
-                          )}
-                          <div className="flex items-baseline gap-spacing-md">
-                            {canPopover ? (
-                              <BibleVersePopover
-                                abbr={bibleAbbr!}
-                                chapter={bibleChapter!}
-                                verse={bibleVerse}
-                                label={section.preset.cta}
-                              />
-                            ) : link ? (
-                              <button
-                                type="button"
-                                data-testid="nexus-bubble-cta"
-                                data-nexus-type={c.type}
-                                onClick={() => {
-                                  trackNexusClick({
-                                    tagId: currentTag.id,
-                                    tagSlug: currentTag.slug,
-                                    type: c.type,
-                                    id: c.id,
-                                    destination: link,
-                                  });
-                                  navigateInternal(link);
-                                }}
-                                className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
-                              >
-                                {section.preset.cta} →
-                              </button>
-                            ) : null /* STAB-NEXUS-P0: nunca renderizar <span> morto */}
-                          </div>
+                          <NexusInlinePreview
+                            item={c}
+                            openHref={link ?? (canPopover ? `/bible?book=${bibleAbbr}&ch=${bibleChapter}${bibleVerse ? `&verse=${bibleVerse}` : ''}` : null)}
+                            ctaLabel={section.preset.cta}
+                            onOpen={(href) => {
+                              trackNexusClick({
+                                tagId: currentTag.id,
+                                tagSlug: currentTag.slug,
+                                type: c.type,
+                                id: c.id,
+                                destination: href,
+                              });
+                              navigateInternal(href);
+                            }}
+                          />
 
                           {/* Fio curatorial entre itens da mesma seção */}
                           {i < section.items.length - 1 && (
