@@ -235,11 +235,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const activeJourneys = journeys.filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0));
 
   return (
-    <ContemplativeLayout
-      title="Jornadas"
-      subtitle="Itinerarium Mentis"
-      icon={Icons.Journeys}
-    >
+    <ContemplativeLayout>
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
       <div ref={ref} className="w-full">
         <div className="w-full space-y-spacing-xl md:space-y-spacing-2xl">
