@@ -3,9 +3,9 @@
  *
  * Valida em múltiplos viewports (mobile, phablet, tablet, desktop) que:
  *  - Atalho `f` alterna `data-focus-mode`.
- *  - Ao ligar: cabeçalho (`data-testid="nexus-header"`) e dots
- *    (`data-testid="nexus-visited-dots"`) somem, mas a seção ativa continua
- *    visível.
+ *  - Ao ligar: toggle de foco (`data-testid="nexus-focus-toggle"`) e dots
+ *    (`data-testid="nexus-section-dots"`) somem, mas a seção ativa
+ *    (`data-testid="nexus-active-section"`) continua visível.
  *  - Atalhos `]` / `[` e `Alt+←/→` continuam alternando seções em focus mode.
  *  - `aria-modal`, `role="dialog"` e `aria-live` seguem presentes.
  */
