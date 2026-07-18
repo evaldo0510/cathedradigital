@@ -494,6 +494,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       </SheetTrigger>
 
       <SheetContent
+        ref={panelRef}
         side={isMobile ? 'bottom' : 'right'}
         data-testid="nexus-popover"
         data-nexus-panel
