@@ -250,41 +250,6 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   // STAB-NEXUS-P0 Etapa 2: resolveLink completo.
   // Retorna string com rota válida ou null (bubble será ocultado — nunca <span> morto).
-  const resolveLink = useCallback((c: TagContent): string | null => {
-    const meta = c.metadata ?? {};
-    switch (c.type) {
-      case 'bible': {
-        if (meta.book && meta.chapter) {
-          const verse = meta.verse ? `&verse=${meta.verse}` : '';
-          return `/bible?book=${meta.book}&ch=${meta.chapter}${verse}`;
-        }
-        return null;
-      }
-      case 'catechism': {
-        const p = meta.paragraph ?? meta.number;
-        return p ? `${AppRoute.CATECHISM}?p=${p}` : null;
-      }
-      case 'magisterium': {
-        // c.id costuma ser o UUID da linha em spiritual_contents; documento real
-        // fica em metadata.document_id ou metadata.slug.
-        const docId = meta.document_id ?? meta.documentId ?? meta.slug ?? c.id;
-        return docId ? `/magisterium/${docId}` : null;
-      }
-      case 'saint': {
-        const ident = meta.slug ?? meta.id ?? c.id;
-        return ident ? `/santos/${ident}` : null;
-      }
-      case 'theme': {
-        const slug = meta.slug ?? c.id;
-        return slug ? `/temas/${slug}` : null;
-      }
-      case 'journey':
-        return c.id ? `/jornadas/${c.id}` : null;
-      // father, council, canon: sem rota pública — retorna null (bubble ocultado).
-      default:
-        return null;
-    }
-  }, []);
 
 
 
