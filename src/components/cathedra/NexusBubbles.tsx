@@ -184,18 +184,55 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     return null;
   };
 
+  // Snapshot da posição de leitura no momento em que o painel abre.
+  // Ao fechar, restauramos o scroll — o leitor volta ao trecho exato.
+  const savedScrollRef = React.useRef<number | null>(null);
+
+  const persistReturn = useCallback(() => {
+    try {
+      sessionStorage.setItem(
+        'nexus:return',
+        JSON.stringify({
+          path: window.location.pathname + window.location.search,
+          scrollY: savedScrollRef.current ?? window.scrollY,
+          tagId: currentTag.id,
+          ts: Date.now(),
+        }),
+      );
+    } catch {
+      /* sessionStorage indisponível — ignoramos silenciosamente */
+    }
+  }, [currentTag.id]);
+
+  const handleOpenChange = useCallback((val: boolean) => {
+    if (navigateOnClick && val) {
+      navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+      return;
+    }
+    if (val) {
+      savedScrollRef.current = window.scrollY;
+      persistReturn();
+      fetchContentForTag(tag);
+    } else if (savedScrollRef.current !== null) {
+      const y = savedScrollRef.current;
+      // Radix libera o body-scroll-lock após o próximo frame; agendamos depois.
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    }
+    setOpen(val);
+  }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
+
+  const navigateInternal = useCallback((path: string) => {
+    persistReturn();
+    setOpen(false);
+    // pequena espera para o Sheet iniciar o close antes de trocar de rota
+    requestAnimationFrame(() => navigate(path));
+  }, [persistReturn, navigate]);
+
   return (
-    <Sheet
-      open={navigateOnClick ? false : open}
-      onOpenChange={(val) => {
-        if (navigateOnClick && val) {
-          navigate(`${AppRoute.TEMAS}/${tag.slug}`);
-          return;
-        }
-        setOpen(val);
-        if (val) fetchContentForTag(tag);
-      }}
-    >
+    <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
+
       <SheetTrigger asChild>
         <BubbleTag
           label={tag.label}
