@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
-import { normalizeText } from '@/lib/utils';
+import { normalizeText, cn } from '@/lib/utils';
 import { getSearchTermsForTag } from '@/lib/tagNormalization';
 import { type TagContent, fetchNexusTagContent } from '@/lib/nexusContent';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -11,13 +11,16 @@ import { supabase } from '@/integrations/supabase/client';
 
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import BibleVersePopover from './BibleVersePopover';
 import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
+import { NEXUS_KIND_PRESETS, NEXUS_HEADER, NEXUS_EMPTY, NEXUS_ERROR, type NexusKind } from './nexus/nexusPresets';
+
 
 
 
