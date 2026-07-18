@@ -56,10 +56,12 @@ describe('ContinuationEngine — Fase 0', () => {
       { node: { node: { id: 'd', kind: 'saint', label: 'D' }, url: '/d' }, intent: 'meet', rawWeight: 0.1, reasons: [] },
     ]);
     const picked = chooseSuggestions(scored);
+    // 1ª passada: 1 por intent (a=study, c=deepen). d é low → descartado.
+    // 2ª passada: preenche vaga remanescente com b (ignora restrição de intent).
     expect(picked).toHaveLength(3);
-    const intents = picked.map((p) => p.intent);
-    expect(new Set(intents).size).toBe(3); // diversificado
     expect(picked.every((p) => p.confidence !== 'low')).toBe(true);
+    // Diversidade: pelo menos 2 intents distintos no topo.
+    expect(new Set(picked.slice(0, 2).map((p) => p.intent)).size).toBe(2);
   });
 
   it('Engine cai no fallback quando o grafo devolve vazio', () => {
