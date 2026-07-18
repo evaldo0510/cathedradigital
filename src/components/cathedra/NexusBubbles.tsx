@@ -266,14 +266,73 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       });
     }
     setOpen(val);
+    if (!val) {
+      writePersistedState(null);
+      setLiveMessage('Painel fechado. Trecho anterior restaurado.');
+    }
   }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
 
   const navigateInternal = useCallback((path: string) => {
     persistReturn();
     setOpen(false);
-    // pequena espera para o Sheet iniciar o close antes de trocar de rota
     requestAnimationFrame(() => navigate(path));
   }, [persistReturn, navigate]);
+
+  // Restaura estado persistido quando esta bubble corresponde ao salvo.
+  useEffect(() => {
+    const saved = readPersistedState();
+    if (!saved || saved.tagId !== tag.id) return;
+    if (saved.path !== window.location.pathname + window.location.search) return;
+    setVisitedKinds(new Set(saved.visitedKinds || []));
+    setActiveSectionIdx(saved.activeSectionIdx || 0);
+    savedScrollRef.current = window.scrollY;
+    setOpen(true);
+    fetchContentForTag(tag);
+    setLiveMessage(`Painel Nexus restaurado em ${tag.label}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persiste estado enquanto o painel está aberto.
+  useEffect(() => {
+    if (!open) return;
+    writePersistedState({
+      tagId: currentTag.id,
+      tagSlug: currentTag.slug,
+      path: window.location.pathname + window.location.search,
+      historyIds: navHistory.map(h => h.id),
+      activeSectionIdx,
+      visitedKinds: Array.from(visitedKinds),
+      ts: Date.now(),
+    });
+  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds]);
+
+  // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
+  useEffect(() => {
+    if (!open || narrativeSections.length === 0) return;
+    const current = narrativeSections[activeSectionIdx];
+    if (!current) return;
+    setVisitedKinds(prev => {
+      if (prev.has(current.kind)) return prev;
+      const next = new Set(prev);
+      next.add(current.kind);
+      return next;
+    });
+    setLiveMessage(`Seção ${activeSectionIdx + 1} de ${narrativeSections.length}: ${current.preset.eyebrow}`);
+    const el = sectionRefs.current[current.kind];
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeSectionIdx, open, narrativeSections]);
+
+  // Atalhos: Alt+→/← ou [/] alternam entre seções sem sair do painel.
+  const handlePanelKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (narrativeSections.length === 0) return;
+    if (e.altKey && (e.key === 'ArrowRight' || e.key === ']')) {
+      e.preventDefault();
+      setActiveSectionIdx(i => Math.min(i + 1, narrativeSections.length - 1));
+    } else if (e.altKey && (e.key === 'ArrowLeft' || e.key === '[')) {
+      e.preventDefault();
+      setActiveSectionIdx(i => Math.max(i - 1, 0));
+    }
+  }, [narrativeSections.length]);
 
   return (
     <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
