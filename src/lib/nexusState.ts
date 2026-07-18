@@ -98,6 +98,40 @@ export const closedLiveMessage = (): string =>
 export const focusModeLiveMessage = (on: boolean): string =>
   on ? 'Modo foco ativado. Apenas a passagem atual está visível.' : 'Modo foco desativado.';
 
+/**
+ * Anúncios de sincronização entre abas.
+ */
+export const syncedSectionLiveMessage = (
+  idx: number,
+  total: number,
+  eyebrow: string,
+): string =>
+  `Atualizado por outra aba — agora na Seção ${idx + 1} de ${total}: ${eyebrow}`;
+
+export const syncedFocusModeLiveMessage = (on: boolean): string =>
+  on
+    ? 'Modo foco ativado em outra aba.'
+    : 'Modo foco desativado em outra aba.';
+
+/**
+ * Mensagem quando o deep link aponta para um kind indisponível.
+ */
+export const invalidDeepLinkLiveMessage = (kind: string): string =>
+  `Seção "${kind}" não disponível. Abrindo seção padrão.`;
+
+/**
+ * Valida se um kind está entre as seções disponíveis.
+ * Retorna `{ valid, fallbackKind }` — fallbackKind = primeira seção disponível.
+ */
+export const validateDeepLinkKind = (
+  kind: string | undefined,
+  availableKinds: string[],
+): { valid: boolean; fallbackKind?: string } => {
+  if (!kind) return { valid: true };
+  if (availableKinds.includes(kind)) return { valid: true };
+  return { valid: false, fallbackKind: availableKinds[0] };
+};
+
 /* -------------------------------------------------------------------------- */
 /* Deep link (hash)                                                            */
 /* -------------------------------------------------------------------------- */
