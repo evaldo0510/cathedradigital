@@ -885,7 +885,7 @@ const EscritosView: React.FC<{
 
 
     {/* R1.4 — Da mesa do bibliotecário: mesa de recomendações, não vitrine de cards. */}
-    <section aria-label="Da mesa do bibliotecário" className="mb-spacing-4xl pt-spacing-3xl relative">
+    <section aria-label="Da mesa do bibliotecário" className="mb-spacing-4xl pt-spacing-2xl relative">
       {/* Textura de papel sutilíssima só nesta mesa. */}
       <div
         aria-hidden
