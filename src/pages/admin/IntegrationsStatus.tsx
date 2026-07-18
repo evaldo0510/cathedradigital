@@ -127,31 +127,89 @@ const statusMeta: Record<Status, { label: string; className: string; icon: typeo
   },
 };
 
+type HistoryRow = {
+  id: string;
+  integration_id: string;
+  ok: boolean;
+  message: string;
+  latency_ms: number | null;
+  created_at: string;
+};
+
 export default function IntegrationsStatus() {
   const [results, setResults] = useState<Record<string, TestResult>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [history, setHistory] = useState<HistoryRow[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  const loadHistory = useCallback(async () => {
+    setHistoryLoading(true);
+    const { data, error } = await supabase
+      .from("integration_test_runs")
+      .select("id, integration_id, ok, message, latency_ms, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setHistoryLoading(false);
+    if (error) {
+      // 403 => usuário não é admin. Silenciar para não poluir.
+      if (!/permission|denied|403/i.test(error.message)) {
+        toast.error(`Histórico: ${error.message}`);
+      }
+      return;
+    }
+    setHistory((data ?? []) as HistoryRow[]);
+  }, []);
+
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const runTest = async (id: string) => {
     setLoading((s) => ({ ...s, [id]: true }));
+    let result: TestResult;
     try {
       const { data, error } = await supabase.functions.invoke("integrations-test", { body: { id } });
       if (error) throw error;
-      const r = data as TestResult;
-      setResults((s) => ({ ...s, [id]: r }));
-      r.ok ? toast.success(`${id}: ${r.message}`) : toast.error(`${id}: ${r.message}`);
+      result = data as TestResult;
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Falha no teste";
-      setResults((s) => ({ ...s, [id]: { ok: false, message: msg } }));
-      toast.error(`${id}: ${msg}`);
-    } finally {
-      setLoading((s) => ({ ...s, [id]: false }));
+      result = { ok: false, message: msg };
     }
+    setResults((s) => ({ ...s, [id]: result }));
+    result.ok ? toast.success(`${id}: ${result.message}`) : toast.error(`${id}: ${result.message}`);
+
+    // Persistir no histórico (best-effort; ignora se não for admin)
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes.user?.id;
+      if (uid) {
+        const { error: insErr } = await supabase.from("integration_test_runs").insert({
+          integration_id: id,
+          ok: result.ok,
+          message: result.message.slice(0, 500),
+          latency_ms: result.latencyMs ?? null,
+          tested_by: uid,
+        });
+        if (!insErr) {
+          loadHistory();
+        }
+      }
+    } catch {
+      /* silencioso */
+    }
+
+    setLoading((s) => ({ ...s, [id]: false }));
   };
 
   const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
   }, {});
+
+  const integrationName = useMemo(
+    () => Object.fromEntries(integrations.map((i) => [i.id, i.name])),
+    [],
+  );
 
   const total = integrations.length;
   const connected = integrations.filter((i) => i.status === "connected").length;
