@@ -206,13 +206,47 @@ export default function IntegrationsStatus() {
                         <p className="font-medium mb-1">Como configurar</p>
                         <p className="text-muted-foreground">{item.howTo}</p>
                       </div>
-                      {item.docsUrl && (
-                        <Button variant="outline" size="sm" asChild className="self-start">
-                          <a href={item.docsUrl} target="_blank" rel="noreferrer">
-                            Documentação <ExternalLink className="ml-1 h-3 w-3" />
-                          </a>
-                        </Button>
+                      {results[item.id] && (
+                        <div
+                          className={`rounded-md p-3 text-sm border ${
+                            results[item.id].ok
+                              ? "bg-emerald-500/5 border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
+                              : "bg-red-500/5 border-red-500/30 text-red-700 dark:text-red-400"
+                          }`}
+                          role="status"
+                          aria-live="polite"
+                        >
+                          <p className="font-medium mb-0.5">
+                            {results[item.id].ok ? "✓ Teste OK" : "✗ Falha no teste"}
+                            {results[item.id].latencyMs != null && (
+                              <span className="ml-2 text-xs opacity-70">{results[item.id].latencyMs}ms</span>
+                            )}
+                          </p>
+                          <p className="opacity-90">{results[item.id].message}</p>
+                        </div>
                       )}
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => runTest(item.id)}
+                          disabled={loading[item.id]}
+                        >
+                          {loading[item.id] ? (
+                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          ) : (
+                            <PlayCircle className="mr-1 h-3 w-3" />
+                          )}
+                          Testar conexão
+                        </Button>
+                        {item.docsUrl && (
+                          <Button variant="outline" size="sm" asChild>
+                            <a href={item.docsUrl} target="_blank" rel="noreferrer">
+                              Documentação <ExternalLink className="ml-1 h-3 w-3" />
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 );
