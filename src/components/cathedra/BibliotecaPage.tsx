@@ -44,17 +44,30 @@ type Escrito = {
   kicker: string;
   to: string;
   description: string;
+  /** Legenda curta que aparece no rodapé da capa (autor/tradição). */
+  spine: string;
+  /** Tom visual da capa: 'paper' (fundo creme) ou 'noir' (fundo escuro). */
+  tone: 'paper' | 'noir';
 };
 
 const escritos: Escrito[] = [
-  { title: 'Bíblia', kicker: 'Sagradas Escrituras', to: AppRoute.BIBLE, description: 'Antigo e Novo Testamento com anotações e Nexus.' },
-  { title: 'Catecismo', kicker: 'Doutrina', to: AppRoute.CATECHISM, description: 'CIC organizado por parágrafos e referências.' },
-  { title: 'Magistério', kicker: 'Documentos Pontifícios', to: AppRoute.MAGISTERIUM, description: 'Encíclicas, exortações e constituições.' },
-  { title: 'Padres da Igreja', kicker: 'Patrística', to: `${AppRoute.BUSCAR}?tipo=padres`, description: 'Escritos dos Padres do Oriente e Ocidente.' },
-  { title: 'Santos', kicker: 'Vida e Escritos', to: AppRoute.SAINTS, description: 'Biografias, escritos e testemunhos.' },
-  { title: 'Concílios', kicker: 'Assembleias da Igreja', to: `${AppRoute.BUSCAR}?tipo=concilios`, description: 'Documentos conciliares em texto integral.' },
-  { title: 'Direito Canônico', kicker: 'Normas', to: `${AppRoute.BUSCAR}?tipo=direito-canonico`, description: 'Código de 1983 e legislação eclesiástica.' },
+  { title: 'Bíblia',            kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                                      description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',      tone: 'paper' },
+  { title: 'Catecismo',         kicker: 'Doutrina',                to: AppRoute.CATECHISM,                                  description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',         tone: 'noir'  },
+  { title: 'Magistério',        kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                                description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',       tone: 'paper' },
+  { title: 'Padres',            kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,                    description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',       tone: 'paper' },
+  { title: 'Santos',            kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                                     description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',          tone: 'noir'  },
+  { title: 'Concílios',         kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,                 description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',     tone: 'paper' },
+  { title: 'Direito Canônico',  kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,          description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici',    tone: 'noir'  },
 ];
+
+type Colecao = { title: string; kicker: string; subtitle: string; to: string; tone: 'paper' | 'noir' };
+const colecoes: Colecao[] = [
+  { title: 'As Confissões',          kicker: 'Série I',   subtitle: 'Santo Agostinho de Hipona',        to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`, tone: 'noir'  },
+  { title: 'Suma Teológica',         kicker: 'Série II',  subtitle: 'S. Tomás de Aquino — Pars Prima',  to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Suma Teológica')}`,      tone: 'paper' },
+  { title: 'Grandes Místicos',       kicker: 'Série III', subtitle: 'Teresa, João da Cruz, Kempis',     to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('mística')}`,             tone: 'noir'  },
+  { title: 'Doutrina Social',        kicker: 'Série IV',  subtitle: 'De Rerum Novarum a Fratelli Tutti',to: `${AppRoute.MAGISTERIUM}`,                                            tone: 'paper' },
+];
+
 
 /**
  * Resolve o destino de uma busca em função do eixo ativo.
