@@ -40,6 +40,12 @@ import {
   type PersistedNexusState,
 } from '@/lib/nexusState';
 import { useFocusTrap } from '@/lib/useFocusTrap';
+import {
+  trackNexusShown,
+  trackNexusClick,
+  trackNexusDestination,
+  trackNexusFailed,
+} from '@/lib/nexusTelemetry';
 
 
 
