@@ -39,34 +39,63 @@ const axes: { key: NonNullable<AxisFilter>; label: string }[] = [
   { key: 'fonte', label: 'Fonte' },
 ];
 
+/**
+ * Paleta identitária por obra (Sprint A da Biblioteca 2.0).
+ * Cada capa recebe sua própria cor + acento, com textura de papel muito discreta.
+ * Elegância, não realismo. Zero pastiche de couro/pergaminho literal.
+ * Todas as cores são hex fixos e aplicados via style inline — são "cor da obra",
+ * não tokens do design system (que continuam sendo primary/secondary/background).
+ */
+type CoverPalette = {
+  /** Cor de fundo da capa. */
+  bg: string;
+  /** Cor do texto principal. */
+  fg: string;
+  /** Cor do kicker + moldura interna + spine (dourado, sépia, etc.). */
+  accent: string;
+  /** 'paper' = fundo claro (grão em multiply escuro). 'ink' = fundo escuro (grão em screen claro). */
+  grain: 'paper' | 'ink';
+};
+
 type Escrito = {
   title: string;
   kicker: string;
   to: string;
   description: string;
-  /** Legenda curta que aparece no rodapé da capa (autor/tradição). */
   spine: string;
-  /** Tom visual da capa: 'paper' (fundo creme) ou 'noir' (fundo escuro). */
-  tone: 'paper' | 'noir';
+  palette: CoverPalette;
 };
 
 const escritos: Escrito[] = [
-  { title: 'Bíblia',            kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                                      description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',      tone: 'paper' },
-  { title: 'Catecismo',         kicker: 'Doutrina',                to: AppRoute.CATECHISM,                                  description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',         tone: 'noir'  },
-  { title: 'Magistério',        kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                                description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',       tone: 'paper' },
-  { title: 'Padres',            kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,                    description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',       tone: 'paper' },
-  { title: 'Santos',            kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                                     description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',          tone: 'noir'  },
-  { title: 'Concílios',         kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,                 description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',     tone: 'paper' },
-  { title: 'Direito Canônico',  kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,          description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici',    tone: 'noir'  },
+  { title: 'Bíblia',           kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                              description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',   palette: { bg: '#111111', fg: '#F4E9D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Catecismo',        kicker: 'Doutrina',                to: AppRoute.CATECHISM,                          description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',      palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink'   } },
+  { title: 'Magistério',       kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                        description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',    palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Padres',           kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,            description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',    palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+  { title: 'Santos',           kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                             description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',       palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink'   } },
+  { title: 'Concílios',        kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,         description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',  palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Direito Canônico', kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,  description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici', palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink'   } },
 ];
 
-type Colecao = { title: string; kicker: string; subtitle: string; to: string; tone: 'paper' | 'noir' };
+type Colecao = { title: string; kicker: string; subtitle: string; to: string; palette: CoverPalette };
 const colecoes: Colecao[] = [
-  { title: 'As Confissões',          kicker: 'Série I',   subtitle: 'Santo Agostinho de Hipona',        to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`, tone: 'noir'  },
-  { title: 'Suma Teológica',         kicker: 'Série II',  subtitle: 'S. Tomás de Aquino — Pars Prima',  to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Suma Teológica')}`,      tone: 'paper' },
-  { title: 'Grandes Místicos',       kicker: 'Série III', subtitle: 'Teresa, João da Cruz, Kempis',     to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('mística')}`,             tone: 'noir'  },
-  { title: 'Doutrina Social',        kicker: 'Série IV',  subtitle: 'De Rerum Novarum a Fratelli Tutti',to: `${AppRoute.MAGISTERIUM}`,                                            tone: 'paper' },
+  { title: 'A Esperança',       kicker: 'Percurso',   subtitle: 'Ancorar-se em Cristo em tempos difíceis',    to: `${AppRoute.TEMAS}/esperanca`,   palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'A Eucaristia',      kicker: 'Percurso',   subtitle: 'Fonte e ápice da vida cristã',               to: `${AppRoute.TEMAS}/sacramentos`, palette: { bg: '#3A0E1A', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Maria',             kicker: 'Percurso',   subtitle: 'A Mãe segundo os Padres e Doutores',         to: `${AppRoute.TEMAS}/maria`,       palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
+  { title: 'Doutrina Social',   kicker: 'Percurso',   subtitle: 'De Rerum Novarum a Fratelli Tutti',          to: AppRoute.MAGISTERIUM,            palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink'   } },
 ];
+
+/** Chips “Descubra” — 8 temas curados que existem em `themes` (slugs reais). */
+const descubra: { name: string; slug: string }[] = [
+  { name: 'Esperança',    slug: 'esperanca'    },
+  { name: 'Família',      slug: 'familia'      },
+  { name: 'Maria',        slug: 'maria'        },
+  { name: 'Perdão',       slug: 'perdao'       },
+  { name: 'Caridade',     slug: 'caridade'     },
+  { name: 'Sacramentos',  slug: 'sacramentos'  },
+  { name: 'Oração',       slug: 'oracao'       },
+  { name: 'Misericórdia', slug: 'misericordia' },
+];
+
 
 
 /**
