@@ -58,6 +58,11 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
           CI: 'true'
+          # Limiares configuráveis de cobertura de máscaras (0..1).
+          # Definir > 0 faz o teste falhar quando a cobertura cair abaixo.
+          MASK_COVERAGE_MIN_TESTID_RATIO: ${{ vars.MASK_COVERAGE_MIN_TESTID_RATIO || '0' }}
+          MASK_COVERAGE_MIN_STRUCTURAL_RATIO: ${{ vars.MASK_COVERAGE_MIN_STRUCTURAL_RATIO || '0.5' }}
+          MASK_COVERAGE_MIN_TOTAL_RATIO: ${{ vars.MASK_COVERAGE_MIN_TOTAL_RATIO || '0' }}
         run: |
           bunx playwright test \
             tests/e2e/menu-visual-regression.spec.ts \
@@ -114,6 +119,22 @@ jobs:
         env:
           ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
         run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=summary
+
+      # 4. Gera PR_COMMENT.md com mask-coverage agregado + links diretos.
+      - name: Build PR comment body (on failure)
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=pr
+
+      # 5. Publica/atualiza um único comentário no PR (sticky via `header`),
+      #    evitando duplicatas quando o CI reprovar em novos pushes.
+      - name: Post/update PR comment (on failure)
+        if: failure() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: lovable-menu-snapshots
+          path: test-results/PR_COMMENT.md
 
       - name: Upload Playwright HTML report (on failure)
         if: failure()
