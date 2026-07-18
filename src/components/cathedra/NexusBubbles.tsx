@@ -463,7 +463,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               </p>
               <button
                 type="button"
-                onClick={() => { navigate(`${AppRoute.TEMAS}/${currentTag.slug}`); setOpen(false); }}
+                onClick={() => navigateInternal(`${AppRoute.TEMAS}/${currentTag.slug}`)}
                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
               >
                 {NEXUS_KIND_PRESETS.theme.cta} →
