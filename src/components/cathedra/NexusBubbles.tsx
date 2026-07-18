@@ -261,9 +261,18 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         side={isMobile ? 'bottom' : 'right'}
         data-testid="nexus-popover"
         data-nexus-panel
+        aria-labelledby={`nexus-title-${currentTag.id}`}
+        aria-describedby={`nexus-desc-${currentTag.id}`}
+        onEscapeKeyDown={() => handleOpenChange(false)}
         className={cn(
           'p-0 border-l border-primary/10 bg-background overflow-hidden',
           'flex flex-col',
+          // Animação editorial — curva easing suave, tempos alongados.
+          'transition-none',
+          'data-[state=open]:duration-700 data-[state=closed]:duration-500',
+          'data-[state=open]:ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'data-[state=closed]:ease-[cubic-bezier(0.4,0,0.2,1)]',
+          'motion-reduce:transition-none motion-reduce:animate-none',
           isMobile
             ? 'h-[90vh] max-h-[90vh] rounded-t-[24px] border-t border-l-0'
             : 'w-full sm:max-w-[460px] md:max-w-[38vw]',
@@ -277,14 +286,24 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {NEXUS_HEADER.eyebrow}
             </span>
           </div>
-          <h2 className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight">
-            {NEXUS_HEADER.subtitle}
-          </h2>
-          <p className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50">
+          <SheetTitle asChild>
+            <h2
+              id={`nexus-title-${currentTag.id}`}
+              className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
+            >
+              {NEXUS_HEADER.subtitle}
+            </h2>
+          </SheetTitle>
+          <SheetDescription
+            id={`nexus-desc-${currentTag.id}`}
+            className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
+          >
+            <span className="sr-only">Conexões teológicas para </span>
             {contextPath}
-          </p>
+          </SheetDescription>
           <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
         </header>
+
 
         {/* Corpo — sequência editorial */}
         <div className="flex-1 overflow-y-auto px-spacing-xl pb-spacing-2xl scrollbar-none">
