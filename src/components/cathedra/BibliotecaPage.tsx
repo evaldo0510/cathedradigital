@@ -359,8 +359,10 @@ const BookCover: React.FC<{
   to: string;
   onOpen?: () => void;
   size?: 'md' | 'lg';
-}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md' }) => {
-  const dims = size === 'lg' ? 'w-[168px] md:w-[192px]' : 'w-[144px] md:w-[160px]';
+  /** Marca de leitura discreta à esquerda (fio dourado vertical). */
+  bookmarked?: boolean;
+}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md', bookmarked = false }) => {
+  const dims = size === 'lg' ? 'w-[168px] md:w-[200px]' : 'w-[144px] md:w-[160px]';
   return (
     <Link
       to={to}
@@ -371,16 +373,29 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 — cor da obra aplicada via style; tokens do design system ficam intocados. */}
+      {/* Capa 2:3 — sombra editorial lateral (livro em pé), não SaaS drop-shadow. */}
       <div
         className={cn(
-          'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500',
-          'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
-          'group-hover:-translate-y-[3px] group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.08),0_18px_32px_-14px_rgba(0,0,0,0.45)]',
+          'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500 ease-out',
+          // sombra editorial: leve à esquerda (lombada), profunda à direita e abaixo
+          'shadow-[-1px_0_0_rgba(0,0,0,0.08),1px_2px_3px_rgba(0,0,0,0.08),8px_18px_28px_-18px_rgba(0,0,0,0.45)]',
+          'group-hover:-translate-y-[4px]',
+          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.10),2px_4px_6px_rgba(0,0,0,0.10),12px_26px_36px_-16px_rgba(0,0,0,0.55)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
         )}
         style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
+        {/* Lombada visual — faixa interna à esquerda, mais escura, simulando dobra. */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-0 w-[6px] pointer-events-none"
+          style={{
+            background:
+              palette.grain === 'ink'
+                ? 'linear-gradient(to right, rgba(0,0,0,0.30), rgba(0,0,0,0) 100%)'
+                : 'linear-gradient(to right, rgba(0,0,0,0.10), rgba(0,0,0,0) 100%)',
+          }}
+        />
         {/* Grão de papel — sutil, apenas quebra a chapadão. */}
         <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
         {/* Moldura interna fina, na cor de acento. */}
@@ -390,7 +405,7 @@ const BookCover: React.FC<{
           style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
         />
         {/* Conteúdo tipográfico */}
-        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md">
+        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+4px)]">
           <span
             className="text-[9px] uppercase tracking-[0.28em] font-medium"
             style={{ color: palette.accent }}
@@ -401,7 +416,7 @@ const BookCover: React.FC<{
             <h3
               className={cn(
                 'font-serif italic leading-[1.05] text-center',
-                size === 'lg' ? 'text-2xl md:text-[26px]' : 'text-xl md:text-[22px]',
+                size === 'lg' ? 'text-2xl md:text-[28px]' : 'text-xl md:text-[22px]',
               )}
             >
               {title}
@@ -415,6 +430,13 @@ const BookCover: React.FC<{
           </span>
         </div>
       </div>
+      {/* Marca de leitura — fio dourado vertical à esquerda, apenas quando bookmarked. */}
+      {bookmarked && (
+        <span
+          aria-hidden
+          className="absolute -left-[6px] top-[10%] bottom-[10%] w-[2px] bg-secondary/80"
+        />
+      )}
       {/* Base da estante */}
       <div aria-hidden className="mx-2 h-[2px] bg-primary/15 shadow-[0_1px_0_hsl(var(--primary)/0.05)]" />
     </Link>
