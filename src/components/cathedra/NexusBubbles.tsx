@@ -542,7 +542,16 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <button
                     type="button"
                     onClick={handleShareDeepLink}
-                    aria-label={copiedShare ? 'Link copiado' : 'Copiar deep link do Nexus'}
+                    data-testid="nexus-share-deeplink"
+                    aria-label={
+                      copiedShare
+                        ? 'Link copiado'
+                        : `Compartilhar seção atual do Nexus${
+                            narrativeSections[activeSectionIdx]?.preset.eyebrow
+                              ? `: ${narrativeSections[activeSectionIdx].preset.eyebrow}`
+                              : ''
+                          }`
+                    }
                     className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
                   >
                     {copiedShare ? '✓' : '⧉'}
