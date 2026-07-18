@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import ContemplativeLayout from './ContemplativeLayout';
+import { EditorialHero } from '@/components/editorial';
 import { cn } from '@/lib/utils';
 import {
   useBibliotecaState,
