@@ -29,6 +29,7 @@ import { TextSelectionToolbar } from './TextSelectionToolbar';
 import { NoteEditModal } from './NoteEditModal';
 import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
 import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 const MIN_DOC_LEN = 500;
 

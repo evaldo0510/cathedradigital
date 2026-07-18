@@ -19,6 +19,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 import SourceAttribution from './SourceAttribution';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',

@@ -4,6 +4,7 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 interface Verse {
   number: number;
@@ -242,9 +243,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         <ReaderContinuation
           context={{
             kind: 'bible',
-            id: `${book.abbrev}-${chapter}`,
+            id: `${book.abbr}-${chapter}`,
             meta: {
-              bookAbbr: book.abbrev,
+              bookAbbr: book.abbr,
               chapter,
               totalChapters: book.chapters,
             },
