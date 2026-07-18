@@ -93,6 +93,11 @@ export interface EditorialHeroProps extends Omit<React.HTMLAttributes<HTMLElemen
   action?: React.ReactNode;
   /** Renderiza filete dourado sob o título. Default: true. */
   rule?: boolean;
+  /**
+   * Textura de pergaminho atmosférica, contida no próprio Hero.
+   * Opacidade ~4%, sem repetição evidente. Default: false.
+   */
+  parchment?: boolean;
 }
 
 export const EditorialHero: React.FC<EditorialHeroProps> = ({
@@ -101,31 +106,49 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
   subtitle,
   action,
   rule = true,
+  parchment = false,
   className,
   ...rest
 }) => (
   <section
     className={cn(
-      'relative py-[calc(var(--stitch-editorial-stack)*1.25)] md:py-[calc(var(--stitch-editorial-stack)*2)]',
+      'relative overflow-hidden py-[calc(var(--stitch-editorial-stack)*1.25)] md:py-[calc(var(--stitch-editorial-stack)*2)]',
       className,
     )}
     {...rest}
   >
-    {kicker && (
-      <p className="font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase mb-6">
-        {kicker}
-      </p>
+    {parchment && (
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-multiply"
+        style={{
+          backgroundImage:
+            "url('https://www.transparenttextures.com/patterns/parchment.png')",
+          backgroundSize: '520px 520px',
+          maskImage:
+            'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
+        }}
+      />
     )}
-    <h1 className="font-stitch-display text-stitch-display-lg-mobile md:text-stitch-display-lg text-stitch-on-background max-w-3xl">
-      {title}
-    </h1>
-    {rule && <EditorialDivider variant="gold-fade" className="mt-8 max-w-[240px]" />}
-    {subtitle && (
-      <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant mt-6 max-w-2xl">
-        {subtitle}
-      </p>
-    )}
-    {action && <div className="mt-10">{action}</div>}
+    <div className="relative">
+      {kicker && (
+        <p className="font-stitch-label text-stitch-label-sm text-stitch-secondary uppercase mb-6 tracking-[0.28em]">
+          {kicker}
+        </p>
+      )}
+      <h1 className="font-stitch-display text-stitch-display-lg-mobile md:text-stitch-display-lg text-stitch-on-background max-w-3xl">
+        {title}
+      </h1>
+      {rule && <EditorialDivider variant="gold-fade" className="mt-8 max-w-[240px]" />}
+      {subtitle && (
+        <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant mt-6 max-w-2xl">
+          {subtitle}
+        </p>
+      )}
+      {action && <div className="mt-10">{action}</div>}
+    </div>
   </section>
 );
 
