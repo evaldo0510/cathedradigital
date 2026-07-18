@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 interface Verse {
   number: number;
