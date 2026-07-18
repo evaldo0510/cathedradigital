@@ -127,15 +127,14 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
         run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=pr
 
-      # 5. Cria (ou atualiza) o comentário no PR. Usa marcador HTML oculto
-      #    "<!-- lovable:menu-snapshots -->" para atualizar em vez de duplicar.
-      - name: Post PR comment (on failure)
+      # 5. Publica/atualiza um único comentário no PR (sticky via `header`),
+      #    evitando duplicatas quando o CI reprovar em novos pushes.
+      - name: Post/update PR comment (on failure)
         if: failure() && github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v4
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-path: test-results/PR_COMMENT.md
-          edit-mode: replace
+          header: lovable-menu-snapshots
+          path: test-results/PR_COMMENT.md
 
       - name: Upload Playwright HTML report (on failure)
         if: failure()
