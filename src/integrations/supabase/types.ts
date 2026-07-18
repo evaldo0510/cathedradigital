@@ -2416,6 +2416,36 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_test_runs: {
+        Row: {
+          created_at: string
+          id: string
+          integration_id: string
+          latency_ms: number | null
+          message: string
+          ok: boolean
+          tested_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          integration_id: string
+          latency_ms?: number | null
+          message: string
+          ok: boolean
+          tested_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          integration_id?: string
+          latency_ms?: number | null
+          message?: string
+          ok?: boolean
+          tested_by?: string | null
+        }
+        Relationships: []
+      }
       intelligent_notification_logs: {
         Row: {
           channel: string

@@ -1,10 +1,10 @@
 import { Helmet } from "react-helmet-async";
-import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle } from "lucide-react";
+import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle, History, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -127,31 +127,89 @@ const statusMeta: Record<Status, { label: string; className: string; icon: typeo
   },
 };
 
+type HistoryRow = {
+  id: string;
+  integration_id: string;
+  ok: boolean;
+  message: string;
+  latency_ms: number | null;
+  created_at: string;
+};
+
 export default function IntegrationsStatus() {
   const [results, setResults] = useState<Record<string, TestResult>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [history, setHistory] = useState<HistoryRow[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  const loadHistory = useCallback(async () => {
+    setHistoryLoading(true);
+    const { data, error } = await supabase
+      .from("integration_test_runs")
+      .select("id, integration_id, ok, message, latency_ms, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setHistoryLoading(false);
+    if (error) {
+      // 403 => usuário não é admin. Silenciar para não poluir.
+      if (!/permission|denied|403/i.test(error.message)) {
+        toast.error(`Histórico: ${error.message}`);
+      }
+      return;
+    }
+    setHistory((data ?? []) as HistoryRow[]);
+  }, []);
+
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const runTest = async (id: string) => {
     setLoading((s) => ({ ...s, [id]: true }));
+    let result: TestResult;
     try {
       const { data, error } = await supabase.functions.invoke("integrations-test", { body: { id } });
       if (error) throw error;
-      const r = data as TestResult;
-      setResults((s) => ({ ...s, [id]: r }));
-      r.ok ? toast.success(`${id}: ${r.message}`) : toast.error(`${id}: ${r.message}`);
+      result = data as TestResult;
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Falha no teste";
-      setResults((s) => ({ ...s, [id]: { ok: false, message: msg } }));
-      toast.error(`${id}: ${msg}`);
-    } finally {
-      setLoading((s) => ({ ...s, [id]: false }));
+      result = { ok: false, message: msg };
     }
+    setResults((s) => ({ ...s, [id]: result }));
+    result.ok ? toast.success(`${id}: ${result.message}`) : toast.error(`${id}: ${result.message}`);
+
+    // Persistir no histórico (best-effort; ignora se não for admin)
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes.user?.id;
+      if (uid) {
+        const { error: insErr } = await supabase.from("integration_test_runs").insert({
+          integration_id: id,
+          ok: result.ok,
+          message: result.message.slice(0, 500),
+          latency_ms: result.latencyMs ?? null,
+          tested_by: uid,
+        });
+        if (!insErr) {
+          loadHistory();
+        }
+      }
+    } catch {
+      /* silencioso */
+    }
+
+    setLoading((s) => ({ ...s, [id]: false }));
   };
 
   const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
   }, {});
+
+  const integrationName = useMemo(
+    () => Object.fromEntries(integrations.map((i) => [i.id, i.name])),
+    [],
+  );
 
   const total = integrations.length;
   const connected = integrations.filter((i) => i.status === "connected").length;
@@ -255,6 +313,78 @@ export default function IntegrationsStatus() {
           </section>
         ))}
       </div>
+
+      <section className="mt-10" aria-labelledby="history-heading">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 id="history-heading" className="text-lg font-semibold flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Histórico de testes
+            <span className="text-xs text-muted-foreground font-normal">(últimos 50)</span>
+          </h2>
+          <Button variant="ghost" size="sm" onClick={loadHistory} disabled={historyLoading}>
+            {historyLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <RefreshCw className="mr-1 h-3 w-3" />}
+            Atualizar
+          </Button>
+        </div>
+        <Card>
+          <CardContent className="p-0">
+            {history.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground text-center">
+                {historyLoading ? "Carregando…" : "Nenhum teste registrado ainda. Clique em \"Testar conexão\" acima."}
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-2 font-medium">Data / hora</th>
+                      <th className="px-4 py-2 font-medium">Integração</th>
+                      <th className="px-4 py-2 font-medium">Resultado</th>
+                      <th className="px-4 py-2 font-medium">Latência</th>
+                      <th className="px-4 py-2 font-medium">Mensagem / Erro</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {history.map((row) => (
+                      <tr key={row.id} className="border-t border-border/60 align-top">
+                        <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
+                          {new Date(row.created_at).toLocaleString("pt-BR", {
+                            dateStyle: "short",
+                            timeStyle: "medium",
+                          })}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap font-medium">
+                          {integrationName[row.integration_id] ?? row.integration_id}
+                        </td>
+                        <td className="px-4 py-2">
+                          <Badge
+                            variant="outline"
+                            className={
+                              row.ok
+                                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
+                                : "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30"
+                            }
+                          >
+                            {row.ok ? <CheckCircle2 className="mr-1 h-3 w-3" /> : <XCircle className="mr-1 h-3 w-3" />}
+                            {row.ok ? "OK" : "Falha"}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
+                          {row.latency_ms != null ? `${row.latency_ms}ms` : "—"}
+                        </td>
+                        <td className="px-4 py-2 text-muted-foreground max-w-md break-words">
+                          {row.message}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
 
       <footer className="mt-10 border-t pt-6 text-sm text-muted-foreground">
         <p>
