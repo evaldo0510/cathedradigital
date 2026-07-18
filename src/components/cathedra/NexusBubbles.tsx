@@ -369,7 +369,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                       {section.preset.eyebrow}
                     </span>
+                    {section.preset.whisper && (
+                      <span className="mt-spacing-xs block font-serif italic text-primary/50 text-sm leading-snug">
+                        {section.preset.whisper}
+                      </span>
+                    )}
                   </header>
+
 
                   <ul className="space-y-spacing-lg">
                     {section.items.map((c, i) => {
