@@ -151,17 +151,52 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     });
   }, [queryClient, tag.id, tag.label]);
 
-  return (
-    <Popover open={navigateOnClick ? false : open} onOpenChange={(val) => {
-      if (navigateOnClick && val) {
-        navigate(`${AppRoute.TEMAS}/${tag.slug}`);
-        return;
-      }
-      setOpen(val);
-      if (val) fetchContentForTag(tag);
-    }}>
+  const isMobile = useIsMobile();
 
-      <PopoverTrigger asChild>
+  // Agrupa o conteúdo já retornado pelo Knowledge Engine em capítulos narrativos.
+  // Ordem estável seguindo NEXUS_KIND_PRESETS.order.
+  const narrativeSections = useMemo(() => {
+    const groups = new Map<NexusKind, TagContent[]>();
+    for (const c of content) {
+      const kind = (c.type as NexusKind);
+      if (!NEXUS_KIND_PRESETS[kind]) continue;
+      const arr = groups.get(kind) ?? [];
+      arr.push(c);
+      groups.set(kind, arr);
+    }
+    return Array.from(groups.entries())
+      .map(([kind, items]) => ({ kind, preset: NEXUS_KIND_PRESETS[kind], items }))
+      .sort((a, b) => a.preset.order - b.preset.order);
+  }, [content]);
+
+  const contextPath = navHistory.length > 1
+    ? navHistory.map(t => t.label).join(' · ')
+    : currentTag.label;
+
+  const resolveLink = (c: TagContent): string | null => {
+    if (c.type === 'bible' && c.metadata?.book && c.metadata?.chapter) {
+      return `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}`;
+    }
+    if (c.type === 'journey') return `/jornadas/${c.id}`;
+    if (c.type === 'catechism' && c.metadata?.paragraph) {
+      return `${AppRoute.CATECHISM}?p=${c.metadata.paragraph}`;
+    }
+    return null;
+  };
+
+  return (
+    <Sheet
+      open={navigateOnClick ? false : open}
+      onOpenChange={(val) => {
+        if (navigateOnClick && val) {
+          navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+          return;
+        }
+        setOpen(val);
+        if (val) fetchContentForTag(tag);
+      }}
+    >
+      <SheetTrigger asChild>
         <BubbleTag
           label={tag.label}
           emoji={tag.emoji}
@@ -175,8 +210,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             } else if (navigateOnClick) {
               navigate(`${AppRoute.TEMAS}/${tag.slug}`);
             }
-          }} 
-
+          }}
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
@@ -184,297 +218,271 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           data-priority={priorityGroup}
           className={className}
         />
-      </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-spacing-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-premium-hover z-[100] bg-card/95 backdrop-blur-xl">
-        <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-spacing-xl border-b border-border/20 flex items-center justify-between">
-          <div className="flex items-center gap-spacing-md">
-            <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-premium-md text-primary border border-primary/5">
-              {getTagIcon(tag.emoji, "w-spacing-lg h-spacing-lg")}
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">{tag.category}</span>
-              <h4 className="text-premium-lg font-display font-medium text-primary leading-tight mt-spacing-2xs">{tag.label}</h4>
-            </div>
+      </SheetTrigger>
+
+      <SheetContent
+        side={isMobile ? 'bottom' : 'right'}
+        data-testid="nexus-popover"
+        data-nexus-panel
+        className={cn(
+          'p-0 border-l border-primary/10 bg-background overflow-hidden',
+          'flex flex-col',
+          isMobile
+            ? 'h-[90vh] max-h-[90vh] rounded-t-[24px] border-t border-l-0'
+            : 'w-full sm:max-w-[460px] md:max-w-[38vw]',
+        )}
+      >
+        {/* Cabeçalho editorial — margem do livro. */}
+        <header className="px-spacing-xl pt-spacing-2xl pb-spacing-lg flex-shrink-0">
+          <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
+            <Icons.Compass className="w-3 h-3 text-secondary" strokeWidth={1.4} aria-hidden="true" />
+            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+              {NEXUS_HEADER.eyebrow}
+            </span>
           </div>
-          <Button 
-            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-premium-hover shadow-primary/10 group border-none"
-            title="Estudo Completo"
-          >
-            <Icons.ExternalLink className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
-          </Button>
-        </div>
-        
-        <div className="p-spacing-xl space-y-spacing-xl max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs with Icons.History */}
-          <nav className="flex items-center gap-spacing-xs overflow-x-auto whitespace-nowrap scrollbar-none pb-spacing-md border-b border-border/5">
-            <button 
-              onClick={() => handlePopTag(0)}
-              aria-label="Voltar à raiz do Nexus"
-              data-bubble-nav="breadcrumb"
-              className="min-h-11 min-w-11 px-spacing-sm text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center justify-center gap-spacing-2xs group"
+          <h2 className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight">
+            {NEXUS_HEADER.subtitle}
+          </h2>
+          <p className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50">
+            {contextPath}
+          </p>
+          <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
+        </header>
+
+        {/* Corpo — sequência editorial */}
+        <div className="flex-1 overflow-y-auto px-spacing-xl pb-spacing-2xl scrollbar-none">
+          {/* Contemplação Logos como pull-quote editorial, quando presente */}
+          {logosInsight && (
+            <motion.blockquote
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-spacing-2xl border-l-2 border-secondary/40 pl-spacing-lg"
             >
-              <Icons.Logo className="w-spacing-sm h-spacing-sm opacity-20 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
-              Nexus
-            </button>
-            
-            {navHistory.map((hTag, idx) => (
-              <React.Fragment key={`${hTag.id}-${idx}`}>
-                <Icons.ChevronRight className="w-spacing-xs h-spacing-xs text-muted-foreground/60 flex-shrink-0" aria-hidden="true" />
-                <button 
-                  onClick={() => handlePopTag(idx)}
-                  disabled={idx === navHistory.length - 1}
-                  aria-label={`Ir para ${hTag.label}${idx === navHistory.length - 1 ? ' (atual)' : ''}`}
-                  aria-current={idx === navHistory.length - 1 ? 'page' : undefined}
-                  data-bubble-nav="breadcrumb"
-                  className={`min-h-11 min-w-11 text-[9px] font-black uppercase tracking-[0.3em] px-spacing-sm py-spacing-2xs rounded-premium-full border transition-all flex items-center justify-center ${
-                    idx === navHistory.length - 1 
-                      ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-premium-md' 
-                      : 'text-muted-foreground/60 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
-                  }`}
-                >
-                  {hTag.label}
-                </button>
-              </React.Fragment>
-            ))}
-            
-            {navHistory.length > 1 && (
-              <button 
-                onClick={() => handlePopTag(navHistory.length - 2)}
-                aria-label="Voltar um nível"
-                data-bubble-nav="breadcrumb"
-                className="ml-auto min-h-11 min-w-11 text-[9px] font-black uppercase tracking-[0.2em] text-secondary/80 hover:text-secondary flex items-center justify-center gap-spacing-2xs pl-spacing-md"
-              >
-                <Icons.ArrowDown className="w-spacing-sm h-spacing-sm rotate-90" aria-hidden="true" /> Voltar
-              </button>
-            )}
-          </nav>
+              <p className="font-serif italic text-primary/70 text-lg leading-relaxed">
+                {logosInsight}
+              </p>
+              <footer className="mt-spacing-sm text-[10px] uppercase tracking-[0.28em] text-secondary/70">
+                Contemplação Logos
+              </footer>
+            </motion.blockquote>
+          )}
 
-          {/* Elegant Icons.Map Header */}
-          <header className="flex flex-col gap-spacing-xs items-center justify-center text-center py-spacing-md">
-            <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/60">SENTIERO DI SAPIENZA</span>
-            <p className="text-premium-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
-              {navHistory.length > 1 ? `Explorando conexões de ${currentTag.label}` : 'Mapeando as conexões vivas da Fé e da Tradição'}
-            </p>
-          </header>
-
-
-
-          {status === 'loading' ? (
-            <div className="space-y-spacing-md py-spacing-xs">
-              <div className="flex gap-spacing-xs">
-                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted animate-pulse" />
-                <div className="flex-1 space-y-spacing-xs">
-                  <div className="h-spacing-sm bg-muted rounded animate-pulse w-full" />
-                  <div className="h-spacing-sm bg-muted rounded animate-pulse w-spacing-xs/3" />
-                </div>
-              </div>
-              <div className="h-spacing-4xl bg-muted/20 rounded-premium animate-pulse w-full" />
-              <p className="text-premium-xs text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
+          {status === 'loading' && (
+            <div className="py-spacing-2xl space-y-spacing-sm" aria-live="polite">
+              <p className="text-[10px] uppercase tracking-[0.32em] text-primary/40 animate-pulse">
+                Reunindo referências…
+              </p>
+              <div className="h-px w-1/3 bg-primary/10 animate-pulse" />
+              <div className="h-px w-2/3 bg-primary/10 animate-pulse" />
+              <div className="h-px w-1/2 bg-primary/10 animate-pulse" />
             </div>
-          ) : status === 'error' && content.length === 0 ? (
-            <div className="p-spacing-lg text-center space-y-spacing-sm bg-red-500/5 rounded-premium border border-red-500/10">
-              <Icons.AlertCircle className="w-spacing-xl h-spacing-xl text-red-500 mx-auto" />
-            <p className="text-premium-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-            <p className="text-premium-xs text-muted-foreground italic">{errorDetails}</p>
-            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-spacing-xl rounded-premium-full text-premium-xs uppercase font-black tracking-widest">Tentar Novamente</Button>
-            <NexusDebugPanel info={debug} />
-          </div>
-        ) : (
+          )}
 
-            <>
-              {status === 'error' && content.length > 0 && (
-                <div className="px-spacing-sm py-spacing-2xs bg-amber-500/10 text-amber-600 rounded-premium text-premium-xs font-bold flex items-center gap-spacing-xs mb-spacing-xs">
-                  <Icons.Info className="w-spacing-sm h-spacing-sm" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
-                </div>
-              )}
-              {logosInsight && (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1.2 }}
-                  className="bg-primary/[0.01] rounded-[2.5rem] p-spacing-xl border border-primary/[0.03] relative overflow-hidden group"
+          {status === 'error' && content.length === 0 && (
+            <div className="py-spacing-2xl">
+              <p className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 mb-spacing-sm">
+                {NEXUS_ERROR.title}
+              </p>
+              <p className="font-serif italic text-primary/70 text-lg leading-relaxed mb-spacing-lg">
+                {NEXUS_ERROR.body}
+              </p>
+              <button
+                type="button"
+                onClick={() => fetchContentForTag(currentTag)}
+                data-testid="retry-button"
+                className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+              >
+                {NEXUS_ERROR.cta} ↻
+              </button>
+              <NexusDebugPanel info={debug} />
+            </div>
+          )}
+
+          {status !== 'loading' && narrativeSections.length > 0 && (
+            <div className="space-y-spacing-2xl">
+              {narrativeSections.map((section, sIdx) => (
+                <motion.section
+                  key={section.kind}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: sIdx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  aria-label={section.preset.eyebrow}
                 >
-                  <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-premium-full -mr-spacing-3xl -mt-spacing-3xl blur-3xl" />
-                  <div className="flex items-center gap-spacing-sm mb-spacing-md">
-                    <div className="w-spacing-md h-spacing-md rounded-premium-full bg-primary/5 flex items-center justify-center">
-                      <Icons.Sparkles className="w-spacing-xs h-spacing-xs text-primary/40" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Contemplação Logos</span>
-                  </div>
-                  <p className="text-premium-base text-foreground/70 leading-relaxed italic font-serif text-center px-spacing-md">
-                    "{logosInsight}"
-                  </p>
-                </motion.div>
-              )}
-              
-              {content.length > 0 && (
-                <div className="space-y-spacing-lg">
-                  {[
-                    { id: 'bible', label: 'Bíblia', icon: <Icons.BookOpen className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'catechism', label: 'Catecismo', icon: <Icons.Church className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'magisterium', label: 'Magistério', icon: <Icons.Shield className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'saint', label: 'Santos', icon: <Icons.Sparkles className="w-spacing-sm h-spacing-sm" /> },
-                    { id: 'journey', label: 'Jornadas', icon: <Icons.Flame className="w-spacing-sm h-spacing-sm" /> },
-                  ].map((category) => {
-                    const categoryContent = content.filter(c => c.type === category.id);
-                    if (categoryContent.length === 0) return null;
+                  <header className="mb-spacing-md">
+                    <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
+                      {section.preset.eyebrow}
+                    </span>
+                  </header>
 
-                    return (
-                      <div key={category.id} className="space-y-spacing-sm">
-                        <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-spacing-xs">
-                          <div className="h-[1px] w-spacing-md bg-border/40" />
-                          <div className="flex items-center gap-spacing-2xs text-primary/60">
-                            {category.icon}
-                            {category.label}
-                          </div>
-                          <div className="h-[1px] flex-1 bg-border/40" />
-                        </span>
-                        
-                        <div className="space-y-spacing-md">
-                          {categoryContent.map((c, i) => {
-                            const isBible = c.type === 'bible';
-                            const isJourney = c.type === 'journey';
-                            const reference = c.title;
-                            
-                            const link = isBible && c.metadata?.book && c.metadata?.chapter 
-                              ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
-                              : isJourney ? `/jornadas/${c.id}` : null;
+                  <ul className="space-y-spacing-lg">
+                    {section.items.map((c, i) => {
+                      const link = resolveLink(c);
+                      const isBible = c.type === 'bible';
+                      const bibleAbbr: string | undefined = isBible ? c.metadata?.book : undefined;
+                      const bibleChapter: number | undefined = isBible ? Number(c.metadata?.chapter) : undefined;
+                      const bibleVerse: number | undefined = isBible && c.metadata?.verse ? Number(c.metadata.verse) : undefined;
+                      const canPopover = isBible && !!bibleAbbr && Number.isFinite(bibleChapter);
+                      const meta = c.metadata?.author || c.metadata?.year || c.metadata?.date;
 
-                            const bibleAbbr: string | undefined = isBible ? c.metadata?.book : undefined;
-                            const bibleChapter: number | undefined = isBible ? Number(c.metadata?.chapter) : undefined;
-                            const bibleVerse: number | undefined = isBible && c.metadata?.verse ? Number(c.metadata.verse) : undefined;
-                            const canPopover = isBible && !!bibleAbbr && Number.isFinite(bibleChapter);
-
-                            return (
-                              <motion.div
-                                key={c.id || i}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.05 }}
-                                className="min-h-11 space-y-spacing-2xs group/content p-spacing-sm rounded-premium hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
-                                onClick={() => !canPopover && link && navigate(link)}
+                      return (
+                        <li key={c.id || i}>
+                          <h3 className="font-serif italic text-primary text-xl md:text-2xl leading-[1.15] mb-spacing-xs">
+                            {c.title}
+                          </h3>
+                          {meta && (
+                            <p className="text-[10px] uppercase tracking-[0.28em] text-primary/45 mb-spacing-sm">
+                              {[c.metadata?.author, c.metadata?.year || c.metadata?.date].filter(Boolean).join(' · ')}
+                            </p>
+                          )}
+                          {c.content_text && (
+                            <p className="font-serif italic text-primary/65 text-base leading-relaxed mb-spacing-md">
+                              {c.content_text}
+                            </p>
+                          )}
+                          <div className="flex items-baseline gap-spacing-md">
+                            {canPopover ? (
+                              <BibleVersePopover
+                                abbr={bibleAbbr!}
+                                chapter={bibleChapter!}
+                                verse={bibleVerse}
+                                label={section.preset.cta}
+                              />
+                            ) : link ? (
+                              <button
+                                type="button"
+                                onClick={() => { navigate(link); setOpen(false); }}
+                                className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
                               >
-                                <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-spacing-sm group-hover/content:text-foreground transition-colors">
-                                  {c.content_text}
-                                </p>
-                                <div className="flex flex-col gap-spacing-xs">
-                                  <div className="flex items-center justify-between" onClick={(e) => canPopover && e.stopPropagation()}>
-                                    {canPopover ? (
-                                      <BibleVersePopover
-                                        abbr={bibleAbbr!}
-                                        chapter={bibleChapter!}
-                                        verse={bibleVerse}
-                                        label={reference}
-                                      />
-                                    ) : (
-                                      <span className="text-premium-xs font-bold text-primary flex items-center gap-spacing-2xs px-spacing-xs py-spacing-3xs rounded-premium-full bg-primary/5">
-                                        {reference}
-                                        {link && <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" />}
-                                      </span>
-                                    )}
-                                  </div>
+                                {section.preset.cta} →
+                              </button>
+                            ) : (
+                              <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
+                                {section.preset.cta}
+                              </span>
+                            )}
+                          </div>
 
-                                  
-                                  {c.metadata?.tags && c.metadata.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-spacing-2xs mt-spacing-2xs">
-                                      {c.metadata.tags
-                                        .filter((tLabel: string) => tLabel.toLowerCase() !== tag.label.toLowerCase())
-                                        .map((tLabel: string) => {
-                                          const matchingTag = allThemes?.find(at => at.label.toLowerCase() === tLabel.toLowerCase());
-                                          if (!matchingTag) return null;
-                                          return (
-                                            <BubbleTag
-                                              key={matchingTag.id}
-                                              label={matchingTag.label}
-                                              emoji={matchingTag.emoji}
-                                              index={i}
-                                              size="xs"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                handlePushTag(matchingTag);
-                                              }}
-                                            />
-                                          );
-                                        })
-                                      }
-                                    </div>
-                                  )}
-                                </div>
-                              </motion.div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
+                          {/* Fio curatorial entre itens da mesma seção */}
+                          {i < section.items.length - 1 && (
+                            <div aria-hidden className="mt-spacing-lg h-px w-[24px] bg-primary/15" />
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {/* Separador editorial entre capítulos */}
+                  {sIdx < narrativeSections.length - 1 && (
+                    <div aria-hidden className="mt-spacing-2xl mx-auto h-px w-[40px] bg-secondary/40" />
+                  )}
+                </motion.section>
+              ))}
+            </div>
+          )}
+
+          {/* Continue este caminho — sempre presente após as seções */}
+          {status !== 'loading' && (
+            <motion.section
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              aria-label="Continue este caminho"
+              className="mt-spacing-3xl pt-spacing-xl border-t border-primary/10"
+            >
+              <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium mb-spacing-md">
+                {NEXUS_KIND_PRESETS.theme.eyebrow}
+              </span>
+              <h3 className="font-serif italic text-primary text-2xl leading-[1.1] mb-spacing-xs">
+                {currentTag.label}
+              </h3>
+              <p className="font-serif italic text-primary/55 text-base leading-relaxed mb-spacing-md">
+                Percorra este tema em profundidade — Escritura, Catecismo, Magistério, Santos.
+              </p>
+              <button
+                type="button"
+                onClick={() => { navigate(`${AppRoute.TEMAS}/${currentTag.slug}`); setOpen(false); }}
+                className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
+              >
+                {NEXUS_KIND_PRESETS.theme.cta} →
+              </button>
+
+              {/* Temas convergentes — evocação, não grade */}
+              {allThemes && allThemes.filter(t => t.category === currentTag.category && t.id !== currentTag.id).length > 0 && (
+                <div className="mt-spacing-xl">
+                  <span className="block text-[9px] uppercase tracking-[0.32em] text-primary/40 mb-spacing-sm">
+                    A mesma luz em outros textos
+                  </span>
+                  <ul className="flex flex-col gap-spacing-xs">
+                    {allThemes
+                      .filter(t => t.category === currentTag.category && t.id !== currentTag.id)
+                      .slice(0, 4)
+                      .map((t) => (
+                        <li key={t.id}>
+                          <button
+                            type="button"
+                            onClick={() => handlePushTag(t)}
+                            className="group inline-flex items-baseline gap-spacing-sm hover:text-secondary transition-colors min-h-11"
+                          >
+                            <span className="w-[2px] h-[14px] bg-secondary/40 group-hover:bg-secondary transition-colors" aria-hidden />
+                            <span className="font-serif italic text-lg text-primary/85 group-hover:text-secondary">
+                              {t.label}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                  </ul>
                 </div>
               )}
+            </motion.section>
+          )}
 
+          {/* Estado vazio — nunca esconde o painel */}
+          {status === 'success' && content.length === 0 && !logosInsight && (
+            <div className="py-spacing-xl">
+              <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 mb-spacing-sm">
+                {NEXUS_EMPTY.title}
+              </span>
+              <p className="font-serif italic text-primary/65 text-lg leading-relaxed mb-spacing-lg">
+                {NEXUS_EMPTY.body}
+              </p>
+              <NexusDebugPanel info={debug} />
+            </div>
+          )}
 
-              {/* Related Themes (The "Map" feeling) */}
-              <div className="pt-spacing-xl space-y-spacing-lg border-t border-border/5">
-                <div className="flex flex-col items-center gap-spacing-xs">
-                  <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/60">RADIUS COGNITIONIS</span>
-                  <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-spacing-sm">
-                  {allThemes?.filter(t => t.category === currentTag.category && t.id !== currentTag.id).slice(0, 5).map((t, i) => (
-                    <TagBubble 
-                      key={t.id} 
-                      tag={t} 
-                      index={i} 
-                      size="xs" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePushTag(t);
-                      }}
-                      className="opacity-60 hover:opacity-100 transition-opacity" 
-                    />
-                  ))}
-                </div>
-
-              </div>
-
-              {!logosInsight && status === 'success' && content.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-spacing-xl text-center space-y-spacing-md">
-                  <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted/20 flex items-center justify-center relative">
-                    <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
-                    <Icons.Search className="w-spacing-xl h-spacing-xl text-muted-foreground/60" />
-                  </div>
-                  <div className="space-y-spacing-2xs">
-                    <p className="text-premium-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
-                    <p className="text-premium-xs text-muted-foreground/60 italic max-w-[200px] mx-auto">
-                      Ainda estamos tecendo as conexões para "{tag.label}". Tente outro tema ou explore o A-Z.
-                    </p>
-                  </div>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} 
-                    className="h-spacing-xl rounded-premium-full text-premium-xs uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
-                  >
-                    Navegação A-Z
-                  </Button>
-                  <NexusDebugPanel info={debug} />
-                </div>
-              )}
-            </>
+          {/* Breadcrumb discreto — só quando o usuário navegou em profundidade */}
+          {navHistory.length > 1 && (
+            <nav aria-label="Caminho percorrido" className="mt-spacing-2xl pt-spacing-lg border-t border-primary/10">
+              <span className="block text-[9px] uppercase tracking-[0.32em] text-primary/40 mb-spacing-sm">
+                Caminho percorrido
+              </span>
+              <ol className="flex flex-wrap items-baseline gap-x-spacing-sm gap-y-spacing-xs">
+                {navHistory.map((h, idx) => (
+                  <li key={`${h.id}-${idx}`} className="flex items-baseline gap-spacing-xs">
+                    {idx > 0 && <span className="text-primary/25 text-xs">·</span>}
+                    <button
+                      type="button"
+                      onClick={() => handlePopTag(idx)}
+                      disabled={idx === navHistory.length - 1}
+                      data-bubble-nav="breadcrumb"
+                      aria-current={idx === navHistory.length - 1 ? 'page' : undefined}
+                      className={cn(
+                        'font-serif italic text-sm min-h-11 transition-colors',
+                        idx === navHistory.length - 1
+                          ? 'text-secondary'
+                          : 'text-primary/60 hover:text-secondary',
+                      )}
+                    >
+                      {h.label}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </nav>
           )}
         </div>
-        
-        <div className="p-spacing-sm bg-muted/20 border-t border-border/40 flex justify-center">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="w-full rounded-premium-full text-premium-xs font-black uppercase tracking-widest h-spacing-xl hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
-            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-          >
-            Navegação Completa
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+      </SheetContent>
+    </Sheet>
   );
 };
 
