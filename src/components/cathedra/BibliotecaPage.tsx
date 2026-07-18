@@ -1185,7 +1185,10 @@ const RecentesView: React.FC<{
 
 const PlaceholderView: React.FC<{ to: string; label: string; description: string }> = ({ to, label, description }) => (
   <div className="max-w-xl">
-    <p className="text-primary/60 text-base leading-relaxed mb-spacing-lg">{description}</p>
+    <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug mb-spacing-lg">
+      {description}
+    </p>
+    <div aria-hidden className="h-px w-16 bg-secondary/40 mb-spacing-lg" />
     <Link
       to={to}
       className="inline-block text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
@@ -1194,5 +1197,6 @@ const PlaceholderView: React.FC<{ to: string; label: string; description: string
     </Link>
   </div>
 );
+
 
 export default BibliotecaPage;
