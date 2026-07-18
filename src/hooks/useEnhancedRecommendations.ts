@@ -21,7 +21,7 @@ export function useEnhancedRecommendations() {
         .from('reading_marks')
         .select('*')
         .eq('user_id', user.id)
-        .order('timestamp', { ascending: false })
+        .order('updated_at', { ascending: false })
         .limit(3);
 
       // 2. Fetch journal entries (emotional state/topics)
