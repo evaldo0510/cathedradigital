@@ -43,6 +43,7 @@ import { useShare } from '@/hooks/useShare';
 import { useHighContrast } from '@/hooks/useHighContrast';
 import biblePerf from '@/lib/biblePerf';
 import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
+import NexusContributionDialog from './NexusContributionDialog';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = parseInt(paragraphId);
