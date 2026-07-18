@@ -161,26 +161,35 @@ const BibliotecaPage: React.FC = () => {
   };
 
   return (
-    <ContemplativeLayout title="Biblioteca" subtitle="Sacrum Archivum" icon={Icons.Compass}>
-      <div className="w-full pb-spacing-4xl" data-biblioteca-theme={theme}>
+    <ContemplativeLayout>
+      <div className="w-full pt-spacing-lg pb-spacing-4xl" data-biblioteca-theme={theme}>
 
-
+        {/* Identidade compacta — libera espaço na primeira dobra (A.5) */}
+        <header className="mb-spacing-md flex items-baseline justify-between gap-spacing-md">
+          <div className="flex items-baseline gap-spacing-sm">
+            <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
+            <span className="text-[10px] uppercase tracking-[0.3em] text-primary/50">Sacrum Archivum</span>
+          </div>
+          <h1 className="font-serif italic text-primary/80 text-base md:text-lg leading-none">
+            Biblioteca
+          </h1>
+        </header>
 
         {/* Busca soberana + eixo */}
         <form
           onSubmit={submitSearch}
-          className="mb-spacing-lg"
+          className="mb-spacing-md"
           role="search"
           aria-label="Buscar na Biblioteca"
         >
           <div className="relative">
-            <Icons.Search className="pointer-events-none absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/30" />
+            <Icons.Search className="pointer-events-none absolute left-spacing-md top-1/2 -translate-y-1/2 w-spacing-sm h-spacing-sm text-primary/30" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="O que você procura?"
               aria-label="O que você procura?"
-              className="w-full bg-transparent border-0 border-b border-primary/15 focus:border-secondary focus:outline-none pl-spacing-3xl pr-spacing-md py-spacing-lg font-serif text-2xl md:text-3xl italic placeholder:text-primary/25 text-primary transition-colors"
+              className="w-full bg-transparent border-0 border-b border-primary/15 focus:border-secondary focus:outline-none pl-spacing-2xl pr-spacing-md py-spacing-md font-serif text-lg md:text-xl italic placeholder:text-primary/25 text-primary transition-colors"
             />
             {(query || axis) && (
               <button
@@ -230,8 +239,8 @@ const BibliotecaPage: React.FC = () => {
         </form>
 
         {/* Navegação editorial (abas) */}
-        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-xl">
-          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-md">
+        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-lg">
+          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-sm">
             {tabs.map((t) => {
               const active = tab === t.key;
               const count =
@@ -261,6 +270,11 @@ const BibliotecaPage: React.FC = () => {
           </ul>
         </nav>
 
+        {/* Hero "Continuar lendo" — âncora da primeira dobra (A.5) */}
+        <div className="mt-spacing-xl">
+          <ContinueReadingHero recents={recents} />
+        </div>
+
         {/* Área principal */}
         <AnimatePresence mode="wait">
           <motion.section
@@ -269,10 +283,10 @@ const BibliotecaPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="mt-spacing-2xl"
+            className="mt-spacing-lg"
           >
             {tab === 'escritos' && (
-              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} recents={recents} />
+              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} />
             )}
             {tab === 'pesquisar' && (
               <PesquisarView
@@ -486,11 +500,8 @@ const Shelf: React.FC<{
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
-  recents: ReturnType<typeof useBibliotecaRecents>['recents'];
-}> = ({ escritos, onOpen, recents }) => (
+}> = ({ escritos, onOpen }) => (
   <div className="w-full">
-    <ContinueReadingHero recents={recents} />
-
     <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
       {escritos.length === 0 && (
         <div className="py-spacing-2xl text-primary/40 italic font-serif">
