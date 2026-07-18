@@ -455,13 +455,24 @@ const ContinueReadingHero: React.FC<{
     ? 'Retome exatamente de onde parou. Sua última leitura permanece aberta.'
     : 'Uma das obras mais profundas da literatura universal — comentada, com introdução histórica e Nexus.';
   const cta = last ? 'Continuar leitura' : 'Iniciar leitura';
+  const meta = last
+    ? `Leitura em curso · ${new Date(last.visitedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}`
+    : 'Curadoria editorial · Cathedra';
+
+  // Próximas sugestões — 2 itens seguintes do histórico ou fallback curado.
+  const nextUp = recents.slice(1, 3);
+  const fallbackNext = [
+    { id: 'f1', title: 'Suma Teológica', subtitle: 'Tomás de Aquino', path: AppRoute.CATECHISM },
+    { id: 'f2', title: 'Imitação de Cristo', subtitle: 'Kempis', path: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Imitação de Cristo')}` },
+  ];
+  const suggestions = nextUp.length > 0 ? nextUp : fallbackNext;
 
   return (
     <section
       aria-label="Continuar lendo"
-      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[192px_1fr] gap-spacing-2xl items-center border-y border-primary/10 py-spacing-2xl"
+      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[200px_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start border-y border-primary/10 py-spacing-3xl"
     >
-      <div className="mx-auto md:mx-0">
+      <div className="mx-auto md:mx-0 relative">
         <BookCover
           kicker={kicker}
           title={title}
@@ -469,24 +480,59 @@ const ContinueReadingHero: React.FC<{
           palette={DEFAULT_PALETTE}
           to={path}
           size="lg"
+          bookmarked={!!last}
         />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 pt-spacing-sm">
         <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium block mb-spacing-sm">
           {last ? 'Continuar lendo' : 'Recomendado hoje'}
         </span>
-        <h2 className="font-serif italic text-3xl md:text-4xl text-primary leading-tight mb-spacing-md">
+        <h2 className="font-serif italic text-[2rem] md:text-[2.75rem] text-primary leading-[1.05] mb-spacing-md">
           {title}
         </h2>
-        <p className="text-primary/60 text-sm md:text-base leading-relaxed max-w-lg mb-spacing-lg">
+        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-lg font-serif">
           {description}
         </p>
-        <Link
-          to={path}
-          className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
-        >
-          {cta} →
-        </Link>
+        <div className="flex flex-wrap items-baseline gap-spacing-lg mb-spacing-xl">
+          <Link
+            to={path}
+            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+          >
+            {cta} →
+          </Link>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
+            {meta}
+          </span>
+        </div>
+
+        {/* Próximas leituras — evocação de lombadas ao lado, sem cards. */}
+        {suggestions.length > 0 && (
+          <div className="hidden md:block border-t border-primary/10 pt-spacing-lg">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-primary/40 block mb-spacing-sm">
+              A seguir
+            </span>
+            <ul className="flex flex-col gap-spacing-xs">
+              {suggestions.map((s) => (
+                <li key={s.id}>
+                  <Link
+                    to={s.path}
+                    className="group inline-flex items-baseline gap-spacing-sm hover:text-secondary transition-colors"
+                  >
+                    <span className="w-[2px] h-[14px] bg-secondary/40 group-hover:bg-secondary transition-colors" aria-hidden />
+                    <span className="font-serif italic text-lg text-primary/85 group-hover:text-secondary">
+                      {s.title}
+                    </span>
+                    {s.subtitle && (
+                      <span className="text-[10px] uppercase tracking-[0.22em] text-primary/40">
+                        · {s.subtitle}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
