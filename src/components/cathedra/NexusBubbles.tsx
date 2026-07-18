@@ -30,11 +30,16 @@ import {
   restoredLiveMessage,
   closedLiveMessage,
   focusModeLiveMessage,
+  syncedSectionLiveMessage,
+  syncedFocusModeLiveMessage,
+  invalidDeepLinkLiveMessage,
+  validateDeepLinkKind,
   parseNexusHash,
   buildNexusHash,
   buildNexusShareUrl,
   type PersistedNexusState,
 } from '@/lib/nexusState';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 
 
 
