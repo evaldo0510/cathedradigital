@@ -732,6 +732,9 @@ const MagisteriumViewer: React.FC = () => {
       {id && <MagisteriumDocumentNav currentId={id} />}
 
       {/* Sprint 1 — Fechar dead-end: próximo passo contextual */}
+      <div className="mb-spacing-lg">
+        <NexusBubbles />
+      </div>
       <ReaderContinuation
         context={{
           kind: 'magisterium',
