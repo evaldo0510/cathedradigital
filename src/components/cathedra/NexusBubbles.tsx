@@ -97,11 +97,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [visitedKinds, setVisitedKinds] = useState<Set<string>>(new Set());
   const [liveMessage, setLiveMessage] = useState<string>('');
   const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   // Guard: evita reentrada infinita entre "aplicar estado externo" e "persistir".
   const applyingExternalRef = React.useRef(false);
   const shareCopiedRef = React.useRef<number | null>(null);
   const [copiedShare, setCopiedShare] = useState(false);
+
+  useFocusTrap(panelRef, open);
 
   const currentTag = navHistory[navHistory.length - 1];
 
