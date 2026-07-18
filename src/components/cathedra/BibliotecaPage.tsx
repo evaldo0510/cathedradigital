@@ -462,7 +462,7 @@ const ContinueReadingHero: React.FC<{
   return (
     <section
       aria-label="Continuar lendo"
-      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[200px_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start border-y border-primary/10 py-spacing-3xl"
+      className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-spacing-2xl md:gap-spacing-4xl items-start pt-spacing-2xl"
     >
       <div className="mx-auto md:mx-0 relative">
         <BookCover
@@ -475,35 +475,47 @@ const ContinueReadingHero: React.FC<{
           bookmarked={!!last}
         />
       </div>
-      <div className="min-w-0 pt-spacing-sm">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium block mb-spacing-sm">
-          {last ? 'Continuar lendo' : 'Recomendado hoje'}
+      <div className="min-w-0 pt-spacing-md">
+        {/* Epígrafe editorial — a atmosfera antes da informação. */}
+        <p className="font-serif italic text-primary/45 text-sm md:text-base leading-snug mb-spacing-xl max-w-md">
+          {last
+            ? '“Você fechou o livro aqui. Ele ainda espera.”'
+            : '“Toda grande caminhada começa por uma única página.”'}
+        </p>
+
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium block mb-spacing-sm">
+          {last ? 'Continue sua caminhada' : 'Recomendado hoje'}
         </span>
-        <h2 className="font-serif italic text-[2rem] md:text-[2.75rem] text-primary leading-[1.05] mb-spacing-md">
+        <h2 className="font-serif italic text-[2.25rem] md:text-[3.25rem] text-primary leading-[1.02] mb-spacing-md tracking-tight">
           {title}
         </h2>
-        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-lg font-serif">
+        {last?.subtitle && (
+          <p className="font-serif italic text-primary/55 text-lg md:text-xl mb-spacing-lg">
+            {last.subtitle}
+          </p>
+        )}
+        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-xl font-serif">
           {description}
         </p>
-        <div className="flex flex-wrap items-baseline gap-spacing-lg mb-spacing-xl">
+        <div className="flex flex-wrap items-baseline gap-spacing-lg">
           <Link
             to={path}
-            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.28em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
           >
             {cta} →
           </Link>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-primary/40">
             {meta}
           </span>
         </div>
 
-        {/* Próximas leituras — evocação de lombadas ao lado, sem cards. */}
+        {/* Próximas leituras — evocação de lombadas, sem card. */}
         {suggestions.length > 0 && (
-          <div className="hidden md:block border-t border-primary/10 pt-spacing-lg">
-            <span className="text-[9px] uppercase tracking-[0.3em] text-primary/40 block mb-spacing-sm">
-              A seguir
+          <div className="hidden md:block mt-spacing-2xl">
+            <span className="text-[9px] uppercase tracking-[0.32em] text-primary/40 block mb-spacing-md">
+              A seguir na sua mesa
             </span>
-            <ul className="flex flex-col gap-spacing-xs">
+            <ul className="flex flex-col gap-spacing-sm">
               {suggestions.map((s) => (
                 <li key={s.id}>
                   <Link
