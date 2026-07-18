@@ -757,7 +757,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {/* Continue este caminho — sempre presente após as seções */}
-          {status !== 'loading' && (
+          {status !== 'loading' && !focusMode && (
             <motion.section
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
