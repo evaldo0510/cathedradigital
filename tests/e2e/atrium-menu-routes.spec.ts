@@ -56,7 +56,8 @@ test.describe('Átrio · itens do menu apontam para rotas canônicas', () => {
       await expect(page.locator('text=/página não encontrada|not\\s*found/i')).toHaveCount(0);
     });
   }
-  }
+
+
 
   test('rota /diario abre sem erros (Diário Espiritual)', async ({ page }) => {
     const consoleErrors: string[] = [];
