@@ -1046,16 +1046,31 @@ const FavoritosView: React.FC<{ items: ReturnType<typeof useFavorites>['favorite
   if (items.length === 0) {
     return (
       <div className="max-w-xl">
-        <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Favoritos</h2>
-        <p className="text-primary/55 text-sm leading-relaxed">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Sua estante
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+          Favoritos
+        </h2>
+        <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
           Marque um parágrafo, versículo ou documento como favorito para retornar a ele com um clique.
         </p>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
       </div>
     );
   }
   return (
     <div className="max-w-3xl">
-      <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-lg">Favoritos</h2>
+      <div className="mb-spacing-lg">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Sua estante
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md">
+          Favoritos
+        </h2>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
+      </div>
+
       <ul className="divide-y divide-primary/10 border-y border-primary/10">
         {items.map((f, i) => {
           const path = f.content && f.content.startsWith('/') ? f.content : undefined;
