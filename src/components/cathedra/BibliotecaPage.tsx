@@ -430,7 +430,7 @@ const ContinueReadingHero: React.FC<{
           kicker={kicker}
           title={title}
           spine="Cathedra Digital"
-          tone="noir"
+          palette={DEFAULT_PALETTE}
           to={path}
           size="lg"
         />
