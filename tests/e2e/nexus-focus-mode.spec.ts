@@ -43,62 +43,65 @@ for (const vp of VIEWPORTS) {
 
       const dialog = await openNexus(page);
 
-      // Estado inicial: focus mode desligado, cabeçalho e dots visíveis.
+      // Estado inicial: focus mode desligado, toggle e dots visíveis.
       await expect(dialog).toHaveAttribute('data-focus-mode', 'false');
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
-      const header = dialog.locator('[data-testid="nexus-header"]');
-      const dots = dialog.locator('[data-testid="nexus-visited-dots"]');
-      const activeSection = dialog.locator('[data-testid="nexus-active-section"]').first();
-      await expect(activeSection).toBeVisible();
+      const focusToggle = dialog.locator('[data-testid="nexus-focus-toggle"]');
+      const dots = dialog.locator('[data-testid="nexus-section-dots"]');
+      const activeSection = () => dialog.locator('[data-testid="nexus-active-section"]').first();
+      await expect(activeSection()).toBeVisible();
 
       // Captura a seção ativa inicial para comparar depois.
-      const initialKind = await activeSection.getAttribute('data-section-kind');
+      const initialKind = await activeSection().getAttribute('data-section-kind');
+      const totalSections = await dialog.locator('[data-section-kind]').count();
 
       // Liga focus mode via `f`.
       await dialog.focus();
       await page.keyboard.press('f');
       await expect(dialog).toHaveAttribute('data-focus-mode', 'true', { timeout: 5000 });
 
-      // Cabeçalho e dots devem sumir do DOM ou ficar invisíveis.
-      if (await header.count()) {
-        await expect(header.first()).toBeHidden();
+      // Toggle e dots devem sumir do DOM ou ficar invisíveis em focus mode.
+      if (await focusToggle.count()) {
+        await expect(focusToggle.first()).toBeHidden();
       }
       if (await dots.count()) {
         await expect(dots.first()).toBeHidden();
       }
 
       // Seção ativa continua visível.
-      await expect(activeSection).toBeVisible();
+      await expect(activeSection()).toBeVisible();
 
       // aria-live segue presente para anúncios.
       const live = dialog.locator('[aria-live]');
       expect(await live.count()).toBeGreaterThan(0);
 
+      // Em focus mode só a seção ativa é renderizada (single-item).
+      await expect(dialog.locator('[data-section-kind]')).toHaveCount(1);
+
       // Atalhos de navegação continuam funcionando em focus mode.
-      const sectionsCount = await dialog.locator('[data-nexus-section]').count();
-      if (sectionsCount > 1) {
+      if (totalSections > 1) {
         await page.keyboard.press(']');
-        await page.waitForTimeout(400);
-        const nextKind = await activeSection.getAttribute('data-section-kind');
+        await page.waitForTimeout(500);
+        const nextKind = await activeSection().getAttribute('data-section-kind');
         expect(nextKind, 'seção mudou após `]` em focus mode').not.toBe(initialKind);
 
         await page.keyboard.press('[');
-        await page.waitForTimeout(400);
-        const backKind = await activeSection.getAttribute('data-section-kind');
+        await page.waitForTimeout(500);
+        const backKind = await activeSection().getAttribute('data-section-kind');
         expect(backKind, 'seção voltou após `[` em focus mode').toBe(initialKind);
 
         // Alt+→ também precisa funcionar em focus mode.
         await page.keyboard.press('Alt+ArrowRight');
-        await page.waitForTimeout(400);
-        const altKind = await activeSection.getAttribute('data-section-kind');
+        await page.waitForTimeout(500);
+        const altKind = await activeSection().getAttribute('data-section-kind');
         expect(altKind, 'Alt+→ alterna em focus mode').not.toBe(initialKind);
       }
 
-      // Desliga focus mode: cabeçalho volta.
+      // Desliga focus mode: toggle volta.
       await page.keyboard.press('f');
       await expect(dialog).toHaveAttribute('data-focus-mode', 'false', { timeout: 5000 });
-      if (await header.count()) {
-        await expect(header.first()).toBeVisible();
+      if (await focusToggle.count()) {
+        await expect(focusToggle.first()).toBeVisible();
       }
 
       // Nenhum erro de execução ao alternar.
