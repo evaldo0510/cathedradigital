@@ -368,10 +368,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         aria-labelledby={`nexus-title-${currentTag.id}`}
         aria-describedby={`nexus-desc-${currentTag.id}`}
         onEscapeKeyDown={() => handleOpenChange(false)}
+        onKeyDown={handlePanelKeyDown}
         className={cn(
           'p-0 border-l border-primary/10 bg-background overflow-hidden',
           'flex flex-col',
-          // Animação editorial — curva easing suave, tempos alongados.
           'transition-none',
           'data-[state=open]:duration-700 data-[state=closed]:duration-500',
           'data-[state=open]:ease-[cubic-bezier(0.22,1,0.36,1)]',
@@ -382,6 +382,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             : 'w-full sm:max-w-[460px] md:max-w-[38vw]',
         )}
       >
+        {/* Anúncios para leitores de tela — mudanças de seção, restauração, etc. */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {liveMessage}
+        </div>
+
         {/* Cabeçalho editorial — margem do livro. */}
         <header className="px-spacing-xl pt-spacing-2xl pb-spacing-lg flex-shrink-0">
           <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
