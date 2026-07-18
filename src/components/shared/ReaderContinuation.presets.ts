@@ -3,6 +3,7 @@
  *
  * Trocar copy = editar apenas este arquivo. Zero lógica.
  */
+import type React from 'react';
 import { Icons } from '@/constants';
 import type { ContinuationIntent } from '@/core/knowledge';
 
