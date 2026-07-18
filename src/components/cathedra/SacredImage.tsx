@@ -85,12 +85,16 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
         <div className="absolute inset-[-50%] opacity-60" style={{ background: `radial-gradient(circle at 40% 40%, ${colors.accent} 0%, transparent 70%)`, animation: 'drift-slow 15s ease-in-out infinite' }} />
         <div className="absolute inset-0 " />
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center z-[5]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-[5] p-4 text-center gap-2">
+            <Icons.Cross className="w-8 h-8 text-white/40" aria-hidden />
             <span
               className="font-serif font-bold text-white/80 select-none"
-              style={{ fontSize: 'clamp(1.5rem, 5vw, 4rem)', textShadow: `0 2px 12px ${colors.depth}` }}
+              style={{ fontSize: 'clamp(1.5rem, 5vw, 3.5rem)', textShadow: `0 2px 12px ${colors.depth}` }}
             >
               {initials}
+            </span>
+            <span className="text-white/60 text-xs uppercase tracking-widest select-none" role="status">
+              Retrato indisponível
             </span>
           </div>
         )}
