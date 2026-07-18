@@ -508,8 +508,6 @@ const EscritosView: React.FC<{
         <div className="py-spacing-2xl text-primary/40 italic font-serif">
           Nada corresponde à sua busca.
         </div>
-          Nada corresponde à sua busca.
-        </div>
       )}
       {escritos.map((e) => (
         <BookCover
