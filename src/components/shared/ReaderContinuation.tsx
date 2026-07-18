@@ -13,6 +13,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
+import {
+  resolveContinuation,
+  type ContinuationSuggestion,
+  type KnowledgeNodeId,
+} from '@/core/knowledge';
+import { INTENT_ICON, KIND_GRAPH_TITLE } from './ReaderContinuation.presets';
+import { telemetry } from '@/utils/navigation-telemetry';
 
 export type ReaderContinuationKind =
   | 'bible'
@@ -25,7 +32,15 @@ export interface ReaderContinuationContext {
   kind: ReaderContinuationKind;
   /** ID canônico (ex.: "gen-1", "142", "gaudium-et-spes", "sao-francisco", "step-uuid"). */
   id?: string;
-  /** Metadados opcionais usados para calcular o próximo item. */
+  /**
+   * ID canônico do nó no KnowledgeGraph (Sprint 2). Se presente e
+   * resolvível, o motor de continuidade tenta gerar sugestões reais
+   * antes de cair no fallback editorial.
+   */
+  graphNodeId?: KnowledgeNodeId;
+  /** Temas associados (Sprint 2). Enriquece a resolução do grafo. */
+  themeIds?: KnowledgeNodeId[];
+  /** Metadados opcionais usados para calcular o próximo item (fallback). */
   meta?: {
     bookAbbr?: string;
     chapter?: number;
