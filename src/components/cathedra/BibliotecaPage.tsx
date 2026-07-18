@@ -162,23 +162,21 @@ const BibliotecaPage: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div className="w-full pt-spacing-lg pb-spacing-4xl" data-biblioteca-theme={theme}>
+      <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme}>
 
-        {/* Identidade compacta — libera espaço na primeira dobra (A.5) */}
-        <header className="mb-spacing-md flex items-baseline justify-between gap-spacing-md">
-          <div className="flex items-baseline gap-spacing-sm">
-            <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-primary/50">Sacrum Archivum</span>
-          </div>
-          <h1 className="font-serif italic text-primary/80 text-base md:text-lg leading-none">
-            Biblioteca
-          </h1>
-        </header>
+        {/* Marca d'água mínima — só uma linha de identidade, sem barra de dashboard. */}
+        <div className="mb-spacing-2xl flex items-baseline gap-spacing-sm opacity-70">
+          <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
+          <span className="text-[10px] uppercase tracking-[0.32em] text-primary/45">Sacrum Archivum · Biblioteca</span>
+        </div>
 
-        {/* Busca soberana + eixo */}
+        {/* ABERTURA — Continuar lendo é a página aberta do livro. */}
+        <ContinueReadingHero recents={recents} />
+
+        {/* Busca — respiração generosa depois da abertura, sem cara de topo de app. */}
         <form
           onSubmit={submitSearch}
-          className="mb-spacing-md"
+          className="mt-spacing-4xl mb-spacing-lg"
           role="search"
           aria-label="Buscar na Biblioteca"
         >
@@ -203,7 +201,6 @@ const BibliotecaPage: React.FC = () => {
             )}
           </div>
 
-          {/* Eixos "o que você procura?" — chips como filtro axial */}
           <div className="mt-spacing-md flex flex-wrap items-center gap-spacing-sm">
             <span className="text-[10px] uppercase tracking-[0.3em] text-primary/40 mr-spacing-sm">
               Filtrar por
@@ -238,9 +235,9 @@ const BibliotecaPage: React.FC = () => {
           </div>
         </form>
 
-        {/* Navegação editorial (abas) */}
-        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-lg">
-          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-sm">
+        {/* Navegação editorial — fio único, sem caixa. */}
+        <nav aria-label="Seções da Biblioteca" className="border-t border-primary/10">
+          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-md">
             {tabs.map((t) => {
               const active = tab === t.key;
               const count =
@@ -270,11 +267,6 @@ const BibliotecaPage: React.FC = () => {
           </ul>
         </nav>
 
-        {/* Hero "Continuar lendo" — âncora da primeira dobra (A.5) */}
-        <div className="mt-spacing-xl">
-          <ContinueReadingHero recents={recents} />
-        </div>
-
         {/* Área principal */}
         <AnimatePresence mode="wait">
           <motion.section
@@ -283,7 +275,7 @@ const BibliotecaPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-spacing-lg"
+            className="mt-spacing-2xl"
           >
             {tab === 'escritos' && (
               <EscritosView escritos={filteredEscritos} onOpen={openEscrito} />
