@@ -24,6 +24,7 @@ type TestResult = { ok: boolean; message: string; latencyMs?: number };
 
 const integrations: Integration[] = [
   {
+    id: "lovable-cloud",
     name: "Lovable Cloud",
     category: "Infraestrutura",
     status: "connected",
@@ -31,6 +32,7 @@ const integrations: Integration[] = [
     howTo: "Ativo por padrão neste projeto. Acesse pelo botão 'View Backend'.",
   },
   {
+    id: "lovable-ai",
     name: "Lovable AI Gateway",
     category: "IA",
     status: "connected",
@@ -38,6 +40,7 @@ const integrations: Integration[] = [
     howTo: "Disponível automaticamente nas edge functions. Secret gerenciado.",
   },
   {
+    id: "mercado-pago",
     name: "Mercado Pago",
     category: "Pagamentos",
     status: "connected",
@@ -46,6 +49,7 @@ const integrations: Integration[] = [
     docsUrl: "https://www.mercadopago.com.br/developers",
   },
   {
+    id: "google-api-key",
     name: "Google API Key",
     category: "Google",
     status: "connected",
@@ -54,6 +58,7 @@ const integrations: Integration[] = [
     docsUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
+    id: "firecrawl",
     name: "Firecrawl",
     category: "Scraping",
     status: "partial",
@@ -61,6 +66,7 @@ const integrations: Integration[] = [
     howTo: "Existe no workspace mas NÃO vinculado a este projeto. Peça 'vincular Firecrawl' para ativar.",
   },
   {
+    id: "google-search-console",
     name: "Google Search Console",
     category: "SEO",
     status: "disconnected",
@@ -69,6 +75,7 @@ const integrations: Integration[] = [
     docsUrl: "https://search.google.com/search-console",
   },
   {
+    id: "semrush",
     name: "Semrush",
     category: "SEO",
     status: "disconnected",
@@ -77,6 +84,7 @@ const integrations: Integration[] = [
     docsUrl: "https://www.semrush.com",
   },
   {
+    id: "google-analytics",
     name: "Google Analytics",
     category: "Analytics",
     status: "disconnected",
@@ -84,6 +92,7 @@ const integrations: Integration[] = [
     howTo: "Não configurado. Conecte via Connectors → Google Analytics.",
   },
   {
+    id: "stripe",
     name: "Stripe",
     category: "Pagamentos",
     status: "disconnected",
@@ -91,6 +100,7 @@ const integrations: Integration[] = [
     howTo: "Não configurado. Peça 'ativar Stripe' se necessário.",
   },
   {
+    id: "github",
     name: "GitHub",
     category: "Dev",
     status: "disconnected",
