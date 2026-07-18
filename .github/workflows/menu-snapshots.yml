@@ -120,6 +120,23 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
         run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=summary
 
+      # 4. Gera PR_COMMENT.md com mask-coverage agregado + links diretos.
+      - name: Build PR comment body (on failure)
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=pr
+
+      # 5. Cria (ou atualiza) o comentário no PR. Usa marcador HTML oculto
+      #    "<!-- lovable:menu-snapshots -->" para atualizar em vez de duplicar.
+      - name: Post PR comment (on failure)
+        if: failure() && github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: test-results/PR_COMMENT.md
+          edit-mode: replace
+
       - name: Upload Playwright HTML report (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
