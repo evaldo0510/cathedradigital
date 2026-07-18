@@ -364,6 +364,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         />
 
         {/* Sprint 1 — Fechar dead-end: próximo passo pela comunhão dos santos */}
+        <div className="mb-spacing-lg">
+          <NexusBubbles />
+        </div>
         <ReaderContinuation
           context={{
             kind: 'saint',
