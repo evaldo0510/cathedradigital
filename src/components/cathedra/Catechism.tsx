@@ -245,6 +245,13 @@ const CatechismContent: React.FC<{
             title={`Cathedra — CIC §${paragraph}`}
             passage={{ kind: 'catechism', paragraph }}
           />
+          <ReaderContinuation
+            context={{
+              kind: 'catechism',
+              id: String(paragraph),
+              meta: { paragraph, nextParagraph: paragraph + 1 },
+            }}
+          />
         </div>
       )}
     </div>

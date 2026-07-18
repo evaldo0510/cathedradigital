@@ -361,6 +361,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           lastScrapedAt={(saint as any).last_scraped_at || (saint as any).lastScrapedAt}
         />
 
+        {/* Sprint 1 — Fechar dead-end: próximo passo pela comunhão dos santos */}
+        <ReaderContinuation
+          context={{
+            kind: 'saint',
+            id: (saint as any).slug || (saint as any).id,
+            meta: { theme: saint.virtues?.[0] },
+          }}
+        />
+
       </div>
     </motion.div>
   </motion.div>

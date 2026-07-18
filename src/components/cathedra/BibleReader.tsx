@@ -237,6 +237,21 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         )}
       </div>
 
+      {/* Bloco de continuidade — fim do capítulo */}
+      <div className="px-spacing-lg pb-spacing-2xl">
+        <ReaderContinuation
+          context={{
+            kind: 'bible',
+            id: `${book.abbrev}-${chapter}`,
+            meta: {
+              bookAbbr: book.abbrev,
+              chapter,
+              totalChapters: book.chapters,
+            },
+          }}
+        />
+      </div>
+
       {/* Navigation Footer */}
       <div className="fixed bottom-24 left-0 right-0 px-6 pointer-events-none">
         <div className="max-w-lg mx-auto flex justify-between items-center pointer-events-auto">
@@ -246,6 +261,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             onClick={onPrevChapter}
             disabled={chapter === 1}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
+            aria-label="Capítulo anterior"
           >
             <Icons.ChevronLeft className="w-6 h-6" />
           </Button>
@@ -256,6 +272,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             onClick={onNextChapter}
             disabled={chapter >= book.chapters}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
+            aria-label="Próximo capítulo"
           >
             <Icons.ChevronRight className="w-6 h-6" />
           </Button>

@@ -729,8 +729,14 @@ const MagisteriumViewer: React.FC = () => {
       {/* STAB-004.3: Navegação entre documentos (derivada de MAGISTERIUM_DOCUMENTS) */}
       {id && <MagisteriumDocumentNav currentId={id} />}
 
-
-
+      {/* Sprint 1 — Fechar dead-end: próximo passo contextual */}
+      <ReaderContinuation
+        context={{
+          kind: 'magisterium',
+          id: id ?? undefined,
+          meta: { theme: content.title },
+        }}
+      />
 
       <div className="mt-spacing-4xl pt-spacing-3xl border-t border-primary/5 flex flex-col items-center gap-spacing-2xl">
         <div className="text-center space-y-spacing-md">

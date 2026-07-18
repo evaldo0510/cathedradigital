@@ -495,6 +495,18 @@ const JornadaStepPage: React.FC = () => {
               </Button>
             </div>
           )}
+          {completed && (
+            <ReaderContinuation
+              context={{
+                kind: 'journey-step',
+                id: stepId ?? undefined,
+                meta: {
+                  journeyId: journeyId ?? undefined,
+                  nextStepId: nextStep?.id,
+                },
+              }}
+            />
+          )}
         </div>
       </div>
     </motion.div>,
