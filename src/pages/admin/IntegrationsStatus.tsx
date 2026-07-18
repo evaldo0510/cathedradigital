@@ -145,13 +145,21 @@ export default function IntegrationsStatus() {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Filtros e paginação do histórico
+  const [filterIntegration, setFilterIntegration] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<"all" | "ok" | "fail">("all");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
     const { data, error } = await supabase
       .from("integration_test_runs")
       .select("id, integration_id, ok, message, latency_ms, created_at")
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(500);
     setHistoryLoading(false);
     if (error) {
       // 403 => usuário não é admin. Silenciar para não poluir.
