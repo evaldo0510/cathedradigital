@@ -473,72 +473,143 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           {liveMessage}
         </div>
 
-        {/* Cabeçalho editorial — margem do livro. */}
-        <header className="px-spacing-xl pt-spacing-2xl pb-spacing-lg flex-shrink-0">
-          <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
-            <Icons.Compass className="w-3 h-3 text-secondary" strokeWidth={1.4} aria-hidden="true" />
-            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
-              {NEXUS_HEADER.eyebrow}
-            </span>
-          </div>
-          <SheetTitle asChild>
-            <h2
-              id={`nexus-title-${currentTag.id}`}
-              className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
-            >
-              {NEXUS_HEADER.subtitle}
-            </h2>
-          </SheetTitle>
-          <SheetDescription
-            id={`nexus-desc-${currentTag.id}`}
-            className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
-          >
-            <span className="sr-only">Conexões teológicas para </span>
-            {contextPath}
-          </SheetDescription>
-          <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
-
-          {/* Indicador de seções visitadas + navegação por teclado */}
-          {narrativeSections.length > 1 && (
-            <nav
-              aria-label="Seções do Nexus"
-              className="mt-spacing-md flex items-center gap-spacing-xs"
-            >
-              {narrativeSections.map((s, i) => {
-                const visited = visitedKinds.has(s.kind);
-                const active = i === activeSectionIdx;
-                return (
+        {/* Cabeçalho editorial — margem do livro. Ocultado no modo foco. */}
+        <header
+          data-focus-mode={focusMode ? 'true' : 'false'}
+          className={cn(
+            'px-spacing-xl flex-shrink-0 transition-all',
+            focusMode ? 'pt-spacing-lg pb-spacing-xs' : 'pt-spacing-2xl pb-spacing-lg',
+          )}
+        >
+          {/* No modo foco reduzimos ao essencial: só um handle mínimo + toggles. */}
+          {!focusMode && (
+            <>
+              <div className="flex items-baseline justify-between gap-spacing-sm mb-spacing-md">
+                <div className="flex items-baseline gap-spacing-sm">
+                  <Icons.Compass className="w-3 h-3 text-secondary" strokeWidth={1.4} aria-hidden="true" />
+                  <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+                    {NEXUS_HEADER.eyebrow}
+                  </span>
+                </div>
+                <div className="flex items-center gap-spacing-xs">
                   <button
-                    key={s.kind}
                     type="button"
-                    onClick={() => setActiveSectionIdx(i)}
-                    aria-current={active ? 'true' : undefined}
-                    aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
-                    title={s.preset.eyebrow}
-                    className={cn(
-                      'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
-                    )}
+                    onClick={handleShareDeepLink}
+                    aria-label={copiedShare ? 'Link copiado' : 'Copiar deep link do Nexus'}
+                    className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
                   >
-                    <span
-                      className={cn(
-                        'block rounded-full transition-all',
-                        active
-                          ? 'h-[8px] w-[8px] bg-secondary'
-                          : visited
-                            ? 'h-[6px] w-[6px] bg-secondary/60'
-                            : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
-                      )}
-                    />
+                    {copiedShare ? '✓' : '⧉'}
                   </button>
-                );
-              })}
-              <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
-                Alt+←/→
-              </span>
-            </nav>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFocusMode(true);
+                      setLiveMessage(focusModeLiveMessage(true));
+                    }}
+                    aria-label="Ativar modo foco (F)"
+                    aria-pressed="false"
+                    data-testid="nexus-focus-toggle"
+                    className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
+                  >
+                    Foco
+                  </button>
+                </div>
+              </div>
+              <SheetTitle asChild>
+                <h2
+                  id={`nexus-title-${currentTag.id}`}
+                  className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
+                >
+                  {NEXUS_HEADER.subtitle}
+                </h2>
+              </SheetTitle>
+              <SheetDescription
+                id={`nexus-desc-${currentTag.id}`}
+                className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
+              >
+                <span className="sr-only">Conexões teológicas para </span>
+                {contextPath}
+              </SheetDescription>
+              <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
+
+              {/* Indicador de seções visitadas + navegação por teclado */}
+              {narrativeSections.length > 1 && (
+                <nav
+                  aria-label="Seções do Nexus"
+                  data-testid="nexus-section-dots"
+                  className="mt-spacing-md flex items-center gap-spacing-xs"
+                >
+                  {narrativeSections.map((s, i) => {
+                    const visited = visitedKinds.has(s.kind);
+                    const active = i === activeSectionIdx;
+                    return (
+                      <button
+                        key={s.kind}
+                        type="button"
+                        onClick={() => setActiveSectionIdx(i)}
+                        aria-current={active ? 'true' : undefined}
+                        aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
+                        title={s.preset.eyebrow}
+                        className={cn(
+                          'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
+                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'block rounded-full transition-all',
+                            active
+                              ? 'h-[8px] w-[8px] bg-secondary'
+                              : visited
+                                ? 'h-[6px] w-[6px] bg-secondary/60'
+                                : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
+                          )}
+                        />
+                      </button>
+                    );
+                  })}
+                  <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
+                    Alt+←/→
+                  </span>
+                </nav>
+              )}
+            </>
+          )}
+
+          {focusMode && (
+            <div className="flex items-center justify-between gap-spacing-sm">
+              {/* Título mínimo, exigido pelo Radix Dialog para a11y */}
+              <SheetTitle asChild>
+                <span
+                  id={`nexus-title-${currentTag.id}`}
+                  className="text-[10px] uppercase tracking-[0.32em] text-primary/60"
+                >
+                  {currentTag.label}
+                  {narrativeSections[activeSectionIdx] && (
+                    <> · <span className="text-secondary">{narrativeSections[activeSectionIdx].preset.eyebrow}</span></>
+                  )}
+                </span>
+              </SheetTitle>
+              <SheetDescription id={`nexus-desc-${currentTag.id}`} className="sr-only">
+                Modo foco ativo. {contextPath}
+              </SheetDescription>
+              <button
+                type="button"
+                onClick={() => {
+                  setFocusMode(false);
+                  setLiveMessage(focusModeLiveMessage(false));
+                }}
+                aria-label="Sair do modo foco (F)"
+                aria-pressed="true"
+                data-testid="nexus-focus-exit"
+                className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
+              >
+                Sair
+              </button>
+            </div>
           )}
         </header>
+
 
 
 
