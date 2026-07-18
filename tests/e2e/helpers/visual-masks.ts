@@ -87,6 +87,12 @@ export function volatileMasks(page: Page): Locator[] {
  * e, quando pelo menos um TESTID crítico não casou, imprime aviso
  * amarelo no stdout do runner (visível em CI).
  *
+ * Limiares (0..1) configuráveis via env, aplicados como `expect` — falham
+ * o teste quando a cobertura fica abaixo do mínimo:
+ *   MASK_COVERAGE_MIN_TESTID_RATIO      (default: 0 — desligado)
+ *   MASK_COVERAGE_MIN_STRUCTURAL_RATIO  (default: 0 — desligado)
+ *   MASK_COVERAGE_MIN_TOTAL_RATIO       (default: 0 — desligado)
+ *
  * Retorna a lista de seletores sem match para permitir asserts opcionais.
  */
 export async function auditMaskCoverage(page: Page, testInfo?: TestInfo): Promise<string[]> {
@@ -103,13 +109,26 @@ export async function auditMaskCoverage(page: Page, testInfo?: TestInfo): Promis
 
   const missing = results.filter((r) => r.count === 0).map((r) => r.selector);
   const missingTestids = results.filter((r) => r.kind === 'testid' && r.count === 0);
+  const missingStructural = results.filter((r) => r.kind === 'structural' && r.count === 0);
+
+  const testidRatio = 1 - missingTestids.length / TESTID_SELECTORS.length;
+  const structuralRatio = 1 - missingStructural.length / STRUCTURAL_SELECTORS.length;
+  const totalRatio = 1 - missing.length / results.length;
 
   const report = {
     total: results.length,
     matched: results.length - missing.length,
+    ratios: {
+      testid: Number(testidRatio.toFixed(3)),
+      structural: Number(structuralRatio.toFixed(3)),
+      total: Number(totalRatio.toFixed(3)),
+    },
     missing,
     missingTestids: missingTestids.map((r) => r.selector),
+    missingStructural: missingStructural.map((r) => r.selector),
     details: results,
+    testTitle: testInfo?.title,
+    testFile: testInfo?.file,
   };
 
   if (testInfo) {
@@ -127,6 +146,36 @@ export async function auditMaskCoverage(page: Page, testInfo?: TestInfo): Promis
         `\n\u001b[33m→ Fallbacks estruturais podem estar cobrindo, mas adicione os data-testid faltantes para proteção precisa.\u001b[0m\n`,
     );
   }
+
+  // Limiares configuráveis — falham o teste quando cobertura < mínimo.
+  const parseRatio = (env?: string) => {
+    if (!env) return 0;
+    const n = Number(env);
+    return Number.isFinite(n) && n >= 0 && n <= 1 ? n : 0;
+  };
+  const minTestid = parseRatio(process.env.MASK_COVERAGE_MIN_TESTID_RATIO);
+  const minStructural = parseRatio(process.env.MASK_COVERAGE_MIN_STRUCTURAL_RATIO);
+  const minTotal = parseRatio(process.env.MASK_COVERAGE_MIN_TOTAL_RATIO);
+
+  const fmt = (r: number) => `${(r * 100).toFixed(1)}%`;
+  if (minTestid > 0 && testidRatio < minTestid) {
+    throw new Error(
+      `[visual-masks] cobertura de testids ${fmt(testidRatio)} abaixo do mínimo ${fmt(minTestid)}. ` +
+        `Faltando: ${missingTestids.map((r) => r.selector).join(', ')}`,
+    );
+  }
+  if (minStructural > 0 && structuralRatio < minStructural) {
+    throw new Error(
+      `[visual-masks] cobertura estrutural ${fmt(structuralRatio)} abaixo do mínimo ${fmt(minStructural)}. ` +
+        `Faltando: ${missingStructural.map((r) => r.selector).join(', ')}`,
+    );
+  }
+  if (minTotal > 0 && totalRatio < minTotal) {
+    throw new Error(
+      `[visual-masks] cobertura total ${fmt(totalRatio)} abaixo do mínimo ${fmt(minTotal)}.`,
+    );
+  }
+
 
   return missing;
 }
