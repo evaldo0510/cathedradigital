@@ -1095,6 +1095,15 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
     return { chapters, verses };
   }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
 
+  const [isNexusContribOpen, setIsNexusContribOpen] = useState(false);
+
+  // Chapter-level check: does this chapter have ANY Nexus connection?
+  const chapterHasConnections = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return false;
+    const prefix = `${selectedBook.abbr}-${selectedChapter}-`;
+    return Object.entries(KNOWLEDGE_CONNECTIONS).some(([key, arr]) => key.startsWith(prefix) && Array.isArray(arr) && arr.length > 0);
+  }, [KNOWLEDGE_CONNECTIONS, selectedBook, selectedChapter]);
+
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
   const connectionsErrorShownRef = useRef(false);
   useEffect(() => {
