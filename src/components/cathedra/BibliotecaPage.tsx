@@ -162,23 +162,21 @@ const BibliotecaPage: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div className="w-full pt-spacing-lg pb-spacing-4xl" data-biblioteca-theme={theme}>
+      <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme}>
 
-        {/* Identidade compacta — libera espaço na primeira dobra (A.5) */}
-        <header className="mb-spacing-md flex items-baseline justify-between gap-spacing-md">
-          <div className="flex items-baseline gap-spacing-sm">
-            <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-primary/50">Sacrum Archivum</span>
-          </div>
-          <h1 className="font-serif italic text-primary/80 text-base md:text-lg leading-none">
-            Biblioteca
-          </h1>
-        </header>
+        {/* Marca d'água mínima — só uma linha de identidade, sem barra de dashboard. */}
+        <div className="mb-spacing-2xl flex items-baseline gap-spacing-sm opacity-70">
+          <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
+          <span className="text-[10px] uppercase tracking-[0.32em] text-primary/45">Sacrum Archivum · Biblioteca</span>
+        </div>
 
-        {/* Busca soberana + eixo */}
+        {/* ABERTURA — Continuar lendo é a página aberta do livro. */}
+        <ContinueReadingHero recents={recents} />
+
+        {/* Busca — respiração generosa depois da abertura, sem cara de topo de app. */}
         <form
           onSubmit={submitSearch}
-          className="mb-spacing-md"
+          className="mt-spacing-4xl mb-spacing-lg"
           role="search"
           aria-label="Buscar na Biblioteca"
         >
@@ -203,7 +201,6 @@ const BibliotecaPage: React.FC = () => {
             )}
           </div>
 
-          {/* Eixos "o que você procura?" — chips como filtro axial */}
           <div className="mt-spacing-md flex flex-wrap items-center gap-spacing-sm">
             <span className="text-[10px] uppercase tracking-[0.3em] text-primary/40 mr-spacing-sm">
               Filtrar por
@@ -238,9 +235,9 @@ const BibliotecaPage: React.FC = () => {
           </div>
         </form>
 
-        {/* Navegação editorial (abas) */}
-        <nav aria-label="Seções da Biblioteca" className="border-y border-primary/10 mt-spacing-lg">
-          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-sm">
+        {/* Navegação editorial — fio único, sem caixa. */}
+        <nav aria-label="Seções da Biblioteca" className="border-t border-primary/10">
+          <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-spacing-2xl gap-y-spacing-sm py-spacing-md">
             {tabs.map((t) => {
               const active = tab === t.key;
               const count =
@@ -270,11 +267,6 @@ const BibliotecaPage: React.FC = () => {
           </ul>
         </nav>
 
-        {/* Hero "Continuar lendo" — âncora da primeira dobra (A.5) */}
-        <div className="mt-spacing-xl">
-          <ContinueReadingHero recents={recents} />
-        </div>
-
         {/* Área principal */}
         <AnimatePresence mode="wait">
           <motion.section
@@ -283,7 +275,7 @@ const BibliotecaPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-spacing-lg"
+            className="mt-spacing-2xl"
           >
             {tab === 'escritos' && (
               <EscritosView escritos={filteredEscritos} onOpen={openEscrito} />
@@ -373,41 +365,70 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 — sombra editorial lateral (livro em pé), não SaaS drop-shadow. */}
+      {/* Capa 2:3 — objeto físico: papel, lombada, folhas, brilho superior. */}
       <div
         className={cn(
           'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500 ease-out',
-          // sombra editorial: leve à esquerda (lombada), profunda à direita e abaixo
-          'shadow-[-1px_0_0_rgba(0,0,0,0.08),1px_2px_3px_rgba(0,0,0,0.08),8px_18px_28px_-18px_rgba(0,0,0,0.45)]',
-          'group-hover:-translate-y-[4px]',
-          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.10),2px_4px_6px_rgba(0,0,0,0.10),12px_26px_36px_-16px_rgba(0,0,0,0.55)]',
+          // Sombra editorial: livro em pé sobre a mesa, não card de dashboard.
+          'shadow-[-1px_0_0_rgba(0,0,0,0.10),1px_2px_3px_rgba(0,0,0,0.10),10px_20px_32px_-18px_rgba(0,0,0,0.55)]',
+          'group-hover:-translate-y-[5px] group-hover:rotate-[-0.2deg]',
+          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.12),2px_4px_6px_rgba(0,0,0,0.12),14px_30px_42px_-14px_rgba(0,0,0,0.65)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
         )}
         style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
-        {/* Lombada visual — faixa interna à esquerda, mais escura, simulando dobra. */}
+        {/* Lombada visual — faixa interna à esquerda, dobra do livro. */}
         <div
           aria-hidden
-          className="absolute inset-y-0 left-0 w-[6px] pointer-events-none"
+          className="absolute inset-y-0 left-0 w-[8px] pointer-events-none"
           style={{
             background:
               palette.grain === 'ink'
-                ? 'linear-gradient(to right, rgba(0,0,0,0.30), rgba(0,0,0,0) 100%)'
-                : 'linear-gradient(to right, rgba(0,0,0,0.10), rgba(0,0,0,0) 100%)',
+                ? 'linear-gradient(to right, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0) 100%)'
+                : 'linear-gradient(to right, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.06) 40%, rgba(0,0,0,0) 100%)',
           }}
         />
-        {/* Grão de papel — sutil, apenas quebra a chapadão. */}
-        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
-        {/* Moldura interna fina, na cor de acento. */}
+        {/* Borda direita — folhas do miolo do livro. */}
         <div
           aria-hidden
-          className="absolute inset-[6px] pointer-events-none"
-          style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
+          className="absolute inset-y-[3%] right-0 w-[3px] pointer-events-none"
+          style={{
+            background:
+              'repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, rgba(0,0,0,0.10) 1px, rgba(0,0,0,0.10) 2px)',
+          }}
+        />
+        {/* Brilho superior — luz incidente na capa. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[35%] pointer-events-none"
+          style={{
+            background:
+              palette.grain === 'ink'
+                ? 'linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0) 100%)'
+                : 'linear-gradient(to bottom, rgba(255,255,255,0.30), rgba(255,255,255,0) 100%)',
+          }}
+        />
+        {/* Sombra inferior interna — peso, desgaste elegante. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[25%] pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.18), rgba(0,0,0,0) 100%)',
+          }}
+        />
+        {/* Grão de papel */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-80" style={grainStyle(palette.grain)} />
+        {/* Moldura interna fina, na cor de acento — impressão editorial. */}
+        <div
+          aria-hidden
+          className="absolute inset-[7px] pointer-events-none"
+          style={{ border: `1px solid ${palette.accent}`, opacity: 0.32 }}
         />
         {/* Conteúdo tipográfico */}
-        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+4px)]">
+        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+6px)]">
           <span
-            className="text-[9px] uppercase tracking-[0.28em] font-medium"
+            className="text-[9px] uppercase tracking-[0.3em] font-medium"
             style={{ color: palette.accent }}
           >
             {kicker}
@@ -423,22 +444,23 @@ const BookCover: React.FC<{
             </h3>
           </div>
           <span
-            className="text-[8px] uppercase tracking-[0.22em] text-center truncate"
-            style={{ color: palette.accent, opacity: 0.7 }}
+            className="text-[8px] uppercase tracking-[0.24em] text-center truncate"
+            style={{ color: palette.accent, opacity: 0.75 }}
           >
             {spine}
           </span>
         </div>
       </div>
-      {/* Marca de leitura — fio dourado vertical à esquerda, apenas quando bookmarked. */}
+      {/* Marca de leitura — fio dourado vertical à esquerda. */}
       {bookmarked && (
         <span
           aria-hidden
           className="absolute -left-[6px] top-[10%] bottom-[10%] w-[2px] bg-secondary/80"
         />
       )}
-      {/* Base da estante */}
-      <div aria-hidden className="mx-2 h-[2px] bg-primary/15 shadow-[0_1px_0_hsl(var(--primary)/0.05)]" />
+      {/* Base da estante — mesa de leitura, não sombra de card. */}
+      <div aria-hidden className="mx-3 h-[1px] bg-primary/10 mt-[3px]" />
+      <div aria-hidden className="mx-4 h-[1px] bg-primary/5 mt-[1px]" />
     </Link>
   );
 };
@@ -470,7 +492,7 @@ const ContinueReadingHero: React.FC<{
   return (
     <section
       aria-label="Continuar lendo"
-      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[200px_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start border-y border-primary/10 py-spacing-3xl"
+      className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-spacing-2xl md:gap-spacing-4xl items-start pt-spacing-2xl"
     >
       <div className="mx-auto md:mx-0 relative">
         <BookCover
@@ -483,35 +505,47 @@ const ContinueReadingHero: React.FC<{
           bookmarked={!!last}
         />
       </div>
-      <div className="min-w-0 pt-spacing-sm">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium block mb-spacing-sm">
-          {last ? 'Continuar lendo' : 'Recomendado hoje'}
+      <div className="min-w-0 pt-spacing-md">
+        {/* Epígrafe editorial — a atmosfera antes da informação. */}
+        <p className="font-serif italic text-primary/45 text-sm md:text-base leading-snug mb-spacing-xl max-w-md">
+          {last
+            ? '“Você fechou o livro aqui. Ele ainda espera.”'
+            : '“Toda grande caminhada começa por uma única página.”'}
+        </p>
+
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium block mb-spacing-sm">
+          {last ? 'Continue sua caminhada' : 'Recomendado hoje'}
         </span>
-        <h2 className="font-serif italic text-[2rem] md:text-[2.75rem] text-primary leading-[1.05] mb-spacing-md">
+        <h2 className="font-serif italic text-[2.25rem] md:text-[3.25rem] text-primary leading-[1.02] mb-spacing-md tracking-tight">
           {title}
         </h2>
-        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-lg font-serif">
+        {last?.subtitle && (
+          <p className="font-serif italic text-primary/55 text-lg md:text-xl mb-spacing-lg">
+            {last.subtitle}
+          </p>
+        )}
+        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-xl font-serif">
           {description}
         </p>
-        <div className="flex flex-wrap items-baseline gap-spacing-lg mb-spacing-xl">
+        <div className="flex flex-wrap items-baseline gap-spacing-lg">
           <Link
             to={path}
-            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.28em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
           >
             {cta} →
           </Link>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-primary/40">
             {meta}
           </span>
         </div>
 
-        {/* Próximas leituras — evocação de lombadas ao lado, sem cards. */}
+        {/* Próximas leituras — evocação de lombadas, sem card. */}
         {suggestions.length > 0 && (
-          <div className="hidden md:block border-t border-primary/10 pt-spacing-lg">
-            <span className="text-[9px] uppercase tracking-[0.3em] text-primary/40 block mb-spacing-sm">
-              A seguir
+          <div className="hidden md:block mt-spacing-2xl">
+            <span className="text-[9px] uppercase tracking-[0.32em] text-primary/40 block mb-spacing-md">
+              A seguir na sua mesa
             </span>
-            <ul className="flex flex-col gap-spacing-xs">
+            <ul className="flex flex-col gap-spacing-sm">
               {suggestions.map((s) => (
                 <li key={s.id}>
                   <Link
@@ -569,7 +603,8 @@ const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
 }> = ({ escritos, onOpen }) => {
-  const [featured, ...rest] = descubra;
+  const [featured, secondaryA, secondaryB, ...tail] = descubra;
+  const smalls = tail.slice(0, 3);
   return (
   <div className="w-full">
     <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, reunida sob uma só luz.">
@@ -591,8 +626,6 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
-
     <Shelf label="Coleções curadas" hint="Séries editoriais para atravessar um tema em profundidade." dim>
       {colecoes.map((c) => (
         <BookCover
@@ -606,62 +639,77 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
-
-    {/* Descubra — layout assimétrico: 1 destaque editorial + secundários. */}
-    <section aria-label="Descubra por tema" className="mb-spacing-3xl pt-spacing-2xl">
-      <div className="mb-spacing-xl">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">Descubra</span>
-        <p className="font-serif italic text-primary/60 text-lg md:text-xl mt-spacing-xs">
+    {/* Descubra — ritmo curatorial 1 grande + 2 médios + 3 pequenos, propositalmente assimétrico. */}
+    <section aria-label="Descubra por tema" className="mb-spacing-4xl pt-spacing-3xl">
+      <div className="mb-spacing-2xl max-w-2xl">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">Descubra</span>
+        <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
           Por onde seu coração precisa começar hoje.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start">
-        {/* Destaque grande */}
+      {/* Linha 1 — destaque grande + 2 médios em coluna, respiração generosa. */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl items-start mb-spacing-3xl">
         <Link
           to={`${AppRoute.TEMAS}/${featured.slug}`}
-          className="group block border-l-2 border-secondary/30 pl-spacing-lg py-spacing-md hover:border-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+          className="md:col-span-7 group block border-l-[3px] border-secondary/40 pl-spacing-lg py-spacing-sm hover:border-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-secondary/80 block mb-spacing-sm">
+          <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 block mb-spacing-sm">
             Um caminho para começar
           </span>
-          <h3 className="font-serif italic text-[2.25rem] md:text-[3rem] text-primary leading-[1.05] mb-spacing-sm group-hover:text-secondary transition-colors">
+          <h3 className="font-serif italic text-[2.5rem] md:text-[3.75rem] text-primary leading-[1.02] mb-spacing-md group-hover:text-secondary transition-colors">
             {featured.name}
           </h3>
           <p className="font-serif italic text-primary/60 text-lg md:text-xl leading-snug max-w-md">
             {featured.hint}
           </p>
-          <span className="mt-spacing-md inline-block text-[10px] uppercase tracking-[0.25em] text-primary/50 group-hover:text-secondary border-b border-primary/20 group-hover:border-secondary pb-[2px] transition-colors">
+          <span className="mt-spacing-lg inline-block text-[10px] uppercase tracking-[0.28em] text-primary/50 group-hover:text-secondary border-b border-primary/20 group-hover:border-secondary pb-[2px] transition-colors">
             Entrar no tema →
           </span>
         </Link>
 
-        {/* Secundários — lista tipográfica com fio dourado no hover */}
-        <ul className="flex flex-col divide-y divide-primary/10">
-          {rest.map((t) => (
+        <div className="md:col-span-5 md:pt-spacing-3xl flex flex-col gap-spacing-2xl">
+          {[secondaryA, secondaryB].filter(Boolean).map((t) => (
+            <Link
+              key={t.slug}
+              to={`${AppRoute.TEMAS}/${t.slug}`}
+              className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <h4 className="font-serif italic text-[1.75rem] md:text-[2.25rem] text-primary/90 group-hover:text-secondary leading-[1.05] transition-colors">
+                {t.name}
+              </h4>
+              <p className="font-serif italic text-primary/55 text-base md:text-lg mt-spacing-xs leading-snug max-w-sm">
+                {t.hint}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Linha 2 — três notas curatoriais alinhadas à direita para quebrar a simetria. */}
+      {smalls.length > 0 && (
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-2xl mt-spacing-lg">
+          {smalls.map((t) => (
             <li key={t.slug}>
               <Link
                 to={`${AppRoute.TEMAS}/${t.slug}`}
-                className="group flex items-baseline gap-spacing-md py-spacing-md hover:pl-spacing-xs transition-[padding] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span
-                  className="w-[2px] h-[18px] bg-transparent group-hover:bg-secondary transition-colors flex-shrink-0"
+                  className="block w-[18px] h-[1px] bg-secondary/50 group-hover:bg-secondary group-hover:w-[36px] transition-all duration-500 mb-spacing-sm"
                   aria-hidden
                 />
-                <div className="min-w-0 flex-1">
-                  <span className="font-serif italic text-xl text-primary/85 group-hover:text-secondary transition-colors block leading-tight">
-                    {t.name}
-                  </span>
-                  <span className="text-[11px] text-primary/45 font-serif italic block mt-[2px] leading-snug">
-                    {t.hint}
-                  </span>
-                </div>
+                <span className="font-serif italic text-xl text-primary/85 group-hover:text-secondary transition-colors block leading-tight">
+                  {t.name}
+                </span>
+                <span className="text-[11px] text-primary/45 font-serif italic block mt-[2px] leading-snug">
+                  {t.hint}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
-      </div>
+      )}
     </section>
   </div>
   );
