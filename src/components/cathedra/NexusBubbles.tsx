@@ -30,11 +30,16 @@ import {
   restoredLiveMessage,
   closedLiveMessage,
   focusModeLiveMessage,
+  syncedSectionLiveMessage,
+  syncedFocusModeLiveMessage,
+  invalidDeepLinkLiveMessage,
+  validateDeepLinkKind,
   parseNexusHash,
   buildNexusHash,
   buildNexusShareUrl,
   type PersistedNexusState,
 } from '@/lib/nexusState';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 
 
 
@@ -92,11 +97,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [visitedKinds, setVisitedKinds] = useState<Set<string>>(new Set());
   const [liveMessage, setLiveMessage] = useState<string>('');
   const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   // Guard: evita reentrada infinita entre "aplicar estado externo" e "persistir".
   const applyingExternalRef = React.useRef(false);
   const shareCopiedRef = React.useRef<number | null>(null);
   const [copiedShare, setCopiedShare] = useState(false);
+
+  useFocusTrap(panelRef, open);
 
   const currentTag = navHistory[navHistory.length - 1];
 
@@ -300,10 +308,25 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   }, []);
 
   // Após o conteúdo carregar, se veio deep-link com kind, seleciona a seção.
+  // Se o kind for inválido, abre na seção padrão e anuncia via aria-live.
   useEffect(() => {
     if (!open || narrativeSections.length === 0) return;
     const deep = parseNexusHash(window.location.hash);
     if (!deep || deep.slug !== currentTag.slug || !deep.kind) return;
+    const available = narrativeSections.map(s => s.kind);
+    const { valid } = validateDeepLinkKind(deep.kind, available);
+    if (!valid) {
+      setActiveSectionIdx(0);
+      setLiveMessage(invalidDeepLinkLiveMessage(deep.kind));
+      // reescreve o hash para refletir a seção padrão
+      const fallbackKind = available[0];
+      if (fallbackKind) {
+        const url = window.location.pathname + window.location.search +
+          buildNexusHash(currentTag.slug, fallbackKind);
+        window.history.replaceState(null, '', url);
+      }
+      return;
+    }
     const idx = narrativeSections.findIndex(s => s.kind === deep.kind);
     if (idx >= 0 && idx !== activeSectionIdx) setActiveSectionIdx(idx);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -334,7 +357,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     }
   }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds, focusMode, narrativeSections]);
 
-  // Sincronização entre abas via evento `storage`.
+  // Sincronização entre abas via evento `storage` — com anúncios detalhados.
   useEffect(() => {
     if (!open) return;
     const onStorage = (e: StorageEvent) => {
@@ -343,12 +366,35 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         const remote = JSON.parse(e.newValue) as PersistedNexusState;
         if (remote.tagId !== currentTag.id) return;
         applyingExternalRef.current = true;
+
+        const remoteIdx = typeof remote.activeSectionIdx === 'number'
+          ? remote.activeSectionIdx
+          : activeSectionIdx;
+        const sectionChanged = remoteIdx !== activeSectionIdx;
+        const remoteFocus = !!remote.focusMode;
+        const focusChanged = remoteFocus !== focusMode;
+
         if (typeof remote.activeSectionIdx === 'number') {
           setActiveSectionIdx(remote.activeSectionIdx);
         }
         setVisitedKinds(new Set(remote.visitedKinds || []));
-        setFocusMode(!!remote.focusMode);
-        setLiveMessage('Painel sincronizado com outra aba.');
+        setFocusMode(remoteFocus);
+
+        // Prioriza anúncio da mudança mais significativa.
+        if (sectionChanged && narrativeSections[remoteIdx]) {
+          setLiveMessage(
+            syncedSectionLiveMessage(
+              remoteIdx,
+              narrativeSections.length,
+              narrativeSections[remoteIdx].preset.eyebrow,
+            ),
+          );
+        } else if (focusChanged) {
+          setLiveMessage(syncedFocusModeLiveMessage(remoteFocus));
+        } else {
+          setLiveMessage('Painel sincronizado com outra aba.');
+        }
+
         // libera guard no próximo tick para o efeito de persistência não reescrever
         setTimeout(() => { applyingExternalRef.current = false; }, 0);
       } catch {
@@ -357,7 +403,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     };
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
-  }, [open, currentTag.id]);
+  }, [open, currentTag.id, activeSectionIdx, focusMode, narrativeSections]);
 
   // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
   useEffect(() => {
@@ -448,6 +494,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       </SheetTrigger>
 
       <SheetContent
+        ref={panelRef}
         side={isMobile ? 'bottom' : 'right'}
         data-testid="nexus-popover"
         data-nexus-panel
@@ -495,7 +542,16 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <button
                     type="button"
                     onClick={handleShareDeepLink}
-                    aria-label={copiedShare ? 'Link copiado' : 'Copiar deep link do Nexus'}
+                    data-testid="nexus-share-deeplink"
+                    aria-label={
+                      copiedShare
+                        ? 'Link copiado'
+                        : `Compartilhar seção atual do Nexus${
+                            narrativeSections[activeSectionIdx]?.preset.eyebrow
+                              ? `: ${narrativeSections[activeSectionIdx].preset.eyebrow}`
+                              : ''
+                          }`
+                    }
                     className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
                   >
                     {copiedShare ? '✓' : '⧉'}

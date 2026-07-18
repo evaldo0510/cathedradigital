@@ -9,6 +9,10 @@ import {
   restoredLiveMessage,
   closedLiveMessage,
   focusModeLiveMessage,
+  syncedSectionLiveMessage,
+  syncedFocusModeLiveMessage,
+  invalidDeepLinkLiveMessage,
+  validateDeepLinkKind,
   parseNexusHash,
   buildNexusHash,
   buildNexusShareUrl,
@@ -211,5 +215,55 @@ describe('nexusState — sync entre abas via storage event', () => {
       newValue: JSON.stringify({ activeSectionIdx: 2, tagId: 't' }),
     });
     expect(applied).toHaveBeenCalledWith({ activeSectionIdx: 2, tagId: 't' });
+  });
+});
+
+describe('nexusState — aria-live de sincronização entre abas', () => {
+  it('anuncia mudança de seção vinda de outra aba', () => {
+    expect(syncedSectionLiveMessage(1, 3, 'Nasce da Escritura')).toBe(
+      'Atualizado por outra aba — agora na Seção 2 de 3: Nasce da Escritura',
+    );
+  });
+
+  it('anuncia modo foco ligado/desligado por outra aba', () => {
+    expect(syncedFocusModeLiveMessage(true)).toBe('Modo foco ativado em outra aba.');
+    expect(syncedFocusModeLiveMessage(false)).toBe('Modo foco desativado em outra aba.');
+  });
+});
+
+describe('nexusState — deep link inválido', () => {
+  it('aceita kind ausente como válido', () => {
+    expect(validateDeepLinkKind(undefined, ['bible', 'catechism']))
+      .toEqual({ valid: true });
+  });
+
+  it('valida kind presente na lista', () => {
+    expect(validateDeepLinkKind('bible', ['bible', 'catechism']))
+      .toEqual({ valid: true });
+  });
+
+  it('rejeita kind inexistente e sugere fallback', () => {
+    expect(validateDeepLinkKind('inexistente', ['bible', 'catechism']))
+      .toEqual({ valid: false, fallbackKind: 'bible' });
+  });
+
+  it('emite mensagem consistente para aria-live', () => {
+    expect(invalidDeepLinkLiveMessage('saint')).toBe(
+      'Seção "saint" não disponível. Abrindo seção padrão.',
+    );
+  });
+});
+
+describe('nexusState — share URL com seção ativa', () => {
+  it('gera URL contendo slug e kind da seção ativa', () => {
+    const url = buildNexusShareUrl(
+      'https://example.com/catechism?p=487',
+      'maria',
+      'bible',
+    );
+    expect(url).toBe('https://example.com/catechism?p=487#nexus=maria:bible');
+    // Roundtrip preserva ambos.
+    const parsed = parseNexusHash('#' + url.split('#')[1]);
+    expect(parsed).toEqual({ slug: 'maria', kind: 'bible' });
   });
 });
