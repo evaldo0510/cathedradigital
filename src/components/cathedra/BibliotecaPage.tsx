@@ -880,78 +880,130 @@ const EscritosView: React.FC<{
     <CollectionsEditorial series={seriesColecoes} />
 
 
-    {/* Descubra — ritmo curatorial 1 grande + 2 médios + 3 pequenos, propositalmente assimétrico. */}
-    <section aria-label="Descubra por tema" className="mb-spacing-4xl pt-spacing-3xl">
-      <div className="mb-spacing-2xl max-w-2xl">
-        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">Descubra</span>
-        <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
-          Por onde seu coração precisa começar hoje.
+    {/* R1.4 — Da mesa do bibliotecário: mesa de recomendações, não vitrine de cards. */}
+    <section aria-label="Da mesa do bibliotecário" className="mb-spacing-4xl pt-spacing-3xl relative">
+      {/* Textura de papel sutilíssima só nesta mesa. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={grainStyle('paper')}
+      />
+
+      {/* Cabeçalho editorial da seção. */}
+      <div className="mb-spacing-3xl max-w-2xl relative">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Da mesa do bibliotecário
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+          Uma leitura escolhida para este momento
+        </h2>
+        <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
+          Percursos preparados para aprofundar a fé, a reflexão e a oração.
         </p>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
       </div>
 
-      {/* Linha 1 — destaque grande + 2 médios em coluna, respiração generosa. */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl items-start mb-spacing-3xl">
-        <Link
-          to={`${AppRoute.TEMAS}/${featured.slug}`}
-          className="md:col-span-7 group block border-l-[3px] border-secondary/40 pl-spacing-lg py-spacing-sm hover:border-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-        >
-          <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 block mb-spacing-sm">
-            Um caminho para começar
-          </span>
-          <h3 className="font-serif italic text-[2.5rem] md:text-[3.75rem] text-primary leading-[1.02] mb-spacing-md group-hover:text-secondary transition-colors">
-            {featured.name}
-          </h3>
-          <p className="font-serif italic text-primary/60 text-lg md:text-xl leading-snug max-w-md">
-            {featured.hint}
-          </p>
-          <span className="mt-spacing-lg inline-block text-[10px] uppercase tracking-[0.28em] text-primary/50 group-hover:text-secondary border-b border-primary/20 group-hover:border-secondary pb-[2px] transition-colors">
-            Entrar no tema →
-          </span>
-        </Link>
+      {/* Recomendação principal — capa maior à esquerda, nota do bibliotecário à direita. */}
+      <div className="relative grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl items-start mb-spacing-4xl">
+        <div className="md:col-span-4 lg:col-span-3 flex md:justify-end">
+          <BookCover
+            kicker="Percurso Editorial"
+            title={featured.name}
+            spine="Nota do bibliotecário"
+            palette={{ bg: '#0E2748', fg: '#EAE3D2', accent: '#C9A24C', grain: 'ink' }}
+            to={`${AppRoute.TEMAS}/${featured.slug}`}
+            size="lg"
+            bookmarked
+          />
+        </div>
 
-        <div className="md:col-span-5 md:pt-spacing-3xl flex flex-col gap-spacing-2xl">
-          {[secondaryA, secondaryB].filter(Boolean).map((t) => (
-            <Link
-              key={t.slug}
-              to={`${AppRoute.TEMAS}/${t.slug}`}
-              className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        <div className="md:col-span-8 lg:col-span-8 lg:col-start-5 relative">
+          {/* Numeral romano marginal — como página de livro. */}
+          <span
+            className="absolute -left-spacing-lg md:-left-spacing-2xl top-0 font-serif italic text-secondary/60 text-2xl md:text-3xl leading-none select-none hidden md:block"
+            aria-hidden
+          >
+            I
+          </span>
+
+          <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 block mb-spacing-sm">
+            Recomendação de hoje
+          </span>
+          <h3 className="font-serif italic text-[2.25rem] md:text-[3rem] text-primary leading-[1.02] mb-spacing-lg">
+            A {featured.name} que permanece
+          </h3>
+
+          {/* Nota do bibliotecário — bloco com filete dourado à esquerda, tom manuscrito. */}
+          <blockquote className="border-l-[2px] border-secondary/40 pl-spacing-lg py-spacing-xs max-w-xl mb-spacing-lg">
+            <p className="font-serif italic text-primary/75 text-lg md:text-xl leading-relaxed">
+              Um caminho para atravessar tempos de espera descobrindo a promessa que sustenta a alma.
+            </p>
+            <footer className="mt-spacing-md text-[10px] uppercase tracking-[0.28em] text-primary/45">
+              Bibliotecário · {featured.hint.replace(/\.$/, '')}
+            </footer>
+          </blockquote>
+
+          <Link
+            to={`${AppRoute.TEMAS}/${featured.slug}`}
+            className="group inline-flex items-baseline gap-spacing-sm font-serif italic text-primary text-lg md:text-xl border-b border-primary/25 hover:border-secondary hover:text-secondary transition-colors pb-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+          >
+            Abrir este caminho
+            <span
+              aria-hidden
+              className="text-secondary transition-transform duration-500 group-hover:translate-x-[6px]"
             >
-              <h4 className="font-serif italic text-[1.75rem] md:text-[2.25rem] text-primary/90 group-hover:text-secondary leading-[1.05] transition-colors">
-                {t.name}
-              </h4>
-              <p className="font-serif italic text-primary/55 text-base md:text-lg mt-spacing-xs leading-snug max-w-sm">
-                {t.hint}
-              </p>
-            </Link>
-          ))}
+              →
+            </span>
+          </Link>
         </div>
       </div>
 
-      {/* Linha 2 — três notas curatoriais alinhadas à direita para quebrar a simetria. */}
-      {smalls.length > 0 && (
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-2xl mt-spacing-lg">
-          {smalls.map((t) => (
-            <li key={t.slug}>
+      {/* Três caminhos assimétricos — para estudar, contemplar, rezar. */}
+      <div className="relative">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 block mb-spacing-lg">
+          Também sobre a mesa
+        </span>
+
+        <ul className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-3xl">
+          {[
+            { numeral: 'II', kicker: 'Para estudar',    title: 'Bíblia + Catecismo', note: 'Ler a Escritura à luz da doutrina que a Igreja recebeu.',       to: AppRoute.CATECHISM, span: 'md:col-span-5' },
+            { numeral: 'III',kicker: 'Para contemplar', title: 'Santos + Padres',    note: 'Escutar quem já atravessou o caminho antes de nós.',             to: AppRoute.SAINTS,    span: 'md:col-span-4' },
+            { numeral: 'IV', kicker: 'Para rezar',      title: 'Lectio + Evangelho', note: 'Fazer da Palavra oração — do texto ao coração, do coração à vida.', to: AppRoute.LECTIO_DIVINA, span: 'md:col-span-3' },
+          ].map((c) => (
+            <li key={c.title} className={cn(c.span, 'group/rec')}>
               <Link
-                to={`${AppRoute.TEMAS}/${t.slug}`}
-                className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                to={c.to}
+                className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
               >
-                <span
-                  className="block w-[18px] h-[1px] bg-secondary/50 group-hover:bg-secondary group-hover:w-[36px] transition-all duration-500 mb-spacing-sm"
-                  aria-hidden
-                />
-                <span className="font-serif italic text-xl text-primary/85 group-hover:text-secondary transition-colors block leading-tight">
-                  {t.name}
-                </span>
-                <span className="text-[11px] text-primary/45 font-serif italic block mt-[2px] leading-snug">
-                  {t.hint}
-                </span>
+                {/* Marca de página — pequeno numeral romano dourado + fio curto. */}
+                <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
+                  <span
+                    className="font-serif italic text-secondary/70 text-xl leading-none"
+                    aria-hidden
+                  >
+                    {c.numeral}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="h-px flex-1 bg-secondary/25 group-hover/rec:bg-secondary/60 transition-colors"
+                  />
+                  <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                    {c.kicker}
+                  </span>
+                </div>
+                <h4 className="font-serif italic text-primary text-[1.75rem] md:text-[2.15rem] leading-[1.05] mb-spacing-sm group-hover/rec:text-secondary transition-colors">
+                  {c.title}
+                </h4>
+                <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
+                  {c.note}
+                </p>
               </Link>
             </li>
           ))}
         </ul>
-      )}
+      </div>
     </section>
+
   </div>
   );
 };
