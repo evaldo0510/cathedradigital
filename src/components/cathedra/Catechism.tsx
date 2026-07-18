@@ -48,6 +48,7 @@ import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
@@ -244,6 +245,13 @@ const CatechismContent: React.FC<{
             reference={`CIC §${paragraph}`}
             title={`Cathedra — CIC §${paragraph}`}
             passage={{ kind: 'catechism', paragraph }}
+          />
+          <ReaderContinuation
+            context={{
+              kind: 'catechism',
+              id: String(paragraph),
+              meta: { paragraph, nextParagraph: paragraph + 1 },
+            }}
           />
         </div>
       )}
