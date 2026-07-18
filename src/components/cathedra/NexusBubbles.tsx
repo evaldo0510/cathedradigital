@@ -69,39 +69,10 @@ interface TagBubbleProps {
 }
 
 
-const NEXUS_STATE_KEY = 'nexus:state:v1';
+// Estado persistido, atalhos, deep-link e mensagens aria-live vivem em @/lib/nexusState
+// (isolados para permitir testes unitários determinísticos).
 
-type PersistedNexusState = {
-  tagId: string;
-  tagSlug?: string;
-  path: string;
-  historyIds: string[];
-  activeSectionIdx: number;
-  visitedKinds: string[];
-  ts: number;
-};
 
-const readPersistedState = (): PersistedNexusState | null => {
-  try {
-    const raw = localStorage.getItem(NEXUS_STATE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as PersistedNexusState;
-    // expira em 24h
-    if (Date.now() - (parsed.ts || 0) > 1000 * 60 * 60 * 24) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-};
-
-const writePersistedState = (s: PersistedNexusState | null) => {
-  try {
-    if (s === null) localStorage.removeItem(NEXUS_STATE_KEY);
-    else localStorage.setItem(NEXUS_STATE_KEY, JSON.stringify(s));
-  } catch {
-    /* ignore */
-  }
-};
 
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
 
