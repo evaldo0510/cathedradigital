@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import ContemplativeLayout from './ContemplativeLayout';
+import { EditorialHero } from '@/components/editorial';
 import { cn } from '@/lib/utils';
 import {
   useBibliotecaState,
@@ -164,14 +165,18 @@ const BibliotecaPage: React.FC = () => {
     <ContemplativeLayout>
       <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme}>
 
-        {/* Marca d'água mínima — só uma linha de identidade, sem barra de dashboard. */}
-        <div className="mb-spacing-2xl flex items-baseline gap-spacing-sm opacity-70">
-          <Icons.Compass className="w-3 h-3 text-primary/30" strokeWidth={1.4} aria-hidden="true" />
-          <span className="text-[10px] uppercase tracking-[0.32em] text-primary/45">Sacrum Archivum · Biblioteca</span>
-        </div>
+        {/* Hero editorial — abertura contemplativa (Sprint R1). */}
+        <EditorialHero
+          parchment
+          kicker="Acervo Católico"
+          title="Biblioteca"
+          subtitle="A Tradição da Igreja reunida para conduzir cada leitura a um caminho de estudo, oração e transformação."
+          className="mb-spacing-2xl"
+        />
 
         {/* ABERTURA — Continuar lendo é a página aberta do livro. */}
         <ContinueReadingHero recents={recents} />
+
 
         {/* Busca — respiração generosa depois da abertura, sem cara de topo de app. */}
         <form
