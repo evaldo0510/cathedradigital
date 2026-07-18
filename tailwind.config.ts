@@ -158,6 +158,10 @@ export default {
         serif: ['Playfair Display', 'serif'],
         reader: ['Merriweather', 'serif'],
         ui: ['Inter', 'sans-serif'],
+        /* Stitch (R0) */
+        'stitch-display': ['EB Garamond', 'Cormorant Garamond', 'ui-serif', 'Georgia', 'serif'],
+        'stitch-body': ['EB Garamond', 'ui-serif', 'Georgia', 'serif'],
+        'stitch-label': ['Karla', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontWeight: {
         'light': 'var(--font-weight-light)',
