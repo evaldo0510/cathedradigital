@@ -286,7 +286,7 @@ const BibliotecaPage: React.FC = () => {
             className="mt-spacing-lg"
           >
             {tab === 'escritos' && (
-              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} recents={recents} />
+              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} />
             )}
             {tab === 'pesquisar' && (
               <PesquisarView
