@@ -19,6 +19,7 @@ import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { useIsMobile } from '@/hooks/use-mobile';
 import BibleVersePopover from './BibleVersePopover';
 import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
+import NexusInlinePreview from './nexus/NexusInlinePreview';
 import { NEXUS_KIND_PRESETS, NEXUS_HEADER, NEXUS_EMPTY, NEXUS_ERROR, type NexusKind } from './nexus/nexusPresets';
 import {
   NEXUS_STATE_KEY,
