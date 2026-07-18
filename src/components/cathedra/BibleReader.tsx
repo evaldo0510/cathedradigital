@@ -241,6 +241,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
       {/* Bloco de continuidade — fim do capítulo */}
       <div className="px-spacing-lg pb-spacing-2xl">
+        <div className="mb-spacing-lg">
+          <NexusBubbles />
+        </div>
         <ReaderContinuation
           context={{
             kind: 'bible',
