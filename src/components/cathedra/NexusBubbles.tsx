@@ -821,6 +821,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   transition={{ duration: 0.4, delay: sIdx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   aria-label={section.preset.eyebrow}
                   aria-current={sIdx === activeSectionIdx ? 'true' : undefined}
+                  data-section-kind={section.kind}
+                  data-testid={sIdx === activeSectionIdx ? 'nexus-active-section' : undefined}
                 >
                   <header className="mb-spacing-md">
                     <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
