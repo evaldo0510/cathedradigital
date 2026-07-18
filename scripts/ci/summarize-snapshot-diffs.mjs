@@ -74,42 +74,44 @@ for (const diff of diffs) {
 }
 
 // ---------- 1. SNAPSHOT-DIFFS.md (imagens embutidas) ----------
-const lines = [];
-lines.push('# Snapshot diffs · resumo visual');
-lines.push('');
-lines.push(`Total de snapshots com diferença: **${diffs.length}** em **${groups.size}** teste(s).`);
-lines.push('');
-lines.push('> Para cada snapshot: **Esperado** (baseline) · **Atual** (nova execução) · **Diff** (regiões alteradas em vermelho).');
-lines.push('');
-
-for (const [dir, items] of groups) {
-  lines.push(`## ${relative(root, dir) || dir}`);
+if (mode === 'md' || mode === 'both') {
+  const lines = [];
+  lines.push('# Snapshot diffs · resumo visual');
   lines.push('');
-  for (const it of items) {
-    lines.push(`### ${it.name}`);
-    lines.push('');
-    lines.push('| Esperado | Atual | Diff |');
-    lines.push('| :--: | :--: | :--: |');
-    const row = [it.expected, it.actual, it.diff]
-      .map((p) => (existsSync(p) ? `![](${relative(root, p)})` : '_(ausente)_'))
-      .join(' | ');
-    lines.push(`| ${row} |`);
-    if (it.trace) {
-      lines.push('');
-      lines.push(`Trace: [\`${relative(root, it.trace)}\`](${relative(root, it.trace)})`);
-    }
-    lines.push('');
-  }
-}
+  lines.push(`Total de snapshots com diferença: **${diffs.length}** em **${groups.size}** teste(s).`);
+  lines.push('');
+  lines.push('> Para cada snapshot: **Esperado** (baseline) · **Atual** (nova execução) · **Diff** (regiões alteradas em vermelho).');
+  lines.push('');
 
-const outPath = join(root, 'SNAPSHOT-DIFFS.md');
-mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, lines.join('\n'), 'utf8');
-console.log(`[snapshot-diffs] escrito ${outPath} (${diffs.length} diffs)`);
+  for (const [dir, items] of groups) {
+    lines.push(`## ${relative(root, dir) || dir}`);
+    lines.push('');
+    for (const it of items) {
+      lines.push(`### ${it.name}`);
+      lines.push('');
+      lines.push('| Esperado | Atual | Diff |');
+      lines.push('| :--: | :--: | :--: |');
+      const row = [it.expected, it.actual, it.diff]
+        .map((p) => (existsSync(p) ? `![](${relative(root, p)})` : '_(ausente)_'))
+        .join(' | ');
+      lines.push(`| ${row} |`);
+      if (it.trace) {
+        lines.push('');
+        lines.push(`Trace: [\`${relative(root, it.trace)}\`](${relative(root, it.trace)})`);
+      }
+      lines.push('');
+    }
+  }
+
+  const outPath = join(root, 'SNAPSHOT-DIFFS.md');
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, lines.join('\n'), 'utf8');
+  console.log(`[snapshot-diffs] escrito ${outPath} (${diffs.length} diffs)`);
+}
 
 // ---------- 2. $GITHUB_STEP_SUMMARY (links diretos) ----------
 const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-if (summaryPath) {
+if ((mode === 'summary' || mode === 'both') && summaryPath) {
   const short = [];
   short.push('## Snapshot diffs · links diretos');
   short.push('');
