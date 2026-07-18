@@ -222,6 +222,36 @@ export default function IntegrationsStatus() {
     [],
   );
 
+  const filteredHistory = useMemo(() => {
+    const fromTs = dateFrom ? new Date(dateFrom + "T00:00:00").getTime() : null;
+    const toTs = dateTo ? new Date(dateTo + "T23:59:59.999").getTime() : null;
+    return history.filter((row) => {
+      if (filterIntegration !== "all" && row.integration_id !== filterIntegration) return false;
+      if (filterStatus === "ok" && !row.ok) return false;
+      if (filterStatus === "fail" && row.ok) return false;
+      const ts = new Date(row.created_at).getTime();
+      if (fromTs !== null && ts < fromTs) return false;
+      if (toTs !== null && ts > toTs) return false;
+      return true;
+    });
+  }, [history, filterIntegration, filterStatus, dateFrom, dateTo]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredHistory.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const pagedHistory = filteredHistory.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterIntegration, filterStatus, dateFrom, dateTo]);
+
+  const hasFilters = filterIntegration !== "all" || filterStatus !== "all" || dateFrom !== "" || dateTo !== "";
+  const clearFilters = () => {
+    setFilterIntegration("all");
+    setFilterStatus("all");
+    setDateFrom("");
+    setDateTo("");
+  };
+
   const total = integrations.length;
   const connected = integrations.filter((i) => i.status === "connected").length;
   const disconnected = integrations.filter((i) => i.status === "disconnected").length;
