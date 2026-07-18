@@ -1,80 +1,95 @@
-# Integração do design Stitch ao Cathedra — plano de reskin
+# Sprint R1 — Biblioteca (padrão visual do Cathedra)
 
-## Princípio único
+Objetivo: transformar `/biblioteca` no **padrão de linguagem editorial** que R2..R7 herdarão, sem tocar arquitetura. Reskin puro sobre `src/components/cathedra/BibliotecaPage.tsx` (859 linhas), preservando `useBibliotecaState`, `useBibliotecaRecents`, `useFavorites` e a tela de eixos "O que você procura?".
 
-Os 12 HTMLs do Google Stitch são **referência visual apenas**. Nada de domínio, rota, hook, adapter, edge function, Supabase, Knowledge Engine, Nexus, Reader, Continuation, RouteRegistry ou schema é tocado. O que muda é a camada de apresentação (tokens CSS, tipografia, layout, composição, espaçamento, motion).
+## 5 regras absolutas (do usuário)
 
-## Mapa Stitch → Cathedra
+1. HTML Stitch é referência de experiência, não código-fonte.
+2. Sem componentes paralelos — nada de `BibliotecaPageV2`. Edita o arquivo existente.
+3. Todo componente novo é reutilizável (prefixo `Editorial*`, em `src/components/editorial/`).
+4. Biblioteca é o padrão — nada específico da Biblioteca vira componente.
+5. PR entrega diff antes/depois + o que ficou igual + o que é reutilizável.
 
-| # | HTML Stitch | Alvo Cathedra (rota / componente) |
-|---|---|---|
-| 1 | Saints & Spiritual Friendships | Módulo Santos (dentro de Biblioteca) |
-| 2 | Catechism | `/catechism` — CatechismReader |
-| 3 | Magisterium | `/magisterio` — MagisteriumReader |
-| 4 | Padres da Igreja | Padres (dentro de Biblioteca) |
-| 5 | Nexus | `NexusInlinePreview` + painel lateral (Sheet) |
-| 6 | Bíblia Sagrada | `/bible` — Bible/BibleReader |
-| 7 | Oração & Lectio Divina | `/rezar` — módulo Rezar |
-| 8 | Pesquisa Universal | `/buscar` — SearchPage |
-| 9 | Formação | `/formar-se` — JornadasPage |
-| 10 | Biblioteca | `/biblioteca` — BibliotecaPage |
-| 11 | Átrio | `/` — AtriumPage (não muda composition.ts, só a apresentação dos blocos) |
-| 12 | Leitor Universal | Shell de Reader compartilhado (PA-2) |
+## Fundação — primitivos `Editorial*`
 
-## Camada de design (fonte da verdade única)
+Criados uma única vez em `src/components/editorial/`, consumidos por R1 e reutilizados em R2..R7. Cada um é um **wrapper visual** — sem estado de domínio, sem fetch, sem regra de negócio. Só recebe children/props de apresentação e aplica tokens `stitch-*`.
 
-Extrair do HTML 1 (já inspecionado) e aplicar em `src/index.css` + `tailwind.config.ts` como tokens semânticos HSL:
+- **EditorialShell** — canvas full-bleed com container `max-w-[--stitch-container-max]`, padding responsivo (`--stitch-margin-mobile` → `--stitch-margin-edge`), fundo `bg-stitch-background`, textura sutil opcional.
+- **EditorialHero** — hero de abertura: kicker (`font-stitch-label` uppercase), título display (`font-stitch-display` + `text-stitch-display-lg`), subtítulo, filete dourado (`bg-stitch-secondary`), slot para ação. Grande, respiração, imagem/textura opcional via prop.
+- **EditorialSection** — bloco tipográfico: `<section>` com kicker + título `stitch-headline-md` + regra dourada fina + slot. Espaçamento vertical `var(--stitch-editorial-stack)`.
+- **EditorialHeader** — cabeçalho de seção compacto (só kicker + título + "ver todos") para grids/listas dentro de uma tela.
+- **EditorialDivider** — filete horizontal (variantes: `hair`, `gold`, `gold-fade`), usa `--rule-gold` já existente. Substitui `<hr>` cru.
+- **EditorialSurface** — cartão base editorial: `bg-stitch-surface-container-low`, borda `border-stitch-outline-variant/40`, raio `--stitch-radius-xl`, hover suave. Base para EditorialCard.
+- **EditorialCard** — cartão de conteúdo (capa + kicker + título + metadado). Aceita variantes `book` (proporção 2:3 estante), `wide` (2 colunas), `plain`.
+- **EditorialGrid** — grid responsivo (`gap` = `--stitch-gutter`; colunas via prop `cols`). Não sabe o que contém.
+- **EditorialShelf** — carrossel horizontal snap-scroll para "coleções em estante" (movimento 3). Reutilizável para "Continue lendo" e "Descobertas".
+- **EditorialFooter** — rodapé minimalista: uma linha, kicker, muito espaço.
 
-- **Paleta Stitch (M3)**: `primary #00113a`, `secondary #735c00`, `background #fbf9f8`, `surface-container #eae8e7`, `on-surface #1b1c1c`, `outline #757682`, containers e inverses correspondentes. Dark mode com os pares equivalentes já presentes nos HTMLs.
-- **Tipografia**: manter Cormorant/EB Garamond como display serif (Logos 2030 continua) e Karla como sans (o Stitch já usa EB Garamond + Karla — alinhado à memória do projeto).
-- **Iconografia**: manter Lucide sólido do Cathedra (memória inegociável). NÃO importar Material Symbols do Stitch — traduzir cada símbolo Stitch para o Lucide equivalente.
-- **Motion, raio, sombra, densidade**: derivar dos HTMLs e expor como tokens (`--radius`, `--shadow-*`, `--motion-*`).
+Nenhum destes pode importar hook de domínio, service ou registry. Zero lógica de conteúdo.
 
-Nenhum componente pode usar cor hardcoded (`text-white`, `bg-[#...]`). Tudo via token semântico — pré-requisito para não quebrar dark mode nem o design-system audit já no CI.
+## Movimentos da Biblioteca
 
-## Ordem de migração (respeita a pedida)
+### Movimento 1 — Hero editorial
 
-Cada etapa segue o mesmo ritual: ler HTML → produzir diff visual (antes×depois) → reskin apenas de layout/CSS → rodar E2E existente da rota → publicar.
+Substitui o cabeçalho atual pelo `EditorialHero` com kicker "Biblioteca Viva", título display "A tradição em suas mãos" (copy exata a confirmar com você), subtítulo espiritual curto, filete dourado, textura de pergaminho muito discreta (`opacity 0.06`, herda do padrão já existente `parchment-overlay`). Sem CTA duro — o Hero é atmosfera, não ação.
 
-1. **Biblioteca** (HTML 10) — hero, capas 3D, grid assimétrico já iniciados na Sprint 3.1; alinhar ao Stitch.
-2. **Leitor Universal** (HTML 12) — Shell compartilhado; consumido por Bíblia, Catecismo, Magistério, Padres, Santos. Reskin do chrome, não do `ReaderService`.
-3. **Pesquisa Universal** (HTML 8) — `/buscar`.
-4. **Formação** (HTML 9) — `/formar-se` (Timeline vertical Logos 2030 permanece).
-5. **Átrio** (HTML 11) — apresentação dos blocos P0–P6; `composition.ts` intacto.
-6. **Nexus** (HTML 5) — visual do `NexusInlinePreview` e do painel lateral; lógica de resolveLink/telemetria intacta.
-7. **Módulos de conteúdo** (HTMLs 2, 3, 4, 6, 7, 1) — cada Reader/lista recebe reskin usando o Shell da etapa 2.
+### Movimento 2 — Continue lendo (peça-mestre)
 
-## Contrato por tela (formato entregue no PR de cada etapa)
+Maior elemento da tela abaixo do Hero. Usa `EditorialSurface` grande em split-screen: à esquerda, capa da obra em estilo "livro aberto" (proporção 2:3, spine dourado, textura sutil — reaproveita `CoverPalette` já existente em `BibliotecaPage.tsx`); à direita, kicker "Você parou em", título da obra, referência/percentual de progresso, botão primário "Continuar". Fonte dos dados: `useBibliotecaRecents()` (já existe). Se lista vazia, esconde o bloco.
 
-Para cada HTML, o PR de reskin inclui um bloco `docs/reskin/<slug>.md` com:
+### Movimento 3 — Coleções (estante)
 
-- **Estado atual** — screenshot da rota hoje.
-- **Estado proposto** — screenshot do HTML Stitch.
-- **Componentes reutilizados** — lista dos componentes existentes que permanecem (nome + caminho).
-- **Componentes só redesenhados** — só CSS/layout muda.
-- **Componentes proibidos de alterar** — Knowledge Engine, RouteRegistry, Continuation Engine, Nexus resolver, Supabase, ReaderService, ContentAdapters, EnvironmentRegistry, JourneyService.
-- **Diff de tokens** — tokens novos/ajustados usados.
-- **Checklist de regressão** — rotas, hooks, contratos, telemetria, testes E2E da área.
+Substitui o grid atual da aba "Coleções" por `EditorialShelf` horizontal com snap. Cada item é `EditorialCard variant="book"` com spine visível, título gravado, autor em `stitch-label-sm`. Sensação de estante física, não de dashboard. Aba "Coleções" existente permanece; muda só a apresentação.
 
-## Critérios de aceite (aplicados a cada etapa e ao fim)
+### Movimento 4 — Descobertas (curadoria)
 
-- Zero mudança em: rotas, hooks, adapters, services, edge functions, schema, RLS.
-- Zero cor hardcoded nova; design-system audit verde.
-- Suítes E2E da rota afetada continuam verdes sem alteração de seletor semântico.
-- Snapshots visuais atualizados apenas nas rotas migradas.
-- Lighthouse/perf-pr-guard sem regressão.
-- Acessibilidade: contraste AA, foco visível, ARIA preservados; axe verde.
-- Dark mode revisado em cada tela migrada.
+Nova seção editorial abaixo das coleções, alimentada pela mesma fonte já usada em "Temas"/"Escritos" (sem novo hook). Layout assimétrico: 1 destaque grande (`EditorialCard variant="wide"`) + 3 secundários em `EditorialGrid cols={3}`. Copy curatorial curta em vez de listagem. Sem paginação — é curadoria, não catálogo.
 
-## Fora de escopo (explícito)
+### Movimento 5 — Rodapé
 
-- Não migrar `prototype-2.0/*` (sandbox, será descomissionado à parte).
-- Não introduzir Material Symbols, Tailwind CDN nem qualquer runtime do Stitch.
-- Não criar novas páginas nem novas rotas.
-- Não alterar copy espiritual sem pedido específico.
+`EditorialFooter` substitui o rodapé pesado atual da página. Uma linha: kicker "Cathedra · Biblioteca Viva", data litúrgica se disponível via hook existente, link discreto para "Sobre a Biblioteca". Muito espaço em branco. Sem múltiplas colunas.
 
-## Entregável imediato após aprovação
+## Preservado integralmente
 
-Sprint R0 (fundação, ~1 iteração): tokens Stitch aplicados em `index.css`/`tailwind.config.ts` + `docs/reskin/README.md` com o mapa acima e o template do contrato por tela. Nenhuma rota migrada ainda — só a base para as sprints R1..R7 rodarem sem retrabalho de token.
+- `useBibliotecaState`, `useBibliotecaRecents`, `useFavorites` — hooks intactos.
+- Sistema de abas (`tabs`) e eixos (`axes`) — permanece; muda só o visual dos chips/tabs (`bg-stitch-secondary-container` no ativo, `text-stitch-on-surface-variant` no inativo, `border-stitch-outline-variant`).
+- `ContemplativeLayout` — permanece como layout base.
+- `CoverPalette` e sistema de capas — permanece; ganha apenas variante `variant="book"` no `EditorialCard`.
+- Todas as rotas, links, deep-links e telemetria.
 
-Confirma esse plano para eu abrir a Sprint R0?
+## Proibido tocar
+
+Knowledge Engine, RouteRegistry, Continuation Engine, Nexus resolver, Supabase, ReaderService, ContentAdapters, EnvironmentRegistry, JourneyService, qualquer hook de domínio.
+
+## Ícones
+
+Manter Lucide (`Icons` de `@/constants`). Nenhum Material Symbols. Nenhum ícone novo em R1.
+
+## Entregáveis do PR
+
+1. `src/components/editorial/` com os 9 primitivos + `index.ts` + `README.md` curto documentando cada um.
+2. `src/components/cathedra/BibliotecaPage.tsx` reescrito só na camada de apresentação (mesmo arquivo, mesmos imports de hook).
+3. `docs/reskin/biblioteca.md` no formato do template R0: antes, depois, componentes reutilizados, componentes só redesenhados, componentes proibidos, diff de tokens, checklist de regressão.
+4. Screenshots antes/depois (light + dark, desktop + mobile 375px) em `/tmp/reskin/biblioteca-*.png`, referenciados no doc.
+
+## Critério de aceite (do usuário)
+
+Abrir `/biblioteca` por 3 segundos deve transmitir "estou entrando em uma biblioteca de estudo da Igreja", não "estou entrando em um dashboard". Validação: comparar screenshots antes/depois lado a lado no PR e você aprovar.
+
+## Checklist técnico (bloqueia merge)
+
+- [ ] Zero cor hardcoded nova (só `stitch-*` e tokens semânticos existentes).
+- [ ] E2E de `/biblioteca` verde sem alterar seletores.
+- [ ] axe (contraste AA) verde em light e dark.
+- [ ] Design-system audit verde.
+- [ ] Lighthouse/perf-pr-guard sem regressão (Hero não carrega imagem pesada nova).
+- [ ] Snapshot visual atualizado só da rota `/biblioteca`.
+- [ ] Mobile 375px: Hero legível, Continue-lendo empilha, Estante rola horizontal sem overflow do body.
+- [ ] Zero import de hook/service dentro de `src/components/editorial/`.
+
+## Pergunta antes de começar
+
+1. Copy do Hero: "A tradição em suas mãos" é chute meu — você tem uma linha oficial? (posso seguir com essa se preferir).
+2. Textura de pergaminho no Hero: manter (herança Logos 2030) ou remover para ficar mais próximo do Stitch original?
+
+Se responder as duas, abro R1 direto. Se não, uso os defaults e você ajusta no PR.
