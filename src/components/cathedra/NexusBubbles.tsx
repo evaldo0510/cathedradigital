@@ -305,10 +305,25 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   }, []);
 
   // Após o conteúdo carregar, se veio deep-link com kind, seleciona a seção.
+  // Se o kind for inválido, abre na seção padrão e anuncia via aria-live.
   useEffect(() => {
     if (!open || narrativeSections.length === 0) return;
     const deep = parseNexusHash(window.location.hash);
     if (!deep || deep.slug !== currentTag.slug || !deep.kind) return;
+    const available = narrativeSections.map(s => s.kind);
+    const { valid } = validateDeepLinkKind(deep.kind, available);
+    if (!valid) {
+      setActiveSectionIdx(0);
+      setLiveMessage(invalidDeepLinkLiveMessage(deep.kind));
+      // reescreve o hash para refletir a seção padrão
+      const fallbackKind = available[0];
+      if (fallbackKind) {
+        const url = window.location.pathname + window.location.search +
+          buildNexusHash(currentTag.slug, fallbackKind);
+        window.history.replaceState(null, '', url);
+      }
+      return;
+    }
     const idx = narrativeSections.findIndex(s => s.kind === deep.kind);
     if (idx >= 0 && idx !== activeSectionIdx) setActiveSectionIdx(idx);
     // eslint-disable-next-line react-hooks/exhaustive-deps
