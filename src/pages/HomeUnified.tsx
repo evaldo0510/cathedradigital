@@ -31,7 +31,7 @@ import {
   ArrowRight,
   ArrowUpRight,
 } from 'lucide-react';
-import { EnvironmentRegistry } from '@/core/navigation';
+import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
 import {
   useResume,
   useLiturgyToday,
