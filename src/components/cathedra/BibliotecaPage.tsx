@@ -517,7 +517,7 @@ const EscritosView: React.FC<{
           kicker={c.kicker}
           title={c.title}
           spine={c.subtitle}
-          tone={c.tone}
+          palette={c.palette}
           to={c.to}
         />
       ))}
