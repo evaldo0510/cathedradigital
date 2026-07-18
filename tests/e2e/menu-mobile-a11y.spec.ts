@@ -106,18 +106,36 @@ test.describe('Menu mobile · acessibilidade', () => {
   });
 });
 
-test.describe('Menu mobile · acessibilidade · iPhone SE (320x568)', () => {
-  test.use({ ...devices['iPhone SE'], viewport: { width: 320, height: 568 } });
+/**
+ * Contrato de restauração de foco após ESC, parametrizado por viewport mobile.
+ * Adicione novas larguras aqui — o mesmo teste roda em todas.
+ */
+const MOBILE_VIEWPORTS = [
+  { label: 'iPhone SE', device: devices['iPhone SE'], width: 320, height: 568 },
+  { label: 'iPhone 13', device: devices['iPhone 13'], width: 390, height: 844 },
+] as const;
 
-  test('foco retorna ao menu-trigger após fechar via ESC (iPhone SE)', async ({ page }) => {
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    const { trigger, dialog } = await openSidebar(page);
+for (const vp of MOBILE_VIEWPORTS) {
+  test.describe(`Menu mobile · acessibilidade · ${vp.label} (${vp.width}x${vp.height})`, () => {
+    test.use({ ...vp.device, viewport: { width: vp.width, height: vp.height } });
 
-    await page.keyboard.press('Escape');
-    await expect(dialog).toBeHidden({ timeout: 5000 });
+    test(`foco retorna exatamente ao menu-trigger após ESC (${vp.label})`, async ({ page }) => {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      const { trigger, dialog } = await openSidebar(page);
 
-    const triggerHandle = await trigger.elementHandle();
-    const isFocused = await page.evaluate((el) => el === document.activeElement, triggerHandle);
-    expect(isFocused, 'menu-trigger deve receber foco após ESC no iPhone SE').toBe(true);
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeHidden({ timeout: 5000 });
+
+      // 1) Identidade do nó: activeElement === trigger.
+      const triggerHandle = await trigger.elementHandle();
+      const isSameNode = await page.evaluate((el) => el === document.activeElement, triggerHandle);
+      expect(isSameNode, `activeElement deve ser o próprio menu-trigger em ${vp.label}`).toBe(true);
+
+      // 2) Verificação semântica: data-testid do elemento focado.
+      const focusedTestId = await page.evaluate(
+        () => (document.activeElement as HTMLElement | null)?.getAttribute('data-testid') ?? null,
+      );
+      expect(focusedTestId, `data-testid do elemento focado em ${vp.label}`).toBe('menu-trigger');
+    });
   });
-});
+}
