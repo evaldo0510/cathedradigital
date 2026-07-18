@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
@@ -184,18 +184,55 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     return null;
   };
 
+  // Snapshot da posição de leitura no momento em que o painel abre.
+  // Ao fechar, restauramos o scroll — o leitor volta ao trecho exato.
+  const savedScrollRef = React.useRef<number | null>(null);
+
+  const persistReturn = useCallback(() => {
+    try {
+      sessionStorage.setItem(
+        'nexus:return',
+        JSON.stringify({
+          path: window.location.pathname + window.location.search,
+          scrollY: savedScrollRef.current ?? window.scrollY,
+          tagId: currentTag.id,
+          ts: Date.now(),
+        }),
+      );
+    } catch {
+      /* sessionStorage indisponível — ignoramos silenciosamente */
+    }
+  }, [currentTag.id]);
+
+  const handleOpenChange = useCallback((val: boolean) => {
+    if (navigateOnClick && val) {
+      navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+      return;
+    }
+    if (val) {
+      savedScrollRef.current = window.scrollY;
+      persistReturn();
+      fetchContentForTag(tag);
+    } else if (savedScrollRef.current !== null) {
+      const y = savedScrollRef.current;
+      // Radix libera o body-scroll-lock após o próximo frame; agendamos depois.
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    }
+    setOpen(val);
+  }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
+
+  const navigateInternal = useCallback((path: string) => {
+    persistReturn();
+    setOpen(false);
+    // pequena espera para o Sheet iniciar o close antes de trocar de rota
+    requestAnimationFrame(() => navigate(path));
+  }, [persistReturn, navigate]);
+
   return (
-    <Sheet
-      open={navigateOnClick ? false : open}
-      onOpenChange={(val) => {
-        if (navigateOnClick && val) {
-          navigate(`${AppRoute.TEMAS}/${tag.slug}`);
-          return;
-        }
-        setOpen(val);
-        if (val) fetchContentForTag(tag);
-      }}
-    >
+    <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
+
       <SheetTrigger asChild>
         <BubbleTag
           label={tag.label}
@@ -224,9 +261,18 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         side={isMobile ? 'bottom' : 'right'}
         data-testid="nexus-popover"
         data-nexus-panel
+        aria-labelledby={`nexus-title-${currentTag.id}`}
+        aria-describedby={`nexus-desc-${currentTag.id}`}
+        onEscapeKeyDown={() => handleOpenChange(false)}
         className={cn(
           'p-0 border-l border-primary/10 bg-background overflow-hidden',
           'flex flex-col',
+          // Animação editorial — curva easing suave, tempos alongados.
+          'transition-none',
+          'data-[state=open]:duration-700 data-[state=closed]:duration-500',
+          'data-[state=open]:ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'data-[state=closed]:ease-[cubic-bezier(0.4,0,0.2,1)]',
+          'motion-reduce:transition-none motion-reduce:animate-none',
           isMobile
             ? 'h-[90vh] max-h-[90vh] rounded-t-[24px] border-t border-l-0'
             : 'w-full sm:max-w-[460px] md:max-w-[38vw]',
@@ -240,14 +286,24 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {NEXUS_HEADER.eyebrow}
             </span>
           </div>
-          <h2 className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight">
-            {NEXUS_HEADER.subtitle}
-          </h2>
-          <p className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50">
+          <SheetTitle asChild>
+            <h2
+              id={`nexus-title-${currentTag.id}`}
+              className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
+            >
+              {NEXUS_HEADER.subtitle}
+            </h2>
+          </SheetTitle>
+          <SheetDescription
+            id={`nexus-desc-${currentTag.id}`}
+            className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
+          >
+            <span className="sr-only">Conexões teológicas para </span>
             {contextPath}
-          </p>
+          </SheetDescription>
           <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
         </header>
+
 
         {/* Corpo — sequência editorial */}
         <div className="flex-1 overflow-y-auto px-spacing-xl pb-spacing-2xl scrollbar-none">
@@ -313,7 +369,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                       {section.preset.eyebrow}
                     </span>
+                    {section.preset.whisper && (
+                      <span className="mt-spacing-xs block font-serif italic text-primary/50 text-sm leading-snug">
+                        {section.preset.whisper}
+                      </span>
+                    )}
                   </header>
+
 
                   <ul className="space-y-spacing-lg">
                     {section.items.map((c, i) => {
@@ -351,7 +413,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                             ) : link ? (
                               <button
                                 type="button"
-                                onClick={() => { navigate(link); setOpen(false); }}
+                                onClick={() => navigateInternal(link)}
                                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
                               >
                                 {section.preset.cta} →
@@ -401,7 +463,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               </p>
               <button
                 type="button"
-                onClick={() => { navigate(`${AppRoute.TEMAS}/${currentTag.slug}`); setOpen(false); }}
+                onClick={() => navigateInternal(`${AppRoute.TEMAS}/${currentTag.slug}`)}
                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
               >
                 {NEXUS_KIND_PRESETS.theme.cta} →
