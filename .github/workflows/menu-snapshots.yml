@@ -58,6 +58,11 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
           CI: 'true'
+          # Limiares configuráveis de cobertura de máscaras (0..1).
+          # Definir > 0 faz o teste falhar quando a cobertura cair abaixo.
+          MASK_COVERAGE_MIN_TESTID_RATIO: ${{ vars.MASK_COVERAGE_MIN_TESTID_RATIO || '0' }}
+          MASK_COVERAGE_MIN_STRUCTURAL_RATIO: ${{ vars.MASK_COVERAGE_MIN_STRUCTURAL_RATIO || '0.5' }}
+          MASK_COVERAGE_MIN_TOTAL_RATIO: ${{ vars.MASK_COVERAGE_MIN_TOTAL_RATIO || '0' }}
         run: |
           bunx playwright test \
             tests/e2e/menu-visual-regression.spec.ts \
