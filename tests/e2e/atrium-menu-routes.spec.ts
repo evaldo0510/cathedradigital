@@ -56,4 +56,28 @@ test.describe('Átrio · itens do menu apontam para rotas canônicas', () => {
       await expect(page.locator('text=/página não encontrada|not\\s*found/i')).toHaveCount(0);
     });
   }
+  }
+
+  test('rota /diario abre sem erros (Diário Espiritual)', async ({ page }) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') consoleErrors.push(msg.text());
+    });
+
+    const response = await page.goto('/diario', { waitUntil: 'domcontentloaded' });
+    expect(response, 'resposta HTTP de /diario').toBeTruthy();
+    expect(response!.status(), 'status HTTP de /diario').toBeLessThan(400);
+
+    // A rota é protegida por AuthGuard: aceita render do diário ou redirecionamento para auth.
+    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    const path = new URL(page.url()).pathname;
+    expect(path, `pathname final ao abrir /diario (foi: ${path})`).toMatch(/^\/(diario|auth|login)/);
+
+    // Não pode cair na NotFound
+    await expect(page.locator('text=/página não encontrada|not\\s*found/i')).toHaveCount(0);
+
+    // Nenhum 404 de rota inexistente no console
+    const has404 = consoleErrors.some((t) => /404:\s*rota inexistente/.test(t));
+    expect(has404, `console errors: ${consoleErrors.join(' | ')}`).toBe(false);
+  });
 });
