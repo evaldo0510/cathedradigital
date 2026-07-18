@@ -686,12 +686,7 @@ const EscritosView: React.FC<{
         </div>
       </div>
 
-      {/* Linha 2 — três pequenos alinhados como notas curatoriais. */}
-      {smalls.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-2xl md:pl-[calc(60%_-_2rem)] md:-mt-spacing-lg">
-          {/* Deslocamento à direita cria a assimetria — não é grade neutra. */}
-        </div>
-      )}
+      {/* Linha 2 — três notas curatoriais alinhadas à direita para quebrar a simetria. */}
       {smalls.length > 0 && (
         <ul className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-2xl mt-spacing-lg">
           {smalls.map((t) => (
