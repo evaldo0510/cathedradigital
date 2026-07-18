@@ -11,7 +11,6 @@ const routeImports: Record<string, () => Promise<any>> = {
   '/bible': () => import('@/components/cathedra/Bible'),
   '/catechism': () => import('@/components/cathedra/Catechism'),
   '/santos': () => import('@/components/cathedra/Saints'),
-  '/saints': () => import('@/components/cathedra/Saints'),
   '/liturgia': () => import('@/components/cathedra/LiturgiaPage'),
   '/study': () => import('@/components/cathedra/StudyMode'),
   '/rosary': () => import('@/components/cathedra/Rosary'),
