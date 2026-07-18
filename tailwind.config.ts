@@ -131,6 +131,15 @@ export default {
         'premium-7xl': '4.5rem',
         'premium-8xl': '6rem',
         'premium-9xl': '8rem',
+        /* Stitch M3 scale (R0) */
+        'stitch-label-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.08em', fontWeight: '700' }],
+        'stitch-label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' }],
+        'stitch-body-md': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+        'stitch-body-lg': ['20px', { lineHeight: '32px', fontWeight: '400' }],
+        'stitch-headline-sm': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+        'stitch-headline-md': ['32px', { lineHeight: '40px', fontWeight: '400' }],
+        'stitch-display-lg-mobile': ['32px', { lineHeight: '40px', fontWeight: '500' }],
+        'stitch-display-lg': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '500' }],
       },
       borderRadius: {
         lg: "var(--radius)",
