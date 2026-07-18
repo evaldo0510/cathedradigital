@@ -501,13 +501,13 @@ const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
   recents: ReturnType<typeof useBibliotecaRecents>['recents'];
-}> = ({ escritos, onOpen, recents }) => (
+}> = ({ escritos, onOpen }) => (
   <div className="w-full">
-    <ContinueReadingHero recents={recents} />
-
     <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
       {escritos.length === 0 && (
         <div className="py-spacing-2xl text-primary/40 italic font-serif">
+          Nada corresponde à sua busca.
+        </div>
           Nada corresponde à sua busca.
         </div>
       )}
