@@ -1117,25 +1117,42 @@ const RecentesView: React.FC<{
   if (items.length === 0) {
     return (
       <div className="max-w-xl">
-        <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Recentes</h2>
-        <p className="text-primary/55 text-sm leading-relaxed">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Trilha recente
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+          Recentes
+        </h2>
+        <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
           Suas últimas leituras aparecerão aqui — com retorno direto ao parágrafo ou seção correta.
         </p>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
       </div>
     );
   }
   return (
     <div className="max-w-3xl">
-      <div className="flex items-baseline justify-between mb-spacing-lg">
-        <h2 className="font-serif text-primary/90 text-2xl italic">Recentes</h2>
-        <button
-          type="button"
-          onClick={onClear}
-          className="text-[10px] uppercase tracking-[0.25em] text-primary/40 hover:text-secondary"
-        >
-          Limpar histórico
-        </button>
+      <div className="mb-spacing-lg">
+        <div className="flex items-baseline justify-between">
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+              Trilha recente
+            </span>
+            <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md">
+              Recentes
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClear}
+            className="text-[10px] uppercase tracking-[0.28em] text-primary/45 hover:text-secondary transition-colors"
+          >
+            Limpar histórico
+          </button>
+        </div>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
       </div>
+
       <ul className="divide-y divide-primary/10 border-y border-primary/10">
         {items.map((r, i) => (
           <li key={r.id} className="flex items-center gap-spacing-sm py-spacing-lg">
