@@ -413,7 +413,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                             ) : link ? (
                               <button
                                 type="button"
-                                onClick={() => { navigate(link); setOpen(false); }}
+                                onClick={() => navigateInternal(link)}
                                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
                               >
                                 {section.preset.cta} →
