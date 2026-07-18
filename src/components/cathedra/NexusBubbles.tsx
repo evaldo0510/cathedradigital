@@ -664,8 +664,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {status !== 'loading' && narrativeSections.length > 0 && (
-            <div className="space-y-spacing-2xl">
-              {narrativeSections.map((section, sIdx) => (
+            <div className="space-y-spacing-2xl" data-testid="nexus-sections">
+              {(focusMode
+                ? narrativeSections.filter((_, i) => i === activeSectionIdx)
+                : narrativeSections
+              ).map((section, sIdx, arr) => (
                 <motion.section
                   key={section.kind}
                   ref={(el) => { sectionRefs.current[section.kind] = el as unknown as HTMLElement | null; }}
