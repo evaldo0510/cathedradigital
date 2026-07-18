@@ -1,139 +1,83 @@
-# Sprint 2 (Revisada) — Continuation Engine
 
-Aprovadas as duas mudanças estratégicas. Reorganizo a Sprint 2 em torno de um **Continuation Engine** próprio, em pipeline, separado do Knowledge Engine.
+# Sprint 3.1 — Biblioteca Viva
 
----
-
-## Princípios arquiteturais
-
-1. **Knowledge Engine** = fonte da verdade sobre relações. Devolve apenas `ResolvedNode[]`. Não conhece UX, não conhece CTA, não conhece intent.
-2. **Continuation Engine** = decide o próximo passo e como apresentá-lo. Transforma nós em `ContinuationSuggestion[]`.
-3. **ReaderContinuation** = componente puramente visual. Recebe sugestões prontas e renderiza.
+**Duração estimada:** 1 sprint focada, entrega única.
+**Escopo:** apenas `/biblioteca` e componentes visuais associados.
+**Ousadia:** 3/5 — refinar com força a linguagem Logos 2030 já existente, sem reescrever componentes do zero nem trocar bibliotecas.
 
 ---
 
-## Fase 0 — Continuation Engine (novo módulo)
+## Regras da sprint (invioláveis)
 
-Criar `src/core/continuation/` isolado do Knowledge Engine:
-
-```text
-src/core/continuation/
-  types.ts               → ContinuationContext, ContinuationCandidate, ContinuationSuggestion, Intent
-  ContinuationEngine.ts  → orquestra o pipeline
-  resolveContext.ts      → normaliza entrada do Reader (kind, ids, temas, litúrgico, usuário)
-  findCandidates.ts      → chama KnowledgeGraph e devolve ResolvedNode[]
-  scoreCandidates.ts     → aplica pesos e devolve { score, confidence, reasons[] }
-  chooseSuggestions.ts   → diversifica por intent, aplica presets, limita N
-  presets.ts             → ícones, títulos, copy editorial por kind + intent
-  fallback.ts            → sugestões estáticas da Sprint 1 (segurança)
-  telemetry.ts           → shown / clicked / dismissed
-  index.ts               → barrel export
-```
-
-Pipeline:
-
-```text
-Reader
-  ↓
-ContinuationEngine.run(context)
-  ↓
-resolveContext()      → ContinuationContext normalizado
-  ↓
-findCandidates()      → ResolvedNode[]  (via KnowledgeGraph)
-  ↓
-scoreCandidates()     → ScoredCandidate[] { score, confidence, reasons[] }
-  ↓
-chooseSuggestions()   → ContinuationSuggestion[] (diversificado por intent)
-  ↓
-ReaderContinuation    (render puro)
-```
-
-Cada etapa é uma função pura, pequena e testável isoladamente.
+1. Zero mudanças em services, rotas, tabelas, adapters ou lógica de dados.
+2. Zero novas dependências.
+3. Só edito arquivos de apresentação (`BibliotecaPage.tsx`, `BookCover.tsx`, `ContinueReadingHero.tsx`, tokens em `index.css`).
+4. Nenhuma alteração fora de `/biblioteca` — se algo puxar mudança em outra tela, vira débito.
+5. Entrega inclui prova visual em 3 viewports (375 / 768 / 1440).
 
 ---
 
-## Ajustes ao contrato
+## O que muda (5 movimentos)
 
-### Substituir `weight` por objeto explicativo
+### 1. Primeira dobra: mesa de novidades, não catálogo
+- Remover qualquer resquício de "grid uniforme" acima da dobra.
+- `ContinueReadingHero` ganha peso de página aberta: tipografia maior, respiro lateral, indicação sutil de progresso como marca de leitura (fio dourado vertical à esquerda), não barra.
+- Ao lado (desktop) ou abaixo (mobile), 2–3 "obras em destaque" com tratamento tipográfico distinto — não card, mas evocação de lombada.
 
-```ts
-type ScoredCandidate = {
-  node: ResolvedNode;
-  score: number;              // 0–100
-  confidence: 'low' | 'medium' | 'high';
-  reasons: string[];          // ex: ["mesmo tema", "mesma passagem", "mesma jornada"]
-};
-```
+### 2. Capas com peso editorial real
+- `BookCover` recebe variações por obra (Bíblia, Catecismo, Magistério, Santos, Padres) usando paletas identitárias já definidas.
+- Textura de papel sutil (já existe token) aplicada com mais presença.
+- Tipografia da capa: Cormorant em versaletes, número/sigla em destaque, autor/tradição em Karla pequena.
+- Sombra editorial (não drop-shadow SaaS): sombra lateral direita simulando profundidade de livro em pé.
 
-Habilita debug, tooltips futuros ("por que esta sugestão?") e auditoria de qualidade.
+### 3. Ritmo da página: seções como capítulos
+- Substituir divisores atuais por `editorial-rule` curto (160px, já existe) + eyebrow tipográfico em versaletes ("Continuar", "Descubra", "Coleções").
+- Espaçamento vertical entre seções aumenta (respiração de livro), não diminui.
+- Remover qualquer título de seção genérico ("Livros", "Categorias") — trocar por copy curatorial ("O que você procura hoje?", "Leituras para este tempo").
 
-### Intents (adicionar `celebrate`)
+### 4. Seção "Descubra" como curadoria humana
+- Layout assimétrico: 1 destaque grande + 2 secundários, não grid 3x3.
+- Cada item traz uma linha curatorial curta ("Um caminho para começar pela Misericórdia") em vez de descrição técnica.
+- Hover/tap: leve deslocamento vertical + fio dourado aparecendo à esquerda. Sem escala, sem sombra colorida.
 
-```text
-study → deepen → meet → pray → apply → celebrate
-```
-
-`celebrate` cobre Natal, Páscoa, Pentecostes, Corpus Christi, santos do dia, festas litúrgicas. Ativado quando `resolveContext` detectar tempo/festa litúrgica relevante.
-
-### Telemetria (adicionar `dismissed`)
-
-Eventos:
-
-- `continuation_shown`   → source (graph/fallback), intents, position, count
-- `continuation_click`   → intent, node id, score, confidence, position
-- `continuation_dismissed` → sinaliza rejeição implícita (scroll além, next passagem sem clicar)
-
-Permite responder: "o usuário ignorou todas as sugestões?" — insumo para evolução do scorer.
+### 5. Microinterações contemplativas
+- Transições de entrada: fade + translate-y de 8px, duração 400ms, easing suave (já disponível via framer-motion existente).
+- Sem parallax, sem scroll-jacking, sem reveals dramáticos. O objetivo é serenidade, não espetáculo.
+- Focus states: fio dourado 2px, sem outline azul do navegador.
 
 ---
 
-## Ordem de execução
+## O que NÃO muda nesta sprint
 
-```text
-0  — Continuation Engine (esqueleto + types + fallback plugado)
-1  — resolveContext (kind, ids, temas, litúrgico, usuário)
-2  — findCandidates + scoreCandidates + chooseSuggestions
-3  — Presets editoriais (ícones, títulos, copy por kind × intent)
-4  — Integração no Catecismo
-5  — Integração na Bíblia
-6  — Integração no Magistério
-7  — Integração em Santos
-8  — Integração na Jornada
-9  — Telemetria (shown / click / dismissed)
-10 — Testes unitários (pipeline puro) + E2E (fluxos-chave)
-```
-
-Zero regressão em cada etapa: fallback da Sprint 1 permanece ativo até o pipeline devolver ≥1 sugestão com `confidence ≥ medium`.
+- Estrutura de dados de obras, coleções, progresso.
+- Rotas, navegação, deep links.
+- Reader, Pesquisa, Formação, Nexus, Footer.
+- Header/identidade global (já foi tratada em CAT-032R).
+- Qualquer coisa em `/admin`.
 
 ---
 
-## O que muda vs. plano anterior
+## Detalhes técnicos
 
-| Antes | Agora |
-|---|---|
-| `resolveContinuation()` monolítica em `src/core/knowledge/continuation/` | Pipeline em `src/core/continuation/` (módulo próprio) |
-| Knowledge Engine devolvia `ContinuationSuggestion` | Devolve apenas `ResolvedNode[]` |
-| Campo `weight: number` | `{ score, confidence, reasons[] }` |
-| 5 intents | 6 intents (+ `celebrate`) |
-| Telemetria: shown, click | + `dismissed` |
+**Arquivos previstos para edição:**
+- `src/pages/BibliotecaPage.tsx` — reorganização de seções, copy curatorial, layout assimétrico da "Descubra".
+- `src/components/biblioteca/BookCover.tsx` — variações tipográficas por obra, sombra lateral, textura.
+- `src/components/biblioteca/ContinueReadingHero.tsx` — tratamento de página aberta, marca de leitura vertical.
+- `src/index.css` — apenas se faltar algum token (sombra lateral editorial, fio dourado de foco). Sem novos tokens de cor.
 
----
-
-## O que **não** muda
-
-- `ReaderContinuation.tsx` continua puramente visual (já está assim desde a Sprint 1).
-- Fallback estático da Sprint 1 permanece como rede de segurança.
-- Presets editoriais (ícones, títulos) continuam centralizados.
-- Pontos de integração são os mesmos 5 leitores.
+**Validação:**
+- Playwright: 3 screenshots (375/768/1440) antes e depois, salvos em `/tmp/browser/sprint-3-1/`.
+- Checklist acessibilidade: contraste, tap targets 44px, navegação por teclado, focus visível.
+- Sem regressão em `/biblioteca` — links, filtros e navegação continuam funcionais.
 
 ---
 
-## Critérios de aceite
+## Entrega
 
-- `src/core/knowledge/` não importa nada de `src/core/continuation/` (dependência unidirecional).
-- `ReaderContinuation` não importa nada de `src/core/knowledge/` (fala só com Continuation Engine).
-- Cada etapa do pipeline tem teste unitário isolado.
-- Telemetria emite os 3 eventos com payload completo.
-- Fallback ativa quando o grafo devolve 0 candidatos ou todos com `confidence = low`.
+Relatório antes×depois com:
+- 6 screenshots (3 viewports × antes/depois).
+- Diff de arquivos tocados (esperado: 3–4 arquivos, ~200–350 linhas).
+- Checklist de regras da sprint cumpridas.
+- Nota perceptiva estimada por superfície.
 
-Confirma para eu iniciar pela Fase 0?
+Se aprovar este plano, começo pela captura do estado atual da `/biblioteca` nos 3 viewports antes de tocar em qualquer arquivo.

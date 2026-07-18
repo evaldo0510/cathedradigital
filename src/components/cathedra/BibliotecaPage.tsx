@@ -84,16 +84,16 @@ const colecoes: Colecao[] = [
   { title: 'Doutrina Social',   kicker: 'Percurso',   subtitle: 'De Rerum Novarum a Fratelli Tutti',          to: AppRoute.MAGISTERIUM,            palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink'   } },
 ];
 
-/** Chips “Descubra” — 8 temas curados que existem em `themes` (slugs reais). */
-const descubra: { name: string; slug: string }[] = [
-  { name: 'Esperança',    slug: 'esperanca'    },
-  { name: 'Família',      slug: 'familia'      },
-  { name: 'Maria',        slug: 'maria'        },
-  { name: 'Perdão',       slug: 'perdao'       },
-  { name: 'Caridade',     slug: 'caridade'     },
-  { name: 'Sacramentos',  slug: 'sacramentos'  },
-  { name: 'Oração',       slug: 'oracao'       },
-  { name: 'Misericórdia', slug: 'misericordia' },
+/** "Descubra" — temas curados com linha curatorial editorial. */
+const descubra: { name: string; slug: string; hint: string }[] = [
+  { name: 'Esperança',    slug: 'esperanca',    hint: 'Ancorar-se em Cristo quando o presente pesa.' },
+  { name: 'Misericórdia', slug: 'misericordia', hint: 'Rosto do Pai que vai ao encontro do filho.' },
+  { name: 'Maria',        slug: 'maria',        hint: 'A Mãe segundo os Padres e Doutores.' },
+  { name: 'Perdão',       slug: 'perdao',       hint: 'Setenta vezes sete, sem medida.' },
+  { name: 'Caridade',     slug: 'caridade',     hint: 'A mais excelente das virtudes.' },
+  { name: 'Sacramentos',  slug: 'sacramentos',  hint: 'Sinais visíveis da graça invisível.' },
+  { name: 'Oração',       slug: 'oracao',       hint: 'A respiração da alma cristã.' },
+  { name: 'Família',      slug: 'familia',      hint: 'Igreja doméstica, escola de virtudes.' },
 ];
 
 
@@ -282,7 +282,7 @@ const BibliotecaPage: React.FC = () => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="mt-spacing-lg"
           >
             {tab === 'escritos' && (
@@ -359,8 +359,10 @@ const BookCover: React.FC<{
   to: string;
   onOpen?: () => void;
   size?: 'md' | 'lg';
-}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md' }) => {
-  const dims = size === 'lg' ? 'w-[168px] md:w-[192px]' : 'w-[144px] md:w-[160px]';
+  /** Marca de leitura discreta à esquerda (fio dourado vertical). */
+  bookmarked?: boolean;
+}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md', bookmarked = false }) => {
+  const dims = size === 'lg' ? 'w-[168px] md:w-[200px]' : 'w-[144px] md:w-[160px]';
   return (
     <Link
       to={to}
@@ -371,16 +373,29 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 — cor da obra aplicada via style; tokens do design system ficam intocados. */}
+      {/* Capa 2:3 — sombra editorial lateral (livro em pé), não SaaS drop-shadow. */}
       <div
         className={cn(
-          'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500',
-          'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
-          'group-hover:-translate-y-[3px] group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.08),0_18px_32px_-14px_rgba(0,0,0,0.45)]',
+          'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500 ease-out',
+          // sombra editorial: leve à esquerda (lombada), profunda à direita e abaixo
+          'shadow-[-1px_0_0_rgba(0,0,0,0.08),1px_2px_3px_rgba(0,0,0,0.08),8px_18px_28px_-18px_rgba(0,0,0,0.45)]',
+          'group-hover:-translate-y-[4px]',
+          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.10),2px_4px_6px_rgba(0,0,0,0.10),12px_26px_36px_-16px_rgba(0,0,0,0.55)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
         )}
         style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
+        {/* Lombada visual — faixa interna à esquerda, mais escura, simulando dobra. */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-0 w-[6px] pointer-events-none"
+          style={{
+            background:
+              palette.grain === 'ink'
+                ? 'linear-gradient(to right, rgba(0,0,0,0.30), rgba(0,0,0,0) 100%)'
+                : 'linear-gradient(to right, rgba(0,0,0,0.10), rgba(0,0,0,0) 100%)',
+          }}
+        />
         {/* Grão de papel — sutil, apenas quebra a chapadão. */}
         <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
         {/* Moldura interna fina, na cor de acento. */}
@@ -390,7 +405,7 @@ const BookCover: React.FC<{
           style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
         />
         {/* Conteúdo tipográfico */}
-        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md">
+        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+4px)]">
           <span
             className="text-[9px] uppercase tracking-[0.28em] font-medium"
             style={{ color: palette.accent }}
@@ -401,7 +416,7 @@ const BookCover: React.FC<{
             <h3
               className={cn(
                 'font-serif italic leading-[1.05] text-center',
-                size === 'lg' ? 'text-2xl md:text-[26px]' : 'text-xl md:text-[22px]',
+                size === 'lg' ? 'text-2xl md:text-[28px]' : 'text-xl md:text-[22px]',
               )}
             >
               {title}
@@ -415,6 +430,13 @@ const BookCover: React.FC<{
           </span>
         </div>
       </div>
+      {/* Marca de leitura — fio dourado vertical à esquerda, apenas quando bookmarked. */}
+      {bookmarked && (
+        <span
+          aria-hidden
+          className="absolute -left-[6px] top-[10%] bottom-[10%] w-[2px] bg-secondary/80"
+        />
+      )}
       {/* Base da estante */}
       <div aria-hidden className="mx-2 h-[2px] bg-primary/15 shadow-[0_1px_0_hsl(var(--primary)/0.05)]" />
     </Link>
@@ -433,13 +455,24 @@ const ContinueReadingHero: React.FC<{
     ? 'Retome exatamente de onde parou. Sua última leitura permanece aberta.'
     : 'Uma das obras mais profundas da literatura universal — comentada, com introdução histórica e Nexus.';
   const cta = last ? 'Continuar leitura' : 'Iniciar leitura';
+  const meta = last
+    ? `Leitura em curso · ${new Date(last.visitedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}`
+    : 'Curadoria editorial · Cathedra';
+
+  // Próximas sugestões — 2 itens seguintes do histórico ou fallback curado.
+  const nextUp = recents.slice(1, 3);
+  const fallbackNext = [
+    { id: 'f1', title: 'Suma Teológica', subtitle: 'Tomás de Aquino', path: AppRoute.CATECHISM },
+    { id: 'f2', title: 'Imitação de Cristo', subtitle: 'Kempis', path: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Imitação de Cristo')}` },
+  ];
+  const suggestions = nextUp.length > 0 ? nextUp : fallbackNext;
 
   return (
     <section
       aria-label="Continuar lendo"
-      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[192px_1fr] gap-spacing-2xl items-center border-y border-primary/10 py-spacing-2xl"
+      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[200px_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start border-y border-primary/10 py-spacing-3xl"
     >
-      <div className="mx-auto md:mx-0">
+      <div className="mx-auto md:mx-0 relative">
         <BookCover
           kicker={kicker}
           title={title}
@@ -447,24 +480,59 @@ const ContinueReadingHero: React.FC<{
           palette={DEFAULT_PALETTE}
           to={path}
           size="lg"
+          bookmarked={!!last}
         />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 pt-spacing-sm">
         <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium block mb-spacing-sm">
           {last ? 'Continuar lendo' : 'Recomendado hoje'}
         </span>
-        <h2 className="font-serif italic text-3xl md:text-4xl text-primary leading-tight mb-spacing-md">
+        <h2 className="font-serif italic text-[2rem] md:text-[2.75rem] text-primary leading-[1.05] mb-spacing-md">
           {title}
         </h2>
-        <p className="text-primary/60 text-sm md:text-base leading-relaxed max-w-lg mb-spacing-lg">
+        <p className="text-primary/60 text-base md:text-lg leading-relaxed max-w-xl mb-spacing-lg font-serif">
           {description}
         </p>
-        <Link
-          to={path}
-          className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
-        >
-          {cta} →
-        </Link>
+        <div className="flex flex-wrap items-baseline gap-spacing-lg mb-spacing-xl">
+          <Link
+            to={path}
+            className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+          >
+            {cta} →
+          </Link>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
+            {meta}
+          </span>
+        </div>
+
+        {/* Próximas leituras — evocação de lombadas ao lado, sem cards. */}
+        {suggestions.length > 0 && (
+          <div className="hidden md:block border-t border-primary/10 pt-spacing-lg">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-primary/40 block mb-spacing-sm">
+              A seguir
+            </span>
+            <ul className="flex flex-col gap-spacing-xs">
+              {suggestions.map((s) => (
+                <li key={s.id}>
+                  <Link
+                    to={s.path}
+                    className="group inline-flex items-baseline gap-spacing-sm hover:text-secondary transition-colors"
+                  >
+                    <span className="w-[2px] h-[14px] bg-secondary/40 group-hover:bg-secondary transition-colors" aria-hidden />
+                    <span className="font-serif italic text-lg text-primary/85 group-hover:text-secondary">
+                      {s.title}
+                    </span>
+                    {s.subtitle && (
+                      <span className="text-[10px] uppercase tracking-[0.22em] text-primary/40">
+                        · {s.subtitle}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -500,9 +568,11 @@ const Shelf: React.FC<{
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
-}> = ({ escritos, onOpen }) => (
+}> = ({ escritos, onOpen }) => {
+  const [featured, ...rest] = descubra;
+  return (
   <div className="w-full">
-    <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
+    <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, reunida sob uma só luz.">
       {escritos.length === 0 && (
         <div className="py-spacing-2xl text-primary/40 italic font-serif">
           Nada corresponde à sua busca.
@@ -521,7 +591,9 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <Shelf label="Coleções curadas" hint="Séries editoriais para leitura em profundidade." dim>
+    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
+
+    <Shelf label="Coleções curadas" hint="Séries editoriais para atravessar um tema em profundidade." dim>
       {colecoes.map((c) => (
         <BookCover
           key={c.title}
@@ -534,29 +606,66 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    {/* Descubra — chips ligados a temas reais (tabela `themes`). */}
-    <section aria-label="Descubra por tema" className="mb-spacing-3xl border-t border-primary/10 pt-spacing-2xl">
-      <div className="mb-spacing-lg">
+    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
+
+    {/* Descubra — layout assimétrico: 1 destaque editorial + secundários. */}
+    <section aria-label="Descubra por tema" className="mb-spacing-3xl pt-spacing-2xl">
+      <div className="mb-spacing-xl">
         <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">Descubra</span>
-        <p className="font-serif italic text-primary/60 text-base mt-[2px]">
+        <p className="font-serif italic text-primary/60 text-lg md:text-xl mt-spacing-xs">
           Por onde seu coração precisa começar hoje.
         </p>
       </div>
-      <ul className="flex flex-wrap gap-spacing-sm">
-        {descubra.map((t) => (
-          <li key={t.slug}>
-            <Link
-              to={`${AppRoute.TEMAS}/${t.slug}`}
-              className="inline-block font-serif italic text-primary/85 text-lg border-b border-primary/20 pb-[2px] hover:text-secondary hover:border-secondary transition-colors"
-            >
-              {t.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start">
+        {/* Destaque grande */}
+        <Link
+          to={`${AppRoute.TEMAS}/${featured.slug}`}
+          className="group block border-l-2 border-secondary/30 pl-spacing-lg py-spacing-md hover:border-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em] text-secondary/80 block mb-spacing-sm">
+            Um caminho para começar
+          </span>
+          <h3 className="font-serif italic text-[2.25rem] md:text-[3rem] text-primary leading-[1.05] mb-spacing-sm group-hover:text-secondary transition-colors">
+            {featured.name}
+          </h3>
+          <p className="font-serif italic text-primary/60 text-lg md:text-xl leading-snug max-w-md">
+            {featured.hint}
+          </p>
+          <span className="mt-spacing-md inline-block text-[10px] uppercase tracking-[0.25em] text-primary/50 group-hover:text-secondary border-b border-primary/20 group-hover:border-secondary pb-[2px] transition-colors">
+            Entrar no tema →
+          </span>
+        </Link>
+
+        {/* Secundários — lista tipográfica com fio dourado no hover */}
+        <ul className="flex flex-col divide-y divide-primary/10">
+          {rest.map((t) => (
+            <li key={t.slug}>
+              <Link
+                to={`${AppRoute.TEMAS}/${t.slug}`}
+                className="group flex items-baseline gap-spacing-md py-spacing-md hover:pl-spacing-xs transition-[padding] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span
+                  className="w-[2px] h-[18px] bg-transparent group-hover:bg-secondary transition-colors flex-shrink-0"
+                  aria-hidden
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="font-serif italic text-xl text-primary/85 group-hover:text-secondary transition-colors block leading-tight">
+                    {t.name}
+                  </span>
+                  <span className="text-[11px] text-primary/45 font-serif italic block mt-[2px] leading-snug">
+                    {t.hint}
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   </div>
-);
+  );
+};
 
 
 
