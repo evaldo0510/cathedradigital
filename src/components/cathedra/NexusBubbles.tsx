@@ -339,7 +339,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     }
   }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds, focusMode, narrativeSections]);
 
-  // Sincronização entre abas via evento `storage`.
+  // Sincronização entre abas via evento `storage` — com anúncios detalhados.
   useEffect(() => {
     if (!open) return;
     const onStorage = (e: StorageEvent) => {
@@ -348,12 +348,35 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         const remote = JSON.parse(e.newValue) as PersistedNexusState;
         if (remote.tagId !== currentTag.id) return;
         applyingExternalRef.current = true;
+
+        const remoteIdx = typeof remote.activeSectionIdx === 'number'
+          ? remote.activeSectionIdx
+          : activeSectionIdx;
+        const sectionChanged = remoteIdx !== activeSectionIdx;
+        const remoteFocus = !!remote.focusMode;
+        const focusChanged = remoteFocus !== focusMode;
+
         if (typeof remote.activeSectionIdx === 'number') {
           setActiveSectionIdx(remote.activeSectionIdx);
         }
         setVisitedKinds(new Set(remote.visitedKinds || []));
-        setFocusMode(!!remote.focusMode);
-        setLiveMessage('Painel sincronizado com outra aba.');
+        setFocusMode(remoteFocus);
+
+        // Prioriza anúncio da mudança mais significativa.
+        if (sectionChanged && narrativeSections[remoteIdx]) {
+          setLiveMessage(
+            syncedSectionLiveMessage(
+              remoteIdx,
+              narrativeSections.length,
+              narrativeSections[remoteIdx].preset.eyebrow,
+            ),
+          );
+        } else if (focusChanged) {
+          setLiveMessage(syncedFocusModeLiveMessage(remoteFocus));
+        } else {
+          setLiveMessage('Painel sincronizado com outra aba.');
+        }
+
         // libera guard no próximo tick para o efeito de persistência não reescrever
         setTimeout(() => { applyingExternalRef.current = false; }, 0);
       } catch {
@@ -362,7 +385,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     };
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
-  }, [open, currentTag.id]);
+  }, [open, currentTag.id, activeSectionIdx, focusMode, narrativeSections]);
 
   // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
   useEffect(() => {
