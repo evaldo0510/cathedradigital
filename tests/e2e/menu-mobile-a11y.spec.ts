@@ -32,6 +32,17 @@ test.describe('Menu mobile · acessibilidade', () => {
     expect(focusedInsideDialog, 'foco inicial deve estar dentro do dialog').toBe(true);
   });
 
+  test('foco inicial cai no botão "Fechar menu" (padrão Radix)', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await openSidebar(page);
+    await page.waitForTimeout(300);
+
+    const focusedLabel = await page.evaluate(
+      () => (document.activeElement as HTMLElement | null)?.getAttribute('aria-label') ?? null,
+    );
+    expect(focusedLabel, 'foco inicial deve ser o botão Fechar menu').toBe('Fechar menu');
+  });
+
   test('focus trap: Tab não escapa do dialog', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     const { dialog } = await openSidebar(page);
