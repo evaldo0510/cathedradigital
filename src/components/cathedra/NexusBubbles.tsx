@@ -156,14 +156,20 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const handlePushTag = (newTag: Tag) => {
     setNavHistory(prev => [...prev, newTag]);
+    setActiveSectionIdx(0);
+    setVisitedKinds(new Set());
+    setLiveMessage(`Explorando ${newTag.label}`);
     fetchContentForTag(newTag);
   };
 
   const handlePopTag = (index: number) => {
     const newHistory = navHistory.slice(0, index + 1);
     setNavHistory(newHistory);
+    setActiveSectionIdx(0);
+    setLiveMessage(`Voltando para ${newHistory[newHistory.length - 1].label}`);
     fetchContentForTag(newHistory[newHistory.length - 1]);
   };
+
 
 
   const { data: allThemes } = useQuery({
