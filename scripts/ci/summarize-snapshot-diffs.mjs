@@ -22,6 +22,8 @@ import { readdirSync, statSync, existsSync, appendFileSync, writeFileSync, mkdir
 import { join, relative, dirname, basename } from 'node:path';
 
 const root = process.argv[2] || 'test-results';
+const modeArg = process.argv.find((a) => a.startsWith('--mode='));
+const mode = modeArg ? modeArg.split('=')[1] : 'both'; // 'md' | 'summary' | 'both'
 const artifactBase = (process.env.ARTIFACT_URL || '').replace(/\/+$/, '');
 
 if (!existsSync(root)) {
