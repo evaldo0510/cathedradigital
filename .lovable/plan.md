@@ -1,102 +1,139 @@
-# Sprint 2 — Continuidade Inteligente via Knowledge Engine
+# Sprint 2 (Revisada) — Continuation Engine
 
-**Regra da sprint:** nenhum CTA é decidido pelo componente. Toda sugestão vem do domínio. O `ReaderContinuation` apenas renderiza.
-
----
-
-## Fase A — Contrato de domínio (sem UI)
-
-Criar em `src/core/knowledge/`:
-
-1. `ContinuationIntent = 'study' | 'deepen' | 'pray' | 'apply' | 'meet'`
-2. `ContinuationSuggestion`:
-   ```text
-   { intent, eyebrow, label, target: ResolvedNode, weight }
-   ```
-3. `ContinuationContext`:
-   ```text
-   { currentKind, currentId, themeIds?, hints? }
-   ```
-4. `resolveContinuation(ctx): ContinuationSuggestion[]` — função pura, no máximo 4 sugestões, ordenadas por peso.
-
-Fonte de dados: `KnowledgeGraph.neighbors` + `relationsFrom` filtradas por `KnowledgeRelationKind` (`develops`, `defined-in`, `commented-by`, `prayed-as`, `applies-to`).
-
-Cobertura por testes unitários dos 5 kinds + fallback vazio.
+Aprovadas as duas mudanças estratégicas. Reorganizo a Sprint 2 em torno de um **Continuation Engine** próprio, em pipeline, separado do Knowledge Engine.
 
 ---
 
-## Fase B — Presets editoriais por kind
+## Princípios arquiteturais
 
-Arquivo único `ReaderContinuation.presets.ts` define título e ordem de intents por kind. Trocar copy = editar 1 arquivo.
-
-| Kind | Título | Ordem de intents |
-|---|---|---|
-| bible | Continue na Palavra | study → deepen → pray |
-| catechism | Aprofunde este ensinamento | study → deepen → apply |
-| magisterium | Continue este estudo | deepen → meet → apply |
-| saint | Inspirado por este santo? | meet → study → pray → apply |
-| journey | (mantém fluxo atual) | — |
-
-Ícones por intent: 📖 study · 📚 deepen · 🙏 pray · 🌿 apply · ✨ meet (via lucide, sem emoji real).
+1. **Knowledge Engine** = fonte da verdade sobre relações. Devolve apenas `ResolvedNode[]`. Não conhece UX, não conhece CTA, não conhece intent.
+2. **Continuation Engine** = decide o próximo passo e como apresentá-lo. Transforma nós em `ContinuationSuggestion[]`.
+3. **ReaderContinuation** = componente puramente visual. Recebe sugestões prontas e renderiza.
 
 ---
 
-## Fase C — Refactor do `ReaderContinuation`
+## Fase 0 — Continuation Engine (novo módulo)
 
-- Nova assinatura única: `<ReaderContinuation context={...} />`.
-- Componente perde qualquer conhecimento de URL, capítulo, parágrafo.
-- Chama `resolveContinuation(context)`, aplica o preset do kind, renderiza no layout editorial já homologado (Cormorant/Karla, 44px, aria-live).
-- **Fallback obrigatório:** se `resolveContinuation` devolver `[]`, mantém comportamento atual (próximo §/capítulo/etapa) — zero regressão.
+Criar `src/core/continuation/` isolado do Knowledge Engine:
 
-Migrar os 5 pontos de plug (Bíblia, Catecismo, Magistério, Santos, Jornada) para passar `context` em vez de props soltas.
+```text
+src/core/continuation/
+  types.ts               → ContinuationContext, ContinuationCandidate, ContinuationSuggestion, Intent
+  ContinuationEngine.ts  → orquestra o pipeline
+  resolveContext.ts      → normaliza entrada do Reader (kind, ids, temas, litúrgico, usuário)
+  findCandidates.ts      → chama KnowledgeGraph e devolve ResolvedNode[]
+  scoreCandidates.ts     → aplica pesos e devolve { score, confidence, reasons[] }
+  chooseSuggestions.ts   → diversifica por intent, aplica presets, limita N
+  presets.ts             → ícones, títulos, copy editorial por kind + intent
+  fallback.ts            → sugestões estáticas da Sprint 1 (segurança)
+  telemetry.ts           → shown / clicked / dismissed
+  index.ts               → barrel export
+```
 
-Ordem de migração: Catecismo → Bíblia → Magistério → Santos → Jornada (Catecismo é o mais denso no grafo, valida o motor primeiro).
+Pipeline:
 
----
+```text
+Reader
+  ↓
+ContinuationEngine.run(context)
+  ↓
+resolveContext()      → ContinuationContext normalizado
+  ↓
+findCandidates()      → ResolvedNode[]  (via KnowledgeGraph)
+  ↓
+scoreCandidates()     → ScoredCandidate[] { score, confidence, reasons[] }
+  ↓
+chooseSuggestions()   → ContinuationSuggestion[] (diversificado por intent)
+  ↓
+ReaderContinuation    (render puro)
+```
 
-## Fase D — Telemetria
-
-Instrumentar via `navigation-telemetry`:
-
-- `reader.continuation.shown` — kind origem, intents oferecidas, se veio do grafo ou do fallback.
-- `reader.continuation.click` — intent, kind origem, kind destino, posição.
-
-Base para medir na Sprint 3 se o usuário realmente segue o caminho sugerido.
-
----
-
-## Fase E — Validação
-
-- Unit: `resolveContinuation` cobre 5 kinds + fallback + limite de 4.
-- E2E: em cada leitor com conteúdo semeado, o bloco mostra ≥1 sugestão real do grafo (não fallback).
-- Homologação visual nos 3 breakpoints (mobile/tablet/desktop) com screenshots.
-- Acessibilidade: axe-core sem regressão.
-
----
-
-## Critério de aceite
-
-1. Nenhum leitor mostra CTA genérico quando o grafo tem vizinhos.
-2. Copy e ordem variam por kind, decididas em `presets.ts`.
-3. `ReaderContinuation` não importa nenhuma rota literal.
-4. Telemetria registra exibição e clique.
-5. Fallback preserva o comportamento da Sprint 1 quando o grafo está vazio.
+Cada etapa é uma função pura, pequena e testável isoladamente.
 
 ---
 
-## Fora de escopo (Sprint 3+)
+## Ajustes ao contrato
 
-- Personalização por histórico do usuário.
-- Sugestões por humor / `spiritual_journal`.
-- IA generativa escolhendo o próximo passo.
-- Nexus visual (popover) reaproveitando o mesmo resolver.
+### Substituir `weight` por objeto explicativo
+
+```ts
+type ScoredCandidate = {
+  node: ResolvedNode;
+  score: number;              // 0–100
+  confidence: 'low' | 'medium' | 'high';
+  reasons: string[];          // ex: ["mesmo tema", "mesma passagem", "mesma jornada"]
+};
+```
+
+Habilita debug, tooltips futuros ("por que esta sugestão?") e auditoria de qualidade.
+
+### Intents (adicionar `celebrate`)
+
+```text
+study → deepen → meet → pray → apply → celebrate
+```
+
+`celebrate` cobre Natal, Páscoa, Pentecostes, Corpus Christi, santos do dia, festas litúrgicas. Ativado quando `resolveContext` detectar tempo/festa litúrgica relevante.
+
+### Telemetria (adicionar `dismissed`)
+
+Eventos:
+
+- `continuation_shown`   → source (graph/fallback), intents, position, count
+- `continuation_click`   → intent, node id, score, confidence, position
+- `continuation_dismissed` → sinaliza rejeição implícita (scroll além, next passagem sem clicar)
+
+Permite responder: "o usuário ignorou todas as sugestões?" — insumo para evolução do scorer.
 
 ---
 
-## Detalhes técnicos
+## Ordem de execução
 
-- `resolveContinuation` vive em `src/core/knowledge/continuation/` como função pura — testável sem React, sem Supabase.
-- Presets em `src/components/shared/ReaderContinuation.presets.ts`.
-- Tipos exportados via barrel `@/core/knowledge`.
-- Nenhuma alteração em `RouteRegistry`, `JourneyService` ou adapters de conteúdo.
-- Nenhuma nova dependência externa.
+```text
+0  — Continuation Engine (esqueleto + types + fallback plugado)
+1  — resolveContext (kind, ids, temas, litúrgico, usuário)
+2  — findCandidates + scoreCandidates + chooseSuggestions
+3  — Presets editoriais (ícones, títulos, copy por kind × intent)
+4  — Integração no Catecismo
+5  — Integração na Bíblia
+6  — Integração no Magistério
+7  — Integração em Santos
+8  — Integração na Jornada
+9  — Telemetria (shown / click / dismissed)
+10 — Testes unitários (pipeline puro) + E2E (fluxos-chave)
+```
+
+Zero regressão em cada etapa: fallback da Sprint 1 permanece ativo até o pipeline devolver ≥1 sugestão com `confidence ≥ medium`.
+
+---
+
+## O que muda vs. plano anterior
+
+| Antes | Agora |
+|---|---|
+| `resolveContinuation()` monolítica em `src/core/knowledge/continuation/` | Pipeline em `src/core/continuation/` (módulo próprio) |
+| Knowledge Engine devolvia `ContinuationSuggestion` | Devolve apenas `ResolvedNode[]` |
+| Campo `weight: number` | `{ score, confidence, reasons[] }` |
+| 5 intents | 6 intents (+ `celebrate`) |
+| Telemetria: shown, click | + `dismissed` |
+
+---
+
+## O que **não** muda
+
+- `ReaderContinuation.tsx` continua puramente visual (já está assim desde a Sprint 1).
+- Fallback estático da Sprint 1 permanece como rede de segurança.
+- Presets editoriais (ícones, títulos) continuam centralizados.
+- Pontos de integração são os mesmos 5 leitores.
+
+---
+
+## Critérios de aceite
+
+- `src/core/knowledge/` não importa nada de `src/core/continuation/` (dependência unidirecional).
+- `ReaderContinuation` não importa nada de `src/core/knowledge/` (fala só com Continuation Engine).
+- Cada etapa do pipeline tem teste unitário isolado.
+- Telemetria emite os 3 eventos com payload completo.
+- Fallback ativa quando o grafo devolve 0 candidatos ou todos com `confidence = low`.
+
+Confirma para eu iniciar pela Fase 0?
