@@ -854,8 +854,8 @@ const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
 }> = ({ escritos, onOpen }) => {
-  const [featured, secondaryA, secondaryB, ...tail] = descubra;
-  const smalls = tail.slice(0, 3);
+  const [featured] = descubra;
+
   return (
   <div className="w-full">
     <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, reunida sob uma só luz.">
