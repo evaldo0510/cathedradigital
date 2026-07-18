@@ -785,18 +785,8 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <Shelf label="Coleções curadas" hint="Séries editoriais para atravessar um tema em profundidade." dim>
-      {colecoes.map((c) => (
-        <BookCover
-          key={c.title}
-          kicker={c.kicker}
-          title={c.title}
-          spine={c.subtitle}
-          palette={c.palette}
-          to={c.to}
-        />
-      ))}
-    </Shelf>
+    <CollectionsEditorial series={seriesColecoes} />
+
 
     {/* Descubra — ritmo curatorial 1 grande + 2 médios + 3 pequenos, propositalmente assimétrico. */}
     <section aria-label="Descubra por tema" className="mb-spacing-4xl pt-spacing-3xl">
