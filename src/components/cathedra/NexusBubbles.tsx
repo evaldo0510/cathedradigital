@@ -341,8 +341,35 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const navigateInternal = useCallback((path: string) => {
     persistReturn();
     setOpen(false);
-    requestAnimationFrame(() => navigate(path));
-  }, [persistReturn, navigate]);
+    requestAnimationFrame(() => {
+      navigate(path);
+      // STAB-NEXUS-P0 Etapa 5: destino resolvido.
+      trackNexusDestination({
+        tagId: currentTag.id,
+        tagSlug: currentTag.slug,
+        type: 'internal',
+        url: path,
+      });
+    });
+  }, [persistReturn, navigate, currentTag.id, currentTag.slug]);
+
+  // STAB-NEXUS-P0 Etapa 5: registra `nexus.shown` uma vez por sessão de painel
+  // aberto, quando há pelo menos um bubble navegável.
+  const shownRef = React.useRef(false);
+  useEffect(() => {
+    if (!open) {
+      shownRef.current = false;
+      return;
+    }
+    if (shownRef.current || narrativeSections.length === 0) return;
+    shownRef.current = true;
+    trackNexusShown({
+      tagId: currentTag.id,
+      tagSlug: currentTag.slug,
+      itemCount: narrativeSections.reduce((n, s) => n + s.items.length, 0),
+      kinds: narrativeSections.map(s => s.kind),
+    });
+  }, [open, narrativeSections, currentTag.id, currentTag.slug]);
 
   // Restaura estado persistido OU abre via deep link (#nexus=slug[:kind]).
   useEffect(() => {
