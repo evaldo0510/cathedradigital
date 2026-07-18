@@ -365,41 +365,70 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 — sombra editorial lateral (livro em pé), não SaaS drop-shadow. */}
+      {/* Capa 2:3 — objeto físico: papel, lombada, folhas, brilho superior. */}
       <div
         className={cn(
           'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500 ease-out',
-          // sombra editorial: leve à esquerda (lombada), profunda à direita e abaixo
-          'shadow-[-1px_0_0_rgba(0,0,0,0.08),1px_2px_3px_rgba(0,0,0,0.08),8px_18px_28px_-18px_rgba(0,0,0,0.45)]',
-          'group-hover:-translate-y-[4px]',
-          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.10),2px_4px_6px_rgba(0,0,0,0.10),12px_26px_36px_-16px_rgba(0,0,0,0.55)]',
+          // Sombra editorial: livro em pé sobre a mesa, não card de dashboard.
+          'shadow-[-1px_0_0_rgba(0,0,0,0.10),1px_2px_3px_rgba(0,0,0,0.10),10px_20px_32px_-18px_rgba(0,0,0,0.55)]',
+          'group-hover:-translate-y-[5px] group-hover:rotate-[-0.2deg]',
+          'group-hover:shadow-[-1px_0_0_rgba(0,0,0,0.12),2px_4px_6px_rgba(0,0,0,0.12),14px_30px_42px_-14px_rgba(0,0,0,0.65)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
         )}
         style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
-        {/* Lombada visual — faixa interna à esquerda, mais escura, simulando dobra. */}
+        {/* Lombada visual — faixa interna à esquerda, dobra do livro. */}
         <div
           aria-hidden
-          className="absolute inset-y-0 left-0 w-[6px] pointer-events-none"
+          className="absolute inset-y-0 left-0 w-[8px] pointer-events-none"
           style={{
             background:
               palette.grain === 'ink'
-                ? 'linear-gradient(to right, rgba(0,0,0,0.30), rgba(0,0,0,0) 100%)'
-                : 'linear-gradient(to right, rgba(0,0,0,0.10), rgba(0,0,0,0) 100%)',
+                ? 'linear-gradient(to right, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0) 100%)'
+                : 'linear-gradient(to right, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.06) 40%, rgba(0,0,0,0) 100%)',
           }}
         />
-        {/* Grão de papel — sutil, apenas quebra a chapadão. */}
-        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
-        {/* Moldura interna fina, na cor de acento. */}
+        {/* Borda direita — folhas do miolo do livro. */}
         <div
           aria-hidden
-          className="absolute inset-[6px] pointer-events-none"
-          style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
+          className="absolute inset-y-[3%] right-0 w-[3px] pointer-events-none"
+          style={{
+            background:
+              'repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, rgba(0,0,0,0.10) 1px, rgba(0,0,0,0.10) 2px)',
+          }}
+        />
+        {/* Brilho superior — luz incidente na capa. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[35%] pointer-events-none"
+          style={{
+            background:
+              palette.grain === 'ink'
+                ? 'linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0) 100%)'
+                : 'linear-gradient(to bottom, rgba(255,255,255,0.30), rgba(255,255,255,0) 100%)',
+          }}
+        />
+        {/* Sombra inferior interna — peso, desgaste elegante. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[25%] pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.18), rgba(0,0,0,0) 100%)',
+          }}
+        />
+        {/* Grão de papel */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-80" style={grainStyle(palette.grain)} />
+        {/* Moldura interna fina, na cor de acento — impressão editorial. */}
+        <div
+          aria-hidden
+          className="absolute inset-[7px] pointer-events-none"
+          style={{ border: `1px solid ${palette.accent}`, opacity: 0.32 }}
         />
         {/* Conteúdo tipográfico */}
-        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+4px)]">
+        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md pl-[calc(theme(spacing.spacing-md)+6px)]">
           <span
-            className="text-[9px] uppercase tracking-[0.28em] font-medium"
+            className="text-[9px] uppercase tracking-[0.3em] font-medium"
             style={{ color: palette.accent }}
           >
             {kicker}
@@ -415,22 +444,23 @@ const BookCover: React.FC<{
             </h3>
           </div>
           <span
-            className="text-[8px] uppercase tracking-[0.22em] text-center truncate"
-            style={{ color: palette.accent, opacity: 0.7 }}
+            className="text-[8px] uppercase tracking-[0.24em] text-center truncate"
+            style={{ color: palette.accent, opacity: 0.75 }}
           >
             {spine}
           </span>
         </div>
       </div>
-      {/* Marca de leitura — fio dourado vertical à esquerda, apenas quando bookmarked. */}
+      {/* Marca de leitura — fio dourado vertical à esquerda. */}
       {bookmarked && (
         <span
           aria-hidden
           className="absolute -left-[6px] top-[10%] bottom-[10%] w-[2px] bg-secondary/80"
         />
       )}
-      {/* Base da estante */}
-      <div aria-hidden className="mx-2 h-[2px] bg-primary/15 shadow-[0_1px_0_hsl(var(--primary)/0.05)]" />
+      {/* Base da estante — mesa de leitura, não sombra de card. */}
+      <div aria-hidden className="mx-3 h-[1px] bg-primary/10 mt-[3px]" />
+      <div aria-hidden className="mx-4 h-[1px] bg-primary/5 mt-[1px]" />
     </Link>
   );
 };
