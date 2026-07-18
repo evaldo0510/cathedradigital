@@ -1,8 +1,11 @@
 import { Helmet } from "react-helmet-async";
-import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle, History, RefreshCw } from "lucide-react";
+import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle, History, RefreshCw, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -142,13 +145,21 @@ export default function IntegrationsStatus() {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Filtros e paginação do histórico
+  const [filterIntegration, setFilterIntegration] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<"all" | "ok" | "fail">("all");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
     const { data, error } = await supabase
       .from("integration_test_runs")
       .select("id, integration_id, ok, message, latency_ms, created_at")
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(500);
     setHistoryLoading(false);
     if (error) {
       // 403 => usuário não é admin. Silenciar para não poluir.
@@ -210,6 +221,36 @@ export default function IntegrationsStatus() {
     () => Object.fromEntries(integrations.map((i) => [i.id, i.name])),
     [],
   );
+
+  const filteredHistory = useMemo(() => {
+    const fromTs = dateFrom ? new Date(dateFrom + "T00:00:00").getTime() : null;
+    const toTs = dateTo ? new Date(dateTo + "T23:59:59.999").getTime() : null;
+    return history.filter((row) => {
+      if (filterIntegration !== "all" && row.integration_id !== filterIntegration) return false;
+      if (filterStatus === "ok" && !row.ok) return false;
+      if (filterStatus === "fail" && row.ok) return false;
+      const ts = new Date(row.created_at).getTime();
+      if (fromTs !== null && ts < fromTs) return false;
+      if (toTs !== null && ts > toTs) return false;
+      return true;
+    });
+  }, [history, filterIntegration, filterStatus, dateFrom, dateTo]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredHistory.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const pagedHistory = filteredHistory.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterIntegration, filterStatus, dateFrom, dateTo]);
+
+  const hasFilters = filterIntegration !== "all" || filterStatus !== "all" || dateFrom !== "" || dateTo !== "";
+  const clearFilters = () => {
+    setFilterIntegration("all");
+    setFilterStatus("all");
+    setDateFrom("");
+    setDateTo("");
+  };
 
   const total = integrations.length;
   const connected = integrations.filter((i) => i.status === "connected").length;
@@ -319,18 +360,95 @@ export default function IntegrationsStatus() {
           <h2 id="history-heading" className="text-lg font-semibold flex items-center gap-2">
             <History className="h-4 w-4" />
             Histórico de testes
-            <span className="text-xs text-muted-foreground font-normal">(últimos 50)</span>
+            <span className="text-xs text-muted-foreground font-normal">
+              ({filteredHistory.length}
+              {hasFilters ? ` de ${history.length}` : ""})
+            </span>
           </h2>
           <Button variant="ghost" size="sm" onClick={loadHistory} disabled={historyLoading}>
             {historyLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <RefreshCw className="mr-1 h-3 w-3" />}
             Atualizar
           </Button>
         </div>
+
+        <Card className="mb-3">
+          <CardContent className="p-4">
+            <div className="grid gap-3 md:grid-cols-4">
+              <div>
+                <Label htmlFor="flt-integration" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Integração
+                </Label>
+                <Select value={filterIntegration} onValueChange={setFilterIntegration}>
+                  <SelectTrigger id="flt-integration" className="mt-1">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    {integrations.map((i) => (
+                      <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="flt-status" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Status
+                </Label>
+                <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as "all" | "ok" | "fail")}>
+                  <SelectTrigger id="flt-status" className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="ok">OK</SelectItem>
+                    <SelectItem value="fail">Falha</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="flt-from" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  De
+                </Label>
+                <Input
+                  id="flt-from"
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="flt-to" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  Até
+                </Label>
+                <Input
+                  id="flt-to"
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            {hasFilters && (
+              <div className="mt-3 flex justify-end">
+                <Button variant="ghost" size="sm" onClick={clearFilters}>
+                  <X className="mr-1 h-3 w-3" /> Limpar filtros
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <Card>
           <CardContent className="p-0">
             {history.length === 0 ? (
               <p className="p-6 text-sm text-muted-foreground text-center">
                 {historyLoading ? "Carregando…" : "Nenhum teste registrado ainda. Clique em \"Testar conexão\" acima."}
+              </p>
+            ) : filteredHistory.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground text-center">
+                Nenhum registro para os filtros aplicados.
               </p>
             ) : (
               <div className="overflow-x-auto">
@@ -345,7 +463,7 @@ export default function IntegrationsStatus() {
                     </tr>
                   </thead>
                   <tbody>
-                    {history.map((row) => (
+                    {pagedHistory.map((row) => (
                       <tr key={row.id} className="border-t border-border/60 align-top">
                         <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
                           {new Date(row.created_at).toLocaleString("pt-BR", {
@@ -381,7 +499,33 @@ export default function IntegrationsStatus() {
                 </table>
               </div>
             )}
+            {filteredHistory.length > pageSize && (
+              <div className="flex items-center justify-between border-t border-border/60 px-4 py-2 text-sm">
+                <span className="text-muted-foreground">
+                  Página {currentPage} de {pageCount}
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage <= 1}
+                  >
+                    <ChevronLeft className="h-3 w-3" /> Anterior
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                    disabled={currentPage >= pageCount}
+                  >
+                    Próxima <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
+
         </Card>
       </section>
 
