@@ -39,34 +39,63 @@ const axes: { key: NonNullable<AxisFilter>; label: string }[] = [
   { key: 'fonte', label: 'Fonte' },
 ];
 
+/**
+ * Paleta identitária por obra (Sprint A da Biblioteca 2.0).
+ * Cada capa recebe sua própria cor + acento, com textura de papel muito discreta.
+ * Elegância, não realismo. Zero pastiche de couro/pergaminho literal.
+ * Todas as cores são hex fixos e aplicados via style inline — são "cor da obra",
+ * não tokens do design system (que continuam sendo primary/secondary/background).
+ */
+type CoverPalette = {
+  /** Cor de fundo da capa. */
+  bg: string;
+  /** Cor do texto principal. */
+  fg: string;
+  /** Cor do kicker + moldura interna + spine (dourado, sépia, etc.). */
+  accent: string;
+  /** 'paper' = fundo claro (grão em multiply escuro). 'ink' = fundo escuro (grão em screen claro). */
+  grain: 'paper' | 'ink';
+};
+
 type Escrito = {
   title: string;
   kicker: string;
   to: string;
   description: string;
-  /** Legenda curta que aparece no rodapé da capa (autor/tradição). */
   spine: string;
-  /** Tom visual da capa: 'paper' (fundo creme) ou 'noir' (fundo escuro). */
-  tone: 'paper' | 'noir';
+  palette: CoverPalette;
 };
 
 const escritos: Escrito[] = [
-  { title: 'Bíblia',            kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                                      description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',      tone: 'paper' },
-  { title: 'Catecismo',         kicker: 'Doutrina',                to: AppRoute.CATECHISM,                                  description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',         tone: 'noir'  },
-  { title: 'Magistério',        kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                                description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',       tone: 'paper' },
-  { title: 'Padres',            kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,                    description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',       tone: 'paper' },
-  { title: 'Santos',            kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                                     description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',          tone: 'noir'  },
-  { title: 'Concílios',         kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,                 description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',     tone: 'paper' },
-  { title: 'Direito Canônico',  kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,          description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici',    tone: 'noir'  },
+  { title: 'Bíblia',           kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                              description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',   palette: { bg: '#111111', fg: '#F4E9D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Catecismo',        kicker: 'Doutrina',                to: AppRoute.CATECHISM,                          description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',      palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink'   } },
+  { title: 'Magistério',       kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                        description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',    palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Padres',           kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,            description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',    palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+  { title: 'Santos',           kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                             description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',       palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink'   } },
+  { title: 'Concílios',        kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,         description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',  palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Direito Canônico', kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,  description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici', palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink'   } },
 ];
 
-type Colecao = { title: string; kicker: string; subtitle: string; to: string; tone: 'paper' | 'noir' };
+type Colecao = { title: string; kicker: string; subtitle: string; to: string; palette: CoverPalette };
 const colecoes: Colecao[] = [
-  { title: 'As Confissões',          kicker: 'Série I',   subtitle: 'Santo Agostinho de Hipona',        to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`, tone: 'noir'  },
-  { title: 'Suma Teológica',         kicker: 'Série II',  subtitle: 'S. Tomás de Aquino — Pars Prima',  to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Suma Teológica')}`,      tone: 'paper' },
-  { title: 'Grandes Místicos',       kicker: 'Série III', subtitle: 'Teresa, João da Cruz, Kempis',     to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('mística')}`,             tone: 'noir'  },
-  { title: 'Doutrina Social',        kicker: 'Série IV',  subtitle: 'De Rerum Novarum a Fratelli Tutti',to: `${AppRoute.MAGISTERIUM}`,                                            tone: 'paper' },
+  { title: 'A Esperança',       kicker: 'Percurso',   subtitle: 'Ancorar-se em Cristo em tempos difíceis',    to: `${AppRoute.TEMAS}/esperanca`,   palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'A Eucaristia',      kicker: 'Percurso',   subtitle: 'Fonte e ápice da vida cristã',               to: `${AppRoute.TEMAS}/sacramentos`, palette: { bg: '#3A0E1A', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Maria',             kicker: 'Percurso',   subtitle: 'A Mãe segundo os Padres e Doutores',         to: `${AppRoute.TEMAS}/maria`,       palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
+  { title: 'Doutrina Social',   kicker: 'Percurso',   subtitle: 'De Rerum Novarum a Fratelli Tutti',          to: AppRoute.MAGISTERIUM,            palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink'   } },
 ];
+
+/** Chips “Descubra” — 8 temas curados que existem em `themes` (slugs reais). */
+const descubra: { name: string; slug: string }[] = [
+  { name: 'Esperança',    slug: 'esperanca'    },
+  { name: 'Família',      slug: 'familia'      },
+  { name: 'Maria',        slug: 'maria'        },
+  { name: 'Perdão',       slug: 'perdao'       },
+  { name: 'Caridade',     slug: 'caridade'     },
+  { name: 'Sacramentos',  slug: 'sacramentos'  },
+  { name: 'Oração',       slug: 'oracao'       },
+  { name: 'Misericórdia', slug: 'misericordia' },
+];
+
 
 
 /**
@@ -283,17 +312,41 @@ const BibliotecaPage: React.FC = () => {
  * Sem imagens externas — capas 100% tipográficas com tokens semânticos.
  */
 
+/** Paleta neutra usada pelo hero quando não há paleta explícita. */
+const DEFAULT_PALETTE: CoverPalette = { bg: '#111111', fg: '#F4E9D0', accent: '#C9A24C', grain: 'ink' };
+
+/**
+ * Textura de papel MUITO discreta via gradientes radiais.
+ * 'paper' aplica pontos escuros em multiply; 'ink' aplica pontos claros em screen.
+ * Nenhuma imagem — apenas CSS. Efeito quase imperceptível, apenas quebra a chapadão.
+ */
+const grainStyle = (mode: CoverPalette['grain']): React.CSSProperties =>
+  mode === 'paper'
+    ? {
+        backgroundImage:
+          'radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
+        backgroundSize: '3px 3px, 7px 7px',
+        backgroundPosition: '0 0, 1px 2px',
+        mixBlendMode: 'multiply',
+      }
+    : {
+        backgroundImage:
+          'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px)',
+        backgroundSize: '3px 3px, 7px 7px',
+        backgroundPosition: '0 0, 1px 2px',
+        mixBlendMode: 'screen',
+      };
+
 const BookCover: React.FC<{
   kicker: string;
   title: string;
   spine: string;
-  tone: 'paper' | 'noir';
+  palette: CoverPalette;
   to: string;
   onOpen?: () => void;
   size?: 'md' | 'lg';
-}> = ({ kicker, title, spine, tone, to, onOpen, size = 'md' }) => {
+}> = ({ kicker, title, spine, palette, to, onOpen, size = 'md' }) => {
   const dims = size === 'lg' ? 'w-[168px] md:w-[192px]' : 'w-[144px] md:w-[160px]';
-  const isNoir = tone === 'noir';
   return (
     <Link
       to={to}
@@ -304,33 +357,29 @@ const BookCover: React.FC<{
       )}
       aria-label={`Abrir ${title}`}
     >
-      {/* Capa 2:3 */}
+      {/* Capa 2:3 — cor da obra aplicada via style; tokens do design system ficam intocados. */}
       <div
         className={cn(
           'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500',
-          'border shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
+          'shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
           'group-hover:-translate-y-[3px] group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.08),0_18px_32px_-14px_rgba(0,0,0,0.45)]',
           'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
-          isNoir
-            ? 'bg-primary text-primary-foreground border-primary/70'
-            : 'bg-card text-primary border-primary/15',
         )}
+        style={{ backgroundColor: palette.bg, color: palette.fg }}
       >
-        {/* Moldura interna fina */}
+        {/* Grão de papel — sutil, apenas quebra a chapadão. */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none opacity-70" style={grainStyle(palette.grain)} />
+        {/* Moldura interna fina, na cor de acento. */}
         <div
           aria-hidden
-          className={cn(
-            'absolute inset-[6px] border pointer-events-none',
-            isNoir ? 'border-secondary/25' : 'border-primary/10',
-          )}
+          className="absolute inset-[6px] pointer-events-none"
+          style={{ border: `1px solid ${palette.accent}`, opacity: 0.35 }}
         />
         {/* Conteúdo tipográfico */}
         <div className="absolute inset-0 flex flex-col justify-between p-spacing-md">
           <span
-            className={cn(
-              'text-[9px] uppercase tracking-[0.28em] font-medium',
-              isNoir ? 'text-secondary/85' : 'text-secondary',
-            )}
+            className="text-[9px] uppercase tracking-[0.28em] font-medium"
+            style={{ color: palette.accent }}
           >
             {kicker}
           </span>
@@ -345,10 +394,8 @@ const BookCover: React.FC<{
             </h3>
           </div>
           <span
-            className={cn(
-              'text-[8px] uppercase tracking-[0.22em] text-center truncate',
-              isNoir ? 'text-primary-foreground/45' : 'text-primary/40',
-            )}
+            className="text-[8px] uppercase tracking-[0.22em] text-center truncate"
+            style={{ color: palette.accent, opacity: 0.7 }}
           >
             {spine}
           </span>
@@ -359,6 +406,7 @@ const BookCover: React.FC<{
     </Link>
   );
 };
+
 
 const ContinueReadingHero: React.FC<{
   recents: ReturnType<typeof useBibliotecaRecents>['recents'];
@@ -382,7 +430,7 @@ const ContinueReadingHero: React.FC<{
           kicker={kicker}
           title={title}
           spine="Cathedra Digital"
-          tone="noir"
+          palette={DEFAULT_PALETTE}
           to={path}
           size="lg"
         />
@@ -455,7 +503,7 @@ const EscritosView: React.FC<{
           kicker={e.kicker}
           title={e.title}
           spine={e.spine}
-          tone={e.tone}
+          palette={e.palette}
           to={e.to}
           onOpen={() => onOpen(e)}
         />
@@ -469,13 +517,36 @@ const EscritosView: React.FC<{
           kicker={c.kicker}
           title={c.title}
           spine={c.subtitle}
-          tone={c.tone}
+          palette={c.palette}
           to={c.to}
         />
       ))}
     </Shelf>
+
+    {/* Descubra — chips ligados a temas reais (tabela `themes`). */}
+    <section aria-label="Descubra por tema" className="mb-spacing-3xl border-t border-primary/10 pt-spacing-2xl">
+      <div className="mb-spacing-lg">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">Descubra</span>
+        <p className="font-serif italic text-primary/60 text-base mt-[2px]">
+          Por onde seu coração precisa começar hoje.
+        </p>
+      </div>
+      <ul className="flex flex-wrap gap-spacing-sm">
+        {descubra.map((t) => (
+          <li key={t.slug}>
+            <Link
+              to={`${AppRoute.TEMAS}/${t.slug}`}
+              className="inline-block font-serif italic text-primary/85 text-lg border-b border-primary/20 pb-[2px] hover:text-secondary hover:border-secondary transition-colors"
+            >
+              {t.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   </div>
 );
+
 
 
 const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () => void }> = ({ query, axis, onSubmit }) => (
