@@ -522,8 +522,31 @@ const EscritosView: React.FC<{
         />
       ))}
     </Shelf>
+
+    {/* Descubra — chips ligados a temas reais (tabela `themes`). */}
+    <section aria-label="Descubra por tema" className="mb-spacing-3xl border-t border-primary/10 pt-spacing-2xl">
+      <div className="mb-spacing-lg">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">Descubra</span>
+        <p className="font-serif italic text-primary/60 text-base mt-[2px]">
+          Por onde seu coração precisa começar hoje.
+        </p>
+      </div>
+      <ul className="flex flex-wrap gap-spacing-sm">
+        {descubra.map((t) => (
+          <li key={t.slug}>
+            <Link
+              to={`${AppRoute.TEMAS}/${t.slug}`}
+              className="inline-block font-serif italic text-primary/85 text-lg border-b border-primary/20 pb-[2px] hover:text-secondary hover:border-secondary transition-colors"
+            >
+              {t.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   </div>
 );
+
 
 
 const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () => void }> = ({ query, axis, onSubmit }) => (
