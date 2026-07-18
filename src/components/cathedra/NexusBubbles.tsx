@@ -54,6 +54,40 @@ interface TagBubbleProps {
 }
 
 
+const NEXUS_STATE_KEY = 'nexus:state:v1';
+
+type PersistedNexusState = {
+  tagId: string;
+  tagSlug?: string;
+  path: string;
+  historyIds: string[];
+  activeSectionIdx: number;
+  visitedKinds: string[];
+  ts: number;
+};
+
+const readPersistedState = (): PersistedNexusState | null => {
+  try {
+    const raw = localStorage.getItem(NEXUS_STATE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedNexusState;
+    // expira em 24h
+    if (Date.now() - (parsed.ts || 0) > 1000 * 60 * 60 * 24) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const writePersistedState = (s: PersistedNexusState | null) => {
+  try {
+    if (s === null) localStorage.removeItem(NEXUS_STATE_KEY);
+    else localStorage.setItem(NEXUS_STATE_KEY, JSON.stringify(s));
+  } catch {
+    /* ignore */
+  }
+};
+
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
 
   const navigate = useNavigate();
@@ -68,8 +102,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   // Navigation stack for context-to-context breadcrumbs
   const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
+  const [activeSectionIdx, setActiveSectionIdx] = useState(0);
+  const [visitedKinds, setVisitedKinds] = useState<Set<string>>(new Set());
+  const [liveMessage, setLiveMessage] = useState<string>('');
+  const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
 
   const currentTag = navHistory[navHistory.length - 1];
+
 
   const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
@@ -117,14 +156,20 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const handlePushTag = (newTag: Tag) => {
     setNavHistory(prev => [...prev, newTag]);
+    setActiveSectionIdx(0);
+    setVisitedKinds(new Set());
+    setLiveMessage(`Explorando ${newTag.label}`);
     fetchContentForTag(newTag);
   };
 
   const handlePopTag = (index: number) => {
     const newHistory = navHistory.slice(0, index + 1);
     setNavHistory(newHistory);
+    setActiveSectionIdx(0);
+    setLiveMessage(`Voltando para ${newHistory[newHistory.length - 1].label}`);
     fetchContentForTag(newHistory[newHistory.length - 1]);
   };
+
 
 
   const { data: allThemes } = useQuery({
@@ -221,14 +266,73 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       });
     }
     setOpen(val);
+    if (!val) {
+      writePersistedState(null);
+      setLiveMessage('Painel fechado. Trecho anterior restaurado.');
+    }
   }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
 
   const navigateInternal = useCallback((path: string) => {
     persistReturn();
     setOpen(false);
-    // pequena espera para o Sheet iniciar o close antes de trocar de rota
     requestAnimationFrame(() => navigate(path));
   }, [persistReturn, navigate]);
+
+  // Restaura estado persistido quando esta bubble corresponde ao salvo.
+  useEffect(() => {
+    const saved = readPersistedState();
+    if (!saved || saved.tagId !== tag.id) return;
+    if (saved.path !== window.location.pathname + window.location.search) return;
+    setVisitedKinds(new Set(saved.visitedKinds || []));
+    setActiveSectionIdx(saved.activeSectionIdx || 0);
+    savedScrollRef.current = window.scrollY;
+    setOpen(true);
+    fetchContentForTag(tag);
+    setLiveMessage(`Painel Nexus restaurado em ${tag.label}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persiste estado enquanto o painel está aberto.
+  useEffect(() => {
+    if (!open) return;
+    writePersistedState({
+      tagId: currentTag.id,
+      tagSlug: currentTag.slug,
+      path: window.location.pathname + window.location.search,
+      historyIds: navHistory.map(h => h.id),
+      activeSectionIdx,
+      visitedKinds: Array.from(visitedKinds),
+      ts: Date.now(),
+    });
+  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds]);
+
+  // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
+  useEffect(() => {
+    if (!open || narrativeSections.length === 0) return;
+    const current = narrativeSections[activeSectionIdx];
+    if (!current) return;
+    setVisitedKinds(prev => {
+      if (prev.has(current.kind)) return prev;
+      const next = new Set(prev);
+      next.add(current.kind);
+      return next;
+    });
+    setLiveMessage(`Seção ${activeSectionIdx + 1} de ${narrativeSections.length}: ${current.preset.eyebrow}`);
+    const el = sectionRefs.current[current.kind];
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeSectionIdx, open, narrativeSections]);
+
+  // Atalhos: Alt+→/← ou [/] alternam entre seções sem sair do painel.
+  const handlePanelKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (narrativeSections.length === 0) return;
+    if (e.altKey && (e.key === 'ArrowRight' || e.key === ']')) {
+      e.preventDefault();
+      setActiveSectionIdx(i => Math.min(i + 1, narrativeSections.length - 1));
+    } else if (e.altKey && (e.key === 'ArrowLeft' || e.key === '[')) {
+      e.preventDefault();
+      setActiveSectionIdx(i => Math.max(i - 1, 0));
+    }
+  }, [narrativeSections.length]);
 
   return (
     <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
@@ -264,10 +368,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         aria-labelledby={`nexus-title-${currentTag.id}`}
         aria-describedby={`nexus-desc-${currentTag.id}`}
         onEscapeKeyDown={() => handleOpenChange(false)}
+        onKeyDown={handlePanelKeyDown}
         className={cn(
           'p-0 border-l border-primary/10 bg-background overflow-hidden',
           'flex flex-col',
-          // Animação editorial — curva easing suave, tempos alongados.
           'transition-none',
           'data-[state=open]:duration-700 data-[state=closed]:duration-500',
           'data-[state=open]:ease-[cubic-bezier(0.22,1,0.36,1)]',
@@ -278,6 +382,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             : 'w-full sm:max-w-[460px] md:max-w-[38vw]',
         )}
       >
+        {/* Anúncios para leitores de tela — mudanças de seção, restauração, etc. */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {liveMessage}
+        </div>
+
         {/* Cabeçalho editorial — margem do livro. */}
         <header className="px-spacing-xl pt-spacing-2xl pb-spacing-lg flex-shrink-0">
           <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
@@ -302,7 +411,49 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             {contextPath}
           </SheetDescription>
           <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
+
+          {/* Indicador de seções visitadas + navegação por teclado */}
+          {narrativeSections.length > 1 && (
+            <nav
+              aria-label="Seções do Nexus"
+              className="mt-spacing-md flex items-center gap-spacing-xs"
+            >
+              {narrativeSections.map((s, i) => {
+                const visited = visitedKinds.has(s.kind);
+                const active = i === activeSectionIdx;
+                return (
+                  <button
+                    key={s.kind}
+                    type="button"
+                    onClick={() => setActiveSectionIdx(i)}
+                    aria-current={active ? 'true' : undefined}
+                    aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
+                    title={s.preset.eyebrow}
+                    className={cn(
+                      'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'block rounded-full transition-all',
+                        active
+                          ? 'h-[8px] w-[8px] bg-secondary'
+                          : visited
+                            ? 'h-[6px] w-[6px] bg-secondary/60'
+                            : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
+                      )}
+                    />
+                  </button>
+                );
+              })}
+              <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
+                Alt+←/→
+              </span>
+            </nav>
+          )}
         </header>
+
 
 
         {/* Corpo — sequência editorial */}
@@ -360,10 +511,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {narrativeSections.map((section, sIdx) => (
                 <motion.section
                   key={section.kind}
+                  ref={(el) => { sectionRefs.current[section.kind] = el as unknown as HTMLElement | null; }}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: sIdx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   aria-label={section.preset.eyebrow}
+                  aria-current={sIdx === activeSectionIdx ? 'true' : undefined}
                 >
                   <header className="mb-spacing-md">
                     <span className="block text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
