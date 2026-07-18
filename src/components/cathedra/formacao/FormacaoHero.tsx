@@ -164,7 +164,7 @@ const FormacaoHero: React.FC = () => {
         aria-labelledby="formacao-hero-title"
       >
         <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-md">
-          Comece uma caminhada
+          Itinerarium Mentis
         </p>
         <h1
           id="formacao-hero-title"
@@ -209,7 +209,7 @@ const FormacaoHero: React.FC = () => {
       aria-labelledby="formacao-hero-title"
     >
       <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-md">
-        Continue sua caminhada
+        Itinerarium Mentis
       </p>
 
       <h1

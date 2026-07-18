@@ -249,7 +249,6 @@ const STORAGE_KEY = 'cathedra:contrast-inspector:on';
 const ENABLED_KEY = 'cathedra:contrast-inspector:enabled';
 
 function readEnabled(): boolean {
-  if (import.meta.env.DEV) return true;
   if (typeof window === 'undefined') return false;
   try {
     const url = new URL(window.location.href);
@@ -262,7 +261,18 @@ function readEnabled(): boolean {
       localStorage.setItem(ENABLED_KEY, '0');
       return false;
     }
-    return localStorage.getItem(ENABLED_KEY) === '1';
+    // Opt-in explícito via localStorage vale em qualquer ambiente
+    if (localStorage.getItem(ENABLED_KEY) === '1') return true;
+    // P0-1: Nunca renderizar em preview/iframe/produção sem opt-in explícito.
+    // Só habilita automaticamente em dev local (fora de iframe e fora de hosts Lovable).
+    if (!import.meta.env.DEV) return false;
+    const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
+    const host = window.location.hostname;
+    const isPreviewHost =
+      host.includes('lovableproject.com') ||
+      host.includes('lovable.app') ||
+      host.includes('id-preview--');
+    return !inIframe && !isPreviewHost;
   } catch {
     return false;
   }
