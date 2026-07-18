@@ -84,8 +84,13 @@ jobs:
             " >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      # Publica primeiro para conseguir a URL do artifact e usá-la nos links
-      # diretos do $GITHUB_STEP_SUMMARY.
+      # 1. Gera o SNAPSHOT-DIFFS.md com imagens embutidas ANTES do upload,
+      #    para que o .md entre no artifact.
+      - name: Generate SNAPSHOT-DIFFS.md (on failure)
+        if: failure()
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=md
+
+      # 2. Publica o artifact (imagens + traces + .md + mask-coverage).
       - name: Upload snapshot diffs (on failure)
         id: upload-diffs
         if: failure()
@@ -102,13 +107,13 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-      # Resumo visual dos diffs + links diretos no $GITHUB_STEP_SUMMARY
-      # apontando para os arquivos dentro do artifact publicado acima.
-      - name: Summarize snapshot diffs (on failure)
+      # 3. Publica o resumo em $GITHUB_STEP_SUMMARY já com a URL do artifact,
+      #    gerando links diretos para cada expected/actual/diff/trace.
+      - name: Summarize snapshot diffs to $GITHUB_STEP_SUMMARY (on failure)
         if: failure()
         env:
           ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
-        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=summary
 
       - name: Upload Playwright HTML report (on failure)
         if: failure()
