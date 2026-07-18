@@ -672,9 +672,10 @@ const ContinueReadingHero: React.FC<{
         <h2 className="font-serif italic text-[2rem] md:text-[3rem] leading-[1.05] text-primary tracking-tight mt-spacing-md">
           {title}
         </h2>
-        <p className="font-serif italic text-primary/55 text-lg md:text-xl mt-spacing-sm">
+        <p className="font-serif italic text-primary/60 text-lg md:text-xl mt-spacing-sm">
           {reference}
         </p>
+
 
         {/* Trecho interrompido — não resumo, evocação. */}
         <blockquote className="mt-spacing-2xl max-w-xl border-l border-secondary/50 pl-spacing-lg">
