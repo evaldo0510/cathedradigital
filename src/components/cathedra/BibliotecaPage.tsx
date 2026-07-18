@@ -758,6 +758,98 @@ const Shelf: React.FC<{
   </section>
 );
 
+/**
+ * Coleções Editoriais — cada série é uma prateleira com identidade própria.
+ * Coluna esquerda: numeral romano dourado + kicker + título grande + curadoria.
+ * Coluna direita: fileira de capas físicas com scroll horizontal.
+ * Entre séries, respiração generosa e fio dourado sutil (não separator técnico).
+ */
+const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) => (
+  <section aria-label="Coleções editoriais" className="mb-spacing-4xl pt-spacing-2xl">
+    {/* Cabeçalho da seção — kicker + subtítulo curatorial. */}
+    <div className="mb-spacing-3xl max-w-2xl">
+      <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+        Coleções Editoriais
+      </span>
+      <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
+        Séries curadas para atravessar a Tradição por caminhos que se sustentam.
+      </p>
+    </div>
+
+    <div className="flex flex-col gap-spacing-4xl">
+      {series.map((serie, idx) => (
+        <article
+          key={serie.title}
+          aria-label={serie.title}
+          className="group/serie relative"
+        >
+          {/* Fio horizontal dourado no topo, exceto na primeira. */}
+          {idx > 0 && (
+            <div
+              aria-hidden
+              className="absolute -top-spacing-2xl left-0 h-px w-16 bg-secondary/25"
+            />
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-3xl items-start">
+            {/* Coluna curatorial */}
+            <header className="md:col-span-4 lg:col-span-3 md:sticky md:top-spacing-2xl">
+              <div className="flex items-baseline gap-spacing-md mb-spacing-md">
+                <span
+                  className="font-serif italic text-4xl md:text-5xl leading-none"
+                  style={{ color: serie.accent }}
+                  aria-hidden
+                >
+                  {serie.numeral}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                  {serie.kicker}
+                </span>
+              </div>
+              <h3 className="font-serif italic text-primary text-[2rem] md:text-[2.5rem] leading-[1.05] mb-spacing-md">
+                {serie.title}
+              </h3>
+              <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug max-w-sm">
+                {serie.curator}
+              </p>
+            </header>
+
+            {/* Prateleira de capas */}
+            <div className="md:col-span-8 lg:col-span-9 min-w-0">
+              <div
+                className={cn(
+                  'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
+                  '[scrollbar-width:thin] [-ms-overflow-style:none]',
+                  '[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-thumb]:bg-primary/15 [&::-webkit-scrollbar-track]:bg-transparent',
+                )}
+              >
+                {serie.items.map((item) => (
+                  <BookCover
+                    key={item.title}
+                    kicker={item.kicker}
+                    title={item.title}
+                    spine={item.spine}
+                    palette={item.palette}
+                    to={item.to}
+                  />
+                ))}
+              </div>
+              {/* Base da prateleira — fio dourado discreto sob as capas. */}
+              <div
+                aria-hidden
+                className="h-px w-full mt-spacing-xs"
+                style={{ background: `linear-gradient(to right, ${serie.accent}55, transparent 80%)` }}
+              />
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+);
+
+
+
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
