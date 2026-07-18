@@ -1019,21 +1019,28 @@ const EscritosView: React.FC<{
 
 const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () => void }> = ({ query, axis, onSubmit }) => (
   <div className="max-w-2xl">
-    <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Pesquisa aberta</h2>
-    <p className="text-primary/55 text-sm leading-relaxed mb-spacing-lg">
+    <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+      Busca
+    </span>
+    <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+      Pesquisa aberta
+    </h2>
+    <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug mb-spacing-lg">
       Digite acima e escolha um eixo — Tema, Pessoa, Documento, Período ou Fonte — para ir direto ao resultado certo.
     </p>
+    <div aria-hidden className="h-px w-16 bg-secondary/40 mb-spacing-lg" />
     {(query.trim() || axis) && (
       <button
         type="button"
         onClick={onSubmit}
-        className="text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary"
+        className="text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
       >
         {axis ? `Buscar em ${axis}` : 'Buscar em toda a Biblioteca'} ↵
       </button>
     )}
   </div>
 );
+
 
 const FavoritosView: React.FC<{ items: ReturnType<typeof useFavorites>['favorites']; onRemove: (id: string) => void }> = ({ items, onRemove }) => {
   if (items.length === 0) {
