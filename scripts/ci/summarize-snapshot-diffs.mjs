@@ -18,12 +18,12 @@
  *   ausente, o resumo usa caminhos relativos ao artifact baixado.
  */
 
-import { readdirSync, statSync, existsSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readdirSync, statSync, existsSync, appendFileSync, writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, relative, dirname, basename } from 'node:path';
 
 const root = process.argv[2] || 'test-results';
 const modeArg = process.argv.find((a) => a.startsWith('--mode='));
-const mode = modeArg ? modeArg.split('=')[1] : 'both'; // 'md' | 'summary' | 'both'
+const mode = modeArg ? modeArg.split('=')[1] : 'both'; // 'md' | 'summary' | 'pr' | 'both' | 'all'
 const artifactBase = (process.env.ARTIFACT_URL || '').replace(/\/+$/, '');
 
 if (!existsSync(root)) {
@@ -43,11 +43,21 @@ function walk(dir, out = []) {
 
 const files = walk(root);
 const diffs = files.filter((f) => f.endsWith('-diff.png'));
+const coverageFiles = files.filter((f) => basename(f) === 'mask-coverage.json');
 
-if (diffs.length === 0) {
-  console.log('[snapshot-diffs] nenhum diff encontrado.');
+// Agrega mask-coverage de todos os testes.
+const coverageAgg = coverageFiles
+  .map((f) => {
+    try { return { path: f, data: JSON.parse(readFileSync(f, 'utf8')) }; }
+    catch { return null; }
+  })
+  .filter(Boolean);
+
+if (diffs.length === 0 && coverageAgg.length === 0) {
+  console.log('[snapshot-diffs] nada a resumir (sem diffs nem mask-coverage).');
   process.exit(0);
 }
+
 
 /** Encontra o trace.zip mais próximo (mesmo diretório do diff). */
 function findTrace(dir) {
