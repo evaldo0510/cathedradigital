@@ -758,6 +758,8 @@ header:hover {
 .editorial-rule {
   border: 0;
   border-top: 1px solid var(--rule-gold-soft);
+  width: min(160px, 40%);
+  margin-inline: auto;
   margin-block: var(--space-editorial);
 }
 .editorial-rule--hair { border-top-color: var(--rule-gold-hair); }
