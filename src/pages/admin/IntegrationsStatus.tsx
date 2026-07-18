@@ -1,8 +1,11 @@
 import { Helmet } from "react-helmet-async";
-import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle, History, RefreshCw } from "lucide-react";
+import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle, History, RefreshCw, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
