@@ -622,6 +622,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         aria-describedby={`nexus-desc-${currentTag.id}`}
         onEscapeKeyDown={() => handleOpenChange(false)}
         onKeyDown={handlePanelKeyDown}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className={cn(
           'p-0 border-l border-primary/10 bg-background overflow-hidden',
           'flex flex-col',
