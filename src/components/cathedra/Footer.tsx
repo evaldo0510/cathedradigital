@@ -254,7 +254,7 @@ const Footer: React.FC = React.memo(() => {
         {/* Faixa principal — 4 colunas equilibradas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-4xl">
           {/* Coluna 1 — Marca */}
-          <div className="flex flex-col gap-spacing-lg md:col-span-2 lg:col-span-1">
+          <div className="flex flex-col gap-spacing-lg">
             <div className="flex flex-col gap-2">
               <div className="flex items-baseline gap-2">
                 <span aria-hidden="true" style={{ color: GOLD, fontSize: 10 }}>●</span>
