@@ -531,6 +531,38 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     }
   }, [activeSectionIdx, narrativeSections.length]);
 
+  // Swipe horizontal no mobile alterna seções (threshold 50px, ignora gestos verticais).
+  const touchStartRef = React.useRef<{ x: number; y: number; t: number } | null>(null);
+  const SWIPE_THRESHOLD = 50;
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    if (e.touches.length !== 1) { touchStartRef.current = null; return; }
+    const t = e.touches[0];
+    touchStartRef.current = { x: t.clientX, y: t.clientY, t: Date.now() };
+  }, [isMobile]);
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+    // Ignora se o gesto começou dentro de um elemento interativo — permite tap normal.
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('button, a, input, textarea, [role="button"], [contenteditable="true"]')) return;
+    const end = e.changedTouches[0];
+    if (!end) return;
+    const dx = end.clientX - start.x;
+    const dy = end.clientY - start.y;
+    // Gesto vertical dominante → preserva scroll nativo.
+    if (Math.abs(dy) >= Math.abs(dx)) return;
+    if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+    const total = narrativeSections.length;
+    if (total <= 1) return;
+    const nextIdx = dx < 0
+      ? Math.min(activeSectionIdx + 1, total - 1)
+      : Math.max(activeSectionIdx - 1, 0);
+    if (nextIdx !== activeSectionIdx) setActiveSectionIdx(nextIdx);
+  }, [isMobile, activeSectionIdx, narrativeSections.length]);
+
   const handleShareDeepLink = useCallback(async () => {
     const currentKind = narrativeSections[activeSectionIdx]?.kind;
     const url = buildNexusShareUrl(
