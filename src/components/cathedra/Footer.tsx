@@ -5,21 +5,18 @@ import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { useLang } from '@/hooks/useLang';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 import { APP_ROUTES } from '@/config/routes';
 
-
-
 const DIOCESES_BR = [
-  // Arquidioceses de SP
   'Arquidiocese de São Paulo',
   'Arquidiocese de Campinas',
   'Arquidiocese de Aparecida',
   'Arquidiocese de Botucatu',
   'Arquidiocese de Ribeirão Preto',
   'Arquidiocese de Sorocaba',
-  // Dioceses de SP
   'Diocese de Bauru',
   'Diocese de Campo Limpo',
   'Diocese de Caraguatatuba',
@@ -48,7 +45,6 @@ const DIOCESES_BR = [
   'Diocese de São Miguel Paulista',
   'Diocese de Taubaté',
   'Diocese de Votuporanga',
-  // Outras Arquidioceses
   'Arquidiocese do Rio de Janeiro',
   'Arquidiocese de Brasília',
   'Arquidiocese de Belo Horizonte',
@@ -64,7 +60,6 @@ const DIOCESES_BR = [
   'Arquidiocese de Vitória',
   'Arquidiocese de Natal',
   'Arquidiocese de São Luís do Maranhão',
-  // Outras Dioceses
   'Diocese de Joinville',
   'Diocese de Caxias do Sul',
   'Diocese de Juiz de Fora',
@@ -125,14 +120,78 @@ const DIOCESE_URLS: Record<string, string> = {
   'Arquidiocese de São Luís do Maranhão': 'https://www.arquidiocesesaoluis.org.br',
 };
 
+// Tokens visuais Logos 2030 — noir + dourado como acento
+const GOLD = '#c9a84c';
+const GOLD_SOFT = 'rgba(201,168,76,0.35)';
+const GOLD_HAIR = 'rgba(201,168,76,0.18)';
+const FONT_DISPLAY = "'Cormorant Garamond', ui-serif, Georgia, serif";
+const FONT_BODY = "'Karla', ui-sans-serif, system-ui, sans-serif";
+
+const EYEBROW_STYLE: React.CSSProperties = {
+  color: GOLD,
+  fontFamily: FONT_BODY,
+  fontSize: '10px',
+  fontWeight: 500,
+  letterSpacing: '0.34em',
+  textTransform: 'uppercase',
+};
+
+interface FooterSectionProps {
+  title: string;
+  id: string;
+  isMobile: boolean;
+  openId: string | null;
+  onToggle: (id: string) => void;
+  children: React.ReactNode;
+}
+
+const FooterSection: React.FC<FooterSectionProps> = ({ title, id, isMobile, openId, onToggle, children }) => {
+  const isOpen = !isMobile || openId === id;
+
+  if (!isMobile) {
+    return (
+      <section aria-labelledby={`footer-h-${id}`}>
+        <h4 id={`footer-h-${id}`} className="mb-spacing-lg" style={EYEBROW_STYLE}>
+          — {title}
+        </h4>
+        {children}
+      </section>
+    );
+  }
+
+  return (
+    <section aria-labelledby={`footer-h-${id}`} className="border-t" style={{ borderColor: GOLD_HAIR }}>
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        aria-expanded={isOpen}
+        aria-controls={`footer-p-${id}`}
+        className="flex w-full items-center justify-between min-h-[44px] py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] rounded-none"
+      >
+        <span id={`footer-h-${id}`} style={EYEBROW_STYLE}>{title}</span>
+        <Icons.ArrowDown
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          style={{ color: GOLD }}
+        />
+      </button>
+      <div id={`footer-p-${id}`} hidden={!isOpen} className="pb-spacing-lg">
+        {children}
+      </div>
+    </section>
+  );
+};
+
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
-  const { t, lang } = useLang();
+  const { lang } = useLang();
   const { isAdmin } = useIsAdmin();
+  const isMobile = useIsMobile();
+  const [openId, setOpenId] = useState<string | null>(null);
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const toggleSection = (id: string) => setOpenId(prev => (prev === id ? null : id));
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican)', url: EXTERNAL_URLS.VATICAN },
@@ -151,6 +210,8 @@ const Footer: React.FC = React.memo(() => {
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
       mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -176,239 +237,323 @@ const Footer: React.FC = React.memo(() => {
 
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
+  const linkItem =
+    'group inline-flex items-center gap-3 min-h-[44px] py-2 text-left text-muted-foreground hover:text-[#c9a84c] focus-visible:text-[#c9a84c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors';
+
   return (
-    <footer className="mt-auto w-full border-t border-border/10 pt-spacing-4xl lg:pt-spacing-4xl pb-spacing-4xl lg:pb-spacing-4xl bg-background relative overflow-hidden contain-layout footer-reading-auto-hide" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 520px' }} aria-label="Rodapé">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
-      
-      <div className="w-full relative z-10 px-spacing-xl md:px-spacing-2xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-3xl lg:gap-spacing-4xl mb-spacing-4xl">
-          
-          <div className="flex flex-col gap-spacing-xl">
-             <div className="flex flex-col gap-2">
-               <div className="flex items-baseline gap-2">
-                 <span className="text-[10px]" style={{ color: '#c9a84c' }} aria-hidden="true">●</span>
-                 <span
-                   style={{
-                     fontFamily: "'Playfair Display', serif",
-                     fontWeight: 500,
-                     fontSize: 'clamp(1.5rem, 2.5vw, 2rem)',
-                     letterSpacing: '0.14em',
-                     color: 'hsl(var(--foreground))',
-                     lineHeight: 1,
-                   }}
-                 >
-                   CATHEDRA
-                 </span>
-               </div>
-               <span
-                 className="pl-4"
-                 style={{
-                   color: '#c9a84c',
-                   fontFamily: 'Inter, sans-serif',
-                   fontSize: '9px',
-                   letterSpacing: '0.4em',
-                   textTransform: 'uppercase',
-                 }}
-               >
-                 Digital Sanctuarium
-               </span>
+    <footer
+      className="mt-auto w-full bg-background text-foreground border-t footer-reading-auto-hide"
+      style={{
+        borderColor: GOLD_HAIR,
+        contentVisibility: 'auto',
+        containIntrinsicSize: '0 520px',
+      }}
+      aria-label={lang === 'pt' ? 'Rodapé' : 'Footer'}
+    >
+      <div className="mx-auto w-full max-w-[1280px] px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl pt-spacing-3xl md:pt-spacing-4xl pb-spacing-2xl">
+        {/* Faixa principal — 4 colunas equilibradas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-4xl">
+          {/* Coluna 1 — Marca */}
+          <div className="flex flex-col gap-spacing-lg md:col-span-2 lg:col-span-1">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline gap-2">
+                <span aria-hidden="true" style={{ color: GOLD, fontSize: 10 }}>●</span>
+                <span
+                  style={{
+                    fontFamily: FONT_DISPLAY,
+                    fontWeight: 500,
+                    fontSize: 'clamp(1.75rem, 2.4vw, 2.25rem)',
+                    letterSpacing: '0.14em',
+                    lineHeight: 1,
+                  }}
+                >
+                  CATHEDRA
+                </span>
+              </div>
+              <span
+                className="pl-4"
+                style={{
+                  color: GOLD,
+                  fontFamily: FONT_BODY,
+                  fontSize: 10,
+                  fontWeight: 500,
+                  letterSpacing: '0.4em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Digital Sanctuarium
+              </span>
             </div>
+
             <p
+              className="max-w-prose"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: FONT_DISPLAY,
                 fontStyle: 'italic',
-                fontSize: '0.95rem',
+                fontSize: '1.0625rem',
                 color: 'hsl(var(--muted-foreground))',
                 lineHeight: 1.65,
               }}
             >
-              {lang === 'pt' 
-                ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica — unindo a tradição milenar à tecnologia moderna.'
-                : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}
+              {lang === 'pt'
+                ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica — unindo tradição milenar e tecnologia contemporânea.'
+                : 'A platform dedicated to the study, prayer, and living of the Catholic faith — uniting ancient tradition with modern technology.'}
             </p>
-            <div className="flex gap-3">
+
+            <div className="flex gap-3 pt-1">
               {[
                 { icon: <Icons.Instagram />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
                 { icon: <Icons.Youtube />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
                 { icon: <Icons.Whatsapp />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
               ].map((social, i) => (
-                <Button
+                <a
                   key={i}
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="rounded-none w-11 h-11 p-0 flex items-center justify-center transition-all"
-                  style={{ border: '1px solid rgba(201,168,76,0.35)', color: '#c9a84c' }}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleSocialClick(social.platform, social.url)}
+                  aria-label={social.platform}
+                  className="inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+                  style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
                 >
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleSocialClick(social.platform, social.url)}
-                    aria-label={social.platform}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
-                  >
-                    {social.icon}
-                  </a>
-                </Button>
+                  {social.icon}
+                </a>
               ))}
             </div>
           </div>
 
-          <div>
-            <h4
-              className="mb-spacing-lg"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
-            >
-              — Santa Sé
-            </h4>
-            <ul className="flex flex-col gap-3" role="list">
+          {/* Coluna 2 — Santa Sé */}
+          <FooterSection
+            title="Santa Sé"
+            id="vatican"
+            isMobile={isMobile}
+            openId={openId}
+            onToggle={toggleSection}
+          >
+            <ul className="flex flex-col" role="list">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground hover:text-[#c9a84c] transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-1 h-1 rounded-none bg-[#c9a84c]/40 group-hover:bg-[#c9a84c] transition-colors" />
-                      {link.title}
-                    </a>
-                  </Button>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkItem}
+                    style={{ fontFamily: FONT_BODY, fontSize: '0.9375rem' }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="w-1 h-1 shrink-0 transition-colors"
+                      style={{ background: GOLD_SOFT }}
+                    />
+                    <span>{link.title}</span>
+                  </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </FooterSection>
 
-          <div>
-            <h4
-              className="mb-spacing-lg"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
-            >
-              — CNBB
-            </h4>
-            <ul className="flex flex-col gap-3" role="list">
+          {/* Coluna 3 — CNBB */}
+          <FooterSection
+            title="CNBB"
+            id="cnbb"
+            isMobile={isMobile}
+            openId={openId}
+            onToggle={toggleSection}
+          >
+            <ul className="flex flex-col" role="list">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground hover:text-[#c9a84c] transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-1 h-1 rounded-none bg-[#c9a84c]/40 group-hover:bg-[#c9a84c] transition-colors" />
-                      {link.title}
-                    </a>
-                  </Button>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkItem}
+                    style={{ fontFamily: FONT_BODY, fontSize: '0.9375rem' }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="w-1 h-1 shrink-0 transition-colors"
+                      style={{ background: GOLD_SOFT }}
+                    />
+                    <span>{link.title}</span>
+                  </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </FooterSection>
 
-          <div className="flex flex-col gap-spacing-xl">
-            <div>
-              <h4
-                className="mb-spacing-md"
-                style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
-              >
-                — {lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}
-              </h4>
-              <select 
-                value={selectedDiocese}
-                onChange={(e) => handleDioceseChange(e.target.value)}
-                aria-label={lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}
-                className="w-full bg-transparent px-0 py-2 text-premium-sm text-foreground focus:outline-none transition-colors cursor-pointer appearance-none"
-                style={{ borderBottom: '1px solid rgba(201,168,76,0.4)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
-              >
-                <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
-                {DIOCESES_BR.map(d => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
-              </select>
-              {dioceseUrl && (
-                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-premium-xs hover:underline" style={{ color: '#c9a84c' }}>
-                  <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
-                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
-                  </a>
-                </Button>
-              )}
-            </div>
-            <div>
-              <h4
-                className="mb-spacing-md"
-                style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
-              >
-                — {lang === 'pt' ? 'Boletim' : 'Newsletter'}
-              </h4>
-              <p
-                className="mb-3"
-                style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '0.85rem', color: 'hsl(var(--muted-foreground))', lineHeight: 1.6 }}
-              >
-                {lang === 'pt' 
-                  ? 'Reflexões teológicas e atualizações da plataforma em seu e-mail.'
-                  : 'Theological reflections and platform updates in your email.'}
-              </p>
-              <form onSubmit={handleSubscribe} className="relative flex items-stretch gap-0">
-                <input 
-                  type="email" 
-                  placeholder={lang === 'pt' ? "Seu e-mail" : "Your email"}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1 bg-transparent px-0 py-2 pr-3 text-premium-sm focus:outline-none transition-colors"
-                  style={{ borderBottom: '1px solid rgba(201,168,76,0.4)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
-                />
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
-                  className="rounded-none bg-transparent transition-all disabled:opacity-50 min-w-[44px] min-h-[44px] px-3 flex items-center justify-center"
-                  style={{ border: '1px solid #c9a84c', color: '#c9a84c' }}
-                  onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
+          {/* Coluna 4 — Diocese + Boletim */}
+          <FooterSection
+            title={lang === 'pt' ? 'Comunhão' : 'Communion'}
+            id="communion"
+            isMobile={isMobile}
+            openId={openId}
+            onToggle={toggleSection}
+          >
+            <div className="flex flex-col gap-spacing-xl">
+              <div>
+                <label
+                  htmlFor="footer-diocese"
+                  className="block mb-2"
+                  style={{ ...EYEBROW_STYLE, fontSize: 9, letterSpacing: '0.3em' }}
                 >
-                  {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-[#c9a84c] border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Icons.ArrowDown className="-rotate-90" />
-                  )}
-                </Button>
-              </form>
+                  {lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}
+                </label>
+                <select
+                  id="footer-diocese"
+                  value={selectedDiocese}
+                  onChange={(e) => handleDioceseChange(e.target.value)}
+                  className="w-full bg-transparent px-0 py-2 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors cursor-pointer appearance-none min-h-[44px]"
+                  style={{
+                    borderBottom: `1px solid ${GOLD_SOFT}`,
+                    fontFamily: FONT_DISPLAY,
+                    fontStyle: 'italic',
+                    fontSize: '1rem',
+                  }}
+                >
+                  <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
+                  {DIOCESES_BR.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+                {dioceseUrl && (
+                  <a
+                    href={dioceseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-3 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+                    style={{ color: GOLD, fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+                  >
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'}
+                    <Icons.ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="footer-email"
+                  className="block mb-2"
+                  style={{ ...EYEBROW_STYLE, fontSize: 9, letterSpacing: '0.3em' }}
+                >
+                  {lang === 'pt' ? 'Boletim' : 'Newsletter'}
+                </label>
+                <p
+                  className="mb-3"
+                  style={{
+                    fontFamily: FONT_DISPLAY,
+                    fontStyle: 'italic',
+                    fontSize: '0.9375rem',
+                    color: 'hsl(var(--muted-foreground))',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {lang === 'pt'
+                    ? 'Reflexões teológicas em seu e-mail.'
+                    : 'Theological reflections in your email.'}
+                </p>
+                <form onSubmit={handleSubscribe} className="flex items-stretch gap-2">
+                  <input
+                    id="footer-email"
+                    type="email"
+                    placeholder={lang === 'pt' ? 'Seu e-mail' : 'Your email'}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    aria-label={lang === 'pt' ? 'Seu e-mail' : 'Your email'}
+                    className="flex-1 min-w-0 bg-transparent px-0 py-2 pr-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors min-h-[44px]"
+                    style={{
+                      borderBottom: `1px solid ${GOLD_SOFT}`,
+                      fontFamily: FONT_DISPLAY,
+                      fontStyle: 'italic',
+                      fontSize: '1rem',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
+                    className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-3 rounded-none transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+                    style={{ border: `1px solid ${GOLD}`, color: GOLD, background: 'transparent' }}
+                    onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; } }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: GOLD, borderTopColor: 'transparent' }} />
+                    ) : (
+                      <Icons.ArrowDown className="-rotate-90 w-4 h-4" />
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
+          </FooterSection>
         </div>
 
+        {/* Régua editorial */}
+        <div
+          className="mt-spacing-3xl md:mt-spacing-4xl mb-spacing-xl h-px w-full"
+          style={{ background: `linear-gradient(90deg, transparent, ${GOLD_HAIR} 20%, ${GOLD_HAIR} 80%, transparent)` }}
+          aria-hidden="true"
+        />
 
-
-        <div className="pt-spacing-3xl flex flex-col md:flex-row items-center justify-between gap-spacing-xl" style={{ borderTop: '1px solid rgba(201,168,76,0.25)' }}>
-          <div className="flex flex-col items-center md:items-start gap-3">
+        {/* Faixa inferior */}
+        <div className="flex flex-col gap-spacing-lg md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-2">
             <p
-              style={{ color: 'hsl(var(--muted-foreground))', fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase' }}
+              style={{
+                color: 'hsl(var(--muted-foreground))',
+                fontFamily: FONT_BODY,
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+              }}
             >
-              © {new Date().getFullYear()} <span style={{ color: '#c9a84c' }}>●</span> Cathedra <span style={{ color: '#c9a84c' }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD }}>●</span> Cathedra <span style={{ color: GOLD }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"
-              style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '0.85rem', color: 'hsl(var(--muted-foreground))' }}
+              style={{
+                fontFamily: FONT_DISPLAY,
+                fontStyle: 'italic',
+                fontSize: '0.9375rem',
+                color: 'hsl(var(--muted-foreground))',
+              }}
             >
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <Button 
-                onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none p-0 h-auto bg-transparent hover:bg-transparent transition-colors"
-                style={{ color: '#c9a84c', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
+              <button
+                type="button"
+                onClick={() => navigate(AppRoute.ADMIN)}
+                className="cursor-pointer select-none bg-transparent p-0 h-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
+                style={{ color: GOLD, fontFamily: FONT_DISPLAY, fontStyle: 'italic', fontSize: '0.9375rem' }}
               >
                 Evaldo.os
-              </Button>
+              </button>
             </p>
           </div>
-          <div className="flex items-center gap-6">
-            <nav className="flex items-center flex-wrap" aria-label="Links institucionais">
+
+          <div className="flex flex-wrap items-center gap-x-1 gap-y-2">
+            <nav
+              aria-label={lang === 'pt' ? 'Links institucionais' : 'Institutional links'}
+              className="flex flex-wrap items-center gap-x-1 gap-y-1"
+            >
               {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
                 <React.Fragment key={item.label}>
-                  <Button 
+                  <Button
                     variant="ghost"
-                    onClick={() => navigate(item.path)} 
-                    className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none px-2 py-1 rounded-none bg-transparent hover:bg-transparent"
-                    style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.28em', textTransform: 'uppercase' }}
+                    onClick={() => navigate(item.path)}
+                    className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
+                    style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
                     aria-label={item.label}
                   >
                     {item.label}
                   </Button>
                   {(index < array.length - 1 || isAdmin) && (
-                    <span className="mx-1 select-none" style={{ color: '#c9a84c', opacity: 0.5 }}>·</span>
+                    <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
                   )}
                 </React.Fragment>
               ))}
@@ -417,8 +562,8 @@ const Footer: React.FC = React.memo(() => {
                   variant="ghost"
                   data-testid="footer-admin-link"
                   onClick={() => navigate('/admin/seo')}
-                  className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none px-2 py-1 rounded-none bg-transparent hover:bg-transparent"
-                  style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', letterSpacing: '0.28em', textTransform: 'uppercase' }}
+                  className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
+                  style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
                   aria-label="Painel administrativo"
                 >
                   Admin
@@ -426,16 +571,17 @@ const Footer: React.FC = React.memo(() => {
               )}
             </nav>
 
-            <Button 
-              onClick={scrollToTop} 
-              className="p-2 bg-transparent rounded-none transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none"
-              style={{ border: '1px solid rgba(201,168,76,0.4)', color: '#c9a84c' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
-              aria-label="Voltar ao topo"
+            <button
+              type="button"
+              onClick={scrollToTop}
+              aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Back to top'}
+              className="ml-2 inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD, background: 'transparent' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
             >
               <Icons.ArrowDown className="rotate-180 w-4 h-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>
