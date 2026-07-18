@@ -1,0 +1,110 @@
+name: menu snapshots (visual regression, chromium)
+
+# Regressão visual do menu (desktop + mobile iPhone SE).
+# Chromium-only para evitar diffs entre engines.
+# Publica os snapshots atuais e diffs como artifact quando há falha de layout.
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/cathedra/Sidebar.tsx'
+      - 'src/components/cathedra/BottomNav.tsx'
+      - 'src/components/cathedra/AppHeader.tsx'
+      - 'src/App.tsx'
+      - 'src/index.css'
+      - 'tests/e2e/menu-visual-regression.spec.ts'
+      - 'tests/e2e/__screenshots__/menu-visual-regression.spec.ts/**'
+      - 'playwright.config.ts'
+      - '.github/workflows/menu-snapshots.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  menu-snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    name: menu-snapshots (chromium)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build app
+        run: bun run build
+
+      - name: Start preview server
+        run: |
+          bunx vite preview --port 8080 --strictPort &
+          echo $! > /tmp/preview.pid
+          for i in $(seq 1 60); do
+            if curl -sSf http://localhost:8080/ > /dev/null; then echo "preview ready"; break; fi
+            sleep 1
+          done
+
+      - name: Run menu snapshot regression (Chromium)
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/menu-visual-regression.spec.ts \
+            --project=chromium \
+            --reporter=list,html,json
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
+
+      - name: Append summary
+        if: always()
+        run: |
+          echo "## Menu snapshots · chromium" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f playwright-report/results.json ]; then
+            node -e "
+              const r = require('./playwright-report/results.json');
+              const s = r.stats || {};
+              console.log('- Expected: ' + (s.expected||0));
+              console.log('- Unexpected: ' + (s.unexpected||0));
+              console.log('- Flaky: ' + (s.flaky||0));
+              console.log('- Skipped: ' + (s.skipped||0));
+            " >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Publica APENAS quando há falha: HTML report + imagens atuais e diffs
+      # gerados pelo Playwright em test-results/ (padrão: *-actual.png, *-diff.png,
+      # *-expected.png). Facilita revisar o regression no PR sem rodar local.
+      - name: Upload snapshot diffs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-snapshots-diffs
+          path: |
+            test-results/**/*-actual.png
+            test-results/**/*-expected.png
+            test-results/**/*-diff.png
+            test-results/**/trace.zip
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload Playwright HTML report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-snapshots-report
+          path: playwright-report
+          retention-days: 14
+          if-no-files-found: ignore
