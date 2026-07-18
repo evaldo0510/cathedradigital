@@ -2823,6 +2823,63 @@ export type Database = {
         }
         Relationships: []
       }
+      nexus_contributions: {
+        Row: {
+          book_abbr: string
+          chapter: number
+          connection_type: string
+          contributor_notes: string | null
+          created_at: string
+          id: string
+          reference_id: string | null
+          reference_title: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string
+          summary: string
+          updated_at: string
+          user_id: string | null
+          verse: number | null
+        }
+        Insert: {
+          book_abbr: string
+          chapter: number
+          connection_type: string
+          contributor_notes?: string | null
+          created_at?: string
+          id?: string
+          reference_id?: string | null
+          reference_title: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          summary: string
+          updated_at?: string
+          user_id?: string | null
+          verse?: number | null
+        }
+        Update: {
+          book_abbr?: string
+          chapter?: number
+          connection_type?: string
+          contributor_notes?: string | null
+          created_at?: string
+          id?: string
+          reference_id?: string | null
+          reference_title?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          summary?: string
+          updated_at?: string
+          user_id?: string | null
+          verse?: number | null
+        }
+        Relationships: []
+      }
       nexus_relation_types: {
         Row: {
           code: string
