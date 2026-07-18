@@ -843,16 +843,23 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                             ) : link ? (
                               <button
                                 type="button"
-                                onClick={() => navigateInternal(link)}
+                                data-testid="nexus-bubble-cta"
+                                data-nexus-type={c.type}
+                                onClick={() => {
+                                  trackNexusClick({
+                                    tagId: currentTag.id,
+                                    tagSlug: currentTag.slug,
+                                    type: c.type,
+                                    id: c.id,
+                                    destination: link,
+                                  });
+                                  navigateInternal(link);
+                                }}
                                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
                               >
                                 {section.preset.cta} →
                               </button>
-                            ) : (
-                              <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
-                                {section.preset.cta}
-                              </span>
-                            )}
+                            ) : null /* STAB-NEXUS-P0: nunca renderizar <span> morto */}
                           </div>
 
                           {/* Fio curatorial entre itens da mesma seção */}
