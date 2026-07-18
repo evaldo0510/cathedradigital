@@ -2,28 +2,33 @@
 /**
  * Gera um resumo Markdown dos diffs de snapshot do Playwright.
  *
- * Varre `test-results/` procurando arquivos `*-expected.png`, `*-actual.png`
- * e `*-diff.png` produzidos por `toHaveScreenshot` quando há falha,
+ * Varre `test-results/` procurando arquivos `*-expected.png`, `*-actual.png`,
+ * `*-diff.png` e `trace.zip` produzidos quando `toHaveScreenshot` falha,
  * e escreve:
- *   1. Um arquivo `test-results/SNAPSHOT-DIFFS.md` com as imagens embutidas
- *      (funciona bem quando publicado como artifact).
- *   2. As mesmas seções em `$GITHUB_STEP_SUMMARY` (referenciando o artifact),
- *      quando a variável estiver definida.
+ *   1. `test-results/SNAPSHOT-DIFFS.md` com as imagens embutidas (funciona bem
+ *      quando publicado como artifact — GitHub renderiza inline).
+ *   2. Um resumo no `$GITHUB_STEP_SUMMARY` com LINKS DIRETOS para cada arquivo
+ *      dentro do artifact `menu-snapshots-diffs` (usando ARTIFACT_URL quando
+ *      disponível) e caminhos relativos como fallback.
  *
  * Uso: `node scripts/ci/summarize-snapshot-diffs.mjs [test-results-dir]`
+ *
+ * Variáveis opcionais:
+ *   ARTIFACT_URL — URL base pública do artifact (ex.: link do run). Quando
+ *   ausente, o resumo usa caminhos relativos ao artifact baixado.
  */
 
 import { readdirSync, statSync, existsSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, relative, dirname, basename } from 'node:path';
 
 const root = process.argv[2] || 'test-results';
+const artifactBase = (process.env.ARTIFACT_URL || '').replace(/\/+$/, '');
 
 if (!existsSync(root)) {
   console.log(`[snapshot-diffs] diretório ${root} não existe — nada a resumir.`);
   process.exit(0);
 }
 
-/** Walk recursivo simples. */
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -42,17 +47,31 @@ if (diffs.length === 0) {
   process.exit(0);
 }
 
-/** Agrupa por caso de teste (diretório do arquivo). */
+/** Encontra o trace.zip mais próximo (mesmo diretório do diff). */
+function findTrace(dir) {
+  const candidate = join(dir, 'trace.zip');
+  return existsSync(candidate) ? candidate : null;
+}
+
+/** Constrói link para um caminho, priorizando ARTIFACT_URL. */
+function linkTo(pathRel) {
+  if (!pathRel) return null;
+  if (artifactBase) return `${artifactBase}/${pathRel}`;
+  return pathRel;
+}
+
 const groups = new Map();
 for (const diff of diffs) {
   const dir = dirname(diff);
   const base = basename(diff).replace(/-diff\.png$/, '');
   const expected = join(dir, `${base}-expected.png`);
   const actual = join(dir, `${base}-actual.png`);
+  const trace = findTrace(dir);
   if (!groups.has(dir)) groups.set(dir, []);
-  groups.get(dir).push({ name: base, expected, actual, diff });
+  groups.get(dir).push({ name: base, expected, actual, diff, trace });
 }
 
+// ---------- 1. SNAPSHOT-DIFFS.md (imagens embutidas) ----------
 const lines = [];
 lines.push('# Snapshot diffs · resumo visual');
 lines.push('');
@@ -73,6 +92,10 @@ for (const [dir, items] of groups) {
       .map((p) => (existsSync(p) ? `![](${relative(root, p)})` : '_(ausente)_'))
       .join(' | ');
     lines.push(`| ${row} |`);
+    if (it.trace) {
+      lines.push('');
+      lines.push(`Trace: [\`${relative(root, it.trace)}\`](${relative(root, it.trace)})`);
+    }
     lines.push('');
   }
 }
@@ -82,20 +105,39 @@ mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, lines.join('\n'), 'utf8');
 console.log(`[snapshot-diffs] escrito ${outPath} (${diffs.length} diffs)`);
 
-// Publica um resumo enxuto no GITHUB_STEP_SUMMARY quando disponível.
+// ---------- 2. $GITHUB_STEP_SUMMARY (links diretos) ----------
 const summaryPath = process.env.GITHUB_STEP_SUMMARY;
 if (summaryPath) {
   const short = [];
-  short.push('## Snapshot diffs');
+  short.push('## Snapshot diffs · links diretos');
   short.push('');
   short.push(`Total: **${diffs.length}** em **${groups.size}** teste(s).`);
   short.push('');
-  short.push('Baixe o artifact `menu-snapshots-diffs` para ver as imagens lado a lado (ver `SNAPSHOT-DIFFS.md`).');
+  short.push(
+    artifactBase
+      ? `Links apontam para o artifact publicado (\`ARTIFACT_URL=${artifactBase}\`).`
+      : 'Links são relativos ao artifact `menu-snapshots-diffs` — baixe-o para navegar.',
+  );
   short.push('');
+  short.push('| Teste | Snapshot | Esperado | Atual | Diff | Trace |');
+  short.push('| --- | --- | :--: | :--: | :--: | :--: |');
+
   for (const [dir, items] of groups) {
-    short.push(`- \`${relative(root, dir) || dir}\` — ${items.length} snapshot(s): ${items.map((i) => `\`${i.name}\``).join(', ')}`);
+    const testLabel = relative(root, dir) || dir;
+    for (const it of items) {
+      const cell = (p) =>
+        p && existsSync(p) ? `[png](${linkTo(relative(root, p))})` : '—';
+      const traceCell = it.trace
+        ? `[zip](${linkTo(relative(root, it.trace))})`
+        : '—';
+      short.push(
+        `| \`${testLabel}\` | \`${it.name}\` | ${cell(it.expected)} | ${cell(it.actual)} | ${cell(it.diff)} | ${traceCell} |`,
+      );
+    }
   }
   short.push('');
+  short.push('Preview lado a lado: veja `SNAPSHOT-DIFFS.md` dentro do mesmo artifact.');
+  short.push('');
   appendFileSync(summaryPath, short.join('\n') + '\n', 'utf8');
-  console.log('[snapshot-diffs] resumo publicado em $GITHUB_STEP_SUMMARY');
+  console.log('[snapshot-diffs] resumo com links publicado em $GITHUB_STEP_SUMMARY');
 }
