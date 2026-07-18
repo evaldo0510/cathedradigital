@@ -20,6 +20,7 @@ import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
