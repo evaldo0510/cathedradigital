@@ -498,16 +498,21 @@ const JornadaStepPage: React.FC = () => {
             </div>
           )}
           {completed && (
-            <ReaderContinuation
-              context={{
-                kind: 'journey-step',
-                id: stepId ?? undefined,
-                meta: {
-                  journeyId: journeyId ?? undefined,
-                  nextStepId: nextStep?.id,
-                },
-              }}
-            />
+            <>
+              <div className="mb-spacing-lg">
+                <NexusBubbles />
+              </div>
+              <ReaderContinuation
+                context={{
+                  kind: 'journey-step',
+                  id: stepId ?? undefined,
+                  meta: {
+                    journeyId: journeyId ?? undefined,
+                    nextStepId: nextStep?.id,
+                  },
+                }}
+              />
+            </>
           )}
         </div>
       </div>
