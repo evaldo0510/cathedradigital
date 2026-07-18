@@ -92,7 +92,7 @@ const FormacaoTimeline: React.FC = () => {
 
   return (
     <section
-      className="editorial-column mx-auto py-spacing-xl"
+      className="editorial-column mx-auto pt-spacing-md pb-spacing-xl"
       aria-labelledby="formacao-timeline-title"
     >
       <p

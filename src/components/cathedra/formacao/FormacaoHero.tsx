@@ -293,10 +293,7 @@ const FormacaoHero: React.FC = () => {
         </Button>
       </div>
 
-      {/* Zona de segurança mobile: evita colisão do CTA "Continuar" com o SmartActionButton (FAB dourado) ancorado na BottomNav. */}
-      <div className="h-32 lg:hidden" aria-hidden="true" />
-
-      <hr className="editorial-rule editorial-rule--hair mt-spacing-2xl" />
+      <hr className="editorial-rule editorial-rule--hair mt-spacing-xl" />
     </motion.section>
   );
 };
