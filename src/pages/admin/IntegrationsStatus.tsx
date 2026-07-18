@@ -1,13 +1,17 @@
 import { Helmet } from "react-helmet-async";
-import { CheckCircle2, XCircle, ExternalLink } from "lucide-react";
+import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Status = "connected" | "disconnected" | "partial";
 
 interface Integration {
+  id: string;
   name: string;
   category: string;
   status: Status;
@@ -16,8 +20,11 @@ interface Integration {
   docsUrl?: string;
 }
 
+type TestResult = { ok: boolean; message: string; latencyMs?: number };
+
 const integrations: Integration[] = [
   {
+    id: "lovable-cloud",
     name: "Lovable Cloud",
     category: "Infraestrutura",
     status: "connected",
@@ -25,6 +32,7 @@ const integrations: Integration[] = [
     howTo: "Ativo por padrão neste projeto. Acesse pelo botão 'View Backend'.",
   },
   {
+    id: "lovable-ai",
     name: "Lovable AI Gateway",
     category: "IA",
     status: "connected",
@@ -32,6 +40,7 @@ const integrations: Integration[] = [
     howTo: "Disponível automaticamente nas edge functions. Secret gerenciado.",
   },
   {
+    id: "mercado-pago",
     name: "Mercado Pago",
     category: "Pagamentos",
     status: "connected",
@@ -40,6 +49,7 @@ const integrations: Integration[] = [
     docsUrl: "https://www.mercadopago.com.br/developers",
   },
   {
+    id: "google-api-key",
     name: "Google API Key",
     category: "Google",
     status: "connected",
@@ -48,6 +58,7 @@ const integrations: Integration[] = [
     docsUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
+    id: "firecrawl",
     name: "Firecrawl",
     category: "Scraping",
     status: "partial",
@@ -55,6 +66,7 @@ const integrations: Integration[] = [
     howTo: "Existe no workspace mas NÃO vinculado a este projeto. Peça 'vincular Firecrawl' para ativar.",
   },
   {
+    id: "google-search-console",
     name: "Google Search Console",
     category: "SEO",
     status: "disconnected",
@@ -63,6 +75,7 @@ const integrations: Integration[] = [
     docsUrl: "https://search.google.com/search-console",
   },
   {
+    id: "semrush",
     name: "Semrush",
     category: "SEO",
     status: "disconnected",
@@ -71,6 +84,7 @@ const integrations: Integration[] = [
     docsUrl: "https://www.semrush.com",
   },
   {
+    id: "google-analytics",
     name: "Google Analytics",
     category: "Analytics",
     status: "disconnected",
@@ -78,6 +92,7 @@ const integrations: Integration[] = [
     howTo: "Não configurado. Conecte via Connectors → Google Analytics.",
   },
   {
+    id: "stripe",
     name: "Stripe",
     category: "Pagamentos",
     status: "disconnected",
@@ -85,6 +100,7 @@ const integrations: Integration[] = [
     howTo: "Não configurado. Peça 'ativar Stripe' se necessário.",
   },
   {
+    id: "github",
     name: "GitHub",
     category: "Dev",
     status: "disconnected",
@@ -112,6 +128,26 @@ const statusMeta: Record<Status, { label: string; className: string; icon: typeo
 };
 
 export default function IntegrationsStatus() {
+  const [results, setResults] = useState<Record<string, TestResult>>({});
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
+
+  const runTest = async (id: string) => {
+    setLoading((s) => ({ ...s, [id]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke("integrations-test", { body: { id } });
+      if (error) throw error;
+      const r = data as TestResult;
+      setResults((s) => ({ ...s, [id]: r }));
+      r.ok ? toast.success(`${id}: ${r.message}`) : toast.error(`${id}: ${r.message}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Falha no teste";
+      setResults((s) => ({ ...s, [id]: { ok: false, message: msg } }));
+      toast.error(`${id}: ${msg}`);
+    } finally {
+      setLoading((s) => ({ ...s, [id]: false }));
+    }
+  };
+
   const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
@@ -170,13 +206,47 @@ export default function IntegrationsStatus() {
                         <p className="font-medium mb-1">Como configurar</p>
                         <p className="text-muted-foreground">{item.howTo}</p>
                       </div>
-                      {item.docsUrl && (
-                        <Button variant="outline" size="sm" asChild className="self-start">
-                          <a href={item.docsUrl} target="_blank" rel="noreferrer">
-                            Documentação <ExternalLink className="ml-1 h-3 w-3" />
-                          </a>
-                        </Button>
+                      {results[item.id] && (
+                        <div
+                          className={`rounded-md p-3 text-sm border ${
+                            results[item.id].ok
+                              ? "bg-emerald-500/5 border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
+                              : "bg-red-500/5 border-red-500/30 text-red-700 dark:text-red-400"
+                          }`}
+                          role="status"
+                          aria-live="polite"
+                        >
+                          <p className="font-medium mb-0.5">
+                            {results[item.id].ok ? "✓ Teste OK" : "✗ Falha no teste"}
+                            {results[item.id].latencyMs != null && (
+                              <span className="ml-2 text-xs opacity-70">{results[item.id].latencyMs}ms</span>
+                            )}
+                          </p>
+                          <p className="opacity-90">{results[item.id].message}</p>
+                        </div>
                       )}
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => runTest(item.id)}
+                          disabled={loading[item.id]}
+                        >
+                          {loading[item.id] ? (
+                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          ) : (
+                            <PlayCircle className="mr-1 h-3 w-3" />
+                          )}
+                          Testar conexão
+                        </Button>
+                        {item.docsUrl && (
+                          <Button variant="outline" size="sm" asChild>
+                            <a href={item.docsUrl} target="_blank" rel="noreferrer">
+                              Documentação <ExternalLink className="ml-1 h-3 w-3" />
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 );
