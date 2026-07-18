@@ -205,11 +205,36 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   // Agrupa o conteúdo já retornado pelo Knowledge Engine em capítulos narrativos.
   // Ordem estável seguindo NEXUS_KIND_PRESETS.order.
+  // STAB-NEXUS-P0 Etapa 2/3: filtra itens sem rota resolvível (father/council/canon
+  // ou nós órfãos) e emite `nexus.failed` — nenhum <span> morto chega ao render.
   const narrativeSections = useMemo(() => {
     const groups = new Map<NexusKind, TagContent[]>();
     for (const c of content) {
       const kind = (c.type as NexusKind);
-      if (!NEXUS_KIND_PRESETS[kind]) continue;
+      if (!NEXUS_KIND_PRESETS[kind]) {
+        trackNexusFailed({
+          tagId: currentTag.id,
+          tagSlug: currentTag.slug,
+          type: c.type,
+          id: c.id,
+          reason: 'no-preset',
+        });
+        continue;
+      }
+      // Item precisa de rota (resolveLink) OU popover Bíblia (book+chapter).
+      const link = resolveLink(c);
+      const canBiblePopover =
+        c.type === 'bible' && !!c.metadata?.book && Number.isFinite(Number(c.metadata?.chapter));
+      if (!link && !canBiblePopover) {
+        trackNexusFailed({
+          tagId: currentTag.id,
+          tagSlug: currentTag.slug,
+          type: c.type,
+          id: c.id,
+          reason: 'no-route',
+        });
+        continue;
+      }
       const arr = groups.get(kind) ?? [];
       arr.push(c);
       groups.set(kind, arr);
@@ -217,7 +242,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     return Array.from(groups.entries())
       .map(([kind, items]) => ({ kind, preset: NEXUS_KIND_PRESETS[kind], items }))
       .sort((a, b) => a.preset.order - b.preset.order);
-  }, [content]);
+  }, [content, resolveLink, currentTag.id, currentTag.slug]);
 
   const contextPath = navHistory.length > 1
     ? navHistory.map(t => t.label).join(' · ')
