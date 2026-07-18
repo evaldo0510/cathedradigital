@@ -116,31 +116,35 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   }, [isOpen, onClose]);
   
   const sections = useMemo(() => {
-    const adminRoutes = APP_ROUTES.filter(r => r.category === 'admin').map(r => ({
+    // ONDA 1: respeitar `showInMenu` — órfãs catalogadas ficam acessíveis via
+    // deep link mas não aparecem no Sidebar.
+    const inMenu = APP_ROUTES.filter(r => r.showInMenu);
+
+    const adminRoutes = inMenu.filter(r => r.category === 'admin').map(r => ({
       label: r.label,
       path: r.path,
       icon: <r.icon size={20} />
     }));
 
-    const spiritualRoutes = APP_ROUTES.filter(r => r.category === 'spiritual').map(r => ({
+    const spiritualRoutes = inMenu.filter(r => r.category === 'spiritual').map(r => ({
       label: r.label,
       path: r.path,
       icon: <r.icon size={20} />
     }));
 
-    const coreRoutes = APP_ROUTES.filter(r => r.category === 'core' && r.path !== '/').map(r => ({
+    const coreRoutes = inMenu.filter(r => r.category === 'core' && r.path !== '/').map(r => ({
       label: r.label,
       path: r.path,
       icon: <r.icon size={20} />
     }));
 
-    const contentRoutes = APP_ROUTES.filter(r => r.category === 'content').map(r => ({
+    const contentRoutes = inMenu.filter(r => r.category === 'content').map(r => ({
       label: r.label,
       path: r.path,
       icon: <r.icon size={20} />
     }));
 
-    const userRoutes = APP_ROUTES.filter(r => r.category === 'user').map(r => ({
+    const userRoutes = inMenu.filter(r => r.category === 'user').map(r => ({
       label: r.label,
       path: r.path,
       icon: <r.icon size={20} />
