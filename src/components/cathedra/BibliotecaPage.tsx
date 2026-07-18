@@ -500,7 +500,6 @@ const Shelf: React.FC<{
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
-  recents: ReturnType<typeof useBibliotecaRecents>['recents'];
 }> = ({ escritos, onOpen }) => (
   <div className="w-full">
     <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
