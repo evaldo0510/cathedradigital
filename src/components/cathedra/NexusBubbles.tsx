@@ -20,6 +20,21 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import BibleVersePopover from './BibleVersePopover';
 import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
 import { NEXUS_KIND_PRESETS, NEXUS_HEADER, NEXUS_EMPTY, NEXUS_ERROR, type NexusKind } from './nexus/nexusPresets';
+import {
+  NEXUS_STATE_KEY,
+  readPersistedState,
+  writePersistedState,
+  reduceSectionKeyboard,
+  isFocusToggleKey,
+  sectionLiveMessage,
+  restoredLiveMessage,
+  closedLiveMessage,
+  focusModeLiveMessage,
+  parseNexusHash,
+  buildNexusHash,
+  buildNexusShareUrl,
+  type PersistedNexusState,
+} from '@/lib/nexusState';
 
 
 
@@ -54,39 +69,10 @@ interface TagBubbleProps {
 }
 
 
-const NEXUS_STATE_KEY = 'nexus:state:v1';
+// Estado persistido, atalhos, deep-link e mensagens aria-live vivem em @/lib/nexusState
+// (isolados para permitir testes unitários determinísticos).
 
-type PersistedNexusState = {
-  tagId: string;
-  tagSlug?: string;
-  path: string;
-  historyIds: string[];
-  activeSectionIdx: number;
-  visitedKinds: string[];
-  ts: number;
-};
 
-const readPersistedState = (): PersistedNexusState | null => {
-  try {
-    const raw = localStorage.getItem(NEXUS_STATE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as PersistedNexusState;
-    // expira em 24h
-    if (Date.now() - (parsed.ts || 0) > 1000 * 60 * 60 * 24) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-};
-
-const writePersistedState = (s: PersistedNexusState | null) => {
-  try {
-    if (s === null) localStorage.removeItem(NEXUS_STATE_KEY);
-    else localStorage.setItem(NEXUS_STATE_KEY, JSON.stringify(s));
-  } catch {
-    /* ignore */
-  }
-};
 
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
 
@@ -106,6 +92,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [visitedKinds, setVisitedKinds] = useState<Set<string>>(new Set());
   const [liveMessage, setLiveMessage] = useState<string>('');
   const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
+  const [focusMode, setFocusMode] = useState(false);
+  // Guard: evita reentrada infinita entre "aplicar estado externo" e "persistir".
+  const applyingExternalRef = React.useRef(false);
+  const shareCopiedRef = React.useRef<number | null>(null);
+  const [copiedShare, setCopiedShare] = useState(false);
 
   const currentTag = navHistory[navHistory.length - 1];
 
@@ -268,7 +259,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     setOpen(val);
     if (!val) {
       writePersistedState(null);
-      setLiveMessage('Painel fechado. Trecho anterior restaurado.');
+      setLiveMessage(closedLiveMessage());
+      setFocusMode(false);
+      // limpa hash de deep-link ao fechar
+      if (window.location.hash && window.location.hash.includes('nexus=')) {
+        const url = window.location.pathname + window.location.search;
+        window.history.replaceState(null, '', url);
+      }
     }
   }, [navigateOnClick, navigate, tag, fetchContentForTag, persistReturn]);
 
@@ -278,23 +275,45 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     requestAnimationFrame(() => navigate(path));
   }, [persistReturn, navigate]);
 
-  // Restaura estado persistido quando esta bubble corresponde ao salvo.
+  // Restaura estado persistido OU abre via deep link (#nexus=slug[:kind]).
   useEffect(() => {
+    // Deep link tem prioridade se corresponder a esta tag.
+    const deep = parseNexusHash(window.location.hash);
+    if (deep && deep.slug === tag.slug) {
+      savedScrollRef.current = window.scrollY;
+      setOpen(true);
+      fetchContentForTag(tag);
+      setLiveMessage(restoredLiveMessage(tag.label));
+      return;
+    }
     const saved = readPersistedState();
     if (!saved || saved.tagId !== tag.id) return;
     if (saved.path !== window.location.pathname + window.location.search) return;
     setVisitedKinds(new Set(saved.visitedKinds || []));
     setActiveSectionIdx(saved.activeSectionIdx || 0);
+    setFocusMode(!!saved.focusMode);
     savedScrollRef.current = window.scrollY;
     setOpen(true);
     fetchContentForTag(tag);
-    setLiveMessage(`Painel Nexus restaurado em ${tag.label}`);
+    setLiveMessage(restoredLiveMessage(tag.label));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persiste estado enquanto o painel está aberto.
+  // Após o conteúdo carregar, se veio deep-link com kind, seleciona a seção.
+  useEffect(() => {
+    if (!open || narrativeSections.length === 0) return;
+    const deep = parseNexusHash(window.location.hash);
+    if (!deep || deep.slug !== currentTag.slug || !deep.kind) return;
+    const idx = narrativeSections.findIndex(s => s.kind === deep.kind);
+    if (idx >= 0 && idx !== activeSectionIdx) setActiveSectionIdx(idx);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, narrativeSections.length]);
+
+  // Persiste estado enquanto o painel está aberto (inclui focusMode).
   useEffect(() => {
     if (!open) return;
+    if (applyingExternalRef.current) return; // evita eco do sync entre abas
+    const currentKind = narrativeSections[activeSectionIdx]?.kind;
     writePersistedState({
       tagId: currentTag.id,
       tagSlug: currentTag.slug,
@@ -302,9 +321,43 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       historyIds: navHistory.map(h => h.id),
       activeSectionIdx,
       visitedKinds: Array.from(visitedKinds),
+      focusMode,
       ts: Date.now(),
     });
-  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds]);
+    // Reflete a seção atual no hash para deep-link compartilhável.
+    if (currentKind) {
+      const newHash = buildNexusHash(currentTag.slug, currentKind);
+      if (window.location.hash !== newHash) {
+        const url = window.location.pathname + window.location.search + newHash;
+        window.history.replaceState(null, '', url);
+      }
+    }
+  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds, focusMode, narrativeSections]);
+
+  // Sincronização entre abas via evento `storage`.
+  useEffect(() => {
+    if (!open) return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== NEXUS_STATE_KEY || !e.newValue) return;
+      try {
+        const remote = JSON.parse(e.newValue) as PersistedNexusState;
+        if (remote.tagId !== currentTag.id) return;
+        applyingExternalRef.current = true;
+        if (typeof remote.activeSectionIdx === 'number') {
+          setActiveSectionIdx(remote.activeSectionIdx);
+        }
+        setVisitedKinds(new Set(remote.visitedKinds || []));
+        setFocusMode(!!remote.focusMode);
+        setLiveMessage('Painel sincronizado com outra aba.');
+        // libera guard no próximo tick para o efeito de persistência não reescrever
+        setTimeout(() => { applyingExternalRef.current = false; }, 0);
+      } catch {
+        /* payload inválido — ignora */
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [open, currentTag.id]);
 
   // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
   useEffect(() => {
@@ -317,22 +370,55 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       next.add(current.kind);
       return next;
     });
-    setLiveMessage(`Seção ${activeSectionIdx + 1} de ${narrativeSections.length}: ${current.preset.eyebrow}`);
+    setLiveMessage(sectionLiveMessage(activeSectionIdx, narrativeSections.length, current.preset.eyebrow));
     const el = sectionRefs.current[current.kind];
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeSectionIdx, open, narrativeSections]);
 
-  // Atalhos: Alt+→/← ou [/] alternam entre seções sem sair do painel.
+  // Atalhos: Alt+←/→ ou [/] alternam seções; `f` alterna modo foco.
   const handlePanelKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (narrativeSections.length === 0) return;
-    if (e.altKey && (e.key === 'ArrowRight' || e.key === ']')) {
+    if (isFocusToggleKey(e)) {
+      // não sequestrar quando o foco está em input/textarea/contenteditable
+      const target = e.target as HTMLElement | null;
+      const tagName = target?.tagName;
+      if (tagName === 'INPUT' || tagName === 'TEXTAREA' || target?.isContentEditable) return;
       e.preventDefault();
-      setActiveSectionIdx(i => Math.min(i + 1, narrativeSections.length - 1));
-    } else if (e.altKey && (e.key === 'ArrowLeft' || e.key === '[')) {
-      e.preventDefault();
-      setActiveSectionIdx(i => Math.max(i - 1, 0));
+      setFocusMode(prev => {
+        const next = !prev;
+        setLiveMessage(focusModeLiveMessage(next));
+        return next;
+      });
+      return;
     }
-  }, [narrativeSections.length]);
+    const next = reduceSectionKeyboard(e, activeSectionIdx, narrativeSections.length);
+    if (next !== null && next !== activeSectionIdx) {
+      e.preventDefault();
+      setActiveSectionIdx(next);
+    }
+  }, [activeSectionIdx, narrativeSections.length]);
+
+  const handleShareDeepLink = useCallback(async () => {
+    const currentKind = narrativeSections[activeSectionIdx]?.kind;
+    const url = buildNexusShareUrl(
+      window.location.origin + window.location.pathname + window.location.search,
+      currentTag.slug,
+      currentKind,
+    );
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: currentTag.label, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+      setCopiedShare(true);
+      setLiveMessage('Link do Nexus copiado para a área de transferência.');
+      if (shareCopiedRef.current) window.clearTimeout(shareCopiedRef.current);
+      shareCopiedRef.current = window.setTimeout(() => setCopiedShare(false), 2000);
+    } catch {
+      /* usuário cancelou ou clipboard indisponível */
+    }
+  }, [activeSectionIdx, currentTag.label, currentTag.slug, narrativeSections]);
+
 
   return (
     <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
@@ -387,79 +473,150 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           {liveMessage}
         </div>
 
-        {/* Cabeçalho editorial — margem do livro. */}
-        <header className="px-spacing-xl pt-spacing-2xl pb-spacing-lg flex-shrink-0">
-          <div className="flex items-baseline gap-spacing-sm mb-spacing-md">
-            <Icons.Compass className="w-3 h-3 text-secondary" strokeWidth={1.4} aria-hidden="true" />
-            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
-              {NEXUS_HEADER.eyebrow}
-            </span>
-          </div>
-          <SheetTitle asChild>
-            <h2
-              id={`nexus-title-${currentTag.id}`}
-              className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
-            >
-              {NEXUS_HEADER.subtitle}
-            </h2>
-          </SheetTitle>
-          <SheetDescription
-            id={`nexus-desc-${currentTag.id}`}
-            className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
-          >
-            <span className="sr-only">Conexões teológicas para </span>
-            {contextPath}
-          </SheetDescription>
-          <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
-
-          {/* Indicador de seções visitadas + navegação por teclado */}
-          {narrativeSections.length > 1 && (
-            <nav
-              aria-label="Seções do Nexus"
-              className="mt-spacing-md flex items-center gap-spacing-xs"
-            >
-              {narrativeSections.map((s, i) => {
-                const visited = visitedKinds.has(s.kind);
-                const active = i === activeSectionIdx;
-                return (
+        {/* Cabeçalho editorial — margem do livro. Ocultado no modo foco. */}
+        <header
+          data-focus-mode={focusMode ? 'true' : 'false'}
+          className={cn(
+            'px-spacing-xl flex-shrink-0 transition-all',
+            focusMode ? 'pt-spacing-lg pb-spacing-xs' : 'pt-spacing-2xl pb-spacing-lg',
+          )}
+        >
+          {/* No modo foco reduzimos ao essencial: só um handle mínimo + toggles. */}
+          {!focusMode && (
+            <>
+              <div className="flex items-baseline justify-between gap-spacing-sm mb-spacing-md">
+                <div className="flex items-baseline gap-spacing-sm">
+                  <Icons.Compass className="w-3 h-3 text-secondary" strokeWidth={1.4} aria-hidden="true" />
+                  <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+                    {NEXUS_HEADER.eyebrow}
+                  </span>
+                </div>
+                <div className="flex items-center gap-spacing-xs">
                   <button
-                    key={s.kind}
                     type="button"
-                    onClick={() => setActiveSectionIdx(i)}
-                    aria-current={active ? 'true' : undefined}
-                    aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
-                    title={s.preset.eyebrow}
-                    className={cn(
-                      'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
-                    )}
+                    onClick={handleShareDeepLink}
+                    aria-label={copiedShare ? 'Link copiado' : 'Copiar deep link do Nexus'}
+                    className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
                   >
-                    <span
-                      className={cn(
-                        'block rounded-full transition-all',
-                        active
-                          ? 'h-[8px] w-[8px] bg-secondary'
-                          : visited
-                            ? 'h-[6px] w-[6px] bg-secondary/60'
-                            : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
-                      )}
-                    />
+                    {copiedShare ? '✓' : '⧉'}
                   </button>
-                );
-              })}
-              <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
-                Alt+←/→
-              </span>
-            </nav>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFocusMode(true);
+                      setLiveMessage(focusModeLiveMessage(true));
+                    }}
+                    aria-label="Ativar modo foco (F)"
+                    aria-pressed="false"
+                    data-testid="nexus-focus-toggle"
+                    className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-primary/60 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
+                  >
+                    Foco
+                  </button>
+                </div>
+              </div>
+              <SheetTitle asChild>
+                <h2
+                  id={`nexus-title-${currentTag.id}`}
+                  className="font-serif italic text-primary text-2xl md:text-[1.75rem] leading-[1.15] tracking-tight font-normal"
+                >
+                  {NEXUS_HEADER.subtitle}
+                </h2>
+              </SheetTitle>
+              <SheetDescription
+                id={`nexus-desc-${currentTag.id}`}
+                className="mt-spacing-sm text-[11px] uppercase tracking-[0.28em] text-primary/50"
+              >
+                <span className="sr-only">Conexões teológicas para </span>
+                {contextPath}
+              </SheetDescription>
+              <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
+
+              {/* Indicador de seções visitadas + navegação por teclado */}
+              {narrativeSections.length > 1 && (
+                <nav
+                  aria-label="Seções do Nexus"
+                  data-testid="nexus-section-dots"
+                  className="mt-spacing-md flex items-center gap-spacing-xs"
+                >
+                  {narrativeSections.map((s, i) => {
+                    const visited = visitedKinds.has(s.kind);
+                    const active = i === activeSectionIdx;
+                    return (
+                      <button
+                        key={s.kind}
+                        type="button"
+                        onClick={() => setActiveSectionIdx(i)}
+                        aria-current={active ? 'true' : undefined}
+                        aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
+                        title={s.preset.eyebrow}
+                        className={cn(
+                          'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
+                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'block rounded-full transition-all',
+                            active
+                              ? 'h-[8px] w-[8px] bg-secondary'
+                              : visited
+                                ? 'h-[6px] w-[6px] bg-secondary/60'
+                                : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
+                          )}
+                        />
+                      </button>
+                    );
+                  })}
+                  <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
+                    Alt+←/→
+                  </span>
+                </nav>
+              )}
+            </>
+          )}
+
+          {focusMode && (
+            <div className="flex items-center justify-between gap-spacing-sm">
+              {/* Título mínimo, exigido pelo Radix Dialog para a11y */}
+              <SheetTitle asChild>
+                <span
+                  id={`nexus-title-${currentTag.id}`}
+                  className="text-[10px] uppercase tracking-[0.32em] text-primary/60"
+                >
+                  {currentTag.label}
+                  {narrativeSections[activeSectionIdx] && (
+                    <> · <span className="text-secondary">{narrativeSections[activeSectionIdx].preset.eyebrow}</span></>
+                  )}
+                </span>
+              </SheetTitle>
+              <SheetDescription id={`nexus-desc-${currentTag.id}`} className="sr-only">
+                Modo foco ativo. {contextPath}
+              </SheetDescription>
+              <button
+                type="button"
+                onClick={() => {
+                  setFocusMode(false);
+                  setLiveMessage(focusModeLiveMessage(false));
+                }}
+                aria-label="Sair do modo foco (F)"
+                aria-pressed="true"
+                data-testid="nexus-focus-exit"
+                className="inline-flex items-center justify-center h-11 min-w-11 px-spacing-xs text-[10px] uppercase tracking-[0.28em] text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 rounded-sm"
+              >
+                Sair
+              </button>
+            </div>
           )}
         </header>
+
 
 
 
         {/* Corpo — sequência editorial */}
         <div className="flex-1 overflow-y-auto px-spacing-xl pb-spacing-2xl scrollbar-none">
           {/* Contemplação Logos como pull-quote editorial, quando presente */}
-          {logosInsight && (
+          {logosInsight && !focusMode && (
             <motion.blockquote
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
@@ -507,8 +664,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {status !== 'loading' && narrativeSections.length > 0 && (
-            <div className="space-y-spacing-2xl">
-              {narrativeSections.map((section, sIdx) => (
+            <div className="space-y-spacing-2xl" data-testid="nexus-sections">
+              {(focusMode
+                ? narrativeSections.filter((_, i) => i === activeSectionIdx)
+                : narrativeSections
+              ).map((section, sIdx, arr) => (
                 <motion.section
                   key={section.kind}
                   ref={(el) => { sectionRefs.current[section.kind] = el as unknown as HTMLElement | null; }}
@@ -588,7 +748,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   </ul>
 
                   {/* Separador editorial entre capítulos */}
-                  {sIdx < narrativeSections.length - 1 && (
+                  {sIdx < arr.length - 1 && (
                     <div aria-hidden className="mt-spacing-2xl mx-auto h-px w-[40px] bg-secondary/40" />
                   )}
                 </motion.section>
@@ -597,7 +757,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {/* Continue este caminho — sempre presente após as seções */}
-          {status !== 'loading' && (
+          {status !== 'loading' && !focusMode && (
             <motion.section
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
@@ -666,7 +826,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {/* Breadcrumb discreto — só quando o usuário navegou em profundidade */}
-          {navHistory.length > 1 && (
+          {navHistory.length > 1 && !focusMode && (
             <nav aria-label="Caminho percorrido" className="mt-spacing-2xl pt-spacing-lg border-t border-primary/10">
               <span className="block text-[9px] uppercase tracking-[0.32em] text-primary/40 mb-spacing-sm">
                 Caminho percorrido
