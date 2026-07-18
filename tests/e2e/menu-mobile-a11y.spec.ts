@@ -105,3 +105,19 @@ test.describe('Menu mobile · acessibilidade', () => {
     expect(critical, `violações axe: ${critical.map((v) => v.id).join(', ')}`).toHaveLength(0);
   });
 });
+
+test.describe('Menu mobile · acessibilidade · iPhone SE (320x568)', () => {
+  test.use({ ...devices['iPhone SE'], viewport: { width: 320, height: 568 } });
+
+  test('foco retorna ao menu-trigger após fechar via ESC (iPhone SE)', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    const { trigger, dialog } = await openSidebar(page);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden({ timeout: 5000 });
+
+    const triggerHandle = await trigger.elementHandle();
+    const isFocused = await page.evaluate((el) => el === document.activeElement, triggerHandle);
+    expect(isFocused, 'menu-trigger deve receber foco após ESC no iPhone SE').toBe(true);
+  });
+});
