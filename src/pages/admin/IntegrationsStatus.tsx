@@ -314,6 +314,78 @@ export default function IntegrationsStatus() {
         ))}
       </div>
 
+      <section className="mt-10" aria-labelledby="history-heading">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 id="history-heading" className="text-lg font-semibold flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Histórico de testes
+            <span className="text-xs text-muted-foreground font-normal">(últimos 50)</span>
+          </h2>
+          <Button variant="ghost" size="sm" onClick={loadHistory} disabled={historyLoading}>
+            {historyLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <RefreshCw className="mr-1 h-3 w-3" />}
+            Atualizar
+          </Button>
+        </div>
+        <Card>
+          <CardContent className="p-0">
+            {history.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground text-center">
+                {historyLoading ? "Carregando…" : "Nenhum teste registrado ainda. Clique em \"Testar conexão\" acima."}
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-2 font-medium">Data / hora</th>
+                      <th className="px-4 py-2 font-medium">Integração</th>
+                      <th className="px-4 py-2 font-medium">Resultado</th>
+                      <th className="px-4 py-2 font-medium">Latência</th>
+                      <th className="px-4 py-2 font-medium">Mensagem / Erro</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {history.map((row) => (
+                      <tr key={row.id} className="border-t border-border/60 align-top">
+                        <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
+                          {new Date(row.created_at).toLocaleString("pt-BR", {
+                            dateStyle: "short",
+                            timeStyle: "medium",
+                          })}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap font-medium">
+                          {integrationName[row.integration_id] ?? row.integration_id}
+                        </td>
+                        <td className="px-4 py-2">
+                          <Badge
+                            variant="outline"
+                            className={
+                              row.ok
+                                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
+                                : "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30"
+                            }
+                          >
+                            {row.ok ? <CheckCircle2 className="mr-1 h-3 w-3" /> : <XCircle className="mr-1 h-3 w-3" />}
+                            {row.ok ? "OK" : "Falha"}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
+                          {row.latency_ms != null ? `${row.latency_ms}ms` : "—"}
+                        </td>
+                        <td className="px-4 py-2 text-muted-foreground max-w-md break-words">
+                          {row.message}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
+
       <footer className="mt-10 border-t pt-6 text-sm text-muted-foreground">
         <p>
           Painel relacionado:{" "}
