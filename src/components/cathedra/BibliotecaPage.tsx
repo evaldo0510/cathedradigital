@@ -84,16 +84,16 @@ const colecoes: Colecao[] = [
   { title: 'Doutrina Social',   kicker: 'Percurso',   subtitle: 'De Rerum Novarum a Fratelli Tutti',          to: AppRoute.MAGISTERIUM,            palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink'   } },
 ];
 
-/** Chips “Descubra” — 8 temas curados que existem em `themes` (slugs reais). */
-const descubra: { name: string; slug: string }[] = [
-  { name: 'Esperança',    slug: 'esperanca'    },
-  { name: 'Família',      slug: 'familia'      },
-  { name: 'Maria',        slug: 'maria'        },
-  { name: 'Perdão',       slug: 'perdao'       },
-  { name: 'Caridade',     slug: 'caridade'     },
-  { name: 'Sacramentos',  slug: 'sacramentos'  },
-  { name: 'Oração',       slug: 'oracao'       },
-  { name: 'Misericórdia', slug: 'misericordia' },
+/** "Descubra" — temas curados com linha curatorial editorial. */
+const descubra: { name: string; slug: string; hint: string }[] = [
+  { name: 'Esperança',    slug: 'esperanca',    hint: 'Ancorar-se em Cristo quando o presente pesa.' },
+  { name: 'Misericórdia', slug: 'misericordia', hint: 'Rosto do Pai que vai ao encontro do filho.' },
+  { name: 'Maria',        slug: 'maria',        hint: 'A Mãe segundo os Padres e Doutores.' },
+  { name: 'Perdão',       slug: 'perdao',       hint: 'Setenta vezes sete, sem medida.' },
+  { name: 'Caridade',     slug: 'caridade',     hint: 'A mais excelente das virtudes.' },
+  { name: 'Sacramentos',  slug: 'sacramentos',  hint: 'Sinais visíveis da graça invisível.' },
+  { name: 'Oração',       slug: 'oracao',       hint: 'A respiração da alma cristã.' },
+  { name: 'Família',      slug: 'familia',      hint: 'Igreja doméstica, escola de virtudes.' },
 ];
 
 
