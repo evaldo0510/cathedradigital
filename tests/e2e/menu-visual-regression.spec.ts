@@ -1,4 +1,5 @@
 import { test, expect, devices } from '@playwright/test';
+import { volatileMasks } from './helpers/visual-masks';
 
 /**
  * Regressão visual do menu (desktop + mobile iPhone SE).
@@ -6,10 +7,9 @@ import { test, expect, devices } from '@playwright/test';
  * IMPORTANTE:
  * - Roda APENAS em Chromium para evitar diffs entre engines.
  * - Mobile fixo em iPhone SE (320×568) — pior caso e mais barato no CI.
- * - Aplique masks em TODO elemento volátil (relógio, avatar, badges,
- *   indicadores de status, contadores) para evitar falsos positivos.
+ * - Masks vêm de tests/e2e/helpers/visual-masks.ts (fonte única).
  *
- * Baseline: `bunx playwright test menu-visual-regression --update-snapshots --project=chromium-visual`
+ * Baseline: `bunx playwright test menu-visual-regression --update-snapshots --project=chromium`
  */
 
 test.describe.configure({ mode: 'serial' });
@@ -24,26 +24,6 @@ const SNAPSHOT_OPTIONS = {
   animations: 'disabled' as const,
   caret: 'hide' as const,
 };
-
-// Seletores de elementos voláteis que devem ser mascarados em TODO snapshot.
-const VOLATILE_SELECTORS = [
-  '[data-testid="clock"]',
-  '[data-testid="user-avatar"]',
-  '[data-testid="notification-badge"]',
-  '[data-testid="streak-badge"]',
-  '[data-testid="xp-counter"]',
-  '[data-testid="bottom-nav-active-bg"]',
-  '[data-testid="bottom-nav-dot"]',
-  'img[alt*="avatar" i]',
-  '[aria-live]',
-  'time',
-  '.animate-pulse',
-  '.animate-spin',
-];
-
-function volatileMasks(page: import('@playwright/test').Page) {
-  return VOLATILE_SELECTORS.map((sel) => page.locator(sel));
-}
 
 test.describe('Menu · regressão visual desktop (Chromium)', () => {
   test.use({ viewport: { width: 1280, height: 800 } });

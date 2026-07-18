@@ -84,9 +84,14 @@ jobs:
             " >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      # Publica APENAS quando há falha: HTML report + imagens atuais e diffs
-      # gerados pelo Playwright em test-results/ (padrão: *-actual.png, *-diff.png,
-      # *-expected.png). Facilita revisar o regression no PR sem rodar local.
+      # Resumo visual dos diffs: gera SNAPSHOT-DIFFS.md com Esperado/Atual/Diff
+      # embutidos e publica um sumário compacto em $GITHUB_STEP_SUMMARY.
+      - name: Summarize snapshot diffs (on failure)
+        if: failure()
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results
+
+      # Publica APENAS quando há falha: imagens atuais/esperadas/diff + traces
+      # + SNAPSHOT-DIFFS.md (renderiza as imagens lado a lado ao baixar).
       - name: Upload snapshot diffs (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
@@ -97,6 +102,7 @@ jobs:
             test-results/**/*-expected.png
             test-results/**/*-diff.png
             test-results/**/trace.zip
+            test-results/SNAPSHOT-DIFFS.md
           retention-days: 14
           if-no-files-found: ignore
 
