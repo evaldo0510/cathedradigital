@@ -110,7 +110,109 @@
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
     --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
     --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
+
+    /* ==================================================================
+     * STITCH TOKENS (Sprint R0 — Reskin foundation)
+     * Namespace isolado: consumido via classes `stitch-*` / `bg-stitch-*`.
+     * NÃO substitui os tokens semânticos existentes. Cada sprint de reskin
+     * (R1..R7) opta por consumir estes tokens na sua rota-alvo.
+     * Fonte: Google Stitch HTMLs (M3 palette). HSL derivado dos hexes.
+     * ================================================================ */
+    --stitch-primary: 222 100% 11%;             /* #00113a */
+    --stitch-on-primary: 0 0% 100%;             /* #ffffff */
+    --stitch-primary-container: 220 100% 20%;   /* #002366 */
+    --stitch-on-primary-container: 224 55% 65%; /* #758dd5 */
+    --stitch-primary-fixed: 228 100% 93%;       /* #dbe1ff */
+    --stitch-inverse-primary: 224 100% 85%;     /* #b3c5ff */
+
+    --stitch-secondary: 48 100% 23%;            /* #735c00 */
+    --stitch-on-secondary: 0 0% 100%;
+    --stitch-secondary-container: 48 99% 68%;   /* #fed65b */
+    --stitch-on-secondary-container: 48 100% 23%; /* #745c00 */
+    --stitch-secondary-fixed: 45 100% 76%;      /* #ffe088 */
+    --stitch-secondary-fixed-dim: 47 79% 60%;   /* #e9c349 */
+
+    --stitch-tertiary: 36 41% 6%;               /* #191308 */
+    --stitch-tertiary-fixed: 35 46% 87%;        /* #eee1ce */
+    --stitch-on-tertiary-fixed: 42 39% 10%;     /* #211b0f */
+
+    --stitch-background: 20 25% 98%;            /* #fbf9f8 */
+    --stitch-on-background: 180 2% 11%;         /* #1b1c1c */
+    --stitch-surface: 20 25% 98%;
+    --stitch-on-surface: 180 2% 11%;
+    --stitch-on-surface-variant: 230 8% 29%;    /* #444650 */
+
+    --stitch-surface-container-lowest: 0 0% 100%;
+    --stitch-surface-container-low: 15 14% 96%; /* #f6f3f2 */
+    --stitch-surface-container: 0 6% 93%;       /* #f0eded */
+    --stitch-surface-container-high: 20 6% 91%; /* #eae8e7 */
+    --stitch-surface-container-highest: 20 4% 89%; /* #e4e2e1 */
+    --stitch-surface-variant: 20 4% 89%;
+    --stitch-surface-dim: 0 4% 85%;             /* #dcd9d9 */
+    --stitch-surface-bright: 20 25% 98%;
+    --stitch-surface-tint: 224 40% 45%;         /* #435b9f */
+
+    --stitch-outline: 232 6% 48%;               /* #757682 */
+    --stitch-outline-variant: 233 11% 80%;      /* #c5c6d2 */
+
+    --stitch-inverse-surface: 0 0% 19%;         /* #303030 */
+    --stitch-inverse-on-surface: 0 6% 95%;      /* #f3f0f0 */
+
+    --stitch-error: 0 75% 42%;                  /* #ba1a1a */
+    --stitch-on-error: 0 0% 100%;
+    --stitch-error-container: 6 100% 92%;       /* #ffdad6 */
+    --stitch-on-error-container: 355 100% 29%;  /* #93000a */
+
+    /* Stitch scale */
+    --stitch-radius-default: 0.125rem;
+    --stitch-radius-lg: 0.25rem;
+    --stitch-radius-xl: 0.5rem;
+    --stitch-radius-full: 0.75rem;
+    --stitch-container-max: 1120px;
+    --stitch-margin-edge: 64px;
+    --stitch-margin-mobile: 20px;
+    --stitch-gutter: 32px;
+    --stitch-editorial-stack: 48px;
+
+    /* Stitch tipografia (mapeada às fontes já carregadas do projeto) */
+    --font-stitch-display: 'EB Garamond', 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-stitch-body: 'EB Garamond', ui-serif, Georgia, serif;
+    --font-stitch-label: 'Karla', ui-sans-serif, system-ui, sans-serif;
   }
+
+  /* Dark mode Stitch — pares oficiais M3 (invertidos). Ativa dentro de .dark. */
+  .dark, [data-theme='dark'] {
+    --stitch-primary: 224 100% 85%;
+    --stitch-on-primary: 222 100% 11%;
+    --stitch-primary-container: 220 100% 20%;
+    --stitch-on-primary-container: 228 100% 93%;
+
+    --stitch-secondary: 47 79% 60%;
+    --stitch-on-secondary: 48 100% 12%;
+    --stitch-secondary-container: 48 100% 23%;
+    --stitch-on-secondary-container: 48 99% 68%;
+
+    --stitch-background: 180 2% 11%;
+    --stitch-on-background: 0 6% 95%;
+    --stitch-surface: 180 2% 11%;
+    --stitch-on-surface: 0 6% 95%;
+    --stitch-on-surface-variant: 233 11% 80%;
+
+    --stitch-surface-container-lowest: 180 4% 7%;
+    --stitch-surface-container-low: 180 2% 13%;
+    --stitch-surface-container: 180 2% 15%;
+    --stitch-surface-container-high: 180 2% 18%;
+    --stitch-surface-container-highest: 180 2% 22%;
+    --stitch-surface-dim: 180 2% 11%;
+    --stitch-surface-bright: 180 2% 22%;
+
+    --stitch-outline: 232 6% 55%;
+    --stitch-outline-variant: 230 8% 29%;
+
+    --stitch-inverse-surface: 0 6% 95%;
+    --stitch-inverse-on-surface: 0 0% 19%;
+  }
+
 
   .dark, [data-theme='dark'] {
     --background: 220 15% 9%;
