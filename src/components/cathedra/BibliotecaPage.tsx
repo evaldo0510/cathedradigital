@@ -777,7 +777,9 @@ const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) 
       <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
         Séries curadas para atravessar a Tradição por caminhos que se sustentam.
       </p>
+      <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
     </div>
+
 
     <div className="flex flex-col gap-spacing-4xl">
       {series.map((serie, idx) => (
