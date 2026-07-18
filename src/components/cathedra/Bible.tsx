@@ -2107,12 +2107,42 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   )}
                 </div>
 
+                  {/* Nexus — Empty state por capítulo + botão de contribuição */}
+                  {!isLoading && verses.length > 0 && !chapterHasConnections && (
+                    <section
+                      data-testid="nexus-empty-state"
+                      aria-labelledby="nexus-empty-title"
+                      className="mt-8 rounded-2xl border border-dashed border-primary/15 bg-primary/[0.02] p-6 text-center"
+                    >
+                      <div className="mx-auto w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-3">
+                        <Icons.Sparkles className="w-5 h-5 text-secondary" aria-hidden="true" />
+                      </div>
+                      <h3 id="nexus-empty-title" className="font-display text-base text-primary mb-1">
+                        Nexus deste capítulo ainda não catalogado
+                      </h3>
+                      <p className="text-sm text-primary/60 max-w-md mx-auto mb-4 leading-relaxed">
+                        Ainda não há conexões teológicas cadastradas para {selectedBook.name} {selectedChapter}. Contribua com uma referência do Catecismo, Magistério ou Escritura — sua sugestão será revisada pelos editores.
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsNexusContribOpen(true)}
+                        data-testid="nexus-contribute-btn"
+                        className="rounded-xl text-[11px] font-black uppercase tracking-widest"
+                      >
+                        <Icons.Plus className="w-4 h-4 mr-2 text-secondary" aria-hidden="true" />
+                        Contribuir com uma conexão
+                      </Button>
+                    </section>
+                  )}
 
-
-
-
-
-
+                  <NexusContributionDialog
+                    open={isNexusContribOpen}
+                    onOpenChange={setIsNexusContribOpen}
+                    bookAbbr={selectedBook.abbr}
+                    bookName={selectedBook.name}
+                    chapter={selectedChapter}
+                  />
 
                   {/* Vertical Navigation Buttons */}
                   <footer className="pt-12 pb-20 space-y-spacing-md">
