@@ -168,8 +168,11 @@ const FormacaoHero: React.FC = () => {
         </p>
         <h1
           id="formacao-hero-title"
-          className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground mb-spacing-md"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          className="font-display leading-[1.05] text-foreground mb-spacing-md !tracking-normal break-words hyphens-auto"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 'clamp(2rem, 7vw, 3.75rem)',
+          }}
         >
           {suggested?.title ?? 'Escolha um caminho'}
         </h1>
@@ -186,7 +189,7 @@ const FormacaoHero: React.FC = () => {
         <Button
           onClick={handleStartSuggested}
           disabled={!suggested}
-          className="min-h-11 min-w-11 px-spacing-lg text-sm font-semibold uppercase tracking-[0.15em]"
+          className="min-h-11 min-w-11 px-spacing-lg text-sm font-semibold uppercase tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90"
         >
           {user ? 'Começar caminho' : 'Entrar e começar'}
           <Icons.ChevronRight className="w-4 h-4 ml-2" />
@@ -211,8 +214,11 @@ const FormacaoHero: React.FC = () => {
 
       <h1
         id="formacao-hero-title"
-        className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground mb-spacing-sm"
-        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        className="font-display leading-[1.05] text-foreground mb-spacing-sm !tracking-normal break-words hyphens-auto"
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'clamp(2rem, 7vw, 3.75rem)',
+        }}
       >
         {journey.title}
       </h1>
@@ -270,7 +276,7 @@ const FormacaoHero: React.FC = () => {
         <Button
           onClick={handleContinue}
           disabled={!nextStep}
-          className="min-h-11 min-w-11 px-spacing-lg text-sm font-semibold uppercase tracking-[0.15em]"
+          className="min-h-11 min-w-11 px-spacing-lg text-sm font-semibold uppercase tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90"
         >
           Continuar
           <Icons.ChevronRight className="w-4 h-4 ml-2" />
