@@ -1,13 +1,17 @@
 import { Helmet } from "react-helmet-async";
-import { CheckCircle2, XCircle, ExternalLink } from "lucide-react";
+import { CheckCircle2, XCircle, ExternalLink, Loader2, PlayCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Status = "connected" | "disconnected" | "partial";
 
 interface Integration {
+  id: string;
   name: string;
   category: string;
   status: Status;
@@ -15,6 +19,8 @@ interface Integration {
   howTo: string;
   docsUrl?: string;
 }
+
+type TestResult = { ok: boolean; message: string; latencyMs?: number };
 
 const integrations: Integration[] = [
   {
