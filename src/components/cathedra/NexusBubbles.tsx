@@ -826,7 +826,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           )}
 
           {/* Breadcrumb discreto — só quando o usuário navegou em profundidade */}
-          {navHistory.length > 1 && (
+          {navHistory.length > 1 && !focusMode && (
             <nav aria-label="Caminho percorrido" className="mt-spacing-2xl pt-spacing-lg border-t border-primary/10">
               <span className="block text-[9px] uppercase tracking-[0.32em] text-primary/40 mb-spacing-sm">
                 Caminho percorrido
