@@ -748,7 +748,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   </ul>
 
                   {/* Separador editorial entre capítulos */}
-                  {sIdx < narrativeSections.length - 1 && (
+                  {sIdx < arr.length - 1 && (
                     <div aria-hidden className="mt-spacing-2xl mx-auto h-px w-[40px] bg-secondary/40" />
                   )}
                 </motion.section>
