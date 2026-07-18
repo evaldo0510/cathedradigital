@@ -990,9 +990,10 @@ const EscritosView: React.FC<{
                     aria-hidden
                     className="h-px flex-1 bg-secondary/25 group-hover/rec:bg-secondary/60 transition-colors"
                   />
-                  <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                  <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                     {c.kicker}
                   </span>
+
                 </div>
                 <h4 className="font-serif italic text-primary text-[1.75rem] md:text-[2.15rem] leading-[1.05] mb-spacing-sm group-hover/rec:text-secondary transition-colors">
                   {c.title}
