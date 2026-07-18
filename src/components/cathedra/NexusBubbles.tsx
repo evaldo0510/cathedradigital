@@ -380,8 +380,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     if (isFocusToggleKey(e)) {
       // não sequestrar quando o foco está em input/textarea/contenteditable
       const target = e.target as HTMLElement | null;
-      const tag = target?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
+      const tagName = target?.tagName;
+      if (tagName === 'INPUT' || tagName === 'TEXTAREA' || target?.isContentEditable) return;
       e.preventDefault();
       setFocusMode(prev => {
         const next = !prev;
