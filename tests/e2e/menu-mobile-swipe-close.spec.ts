@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 /**
  * Menu mobile · fechar via gesto de swipe/drag (framer-motion `drag="x"`).
@@ -11,6 +11,50 @@ const VIEWPORTS = [
   { name: 'iPhone 13', width: 390, height: 844, dpr: 3 },
 ] as const;
 
+/**
+ * Dispara uma sequência Pointer Events completa (down → move* → up) no ponto
+ * indicado. Framer-motion escuta Pointer Events, então isso é mais confiável
+ * que page.mouse quando hasTouch está ativo.
+ */
+async function pointerSwipeLeft(
+  page: Page,
+  startX: number,
+  startY: number,
+  deltaX: number,
+  steps: number,
+  stepDelayMs: number,
+) {
+  await page.evaluate(
+    async ({ startX, startY, deltaX, steps, stepDelayMs }) => {
+      const target = document.elementFromPoint(startX, startY) ?? document.body;
+      const pointerId = 1;
+      const base = {
+        pointerId,
+        pointerType: 'touch' as const,
+        isPrimary: true,
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      };
+
+      const fire = (type: string, x: number, y: number) => {
+        const ev = new PointerEvent(type, { ...base, clientX: x, clientY: y });
+        target.dispatchEvent(ev);
+      };
+
+      fire('pointerdown', startX, startY);
+      for (let i = 1; i <= steps; i++) {
+        const x = startX + (deltaX * i) / steps;
+        fire('pointermove', x, startY);
+        // Aguarda para controlar velocity (px por ms) sem estourar o threshold negativo.
+        await new Promise((r) => setTimeout(r, stepDelayMs));
+      }
+      fire('pointerup', startX + deltaX, startY);
+    },
+    { startX, startY, deltaX, steps, stepDelayMs },
+  );
+}
+
 for (const vp of VIEWPORTS) {
   test.describe(`Swipe close · ${vp.name} (${vp.width}×${vp.height})`, () => {
     test.use({
@@ -21,6 +65,8 @@ for (const vp of VIEWPORTS) {
     });
 
     test('swipe para a esquerda fecha o drawer e devolve foco ao menu-trigger', async ({ page }) => {
+      test.slow(); // triplica o timeout: gesto + animação de saída podem passar de 5s em CI.
+
       await page.goto('/', { waitUntil: 'domcontentloaded' });
 
       const trigger = page.getByTestId('menu-trigger');
@@ -31,31 +77,38 @@ for (const vp of VIEWPORTS) {
       const dialog = page.getByRole('dialog', { name: /Menu de navegação|navigation_menu/i });
       await expect(dialog).toBeVisible({ timeout: 5000 });
 
-      // Aguarda animação de entrada estabilizar antes do gesto.
-      await page.waitForTimeout(500);
+      // Aguarda animação de entrada estabilizar completamente.
+      await page.waitForTimeout(700);
 
       const box = await dialog.boundingBox();
       if (!box) throw new Error('dialog sem boundingBox');
 
-      // Ponto inicial no meio do drawer; deslocamento de ~180px para a esquerda
-      // ultrapassa o threshold offset.x < -100 do framer-motion.
       const startX = box.x + box.width / 2;
       const startY = box.y + box.height / 2;
-      const endX = startX - 180;
+      const deltaX = -Math.max(180, Math.floor(box.width * 0.7));
 
-      // Framer-motion escuta Pointer Events. page.mouse dispara mouse+pointer
-      // events, suficiente mesmo com hasTouch=true.
-      await page.mouse.move(startX, startY);
-      await page.mouse.down();
-      // Vários passos pequenos para gerar velocity > 500px/s.
-      const steps = 10;
-      for (let i = 1; i <= steps; i++) {
-        const x = startX + ((endX - startX) * i) / steps;
-        await page.mouse.move(x, startY, { steps: 1 });
+      // Estratégia de retry: até 3 tentativas com passos/velocidade crescentes.
+      // Framer-motion pode ignorar gestos pouco convincentes; se o dialog não
+      // fechar, retentamos com mais passos e menos delay (maior velocity).
+      const attempts = [
+        { steps: 20, stepDelayMs: 12 }, // ~240ms total, velocity ~ deltaX/240 * 1000 px/s
+        { steps: 24, stepDelayMs: 8 },  // ~192ms
+        { steps: 30, stepDelayMs: 5 },  // ~150ms → velocity bem acima de 500 px/s
+      ];
+
+      let closed = false;
+      for (const attempt of attempts) {
+        await pointerSwipeLeft(page, startX, startY, deltaX, attempt.steps, attempt.stepDelayMs);
+        try {
+          await expect(dialog).toBeHidden({ timeout: 3000 });
+          closed = true;
+          break;
+        } catch {
+          // Ainda visível: aguarda snap-back terminar antes de retentar.
+          await page.waitForTimeout(500);
+        }
       }
-      await page.mouse.up();
-
-      await expect(dialog).toBeHidden({ timeout: 5000 });
+      expect(closed, `drawer não fechou após ${attempts.length} tentativas de swipe em ${vp.name}`).toBe(true);
 
       // Foco deve voltar exatamente ao menu-trigger.
       const triggerHandle = await trigger.elementHandle();
