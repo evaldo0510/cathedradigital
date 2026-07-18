@@ -27,6 +27,8 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import type { Tables } from '@/integrations/supabase/types';
 import ContemplativeLayout from './ContemplativeLayout';
+import FormacaoHero from './formacao/FormacaoHero';
+import FormacaoTimeline from './formacao/FormacaoTimeline';
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   iniciante: 'Iniciante',
@@ -241,7 +243,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
       <div ref={ref} className="w-full">
         <div className="w-full space-y-spacing-xl md:space-y-spacing-2xl">
-          
+
+          {/* CAT-032 — Formação Viva: Hero editorial + Timeline vertical */}
+          <FormacaoHero />
+          <FormacaoTimeline />
+
           {/* Journey Reminder Settings */}
           {user && (
             <div className="flex justify-end mb-spacing-md">
@@ -334,85 +340,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
       )}
 
-      {/* Active Journey Highlight */}
-      <AnimatePresence>
-        {activeJourneys.length > 0 && (
-          <motion.div 
-            className="space-y-spacing-sm"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary/60">
-              <Icons.Flame className="w-spacing-sm h-spacing-sm" /> Continuar Jornada
-            </div>
-            {activeJourneys.slice(0, 1).map(journey => {
-              const total = stepsCountMap[journey.id] || 1;
-              const done = progressMap[journey.id] || 0;
-              const pct = Math.round((done / total) * 100);
-              return (
-                <motion.div
-                  key={`active-${journey.id}`}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <CathedraCard 
-                    variant="interactive"
-                    padding="none"
-                    className="premium-card border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-premium-hover shadow-primary/5 relative cursor-pointer focus-visible:ring-4 focus-visible:ring-primary outline-none" 
-                    onClick={() => navigate(`/jornadas/${journey.id}`)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
-                    aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
-                  >
-                    {journey.cover_url && (
-                      <div className="absolute inset-0 opacity-10 grayscale group-hover:opacity-20 transition-opacity">
-                        <img 
-                          src={journey.cover_url} 
-                          alt="" 
-                          aria-hidden="true" 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                    )}
-
-                    <div className="absolute top-spacing-0 right-0 p-spacing-md opacity-5 pointer-events-none">
-                      <Icons.Flame className="w-spacing-3xl h-spacing-3xl text-primary" />
-                    </div>
-                    <div className="p-spacing-sm sm:p-spacing-md space-y-spacing-xs sm:space-y-spacing-sm">
-                      <div className="flex items-center justify-between gap-spacing-sm">
-                        <div className="flex-1 min-w-spacing-0">
-                          <h3 className="font-bold text-foreground text-premium-base sm:text-premium-lg">{journey.title}</h3>
-                          {journey.subtitle && (
-                            <p className="text-premium-xs text-muted-foreground font-serif italic mt-spacing-3xs">{journey.subtitle}</p>
-                          )}
-                        </div>
-                        <div className="relative w-spacing-xl h-spacing-xl sm:w-spacing-2xl sm:h-spacing-2xl flex-shrink-0">
-                          <svg className="w-spacing-xl h-spacing-xl sm:w-spacing-2xl sm:h-spacing-2xl -rotate-90" viewBox="0 0 36 36">
-                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
-                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
-                          </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-premium-xs sm:text-premium-xs font-black text-primary">{pct}%</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p className="text-premium-xs text-muted-foreground font-medium">{done} de {total} etapas</p>
-                        <Button 
-                          size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-premium-xs sm:text-premium-xs uppercase tracking-[0.15em] px-spacing-sm sm:px-spacing-md h-spacing-xl sm:h-spacing-xl rounded-premium-full sm:rounded-premium-full shadow-premium shadow-primary/20 group"
-                        >
-                          Continuar <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs group-hover:translate-x-0.5 transition-transform" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CathedraCard>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Active Journey Highlight — substituído por FormacaoHero (CAT-032) */}
 
       {/* CTA Diagnóstico */}
       {!Object.keys(progressMap).length && (
