@@ -804,9 +804,10 @@ const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) 
                 >
                   {serie.numeral}
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                   {serie.kicker}
                 </span>
+
               </div>
               <h3 className="font-serif italic text-primary text-[2rem] md:text-[2.5rem] leading-[1.05] mb-spacing-md">
                 {serie.title}
