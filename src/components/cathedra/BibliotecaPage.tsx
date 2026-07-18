@@ -168,11 +168,13 @@ const BibliotecaPage: React.FC = () => {
         {/* Hero editorial — abertura contemplativa (Sprint R1). */}
         <EditorialHero
           parchment
+          meta="Leitura, estudo e oração em um único acervo"
           kicker="Acervo Católico"
           title="Biblioteca"
           subtitle="A Tradição da Igreja reunida para conduzir cada leitura a um caminho de estudo, oração e transformação."
           className="mb-spacing-2xl"
         />
+
 
         {/* ABERTURA — Continuar lendo é a página aberta do livro. */}
         <ContinueReadingHero recents={recents} />

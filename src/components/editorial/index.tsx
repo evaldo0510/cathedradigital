@@ -91,6 +91,12 @@ export interface EditorialHeroProps extends Omit<React.HTMLAttributes<HTMLElemen
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   action?: React.ReactNode;
+  /**
+   * Linha contextual discreta acima do kicker.
+   * Uso: "Última atualização • Hoje" · "Mais de 2.000 textos interligados".
+   * Atmosfera de acervo vivo, sem poluir a interface.
+   */
+  meta?: React.ReactNode;
   /** Renderiza filete dourado sob o título. Default: true. */
   rule?: boolean;
   /**
@@ -105,6 +111,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
   title,
   subtitle,
   action,
+  meta,
   rule = true,
   parchment = false,
   className,
@@ -133,6 +140,15 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
       />
     )}
     <div className="relative">
+      {meta && (
+        <div className="mb-8 flex items-center gap-3 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant/80 uppercase tracking-[0.24em]">
+          <span
+            aria-hidden="true"
+            className="inline-block h-[6px] w-[6px] rounded-full bg-stitch-secondary/70"
+          />
+          <span>{meta}</span>
+        </div>
+      )}
       {kicker && (
         <p className="font-stitch-label text-stitch-label-sm text-stitch-secondary uppercase mb-6 tracking-[0.28em]">
           {kicker}
@@ -151,6 +167,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
     </div>
   </section>
 );
+
 
 /* ------------------------------------------------------------------ */
 /* Section — bloco tipográfico com kicker + título                    */
