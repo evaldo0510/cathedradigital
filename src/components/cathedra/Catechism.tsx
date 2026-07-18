@@ -49,6 +49,7 @@ import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
@@ -246,6 +247,9 @@ const CatechismContent: React.FC<{
             title={`Cathedra — CIC §${paragraph}`}
             passage={{ kind: 'catechism', paragraph }}
           />
+          <div className="mt-spacing-md">
+            <NexusBubbles />
+          </div>
           <ReaderContinuation
             context={{
               kind: 'catechism',

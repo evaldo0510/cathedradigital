@@ -20,6 +20,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 const SECTION_CONFIG = [
   { key: 'padh', label: 'A Palavra', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, isPremium: false },
@@ -497,16 +498,21 @@ const JornadaStepPage: React.FC = () => {
             </div>
           )}
           {completed && (
-            <ReaderContinuation
-              context={{
-                kind: 'journey-step',
-                id: stepId ?? undefined,
-                meta: {
-                  journeyId: journeyId ?? undefined,
-                  nextStepId: nextStep?.id,
-                },
-              }}
-            />
+            <>
+              <div className="mb-spacing-lg">
+                <NexusBubbles />
+              </div>
+              <ReaderContinuation
+                context={{
+                  kind: 'journey-step',
+                  id: stepId ?? undefined,
+                  meta: {
+                    journeyId: journeyId ?? undefined,
+                    nextStepId: nextStep?.id,
+                  },
+                }}
+              />
+            </>
           )}
         </div>
       </div>

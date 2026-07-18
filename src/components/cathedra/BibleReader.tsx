@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 interface Verse {
   number: number;
@@ -240,6 +241,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
       {/* Bloco de continuidade — fim do capítulo */}
       <div className="px-spacing-lg pb-spacing-2xl">
+        <div className="mb-spacing-lg">
+          <NexusBubbles />
+        </div>
         <ReaderContinuation
           context={{
             kind: 'bible',

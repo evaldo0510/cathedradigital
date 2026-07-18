@@ -20,6 +20,7 @@ import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -363,6 +364,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         />
 
         {/* Sprint 1 — Fechar dead-end: próximo passo pela comunhão dos santos */}
+        <div className="mb-spacing-lg">
+          <NexusBubbles />
+        </div>
         <ReaderContinuation
           context={{
             kind: 'saint',
