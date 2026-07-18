@@ -672,9 +672,10 @@ const ContinueReadingHero: React.FC<{
         <h2 className="font-serif italic text-[2rem] md:text-[3rem] leading-[1.05] text-primary tracking-tight mt-spacing-md">
           {title}
         </h2>
-        <p className="font-serif italic text-primary/55 text-lg md:text-xl mt-spacing-sm">
+        <p className="font-serif italic text-primary/60 text-lg md:text-xl mt-spacing-sm">
           {reference}
         </p>
+
 
         {/* Trecho interrompido — não resumo, evocação. */}
         <blockquote className="mt-spacing-2xl max-w-xl border-l border-secondary/50 pl-spacing-lg">
@@ -737,15 +738,17 @@ const Shelf: React.FC<{
   dim?: boolean;
   children: React.ReactNode;
 }> = ({ label, hint, dim, children }) => (
-  <section aria-label={label} className={cn('mb-spacing-3xl', dim && 'opacity-80')}>
+  <section aria-label={label} className={cn('mb-spacing-4xl pt-spacing-2xl', dim && 'opacity-80')}>
     <header className="flex items-baseline justify-between mb-spacing-lg">
       <div>
-        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">{label}</span>
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">{label}</span>
         {hint && (
           <p className="font-serif italic text-primary/60 text-base mt-[2px]">{hint}</p>
         )}
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
       </div>
     </header>
+
     <div
       className={cn(
         'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
@@ -774,7 +777,9 @@ const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) 
       <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
         Séries curadas para atravessar a Tradição por caminhos que se sustentam.
       </p>
+      <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
     </div>
+
 
     <div className="flex flex-col gap-spacing-4xl">
       {series.map((serie, idx) => (
@@ -802,9 +807,10 @@ const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) 
                 >
                   {serie.numeral}
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                   {serie.kicker}
                 </span>
+
               </div>
               <h3 className="font-serif italic text-primary text-[2rem] md:text-[2.5rem] leading-[1.05] mb-spacing-md">
                 {serie.title}
@@ -881,7 +887,7 @@ const EscritosView: React.FC<{
 
 
     {/* R1.4 — Da mesa do bibliotecário: mesa de recomendações, não vitrine de cards. */}
-    <section aria-label="Da mesa do bibliotecário" className="mb-spacing-4xl pt-spacing-3xl relative">
+    <section aria-label="Da mesa do bibliotecário" className="mb-spacing-4xl pt-spacing-2xl relative">
       {/* Textura de papel sutilíssima só nesta mesa. */}
       <div
         aria-hidden
@@ -987,9 +993,10 @@ const EscritosView: React.FC<{
                     aria-hidden
                     className="h-px flex-1 bg-secondary/25 group-hover/rec:bg-secondary/60 transition-colors"
                   />
-                  <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                  <span className="text-[10px] uppercase tracking-[0.32em] text-secondary/80 font-medium">
                     {c.kicker}
                   </span>
+
                 </div>
                 <h4 className="font-serif italic text-primary text-[1.75rem] md:text-[2.15rem] leading-[1.05] mb-spacing-sm group-hover/rec:text-secondary transition-colors">
                   {c.title}
@@ -1012,15 +1019,21 @@ const EscritosView: React.FC<{
 
 const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () => void }> = ({ query, axis, onSubmit }) => (
   <div className="max-w-2xl">
-    <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Pesquisa aberta</h2>
-    <p className="text-primary/55 text-sm leading-relaxed mb-spacing-lg">
+    <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+      Busca
+    </span>
+    <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+      Pesquisa aberta
+    </h2>
+    <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug mb-spacing-lg">
       Digite acima e escolha um eixo — Tema, Pessoa, Documento, Período ou Fonte — para ir direto ao resultado certo.
     </p>
+    <div aria-hidden className="h-px w-16 bg-secondary/40 mb-spacing-lg" />
     {(query.trim() || axis) && (
       <button
         type="button"
         onClick={onSubmit}
-        className="text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary"
+        className="text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
       >
         {axis ? `Buscar em ${axis}` : 'Buscar em toda a Biblioteca'} ↵
       </button>
@@ -1028,20 +1041,36 @@ const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () =>
   </div>
 );
 
+
 const FavoritosView: React.FC<{ items: ReturnType<typeof useFavorites>['favorites']; onRemove: (id: string) => void }> = ({ items, onRemove }) => {
   if (items.length === 0) {
     return (
       <div className="max-w-xl">
-        <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Favoritos</h2>
-        <p className="text-primary/55 text-sm leading-relaxed">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Sua estante
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+          Favoritos
+        </h2>
+        <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
           Marque um parágrafo, versículo ou documento como favorito para retornar a ele com um clique.
         </p>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
       </div>
     );
   }
   return (
     <div className="max-w-3xl">
-      <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-lg">Favoritos</h2>
+      <div className="mb-spacing-lg">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Sua estante
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md">
+          Favoritos
+        </h2>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
+      </div>
+
       <ul className="divide-y divide-primary/10 border-y border-primary/10">
         {items.map((f, i) => {
           const path = f.content && f.content.startsWith('/') ? f.content : undefined;
@@ -1088,25 +1117,42 @@ const RecentesView: React.FC<{
   if (items.length === 0) {
     return (
       <div className="max-w-xl">
-        <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-md">Recentes</h2>
-        <p className="text-primary/55 text-sm leading-relaxed">
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+          Trilha recente
+        </span>
+        <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md mb-spacing-md">
+          Recentes
+        </h2>
+        <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug">
           Suas últimas leituras aparecerão aqui — com retorno direto ao parágrafo ou seção correta.
         </p>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-lg" />
       </div>
     );
   }
   return (
     <div className="max-w-3xl">
-      <div className="flex items-baseline justify-between mb-spacing-lg">
-        <h2 className="font-serif text-primary/90 text-2xl italic">Recentes</h2>
-        <button
-          type="button"
-          onClick={onClear}
-          className="text-[10px] uppercase tracking-[0.25em] text-primary/40 hover:text-secondary"
-        >
-          Limpar histórico
-        </button>
+      <div className="mb-spacing-lg">
+        <div className="flex items-baseline justify-between">
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+              Trilha recente
+            </span>
+            <h2 className="font-serif italic text-primary text-[2rem] md:text-[2.75rem] leading-[1.05] mt-spacing-md">
+              Recentes
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClear}
+            className="text-[10px] uppercase tracking-[0.28em] text-primary/45 hover:text-secondary transition-colors"
+          >
+            Limpar histórico
+          </button>
+        </div>
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
       </div>
+
       <ul className="divide-y divide-primary/10 border-y border-primary/10">
         {items.map((r, i) => (
           <li key={r.id} className="flex items-center gap-spacing-sm py-spacing-lg">
@@ -1139,7 +1185,10 @@ const RecentesView: React.FC<{
 
 const PlaceholderView: React.FC<{ to: string; label: string; description: string }> = ({ to, label, description }) => (
   <div className="max-w-xl">
-    <p className="text-primary/60 text-base leading-relaxed mb-spacing-lg">{description}</p>
+    <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug mb-spacing-lg">
+      {description}
+    </p>
+    <div aria-hidden className="h-px w-16 bg-secondary/40 mb-spacing-lg" />
     <Link
       to={to}
       className="inline-block text-[11px] uppercase tracking-[0.25em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
@@ -1148,5 +1197,6 @@ const PlaceholderView: React.FC<{ to: string; label: string; description: string
     </Link>
   </div>
 );
+
 
 export default BibliotecaPage;
