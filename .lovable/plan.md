@@ -1,77 +1,102 @@
-# Onda 2 — Fase C: JourneyService (arquitetura congelada)
+# Sprint 2 — Continuidade Inteligente via Knowledge Engine
 
-## Regra-mãe
+**Regra da sprint:** nenhum CTA é decidido pelo componente. Toda sugestão vem do domínio. O `ReaderContinuation` apenas renderiza.
 
-Nenhuma nova camada arquitetural. Nenhum novo Registry/Manager/Controller/Provider/Engine/Facade. Só se cria o que está nesta fase; a partir daqui, todo esforço é integração das telas ao que já existe.
+---
 
-## 1. Localização e contrato
+## Fase A — Contrato de domínio (sem UI)
 
-```text
-src/core/journey/
-├── JourneyService.ts   # API pública (objeto único)
-├── JourneyAdapter.ts   # itineraria → journeys + fallback content.html ↔ interpretation
-├── types.ts            # Journey, JourneyStep, JourneyProgress, JourneyRecommendation, Filters
-├── index.ts            # barrel: exporta APENAS JourneyService + types públicos
-└── README.md           # contrato, regras de uso, o que NÃO fazer
-```
+Criar em `src/core/knowledge/`:
 
-**Export:** named export `JourneyService` (objeto único, padrão do projeto). Adapter e helpers permanecem internos.
-**Import único autorizado nas telas:** `import { JourneyService } from "@/core/journey"`.
-**Proibido:** UI chamando o backend direto para `journeys | journey_steps | journey_progress | itineraria | itineraria_steps | itineraria_progress`.
+1. `ContinuationIntent = 'study' | 'deepen' | 'pray' | 'apply' | 'meet'`
+2. `ContinuationSuggestion`:
+   ```text
+   { intent, eyebrow, label, target: ResolvedNode, weight }
+   ```
+3. `ContinuationContext`:
+   ```text
+   { currentKind, currentId, themeIds?, hints? }
+   ```
+4. `resolveContinuation(ctx): ContinuationSuggestion[]` — função pura, no máximo 4 sugestões, ordenadas por peso.
 
-## 2. Fluxo obrigatório
+Fonte de dados: `KnowledgeGraph.neighbors` + `relationsFrom` filtradas por `KnowledgeRelationKind` (`develops`, `defined-in`, `commented-by`, `prayed-as`, `applies-to`).
 
-```text
-UI → JourneyService → JourneyAdapter → journeys (backend)
-```
+Cobertura por testes unitários dos 5 kinds + fallback vazio.
 
-Adapter absorve `itineraria*` durante a compatibilidade. Quando todos os consumidores migrarem (Fase D), `itineraria*` é removido — sem tocar nada agora.
+---
 
-## 3. Métodos (20, derivados do CAT-031)
+## Fase B — Presets editoriais por kind
 
-- **Leitura (7):** `list`, `getBySlug`, `getById`, `listSteps`, `getStep`, `getFirstStep`, `getRelated`.
-- **Progresso (6):** `getProgress`, `startJourney`, `completeStep`, `resumeJourney`, `listUserJourneys`, `resetProgress`.
-- **Admin (4):** `createJourney`, `updateJourney`, `upsertStep`, `deleteJourney`.
-- **Stats/Nexus (3):** `getStats`, `getGlobalStats`, `getNexusForStep`.
+Arquivo único `ReaderContinuation.presets.ts` define título e ordem de intents por kind. Trocar copy = editar 1 arquivo.
 
-Retorno padronizado `{ data, error }`. Sem novos hooks nesta fase — hooks existentes passam a chamar o service.
+| Kind | Título | Ordem de intents |
+|---|---|---|
+| bible | Continue na Palavra | study → deepen → pray |
+| catechism | Aprofunde este ensinamento | study → deepen → apply |
+| magisterium | Continue este estudo | deepen → meet → apply |
+| saint | Inspirado por este santo? | meet → study → pray → apply |
+| journey | (mantém fluxo atual) | — |
 
-## 4. Adapter de compatibilidade
+Ícones por intent: 📖 study · 📚 deepen · 🙏 pray · 🌿 apply · ✨ meet (via lucide, sem emoji real).
 
-- `JourneyAdapter.fromItineraria(row)` / `.fromItinerariaStep(row)`: mapeia campos e prefixa IDs de itineraria com `itin:` para evitar colisão.
-- `JourneyAdapter.normalizeContent(content)`: se falta `interpretation` e existe `html`, copia; e vice-versa (para admin).
-- `getBySlug` consulta `journeys` primeiro; se ausente, tenta `itineraria` via adapter. Deep links `/jornadas/:slug` seguem funcionando sem redirect.
-- Escrita no path adaptado é bloqueada nesta fase (admin edita só `journeys` reais).
+---
 
-## 5. Ordem de integração (revisada)
+## Fase C — Refactor do `ReaderContinuation`
 
-Sprint A (agora): criar `src/core/journey/*` + testes.
-Sprint B: **Formação** migrada 100% para `JourneyService`.
-Sprint C: **Hoje** migrado.
-Sprint D: **Biblioteca** (`ContinueReadingHero`, cards, "Descubra") migrada.
-Sprint E: Reader.
-Sprint F: Nexus.
-Sprint G: Admin + Edge Functions.
+- Nova assinatura única: `<ReaderContinuation context={...} />`.
+- Componente perde qualquer conhecimento de URL, capítulo, parágrafo.
+- Chama `resolveContinuation(context)`, aplica o preset do kind, renderiza no layout editorial já homologado (Cormorant/Karla, 44px, aria-live).
+- **Fallback obrigatório:** se `resolveContinuation` devolver `[]`, mantém comportamento atual (próximo §/capítulo/etapa) — zero regressão.
 
-Regra por sprint: só se remove import direto do backend quando o arquivo estiver 100% no service. Typecheck + E2E entre sprints. Nenhuma sprint avança sem homologação sua.
+Migrar os 5 pontos de plug (Bíblia, Catecismo, Magistério, Santos, Jornada) para passar `context` em vez de props soltas.
 
-## 6. Nomenclatura congelada (só strings de UI)
+Ordem de migração: Catecismo → Bíblia → Magistério → Santos → Jornada (Catecismo é o mais denso no grafo, valida o motor primeiro).
 
-- Menu/navegação: **"Formação"**.
-- Unidade individual: **"Caminho"/"Caminhos"** (título de "Minha Jornada" passa a "Meus Caminhos").
-- Rotas, tabelas e domínio interno (`Journey`, `JourneyService`, `journeys`) permanecem.
+---
 
-Aplicada apenas nas telas tocadas em cada sprint — não faço varredura global agora.
+## Fase D — Telemetria
 
-## 7. Entregáveis desta Sprint A
+Instrumentar via `navigation-telemetry`:
 
-1. `src/core/journey/{JourneyService.ts,JourneyAdapter.ts,types.ts,index.ts,README.md}`.
-2. Testes unitários dos 20 métodos + adapter (`itineraria` → `Journey`, fallback de content).
-3. Typecheck limpo. Zero mudança em telas (contrato disponível, migração começa na Sprint B).
-4. Relatório curto `docs/ONDA-02-FASE-C-SPRINT-A.md` com API pública e checklist para as sprints seguintes.
+- `reader.continuation.shown` — kind origem, intents oferecidas, se veio do grafo ou do fallback.
+- `reader.continuation.click` — intent, kind origem, kind destino, posição.
 
-## 8. Fora de escopo
+Base para medir na Sprint 3 se o usuário realmente segue o caminho sugerido.
 
-- Migração de qualquer tela (Sprints B–G).
-- Alteração de schema, remoção de `itineraria*`, novos hooks, novas rotas.
-- Qualquer novo Registry/Manager/Provider/Engine.
+---
+
+## Fase E — Validação
+
+- Unit: `resolveContinuation` cobre 5 kinds + fallback + limite de 4.
+- E2E: em cada leitor com conteúdo semeado, o bloco mostra ≥1 sugestão real do grafo (não fallback).
+- Homologação visual nos 3 breakpoints (mobile/tablet/desktop) com screenshots.
+- Acessibilidade: axe-core sem regressão.
+
+---
+
+## Critério de aceite
+
+1. Nenhum leitor mostra CTA genérico quando o grafo tem vizinhos.
+2. Copy e ordem variam por kind, decididas em `presets.ts`.
+3. `ReaderContinuation` não importa nenhuma rota literal.
+4. Telemetria registra exibição e clique.
+5. Fallback preserva o comportamento da Sprint 1 quando o grafo está vazio.
+
+---
+
+## Fora de escopo (Sprint 3+)
+
+- Personalização por histórico do usuário.
+- Sugestões por humor / `spiritual_journal`.
+- IA generativa escolhendo o próximo passo.
+- Nexus visual (popover) reaproveitando o mesmo resolver.
+
+---
+
+## Detalhes técnicos
+
+- `resolveContinuation` vive em `src/core/knowledge/continuation/` como função pura — testável sem React, sem Supabase.
+- Presets em `src/components/shared/ReaderContinuation.presets.ts`.
+- Tipos exportados via barrel `@/core/knowledge`.
+- Nenhuma alteração em `RouteRegistry`, `JourneyService` ou adapters de conteúdo.
+- Nenhuma nova dependência externa.

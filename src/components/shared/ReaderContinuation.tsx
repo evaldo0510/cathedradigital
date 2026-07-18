@@ -13,6 +13,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
+import {
+  resolveContinuation,
+  type ContinuationSuggestion,
+  type KnowledgeNodeId,
+} from '@/core/knowledge';
+import { INTENT_ICON, KIND_GRAPH_TITLE } from './ReaderContinuation.presets';
+import { telemetry } from '@/utils/navigation-telemetry';
 
 export type ReaderContinuationKind =
   | 'bible'
@@ -25,7 +32,15 @@ export interface ReaderContinuationContext {
   kind: ReaderContinuationKind;
   /** ID canônico (ex.: "gen-1", "142", "gaudium-et-spes", "sao-francisco", "step-uuid"). */
   id?: string;
-  /** Metadados opcionais usados para calcular o próximo item. */
+  /**
+   * ID canônico do nó no KnowledgeGraph (Sprint 2). Se presente e
+   * resolvível, o motor de continuidade tenta gerar sugestões reais
+   * antes de cair no fallback editorial.
+   */
+  graphNodeId?: KnowledgeNodeId;
+  /** Temas associados (Sprint 2). Enriquece a resolução do grafo. */
+  themeIds?: KnowledgeNodeId[];
+  /** Metadados opcionais usados para calcular o próximo item (fallback). */
   meta?: {
     bookAbbr?: string;
     chapter?: number;
@@ -232,19 +247,71 @@ export interface ReaderContinuationProps {
   onCtaClick?: (suggestion: { label: string; href: string; kind: string }) => void;
 }
 
+/**
+ * Adapta uma sugestão vinda do KnowledgeGraph para o formato interno
+ * de render. Mantém a mesma UI dos CTAs de fallback (zero divergência).
+ */
+function fromGraphSuggestion(
+  s: ContinuationSuggestion,
+  index: number,
+): Suggestion {
+  const Icon = INTENT_ICON[s.intent] ?? Icons.ChevronRight;
+  return {
+    label: s.label,
+    description: s.eyebrow,
+    href: s.target.url ?? '#',
+    icon: Icon,
+    variant: index === 0 ? 'primary' : 'secondary',
+  };
+}
+
 export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
   context,
   className,
   onCtaClick,
 }) => {
-  const suggestions = React.useMemo(() => buildSuggestions(context), [context]);
-  const title = KIND_TITLE[context.kind];
+  // 1) Tenta resolver via KnowledgeGraph (Sprint 2).
+  const graphSuggestions = React.useMemo<ContinuationSuggestion[]>(() => {
+    if (!context.graphNodeId && (!context.themeIds || context.themeIds.length === 0)) {
+      return [];
+    }
+    return resolveContinuation({
+      currentKind: context.kind === 'journey-step' ? 'journey-step' : context.kind,
+      currentId: context.graphNodeId,
+      themeIds: context.themeIds,
+    });
+  }, [context.graphNodeId, context.themeIds, context.kind]);
+
+  const usedGraph = graphSuggestions.length > 0;
+
+  // 2) Fallback editorial da Sprint 1 quando o grafo não devolve nada.
+  const suggestions = React.useMemo<Suggestion[]>(() => {
+    if (usedGraph) return graphSuggestions.map(fromGraphSuggestion);
+    return buildSuggestions(context);
+  }, [usedGraph, graphSuggestions, context]);
+
+  const title = usedGraph
+    ? KIND_GRAPH_TITLE[context.kind] ?? KIND_TITLE[context.kind]
+    : KIND_TITLE[context.kind];
   const epigraph = KIND_EPIGRAPH[context.kind];
+
+  // 3) Telemetria: `shown` uma vez por conjunto de sugestões.
+  React.useEffect(() => {
+    telemetry.log('reader.continuation.shown', 'info', {
+      kind: context.kind,
+      source: usedGraph ? 'graph' : 'fallback',
+      count: suggestions.length,
+      intents: usedGraph ? graphSuggestions.map((g) => g.intent) : undefined,
+    });
+    // Intencional: dispara ao mudar de conteúdo.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.kind, context.graphNodeId, context.id, usedGraph]);
 
   return (
     <aside
       aria-label="Próximos passos de leitura"
       data-reader-continuation={context.kind}
+      data-source={usedGraph ? 'graph' : 'fallback'}
       className={cn(
         'reader-continuation w-full max-w-[70ch] mx-auto',
         'mt-spacing-3xl pt-spacing-2xl',
@@ -265,16 +332,24 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
       </header>
 
       <ul className="flex flex-col gap-spacing-sm" role="list">
-        {suggestions.map((s) => {
+        {suggestions.map((s, idx) => {
           const Icon = s.icon;
           const isPrimary = s.variant === 'primary';
+          const graphIntent = usedGraph ? graphSuggestions[idx]?.intent : undefined;
           return (
             <li key={`${s.label}-${s.href}`}>
               <Link
                 to={s.href}
-                onClick={() =>
-                  onCtaClick?.({ label: s.label, href: s.href, kind: context.kind })
-                }
+                onClick={() => {
+                  telemetry.log('reader.continuation.click', 'info', {
+                    kind: context.kind,
+                    source: usedGraph ? 'graph' : 'fallback',
+                    intent: graphIntent,
+                    href: s.href,
+                    position: idx,
+                  });
+                  onCtaClick?.({ label: s.label, href: s.href, kind: context.kind });
+                }}
                 className={cn(
                   'group flex items-center gap-spacing-md',
                   'min-h-[44px] px-spacing-lg py-spacing-md rounded-premium-lg',

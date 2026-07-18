@@ -23,6 +23,14 @@ export * from './types';
 export { buildId, parseId, isValidId, slugify, KNOWLEDGE_KINDS } from './ids';
 export type { ParsedId } from './ids';
 
+// --- Continuation (Sprint 2 — Continuidade Inteligente) ---
+export { resolveContinuation } from './continuation';
+export type {
+  ContinuationContext,
+  ContinuationIntent,
+  ContinuationSuggestion,
+} from './continuation';
+
 // --- Internos (uso interno / compatibilidade — evitar em novos consumidores) ---
 export { KnowledgeRegistry } from './KnowledgeRegistry';
 export { KnowledgeNavigator, COMPOSED_STUDY_STAGES } from './KnowledgeNavigator';
