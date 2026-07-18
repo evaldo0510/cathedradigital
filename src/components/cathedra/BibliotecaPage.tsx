@@ -503,7 +503,7 @@ const EscritosView: React.FC<{
           kicker={e.kicker}
           title={e.title}
           spine={e.spine}
-          tone={e.tone}
+          palette={e.palette}
           to={e.to}
           onOpen={() => onOpen(e)}
         />
