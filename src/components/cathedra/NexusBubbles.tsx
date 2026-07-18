@@ -616,7 +616,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         {/* Corpo — sequência editorial */}
         <div className="flex-1 overflow-y-auto px-spacing-xl pb-spacing-2xl scrollbar-none">
           {/* Contemplação Logos como pull-quote editorial, quando presente */}
-          {logosInsight && (
+          {logosInsight && !focusMode && (
             <motion.blockquote
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
