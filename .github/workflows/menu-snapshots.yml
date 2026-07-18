@@ -84,15 +84,15 @@ jobs:
             " >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      # Resumo visual dos diffs: gera SNAPSHOT-DIFFS.md com Esperado/Atual/Diff
-      # embutidos e publica um sumário compacto em $GITHUB_STEP_SUMMARY.
-      - name: Summarize snapshot diffs (on failure)
+      # 1. Gera o SNAPSHOT-DIFFS.md com imagens embutidas ANTES do upload,
+      #    para que o .md entre no artifact.
+      - name: Generate SNAPSHOT-DIFFS.md (on failure)
         if: failure()
-        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=md
 
-      # Publica APENAS quando há falha: imagens atuais/esperadas/diff + traces
-      # + SNAPSHOT-DIFFS.md (renderiza as imagens lado a lado ao baixar).
+      # 2. Publica o artifact (imagens + traces + .md + mask-coverage).
       - name: Upload snapshot diffs (on failure)
+        id: upload-diffs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -102,9 +102,18 @@ jobs:
             test-results/**/*-expected.png
             test-results/**/*-diff.png
             test-results/**/trace.zip
+            test-results/**/mask-coverage.json
             test-results/SNAPSHOT-DIFFS.md
           retention-days: 14
           if-no-files-found: ignore
+
+      # 3. Publica o resumo em $GITHUB_STEP_SUMMARY já com a URL do artifact,
+      #    gerando links diretos para cada expected/actual/diff/trace.
+      - name: Summarize snapshot diffs to $GITHUB_STEP_SUMMARY (on failure)
+        if: failure()
+        env:
+          ARTIFACT_URL: ${{ steps.upload-diffs.outputs.artifact-url }}
+        run: node scripts/ci/summarize-snapshot-diffs.mjs test-results --mode=summary
 
       - name: Upload Playwright HTML report (on failure)
         if: failure()
