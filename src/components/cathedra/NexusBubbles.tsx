@@ -20,6 +20,21 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import BibleVersePopover from './BibleVersePopover';
 import { NexusDebugPanel, type NexusDebugInfo } from './NexusDebugPanel';
 import { NEXUS_KIND_PRESETS, NEXUS_HEADER, NEXUS_EMPTY, NEXUS_ERROR, type NexusKind } from './nexus/nexusPresets';
+import {
+  NEXUS_STATE_KEY,
+  readPersistedState,
+  writePersistedState,
+  reduceSectionKeyboard,
+  isFocusToggleKey,
+  sectionLiveMessage,
+  restoredLiveMessage,
+  closedLiveMessage,
+  focusModeLiveMessage,
+  parseNexusHash,
+  buildNexusHash,
+  buildNexusShareUrl,
+  type PersistedNexusState,
+} from '@/lib/nexusState';
 
 
 
