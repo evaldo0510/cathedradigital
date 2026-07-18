@@ -40,6 +40,12 @@ import {
   type PersistedNexusState,
 } from '@/lib/nexusState';
 import { useFocusTrap } from '@/lib/useFocusTrap';
+import {
+  trackNexusShown,
+  trackNexusClick,
+  trackNexusDestination,
+  trackNexusFailed,
+} from '@/lib/nexusTelemetry';
 
 
 
@@ -197,13 +203,74 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const isMobile = useIsMobile();
 
+  // STAB-NEXUS-P0 Etapa 2: resolveLink completo (bible/catechism/magisterium/
+  // saint/theme/journey). Retorna null para tipos sem rota pública (father/
+  // council/canon) — bubble será ocultado, nunca <span> morto.
+  const resolveLink = useCallback((c: TagContent): string | null => {
+    const meta = c.metadata ?? {};
+    switch (c.type) {
+      case 'bible': {
+        if (meta.book && meta.chapter) {
+          const verse = meta.verse ? `&verse=${meta.verse}` : '';
+          return `/bible?book=${meta.book}&ch=${meta.chapter}${verse}`;
+        }
+        return null;
+      }
+      case 'catechism': {
+        const p = meta.paragraph ?? meta.number;
+        return p ? `${AppRoute.CATECHISM}?p=${p}` : null;
+      }
+      case 'magisterium': {
+        const docId = meta.document_id ?? meta.documentId ?? meta.slug ?? c.id;
+        return docId ? `/magisterium/${docId}` : null;
+      }
+      case 'saint': {
+        const ident = meta.slug ?? meta.id ?? c.id;
+        return ident ? `/santos/${ident}` : null;
+      }
+      case 'theme': {
+        const slug = meta.slug ?? c.id;
+        return slug ? `/temas/${slug}` : null;
+      }
+      case 'journey':
+        return c.id ? `/jornadas/${c.id}` : null;
+      default:
+        return null;
+    }
+  }, []);
+
   // Agrupa o conteúdo já retornado pelo Knowledge Engine em capítulos narrativos.
   // Ordem estável seguindo NEXUS_KIND_PRESETS.order.
+  // STAB-NEXUS-P0 Etapa 2/3: filtra itens sem rota resolvível (father/council/canon
+  // ou nós órfãos) e emite `nexus.failed` — nenhum <span> morto chega ao render.
   const narrativeSections = useMemo(() => {
     const groups = new Map<NexusKind, TagContent[]>();
     for (const c of content) {
       const kind = (c.type as NexusKind);
-      if (!NEXUS_KIND_PRESETS[kind]) continue;
+      if (!NEXUS_KIND_PRESETS[kind]) {
+        trackNexusFailed({
+          tagId: currentTag.id,
+          tagSlug: currentTag.slug,
+          type: c.type,
+          id: c.id,
+          reason: 'no-preset',
+        });
+        continue;
+      }
+      // Item precisa de rota (resolveLink) OU popover Bíblia (book+chapter).
+      const link = resolveLink(c);
+      const canBiblePopover =
+        c.type === 'bible' && !!c.metadata?.book && Number.isFinite(Number(c.metadata?.chapter));
+      if (!link && !canBiblePopover) {
+        trackNexusFailed({
+          tagId: currentTag.id,
+          tagSlug: currentTag.slug,
+          type: c.type,
+          id: c.id,
+          reason: 'no-route',
+        });
+        continue;
+      }
       const arr = groups.get(kind) ?? [];
       arr.push(c);
       groups.set(kind, arr);
@@ -211,22 +278,16 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     return Array.from(groups.entries())
       .map(([kind, items]) => ({ kind, preset: NEXUS_KIND_PRESETS[kind], items }))
       .sort((a, b) => a.preset.order - b.preset.order);
-  }, [content]);
+  }, [content, resolveLink, currentTag.id, currentTag.slug]);
 
   const contextPath = navHistory.length > 1
     ? navHistory.map(t => t.label).join(' · ')
     : currentTag.label;
 
-  const resolveLink = (c: TagContent): string | null => {
-    if (c.type === 'bible' && c.metadata?.book && c.metadata?.chapter) {
-      return `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}`;
-    }
-    if (c.type === 'journey') return `/jornadas/${c.id}`;
-    if (c.type === 'catechism' && c.metadata?.paragraph) {
-      return `${AppRoute.CATECHISM}?p=${c.metadata.paragraph}`;
-    }
-    return null;
-  };
+  // STAB-NEXUS-P0 Etapa 2: resolveLink completo.
+  // Retorna string com rota válida ou null (bubble será ocultado — nunca <span> morto).
+
+
 
   // Snapshot da posição de leitura no momento em que o painel abre.
   // Ao fechar, restauramos o scroll — o leitor volta ao trecho exato.
@@ -280,8 +341,35 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const navigateInternal = useCallback((path: string) => {
     persistReturn();
     setOpen(false);
-    requestAnimationFrame(() => navigate(path));
-  }, [persistReturn, navigate]);
+    requestAnimationFrame(() => {
+      navigate(path);
+      // STAB-NEXUS-P0 Etapa 5: destino resolvido.
+      trackNexusDestination({
+        tagId: currentTag.id,
+        tagSlug: currentTag.slug,
+        type: 'internal',
+        url: path,
+      });
+    });
+  }, [persistReturn, navigate, currentTag.id, currentTag.slug]);
+
+  // STAB-NEXUS-P0 Etapa 5: registra `nexus.shown` uma vez por sessão de painel
+  // aberto, quando há pelo menos um bubble navegável.
+  const shownRef = React.useRef(false);
+  useEffect(() => {
+    if (!open) {
+      shownRef.current = false;
+      return;
+    }
+    if (shownRef.current || narrativeSections.length === 0) return;
+    shownRef.current = true;
+    trackNexusShown({
+      tagId: currentTag.id,
+      tagSlug: currentTag.slug,
+      itemCount: narrativeSections.reduce((n, s) => n + s.items.length, 0),
+      kinds: narrativeSections.map(s => s.kind),
+    });
+  }, [open, narrativeSections, currentTag.id, currentTag.slug]);
 
   // Restaura estado persistido OU abre via deep link (#nexus=slug[:kind]).
   useEffect(() => {
@@ -782,16 +870,23 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                             ) : link ? (
                               <button
                                 type="button"
-                                onClick={() => navigateInternal(link)}
+                                data-testid="nexus-bubble-cta"
+                                data-nexus-type={c.type}
+                                onClick={() => {
+                                  trackNexusClick({
+                                    tagId: currentTag.id,
+                                    tagSlug: currentTag.slug,
+                                    type: c.type,
+                                    id: c.id,
+                                    destination: link,
+                                  });
+                                  navigateInternal(link);
+                                }}
                                 className="text-[11px] uppercase tracking-[0.28em] text-primary border-b border-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors min-h-11"
                               >
                                 {section.preset.cta} →
                               </button>
-                            ) : (
-                              <span className="text-[10px] uppercase tracking-[0.25em] text-primary/40">
-                                {section.preset.cta}
-                              </span>
-                            )}
+                            ) : null /* STAB-NEXUS-P0: nunca renderizar <span> morto */}
                           </div>
 
                           {/* Fio curatorial entre itens da mesma seção */}
