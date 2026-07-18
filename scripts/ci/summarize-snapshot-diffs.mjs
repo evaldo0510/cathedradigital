@@ -155,3 +155,80 @@ if ((mode === 'summary' || mode === 'both') && summaryPath) {
   appendFileSync(summaryPath, short.join('\n') + '\n', 'utf8');
   console.log('[snapshot-diffs] resumo com links publicado em $GITHUB_STEP_SUMMARY');
 }
+
+// ---------- 3. PR_COMMENT.md (para postagem em comentário de PR) ----------
+if (mode === 'pr' || mode === 'all' || mode === 'both') {
+  const pr = [];
+  pr.push('<!-- lovable:menu-snapshots -->');
+  pr.push('## 🖼️ Menu snapshots · resultado');
+  pr.push('');
+
+  // Mask coverage agregado.
+  if (coverageAgg.length > 0) {
+    const totals = coverageAgg.reduce(
+      (acc, c) => {
+        acc.testid += c.data.ratios?.testid || 0;
+        acc.structural += c.data.ratios?.structural || 0;
+        acc.total += c.data.ratios?.total || 0;
+        acc.missingTestids.push(...(c.data.missingTestids || []));
+        return acc;
+      },
+      { testid: 0, structural: 0, total: 0, missingTestids: [] },
+    );
+    const n = coverageAgg.length;
+    const avg = (x) => `${((x / n) * 100).toFixed(1)}%`;
+    const uniqueMissing = [...new Set(totals.missingTestids)];
+    pr.push('### Cobertura de máscaras (média sobre ' + n + ' testes)');
+    pr.push('');
+    pr.push('| Categoria | Cobertura |');
+    pr.push('| --- | :--: |');
+    pr.push(`| Testids precisos | **${avg(totals.testid)}** |`);
+    pr.push(`| Fallbacks estruturais | **${avg(totals.structural)}** |`);
+    pr.push(`| Total | **${avg(totals.total)}** |`);
+    pr.push('');
+    if (uniqueMissing.length > 0) {
+      pr.push('<details><summary>Testids sem match (' + uniqueMissing.length + ')</summary>');
+      pr.push('');
+      uniqueMissing.forEach((s) => pr.push(`- \`${s}\``));
+      pr.push('');
+      pr.push('</details>');
+      pr.push('');
+    }
+  } else {
+    pr.push('_Nenhum relatório de mask-coverage encontrado._');
+    pr.push('');
+  }
+
+  // Diffs com links diretos.
+  if (diffs.length > 0) {
+    pr.push(`### Snapshots com diferença (${diffs.length})`);
+    pr.push('');
+    pr.push('| Teste | Snapshot | Esperado | Atual | Diff | Trace |');
+    pr.push('| --- | --- | :--: | :--: | :--: | :--: |');
+    for (const [dir, items] of groups) {
+      const testLabel = relative(root, dir) || dir;
+      for (const it of items) {
+        const cell = (p) => (p && existsSync(p) ? `[png](${linkTo(relative(root, p))})` : '—');
+        const traceCell = it.trace ? `[zip](${linkTo(relative(root, it.trace))})` : '—';
+        pr.push(
+          `| \`${testLabel}\` | \`${it.name}\` | ${cell(it.expected)} | ${cell(it.actual)} | ${cell(it.diff)} | ${traceCell} |`,
+        );
+      }
+    }
+    pr.push('');
+    pr.push(
+      artifactBase
+        ? `Artifact: ${artifactBase}`
+        : '_Baixe o artifact `menu-snapshots-diffs` para abrir os arquivos._',
+    );
+  } else {
+    pr.push('### ✅ Nenhum snapshot com diferença');
+  }
+  pr.push('');
+  pr.push(`_Última atualização: ${new Date().toISOString()}_`);
+
+  const prPath = join(root, 'PR_COMMENT.md');
+  mkdirSync(dirname(prPath), { recursive: true });
+  writeFileSync(prPath, pr.join('\n'), 'utf8');
+  console.log(`[snapshot-diffs] escrito ${prPath}`);
+}
