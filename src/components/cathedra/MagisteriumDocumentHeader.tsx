@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Icons } from '@/constants';
 import type { MagisteriumDocument } from '@/data/magisterium-urls';
+import PassageActions from '@/components/shared/PassageActions';
 
 interface MagisteriumDocumentHeaderProps {
   doc: MagisteriumDocument;
 }
+
 
 /**
  * STAB-004.2 — Ficha rica do documento.
@@ -41,67 +42,9 @@ const MetaRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, 
 const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ doc }) => {
   const dateLabel = formatDate(doc.date, doc.year);
   const showPontificate = doc.pontificate && doc.pontificate !== doc.author;
-  const [busy, setBusy] = useState<'link' | 'ref' | 'share' | null>(null);
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const reference = `${doc.title}\n${doc.author}${doc.year ? ` · ${doc.year}` : ''}\n\n${shareUrl}`;
+  const referenceLabel = `${doc.title} — ${doc.author}${doc.year ? ` (${doc.year})` : ''}`;
 
-  const copyToClipboard = async (text: string): Promise<boolean> => {
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        return true;
-      }
-      // Fallback legado
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      return ok;
-    } catch {
-      return false;
-    }
-  };
-
-  const handleCopyLink = async () => {
-    setBusy('link');
-    const ok = await copyToClipboard(shareUrl);
-    setBusy(null);
-    if (ok) toast.success('Link copiado');
-    else toast.error('Não foi possível copiar o link');
-  };
-
-  const handleCopyReference = async () => {
-    setBusy('ref');
-    const ok = await copyToClipboard(reference);
-    setBusy(null);
-    if (ok) toast.success('Referência copiada');
-    else toast.error('Não foi possível copiar a referência');
-  };
-
-  const handleShare = async () => {
-    setBusy('share');
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: doc.title, text: doc.summary || doc.title, url: shareUrl });
-      } else {
-        const ok = await copyToClipboard(shareUrl);
-        if (ok) toast.success('Link copiado para compartilhar');
-        else toast.error('Compartilhamento indisponível');
-      }
-    } catch (err: any) {
-      // Usuário cancelou o share nativo — silencioso.
-      if (err?.name !== 'AbortError') {
-        toast.error('Não foi possível compartilhar');
-      }
-    } finally {
-      setBusy(null);
-    }
-  };
 
   return (
     <header
@@ -202,38 +145,15 @@ const MagisteriumDocumentHeader: React.FC<MagisteriumDocumentHeaderProps> = ({ d
           </>
         )}
 
-        {/* STAB-004.3.1 — Ações de compartilhamento */}
-        <div className="mt-spacing-lg pt-spacing-lg border-t border-primary/10 flex flex-wrap gap-spacing-2xs">
-          <button
-            type="button"
-            onClick={handleCopyLink}
-            disabled={busy === 'link'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
-            aria-label="Copiar link do documento"
-          >
-            <Icons.Link className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
-            Copiar link
-          </button>
-          <button
-            type="button"
-            onClick={handleCopyReference}
-            disabled={busy === 'ref'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
-            aria-label="Copiar referência bibliográfica"
-          >
-            <Icons.Quote className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
-            Copiar referência
-          </button>
-          <button
-            type="button"
-            onClick={handleShare}
-            disabled={busy === 'share'}
-            className="inline-flex items-center gap-spacing-2xs rounded-premium-full border border-primary/15 bg-background px-spacing-md py-spacing-xs text-[10px] font-bold uppercase tracking-widest text-primary/80 hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none min-h-11"
-            aria-label="Compartilhar documento"
-          >
-            <Icons.Share2 className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
-            Compartilhar
-          </button>
+        {/* STAB-004.3.1 — Ações de compartilhamento (via PassageActions) */}
+        <div className="mt-spacing-lg pt-spacing-lg border-t border-primary/10">
+          <PassageActions
+            text={doc.summary || doc.title}
+            reference={referenceLabel}
+            title={doc.title}
+            passage={{ kind: 'magisterium', id: doc.id, highlight: doc.abbr || doc.title }}
+            size="sm"
+          />
         </div>
       </div>
     </header>

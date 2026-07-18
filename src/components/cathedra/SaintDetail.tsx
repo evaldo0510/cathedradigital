@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
-import ShareButton from './ShareButton';
+import PassageActions from '@/components/shared/PassageActions';
 import DocumentViewer from './DocumentViewer';
 import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
@@ -181,12 +181,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               </Button>
             )}
             
-            <ShareButton
+            <PassageActions
+              text={saint.quotes?.[0] || saint.bio}
+              reference={`${saint.name} — ${saint.title}`}
               title={saint.name}
-              text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
-              variant="default"
+              url={typeof window !== 'undefined' ? window.location.href : ''}
               size="sm"
-              className="!px-spacing-md !py-spacing-xs !text-premium-small !rounded-premium-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
           </div>
 
