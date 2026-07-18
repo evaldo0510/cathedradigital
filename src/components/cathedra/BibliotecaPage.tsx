@@ -568,9 +568,11 @@ const Shelf: React.FC<{
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
-}> = ({ escritos, onOpen }) => (
+}> = ({ escritos, onOpen }) => {
+  const [featured, ...rest] = descubra;
+  return (
   <div className="w-full">
-    <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
+    <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, reunida sob uma só luz.">
       {escritos.length === 0 && (
         <div className="py-spacing-2xl text-primary/40 italic font-serif">
           Nada corresponde à sua busca.
@@ -589,7 +591,9 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <Shelf label="Coleções curadas" hint="Séries editoriais para leitura em profundidade." dim>
+    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
+
+    <Shelf label="Coleções curadas" hint="Séries editoriais para atravessar um tema em profundidade." dim>
       {colecoes.map((c) => (
         <BookCover
           key={c.title}
@@ -602,29 +606,66 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    {/* Descubra — chips ligados a temas reais (tabela `themes`). */}
-    <section aria-label="Descubra por tema" className="mb-spacing-3xl border-t border-primary/10 pt-spacing-2xl">
-      <div className="mb-spacing-lg">
+    <hr className="editorial-rule editorial-rule--hair" aria-hidden />
+
+    {/* Descubra — layout assimétrico: 1 destaque editorial + secundários. */}
+    <section aria-label="Descubra por tema" className="mb-spacing-3xl pt-spacing-2xl">
+      <div className="mb-spacing-xl">
         <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">Descubra</span>
-        <p className="font-serif italic text-primary/60 text-base mt-[2px]">
+        <p className="font-serif italic text-primary/60 text-lg md:text-xl mt-spacing-xs">
           Por onde seu coração precisa começar hoje.
         </p>
       </div>
-      <ul className="flex flex-wrap gap-spacing-sm">
-        {descubra.map((t) => (
-          <li key={t.slug}>
-            <Link
-              to={`${AppRoute.TEMAS}/${t.slug}`}
-              className="inline-block font-serif italic text-primary/85 text-lg border-b border-primary/20 pb-[2px] hover:text-secondary hover:border-secondary transition-colors"
-            >
-              {t.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-spacing-2xl md:gap-spacing-3xl items-start">
+        {/* Destaque grande */}
+        <Link
+          to={`${AppRoute.TEMAS}/${featured.slug}`}
+          className="group block border-l-2 border-secondary/30 pl-spacing-lg py-spacing-md hover:border-secondary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em] text-secondary/80 block mb-spacing-sm">
+            Um caminho para começar
+          </span>
+          <h3 className="font-serif italic text-[2.25rem] md:text-[3rem] text-primary leading-[1.05] mb-spacing-sm group-hover:text-secondary transition-colors">
+            {featured.name}
+          </h3>
+          <p className="font-serif italic text-primary/60 text-lg md:text-xl leading-snug max-w-md">
+            {featured.hint}
+          </p>
+          <span className="mt-spacing-md inline-block text-[10px] uppercase tracking-[0.25em] text-primary/50 group-hover:text-secondary border-b border-primary/20 group-hover:border-secondary pb-[2px] transition-colors">
+            Entrar no tema →
+          </span>
+        </Link>
+
+        {/* Secundários — lista tipográfica com fio dourado no hover */}
+        <ul className="flex flex-col divide-y divide-primary/10">
+          {rest.map((t) => (
+            <li key={t.slug}>
+              <Link
+                to={`${AppRoute.TEMAS}/${t.slug}`}
+                className="group flex items-baseline gap-spacing-md py-spacing-md hover:pl-spacing-xs transition-[padding] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span
+                  className="w-[2px] h-[18px] bg-transparent group-hover:bg-secondary transition-colors flex-shrink-0"
+                  aria-hidden
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="font-serif italic text-xl text-primary/85 group-hover:text-secondary transition-colors block leading-tight">
+                    {t.name}
+                  </span>
+                  <span className="text-[11px] text-primary/45 font-serif italic block mt-[2px] leading-snug">
+                    {t.hint}
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   </div>
-);
+  );
+};
 
 
 
