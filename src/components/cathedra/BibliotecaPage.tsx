@@ -77,12 +77,116 @@ const escritos: Escrito[] = [
   { title: 'Direito Canônico', kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,  description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici', palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink'   } },
 ];
 
-type Colecao = { title: string; kicker: string; subtitle: string; to: string; palette: CoverPalette };
-const colecoes: Colecao[] = [
-  { title: 'A Esperança',       kicker: 'Percurso',   subtitle: 'Ancorar-se em Cristo em tempos difíceis',    to: `${AppRoute.TEMAS}/esperanca`,   palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink'   } },
-  { title: 'A Eucaristia',      kicker: 'Percurso',   subtitle: 'Fonte e ápice da vida cristã',               to: `${AppRoute.TEMAS}/sacramentos`, palette: { bg: '#3A0E1A', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
-  { title: 'Maria',             kicker: 'Percurso',   subtitle: 'A Mãe segundo os Padres e Doutores',         to: `${AppRoute.TEMAS}/maria`,       palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
-  { title: 'Doutrina Social',   kicker: 'Percurso',   subtitle: 'De Rerum Novarum a Fratelli Tutti',          to: AppRoute.MAGISTERIUM,            palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink'   } },
+type ColecaoItem = { title: string; kicker: string; spine: string; to: string; palette: CoverPalette };
+type ColecaoSerie = {
+  numeral: string;   // I, II, III... — numeração romana editorial
+  kicker: string;    // ex.: "Série · Sagrada Escritura"
+  title: string;     // Nome da série
+  curator: string;   // Uma frase de curadoria — por que existe
+  accent: string;    // Cor de acento do módulo (fio, numeral, kicker)
+  items: ColecaoItem[];
+};
+
+/**
+ * Coleções editoriais — cada série tem identidade própria (numeral, kicker, acento).
+ * Curadoria de biblioteca monástica: silêncio entre módulos, autoridade tipográfica,
+ * capas físicas com paleta coerente por série. Não é grid comum.
+ */
+const seriesColecoes: ColecaoSerie[] = [
+  {
+    numeral: 'I',
+    kicker: 'Série · Sagrada Escritura',
+    title: 'Evangelhos',
+    curator: 'Os quatro rostos do único Cristo — porta de entrada de toda leitura cristã.',
+    accent: '#C9A24C',
+    items: [
+      { title: 'Mateus',  kicker: 'Evangelho', spine: 'O Rei prometido',   to: `${AppRoute.BIBLE}?book=mt`, palette: { bg: '#1F1A0F', fg: '#F0E4C4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Marcos',  kicker: 'Evangelho', spine: 'O Servo',           to: `${AppRoute.BIBLE}?book=mc`, palette: { bg: '#3A1810', fg: '#F0DFC4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Lucas',   kicker: 'Evangelho', spine: 'O Filho do Homem',  to: `${AppRoute.BIBLE}?book=lc`, palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'João',    kicker: 'Evangelho', spine: 'O Verbo eterno',    to: `${AppRoute.BIBLE}?book=jo`, palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+    ],
+  },
+  {
+    numeral: 'II',
+    kicker: 'Série · Corpus Paulinum',
+    title: 'Cartas Paulinas',
+    curator: 'A palavra do Apóstolo às primeiras comunidades — teologia que nasce da missão.',
+    accent: '#B8965A',
+    items: [
+      { title: 'Romanos',        kicker: 'Epístola', spine: 'A justiça pela fé',    to: `${AppRoute.BIBLE}?book=rm`,  palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: '1 Coríntios',    kicker: 'Epístola', spine: 'A caridade',           to: `${AppRoute.BIBLE}?book=1co`, palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Gálatas',        kicker: 'Epístola', spine: 'Liberdade em Cristo',  to: `${AppRoute.BIBLE}?book=gl`,  palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Efésios',        kicker: 'Epístola', spine: 'O mistério da Igreja', to: `${AppRoute.BIBLE}?book=ef`,  palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'Filipenses',     kicker: 'Epístola', spine: 'A alegria em Cristo',  to: `${AppRoute.BIBLE}?book=fp`,  palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
+    ],
+  },
+  {
+    numeral: 'III',
+    kicker: 'Série · Doutrina',
+    title: 'Catecismo Essencial',
+    curator: 'Quatro pilares para começar: fé, sacramentos, vida em Cristo e oração.',
+    accent: '#B8965A',
+    items: [
+      { title: 'Profissão da Fé',    kicker: 'CIC · I',   spine: '§§ 26 – 1065',   to: `${AppRoute.CATECHISM}?p=26`,   palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Sacramentos',        kicker: 'CIC · II',  spine: '§§ 1066 – 1690', to: `${AppRoute.CATECHISM}?p=1066`, palette: { bg: '#3A0E1A', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Vida em Cristo',     kicker: 'CIC · III', spine: '§§ 1691 – 2557', to: `${AppRoute.CATECHISM}?p=1691`, palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Oração Cristã',      kicker: 'CIC · IV',  spine: '§§ 2558 – 2865', to: `${AppRoute.CATECHISM}?p=2558`, palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+    ],
+  },
+  {
+    numeral: 'IV',
+    kicker: 'Série · Santoral',
+    title: 'Santos da Igreja',
+    curator: 'Testemunhas de que o Evangelho ainda é possível — de cada século, uma voz.',
+    accent: '#C9A24C',
+    items: [
+      { title: 'Agostinho',      kicker: 'Padre e Doutor',   spine: 'Séc. IV–V',  to: `${AppRoute.SAINTS}?q=agostinho`,       palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Francisco',      kicker: 'Fundador',         spine: 'Séc. XII–XIII', to: `${AppRoute.SAINTS}?q=francisco-de-assis`, palette: { bg: '#4A2A10', fg: '#F0DFC4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Teresa de Ávila',kicker: 'Doutora',          spine: 'Séc. XVI',   to: `${AppRoute.SAINTS}?q=teresa-de-avila`, palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'Teresinha',      kicker: 'Doutora',          spine: 'Séc. XIX',   to: `${AppRoute.SAINTS}?q=teresinha`,       palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink' } },
+    ],
+  },
+  {
+    numeral: 'V',
+    kicker: 'Série · Patrística',
+    title: 'Padres da Igreja',
+    curator: 'A Igreja pensando em voz alta nos primeiros séculos — a Tradição em sua fonte.',
+    accent: '#8A6B3E',
+    items: [
+      { title: 'Inácio de Antioquia', kicker: 'Padre Apostólico', spine: 'Séc. I–II',   to: `${AppRoute.BUSCAR}?tipo=padres&q=inacio-antioquia`, palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink' } },
+      { title: 'Ireneu de Lyon',      kicker: 'Padre Grego',      spine: 'Séc. II',     to: `${AppRoute.BUSCAR}?tipo=padres&q=ireneu`,           palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Atanásio',            kicker: 'Padre Grego',      spine: 'Séc. IV',     to: `${AppRoute.BUSCAR}?tipo=padres&q=atanasio`,         palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'João Crisóstomo',     kicker: 'Padre Grego',      spine: 'Séc. IV–V',   to: `${AppRoute.BUSCAR}?tipo=padres&q=crisostomo`,       palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'Gregório Magno',      kicker: 'Padre Latino',     spine: 'Séc. VI–VII', to: `${AppRoute.BUSCAR}?tipo=padres&q=gregorio-magno`,   palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+    ],
+  },
+  {
+    numeral: 'VI',
+    kicker: 'Série · Magistério',
+    title: 'Concílios',
+    curator: 'Quando a Igreja inteira se reúne para escutar o Espírito e responder ao seu tempo.',
+    accent: '#B8965A',
+    items: [
+      { title: 'Niceia I',      kicker: 'Concílio', spine: '325 · Trindade',      to: `${AppRoute.BUSCAR}?tipo=concilios&q=niceia`,      palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Calcedônia',    kicker: 'Concílio', spine: '451 · Cristologia',   to: `${AppRoute.BUSCAR}?tipo=concilios&q=calcedonia`,  palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Trento',        kicker: 'Concílio', spine: '1545–1563',           to: `${AppRoute.BUSCAR}?tipo=concilios&q=trento`,      palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Vaticano II',   kicker: 'Concílio', spine: '1962–1965',           to: `${AppRoute.BUSCAR}?tipo=concilios&q=vaticano-ii`, palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+    ],
+  },
+  {
+    numeral: 'VII',
+    kicker: 'Série · Magistério Pontifício',
+    title: 'Encíclicas',
+    curator: 'A voz do Sucessor de Pedro na história — de Rerum Novarum a Fratelli Tutti.',
+    accent: '#C9A24C',
+    items: [
+      { title: 'Rerum Novarum',     kicker: 'Leão XIII',    spine: '1891 · Trabalho',      to: `${AppRoute.MAGISTERIUM}?q=rerum-novarum`,   palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Humanae Vitae',     kicker: 'Paulo VI',     spine: '1968 · Vida',          to: `${AppRoute.MAGISTERIUM}?q=humanae-vitae`,   palette: { bg: '#DDE4E8', fg: '#1A2E3E', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'Redemptor Hominis', kicker: 'João Paulo II',spine: '1979 · Cristo',        to: `${AppRoute.MAGISTERIUM}?q=redemptor-hominis`, palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Deus Caritas Est',  kicker: 'Bento XVI',    spine: '2005 · Amor',          to: `${AppRoute.MAGISTERIUM}?q=deus-caritas-est`, palette: { bg: '#2C3E50', fg: '#EEE6D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Fratelli Tutti',    kicker: 'Francisco',    spine: '2020 · Fraternidade',  to: `${AppRoute.MAGISTERIUM}?q=fratelli-tutti`,  palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
+    ],
+  },
 ];
 
 /** "Descubra" — temas curados com linha curatorial editorial. */
@@ -654,6 +758,98 @@ const Shelf: React.FC<{
   </section>
 );
 
+/**
+ * Coleções Editoriais — cada série é uma prateleira com identidade própria.
+ * Coluna esquerda: numeral romano dourado + kicker + título grande + curadoria.
+ * Coluna direita: fileira de capas físicas com scroll horizontal.
+ * Entre séries, respiração generosa e fio dourado sutil (não separator técnico).
+ */
+const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) => (
+  <section aria-label="Coleções editoriais" className="mb-spacing-4xl pt-spacing-2xl">
+    {/* Cabeçalho da seção — kicker + subtítulo curatorial. */}
+    <div className="mb-spacing-3xl max-w-2xl">
+      <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+        Coleções Editoriais
+      </span>
+      <p className="font-serif italic text-primary/60 text-xl md:text-2xl mt-spacing-sm leading-snug">
+        Séries curadas para atravessar a Tradição por caminhos que se sustentam.
+      </p>
+    </div>
+
+    <div className="flex flex-col gap-spacing-4xl">
+      {series.map((serie, idx) => (
+        <article
+          key={serie.title}
+          aria-label={serie.title}
+          className="group/serie relative"
+        >
+          {/* Fio horizontal dourado no topo, exceto na primeira. */}
+          {idx > 0 && (
+            <div
+              aria-hidden
+              className="absolute -top-spacing-2xl left-0 h-px w-16 bg-secondary/25"
+            />
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-3xl items-start">
+            {/* Coluna curatorial */}
+            <header className="md:col-span-4 lg:col-span-3 md:sticky md:top-spacing-2xl">
+              <div className="flex items-baseline gap-spacing-md mb-spacing-md">
+                <span
+                  className="font-serif italic text-4xl md:text-5xl leading-none"
+                  style={{ color: serie.accent }}
+                  aria-hidden
+                >
+                  {serie.numeral}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 font-medium">
+                  {serie.kicker}
+                </span>
+              </div>
+              <h3 className="font-serif italic text-primary text-[2rem] md:text-[2.5rem] leading-[1.05] mb-spacing-md">
+                {serie.title}
+              </h3>
+              <p className="font-serif italic text-primary/60 text-base md:text-lg leading-snug max-w-sm">
+                {serie.curator}
+              </p>
+            </header>
+
+            {/* Prateleira de capas */}
+            <div className="md:col-span-8 lg:col-span-9 min-w-0">
+              <div
+                className={cn(
+                  'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
+                  '[scrollbar-width:thin] [-ms-overflow-style:none]',
+                  '[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-thumb]:bg-primary/15 [&::-webkit-scrollbar-track]:bg-transparent',
+                )}
+              >
+                {serie.items.map((item) => (
+                  <BookCover
+                    key={item.title}
+                    kicker={item.kicker}
+                    title={item.title}
+                    spine={item.spine}
+                    palette={item.palette}
+                    to={item.to}
+                  />
+                ))}
+              </div>
+              {/* Base da prateleira — fio dourado discreto sob as capas. */}
+              <div
+                aria-hidden
+                className="h-px w-full mt-spacing-xs"
+                style={{ background: `linear-gradient(to right, ${serie.accent}55, transparent 80%)` }}
+              />
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+);
+
+
+
 const EscritosView: React.FC<{
   escritos: Escrito[];
   onOpen: (e: Escrito) => void;
@@ -681,18 +877,8 @@ const EscritosView: React.FC<{
       ))}
     </Shelf>
 
-    <Shelf label="Coleções curadas" hint="Séries editoriais para atravessar um tema em profundidade." dim>
-      {colecoes.map((c) => (
-        <BookCover
-          key={c.title}
-          kicker={c.kicker}
-          title={c.title}
-          spine={c.subtitle}
-          palette={c.palette}
-          to={c.to}
-        />
-      ))}
-    </Shelf>
+    <CollectionsEditorial series={seriesColecoes} />
+
 
     {/* Descubra — ritmo curatorial 1 grande + 2 médios + 3 pequenos, propositalmente assimétrico. */}
     <section aria-label="Descubra por tema" className="mb-spacing-4xl pt-spacing-3xl">
