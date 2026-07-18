@@ -162,5 +162,51 @@ for (const vp of VIEWPORTS) {
       );
       expect(focusedTestId, `foco não pode retornar ao menu-trigger em ${vp.name}`).not.toBe('menu-trigger');
     });
+
+    test('múltiplos swipes abaixo do threshold NÃO fecham o drawer', async ({ page }) => {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+      const trigger = page.getByTestId('menu-trigger');
+      await expect(trigger).toBeVisible({ timeout: 10000 });
+      await trigger.focus();
+      await trigger.click();
+
+      const dialog = page.getByRole('dialog', { name: /Menu de navegação|navigation_menu/i });
+      await expect(dialog).toBeVisible({ timeout: 5000 });
+      await page.waitForTimeout(700);
+
+      const box = await dialog.boundingBox();
+      if (!box) throw new Error('dialog sem boundingBox');
+      const startX = box.x + box.width / 2;
+      const startY = box.y + box.height / 2;
+
+      // 5 gestos fracos consecutivos, variando levemente offset (-40 a -80) e
+      // duração (mantendo velocity < 500 px/s). Cada gesto deve gerar snap-back
+      // sem acumular estado que force o fechamento.
+      const gestures = [
+        { dx: -40, steps: 15 },
+        { dx: -70, steps: 22 },
+        { dx: -55, steps: 18 },
+        { dx: -80, steps: 25 },
+        { dx: -50, steps: 16 },
+      ];
+
+      for (const [i, g] of gestures.entries()) {
+        await pointerSwipeLeft(page, startX, startY, g.dx, g.steps, 20);
+        await page.waitForTimeout(350); // deixa framer-motion animar snap-back
+        await expect(dialog, `dialog deve seguir visível após swipe #${i + 1} em ${vp.name}`).toBeVisible();
+      }
+
+      await page.waitForTimeout(400);
+      await expect(dialog).toBeVisible();
+
+      const focusedInside = await dialog.evaluate((el) => el.contains(document.activeElement));
+      expect(focusedInside, `foco não pode escapar do dialog em ${vp.name}`).toBe(true);
+
+      const focusedTestId = await page.evaluate(
+        () => (document.activeElement as HTMLElement | null)?.getAttribute('data-testid') ?? null,
+      );
+      expect(focusedTestId, `foco não pode retornar ao menu-trigger em ${vp.name}`).not.toBe('menu-trigger');
+    });
   });
 }
