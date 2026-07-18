@@ -411,7 +411,49 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             {contextPath}
           </SheetDescription>
           <div aria-hidden className="mt-spacing-md h-px w-[40px] bg-secondary/60" />
+
+          {/* Indicador de seções visitadas + navegação por teclado */}
+          {narrativeSections.length > 1 && (
+            <nav
+              aria-label="Seções do Nexus"
+              className="mt-spacing-md flex items-center gap-spacing-xs"
+            >
+              {narrativeSections.map((s, i) => {
+                const visited = visitedKinds.has(s.kind);
+                const active = i === activeSectionIdx;
+                return (
+                  <button
+                    key={s.kind}
+                    type="button"
+                    onClick={() => setActiveSectionIdx(i)}
+                    aria-current={active ? 'true' : undefined}
+                    aria-label={`${s.preset.eyebrow}${visited ? ' (visitada)' : ''}`}
+                    title={s.preset.eyebrow}
+                    className={cn(
+                      'group inline-flex items-center justify-center h-6 w-6 rounded-full transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'block rounded-full transition-all',
+                        active
+                          ? 'h-[8px] w-[8px] bg-secondary'
+                          : visited
+                            ? 'h-[6px] w-[6px] bg-secondary/60'
+                            : 'h-[6px] w-[6px] bg-primary/20 group-hover:bg-primary/40',
+                      )}
+                    />
+                  </button>
+                );
+              })}
+              <span className="ml-spacing-sm text-[9px] uppercase tracking-[0.28em] text-primary/40 hidden md:inline">
+                Alt+←/→
+              </span>
+            </nav>
+          )}
         </header>
+
 
 
         {/* Corpo — sequência editorial */}
