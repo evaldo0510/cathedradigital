@@ -46,9 +46,45 @@ for (const vp of VIEWPORTS) {
       await expect(dialog).toBeHidden({ timeout: 5000 });
 
       // Foco deve voltar exatamente ao menu-trigger.
+      // 1) Identidade do nó.
       const triggerHandle = await trigger.elementHandle();
       const isFocused = await page.evaluate((el) => el === document.activeElement, triggerHandle);
       expect(isFocused, `menu-trigger deve receber foco em ${vp.name} após clicar no overlay`).toBe(true);
+
+      // 2) Verificação semântica: data-testid do elemento focado.
+      const focusedTestId = await page.evaluate(
+        () => (document.activeElement as HTMLElement | null)?.getAttribute('data-testid') ?? null,
+      );
+      expect(focusedTestId, `data-testid do elemento focado em ${vp.name}`).toBe('menu-trigger');
+    });
+
+    test('ESC com drawer já fechado não altera activeElement', async ({ page }) => {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+      const trigger = page.getByTestId('menu-trigger');
+      await expect(trigger).toBeVisible({ timeout: 10000 });
+      await trigger.focus();
+
+      // Confirma estado inicial: drawer fechado, foco no trigger.
+      const dialog = page.getByRole('dialog', { name: /Menu de navegação|navigation_menu/i });
+      await expect(dialog).toBeHidden();
+
+      const triggerHandle = await trigger.elementHandle();
+      const focusedBefore = await page.evaluate((el) => el === document.activeElement, triggerHandle);
+      expect(focusedBefore, `foco inicial deve estar no menu-trigger em ${vp.name}`).toBe(true);
+
+      // Pressiona ESC sem drawer aberto.
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(200);
+
+      // activeElement deve permanecer no menu-trigger.
+      const focusedAfter = await page.evaluate((el) => el === document.activeElement, triggerHandle);
+      expect(focusedAfter, `ESC no vazio não pode roubar foco em ${vp.name}`).toBe(true);
+
+      const focusedTestId = await page.evaluate(
+        () => (document.activeElement as HTMLElement | null)?.getAttribute('data-testid') ?? null,
+      );
+      expect(focusedTestId).toBe('menu-trigger');
     });
   });
 }
