@@ -203,6 +203,42 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const isMobile = useIsMobile();
 
+  // STAB-NEXUS-P0 Etapa 2: resolveLink completo (bible/catechism/magisterium/
+  // saint/theme/journey). Retorna null para tipos sem rota pública (father/
+  // council/canon) — bubble será ocultado, nunca <span> morto.
+  const resolveLink = useCallback((c: TagContent): string | null => {
+    const meta = c.metadata ?? {};
+    switch (c.type) {
+      case 'bible': {
+        if (meta.book && meta.chapter) {
+          const verse = meta.verse ? `&verse=${meta.verse}` : '';
+          return `/bible?book=${meta.book}&ch=${meta.chapter}${verse}`;
+        }
+        return null;
+      }
+      case 'catechism': {
+        const p = meta.paragraph ?? meta.number;
+        return p ? `${AppRoute.CATECHISM}?p=${p}` : null;
+      }
+      case 'magisterium': {
+        const docId = meta.document_id ?? meta.documentId ?? meta.slug ?? c.id;
+        return docId ? `/magisterium/${docId}` : null;
+      }
+      case 'saint': {
+        const ident = meta.slug ?? meta.id ?? c.id;
+        return ident ? `/santos/${ident}` : null;
+      }
+      case 'theme': {
+        const slug = meta.slug ?? c.id;
+        return slug ? `/temas/${slug}` : null;
+      }
+      case 'journey':
+        return c.id ? `/jornadas/${c.id}` : null;
+      default:
+        return null;
+    }
+  }, []);
+
   // Agrupa o conteúdo já retornado pelo Knowledge Engine em capítulos narrativos.
   // Ordem estável seguindo NEXUS_KIND_PRESETS.order.
   // STAB-NEXUS-P0 Etapa 2/3: filtra itens sem rota resolvível (father/council/canon
