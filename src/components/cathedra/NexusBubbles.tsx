@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
