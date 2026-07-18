@@ -275,23 +275,45 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     requestAnimationFrame(() => navigate(path));
   }, [persistReturn, navigate]);
 
-  // Restaura estado persistido quando esta bubble corresponde ao salvo.
+  // Restaura estado persistido OU abre via deep link (#nexus=slug[:kind]).
   useEffect(() => {
+    // Deep link tem prioridade se corresponder a esta tag.
+    const deep = parseNexusHash(window.location.hash);
+    if (deep && deep.slug === tag.slug) {
+      savedScrollRef.current = window.scrollY;
+      setOpen(true);
+      fetchContentForTag(tag);
+      setLiveMessage(restoredLiveMessage(tag.label));
+      return;
+    }
     const saved = readPersistedState();
     if (!saved || saved.tagId !== tag.id) return;
     if (saved.path !== window.location.pathname + window.location.search) return;
     setVisitedKinds(new Set(saved.visitedKinds || []));
     setActiveSectionIdx(saved.activeSectionIdx || 0);
+    setFocusMode(!!saved.focusMode);
     savedScrollRef.current = window.scrollY;
     setOpen(true);
     fetchContentForTag(tag);
-    setLiveMessage(`Painel Nexus restaurado em ${tag.label}`);
+    setLiveMessage(restoredLiveMessage(tag.label));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persiste estado enquanto o painel está aberto.
+  // Após o conteúdo carregar, se veio deep-link com kind, seleciona a seção.
+  useEffect(() => {
+    if (!open || narrativeSections.length === 0) return;
+    const deep = parseNexusHash(window.location.hash);
+    if (!deep || deep.slug !== currentTag.slug || !deep.kind) return;
+    const idx = narrativeSections.findIndex(s => s.kind === deep.kind);
+    if (idx >= 0 && idx !== activeSectionIdx) setActiveSectionIdx(idx);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, narrativeSections.length]);
+
+  // Persiste estado enquanto o painel está aberto (inclui focusMode).
   useEffect(() => {
     if (!open) return;
+    if (applyingExternalRef.current) return; // evita eco do sync entre abas
+    const currentKind = narrativeSections[activeSectionIdx]?.kind;
     writePersistedState({
       tagId: currentTag.id,
       tagSlug: currentTag.slug,
@@ -299,9 +321,43 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       historyIds: navHistory.map(h => h.id),
       activeSectionIdx,
       visitedKinds: Array.from(visitedKinds),
+      focusMode,
       ts: Date.now(),
     });
-  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds]);
+    // Reflete a seção atual no hash para deep-link compartilhável.
+    if (currentKind) {
+      const newHash = buildNexusHash(currentTag.slug, currentKind);
+      if (window.location.hash !== newHash) {
+        const url = window.location.pathname + window.location.search + newHash;
+        window.history.replaceState(null, '', url);
+      }
+    }
+  }, [open, currentTag.id, currentTag.slug, navHistory, activeSectionIdx, visitedKinds, focusMode, narrativeSections]);
+
+  // Sincronização entre abas via evento `storage`.
+  useEffect(() => {
+    if (!open) return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== NEXUS_STATE_KEY || !e.newValue) return;
+      try {
+        const remote = JSON.parse(e.newValue) as PersistedNexusState;
+        if (remote.tagId !== currentTag.id) return;
+        applyingExternalRef.current = true;
+        if (typeof remote.activeSectionIdx === 'number') {
+          setActiveSectionIdx(remote.activeSectionIdx);
+        }
+        setVisitedKinds(new Set(remote.visitedKinds || []));
+        setFocusMode(!!remote.focusMode);
+        setLiveMessage('Painel sincronizado com outra aba.');
+        // libera guard no próximo tick para o efeito de persistência não reescrever
+        setTimeout(() => { applyingExternalRef.current = false; }, 0);
+      } catch {
+        /* payload inválido — ignora */
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [open, currentTag.id]);
 
   // Marca seção ativa como visitada, faz scroll e anuncia via aria-live.
   useEffect(() => {
@@ -314,22 +370,55 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       next.add(current.kind);
       return next;
     });
-    setLiveMessage(`Seção ${activeSectionIdx + 1} de ${narrativeSections.length}: ${current.preset.eyebrow}`);
+    setLiveMessage(sectionLiveMessage(activeSectionIdx, narrativeSections.length, current.preset.eyebrow));
     const el = sectionRefs.current[current.kind];
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeSectionIdx, open, narrativeSections]);
 
-  // Atalhos: Alt+→/← ou [/] alternam entre seções sem sair do painel.
+  // Atalhos: Alt+←/→ ou [/] alternam seções; `f` alterna modo foco.
   const handlePanelKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (narrativeSections.length === 0) return;
-    if (e.altKey && (e.key === 'ArrowRight' || e.key === ']')) {
+    if (isFocusToggleKey(e)) {
+      // não sequestrar quando o foco está em input/textarea/contenteditable
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
       e.preventDefault();
-      setActiveSectionIdx(i => Math.min(i + 1, narrativeSections.length - 1));
-    } else if (e.altKey && (e.key === 'ArrowLeft' || e.key === '[')) {
-      e.preventDefault();
-      setActiveSectionIdx(i => Math.max(i - 1, 0));
+      setFocusMode(prev => {
+        const next = !prev;
+        setLiveMessage(focusModeLiveMessage(next));
+        return next;
+      });
+      return;
     }
-  }, [narrativeSections.length]);
+    const next = reduceSectionKeyboard(e, activeSectionIdx, narrativeSections.length);
+    if (next !== null && next !== activeSectionIdx) {
+      e.preventDefault();
+      setActiveSectionIdx(next);
+    }
+  }, [activeSectionIdx, narrativeSections.length]);
+
+  const handleShareDeepLink = useCallback(async () => {
+    const currentKind = narrativeSections[activeSectionIdx]?.kind;
+    const url = buildNexusShareUrl(
+      window.location.origin + window.location.pathname + window.location.search,
+      currentTag.slug,
+      currentKind,
+    );
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: currentTag.label, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+      setCopiedShare(true);
+      setLiveMessage('Link do Nexus copiado para a área de transferência.');
+      if (shareCopiedRef.current) window.clearTimeout(shareCopiedRef.current);
+      shareCopiedRef.current = window.setTimeout(() => setCopiedShare(false), 2000);
+    } catch {
+      /* usuário cancelou ou clipboard indisponível */
+    }
+  }, [activeSectionIdx, currentTag.label, currentTag.slug, narrativeSections]);
+
 
   return (
     <Sheet open={navigateOnClick ? false : open} onOpenChange={handleOpenChange}>
