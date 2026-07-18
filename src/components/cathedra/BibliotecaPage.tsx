@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -44,17 +44,30 @@ type Escrito = {
   kicker: string;
   to: string;
   description: string;
+  /** Legenda curta que aparece no rodapé da capa (autor/tradição). */
+  spine: string;
+  /** Tom visual da capa: 'paper' (fundo creme) ou 'noir' (fundo escuro). */
+  tone: 'paper' | 'noir';
 };
 
 const escritos: Escrito[] = [
-  { title: 'Bíblia', kicker: 'Sagradas Escrituras', to: AppRoute.BIBLE, description: 'Antigo e Novo Testamento com anotações e Nexus.' },
-  { title: 'Catecismo', kicker: 'Doutrina', to: AppRoute.CATECHISM, description: 'CIC organizado por parágrafos e referências.' },
-  { title: 'Magistério', kicker: 'Documentos Pontifícios', to: AppRoute.MAGISTERIUM, description: 'Encíclicas, exortações e constituições.' },
-  { title: 'Padres da Igreja', kicker: 'Patrística', to: `${AppRoute.BUSCAR}?tipo=padres`, description: 'Escritos dos Padres do Oriente e Ocidente.' },
-  { title: 'Santos', kicker: 'Vida e Escritos', to: AppRoute.SAINTS, description: 'Biografias, escritos e testemunhos.' },
-  { title: 'Concílios', kicker: 'Assembleias da Igreja', to: `${AppRoute.BUSCAR}?tipo=concilios`, description: 'Documentos conciliares em texto integral.' },
-  { title: 'Direito Canônico', kicker: 'Normas', to: `${AppRoute.BUSCAR}?tipo=direito-canonico`, description: 'Código de 1983 e legislação eclesiástica.' },
+  { title: 'Bíblia',            kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                                      description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',      tone: 'paper' },
+  { title: 'Catecismo',         kicker: 'Doutrina',                to: AppRoute.CATECHISM,                                  description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',         tone: 'noir'  },
+  { title: 'Magistério',        kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                                description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',       tone: 'paper' },
+  { title: 'Padres',            kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,                    description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',       tone: 'paper' },
+  { title: 'Santos',            kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                                     description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',          tone: 'noir'  },
+  { title: 'Concílios',         kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,                 description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',     tone: 'paper' },
+  { title: 'Direito Canônico',  kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,          description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici',    tone: 'noir'  },
 ];
+
+type Colecao = { title: string; kicker: string; subtitle: string; to: string; tone: 'paper' | 'noir' };
+const colecoes: Colecao[] = [
+  { title: 'As Confissões',          kicker: 'Série I',   subtitle: 'Santo Agostinho de Hipona',        to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`, tone: 'noir'  },
+  { title: 'Suma Teológica',         kicker: 'Série II',  subtitle: 'S. Tomás de Aquino — Pars Prima',  to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('Suma Teológica')}`,      tone: 'paper' },
+  { title: 'Grandes Místicos',       kicker: 'Série III', subtitle: 'Teresa, João da Cruz, Kempis',     to: `${AppRoute.BUSCAR}?q=${encodeURIComponent('mística')}`,             tone: 'noir'  },
+  { title: 'Doutrina Social',        kicker: 'Série IV',  subtitle: 'De Rerum Novarum a Fratelli Tutti',to: `${AppRoute.MAGISTERIUM}`,                                            tone: 'paper' },
+];
+
 
 /**
  * Resolve o destino de uma busca em função do eixo ativo.
@@ -81,25 +94,16 @@ function resolveSearchTarget(query: string, axis: AxisFilter): string {
 }
 
 type BibliotecaTheme = 'vaticana' | 'apple' | 'logos';
-const THEME_KEY = 'cathedra.biblioteca.theme';
-const themeOptions: { key: BibliotecaTheme; label: string; hint: string }[] = [
-  { key: 'vaticana', label: 'Vaticana', hint: 'Clássico contemplativo' },
-  { key: 'apple', label: 'Apple Books', hint: 'Minimalismo silencioso' },
-  { key: 'logos', label: 'Logos 2030', hint: 'Pesquisa como âncora' },
-];
 
 const BibliotecaPage: React.FC = () => {
   const navigate = useNavigate();
   const { query, axis, tab, setQuery, setAxis, setTab } = useBibliotecaState();
   const { recents, pushRecent, clearRecents, removeRecent } = useBibliotecaRecents();
   const { favorites, removeFavorite } = useFavorites('biblioteca');
-  const [theme, setTheme] = useState<BibliotecaTheme>(() => {
-    if (typeof window === 'undefined') return 'logos';
-    return (localStorage.getItem(THEME_KEY) as BibliotecaTheme) || 'logos';
-  });
-  useEffect(() => {
-    try { localStorage.setItem(THEME_KEY, theme); } catch {}
-  }, [theme]);
+  // Identidade travada em "Logos 2030" — seletor removido para reduzir dívida (auditoria).
+  const theme: BibliotecaTheme = 'logos';
+
+
 
   const filteredEscritos = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -130,37 +134,8 @@ const BibliotecaPage: React.FC = () => {
   return (
     <ContemplativeLayout title="Biblioteca" subtitle="Sacrum Archivum" icon={Icons.Compass}>
       <div className="w-full pb-spacing-4xl" data-biblioteca-theme={theme}>
-        {/* Seletor de tema — validação de conceito Logos 2030 */}
-        <div
-          role="radiogroup"
-          aria-label="Tema visual da Biblioteca"
-          className="mb-spacing-lg flex flex-wrap items-center gap-spacing-sm"
-        >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-primary/40 mr-spacing-sm">
-            Tema
-          </span>
-          {themeOptions.map((opt) => {
-            const active = theme === opt.key;
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                title={opt.hint}
-                onClick={() => setTheme(opt.key)}
-                className={cn(
-                  'text-[11px] uppercase tracking-[0.2em] px-spacing-md py-[6px] border transition-colors',
-                  active
-                    ? 'border-secondary text-secondary bg-secondary/5'
-                    : 'border-primary/15 text-primary/60 hover:border-secondary/60 hover:text-secondary',
-                )}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+
+
 
         {/* Busca soberana + eixo */}
         <form
@@ -268,7 +243,7 @@ const BibliotecaPage: React.FC = () => {
             className="mt-spacing-2xl"
           >
             {tab === 'escritos' && (
-              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} />
+              <EscritosView escritos={filteredEscritos} onOpen={openEscrito} recents={recents} />
             )}
             {tab === 'pesquisar' && (
               <PesquisarView
@@ -301,57 +276,207 @@ const BibliotecaPage: React.FC = () => {
 
 /* -------------------- Sub-views -------------------- */
 
-const EscritosView: React.FC<{ escritos: Escrito[]; onOpen: (e: Escrito) => void }> = ({ escritos, onOpen }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-spacing-2xl">
-    <div className="lg:col-span-7">
-      <h2 className="font-serif text-primary/90 text-2xl italic mb-spacing-lg">Fontes primárias</h2>
-      <p className="text-primary/55 text-sm leading-relaxed mb-spacing-xl max-w-lg">
-        Um único ambiente para toda a Tradição escrita da Igreja. Navegue sem trocar de contexto.
-      </p>
-      <ul className="divide-y divide-primary/10 border-y border-primary/10">
-        {escritos.length === 0 && (
-          <li className="py-spacing-2xl text-center text-primary/40 italic font-serif">
-            Nada corresponde à sua busca.
-          </li>
-        )}
-        {escritos.map((e) => (
-          <li key={e.title}>
-            <Link
-              to={e.to}
-              onClick={() => onOpen(e)}
-              className="group flex items-center justify-between gap-spacing-md py-spacing-lg px-spacing-xs hover:bg-primary/[0.03] transition-colors"
-            >
-              <div className="min-w-0">
-                <span className="block text-[10px] uppercase tracking-[0.25em] text-secondary/80 mb-[2px]">{e.kicker}</span>
-                <span className="font-serif text-2xl text-primary group-hover:text-secondary transition-colors">{e.title}</span>
-                <span className="block text-sm text-primary/55 mt-[2px] truncate">{e.description}</span>
-              </div>
-              <Icons.ChevronRight className="w-4 h-4 text-secondary opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" aria-hidden />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+/* -------------------- Estante (v3 — “Kindle da Igreja”) --------------------
+ * Hero horizontal “Continuar lendo” (usa o último recente ou fallback curado)
+ * + faixa de capas tipográficas 2:3 para Fontes Primárias
+ * + faixa de Coleções curadas (opacidade reduzida = hierarquia).
+ * Sem imagens externas — capas 100% tipográficas com tokens semânticos.
+ */
 
-    <aside className="lg:col-span-5 space-y-spacing-2xl">
-      <div className="bg-primary text-white p-spacing-2xl relative overflow-hidden">
-        <span className="text-secondary text-[10px] tracking-[0.3em] uppercase font-medium mb-spacing-sm block">Destaque da coleção</span>
-        <h3 className="font-serif text-3xl leading-tight mb-spacing-md text-white">As Confissões de Santo Agostinho</h3>
-        <p className="text-white/70 text-sm leading-relaxed mb-spacing-lg max-w-sm">
-          Uma das obras mais profundas da literatura universal, com comentários e introdução histórica.
+const BookCover: React.FC<{
+  kicker: string;
+  title: string;
+  spine: string;
+  tone: 'paper' | 'noir';
+  to: string;
+  onOpen?: () => void;
+  size?: 'md' | 'lg';
+}> = ({ kicker, title, spine, tone, to, onOpen, size = 'md' }) => {
+  const dims = size === 'lg' ? 'w-[168px] md:w-[192px]' : 'w-[144px] md:w-[160px]';
+  const isNoir = tone === 'noir';
+  return (
+    <Link
+      to={to}
+      onClick={onOpen}
+      className={cn(
+        'group relative block flex-shrink-0 snap-start focus:outline-none',
+        dims,
+      )}
+      aria-label={`Abrir ${title}`}
+    >
+      {/* Capa 2:3 */}
+      <div
+        className={cn(
+          'relative aspect-[2/3] w-full overflow-hidden transition-all duration-500',
+          'border shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.35)]',
+          'group-hover:-translate-y-[3px] group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.08),0_18px_32px_-14px_rgba(0,0,0,0.45)]',
+          'group-focus-visible:ring-2 group-focus-visible:ring-secondary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
+          isNoir
+            ? 'bg-primary text-primary-foreground border-primary/70'
+            : 'bg-card text-primary border-primary/15',
+        )}
+      >
+        {/* Moldura interna fina */}
+        <div
+          aria-hidden
+          className={cn(
+            'absolute inset-[6px] border pointer-events-none',
+            isNoir ? 'border-secondary/25' : 'border-primary/10',
+          )}
+        />
+        {/* Conteúdo tipográfico */}
+        <div className="absolute inset-0 flex flex-col justify-between p-spacing-md">
+          <span
+            className={cn(
+              'text-[9px] uppercase tracking-[0.28em] font-medium',
+              isNoir ? 'text-secondary/85' : 'text-secondary',
+            )}
+          >
+            {kicker}
+          </span>
+          <div className="flex-1 flex items-center justify-center px-[2px]">
+            <h3
+              className={cn(
+                'font-serif italic leading-[1.05] text-center',
+                size === 'lg' ? 'text-2xl md:text-[26px]' : 'text-xl md:text-[22px]',
+              )}
+            >
+              {title}
+            </h3>
+          </div>
+          <span
+            className={cn(
+              'text-[8px] uppercase tracking-[0.22em] text-center truncate',
+              isNoir ? 'text-primary-foreground/45' : 'text-primary/40',
+            )}
+          >
+            {spine}
+          </span>
+        </div>
+      </div>
+      {/* Base da estante */}
+      <div aria-hidden className="mx-2 h-[2px] bg-primary/15 shadow-[0_1px_0_hsl(var(--primary)/0.05)]" />
+    </Link>
+  );
+};
+
+const ContinueReadingHero: React.FC<{
+  recents: ReturnType<typeof useBibliotecaRecents>['recents'];
+}> = ({ recents }) => {
+  const last = recents[0];
+  const kicker = last?.subtitle ?? 'Destaque da coleção';
+  const title = last?.title ?? 'As Confissões';
+  const path = last?.path ?? `${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`;
+  const description = last
+    ? 'Retome exatamente de onde parou. Sua última leitura permanece aberta.'
+    : 'Uma das obras mais profundas da literatura universal — comentada, com introdução histórica e Nexus.';
+  const cta = last ? 'Continuar leitura' : 'Iniciar leitura';
+
+  return (
+    <section
+      aria-label="Continuar lendo"
+      className="mb-spacing-3xl grid grid-cols-1 md:grid-cols-[192px_1fr] gap-spacing-2xl items-center border-y border-primary/10 py-spacing-2xl"
+    >
+      <div className="mx-auto md:mx-0">
+        <BookCover
+          kicker={kicker}
+          title={title}
+          spine="Cathedra Digital"
+          tone="noir"
+          to={path}
+          size="lg"
+        />
+      </div>
+      <div className="min-w-0">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium block mb-spacing-sm">
+          {last ? 'Continuar lendo' : 'Recomendado hoje'}
+        </span>
+        <h2 className="font-serif italic text-3xl md:text-4xl text-primary leading-tight mb-spacing-md">
+          {title}
+        </h2>
+        <p className="text-primary/60 text-sm md:text-base leading-relaxed max-w-lg mb-spacing-lg">
+          {description}
         </p>
         <Link
-          to={`${AppRoute.BUSCAR}?q=${encodeURIComponent('Confissões Agostinho')}`}
-          className="inline-block border border-secondary text-secondary px-spacing-lg py-spacing-sm text-[11px] tracking-[0.25em] uppercase hover:bg-secondary hover:text-primary transition-colors"
+          to={path}
+          className="inline-block border-b border-primary text-[11px] uppercase tracking-[0.25em] text-primary pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
         >
-          Iniciar leitura
+          {cta} →
         </Link>
-        <div aria-hidden className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full border border-secondary/20" />
-        <div aria-hidden className="absolute -right-8 -bottom-8 w-64 h-64 rounded-full border border-secondary/10" />
       </div>
-    </aside>
+    </section>
+  );
+};
+
+const Shelf: React.FC<{
+  label: string;
+  hint?: string;
+  dim?: boolean;
+  children: React.ReactNode;
+}> = ({ label, hint, dim, children }) => (
+  <section aria-label={label} className={cn('mb-spacing-3xl', dim && 'opacity-80')}>
+    <header className="flex items-baseline justify-between mb-spacing-lg">
+      <div>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">{label}</span>
+        {hint && (
+          <p className="font-serif italic text-primary/60 text-base mt-[2px]">{hint}</p>
+        )}
+      </div>
+    </header>
+    <div
+      className={cn(
+        'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
+        '[scrollbar-width:thin] [-ms-overflow-style:none]',
+        '[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-thumb]:bg-primary/15 [&::-webkit-scrollbar-track]:bg-transparent',
+      )}
+    >
+      {children}
+    </div>
+  </section>
+);
+
+const EscritosView: React.FC<{
+  escritos: Escrito[];
+  onOpen: (e: Escrito) => void;
+  recents: ReturnType<typeof useBibliotecaRecents>['recents'];
+}> = ({ escritos, onOpen, recents }) => (
+  <div className="w-full">
+    <ContinueReadingHero recents={recents} />
+
+    <Shelf label="Fontes primárias" hint="A Tradição escrita da Igreja, num só ambiente.">
+      {escritos.length === 0 && (
+        <div className="py-spacing-2xl text-primary/40 italic font-serif">
+          Nada corresponde à sua busca.
+        </div>
+      )}
+      {escritos.map((e) => (
+        <BookCover
+          key={e.title}
+          kicker={e.kicker}
+          title={e.title}
+          spine={e.spine}
+          tone={e.tone}
+          to={e.to}
+          onOpen={() => onOpen(e)}
+        />
+      ))}
+    </Shelf>
+
+    <Shelf label="Coleções curadas" hint="Séries editoriais para leitura em profundidade." dim>
+      {colecoes.map((c) => (
+        <BookCover
+          key={c.title}
+          kicker={c.kicker}
+          title={c.title}
+          spine={c.subtitle}
+          tone={c.tone}
+          to={c.to}
+        />
+      ))}
+    </Shelf>
   </div>
 );
+
 
 const PesquisarView: React.FC<{ query: string; axis: AxisFilter; onSubmit: () => void }> = ({ query, axis, onSubmit }) => (
   <div className="max-w-2xl">
