@@ -49,6 +49,7 @@ import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
