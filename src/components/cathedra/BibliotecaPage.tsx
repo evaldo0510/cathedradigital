@@ -737,15 +737,17 @@ const Shelf: React.FC<{
   dim?: boolean;
   children: React.ReactNode;
 }> = ({ label, hint, dim, children }) => (
-  <section aria-label={label} className={cn('mb-spacing-3xl', dim && 'opacity-80')}>
+  <section aria-label={label} className={cn('mb-spacing-4xl pt-spacing-2xl', dim && 'opacity-80')}>
     <header className="flex items-baseline justify-between mb-spacing-lg">
       <div>
-        <span className="text-[10px] uppercase tracking-[0.3em] text-secondary font-medium">{label}</span>
+        <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">{label}</span>
         {hint && (
           <p className="font-serif italic text-primary/60 text-base mt-[2px]">{hint}</p>
         )}
+        <div aria-hidden className="h-px w-16 bg-secondary/40 mt-spacing-md" />
       </div>
     </header>
+
     <div
       className={cn(
         'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
