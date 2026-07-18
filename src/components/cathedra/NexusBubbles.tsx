@@ -54,6 +54,40 @@ interface TagBubbleProps {
 }
 
 
+const NEXUS_STATE_KEY = 'nexus:state:v1';
+
+type PersistedNexusState = {
+  tagId: string;
+  tagSlug?: string;
+  path: string;
+  historyIds: string[];
+  activeSectionIdx: number;
+  visitedKinds: string[];
+  ts: number;
+};
+
+const readPersistedState = (): PersistedNexusState | null => {
+  try {
+    const raw = localStorage.getItem(NEXUS_STATE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedNexusState;
+    // expira em 24h
+    if (Date.now() - (parsed.ts || 0) > 1000 * 60 * 60 * 24) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const writePersistedState = (s: PersistedNexusState | null) => {
+  try {
+    if (s === null) localStorage.removeItem(NEXUS_STATE_KEY);
+    else localStorage.setItem(NEXUS_STATE_KEY, JSON.stringify(s));
+  } catch {
+    /* ignore */
+  }
+};
+
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
 
   const navigate = useNavigate();
@@ -68,8 +102,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   // Navigation stack for context-to-context breadcrumbs
   const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
+  const [activeSectionIdx, setActiveSectionIdx] = useState(0);
+  const [visitedKinds, setVisitedKinds] = useState<Set<string>>(new Set());
+  const [liveMessage, setLiveMessage] = useState<string>('');
+  const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
 
   const currentTag = navHistory[navHistory.length - 1];
+
 
   const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
