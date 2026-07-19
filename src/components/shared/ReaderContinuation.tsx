@@ -264,6 +264,7 @@ const KIND_TITLE: Record<ReaderContinuationKind, string> = {
   saint: 'Continuar pela comunhão dos santos',
   'journey-step': 'Seguir na formação',
   prayer: 'Continuar na oração',
+  'glossary-term': 'Aprofundar no Léxico',
 };
 
 const KIND_EPIGRAPH: Record<ReaderContinuationKind, string> = {
@@ -273,6 +274,7 @@ const KIND_EPIGRAPH: Record<ReaderContinuationKind, string> = {
   saint: '“Ide, e fazei o mesmo.” — Lc 10,37',
   'journey-step': '“Corramos com perseverança a prova que nos está proposta.” — Hb 12,1',
   prayer: '“Orai sem cessar.” — 1Ts 5,17',
+  'glossary-term': '“Da abundância do coração fala a boca.” — Mt 12,34',
 };
 
 export interface ReaderContinuationProps {
