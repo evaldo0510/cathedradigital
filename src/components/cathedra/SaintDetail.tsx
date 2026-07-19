@@ -102,7 +102,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       </Button>
 
       {/* Icons.Image Sidebar */}
-      <div className="w-full md:w-spacing-xs/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-2/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
         <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </div>
