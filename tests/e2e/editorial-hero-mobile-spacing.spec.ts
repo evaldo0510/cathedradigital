@@ -7,14 +7,20 @@ import { test, expect, devices } from '@playwright/test';
  * - Se o padding topo real for < 24px, falha (proxy para colagem visual).
  */
 
-const HEROS = [
-  { route: '/biblia', name: 'Bible' },
-  { route: '/magisterio', name: 'Magisterium' },
-  { route: '/santos', name: 'Saints' },
+// Cobertura completa das páginas que consomem EditorialHero.
+// Ao adicionar uma nova rota que use <EditorialHero>, inclua-a aqui.
+export const EDITORIAL_HERO_ROUTES = [
+  { route: '/biblia', name: 'Bible', variant: 'legacy' as const },
+  { route: '/magisterio', name: 'Magisterium', variant: 'legacy' as const },
+  { route: '/santos', name: 'Saints', variant: 'legacy' as const },
+  { route: '/biblioteca', name: 'Biblioteca', variant: 'editorial' as const },
 ];
 
+const HEROS = EDITORIAL_HERO_ROUTES;
 const MOBILE_WIDTHS = [320, 375, 414];
-const MIN_MOBILE_TOP_PADDING = 24; // px — abaixo disso consideramos "colado"
+const MIN_MOBILE_TOP_PADDING_LEGACY = 24; // px — abaixo disso consideramos "colado"
+const MIN_MOBILE_TOP_PADDING_EDITORIAL = 16; // editorial usa escala fluida, tolerância menor
+
 
 for (const { route, name } of HEROS) {
   for (const width of MOBILE_WIDTHS) {
