@@ -240,6 +240,8 @@ const Rosary: React.FC = () => {
         intention={intention}
         initialMode={mode}
         initialStepIndex={resumeStepIndex}
+        initialElapsedMs={resumeElapsedMs}
+        initialStartedAt={resumeStartedAt}
         onClose={handleClose}
         onProgress={handleProgress}
       />
