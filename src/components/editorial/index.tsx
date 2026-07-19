@@ -107,7 +107,40 @@ export interface EditorialHeroProps extends Omit<React.HTMLAttributes<HTMLElemen
    * Opacidade ~4%, sem repetição evidente. Default: false.
    */
   parchment?: boolean;
+  /**
+   * Sprint E2 — preserva fidelidade visual de heros legados.
+   * `editorial` (default) usa Cormorant Garamond + kicker dourado tracking-[0.28em].
+   * `legacy` usa a tipografia atual da página (font-display + tracking mais estreito),
+   * permitindo migração estrutural sem mudança visual.
+   */
+  variant?: 'editorial' | 'legacy';
+  /** Alinhamento horizontal do conteúdo. Default: `left`. */
+  align?: 'left' | 'center';
+  /** Ícone opcional exibido acima do kicker (heros com selo visual). */
+  icon?: React.ReactNode;
+  /** Slot para badges/pills abaixo do subtítulo (Home, Jornadas, Formação). */
+  badges?: React.ReactNode;
+  /** Fundo do hero: `none`, `parchment` (mesmo que prop `parchment`) ou `gradient`. */
+  background?: 'none' | 'parchment' | 'gradient';
+  /** Escala vertical + tipográfica. Default: `md`. */
+  size?: 'sm' | 'md' | 'lg';
+  /** Escapes tipográficos por página. */
+  titleClassName?: string;
+  subtitleClassName?: string;
+  kickerClassName?: string;
 }
+
+const HERO_SIZE_PAD: Record<NonNullable<EditorialHeroProps['size']>, string> = {
+  sm: 'py-[calc(var(--stitch-editorial-stack)*0.75)] md:py-[calc(var(--stitch-editorial-stack)*1)]',
+  md: 'py-[calc(var(--stitch-editorial-stack)*1.25)] md:py-[calc(var(--stitch-editorial-stack)*2)]',
+  lg: 'py-[calc(var(--stitch-editorial-stack)*1.75)] md:py-[calc(var(--stitch-editorial-stack)*2.5)]',
+};
+
+const HERO_TITLE_SIZE: Record<NonNullable<EditorialHeroProps['size']>, string> = {
+  sm: 'text-stitch-display-md-mobile md:text-stitch-display-md',
+  md: 'text-stitch-display-lg-mobile md:text-stitch-display-lg',
+  lg: 'text-stitch-display-lg-mobile md:text-stitch-display-lg',
+};
 
 export const EditorialHero: React.FC<EditorialHeroProps> = ({
   kicker,
@@ -117,52 +150,112 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
   meta,
   rule = true,
   parchment = false,
+  variant = 'editorial',
+  align = 'left',
+  icon,
+  badges,
+  background,
+  size = 'md',
+  titleClassName,
+  subtitleClassName,
+  kickerClassName,
   className,
   ...rest
-}) => (
-  <section
-    className={cn(
-      'relative overflow-hidden py-[calc(var(--stitch-editorial-stack)*1.25)] md:py-[calc(var(--stitch-editorial-stack)*2)]',
-      className,
-    )}
-    {...rest}
-  >
-    {parchment && (
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-multiply"
-        style={{
-          backgroundImage:
-            "url('https://www.transparenttextures.com/patterns/parchment.png')",
-          backgroundSize: '520px 520px',
-          maskImage:
-            'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
-          WebkitMaskImage:
-            'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
-        }}
-      />
-    )}
-    <div className="relative">
-      {meta && (
-        <div className="mb-8 flex items-center gap-3 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant/80 uppercase tracking-[0.24em]">
-          <span
-            aria-hidden="true"
-            className="inline-block h-[6px] w-[6px] rounded-full bg-stitch-secondary/70"
+}) => {
+  const bg = background ?? (parchment ? 'parchment' : 'none');
+  const centered = align === 'center';
+  const isLegacy = variant === 'legacy';
+
+  return (
+    <section
+      data-editorial-hero
+      data-variant={variant}
+      className={cn(
+        'relative overflow-hidden',
+        HERO_SIZE_PAD[size],
+        className,
+      )}
+      {...rest}
+    >
+      {bg === 'parchment' && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-multiply"
+          style={{
+            backgroundImage:
+              "url('https://www.transparenttextures.com/patterns/parchment.png')",
+            backgroundSize: '520px 520px',
+            maskImage:
+              'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
+          }}
+        />
+      )}
+      {bg === 'gradient' && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--stitch-surface))_0%,transparent_100%)]"
+        />
+      )}
+      <div className={cn('relative', centered && 'text-center flex flex-col items-center')}>
+        {meta && (
+          <div
+            className={cn(
+              'mb-8 flex items-center gap-3 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant/80 uppercase tracking-[0.24em]',
+              centered && 'justify-center',
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className="inline-block h-[6px] w-[6px] rounded-full bg-stitch-secondary/70"
+            />
+            <span>{meta}</span>
+          </div>
+        )}
+        {icon && (
+          <div className={cn('mb-4 text-stitch-secondary', centered && 'mx-auto')}>{icon}</div>
+        )}
+        {kicker && (
+          <p
+            className={cn(
+              'font-stitch-label text-stitch-label-sm uppercase mb-6',
+              isLegacy
+                ? 'text-stitch-secondary/80 tracking-[0.18em] font-semibold'
+                : 'text-stitch-secondary tracking-[0.28em]',
+              kickerClassName,
+            )}
+          >
+            {kicker}
+          </p>
+        )}
+        <h1
+          className={cn(
+            isLegacy
+              ? 'font-stitch-sans font-light not-italic text-stitch-on-background'
+              : 'font-stitch-display text-stitch-on-background',
+            HERO_TITLE_SIZE[size],
+            centered ? 'max-w-3xl mx-auto' : 'max-w-3xl',
+            titleClassName,
+          )}
+        >
+          {title}
+        </h1>
+        {rule && (
+          <EditorialDivider
+            variant="gold-fade"
+            className={cn('mt-8 max-w-[240px]', centered && 'mx-auto')}
           />
-          <span>{meta}</span>
-        </div>
-      )}
-      {kicker && (
-        <p className="font-stitch-label text-stitch-label-sm text-stitch-secondary uppercase mb-6 tracking-[0.28em]">
-          {kicker}
-        </p>
-      )}
-      <h1 className="font-stitch-display text-stitch-display-lg-mobile md:text-stitch-display-lg text-stitch-on-background max-w-3xl">
-        {title}
-      </h1>
-      {rule && <EditorialDivider variant="gold-fade" className="mt-8 max-w-[240px]" />}
-      {subtitle && (
-        <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant mt-6 max-w-2xl">
+        )}
+        {subtitle && (
+          <p
+            className={cn(
+              'font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant mt-6',
+              centered ? 'max-w-2xl mx-auto' : 'max-w-2xl',
+              isLegacy && 'italic',
+              subtitleClassName,
+            )}
+          >
           {subtitle}
         </p>
       )}
