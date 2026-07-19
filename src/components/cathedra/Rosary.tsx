@@ -25,6 +25,7 @@ import {
 } from "./rosary/mysteries";
 import { RosaryArt } from "./rosary/RosaryArt";
 import { RosarySession, type RosaryMode } from "./rosary/RosarySession";
+import { markRosaryReturn, clearRosaryReturn } from "@/lib/rosaryReturnContext";
 
 function formatElapsed(ms: number): string {
   if (!ms || ms < 1000) return "0min";
@@ -137,6 +138,15 @@ const Rosary: React.FC = () => {
         section: selectedSet,
         step: stepIndex,
         label: `${s.name}|${currentMode}|${mysteryIndex}|${Math.round(elapsedMs)}|${startedAt}`,
+      });
+      // Breadcrumb para "Voltar ao Rosário" em telas externas (ex.: Glossário).
+      markRosaryReturn({
+        setName: s.name,
+        mysteryLabel: `${mysteryIndex + 1}º mistério`,
+        mysteryIndex,
+        stepIndex,
+        elapsedMs: Math.round(elapsedMs),
+        startedAt,
       });
     },
     [selectedSet],
