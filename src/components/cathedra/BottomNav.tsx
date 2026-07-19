@@ -126,15 +126,15 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 1 : 0.3,
-        scale: isActive ? 1.05 : 0.9,
+        opacity: 1,
+        scale: isActive ? 1.05 : 0.95,
         y: isActive ? 0 : (shouldReduceMotion ? 0 : 1)
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
         "text-[8px] md:text-[9.5px] font-medium uppercase tracking-[0.28em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
-        isActive ? 'text-[#c9a84c] font-semibold' : 'text-muted-foreground/40'
+        isActive ? 'text-[#c9a84c] font-semibold' : 'text-foreground/80'
       )}
     >
       {label}
