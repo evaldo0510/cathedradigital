@@ -115,10 +115,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-300",
-          isActive ? "text-[#c9a84c] opacity-100 scale-110" : "text-muted-foreground/30 group-hover:text-[#c9a84c]/60 group-active:scale-95"
+          isActive ? "text-[#c9a84c] opacity-100 scale-110" : "text-foreground/80 group-hover:text-[#c9a84c] group-active:scale-95"
         )}
         size={18}
-        strokeWidth={isActive ? 1.5 : 1.2}
+        strokeWidth={isActive ? 1.5 : 1.6}
         aria-hidden="true"
       />
     </motion.div>
