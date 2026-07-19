@@ -22,6 +22,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const GlobalSearchPage = lazy(
   () => import('@/components/cathedra/GlobalSearchPage'),
