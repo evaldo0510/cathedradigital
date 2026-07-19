@@ -1,0 +1,78 @@
+name: Nexus PR guard (vitest + Playwright RTL/dark)
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/nexusContent**'
+      - 'src/components/cathedra/NexusBubbles**'
+      - 'tests/e2e/nexus-**'
+      - 'tests/e2e/*rtl*'
+      - 'tests/e2e/*dark*'
+      - 'playwright.config.ts'
+      - 'vitest.config.ts'
+      - 'package.json'
+      - '.github/workflows/nexus-pr-guard.yml'
+
+concurrency:
+  group: nexus-pr-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vitest:
+    name: Unit + property + integration (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps
+        run: bun install --frozen-lockfile
+      - name: Run Nexus vitest suites
+        run: |
+          bunx vitest run \
+            src/lib/nexusContent.test.ts \
+            src/lib/nexusContent.property.test.ts \
+            src/lib/nexusContent.integration.rtl.test.tsx \
+            src/lib/nexusIntegration.test.ts
+
+  playwright-nexus-rtl-dark:
+    name: Playwright Nexus / RTL / dark
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps
+        run: bun install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Build
+        run: bun run build
+      - name: Run Nexus + RTL + dark specs
+        env:
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/nexus-bible-rtl-visual.spec.ts \
+            tests/e2e/nexus-bible-catechism.spec.ts \
+            tests/e2e/nexus-visual-diff.spec.ts \
+            tests/e2e/nexus-visual-regression.spec.ts \
+            tests/e2e/nexus-high-contrast-sync.spec.ts \
+            tests/e2e/nexus-keyboard-high-contrast.spec.ts \
+            tests/e2e/mobile-footer-bottomnav-dark-keyboard.spec.ts \
+            tests/e2e/reading-settings-popover-darkmode.spec.ts \
+            --reporter=line,html
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-pr-guard-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+          if-no-files-found: ignore
