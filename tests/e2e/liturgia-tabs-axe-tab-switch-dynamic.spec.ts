@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const AXE_REPORT_DIR = join('playwright-report', 'axe', 'liturgia-tabs');
+mkdirSync(AXE_REPORT_DIR, { recursive: true });
 
 /**
  * Executa axe-core no meio da alternância de abas da Liturgia
@@ -105,6 +110,28 @@ test.describe('Liturgia — axe durante alternância de abas (clique + teclado) 
           await page.waitForTimeout(150);
 
           const results = await runAxe(page);
+
+          // Relatório detalhado como artefato do CI: um JSON por combinação.
+          const filename =
+            `${vp.name}__${step.theme}__tab-${step.tabIndex}__${interaction}.json`;
+          const payload = {
+            generated_at: new Date().toISOString(),
+            viewport: vp.name,
+            theme: step.theme,
+            tab_index: step.tabIndex,
+            interaction,
+            url: page.url(),
+            summary: {
+              violations: results.violations.length,
+              passes: results.passes.length,
+              incomplete: results.incomplete.length,
+              inapplicable: results.inapplicable.length,
+            },
+            violations: results.violations,
+            incomplete: results.incomplete,
+          };
+          writeFileSync(join(AXE_REPORT_DIR, filename), JSON.stringify(payload, null, 2));
+
           if (results.violations.length) {
             allViolations.push(
               ...results.violations.map((v) => ({
