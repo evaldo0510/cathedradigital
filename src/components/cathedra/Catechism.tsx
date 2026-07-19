@@ -540,9 +540,11 @@ const Catechism: React.FC = memo(() => {
               ))}
             </div>
 
-            <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
+            <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
+            <div>
                <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
             </div>
+
           </div>
           <CatechismDiagnosticPanel />
         </ContemplativeLayout>
