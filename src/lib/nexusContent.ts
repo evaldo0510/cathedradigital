@@ -102,7 +102,7 @@ export function formatNexusContent(data: any, type: string): TagContent {
   return {
     id: data.id,
     type: data.type,
-    content_text: safeText(data.content_text),
+    content_text: typeof data.content_text === 'string' ? data.content_text : '',
     title: safeTitle(data.reference_id) ?? safeTitle(data.title) ?? fallbackReference,
     metadata: baseMeta,
   };
