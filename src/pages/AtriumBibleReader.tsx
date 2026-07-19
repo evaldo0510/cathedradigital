@@ -7,16 +7,23 @@
  *    preservando toda a lógica atual sem duplicação.
  */
 
-import React, { lazy, Suspense, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BookOpen, Search as SearchIcon, ArrowRight } from 'lucide-react';
+import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import {
+  BiblePickerSheet,
+  getBibleLastRead,
+  setBibleLastRead,
+} from '@/components/mobile/BiblePickerSheet';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -47,15 +54,40 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
   const hasReaderParams = sp.get('book') || sp.get('view');
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const abbr = sp.get('book');
+  const chapterStr = sp.get('chapter') ?? sp.get('c');
+
+  // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
+  useEffect(() => {
+    if (!abbr || !chapterStr) return;
+    const n = Number(chapterStr);
+    if (!Number.isFinite(n)) return;
+    setBibleLastRead({ abbr, chapter: n });
+  }, [abbr, chapterStr]);
 
   if (hasReaderParams) {
-    const abbr = sp.get('book');
-    const chapter = sp.get('chapter') ?? sp.get('c');
     const book = findBookByAbbr(abbr);
     const title = book ? book.name : 'Sagrada Escritura';
-    const subtitle = chapter ? `Capítulo ${chapter}` : undefined;
+    const subtitle = chapterStr ? `Capítulo ${chapterStr}` : undefined;
     return (
       <Suspense fallback={<BibleSkeleton />}>
+        <MobileTopBar
+          kicker="Cathedra · Bíblia"
+          title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
+          showBack
+          actions={
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Escolher livro e capítulo"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+            >
+              <LayoutGrid className="h-5 w-5" />
+            </button>
+          }
+        />
         <EditorialReaderChrome
           kicker="Cathedra · Lectio Divina"
           title={title}
@@ -65,6 +97,7 @@ const AtriumBibleReader: React.FC = () => {
         <BibleReadGate>
           <Bible />
         </BibleReadGate>
+        <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
       </Suspense>
     );
   }
@@ -75,6 +108,9 @@ const AtriumBibleReader: React.FC = () => {
 
 const BibleLanding: React.FC = () => {
   const [testament, setTestament] = useState<Testament>('Antigo Testamento');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const last = getBibleLastRead();
+  const lastBook = last ? findBookByAbbr(last.abbr) : undefined;
 
   const categories = useMemo(() => BIBLE_DATA[testament] ?? [], [testament]);
   const bookCount = useMemo(
@@ -98,7 +134,23 @@ const BibleLanding: React.FC = () => {
         <meta property="og:title" content="Cathedra — Sagrada Escritura" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar
+        kicker="Cathedra"
+        title="Bíblia"
+        transparent
+        actions={
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            aria-label="Escolher livro e capítulo"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+          >
+            <LayoutGrid className="h-5 w-5" />
+          </button>
+        }
+      />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* Hero */}
         <section className="border-b border-stitch-secondary/10 pb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
@@ -122,7 +174,29 @@ const BibleLanding: React.FC = () => {
               <span className="font-stitch-body">Buscar passagem…</span>
             </Link>
           </div>
+
+          {/* Ações rápidas: picker + continuar */}
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
+            >
+              <LayoutGrid className="h-4 w-4 text-stitch-secondary" />
+              Escolher livro
+            </button>
+            {last && lastBook && (
+              <Link
+                to={buildBibleUrl({ abbr: last.abbr, chapter: last.chapter })}
+                className="inline-flex items-center gap-2 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary"
+              >
+                Continuar em {lastBook.name} {last.chapter}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
         </section>
+
 
         {/* Testament switcher */}
         <section className="pt-10">
@@ -225,6 +299,9 @@ const BibleLanding: React.FC = () => {
           </p>
         </section>
       </main>
+
+      <MobileBottomNav />
+      <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
     </div>
   );
 };

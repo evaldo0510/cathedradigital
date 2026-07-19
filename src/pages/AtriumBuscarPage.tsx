@@ -20,10 +20,12 @@ import {
   MessageCircle,
   Tag as TagIcon,
   ArrowRight,
+  BookMarked as BookFilterIcon,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { BiblePickerSheet } from '@/components/mobile/BiblePickerSheet';
 
 const GlobalSearchPage = lazy(
   () => import('@/components/cathedra/GlobalSearchPage'),
@@ -94,7 +96,10 @@ const SUGGESTIONS = [
 const AtriumBuscarPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlQuery = searchParams.get('q') ?? '';
+  const livro = searchParams.get('livro') ?? '';
+  const capitulo = searchParams.get('capitulo') ?? '';
   const [draft, setDraft] = useState(urlQuery);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     setDraft(urlQuery);
@@ -108,6 +113,14 @@ const AtriumBuscarPage: React.FC = () => {
     else next.delete('q');
     setSearchParams(next, { replace: true });
   };
+
+  const clearBibleFilter = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('livro');
+    next.delete('capitulo');
+    setSearchParams(next, { replace: true });
+  };
+
 
   return (
     <div
@@ -176,6 +189,31 @@ const AtriumBuscarPage: React.FC = () => {
               </button>
             )}
           </form>
+
+          {/* Filtro Bíblia: Livro / Capítulo */}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+              Filtrar
+            </span>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-3 py-1.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary"
+            >
+              <BookFilterIcon className="h-3.5 w-3.5 text-stitch-secondary" />
+              {livro && capitulo ? `${livro.toUpperCase()} ${capitulo}` : 'Livro / Capítulo'}
+            </button>
+            {(livro || capitulo) && (
+              <button
+                type="button"
+                onClick={clearBibleFilter}
+                className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant hover:text-stitch-primary"
+              >
+                Limpar filtro
+              </button>
+            )}
+          </div>
+
 
           {/* Sugestões */}
           {!hasQuery && (
@@ -259,6 +297,17 @@ const AtriumBuscarPage: React.FC = () => {
       </main>
 
       <MobileBottomNav />
+      <BiblePickerSheet
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        selectionOnly
+        onSelect={(sel) => {
+          const next = new URLSearchParams(searchParams);
+          next.set('livro', sel.abbr);
+          next.set('capitulo', String(sel.chapter));
+          setSearchParams(next, { replace: true });
+        }}
+      />
     </div>
   );
 };
