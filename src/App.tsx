@@ -574,6 +574,10 @@ const AppLayout: React.FC = () => {
               <Route path="/security" element={<Navigate to="/admin/security" replace />} />
               <Route path="/catechism-explorer" element={<Navigate to="/catechism" replace />} />
 
+              {/* Nexus público — Etapa 7 */}
+              <Route path="/nexus" element={<Suspense fallback={<LoadingFallback />}><AtriumNexusPage /></Suspense>} />
+
+
 
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={
