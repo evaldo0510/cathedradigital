@@ -340,18 +340,18 @@ const Relatio: React.FC<RelatioProps> = ({
                                 {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                               </div>
                               <div className="space-y-spacing-3xs">
-                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 group-hover:text-primary transition-colors">
                                   {item.type === 'bible' ? 'Escritura' : 
                                    item.type === 'catechism' ? 'Catecismo' : 
                                    item.type === 'magisterium' ? 'Magistério' : 
                                    item.type === 'saint' ? 'Tradição' : 'Jornada'}
                                 </p>
                                 <div className="flex items-center gap-spacing-xs">
-                                  <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
+                                  <span className="text-[8px] font-bold text-foreground uppercase tracking-widest">
                                     {item.reason}
                                   </span>
                                   <div className={cn("w-spacing-2xs h-spacing-2xs rounded-premium-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
-                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-secondary/60")}>
+                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-primary/80")}>
                                     {strengthLabel}
                                   </span>
                                 </div>
