@@ -20,10 +20,12 @@ import {
   MessageCircle,
   Tag as TagIcon,
   ArrowRight,
+  BookMarked as BookFilterIcon,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { BiblePickerSheet } from '@/components/mobile/BiblePickerSheet';
 
 const GlobalSearchPage = lazy(
   () => import('@/components/cathedra/GlobalSearchPage'),
