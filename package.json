@@ -58,6 +58,8 @@
     "e2e:report:pdf": "bun run scripts/generate-e2e-report.ts",
     "test:bible-selection": "playwright test tests/e2e/bible-selection-keyboard.spec.ts",
     "test:bible-selection:update": "playwright test tests/e2e/bible-selection-keyboard.spec.ts --update-snapshots",
+    "test:editorial-hero": "playwright test tests/e2e/editorial-hero-mobile-spacing.spec.ts tests/e2e/editorial-hero-visual-regression.spec.ts",
+    "test:editorial-hero:update": "bun run scripts/update-editorial-hero-snapshots.ts",
     "test:bible-selection-a11y": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts",
     "test:bible-selection-focus": "playwright test tests/e2e/bible-selection-focus.spec.ts",
     "test:bible-selection-ci": "playwright test tests/e2e/bible-selection-a11y-kb.spec.ts tests/e2e/bible-selection-keyboard.spec.ts tests/e2e/bible-selection-focus.spec.ts --reporter=list,html,json",
