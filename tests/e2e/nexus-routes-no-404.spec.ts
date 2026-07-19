@@ -1,0 +1,60 @@
+/**
+ * Nexus — Rotas sem 404
+ *
+ * Percorre TODAS as chaves do RouteRegistry (fonte única dos links do Nexus)
+ * resolvendo cada uma com parâmetros plausíveis e valida que a navegação
+ * NUNCA cai na página 404 (`<h1>404</h1>`) e que a rota não é redirecionada
+ * para o handler curinga `*`.
+ *
+ * Regressão do P0 da sprint CAT-11: antes o RouteRegistry emitia prefixos
+ * /estudar/* e /rezar/* inexistentes, resultando em 404 ao clicar no Nexus.
+ */
+import { test, expect } from '@playwright/test';
+
+// Params plausíveis para cada rota que exige placeholders.
+// Escolhidos a partir de slugs/valores reais existentes no banco/rotas.
+const CASES: Array<{ key: string; params?: Record<string, string | number>; label: string }> = [
+  { key: 'atrium', label: 'Átrio' },
+  { key: 'env.estudar', label: 'Ambiente: Estudar' },
+  { key: 'env.rezar', label: 'Ambiente: Rezar' },
+  { key: 'env.formar-se', label: 'Ambiente: Formar-se' },
+  { key: 'env.pesquisar', label: 'Ambiente: Pesquisar' },
+  { key: 'env.minha-jornada', label: 'Ambiente: Minha Jornada' },
+  { key: 'study.composed', params: { slug: 'videira' }, label: 'Estudo composto (tema)' },
+  { key: 'study.bible', params: { book: 'Jo', chapter: 6 }, label: 'Bíblia (Jo 6)' },
+  { key: 'study.catechism', params: { paragraph: 2 }, label: 'Catecismo §2' },
+  { key: 'study.magisterium', params: { doc: 'dei-verbum' }, label: 'Magistério (dei-verbum)' },
+  { key: 'study.father', params: { slug: 'agostinho' }, label: 'Padre (Agostinho)' },
+  { key: 'study.saint', params: { slug: 'agostinho' }, label: 'Santo (Agostinho)' },
+  { key: 'pray.lectio', params: { slug: 'jo-6' }, label: 'Lectio (Jo 6)' },
+  { key: 'pray.liturgy-today', label: 'Liturgia de hoje' },
+];
+
+test.describe('Nexus — todos os links navegam sem 404', () => {
+  for (const c of CASES) {
+    test(`${c.key} → ${c.label} não gera 404`, async ({ page }) => {
+      // Resolve URL dentro do próprio app usando o RouteRegistry (fonte da verdade).
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      const url = await page.evaluate(
+        async ({ key, params }) => {
+          const mod = await import('/src/core/navigation/RouteRegistry.ts');
+          return mod.RouteRegistry.resolve(key as never, params ?? {});
+        },
+        { key: c.key, params: c.params ?? {} }
+      );
+
+      expect(url, `URL resolvida para ${c.key}`).toBeTruthy();
+      // Nenhum link do Nexus pode voltar a apontar para prefixos antigos.
+      expect(url.startsWith('/estudar/'), 'não deve usar /estudar/*').toBe(false);
+      expect(url.startsWith('/rezar/'), 'não deve usar /rezar/*').toBe(false);
+
+      const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+      // O app é SPA: o HTTP status é 200 mesmo para rotas inexistentes.
+      // A prova real de 404 é o componente NotFound renderizar `<h1>404</h1>`.
+      expect(response?.status(), 'status HTTP').toBeLessThan(400);
+
+      const notFound = page.locator('h1', { hasText: /^404$/ });
+      await expect(notFound, `rota ${url} não pode renderizar NotFound`).toHaveCount(0);
+    });
+  }
+});
