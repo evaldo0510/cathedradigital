@@ -194,7 +194,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           align="center"
           size="sm"
           rule={false}
-          className="!pt-10 md:!pt-6 !pb-0"
+          
           icon={
             <motion.div
               initial={{ opacity: 0, y: -10 }}
