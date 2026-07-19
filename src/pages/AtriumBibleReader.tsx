@@ -16,6 +16,7 @@ import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
+import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -32,13 +33,35 @@ const TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
   },
 };
 
+function findBookByAbbr(abbr: string | null): BibleBook | undefined {
+  if (!abbr) return undefined;
+  for (const t of Object.values(BIBLE_DATA)) {
+    for (const cat of t) {
+      const found = cat.books.find((b) => b.abbr.toLowerCase() === abbr.toLowerCase());
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
   const hasReaderParams = sp.get('book') || sp.get('view');
 
   if (hasReaderParams) {
+    const abbr = sp.get('book');
+    const chapter = sp.get('chapter') ?? sp.get('c');
+    const book = findBookByAbbr(abbr);
+    const title = book ? book.name : 'Sagrada Escritura';
+    const subtitle = chapter ? `Capítulo ${chapter}` : undefined;
     return (
       <Suspense fallback={<BibleSkeleton />}>
+        <EditorialReaderChrome
+          kicker="Cathedra · Lectio Divina"
+          title={title}
+          subtitle={subtitle}
+          backHref={AppRoute.BIBLE}
+        />
         <BibleReadGate>
           <Bible />
         </BibleReadGate>
@@ -48,6 +71,7 @@ const AtriumBibleReader: React.FC = () => {
 
   return <BibleLanding />;
 };
+
 
 const BibleLanding: React.FC = () => {
   const [testament, setTestament] = useState<Testament>('Antigo Testamento');
