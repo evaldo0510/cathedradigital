@@ -313,6 +313,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         )}
 
         {/* Relatio: Intelligent Contextual Connections */}
+        <EditorialDivider variant="gold-fade" />
         <Relatio 
           context={{
             type: 'saint',
