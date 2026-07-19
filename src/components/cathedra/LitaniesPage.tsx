@@ -284,13 +284,13 @@ const LitaniesPage: React.FC = () => {
         <div className="premium-card p-spacing-xl md:p-spacing-3xl space-y-spacing-xl">
           {/* Opening */}
           {litany.opening && (
-            <div className="text-center pb-spacing-xl border-b border-border/50">
+            <div ref={openingRef} id="litany-opening" className="text-center pb-spacing-xl border-b border-border/50 scroll-mt-24">
               <p className="font-serif text-premium-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.opening}</p>
             </div>
           )}
 
           {/* Invocations */}
-          <div className="space-y-spacing-2xs w-full">
+          <div ref={invocationsRef} id="litany-invocations" className="space-y-spacing-2xs w-full scroll-mt-24">
             {litany.invocations.map((inv, i) => (
               <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-spacing-2xs md:gap-spacing-md py-spacing-sm border-b border-border/30 last:border-0 group">
                 <p className="flex-1 font-serif text-premium-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
@@ -301,7 +301,7 @@ const LitaniesPage: React.FC = () => {
 
           {/* Closing */}
           {litany.closing && (
-            <div className="text-center pt-spacing-xl border-t border-border/50">
+            <div ref={closingRef} id="litany-closing" className="text-center pt-spacing-xl border-t border-border/50 scroll-mt-24">
               <p className="font-serif text-premium-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.closing}</p>
             </div>
           )}
