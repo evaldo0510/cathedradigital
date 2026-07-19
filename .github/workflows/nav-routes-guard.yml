@@ -79,6 +79,7 @@ jobs:
             tests/e2e/legacy-redirects-history-entries.spec.ts \
             tests/e2e/legacy-redirects-search-queryparams.spec.ts \
             tests/e2e/legacy-redirects-admin-back.spec.ts \
+            tests/e2e/legacy-redirects-reload.spec.ts \
             --project=chromium \
             --reporter=list
       - name: Upload Playwright report
