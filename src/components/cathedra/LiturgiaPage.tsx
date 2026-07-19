@@ -208,8 +208,8 @@ const LiturgiaPage: React.FC = () => {
             <Button
               key={tab.id}
               variant="ghost"
-              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 sm:flex-none flex items-center justify-center gap-spacing-xs px-spacing-md sm:px-spacing-xl py-spacing-sm rounded-premium-full text-premium-xs sm:text-premium-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105 hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
+              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 sm:flex-none flex items-center justify-center gap-spacing-2xs sm:gap-spacing-xs px-spacing-xs sm:px-spacing-xl py-spacing-sm rounded-premium-full text-[10px] sm:text-premium-sm font-black uppercase tracking-wider sm:tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none min-w-0 ${
+                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary sm:scale-105 hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`)}
               onClick={() => setSearchParams({ tab: tab.id })}
               onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
