@@ -309,16 +309,28 @@ const Rosary: React.FC = () => {
             </div>
           )}
           <div className="space-y-spacing-sm">
-            {['signOfCross', 'creed', 'ourFather'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-                <div className="flex items-center justify-between">
-                  <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
-                </div>
-                {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-              </div>
-            ))}
+            {['signOfCross', 'creed', 'ourFather'].map(k => {
+              const open = showPrayer === k;
+              const p = PRAYERS[k as keyof typeof PRAYERS];
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`rosary-prayer-intro-${k}`}
+                  onClick={() => setShowPrayer(open ? null : k)}
+                  className="group w-full text-left bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-premium-sm text-secondary/90">{p.title}</span>
+                    <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden />
+                  </div>
+                  {open && <p id={`rosary-prayer-intro-${k}`} className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{p.text}</p>}
+                </button>
+              );
+            })}
           </div>
+
           <p className="text-premium-xs text-secondary/40 text-center font-serif italic max-w-spacing-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
           <Button onClick={() => setStep('mystery')} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Iniciar 1º Mistério
