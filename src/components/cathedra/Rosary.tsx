@@ -25,7 +25,7 @@ import {
 } from "./rosary/mysteries";
 import { RosaryArt } from "./rosary/RosaryArt";
 import { RosarySession, type RosaryMode } from "./rosary/RosarySession";
-import { markRosaryReturn, clearRosaryReturn } from "@/lib/rosaryReturnContext";
+import { markRosaryReturn, clearRosaryReturn, ROSARY_MODE_LABEL } from "@/lib/rosaryReturnContext";
 
 function formatElapsed(ms: number): string {
   if (!ms || ms < 1000) return "0min";
@@ -54,6 +54,10 @@ const Rosary: React.FC = () => {
   const [resumeElapsedMs, setResumeElapsedMs] = useState<number>(0);
   const [resumeStartedAt, setResumeStartedAt] = useState<string | undefined>(undefined);
   const preparationHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  // Mensagem aria-live anunciada quando o foco vai ao cabeçalho por restauração
+  // (hash #preparation, back/forward, ou BFCache). Vazia por padrão para não
+  // anunciar em navegação inicial.
+  const [restoreAnnouncement, setRestoreAnnouncement] = useState("");
 
   const { progress, loaded, save } = useDevotionalProgress("rosary");
   const { setIndex, setFavorite } = useDevotionalReader();
@@ -64,9 +68,37 @@ const Rosary: React.FC = () => {
   //      já esteve numa sessão e voltou pelo botão do sistema, então o
   //      hash pode já ter sido limpo. `PerformanceNavigationTiming.type`
   //      === "back_forward" cobre esse caso.
-  //   3) Popstate ao vivo dentro da SPA (ex.: BFCache/Firefox restore).
+  //   3) Popstate ao vivo dentro da SPA e BFCache (pageshow persisted=true).
   // Cabeçalho tem tabIndex={-1} para ser focável sem entrar na ordem de tab.
   const didFocusHeadingRef = useRef(false);
+  const focusHeading = useCallback(
+    (reason: "hash" | "history" | "bfcache" | "popstate") => {
+      if (typeof window === "undefined") return;
+      if (isPraying) return;
+      const el = preparationHeadingRef.current;
+      if (!el) return;
+      // Guarda contra loop: se o cabeçalho já é o activeElement, nada a fazer.
+      if (document.activeElement === el) {
+        didFocusHeadingRef.current = true;
+        return;
+      }
+      el.focus();
+      didFocusHeadingRef.current = true;
+      // Anuncia o modo restaurado quando a origem é uma restauração sem hash
+      // (histórico/BFCache/popstate). Hash puro já indica intenção explícita
+      // do usuário e não precisa de anúncio adicional.
+      if (reason !== "hash") {
+        const label = ROSARY_MODE_LABEL[mode];
+        // Rewrite para forçar leitura mesmo se a mensagem for igual à anterior.
+        setRestoreAnnouncement("");
+        window.requestAnimationFrame(() => {
+          setRestoreAnnouncement(`Rosário restaurado no modo ${label}.`);
+        });
+      }
+    },
+    [isPraying, mode],
+  );
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!loaded || !selectedSet || isPraying) return;
@@ -81,35 +113,36 @@ const Rosary: React.FC = () => {
     if (!hasHash && !isHistoryRestore) return;
 
     const raf = window.requestAnimationFrame(() => {
-      preparationHeadingRef.current?.focus();
-      didFocusHeadingRef.current = true;
+      focusHeading(hasHash ? "hash" : "history");
       if (hasHash) {
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
       }
     });
     return () => window.cancelAnimationFrame(raf);
-  }, [loaded, selectedSet, isPraying]);
+  }, [loaded, selectedSet, isPraying, focusHeading]);
 
   // Popstate/BFCache: usuário volta ao Rosário sem trigger de re-render de
-  // rota. Reseta a flag e força novo foco após rehidratação do estado.
+  // rota. Foco disparado UMA ÚNICA VEZ por evento — pageshow inicial (persisted
+  // === false) é ignorado para evitar loop de refoco.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const handler = () => {
+    const onPopstate = () => {
       didFocusHeadingRef.current = false;
-      window.requestAnimationFrame(() => {
-        if (preparationHeadingRef.current && !isPraying) {
-          preparationHeadingRef.current.focus();
-          didFocusHeadingRef.current = true;
-        }
-      });
+      window.requestAnimationFrame(() => focusHeading("popstate"));
     };
-    window.addEventListener("popstate", handler);
-    window.addEventListener("pageshow", handler);
+    const onPageshow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return; // Ignora pageshow inicial — não é BFCache.
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => focusHeading("bfcache"));
+    };
+    window.addEventListener("popstate", onPopstate);
+    window.addEventListener("pageshow", onPageshow);
     return () => {
-      window.removeEventListener("popstate", handler);
-      window.removeEventListener("pageshow", handler);
+      window.removeEventListener("popstate", onPopstate);
+      window.removeEventListener("pageshow", onPageshow);
     };
-  }, [isPraying]);
+  }, [focusHeading]);
+
 
   const todaySet = useMemo(() => suggestSetForToday(), []);
 
@@ -366,6 +399,16 @@ const Rosary: React.FC = () => {
             >
               {set.name}
             </h1>
+            {/* Anúncio aria-live para restauração de sessão (histórico/BFCache/popstate). */}
+            <p
+              data-testid="rosary-restore-live"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="sr-only"
+            >
+              {restoreAnnouncement}
+            </p>
             <p className="text-premium-sm text-muted-foreground font-serif italic">
               {set.epigraph}
             </p>
