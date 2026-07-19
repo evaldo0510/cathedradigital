@@ -374,22 +374,33 @@ const Rosary: React.FC = () => {
             <p className="text-premium-xs font-black uppercase tracking-widest text-secondary/30 mb-spacing-lg">{currentMystery + 1}º Mistério — Dezena</p>
             
             {/* Bead Counter */}
-            <div className="flex flex-col items-center gap-spacing-lg py-spacing-md">
+            <div
+              className="flex flex-col items-center gap-spacing-lg py-spacing-md"
+              role="group"
+              aria-label={`Contador de Ave-Marias: ${aveCount} de 10`}
+            >
               <div className="grid grid-cols-5 gap-spacing-md md:flex md:items-center md:gap-spacing-md">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Button
-                    key={i}
-                    onClick={() => setAveCount(i + 1)}
-                    className={`w-spacing-lg h-spacing-lg rounded-premium-full border-2 transition-all duration-300 ${
-                      i < aveCount
-                        ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
-                        : 'bg-transparent border-secondary/25 hover:border-secondary/50'
-                    }`}
-                  />
-                ))}
+                {Array.from({ length: 10 }).map((_, i) => {
+                  const filled = i < aveCount;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setAveCount(i + 1)}
+                      aria-label={`Ave-Maria ${i + 1} de 10`}
+                      aria-pressed={filled}
+                      className={`w-spacing-lg h-spacing-lg rounded-premium-full border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
+                        filled
+                          ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
+                          : 'bg-transparent border-secondary/25 hover:border-secondary/50'
+                      }`}
+                    />
+                  );
+                })}
               </div>
-              <p className="text-secondary/40 text-premium-xs font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
+              <p className="text-secondary/40 text-premium-xs font-black uppercase tracking-[0.2em]" aria-live="polite">{aveCount}/10 Ave-Marias</p>
             </div>
+
           </div>
 
           <div className="space-y-spacing-sm">
