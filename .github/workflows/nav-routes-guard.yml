@@ -75,6 +75,7 @@ jobs:
             tests/e2e/nav-auth-admin-snapshots.spec.ts \
             tests/e2e/legacy-redirects-status-codes.spec.ts \
             tests/e2e/legacy-redirects-back-button.spec.ts \
+            tests/e2e/legacy-redirects-scroll-restore.spec.ts \
             --project=chromium \
             --reporter=list
       - name: Upload Playwright report
