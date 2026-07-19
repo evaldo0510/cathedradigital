@@ -185,7 +185,8 @@ const JornadaStepPage: React.FC = () => {
 
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
-    setSaving(true);
+    setCompleting(true);
+    setStatusMessage('Concluindo etapa…');
     try {
       const { error } = await supabase.from('journey_progress').upsert(
         {
@@ -217,10 +218,18 @@ const JornadaStepPage: React.FC = () => {
       }
 
       setCompleted(true);
+      setStatusMessage('Etapa concluída.');
+      toast.success('Etapa concluída.');
+      // Se for a última, direciona para conclusão da jornada
+      if (!nextStep && journeyId) {
+        setTimeout(() => navigate(`/jornadas/${journeyId}/conclusao`), 600);
+      }
     } catch (err) {
       console.error('Failed to complete step:', err);
+      setStatusMessage('Erro ao concluir. Tente novamente.');
+      toast.error('Não foi possível concluir a etapa.');
     } finally {
-      setSaving(false);
+      setCompleting(false);
     }
   };
 
