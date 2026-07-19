@@ -8,9 +8,8 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
-import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+
 import {
   usePrayers,
   PRAYER_CATEGORY_LABEL,
