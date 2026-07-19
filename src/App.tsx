@@ -120,6 +120,7 @@ const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
 const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
+const GlossaryTermPage = lazy(() => import('./pages/GlossaryTermPage'));
 const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
 const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
@@ -528,7 +529,7 @@ const AppLayout: React.FC = () => {
               <Route path="/temas/:slug" element={<Suspense fallback={<LoadingFallback />}><TemaDetailPage /></Suspense>} />
               {/* Glossário — rota canônica /glossario + redirects legados */}
               <Route path="/glossario" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
-              <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryTermPage /></Suspense>} />
               <Route path="/glossary" element={<Navigate to="/glossario" replace />} />
               <Route path="/glossary/:slug" element={<Navigate to="/glossario" replace />} />
               <Route path="/az-faith" element={<Navigate to="/glossario" replace />} />

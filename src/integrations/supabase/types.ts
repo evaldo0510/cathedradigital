@@ -2263,12 +2263,22 @@ export type Database = {
           created_at: string
           deep_interpretation: string | null
           definition: string
+          fathers_refs: string[] | null
           id: string
+          interpretation: string | null
           journey_id: string | null
+          journey_refs: string[] | null
           language: string
           magisterium_references: string[] | null
+          nexus_refs: Json | null
           practical_application: string | null
+          prayer_refs: string[] | null
+          published_at: string | null
           reference: string | null
+          saints_refs: string[] | null
+          sections_order: string[] | null
+          slug: string | null
+          status: string
           term: string
           updated_at: string
         }
@@ -2279,12 +2289,22 @@ export type Database = {
           created_at?: string
           deep_interpretation?: string | null
           definition: string
+          fathers_refs?: string[] | null
           id?: string
+          interpretation?: string | null
           journey_id?: string | null
+          journey_refs?: string[] | null
           language?: string
           magisterium_references?: string[] | null
+          nexus_refs?: Json | null
           practical_application?: string | null
+          prayer_refs?: string[] | null
+          published_at?: string | null
           reference?: string | null
+          saints_refs?: string[] | null
+          sections_order?: string[] | null
+          slug?: string | null
+          status?: string
           term: string
           updated_at?: string
         }
@@ -2295,12 +2315,22 @@ export type Database = {
           created_at?: string
           deep_interpretation?: string | null
           definition?: string
+          fathers_refs?: string[] | null
           id?: string
+          interpretation?: string | null
           journey_id?: string | null
+          journey_refs?: string[] | null
           language?: string
           magisterium_references?: string[] | null
+          nexus_refs?: Json | null
           practical_application?: string | null
+          prayer_refs?: string[] | null
+          published_at?: string | null
           reference?: string | null
+          saints_refs?: string[] | null
+          sections_order?: string[] | null
+          slug?: string | null
+          status?: string
           term?: string
           updated_at?: string
         }
@@ -2754,12 +2784,15 @@ export type Database = {
       }
       journey_steps: {
         Row: {
+          closing: string | null
           content: Json
           created_at: string
           duration_minutes: number
+          exercise: string | null
           id: string
           is_free: boolean
           journey_id: string
+          reflection: string | null
           step_order: number
           step_type: string
           subtitle: string | null
@@ -2767,12 +2800,15 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          closing?: string | null
           content?: Json
           created_at?: string
           duration_minutes?: number
+          exercise?: string | null
           id?: string
           is_free?: boolean
           journey_id: string
+          reflection?: string | null
           step_order?: number
           step_type?: string
           subtitle?: string | null
@@ -2780,12 +2816,15 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          closing?: string | null
           content?: Json
           created_at?: string
           duration_minutes?: number
+          exercise?: string | null
           id?: string
           is_free?: boolean
           journey_id?: string
+          reflection?: string | null
           step_order?: number
           step_type?: string
           subtitle?: string | null
@@ -2812,16 +2851,23 @@ export type Database = {
       journeys: {
         Row: {
           category: string
+          closing_message: string | null
           cover_url: string | null
           created_at: string
           description: string
           difficulty: string
           estimated_days: number
+          hero_image_url: string | null
+          hero_kicker: string | null
+          hero_quote: string | null
           icon: string
           id: string
           is_active: boolean
           is_premium: boolean
+          narrative_intro: string | null
+          slug: string | null
           sort_order: number
+          status: string
           subtitle: string | null
           tags: string[] | null
           title: string
@@ -2829,16 +2875,23 @@ export type Database = {
         }
         Insert: {
           category?: string
+          closing_message?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string
           difficulty?: string
           estimated_days?: number
+          hero_image_url?: string | null
+          hero_kicker?: string | null
+          hero_quote?: string | null
           icon?: string
           id?: string
           is_active?: boolean
           is_premium?: boolean
+          narrative_intro?: string | null
+          slug?: string | null
           sort_order?: number
+          status?: string
           subtitle?: string | null
           tags?: string[] | null
           title: string
@@ -2846,16 +2899,23 @@ export type Database = {
         }
         Update: {
           category?: string
+          closing_message?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string
           difficulty?: string
           estimated_days?: number
+          hero_image_url?: string | null
+          hero_kicker?: string | null
+          hero_quote?: string | null
           icon?: string
           id?: string
           is_active?: boolean
           is_premium?: boolean
+          narrative_intro?: string | null
+          slug?: string | null
           sort_order?: number
+          status?: string
           subtitle?: string | null
           tags?: string[] | null
           title?: string
@@ -6234,12 +6294,22 @@ export type Database = {
           created_at: string
           deep_interpretation: string | null
           definition: string
+          fathers_refs: string[] | null
           id: string
+          interpretation: string | null
           journey_id: string | null
+          journey_refs: string[] | null
           language: string
           magisterium_references: string[] | null
+          nexus_refs: Json | null
           practical_application: string | null
+          prayer_refs: string[] | null
+          published_at: string | null
           reference: string | null
+          saints_refs: string[] | null
+          sections_order: string[] | null
+          slug: string | null
+          status: string
           term: string
           updated_at: string
         }[]
@@ -6254,16 +6324,23 @@ export type Database = {
         Args: { result_limit?: number; search_query: string }
         Returns: {
           category: string
+          closing_message: string | null
           cover_url: string | null
           created_at: string
           description: string
           difficulty: string
           estimated_days: number
+          hero_image_url: string | null
+          hero_kicker: string | null
+          hero_quote: string | null
           icon: string
           id: string
           is_active: boolean
           is_premium: boolean
+          narrative_intro: string | null
+          slug: string | null
           sort_order: number
+          status: string
           subtitle: string | null
           tags: string[] | null
           title: string
@@ -6332,6 +6409,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      slugify: { Args: { input: string }; Returns: string }
       track_webhook_alert: {
         Args: { p_message: string; p_severity: string; p_type: string }
         Returns: undefined
