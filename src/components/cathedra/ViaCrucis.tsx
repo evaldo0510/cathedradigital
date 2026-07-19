@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { Icons } from '../../constants';
@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
 import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
+
+const VIA_METHOD_LABEL: Record<'landing' | 'journey', string> = {
+  landing: 'contemplativo',
+  journey: 'guiado',
+};
+
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
