@@ -243,14 +243,14 @@ const GlossaryPage: React.FC = () => {
               Sessão em andamento
             </p>
             <p className="text-premium-sm text-foreground font-serif truncate">
-              {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · {formatElapsedShort(rosaryReturn.elapsedMs)} rezados
+              {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · modo {ROSARY_MODE_LABEL[rosaryReturn.mode]} · {formatElapsedShort(rosaryReturn.elapsedMs)} rezados
             </p>
           </div>
           <Button
             type="button"
             onClick={handleReturnToRosary}
             className="min-h-11 rounded-premium-full bg-secondary text-secondary-foreground font-black uppercase text-premium-xs tracking-widest px-spacing-md hover:bg-secondary/90 focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label={`Voltar ao Rosário — ${rosaryReturn.setName}, ${rosaryReturn.mysteryLabel}, ${formatElapsedShort(rosaryReturn.elapsedMs)} rezados`}
+            aria-label={`Voltar ao Rosário — ${rosaryReturn.setName}, ${rosaryReturn.mysteryLabel}, modo ${ROSARY_MODE_LABEL[rosaryReturn.mode]}, ${formatElapsedShort(rosaryReturn.elapsedMs)} rezados`}
           >
             Voltar ao Rosário
           </Button>
