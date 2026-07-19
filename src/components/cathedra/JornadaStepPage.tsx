@@ -506,7 +506,8 @@ const JornadaStepPage: React.FC = () => {
                     type="button"
                     onClick={() => toggleSection(key)}
                     aria-expanded={isExpanded}
-                    className="flex w-full items-center gap-4 px-5 py-4 text-left"
+                    aria-controls={`section-panel-${key}`}
+                    className="flex w-full items-center gap-4 px-5 py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
                   >
                     <span className="font-stitch-display text-[20px] italic leading-none text-stitch-secondary/40">
                       {String(i + 1).padStart(2, '0')}
