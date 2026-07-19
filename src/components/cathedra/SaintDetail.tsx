@@ -112,6 +112,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
 
         <EditorialReaderHeader
+          className="pt-0"
           kicker={`Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
           title={saint.name}
           subtitle={saint.title}
