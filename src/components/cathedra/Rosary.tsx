@@ -309,16 +309,28 @@ const Rosary: React.FC = () => {
             </div>
           )}
           <div className="space-y-spacing-sm">
-            {['signOfCross', 'creed', 'ourFather'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-                <div className="flex items-center justify-between">
-                  <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
-                </div>
-                {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-              </div>
-            ))}
+            {['signOfCross', 'creed', 'ourFather'].map(k => {
+              const open = showPrayer === k;
+              const p = PRAYERS[k as keyof typeof PRAYERS];
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`rosary-prayer-intro-${k}`}
+                  onClick={() => setShowPrayer(open ? null : k)}
+                  className="group w-full text-left bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-premium-sm text-secondary/90">{p.title}</span>
+                    <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden />
+                  </div>
+                  {open && <p id={`rosary-prayer-intro-${k}`} className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{p.text}</p>}
+                </button>
+              );
+            })}
           </div>
+
           <p className="text-premium-xs text-secondary/40 text-center font-serif italic max-w-spacing-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
           <Button onClick={() => setStep('mystery')} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Iniciar 1º Mistério
@@ -362,38 +374,61 @@ const Rosary: React.FC = () => {
             <p className="text-premium-xs font-black uppercase tracking-widest text-secondary/30 mb-spacing-lg">{currentMystery + 1}º Mistério — Dezena</p>
             
             {/* Bead Counter */}
-            <div className="flex flex-col items-center gap-spacing-lg py-spacing-md">
+            <div
+              className="flex flex-col items-center gap-spacing-lg py-spacing-md"
+              role="group"
+              aria-label={`Contador de Ave-Marias: ${aveCount} de 10`}
+            >
               <div className="grid grid-cols-5 gap-spacing-md md:flex md:items-center md:gap-spacing-md">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Button
-                    key={i}
-                    onClick={() => setAveCount(i + 1)}
-                    className={`w-spacing-lg h-spacing-lg rounded-premium-full border-2 transition-all duration-300 ${
-                      i < aveCount
-                        ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
-                        : 'bg-transparent border-secondary/25 hover:border-secondary/50'
-                    }`}
-                  />
-                ))}
+                {Array.from({ length: 10 }).map((_, i) => {
+                  const filled = i < aveCount;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setAveCount(i + 1)}
+                      aria-label={`Ave-Maria ${i + 1} de 10`}
+                      aria-pressed={filled}
+                      className={`w-spacing-lg h-spacing-lg rounded-premium-full border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
+                        filled
+                          ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
+                          : 'bg-transparent border-secondary/25 hover:border-secondary/50'
+                      }`}
+                    />
+                  );
+                })}
               </div>
-              <p className="text-secondary/40 text-premium-xs font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
+              <p className="text-secondary/40 text-premium-xs font-black uppercase tracking-[0.2em]" aria-live="polite">{aveCount}/10 Ave-Marias</p>
             </div>
+
           </div>
 
           <div className="space-y-spacing-sm">
-            {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-                <div className="flex items-center justify-between">
-                  <p className="font-bold text-premium-sm text-secondary/90">
-                    {PRAYERS[k as keyof typeof PRAYERS].title}
-                    {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
-                  </p>
-                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
-                </div>
-                {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-              </div>
-            ))}
+            {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => {
+              const open = showPrayer === k;
+              const p = PRAYERS[k as keyof typeof PRAYERS];
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`rosary-prayer-dec-${k}`}
+                  onClick={() => setShowPrayer(open ? null : k)}
+                  className="group w-full text-left bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-premium-sm text-secondary/90">
+                      {p.title}
+                      {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
+                    </span>
+                    <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden />
+                  </div>
+                  {open && <p id={`rosary-prayer-dec-${k}`} className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{p.text}</p>}
+                </button>
+              );
+            })}
           </div>
+
           <Button onClick={() => {
             setAveCount(0);
             if (currentMystery < 4) {
@@ -417,13 +452,20 @@ const Rosary: React.FC = () => {
           <h3 className="text-premium-2xl font-serif font-bold text-secondary">Oração Final</h3>
           <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-secondary/50">Salve Rainha</p>
         </div>
-        <div className="bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
+        <button
+          type="button"
+          aria-expanded={showPrayer === 'salve'}
+          aria-controls="rosary-prayer-salve"
+          onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}
+          className="w-full text-left bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+        >
           <div className="flex items-center justify-between mb-spacing-xs">
-            <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS.salveRainha.title}</p>
-            <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
+            <span className="font-bold text-premium-sm text-secondary/90">{PRAYERS.salveRainha.title}</span>
+            <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} aria-hidden />
           </div>
-          {showPrayer === 'salve' && <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
-        </div>
+          {showPrayer === 'salve' && <p id="rosary-prayer-salve" className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
+        </button>
+
         <div className="text-center space-y-spacing-md py-spacing-xl">
           <div className="relative inline-block font-serif">
             <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
