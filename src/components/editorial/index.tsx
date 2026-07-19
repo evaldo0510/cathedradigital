@@ -256,13 +256,16 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
               subtitleClassName,
             )}
           >
-          {subtitle}
-        </p>
-      )}
-      {action && <div className="mt-10">{action}</div>}
-    </div>
-  </section>
-);
+            {subtitle}
+          </p>
+        )}
+        {badges && <div className={cn('mt-6 flex flex-wrap gap-2', centered && 'justify-center')}>{badges}</div>}
+        {action && <div className="mt-10">{action}</div>}
+      </div>
+    </section>
+  );
+};
+
 
 
 /* ------------------------------------------------------------------ */
