@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
+import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
 
 type Hora = 'laudes' | 'tercia' | 'sexta' | 'noa' | 'vesperas' | 'completas' | 'oficio';
 
@@ -168,6 +170,8 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
 const BreviaryPage: React.FC = () => {
   const [selectedHora, setSelectedHora] = useState<Hora | null>(null);
+  const { progress, loaded, save } = useDevotionalProgress('breviary');
+  const { setIndex, setFavorite } = useDevotionalReader();
 
   const currentHour = new Date().getHours();
   const suggestedHora = useMemo(() => {
@@ -179,6 +183,46 @@ const BreviaryPage: React.FC = () => {
     if (currentHour < 20) return 'vesperas';
     return 'completas';
   }, [currentHour]);
+
+  useEffect(() => {
+    if (loaded && progress.section && !selectedHora) {
+      const found = HORAS.find(h => h.id === progress.section);
+      if (found) setSelectedHora(found.id);
+    }
+  }, [loaded, progress.section, selectedHora]);
+
+  useEffect(() => {
+    if (selectedHora) {
+      const h = HORAS.find(x => x.id === selectedHora);
+      if (h) save({ section: h.id, step: null, label: h.title });
+    }
+  }, [selectedHora, save]);
+
+  useEffect(() => {
+    setIndex(
+      'Horas Canônicas',
+      HORAS.map(h => ({
+        id: h.id,
+        label: h.title,
+        hint: `${h.latin} · ${h.time}`,
+        active: selectedHora === h.id,
+        onSelect: () => setSelectedHora(h.id),
+      })),
+    );
+    const h = HORAS.find(x => x.id === selectedHora);
+    setFavorite(
+      h
+        ? {
+            contentType: 'breviary_hour',
+            contentId: h.id,
+            title: `Breviário — ${h.title}`,
+            content: h.prayer,
+            url: '/breviary',
+            metadata: { hora: h.id, latin: h.latin, time: h.time },
+          }
+        : null,
+    );
+  }, [selectedHora, setIndex, setFavorite]);
 
   const hora = HORAS.find(h => h.id === selectedHora);
 

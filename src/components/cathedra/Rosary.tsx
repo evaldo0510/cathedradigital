@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
+import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
+import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
 
 import ShareButton from './ShareButton';
 
@@ -108,6 +110,48 @@ const Rosary: React.FC = () => {
   const [showPrayer, setShowPrayer] = useState<string | null>(null);
   const [aveCount, setAveCount] = useState(0);
   const [intention, setIntention] = useState('');
+  const { progress, loaded, save } = useDevotionalProgress('rosary');
+  const { setIndex, setFavorite } = useDevotionalReader();
+
+  useEffect(() => {
+    if (loaded && progress.section && !selectedSet && MYSTERIES[progress.section as MysterySet]) {
+      setSelectedSet(progress.section as MysterySet);
+    }
+  }, [loaded, progress.section, selectedSet]);
+
+  useEffect(() => {
+    if (selectedSet) {
+      save({ section: selectedSet, step: currentMystery + 1, label: MYSTERIES[selectedSet].name });
+    }
+  }, [selectedSet, currentMystery, save]);
+
+  useEffect(() => {
+    setIndex(
+      'Mistérios do Rosário',
+      (Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => ({
+        id: key,
+        label: val.name,
+        hint: val.day,
+        active: selectedSet === key,
+        onSelect: () => {
+          setSelectedSet(key);
+          setCurrentMystery(0);
+        },
+      })),
+    );
+    setFavorite(
+      selectedSet
+        ? {
+            contentType: 'rosary_mystery_set',
+            contentId: selectedSet,
+            title: `Rosário — ${MYSTERIES[selectedSet].name}`,
+            content: MYSTERIES[selectedSet].mysteries.map(m => `• ${m.title}`).join('\n'),
+            url: '/rosary',
+            metadata: { set: selectedSet, day: MYSTERIES[selectedSet].day },
+          }
+        : null,
+    );
+  }, [selectedSet, setIndex, setFavorite]);
 
   if (!selectedSet) {
     return (
