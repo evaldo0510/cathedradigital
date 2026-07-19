@@ -13,15 +13,24 @@
 const KEY = "cathedra:rosary:return";
 const TTL_MS = 4 * 60 * 60 * 1000;
 
+export type RosaryReturnMode = "contemplativo" | "guiado" | "automatico";
+
 export interface RosaryReturnContext {
   setName: string;           // ex.: "Mistérios Gozosos"
   mysteryLabel: string;      // ex.: "3º mistério"
   mysteryIndex: number;      // 0..4
   stepIndex: number;         // passo dentro da sessão
+  mode: RosaryReturnMode;    // modo escolhido para a sessão
   elapsedMs: number;         // tempo já rezado
   startedAt: string;         // ISO
   updatedAt: string;         // ISO — usado para TTL
 }
+
+export const ROSARY_MODE_LABEL: Record<RosaryReturnMode, string> = {
+  contemplativo: "Contemplativo",
+  guiado: "Guiado",
+  automatico: "Automático",
+};
 
 function isBrowser(): boolean {
   return typeof window !== "undefined" && typeof window.sessionStorage !== "undefined";
