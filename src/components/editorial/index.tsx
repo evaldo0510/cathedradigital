@@ -16,6 +16,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
+// Sprint E1 — primitivas adicionais (fundação sem consumo ainda).
+export * from './primitives';
+
 /* ------------------------------------------------------------------ */
 /* Shell — canvas base editorial                                      */
 /* ------------------------------------------------------------------ */
