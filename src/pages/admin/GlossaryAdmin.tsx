@@ -380,6 +380,22 @@ export default function GlossaryAdmin() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Preview em tempo real */}
+        {showPreview && (
+          <Card className="h-fit lg:sticky lg:top-4">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base">Preview</CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">Espelha o reader público em tempo real.</p>
+              </div>
+              <Badge variant="outline" className="uppercase tracking-wider text-[10px]">Ao vivo</Badge>
+            </CardHeader>
+            <CardContent className="p-3 max-h-[80vh] overflow-auto">
+              <GlossaryTermPreview data={previewData} />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
