@@ -121,6 +121,18 @@ const GlossaryPage: React.FC = () => {
   const [category, setCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
+
+  // Detecta se o usuário veio de uma sessão ativa do Rosário.
+  useEffect(() => {
+    setRosaryReturn(getRosaryReturn());
+  }, []);
+
+  const handleReturnToRosary = () => {
+    clearRosaryReturn();
+    setRosaryReturn(null);
+    navigate('/rosary');
+  };
 
   // Server-side fuzzy search (pg_trgm + unaccent) via shared hook.
   const { results: searchResults, isPending: isSearchPending } = useFuzzySearch<GlossaryTerm>({
