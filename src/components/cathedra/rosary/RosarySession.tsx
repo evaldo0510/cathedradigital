@@ -158,6 +158,8 @@ export const RosarySession: React.FC<Props> = ({
   intention,
   initialMode,
   initialStepIndex = 0,
+  initialElapsedMs = 0,
+  initialStartedAt,
   onClose,
   onProgress,
 }) => {
@@ -174,7 +176,15 @@ export const RosarySession: React.FC<Props> = ({
     [stepIndex],
   );
 
-  /* ---------- Telemetria ---------- */
+  /* ---------- Cronômetro (soma tempo acumulado + sessão atual) ---------- */
+  const startedAtRef = useRef<string>(initialStartedAt ?? new Date().toISOString());
+  const sessionStartMsRef = useRef<number>(Date.now());
+  const elapsedMs = useCallback(
+    () => initialElapsedMs + (Date.now() - sessionStartMsRef.current),
+    [initialElapsedMs],
+  );
+
+  /* ---------- Telemetria (disparo único por evento) ---------- */
   const startedRef = useRef(false);
   useEffect(() => {
     if (!startedRef.current) {
@@ -183,35 +193,62 @@ export const RosarySession: React.FC<Props> = ({
         set: set.key,
         mode,
         resumedFromStep: initialStepIndex,
+        resumedElapsedMs: initialElapsedMs,
+        startedAt: startedAtRef.current,
       });
     }
-  }, [set.key, mode, initialStepIndex]);
+  }, [set.key, mode, initialStepIndex, initialElapsedMs]);
 
-  const lastAnnouncedMysteryRef = useRef<number>(-1);
+  const startedMysteriesRef = useRef<Set<number>>(new Set());
+  const completedMysteriesRef = useRef<Set<number>>(new Set());
+  const completedSessionRef = useRef(false);
   useEffect(() => {
-    if (phase.kind === "announce" && phase.mysteryIndex !== lastAnnouncedMysteryRef.current) {
-      lastAnnouncedMysteryRef.current = phase.mysteryIndex;
+    if (
+      phase.kind === "announce" &&
+      phase.mysteryIndex >= 0 &&
+      !startedMysteriesRef.current.has(phase.mysteryIndex)
+    ) {
+      startedMysteriesRef.current.add(phase.mysteryIndex);
       telemetry.log("rosary.mystery_started", "info", {
         set: set.key,
         mysteryIndex: phase.mysteryIndex,
         title: set.mysteries[phase.mysteryIndex]?.title,
       });
     }
-    if (phase.kind === "fatima") {
+    if (
+      phase.kind === "fatima" &&
+      phase.mysteryIndex >= 0 &&
+      !completedMysteriesRef.current.has(phase.mysteryIndex)
+    ) {
+      completedMysteriesRef.current.add(phase.mysteryIndex);
       telemetry.log("rosary.mystery_completed", "info", {
         set: set.key,
         mysteryIndex: phase.mysteryIndex,
+        title: set.mysteries[phase.mysteryIndex]?.title,
+        elapsedMs: elapsedMs(),
       });
     }
-    if (phase.kind === "closing") {
-      telemetry.log("rosary.completed", "info", { set: set.key, mode });
+    if (phase.kind === "closing" && !completedSessionRef.current) {
+      completedSessionRef.current = true;
+      telemetry.log("rosary.completed", "info", {
+        set: set.key,
+        mode,
+        durationMs: elapsedMs(),
+        startedAt: startedAtRef.current,
+      });
     }
-  }, [phase.kind, phase.mysteryIndex, set, mode]);
+  }, [phase.kind, phase.mysteryIndex, set, mode, elapsedMs]);
 
   /* ---------- Persistência ---------- */
   useEffect(() => {
-    onProgress(stepIndex, Math.max(0, phase.mysteryIndex), mode);
-  }, [stepIndex, phase.mysteryIndex, mode, onProgress]);
+    onProgress(
+      stepIndex,
+      Math.max(0, phase.mysteryIndex),
+      mode,
+      elapsedMs(),
+      startedAtRef.current,
+    );
+  }, [stepIndex, phase.mysteryIndex, mode, onProgress, elapsedMs]);
 
   /* ---------- Automático ---------- */
   useEffect(() => {
