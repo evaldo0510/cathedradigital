@@ -36,11 +36,89 @@ const ViaCrucis: React.FC = () => {
   const { progress, loaded, save } = useDevotionalProgress('viacrucis');
   const { setIndex, setFavorite } = useDevotionalReader();
 
+  // Ref para cabeçalho da tela ativa (landing ou estação). Focado UMA ÚNICA
+  // VEZ ao restaurar via histórico (back/forward), popstate na SPA, hash
+  // `#via-sacra`, ou BFCache (pageshow persisted=true).
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const didFocusHeadingRef = useRef(false);
+  const [restoreAnnouncement, setRestoreAnnouncement] = useState('');
+
   useEffect(() => {
     if (loaded && progress.step != null) {
       setCurrentStation(Math.max(0, Math.min(STATIONS.length - 1, progress.step - 1)));
+      if (progress.section === 'station') setIsJourney(true);
     }
-  }, [loaded, progress.step]);
+  }, [loaded, progress.step, progress.section]);
+
+  const focusHeading = useCallback(
+    (reason: 'hash' | 'history' | 'bfcache' | 'popstate') => {
+      if (typeof window === 'undefined') return;
+      const el = headingRef.current;
+      if (!el) return;
+      if (document.activeElement === el) {
+        didFocusHeadingRef.current = true;
+        return;
+      }
+      el.focus();
+      didFocusHeadingRef.current = true;
+      if (reason !== 'hash') {
+        const method = isJourney ? VIA_METHOD_LABEL.journey : VIA_METHOD_LABEL.landing;
+        const state = isJourney
+          ? `estação ${currentStation + 1} de ${STATIONS.length}`
+          : 'introdução';
+        setRestoreAnnouncement('');
+        window.requestAnimationFrame(() => {
+          setRestoreAnnouncement(`Via Sacra restaurada no modo ${method}, ${state}.`);
+        });
+      }
+    },
+    [isJourney, currentStation],
+  );
+
+  // Foco na entrada: hash `#via-sacra` ou restauração via histórico.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!loaded) return;
+    if (didFocusHeadingRef.current) return;
+
+    const hasHash = window.location.hash === '#via-sacra';
+    const navEntry = performance.getEntriesByType('navigation')[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    const isHistoryRestore = navEntry?.type === 'back_forward';
+
+    if (!hasHash && !isHistoryRestore) return;
+
+    const raf = window.requestAnimationFrame(() => {
+      focusHeading(hasHash ? 'hash' : 'history');
+      if (hasHash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [loaded, focusHeading]);
+
+  // Popstate/BFCache: foco disparado UMA ÚNICA VEZ por evento. pageshow
+  // inicial (persisted=false) é ignorado para evitar loop de refoco.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onPopstate = () => {
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => focusHeading('popstate'));
+    };
+    const onPageshow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => focusHeading('bfcache'));
+    };
+    window.addEventListener('popstate', onPopstate);
+    window.addEventListener('pageshow', onPageshow);
+    return () => {
+      window.removeEventListener('popstate', onPopstate);
+      window.removeEventListener('pageshow', onPageshow);
+    };
+  }, [focusHeading]);
+
 
   useEffect(() => {
     if (isJourney) {
