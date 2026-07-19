@@ -299,6 +299,9 @@ const BibleLanding: React.FC = () => {
           </p>
         </section>
       </main>
+
+      <MobileBottomNav />
+      <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
     </div>
   );
 };
