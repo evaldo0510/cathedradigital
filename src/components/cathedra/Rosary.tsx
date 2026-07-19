@@ -26,6 +26,24 @@ import {
 import { RosaryArt } from "./rosary/RosaryArt";
 import { RosarySession, type RosaryMode } from "./rosary/RosarySession";
 
+function formatElapsed(ms: number): string {
+  if (!ms || ms < 1000) return "0min";
+  const totalMin = Math.floor(ms / 60000);
+  if (totalMin < 60) return `${totalMin}min`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return m ? `${h}h${String(m).padStart(2, "0")}` : `${h}h`;
+}
+
+function formatStartedAt(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
+}
+
 const Rosary: React.FC = () => {
   const [selectedSet, setSelectedSet] = useState<MysterySet | null>(null);
   const [isPraying, setIsPraying] = useState(false);
