@@ -7,16 +7,23 @@
  *    preservando toda a lógica atual sem duplicação.
  */
 
-import React, { lazy, Suspense, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BookOpen, Search as SearchIcon, ArrowRight } from 'lucide-react';
+import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import {
+  BiblePickerSheet,
+  getBibleLastRead,
+  setBibleLastRead,
+} from '@/components/mobile/BiblePickerSheet';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
