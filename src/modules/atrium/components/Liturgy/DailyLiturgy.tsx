@@ -11,7 +11,7 @@ const DailyLiturgy: React.FC = () => {
         Liturgia do dia
       </h2>
       <a
-        href="/rezar/liturgia/hoje"
+        href="/liturgia"
         className="block p-4 rounded-md border border-border hover:bg-muted transition"
       >
         <div className="flex items-center gap-2 mb-1">
