@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MAGISTERIUM_CATEGORIES } from '@/data/magisterium-urls';
 import { AppRoute } from '@/types';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const MagisteriumViewer = lazy(
   () => import('@/components/cathedra/MagisteriumViewer'),
