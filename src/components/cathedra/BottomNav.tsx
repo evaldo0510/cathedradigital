@@ -164,24 +164,36 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
   const { t } = useContext(LangContext);
   const shouldReduceMotion = useReducedMotion();
+  const [atalhosOpen, setAtalhosOpen] = useState(false);
 
   const items = useMemo(() => {
+    // 3 rotas principais para dar espaço ao Atalhos + Mais.
     const mainItems = APP_ROUTES
       .filter(r => r.showInMenu && ['core', 'spiritual'].includes(r.category || ''))
-      .slice(0, 4)
+      .slice(0, 3)
       .map(r => ({
         label: r.label,
         route: r.path,
         icon: r.icon,
-        isMenu: false
+        isMenu: false,
+        isAtalhos: false,
       }));
 
-    // Add Menu/More item
+    // Atalhos rápidos (posição central, substitui o antigo FAB flutuante).
+    mainItems.push({
+      label: 'Atalhos',
+      route: '',
+      icon: Icons.Sparkles,
+      isMenu: false,
+      isAtalhos: true,
+    });
+
     mainItems.push({
       label: 'Mais',
       route: '',
       icon: Icons.Menu,
-      isMenu: true
+      isMenu: true,
+      isAtalhos: false,
     });
 
     return mainItems;
@@ -197,10 +209,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full relative">
-        <SmartActionButton />
         {items.map((item, i) => {
-          const isActive = item.isMenu 
-            ? false 
+          const isActive = item.isMenu || item.isAtalhos
+            ? false
             : (item.route ? isRouteActive(item.route, currentPath) : false);
 
           return (
@@ -211,12 +222,20 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
-              data-testid={item.isMenu ? "menu-trigger" : `nav-${item.label.toLowerCase()}`}
+              data-testid={
+                item.isMenu
+                  ? 'menu-trigger'
+                  : item.isAtalhos
+                  ? 'smart-action-button'
+                  : `nav-${item.label.toLowerCase()}`
+              }
               onClick={(e) => {
                 if (e.defaultPrevented || !isLegitimateClick(e)) return;
-                
+
                 if (item.isMenu) {
                   onOpenSidebar();
+                } else if (item.isAtalhos) {
+                  setAtalhosOpen(true);
                 } else if (item.route) {
                   if (location.pathname === item.route) return;
                   navigate(item.route);
@@ -228,6 +247,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
           );
         })}
       </div>
+      <SmartActionSheet open={atalhosOpen} onOpenChange={setAtalhosOpen} />
     </nav>
   );
 };
