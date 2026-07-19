@@ -148,9 +148,20 @@ const JornadaStepPage: React.FC = () => {
 
       if (allSteps && stepRes.data) {
         const currentIndex = allSteps.findIndex((s) => s.id === stepId);
-        if (currentIndex !== -1 && currentIndex < allSteps.length - 1) {
-          setNextStep(allSteps[currentIndex + 1]);
+        if (currentIndex !== -1) {
+          if (currentIndex > 0) setPrevStep(allSteps[currentIndex - 1]);
+          else setPrevStep(null);
+          if (currentIndex < allSteps.length - 1) setNextStep(allSteps[currentIndex + 1]);
+          else setNextStep(null);
         }
+      }
+
+      // Retomar seção expandida salva
+      if (storageKey) {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+          if (saved.expandedSection) setExpandedSection(saved.expandedSection);
+        } catch { /* noop */ }
       }
 
       if (user && stepRes.data) {
