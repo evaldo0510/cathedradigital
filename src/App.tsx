@@ -609,6 +609,19 @@ const AppLayout: React.FC = () => {
               <Route path="/telemetry" element={<Navigate to="/admin/telemetry" replace />} />
               <Route path="/security" element={<Navigate to="/admin/security" replace />} />
               <Route path="/catechism-explorer" element={<Navigate to="/catechism" replace />} />
+              <Route path="/formacao" element={<Navigate to="/jornadas" replace />} />
+              <Route path="/formar-se" element={<Navigate to="/jornadas" replace />} />
+              <Route path="/minha-jornada" element={<Navigate to="/jornadas" replace />} />
+              <Route path="/pesquisar" element={<Navigate to="/buscar" replace />} />
+              <Route path="/search" element={<Navigate to="/buscar" replace />} />
+              <Route path="/oracoes" element={<Navigate to="/oracao" replace />} />
+              <Route path="/orar" element={<Navigate to="/oracao" replace />} />
+              <Route path="/rosario" element={<Navigate to="/rosary" replace />} />
+              <Route path="/via-sacra" element={<Navigate to="/viacrucis" replace />} />
+              <Route path="/glossary" element={<Navigate to="/glossario" replace />} />
+              <Route path="/today" element={<Navigate to="/hoje" replace />} />
+              <Route path="/saints" element={<Navigate to="/santos" replace />} />
+              <Route path="/liturgy" element={<Navigate to="/liturgia" replace />} />
 
               {/* Nexus público — Etapa 7 */}
               <Route path="/nexus" element={<Suspense fallback={<LoadingFallback />}><AtriumNexusPage /></Suspense>} />
