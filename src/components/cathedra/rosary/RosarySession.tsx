@@ -772,7 +772,7 @@ interface MysteryContinuationProps {
   onCtaClick: (evt: { label: string; href: string; kind: string }) => void;
 }
 
-const MysteryContinuation: React.FC<MysteryContinuationProps> = ({
+export const MysteryContinuation: React.FC<MysteryContinuationProps> = ({
   mystery,
   setKey,
   onCtaClick,
