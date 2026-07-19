@@ -237,7 +237,7 @@ const AtriumBuscarPage: React.FC = () => {
         </section>
 
         {/* ─── Resultados (delegação) ou Territórios ────────────────── */}
-        {hasQuery ? (
+        {showResults ? (
           <section className="pt-10">
             <Suspense
               fallback={
