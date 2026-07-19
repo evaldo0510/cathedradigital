@@ -163,3 +163,77 @@ describe('formatNexusContent — reference_id com pontuação/espaços extras', 
   });
 });
 
+describe('formatNexusContent — entradas inválidas retornam book/chapter/verse seguros', () => {
+  const invalidInputs: Array<{ label: string; reference_id: any }> = [
+    { label: 'string vazia', reference_id: '' },
+    { label: 'só espaços', reference_id: '   ' },
+    { label: 'null', reference_id: null },
+    { label: 'undefined', reference_id: undefined },
+    { label: 'número', reference_id: 12345 as any },
+    { label: 'objeto', reference_id: { foo: 'bar' } as any },
+    { label: 'array', reference_id: ['Jo', 14, 6] as any },
+    { label: 'boolean', reference_id: true as any },
+    { label: 'livro inexistente', reference_id: 'Xyz 1,1' },
+    { label: 'só capítulo sem livro', reference_id: '14, 6' },
+    { label: 'apenas texto', reference_id: 'texto qualquer' },
+    { label: 'só pontuação', reference_id: ',,, :::' },
+    { label: 'capítulo não numérico', reference_id: 'Jo abc,6' },
+    { label: 'referência muito longa', reference_id: 'x'.repeat(500) },
+  ];
+
+  for (const { label, reference_id } of invalidInputs) {
+    it(`retorna metadata seguro (book/chapter/verse indefinidos) para ${label}`, () => {
+      const data = { id: 'inv', type: 'bible', content_text: 'v', reference_id, metadata: {} };
+      const r = formatNexusContent(data, 'bible');
+      // Não deve quebrar e não deve popular campos derivados
+      expect(r).toBeDefined();
+      expect(r.metadata).toBeDefined();
+      expect(r.metadata.book).toBeUndefined();
+      expect(r.metadata.chapter).toBeUndefined();
+      expect(r.metadata.verse).toBeUndefined();
+      // Restante do conteúdo preservado
+      expect(r.id).toBe('inv');
+      expect(r.type).toBe('bible');
+      expect(r.content_text).toBe('v');
+      // Title cai no fallback ou usa reference_id truthy
+      expect(typeof r.title).toBe('string');
+      expect(r.title.length).toBeGreaterThan(0);
+    });
+  }
+
+  it('não lança quando data.metadata é null', () => {
+    const data = { id: '1', type: 'bible', content_text: 'v', reference_id: 'nada', metadata: null };
+    expect(() => formatNexusContent(data, 'bible')).not.toThrow();
+    const r = formatNexusContent(data, 'bible');
+    expect(r.metadata).toBeDefined();
+    expect(r.metadata.book).toBeUndefined();
+  });
+
+  it('não lança quando data.tags é ausente', () => {
+    const data = { id: '1', type: 'bible', content_text: 'v', reference_id: 'invalida' };
+    const r = formatNexusContent(data, 'bible');
+    expect(Array.isArray(r.metadata.tags)).toBe(true);
+    expect(r.metadata.tags).toEqual([]);
+  });
+
+  it('preserva title do fallback quando reference_id inválido e sem title', () => {
+    const r = formatNexusContent({ id: '1', type: 'bible', reference_id: '' }, 'bible');
+    expect(r.title).toBe('Escritura');
+    expect(r.metadata.book).toBeUndefined();
+  });
+
+  it('processa lote com entradas mistas sem quebrar as válidas', () => {
+    const items = [
+      { id: '1', type: 'bible', reference_id: 'Jo 3,16', metadata: {} },
+      { id: '2', type: 'bible', reference_id: null, metadata: {} },
+      { id: '3', type: 'bible', reference_id: 'lixo', metadata: {} },
+      { id: '4', type: 'bible', reference_id: 'Mt 5,3', metadata: {} },
+    ];
+    const results = items.map(d => formatNexusContent(d, 'bible'));
+    expect(results[0].metadata).toMatchObject({ book: 'Jo', chapter: 3, verse: 16 });
+    expect(results[1].metadata.book).toBeUndefined();
+    expect(results[2].metadata.book).toBeUndefined();
+    expect(results[3].metadata).toMatchObject({ book: 'Mt', chapter: 5, verse: 3 });
+  });
+});
+
