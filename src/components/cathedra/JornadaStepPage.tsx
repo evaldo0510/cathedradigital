@@ -761,17 +761,29 @@ const JornadaStepPage: React.FC = () => {
             )}
 
             <button
-              onClick={
-                completed
-                  ? () =>
-                      nextStep
-                        ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
-                        : navigate(`/jornadas/${journeyId}/conclusao`)
-                  : completeStep
-              }
-              disabled={completing || saving || (!completed && !canComplete)}
+              data-testid="complete-step-btn"
+              onClick={() => {
+                if (completing || saving) return;
+                if (completed) {
+                  return nextStep
+                    ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
+                    : navigate(`/jornadas/${journeyId}/conclusao`);
+                }
+                if (!canComplete) {
+                  const msg = reflectionRequired
+                    ? reflectionCount === 0
+                      ? 'Escreva sua reflexão para concluir esta etapa.'
+                      : `Reflexão muito curta — escreva ao menos ${MIN_REFLECTION_LEN} caracteres (faltam ${MIN_REFLECTION_LEN - reflectionCount}).`
+                    : 'Dados incompletos.';
+                  setStatusMessage(msg);
+                  toast.error(msg);
+                  reflectionRef.current?.focus();
+                  return;
+                }
+                completeStep();
+              }}
               aria-busy={completing}
-              aria-disabled={!completed && !canComplete}
+              aria-disabled={!completed && (!canComplete || completing || saving)}
               aria-label={
                 completed
                   ? nextStep
@@ -781,11 +793,31 @@ const JornadaStepPage: React.FC = () => {
                     ? 'Concluir esta etapa'
                     : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir`
               }
-              title={completed ? 'Próxima etapa (→)' : canComplete ? 'Concluir etapa (Alt+Enter)' : 'Escreva sua reflexão para habilitar'}
+              title={
+                completed
+                  ? 'Próxima etapa (→)'
+                  : canComplete
+                    ? 'Concluir etapa (Alt+Enter)'
+                    : reflectionCount === 0
+                      ? 'Escreva sua reflexão para habilitar'
+                      : `Faltam ${MIN_REFLECTION_LEN - reflectionCount} caracteres`
+              }
               className={`${
                 completed ? 'flex-1' : 'flex-[2]'
-              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
+              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background aria-disabled:cursor-not-allowed aria-disabled:opacity-50`}
             >
+              {completing ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  Concluindo…
+                </>
+              ) : completed ? (
+                nextStep ? (
+                  <>
+                    Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
+                  </>
+                ) : (
+                  <>
               {completing ? (
                 <>
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
