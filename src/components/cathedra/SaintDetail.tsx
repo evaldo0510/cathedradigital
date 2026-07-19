@@ -22,6 +22,7 @@ import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
