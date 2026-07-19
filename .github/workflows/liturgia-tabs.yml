@@ -51,6 +51,10 @@ jobs:
             tests/e2e/liturgia-tabs-reduced-motion.spec.ts \
             tests/e2e/liturgia-tabs-shift-tab.spec.ts \
             tests/e2e/liturgia-tabs-visual-dark-responsive.spec.ts \
+            tests/e2e/liturgia-tabs-theme-toggle-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-mobile-tap.spec.ts \
+            tests/e2e/liturgia-tabs-visual-dark-states.spec.ts \
+            tests/e2e/liturgia-tabs-forced-colors.spec.ts \
             --project=chromium --reporter=list,html
 
       - name: Upload Playwright HTML report
