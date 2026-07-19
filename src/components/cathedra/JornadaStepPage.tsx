@@ -653,6 +653,8 @@ const JornadaStepPage: React.FC = () => {
               </p>
             )}
             <Textarea
+              ref={reflectionRef}
+              id="reflection-textarea"
               placeholder="Escreva sua reflexão aqui. Suas palavras são privadas."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
@@ -676,6 +678,7 @@ const JornadaStepPage: React.FC = () => {
                       ? 'text-destructive'
                       : 'text-stitch-on-surface-variant/70'
                   }
+                  data-testid="reflection-status"
                 >
                   {reflectionRequired
                     ? reflectionValid
@@ -683,7 +686,14 @@ const JornadaStepPage: React.FC = () => {
                       : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir.`
                     : 'Opcional — escreva se quiser guardar a reflexão.'}
                 </span>
-                <span className="text-stitch-on-surface-variant/60">{reflectionCount}</span>
+                <span className="flex items-center gap-3 text-stitch-on-surface-variant/60">
+                  {draftSavedAt && reflection.trim() && (
+                    <span aria-live="polite" className="normal-case tracking-normal italic">
+                      Rascunho salvo
+                    </span>
+                  )}
+                  <span>{reflectionCount}</span>
+                </span>
               </div>
             )}
           </motion.section>
