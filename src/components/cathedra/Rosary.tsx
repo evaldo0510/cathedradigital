@@ -404,19 +404,31 @@ const Rosary: React.FC = () => {
           </div>
 
           <div className="space-y-spacing-sm">
-            {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-                <div className="flex items-center justify-between">
-                  <p className="font-bold text-premium-sm text-secondary/90">
-                    {PRAYERS[k as keyof typeof PRAYERS].title}
-                    {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
-                  </p>
-                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
-                </div>
-                {showPrayer === k && <p className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-              </div>
-            ))}
+            {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => {
+              const open = showPrayer === k;
+              const p = PRAYERS[k as keyof typeof PRAYERS];
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`rosary-prayer-dec-${k}`}
+                  onClick={() => setShowPrayer(open ? null : k)}
+                  className="group w-full text-left bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-premium-sm text-secondary/90">
+                      {p.title}
+                      {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
+                    </span>
+                    <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden />
+                  </div>
+                  {open && <p id={`rosary-prayer-dec-${k}`} className="text-premium-lg md:text-premium-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{p.text}</p>}
+                </button>
+              );
+            })}
           </div>
+
           <Button onClick={() => {
             setAveCount(0);
             if (currentMystery < 4) {
