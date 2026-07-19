@@ -208,7 +208,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           title="Santos"
           titleClassName="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground max-w-none"
           subtitle={'"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'}
-          subtitleClassName="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto mt-spacing-md"
+          subtitleClassName="text-muted-foreground font-serif italic max-w-2xl mx-auto mt-spacing-md"
         />
 
 
