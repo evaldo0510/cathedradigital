@@ -212,6 +212,15 @@ const ViaCrucis: React.FC = () => {
 
   return (
     <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        data-testid="via-sacra-restore-live"
+      >
+        {restoreAnnouncement}
+      </div>
       {/* Navigation */}
       <div className="flex items-center justify-between px-spacing-xs">
         <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-premium-full shadow-premium-md gap-spacing-xs">
@@ -243,12 +252,21 @@ const ViaCrucis: React.FC = () => {
         <div className="relative text-center space-y-spacing-lg">
           <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-premium-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
           <div className="space-y-spacing-xs">
-            <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
+            <h2
+              id="via-sacra-heading"
+              ref={headingRef}
+              tabIndex={-1}
+              className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+            >
+              {station.title}
+            </h2>
             <p className="text-premium-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-spacing-xs">
               <Icons.BookOpen className="w-spacing-md h-spacing-md" /> {station.scripture}
             </p>
           </div>
         </div>
+
+
 
         <div className="relative space-y-spacing-2xl max-w-spacing-2xl mx-auto">
           <div className="space-y-spacing-md">
