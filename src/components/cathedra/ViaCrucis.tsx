@@ -155,14 +155,31 @@ const ViaCrucis: React.FC = () => {
   if (!isJourney) {
     return (
       <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+          data-testid="via-sacra-restore-live"
+        >
+          {restoreAnnouncement}
+        </div>
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
             <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
-          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
+          <h1
+            id="via-sacra-heading"
+            ref={headingRef}
+            tabIndex={-1}
+            className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+          >
+            Via Crucis
+          </h1>
           <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
         </motion.div>
+
 
         <div className="flex justify-center">
           <Button onClick={() => setIsJourney(true)} size="lg" className="h-spacing-3xl px-spacing-xl gap-spacing-sm rounded-premium-full shadow-premium-hover">
