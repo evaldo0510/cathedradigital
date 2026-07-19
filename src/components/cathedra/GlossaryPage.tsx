@@ -16,6 +16,7 @@ import {
   getRosaryReturn,
   clearRosaryReturn,
   formatElapsedShort,
+  ROSARY_MODE_LABEL,
   type RosaryReturnContext,
 } from '@/lib/rosaryReturnContext';
 
