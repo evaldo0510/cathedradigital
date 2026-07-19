@@ -304,7 +304,7 @@ const LazyParagraph: React.FC<{
     >
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
-          <span id={`heading-p${p}`} className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
+          <span id={`heading-p${p}`} className="text-premium-base md:text-premium-lg font-display tracking-[0.18em] text-secondary/70 uppercase">§{p}</span>
           <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <Button
               variant="ghost"
