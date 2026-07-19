@@ -286,23 +286,31 @@ const Rosary: React.FC = () => {
 
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-spacing-sm">
           {canResume && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsPraying(true)}
-              className="min-h-11 rounded-premium-full border-secondary/40 text-foreground"
-            >
-              <Icons.ChevronRight className="w-4 h-4 mr-1" />
-              Retomar oração
-            </Button>
+            <div className="flex flex-col items-end gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsPraying(true)}
+                className="min-h-11 rounded-premium-full border-secondary/50 text-foreground focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-describedby="rosary-resume-hint"
+              >
+                <Icons.ChevronRight className="w-4 h-4 mr-1" />
+                Retomar oração
+              </Button>
+              <p id="rosary-resume-hint" className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
+                {formatElapsed(resumeElapsedMs)} rezados{resumeStartedAt ? ` · ${formatStartedAt(resumeStartedAt)}` : ""}
+              </p>
+            </div>
           )}
           <Button
             type="button"
             onClick={() => {
               setResumeStepIndex(0);
+              setResumeElapsedMs(0);
+              setResumeStartedAt(new Date().toISOString());
               setIsPraying(true);
             }}
-            className="min-h-12 rounded-premium-full bg-foreground text-background px-6 font-black uppercase tracking-[0.18em] text-[11px] shadow-premium-hover hover:bg-primary hover:text-primary-foreground"
+            className="min-h-12 rounded-premium-full bg-foreground text-background px-6 font-black uppercase tracking-[0.18em] text-[11px] shadow-premium-hover hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {canResume ? "Começar novamente" : "Iniciar Oração"}
           </Button>
