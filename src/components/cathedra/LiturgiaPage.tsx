@@ -199,7 +199,7 @@ const LiturgiaPage: React.FC = () => {
       subtitle="Lex Orandi, Lex Credendi"
       icon={Icons.Liturgy}
       headerActions={
-        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs overflow-x-auto max-w-full shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
+        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs max-w-full shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
           {[
             { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-spacing-md h-spacing-md" /> },
             { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-spacing-md h-spacing-md" /> },
@@ -207,13 +207,14 @@ const LiturgiaPage: React.FC = () => {
           ].map((tab, idx) => (
             <Button
               key={tab.id}
-              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-spacing-xs px-spacing-xl py-spacing-sm rounded-premium-full text-premium-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+              variant="ghost"
+              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 sm:flex-none flex items-center justify-center gap-spacing-2xs sm:gap-spacing-xs px-spacing-xs sm:px-spacing-xl py-spacing-sm rounded-premium-full text-[10px] sm:text-premium-sm font-black uppercase tracking-wider sm:tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none min-w-0 ${
+                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary sm:scale-105 hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`)}
               onClick={() => setSearchParams({ tab: tab.id })}
               onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
             >
-              {tab.icon} {tab.label}
+              {tab.icon} <span>{tab.label}</span>
             </Button>
           ))}
         </div>
