@@ -554,8 +554,15 @@ const Catechism: React.FC = memo(() => {
 
   if (viewMode === 'sections' && selectedPart) {
     return (
-      <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
+      <ContemplativeLayout>
         <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
+          <EditorialReaderHeader
+            kicker={`Catecismo · ${selectedPart.part}`}
+            title={selectedPart.title}
+            subtitle="Selecione uma seção para iniciar a leitura"
+            meta={`${selectedPart.sections.length} seções`}
+          />
+
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Voltar às Partes
