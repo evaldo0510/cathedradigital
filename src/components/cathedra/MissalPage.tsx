@@ -76,10 +76,61 @@ const MISSAL_SECTIONS: MissalSection[] = [
   },
 ];
 
+function slugify(str: string): string {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60);
+}
+
 const MissalPage: React.FC = () => {
   const [showLatin, setShowLatin] = useState(false);
   const [showRubrics, setShowRubrics] = useState(true);
   const [expandedSection, setExpandedSection] = useState<string | null>('entrance');
+  const { setIndex, setFavorite } = useDevotionalReader();
+  const { isFavorited, toggle } = useDevotionalFavorites();
+
+  // Publica o índice de partes do Missal para o shell mobile.
+  useEffect(() => {
+    const items = MISSAL_SECTIONS.map(section => ({
+      id: section.id,
+      label: section.title,
+      hint: section.subtitle,
+      active: expandedSection === section.id,
+      onSelect: () => {
+        setExpandedSection(section.id);
+        requestAnimationFrame(() =>
+          document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+        );
+      },
+    }));
+    setIndex('Ordo Missæ', items);
+    setFavorite(null);
+    return () => setIndex('Índice', []);
+  }, [expandedSection, setIndex, setFavorite]);
+
+  const handleFavPart = async (sectionId: string, partLabel: string, partText: string) => {
+    const contentId = `${sectionId}:${slugify(partLabel)}`;
+    try {
+      const wasFav = isFavorited('missal_part', contentId);
+      await toggle({
+        contentType: 'missal_part',
+        contentId,
+        title: partLabel,
+        content: partText,
+        url: `/missal#missal-${sectionId}`,
+        metadata: { sectionId },
+      });
+      toast.success(wasFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(msg === 'auth-required' ? 'Faça login para favoritar' : 'Erro ao salvar favorito');
+    }
+  };
+
 
   return (
     <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl">
