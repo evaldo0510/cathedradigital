@@ -54,6 +54,10 @@ const JornadaCompletePage: React.FC = () => {
   const [rewardsProcessed, setRewardsProcessed] = useState(false);
   const [totalSteps, setTotalSteps] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(0);
+  const [pendingSteps, setPendingSteps] = useState<
+    { id: string; title: string; step_order: number }[]
+  >([]);
+  const [showPreview, setShowPreview] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
 
   const isJourneyComplete = totalSteps > 0 && completedSteps >= totalSteps;
