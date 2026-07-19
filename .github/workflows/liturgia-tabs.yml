@@ -19,7 +19,7 @@ on:
 jobs:
   liturgia-tabs:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -27,7 +27,8 @@ jobs:
           bun-version: latest
       - run: bun install --frozen-lockfile
       - run: bunx playwright install --with-deps chromium webkit
-      - name: Run Liturgia tab suite (visual + a11y + tablet/mobile portrait + keyboard + dark)
+
+      - name: Run Liturgia tab suite (visual + a11y + orientation + keyboard + dark + toggle + focus-ring)
         env:
           CI: 'true'
         run: |
@@ -39,14 +40,59 @@ jobs:
             tests/e2e/liturgia-tabs-keyboard.spec.ts \
             tests/e2e/liturgia-tabs-visual.spec.ts \
             tests/e2e/liturgia-tabs-portrait.spec.ts \
+            tests/e2e/liturgia-tabs-landscape.spec.ts \
             tests/e2e/liturgia-tabs-a11y.spec.ts \
+            tests/e2e/liturgia-tabs-toggle.spec.ts \
+            tests/e2e/liturgia-tabs-focus-ring.spec.ts \
             --project=chromium --reporter=list,html
-      - name: Upload Playwright report (on failure)
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liturgia-tabs-html-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload visual diffs & screenshots (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: liturgia-tabs-report
+          name: liturgia-tabs-visual-diffs
           path: |
-            playwright-report/
-            test-results/
+            test-results/**/*-actual.png
+            test-results/**/*-expected.png
+            test-results/**/*-diff.png
+            test-results/**/*.png
+            test-results/**/trace.zip
+            test-results/**/video.webm
           retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload full test-results (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liturgia-tabs-test-results
+          path: test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Summary — how to inspect visual diffs
+        if: failure()
+        run: |
+          {
+            echo "### 🔍 Visual regression falhou"
+            echo ""
+            echo "Baixe o artefato **liturgia-tabs-visual-diffs** — contém:"
+            echo "- \`*-actual.png\` → screenshot capturado neste run"
+            echo "- \`*-expected.png\` → baseline commitado"
+            echo "- \`*-diff.png\` → diff pixel-a-pixel (contraste/estilo)"
+            echo ""
+            echo "Traces em \`trace.zip\` abrem em https://trace.playwright.dev"
+            echo ""
+            echo "Atualizar baseline (após revisão):"
+            echo '```bash'
+            echo "bunx playwright test tests/e2e/liturgia-tabs-visual.spec.ts --update-snapshots"
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
