@@ -42,7 +42,13 @@ const JornadaCompletePage: React.FC = () => {
   const [xpAwarded, setXpAwarded] = useState(0);
   const [newBadges, setNewBadges] = useState<string[]>([]);
   const [rewardsProcessed, setRewardsProcessed] = useState(false);
+  const [totalSteps, setTotalSteps] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState(0);
   const certificateRef = useRef<HTMLDivElement>(null);
+
+  const isJourneyComplete = totalSteps > 0 && completedSteps >= totalSteps;
+  const hasCertificateData = !!(journey?.title);
+  const canShareCertificate = hasCertificateData && isJourneyComplete;
 
   useEffect(() => {
     if (id && user) loadData();
@@ -65,7 +71,7 @@ const JornadaCompletePage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [journeyRes, progressRes, nextRes] = await Promise.all([
+      const [journeyRes, progressRes, nextRes, totalRes] = await Promise.all([
         supabase.from('journeys').select('*').eq('id', id!).single(),
         supabase
           .from('journey_progress')
@@ -80,9 +86,15 @@ const JornadaCompletePage: React.FC = () => {
           .neq('id', id!)
           .order('sort_order', { ascending: true })
           .limit(3),
+        supabase
+          .from('journey_steps')
+          .select('*', { count: 'exact', head: true })
+          .eq('journey_id', id!),
       ]);
 
       if (journeyRes.data) setJourney(journeyRes.data);
+      setTotalSteps(totalRes.count || 0);
+      setCompletedSteps(progressRes.data?.length || 0);
 
       if (progressRes.data) {
         const stepIds = progressRes.data.map((p) => p.step_id);
@@ -186,6 +198,14 @@ const JornadaCompletePage: React.FC = () => {
 
   const shareCertificate = async () => {
     if (!certificateRef.current) return;
+    if (!canShareCertificate) {
+      toast.error(
+        !hasCertificateData
+          ? 'Dados da jornada indisponíveis.'
+          : 'Conclua todas as etapas antes de compartilhar o certificado.',
+      );
+      return;
+    }
     setSharing(true);
     try {
       const { default: html2canvas } = await import('html2canvas');
@@ -283,22 +303,40 @@ const JornadaCompletePage: React.FC = () => {
         <div className="mt-8 max-w-[520px]" role="group" aria-label="Progresso da jornada">
           <div className="flex items-baseline justify-between font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
             <span>Progresso</span>
-            <span className="text-stitch-secondary">100% · Completa</span>
+            <span className={isJourneyComplete ? 'text-stitch-secondary' : 'text-destructive'}>
+              {totalSteps > 0
+                ? `${Math.round((completedSteps / totalSteps) * 100)}% · ${completedSteps}/${totalSteps}`
+                : '—'}
+              {isJourneyComplete ? ' · Completa' : ''}
+            </span>
           </div>
           <div
             className="mt-2 h-[2px] w-full overflow-hidden bg-stitch-surface-container-high"
             role="progressbar"
-            aria-valuenow={100}
+            aria-valuenow={totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0}
             aria-valuemin={0}
             aria-valuemax={100}
           >
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: '100%' }}
+              animate={{
+                width: totalSteps > 0 ? `${(completedSteps / totalSteps) * 100}%` : '0%',
+              }}
               transition={{ duration: 1.2, ease: 'easeOut' }}
               className="h-full bg-stitch-secondary"
             />
           </div>
+          {!isJourneyComplete && totalSteps > 0 && (
+            <p
+              role="alert"
+              className="mt-3 font-stitch-body text-[12px] italic text-destructive"
+            >
+              Você ainda tem {totalSteps - completedSteps} etapa
+              {totalSteps - completedSteps === 1 ? '' : 's'} pendente
+              {totalSteps - completedSteps === 1 ? '' : 's'}. Conclua-as para liberar o
+              certificado.
+            </p>
+          )}
         </div>
 
         {/* ─── Certificado ───────────────────────────── */}
@@ -350,8 +388,19 @@ const JornadaCompletePage: React.FC = () => {
           <div className="mt-4 flex justify-center">
             <button
               onClick={shareCertificate}
-              disabled={sharing}
-              className="inline-flex items-center gap-2 border border-stitch-outline-variant/40 px-5 py-2.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:opacity-50"
+              disabled={sharing || !canShareCertificate}
+              aria-disabled={!canShareCertificate}
+              aria-label={
+                canShareCertificate
+                  ? 'Compartilhar certificado'
+                  : 'Conclua todas as etapas para compartilhar o certificado'
+              }
+              title={
+                canShareCertificate
+                  ? 'Compartilhar certificado'
+                  : 'Conclua todas as etapas para liberar'
+              }
+              className="inline-flex items-center gap-2 border border-stitch-outline-variant/40 px-5 py-2.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
             >
               {sharing ? (
                 <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />

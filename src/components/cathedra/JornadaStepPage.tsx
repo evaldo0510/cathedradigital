@@ -186,6 +186,16 @@ const JornadaStepPage: React.FC = () => {
 
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
+    // Validação: se há pergunta final, a reflexão é obrigatória (mínimo 10 chars).
+    const finalPromptCheck =
+      getVariantContent('final_question', content) ||
+      getVariantContent('journal_prompt', content) ||
+      getVariantContent('question', content);
+    if (finalPromptCheck && reflection.trim().length < 10) {
+      setStatusMessage('Escreva sua reflexão antes de concluir (mínimo 10 caracteres).');
+      toast.error('Escreva sua reflexão antes de concluir (mínimo 10 caracteres).');
+      return;
+    }
     setCompleting(true);
     setStatusMessage('Concluindo etapa…');
     try {
@@ -380,6 +390,12 @@ const JornadaStepPage: React.FC = () => {
     getVariantContent('final_question', content) ||
     getVariantContent('journal_prompt', content) ||
     getVariantContent('question', content);
+  const MIN_REFLECTION_LEN = 10;
+  const trimmedReflection = reflection.trim();
+  const reflectionRequired = !!finalPrompt;
+  const reflectionValid = trimmedReflection.length >= MIN_REFLECTION_LEN;
+  const canComplete = !reflectionRequired || reflectionValid;
+  const reflectionCount = trimmedReflection.length;
 
   return createPortal(
     <motion.div
@@ -612,9 +628,36 @@ const JornadaStepPage: React.FC = () => {
               placeholder="Escreva sua reflexão aqui. Suas palavras são privadas."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              className="min-h-[140px] resize-none border-stitch-outline-variant/40 bg-stitch-surface-container-lowest font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:border-stitch-secondary focus-visible:ring-0"
+              aria-invalid={reflectionRequired && !reflectionValid && reflectionCount > 0}
+              aria-describedby="reflection-help"
+              className={`min-h-[140px] resize-none bg-stitch-surface-container-lowest font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:ring-0 ${
+                reflectionRequired && !reflectionValid && reflectionCount > 0
+                  ? 'border-destructive/60 focus-visible:border-destructive'
+                  : 'border-stitch-outline-variant/40 focus-visible:border-stitch-secondary'
+              }`}
               disabled={completed}
             />
+            {!completed && (
+              <div
+                id="reflection-help"
+                className="mt-2 flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-[0.18em]"
+              >
+                <span
+                  className={
+                    reflectionRequired && !reflectionValid
+                      ? 'text-destructive'
+                      : 'text-stitch-on-surface-variant/70'
+                  }
+                >
+                  {reflectionRequired
+                    ? reflectionValid
+                      ? 'Pronto para concluir.'
+                      : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir.`
+                    : 'Opcional — escreva se quiser guardar a reflexão.'}
+                </span>
+                <span className="text-stitch-on-surface-variant/60">{reflectionCount}</span>
+              </div>
+            )}
           </motion.section>
 
           {/* Nexus + continuação após conclusão */}
@@ -688,16 +731,19 @@ const JornadaStepPage: React.FC = () => {
                         : navigate(`/jornadas/${journeyId}/conclusao`)
                   : completeStep
               }
-              disabled={completing || saving}
+              disabled={completing || saving || (!completed && !canComplete)}
               aria-busy={completing}
+              aria-disabled={!completed && !canComplete}
               aria-label={
                 completed
                   ? nextStep
                     ? `Próxima etapa: ${nextStep.title}`
                     : 'Ir para a conclusão da jornada'
-                  : 'Concluir esta etapa'
+                  : canComplete
+                    ? 'Concluir esta etapa'
+                    : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir`
               }
-              title={completed ? 'Próxima etapa (→)' : 'Concluir etapa (Alt+Enter)'}
+              title={completed ? 'Próxima etapa (→)' : canComplete ? 'Concluir etapa (Alt+Enter)' : 'Escreva sua reflexão para habilitar'}
               className={`${
                 completed ? 'flex-1' : 'flex-[2]'
               } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
