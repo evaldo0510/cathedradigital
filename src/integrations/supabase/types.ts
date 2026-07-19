@@ -1335,29 +1335,44 @@ export type Database = {
       }
       bible_favorites: {
         Row: {
-          book_abbr: string
+          book_abbr: string | null
           chapter: number
           content: string
+          content_id: string | null
+          content_type: string
           created_at: string
           id: string
+          metadata: Json
+          title: string | null
+          url: string | null
           user_id: string
           verse_number: number
         }
         Insert: {
-          book_abbr: string
+          book_abbr?: string | null
           chapter: number
           content: string
+          content_id?: string | null
+          content_type?: string
           created_at?: string
           id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
           user_id: string
           verse_number: number
         }
         Update: {
-          book_abbr?: string
+          book_abbr?: string | null
           chapter?: number
           content?: string
+          content_id?: string | null
+          content_type?: string
           created_at?: string
           id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
           user_id?: string
           verse_number?: number
         }
