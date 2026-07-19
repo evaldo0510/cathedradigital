@@ -635,15 +635,38 @@ const JornadaStepPage: React.FC = () => {
       {/* ─── Ação inferior ────────────────────────────── */}
       <div className="flex-shrink-0 border-t border-stitch-secondary/10 bg-stitch-background/95 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:px-16">
         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-2">
+          {/* Anúncios para leitores de tela */}
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {statusMessage}
+          </div>
+
           <div className="flex gap-2">
+            {/* Navegação entre etapas (sempre visível) */}
+            <button
+              type="button"
+              onClick={() => prevStep && navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`)}
+              disabled={!prevStep}
+              aria-label={prevStep ? `Etapa anterior: ${prevStep.title}` : 'Sem etapa anterior'}
+              title="Etapa anterior (←)"
+              className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center border border-stitch-outline-variant/40 text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+
             {!completed && (
               <button
                 onClick={handleSaveReflection}
-                disabled={saving || !reflection.trim()}
-                className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-4 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={saving || completing || !reflection.trim()}
+                aria-busy={saving}
+                aria-label={reflection.trim() ? 'Salvar reflexão' : 'Escreva uma reflexão para habilitar'}
+                title="Salvar reflexão"
+                className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-4 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {saving ? (
-                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  <>
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Salvando…
+                  </>
                 ) : (
                   <>
                     <Save className="h-3.5 w-3.5" /> Salvar
@@ -651,22 +674,45 @@ const JornadaStepPage: React.FC = () => {
                 )}
               </button>
             )}
+
             <button
-              onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
-              disabled={saving}
+              onClick={
+                completed
+                  ? () =>
+                      nextStep
+                        ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
+                        : navigate(`/jornadas/${journeyId}/conclusao`)
+                  : completeStep
+              }
+              disabled={completing || saving}
+              aria-busy={completing}
+              aria-label={
+                completed
+                  ? nextStep
+                    ? `Próxima etapa: ${nextStep.title}`
+                    : 'Ir para a conclusão da jornada'
+                  : 'Concluir esta etapa'
+              }
+              title={completed ? 'Próxima etapa (→)' : 'Concluir etapa (Alt+Enter)'}
               className={`${
-                completed ? 'w-full' : 'flex-[2]'
-              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 disabled:opacity-50`}
+                completed ? 'flex-1' : 'flex-[2]'
+              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
             >
-              {saving ? (
+              {completing ? (
                 <>
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Salvando…
+                  Concluindo…
                 </>
               ) : completed ? (
-                <>
-                  <ArrowLeft className="h-3.5 w-3.5" /> Voltar à Jornada
-                </>
+                nextStep ? (
+                  <>
+                    Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
+                  </>
+                ) : (
+                  <>
+                    <Award className="h-3.5 w-3.5" /> Conclusão
+                  </>
+                )
               ) : (
                 <>
                   <Check className="h-3.5 w-3.5" /> Concluir Etapa
@@ -674,14 +720,6 @@ const JornadaStepPage: React.FC = () => {
               )}
             </button>
           </div>
-          {completed && nextStep && (
-            <button
-              onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-              className="inline-flex w-full items-center justify-center gap-2 border border-stitch-secondary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-secondary transition-colors hover:bg-stitch-secondary hover:text-stitch-primary"
-            >
-              Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          )}
         </div>
       </div>
     </motion.div>,
