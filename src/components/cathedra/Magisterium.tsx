@@ -509,7 +509,7 @@ const Magisterium: React.FC = () => {
         align="center"
         size="sm"
         rule={false}
-        className="!py-0 header-margin-rhythm px-spacing-md md:px-spacing-xl"
+        className="header-margin-rhythm px-spacing-md md:px-spacing-xl"
         icon={
           <Icons.ScrollText
             className="w-spacing-md h-spacing-md md:w-spacing-xl md:h-spacing-xl text-primary/20 mx-auto transition-all duration-1000"
