@@ -187,10 +187,54 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
           <div className="flex items-center gap-3 md:gap-5">
             <span className="editorial-meta text-secondary whitespace-nowrap">
-              {anyPending ? 'Buscando sabedoria' : 'Resultados'}
+              {hasBibleFilter && !hasQuery
+                ? 'Passagem bíblica'
+                : anyPending ? 'Buscando sabedoria' : 'Resultados'}
             </span>
             <div className="h-px flex-1 bg-secondary/35" />
           </div>
+
+          {hasBibleFilter && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-spacing-md rounded-2xl border border-secondary/30 bg-card p-spacing-lg shadow-sm"
+              role="region"
+              aria-label="Filtro bíblico ativo"
+            >
+              <div className="flex items-center gap-2 text-secondary">
+                <Icons.BookOpen className="h-4 w-4" aria-hidden="true" />
+                <span className="editorial-meta">Filtro: Bíblia</span>
+              </div>
+              <p className="mt-spacing-xs editorial-display text-2xl text-foreground">
+                {bibleLivro.toUpperCase()} {bibleCapitulo}
+              </p>
+              <p className="mt-spacing-xs text-premium-sm text-muted-foreground/80">
+                {hasQuery
+                  ? <>Mostrando resultados de <span className="text-secondary">"{query.trim()}"</span> restritos à passagem selecionada.</>
+                  : 'Escolha uma pergunta ou abra o capítulo para leitura contemplativa.'}
+              </p>
+              <div className="mt-spacing-md flex flex-wrap items-center gap-spacing-xs">
+                <Button
+                  onClick={() => navigate(`/bible?book=${encodeURIComponent(bibleLivro)}&chapter=${encodeURIComponent(bibleCapitulo)}`)}
+                  variant="default"
+                  className="min-h-11"
+                >
+                  <Icons.BookOpen className="w-4 h-4 mr-2" aria-hidden="true" />
+                  Abrir capítulo
+                </Button>
+                <Button
+                  onClick={clearBibleFilter}
+                  variant="ghost"
+                  className="min-h-11"
+                >
+                  <Icons.X className="w-4 h-4 mr-2" aria-hidden="true" />
+                  Limpar filtro
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
 
 
 
