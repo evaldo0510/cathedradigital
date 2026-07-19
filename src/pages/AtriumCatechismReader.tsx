@@ -5,13 +5,14 @@
  * Com ?p=N → delega ao Catechism existente (não duplica lógica).
  */
 
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BookMarked, ArrowRight, Search as SearchIcon } from 'lucide-react';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
+import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 
 const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
 
@@ -23,17 +24,45 @@ const PART_KICKERS: Record<string, string> = {
   'Parte IV': 'Oração',
 };
 
+function findPartByParagraph(p: number): { part: string; section?: string } | null {
+  for (const part of CIC_SECTIONS) {
+    for (const sec of part.sections) {
+      const [start, end] = sec.paragraphs;
+      if (p >= start && p <= end) return { part: part.part, section: sec.title };
+    }
+  }
+  return null;
+}
+
 const AtriumCatechismReader: React.FC = () => {
   const [sp] = useSearchParams();
-  if (sp.get('p')) {
+  const pParam = sp.get('p');
+  const chrome = useMemo(() => {
+    if (!pParam) return null;
+    const n = parseInt(pParam, 10);
+    const loc = Number.isFinite(n) ? findPartByParagraph(n) : null;
+    const kicker = loc ? `${PART_KICKERS[loc.part] ?? loc.part}` : 'Depositum Fidei';
+    const title = `§${pParam}`;
+    const subtitle = loc?.section;
+    return { kicker, title, subtitle };
+  }, [pParam]);
+
+  if (pParam && chrome) {
     return (
       <Suspense fallback={<CatechismSkeleton />}>
+        <EditorialReaderChrome
+          kicker={`Cathedra · ${chrome.kicker}`}
+          title={chrome.title}
+          subtitle={chrome.subtitle}
+          backHref={AppRoute.CATECHISM}
+        />
         <Catechism />
       </Suspense>
     );
   }
   return <CatechismLanding />;
 };
+
 
 const CatechismLanding: React.FC = () => {
   return (
