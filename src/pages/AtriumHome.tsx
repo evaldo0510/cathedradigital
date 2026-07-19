@@ -31,6 +31,8 @@ import {
   Route as RouteIcon,
   Megaphone,
 } from 'lucide-react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   useResume,
   useLiturgyToday,
@@ -120,7 +122,9 @@ const AtriumHome: React.FC = () => {
         />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar kicker="Cathedra" title="Átrio" transparent />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-stitch-secondary/30 md:block" />
@@ -467,6 +471,8 @@ const AtriumHome: React.FC = () => {
           todos os dias da minha vida." — Sl 27,4
         </p>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
