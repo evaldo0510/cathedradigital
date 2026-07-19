@@ -471,6 +471,8 @@ const AtriumHome: React.FC = () => {
           todos os dias da minha vida." — Sl 27,4
         </p>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
