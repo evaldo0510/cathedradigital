@@ -386,6 +386,12 @@ const JornadaStepPage: React.FC = () => {
     getVariantContent('final_question', content) ||
     getVariantContent('journal_prompt', content) ||
     getVariantContent('question', content);
+  const MIN_REFLECTION_LEN = 10;
+  const trimmedReflection = reflection.trim();
+  const reflectionRequired = !!finalPrompt;
+  const reflectionValid = trimmedReflection.length >= MIN_REFLECTION_LEN;
+  const canComplete = !reflectionRequired || reflectionValid;
+  const reflectionCount = trimmedReflection.length;
 
   return createPortal(
     <motion.div
