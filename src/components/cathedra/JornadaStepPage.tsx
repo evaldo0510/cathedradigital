@@ -628,9 +628,36 @@ const JornadaStepPage: React.FC = () => {
               placeholder="Escreva sua reflexão aqui. Suas palavras são privadas."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              className="min-h-[140px] resize-none border-stitch-outline-variant/40 bg-stitch-surface-container-lowest font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:border-stitch-secondary focus-visible:ring-0"
+              aria-invalid={reflectionRequired && !reflectionValid && reflectionCount > 0}
+              aria-describedby="reflection-help"
+              className={`min-h-[140px] resize-none bg-stitch-surface-container-lowest font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:ring-0 ${
+                reflectionRequired && !reflectionValid && reflectionCount > 0
+                  ? 'border-destructive/60 focus-visible:border-destructive'
+                  : 'border-stitch-outline-variant/40 focus-visible:border-stitch-secondary'
+              }`}
               disabled={completed}
             />
+            {!completed && (
+              <div
+                id="reflection-help"
+                className="mt-2 flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-[0.18em]"
+              >
+                <span
+                  className={
+                    reflectionRequired && !reflectionValid
+                      ? 'text-destructive'
+                      : 'text-stitch-on-surface-variant/70'
+                  }
+                >
+                  {reflectionRequired
+                    ? reflectionValid
+                      ? 'Pronto para concluir.'
+                      : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir.`
+                    : 'Opcional — escreva se quiser guardar a reflexão.'}
+                </span>
+                <span className="text-stitch-on-surface-variant/60">{reflectionCount}</span>
+              </div>
+            )}
           </motion.section>
 
           {/* Nexus + continuação após conclusão */}
