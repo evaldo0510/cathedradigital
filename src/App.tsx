@@ -104,6 +104,7 @@ const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
+const ContemplatioPage = lazy(() => import('./pages/ContemplatioPage'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
@@ -538,6 +539,8 @@ const AppLayout: React.FC = () => {
               <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><PrayerPage /></Suspense>} />
               <Route path="/prayers" element={<Navigate to="/oracao" replace />} />
               <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
+              <Route path="/contemplatio" element={<Suspense fallback={<LoadingFallback />}><ContemplatioPage /></Suspense>} />
+              <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />
               <Route path="/confession" element={<Suspense fallback={<LoadingFallback />}><PoenitentiaPage /></Suspense>} />
 
               {/* Jornadas */}
