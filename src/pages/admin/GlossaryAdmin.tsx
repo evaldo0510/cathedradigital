@@ -14,8 +14,9 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft } from "lucide-react";
+import { Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import GlossaryTermPreview, { type GlossaryPreviewData } from "@/components/admin/GlossaryTermPreview";
 
 type Status = "draft" | "review" | "published";
 
