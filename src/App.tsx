@@ -26,6 +26,7 @@ import { initGA4AutoTracking } from './lib/analytics';
 import CathedralSidebar from './components/cathedra/Sidebar';
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
+const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
 import CathedralFooter from './components/cathedra/Footer';
 import NotFound from './pages/NotFound';
 import BottomNav from './components/cathedra/BottomNav';
@@ -469,6 +470,7 @@ const AppLayout: React.FC = () => {
               <Route path="/legacy-home" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/dev/editorial" element={<Suspense fallback={<LoadingFallback />}><EditorialShowcase /></Suspense>} />
+              <Route path="/dev/mobile" element={<Suspense fallback={<LoadingFallback />}><MobileShowcase /></Suspense>} />
 
 
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><AtriumBibleReader /></Suspense>} />
