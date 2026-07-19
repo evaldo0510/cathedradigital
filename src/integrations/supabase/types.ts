@@ -3422,6 +3422,78 @@ export type Database = {
         }
         Relationships: []
       }
+      prayers: {
+        Row: {
+          category: Database["public"]["Enums"]["prayer_category"]
+          content: string
+          content_latin: string | null
+          created_at: string
+          estimated_seconds: number
+          explanation: string | null
+          id: string
+          is_published: boolean
+          kicker: string | null
+          meditation: string | null
+          order_index: number
+          related_bible: string[]
+          related_catechism: number[]
+          related_glossary: string[]
+          related_saints: string[]
+          slug: string
+          source_ref: string | null
+          subtitle: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["prayer_category"]
+          content: string
+          content_latin?: string | null
+          created_at?: string
+          estimated_seconds?: number
+          explanation?: string | null
+          id?: string
+          is_published?: boolean
+          kicker?: string | null
+          meditation?: string | null
+          order_index?: number
+          related_bible?: string[]
+          related_catechism?: number[]
+          related_glossary?: string[]
+          related_saints?: string[]
+          slug: string
+          source_ref?: string | null
+          subtitle?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["prayer_category"]
+          content?: string
+          content_latin?: string | null
+          created_at?: string
+          estimated_seconds?: number
+          explanation?: string | null
+          id?: string
+          is_published?: boolean
+          kicker?: string | null
+          meditation?: string | null
+          order_index?: number
+          related_bible?: string[]
+          related_catechism?: number[]
+          related_glossary?: string[]
+          related_saints?: string[]
+          slug?: string
+          source_ref?: string | null
+          subtitle?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profile_update_rate: {
         Row: {
           count: number
@@ -6275,6 +6347,16 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      prayer_category:
+        | "fundamentais"
+        | "marianas"
+        | "espirito_santo"
+        | "santos"
+        | "antes_depois"
+        | "protecao"
+        | "momentos_do_dia"
+        | "eucaristica"
+        | "confissao_defuntos"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -6403,6 +6485,17 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      prayer_category: [
+        "fundamentais",
+        "marianas",
+        "espirito_santo",
+        "santos",
+        "antes_depois",
+        "protecao",
+        "momentos_do_dia",
+        "eucaristica",
+        "confissao_defuntos",
+      ],
     },
   },
 } as const
