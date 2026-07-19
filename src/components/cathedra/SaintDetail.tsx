@@ -22,6 +22,7 @@ import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -109,7 +110,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
 
       {/* Content Area */}
-      <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
+      <div className="flex-1 overflow-y-auto no-scrollbar">
+        <EditorialReaderChrome
+          kicker={`Cathedra · Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+          title={saint.name}
+          subtitle={saint.title}
+          shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
+        />
+
+        <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-xl">
 
         <EditorialReaderHeader
           className="pt-0"
@@ -378,6 +387,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           }}
         />
 
+        </div>
       </div>
     </motion.div>
   </motion.div>
