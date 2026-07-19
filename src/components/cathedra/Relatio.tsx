@@ -407,7 +407,7 @@ const Relatio: React.FC<RelatioProps> = ({
                           
                           <div className="flex-1 space-y-spacing-xs">
                             <h4 className="text-premium-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
-                            <p className="text-premium-sm text-muted-foreground leading-relaxed line-clamp-spacing-sm font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
+                            <p className="text-premium-sm text-foreground/80 leading-relaxed line-clamp-spacing-sm font-serif italic font-light group-hover:text-foreground transition-colors duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
                             </p>
                           </div>
