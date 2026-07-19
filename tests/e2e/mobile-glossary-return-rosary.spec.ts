@@ -155,4 +155,37 @@ test.describe('mobile · Glossário → Voltar ao Rosário', () => {
       ).toBeChecked({ timeout: 10_000 });
     }
   });
+
+  test('foco vai para o cabeçalho da preparação após click do mouse', async ({ page }) => {
+    await seedSession(page, makeSeed({ mode: 'guiado' }));
+    await page.goto('/glossario', { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('rosary-return-button').click();
+    await page.waitForURL(/\/rosary\b/);
+
+    const heading = page.locator('#rosary-preparation-heading');
+    await expect(heading).toBeVisible();
+    await expect(heading).toBeFocused({ timeout: 10_000 });
+    // Hash é limpo após mover o foco (evita re-focar em navegações futuras).
+    await expect(page).toHaveURL(/\/rosary(?!#preparation)/);
+  });
+
+  for (const key of ['Enter', 'Space'] as const) {
+    test(`ativação via teclado (${key}) leva ao Rosário e move foco ao cabeçalho`, async ({ page }) => {
+      await seedSession(page, makeSeed({ mode: 'contemplativo' }));
+      await page.goto('/glossario', { waitUntil: 'domcontentloaded' });
+
+      const btn = page.getByTestId('rosary-return-button');
+      await btn.focus();
+      await expect(btn).toBeFocused();
+      await page.keyboard.press(key);
+
+      await page.waitForURL(/\/rosary\b/);
+      const heading = page.locator('#rosary-preparation-heading');
+      await expect(heading).toBeFocused({ timeout: 10_000 });
+      await expect(heading).toHaveAttribute('tabindex', '-1');
+      await expect(
+        page.locator('input[name="rosary-mode-choose"][value="contemplativo"]'),
+      ).toBeChecked();
+    });
+  }
 });

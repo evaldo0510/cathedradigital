@@ -53,9 +53,26 @@ const Rosary: React.FC = () => {
   const [resumeStepIndex, setResumeStepIndex] = useState<number | undefined>(undefined);
   const [resumeElapsedMs, setResumeElapsedMs] = useState<number>(0);
   const [resumeStartedAt, setResumeStartedAt] = useState<string | undefined>(undefined);
+  const preparationHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   const { progress, loaded, save } = useDevotionalProgress("rosary");
   const { setIndex, setFavorite } = useDevotionalReader();
+
+  // Retorno vindo do Glossário (ou qualquer origem com #preparation): move
+  // o foco ao cabeçalho da preparação assim que o conjunto for restaurado.
+  // Cabeçalho recebe tabIndex={-1} para ser programaticamente focável sem
+  // entrar na ordem natural de tab — padrão de "skip focus" acessível.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== "#preparation") return;
+    if (!loaded || !selectedSet || isPraying) return;
+    const raf = window.requestAnimationFrame(() => {
+      preparationHeadingRef.current?.focus();
+      // Remove o hash sem recarregar nem empurrar entrada no histórico.
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [loaded, selectedSet, isPraying]);
 
   const todaySet = useMemo(() => suggestSetForToday(), []);
 
@@ -304,7 +321,12 @@ const Rosary: React.FC = () => {
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/70">
               {set.day} · {set.latin}
             </p>
-            <h1 className="font-display text-premium-3xl md:text-premium-4xl text-foreground">
+            <h1
+              ref={preparationHeadingRef}
+              id="rosary-preparation-heading"
+              tabIndex={-1}
+              className="font-display text-premium-3xl md:text-premium-4xl text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-premium-sm"
+            >
               {set.name}
             </h1>
             <p className="text-premium-sm text-muted-foreground font-serif italic">

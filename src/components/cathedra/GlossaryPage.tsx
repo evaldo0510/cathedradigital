@@ -132,7 +132,9 @@ const GlossaryPage: React.FC = () => {
   const handleReturnToRosary = () => {
     clearRosaryReturn();
     setRosaryReturn(null);
-    navigate('/rosary');
+    // Hash sinaliza para o /rosary mover o foco ao cabeçalho da preparação,
+    // preservando o fluxo de teclado após uma navegação SPA.
+    navigate('/rosary#preparation');
   };
 
   // Server-side fuzzy search (pg_trgm + unaccent) via shared hook.
