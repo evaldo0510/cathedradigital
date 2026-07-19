@@ -175,6 +175,14 @@ const JornadaStepPage: React.FC = () => {
         if (progress) {
           setCompleted(true);
           setReflection(progress.reflection || '');
+        } else if (storageKey) {
+          // Retomar rascunho de reflexão salvo localmente
+          try {
+            const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            if (typeof saved.draftReflection === 'string' && saved.draftReflection.trim()) {
+              setReflection(saved.draftReflection);
+            }
+          } catch { /* noop */ }
         }
       }
     } catch (err) {
