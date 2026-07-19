@@ -191,6 +191,8 @@ const CatechismLanding: React.FC = () => {
           </p>
         </section>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
