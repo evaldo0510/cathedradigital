@@ -11,7 +11,14 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Hub, ArrowForward, MenuBook, AutoStories, AddCircle, AutoAwesome } from '@/components/editorial/Icon';
+import {
+  Network as Hub,
+  ArrowRight as ArrowForward,
+  BookOpen as MenuBook,
+  BookMarked as AutoStories,
+  PlusCircle as AddCircle,
+  Sparkles as AutoAwesome,
+} from 'lucide-react';
 import {
   useResume,
   useLiturgyToday,
