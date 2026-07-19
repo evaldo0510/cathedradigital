@@ -731,16 +731,19 @@ const JornadaStepPage: React.FC = () => {
                         : navigate(`/jornadas/${journeyId}/conclusao`)
                   : completeStep
               }
-              disabled={completing || saving}
+              disabled={completing || saving || (!completed && !canComplete)}
               aria-busy={completing}
+              aria-disabled={!completed && !canComplete}
               aria-label={
                 completed
                   ? nextStep
                     ? `Próxima etapa: ${nextStep.title}`
                     : 'Ir para a conclusão da jornada'
-                  : 'Concluir esta etapa'
+                  : canComplete
+                    ? 'Concluir esta etapa'
+                    : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir`
               }
-              title={completed ? 'Próxima etapa (→)' : 'Concluir etapa (Alt+Enter)'}
+              title={completed ? 'Próxima etapa (→)' : canComplete ? 'Concluir etapa (Alt+Enter)' : 'Escreva sua reflexão para habilitar'}
               className={`${
                 completed ? 'flex-1' : 'flex-[2]'
               } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
