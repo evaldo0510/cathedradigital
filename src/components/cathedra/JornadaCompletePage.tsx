@@ -1,14 +1,32 @@
-import { Icons } from '@/constants';
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+/**
+ * JornadaCompletePage — refino editorial Logos 2030.
+ *
+ * Preserva integralmente lógica de recompensas (XP/badges), reflexões,
+ * próxima jornada e compartilhamento do certificado. Realinha o visual
+ * ao padrão stitch-* usado em /jornadas e no leitor de passo.
+ */
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Award,
+  BookOpen,
+  ChevronRight,
+  Quote,
+  Share2,
+  Sparkles,
+  Star,
+  Zap,
+} from 'lucide-react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
-import { toast } from 'sonner';
 import { checkNewBadges, getBadgeById, BadgeContext } from '@/lib/badges';
 
 const JornadaCompletePage: React.FC = () => {
@@ -28,12 +46,18 @@ const JornadaCompletePage: React.FC = () => {
 
   useEffect(() => {
     if (id && user) loadData();
+     
   }, [id, user]);
 
   useEffect(() => {
     if (!loading && journey) {
-      import('canvas-confetti').then(mod => {
-        mod.default({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+      import('canvas-confetti').then((mod) => {
+        mod.default({
+          particleCount: 180,
+          spread: 110,
+          origin: { y: 0.4 },
+          colors: ['#c9a84c', '#e8c547', '#b8860b', '#0B1F3A'],
+        });
       });
     }
   }, [loading, journey]);
@@ -61,23 +85,22 @@ const JornadaCompletePage: React.FC = () => {
       if (journeyRes.data) setJourney(journeyRes.data);
 
       if (progressRes.data) {
-        // Get step titles
-        const stepIds = progressRes.data.map(p => p.step_id);
+        const stepIds = progressRes.data.map((p) => p.step_id);
         const { data: steps } = await supabase
           .from('journey_steps')
           .select('id, title, step_order')
           .in('id', stepIds)
           .order('step_order', { ascending: true });
 
-        const stepMap = new Map(steps?.map(s => [s.id, s.title]) || []);
+        const stepMap = new Map(steps?.map((s) => [s.id, s.title]) || []);
         setReflections(
           progressRes.data
-            .filter(p => p.reflection)
-            .map(p => ({
+            .filter((p) => p.reflection)
+            .map((p) => ({
               title: stepMap.get(p.step_id) || 'Etapa',
               reflection: p.reflection!,
               completed_at: p.completed_at,
-            }))
+            })),
         );
       }
 
@@ -91,18 +114,17 @@ const JornadaCompletePage: React.FC = () => {
     }
   };
 
-  // Icons.Award XP and badges on first visit to completion page
   useEffect(() => {
     if (!loading && journey && user && !rewardsProcessed) {
       processRewards();
     }
+     
   }, [loading, journey, user, rewardsProcessed]);
 
   const processRewards = async () => {
     if (!user) return;
     setRewardsProcessed(true);
     try {
-      // Get profile
       const { data: profile } = await supabase
         .from('profiles')
         .select('xp, badges, streak, completed_books, total_minutes_read')
@@ -110,11 +132,7 @@ const JornadaCompletePage: React.FC = () => {
         .single();
       if (!profile) return;
 
-      // Count completed journeys (distinct journey_ids where all steps done)
-      const { data: allJourneys } = await supabase
-        .from('journeys')
-        .select('id')
-        .eq('is_active', true);
+      const { data: allJourneys } = await supabase.from('journeys').select('id').eq('is_active', true);
 
       let completedJourneyCount = 0;
       if (allJourneys) {
@@ -134,12 +152,10 @@ const JornadaCompletePage: React.FC = () => {
         }
       }
 
-      // Icons.Award XP: 100 per journey completion
       const xpGain = 100;
       const newXp = (profile.xp || 0) + xpGain;
       setXpAwarded(xpGain);
 
-      // Icons.Check badges
       const ctx: BadgeContext = {
         completedBooks: new Set(profile.completed_books || []),
         chaptersRead: {},
@@ -151,15 +167,10 @@ const JornadaCompletePage: React.FC = () => {
       const earned = checkNewBadges(profile.badges || [], ctx);
       setNewBadges(earned);
 
-      // Update profile
       const updatedBadges = [...(profile.badges || []), ...earned];
-      await supabase
-        .from('profiles')
-        .update({ xp: newXp, badges: updatedBadges })
-        .eq('id', user.id);
+      await supabase.from('profiles').update({ xp: newXp, badges: updatedBadges }).eq('id', user.id);
 
-      // Show toast for badges
-      earned.forEach(badgeId => {
+      earned.forEach((badgeId) => {
         const badge = getBadgeById(badgeId);
         if (badge) {
           toast.success(`${badge.icon} Nova conquista: ${badge.name}!`, {
@@ -173,20 +184,6 @@ const JornadaCompletePage: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
-      </div>
-    );
-  }
-
-  if (!journey) return null;
-
-  const completionDate = new Date().toLocaleDateString('pt-BR', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  });
-
   const shareCertificate = async () => {
     if (!certificateRef.current) return;
     setSharing(true);
@@ -197,26 +194,29 @@ const JornadaCompletePage: React.FC = () => {
         scale: 2,
         useCORS: true,
       });
-      const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
       if (!blob) throw new Error('Failed to generate image');
 
-      const file = new File([blob], `cathedra-certificado-${journey.title.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
+      const file = new File(
+        [blob],
+        `cathedra-certificado-${journey.title.replace(/\s+/g, '-').toLowerCase()}.png`,
+        { type: 'image/png' },
+      );
 
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: `Certificado: ${journey.title}`,
-          text: `Concluí a jornada "${journey.title}" no Cathedra! 🏅`,
+          text: `Concluí a jornada "${journey.title}" no Cathedra.`,
           files: [file],
         });
       } else {
-        // Fallback: download
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = file.name;
         a.click();
         URL.revokeObjectURL(url);
-        toast.success('Certificado salvo como imagem!');
+        toast.success('Certificado salvo como imagem.');
       }
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
@@ -227,186 +227,277 @@ const JornadaCompletePage: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-stitch-background">
+        <div className="mx-auto max-w-[900px] px-5 pt-16 md:px-16">
+          <div className="h-4 w-32 animate-pulse bg-stitch-surface-container-high" />
+          <div className="mt-8 h-[280px] w-full animate-pulse border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest" />
+          <div className="mt-8 h-16 w-full animate-pulse bg-stitch-surface-container-high" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!journey) return null;
+
+  const completionDate = new Date().toLocaleDateString('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
   return (
-    <div className="space-y-spacing-xl w-full pb-spacing-2xl">
-      {/* Back */}
-      <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
-        <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Jornadas
-      </Button>
+    <div
+      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      style={{
+        backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
+      }}
+    >
+      <Helmet>
+        <title>Jornada concluída — {journey.title} — Cathedra</title>
+      </Helmet>
 
-      {/* Certificate */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div ref={certificateRef}>
-          <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-            <CardContent className="p-spacing-xl text-center space-y-spacing-lg">
-              <div className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-                <Icons.Award className="w-spacing-xl h-spacing-xl text-primary" />
-              </div>
-
-              <div className="space-y-spacing-xs">
-                <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
-                <h1 className="text-premium-2xl md:text-premium-3xl font-bold font-serif text-foreground">{journey.title}</h1>
-                <p className="text-premium-sm text-muted-foreground italic">{journey.subtitle}</p>
-              </div>
-
-              <div className="border-t border-b border-border/50 py-spacing-md space-y-spacing-2xs">
-                <p className="text-premium-xs text-muted-foreground">Jornada concluída em</p>
-                <p className="text-premium-sm font-semibold text-foreground">{completionDate}</p>
-              </div>
-
-              <div className="flex items-center justify-center gap-spacing-xs text-premium-xs text-muted-foreground">
-                <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
-                <span>CATHEDRA — Digital Sanctuarium</span>
-                <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Share Button */}
-        <div className="flex justify-center mt-spacing-sm">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={shareCertificate}
-            disabled={sharing}
-            className="flex items-center gap-spacing-xs"
-          >
-            <Icons.Share2 className="w-spacing-md h-spacing-md" />
-            {sharing ? 'Gerando imagem...' : 'Compartilhar Certificado'}
-          </Button>
-        </div>
-      </motion.div>
-
-      {/* XP & Badges Reward */}
-      {(xpAwarded > 0 || newBadges.length > 0) && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+      <main className="mx-auto w-full max-w-[900px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
+        {/* Breadcrumb */}
+        <Link
+          to={AppRoute.JORNADAS}
+          className="inline-flex items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant transition-colors hover:text-stitch-secondary"
         >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
-            <CardContent className="p-spacing-lg space-y-spacing-md">
-              <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
-                <Icons.Star className="w-spacing-md h-spacing-md text-primary" /> Recompensas
+          <ArrowLeft className="h-3 w-3" /> Formação
+        </Link>
+
+        {/* Kicker de conclusão */}
+        <div className="mt-6 flex items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+          <Sparkles className="h-3 w-3" /> Jornada Concluída
+        </div>
+        <h1 className="mt-2 font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[58px] md:tracking-[-0.02em]">
+          Deo gratias.
+        </h1>
+        <p className="mt-3 max-w-[62ch] font-stitch-body text-[16px] leading-[28px] text-stitch-on-surface-variant md:text-[18px] md:leading-[30px]">
+          Você percorreu <span className="italic text-stitch-primary">{journey.title}</span>. Que o
+          que foi lido se torne oração, e o que foi orado se torne vida.
+        </p>
+
+        {/* ─── Certificado ───────────────────────────── */}
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-10"
+        >
+          <div ref={certificateRef}>
+            <div
+              className="relative overflow-hidden border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-8 text-center md:p-12"
+              style={{
+                backgroundImage:
+                  'url("https://www.transparenttextures.com/patterns/parchment.png")',
+              }}
+            >
+              <div className="pointer-events-none absolute inset-3 border border-stitch-secondary/20" />
+              <div className="relative">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-stitch-secondary/40 bg-stitch-secondary/10">
+                  <Award className="h-7 w-7 text-stitch-secondary" />
+                </div>
+                <p className="mt-6 font-stitch-body text-[11px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+                  Certificado de Conclusão
+                </p>
+                <h2 className="mt-3 font-stitch-display text-[26px] italic leading-[34px] text-stitch-primary md:text-[36px] md:leading-[44px]">
+                  {journey.title}
+                </h2>
+                {journey.subtitle && (
+                  <p className="mt-2 font-stitch-body text-[14px] italic text-stitch-on-surface-variant md:text-[15px]">
+                    {journey.subtitle}
+                  </p>
+                )}
+                <div className="mx-auto mt-8 max-w-xs border-t border-b border-stitch-secondary/20 py-4">
+                  <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.28em] text-stitch-on-surface-variant">
+                    Concluída em
+                  </p>
+                  <p className="mt-1 font-stitch-display text-[16px] italic text-stitch-primary">
+                    {completionDate}
+                  </p>
+                </div>
+                <p className="mt-6 font-stitch-body text-[10px] font-bold uppercase tracking-[0.4em] text-stitch-secondary">
+                  Cathedra · Digital Sanctuarium
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={shareCertificate}
+              disabled={sharing}
+              className="inline-flex items-center gap-2 border border-stitch-outline-variant/40 px-5 py-2.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:opacity-50"
+            >
+              {sharing ? (
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                <Share2 className="h-3.5 w-3.5" />
+              )}
+              {sharing ? 'Gerando imagem…' : 'Compartilhar Certificado'}
+            </button>
+          </div>
+        </motion.section>
+
+        {/* ─── Recompensas ───────────────────────────── */}
+        {(xpAwarded > 0 || newBadges.length > 0) && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mt-14"
+          >
+            <div className="mb-4 flex items-baseline justify-between">
+              <h2 className="flex items-center gap-2 font-stitch-display text-[22px] italic text-stitch-primary md:text-[26px]">
+                <Star className="h-4 w-4 text-stitch-secondary" /> Recompensas
               </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {xpAwarded > 0 && (
-                <div className="flex items-center gap-spacing-sm p-spacing-sm bg-primary/10 rounded-premium">
-                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center text-premium-lg">⚡</div>
+                <div className="flex items-center gap-4 border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stitch-secondary/15 text-stitch-secondary">
+                    <Zap className="h-5 w-5" />
+                  </div>
                   <div>
-                    <p className="text-premium-sm font-bold text-foreground">+{xpAwarded} XP</p>
-                    <p className="text-premium-xs text-muted-foreground">Por concluir esta jornada</p>
+                    <p className="font-stitch-display text-[20px] italic leading-none text-stitch-primary">
+                      +{xpAwarded} XP
+                    </p>
+                    <p className="mt-1 font-stitch-body text-[12px] text-stitch-on-surface-variant">
+                      Por concluir esta jornada
+                    </p>
                   </div>
                 </div>
               )}
-              {newBadges.map(badgeId => {
+              {newBadges.map((badgeId) => {
                 const badge = getBadgeById(badgeId);
                 if (!badge) return null;
                 return (
-                  <div key={badgeId} className="flex items-center gap-spacing-sm p-spacing-sm bg-accent/10 rounded-premium">
-                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-accent/20 flex items-center justify-center text-premium-lg">{badge.icon}</div>
-                    <div>
-                      <p className="text-premium-sm font-bold text-foreground">{badge.name}</p>
-                      <p className="text-premium-xs text-muted-foreground">{badge.description}</p>
+                  <div
+                    key={badgeId}
+                    className="flex items-center gap-4 border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-4"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stitch-secondary/10 text-[22px]">
+                      {badge.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-stitch-display text-[17px] italic text-stitch-primary">
+                        {badge.name}
+                      </p>
+                      <p className="mt-0.5 font-stitch-body text-[12px] leading-snug text-stitch-on-surface-variant">
+                        {badge.description}
+                      </p>
                     </div>
                   </div>
                 );
               })}
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
+            </div>
+          </motion.section>
+        )}
 
-      {/* Reflections Summary */}
-      {reflections.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="space-y-spacing-md"
-        >
-          <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
-            <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary" /> Suas Reflexões
-          </h2>
-
-          <div className="space-y-spacing-sm">
-            {reflections.map((r, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + i * 0.1 }}
-              >
-                <Card className="border-border/50">
-                  <CardContent className="p-spacing-md space-y-spacing-xs">
-                    <p className="text-premium-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
-                    <div className="flex gap-spacing-xs">
-                      <Icons.Quote className="w-spacing-md h-spacing-md text-muted-foreground flex-shrink-0 mt-spacing-3xs" />
-                      <p className="text-premium-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Next Journey Suggestion */}
-      {nextJourney && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="space-y-spacing-sm"
-        >
-          <h2 className="text-premium-lg font-bold text-foreground">Continue sua caminhada</h2>
-
-          <Card
-            className="border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
-            onClick={() => navigate(`/jornadas/${nextJourney.id}`)}
+        {/* ─── Reflexões ─────────────────────────────── */}
+        {reflections.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-14"
           >
-            <CardContent className="p-spacing-md flex items-center gap-spacing-md">
-              <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Icons.ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
+            <div className="mb-6 flex items-baseline justify-between">
+              <h2 className="flex items-center gap-2 font-stitch-display text-[22px] italic text-stitch-primary md:text-[26px]">
+                <BookOpen className="h-4 w-4 text-stitch-secondary" /> Suas Reflexões
+              </h2>
+              <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
+                {reflections.length} registro{reflections.length === 1 ? '' : 's'}
+              </span>
+            </div>
+            <div className="space-y-3">
+              {reflections.map((r, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + i * 0.06 }}
+                  className="border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-5"
+                >
+                  <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.22em] text-stitch-secondary">
+                    {r.title}
+                  </p>
+                  <div className="mt-3 flex gap-3">
+                    <Quote className="h-4 w-4 flex-shrink-0 text-stitch-secondary/60" />
+                    <p className="font-stitch-body text-[15px] italic leading-[26px] text-stitch-on-surface md:text-[16px] md:leading-[28px]">
+                      {r.reflection}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ─── Próxima jornada ───────────────────────── */}
+        {nextJourney && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            className="mt-14"
+          >
+            <h2 className="mb-4 font-stitch-display text-[22px] italic text-stitch-primary md:text-[26px]">
+              Continue sua caminhada
+            </h2>
+            <Link
+              to={`/jornadas/${nextJourney.id}`}
+              className="group relative flex items-center gap-5 border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary/50 hover:shadow-sm"
+            >
+              <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
+              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-stitch-secondary/10 text-stitch-secondary">
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </div>
-              <div className="flex-1 min-w-spacing-0">
-                <h3 className="font-bold text-premium-sm text-foreground">{nextJourney.title}</h3>
+              <div className="min-w-0 flex-1">
+                <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
+                  Próxima Jornada
+                </p>
+                <h3 className="mt-1 font-stitch-display text-[20px] italic text-stitch-primary md:text-[22px]">
+                  {nextJourney.title}
+                </h3>
                 {nextJourney.subtitle && (
-                  <p className="text-premium-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
+                  <p className="mt-1 line-clamp-2 font-stitch-body text-[13px] text-stitch-on-surface-variant">
+                    {nextJourney.subtitle}
+                  </p>
                 )}
               </div>
-              <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
+              <ChevronRight className="h-5 w-5 flex-shrink-0 text-stitch-on-surface-variant transition-colors group-hover:text-stitch-secondary" />
+            </Link>
+          </motion.section>
+        )}
 
-      {/* Actions */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9 }}
-        className="flex flex-col sm:flex-row gap-spacing-sm"
-      >
-        <Button
-          className="flex-1"
-          onClick={() => navigate(AppRoute.JORNADAS)}
+        {/* ─── Ações ─────────────────────────────────── */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.85 }}
+          className="mt-14 flex flex-col gap-2 sm:flex-row"
         >
-          Ver Todas as Jornadas
-        </Button>
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => navigate(`/jornadas/${id}`)}
-        >
-          Rever Etapas
-        </Button>
-      </motion.div>
+          <button
+            onClick={() => navigate(AppRoute.JORNADAS)}
+            className="inline-flex flex-1 items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90"
+          >
+            Ver todas as jornadas <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => navigate(`/jornadas/${id}`)}
+            className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary"
+          >
+            Rever etapas
+          </button>
+        </motion.section>
+
+        <p className="mt-16 border-t border-stitch-secondary/10 pt-6 text-center font-stitch-body text-[13px] italic text-stitch-on-surface-variant">
+          "Combati o bom combate, terminei a corrida, guardei a fé." — 2Tm 4,7
+        </p>
+      </main>
     </div>
   );
 };
