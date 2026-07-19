@@ -1,0 +1,52 @@
+name: Liturgia Tabs Guard
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/cathedra/LiturgiaPage.tsx'
+      - 'src/components/cathedra/TabUtils.tsx'
+      - 'src/components/ui/tabs.tsx'
+      - 'src/components/ui/button.tsx'
+      - 'src/index.css'
+      - 'tests/e2e/liturgia-tabs-*.spec.ts'
+      - '.github/workflows/liturgia-tabs.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/components/cathedra/LiturgiaPage.tsx'
+      - 'tests/e2e/liturgia-tabs-*.spec.ts'
+
+jobs:
+  liturgia-tabs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium webkit
+      - name: Run Liturgia tab suite (visual + a11y + tablet/mobile portrait + keyboard + dark)
+        env:
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/liturgia-tabs-mobile.spec.ts \
+            tests/e2e/liturgia-tabs-tablet.spec.ts \
+            tests/e2e/liturgia-tabs-desktop.spec.ts \
+            tests/e2e/liturgia-tabs-desktop-dark.spec.ts \
+            tests/e2e/liturgia-tabs-keyboard.spec.ts \
+            tests/e2e/liturgia-tabs-visual.spec.ts \
+            tests/e2e/liturgia-tabs-portrait.spec.ts \
+            tests/e2e/liturgia-tabs-a11y.spec.ts \
+            --project=chromium --reporter=list,html
+      - name: Upload Playwright report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liturgia-tabs-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
