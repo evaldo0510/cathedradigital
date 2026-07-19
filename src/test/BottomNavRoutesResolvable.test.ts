@@ -123,6 +123,13 @@ describe("Bottom nav e redirects — sem 404", () => {
       if (t.includes("${") || t.includes(":")) return false;
       // aceita rota exata OU prefixo que exista como rota (ex.: redirect para /admin/telemetry)
       if (isExactRouteMatch(t, routePaths)) return false;
+      // aceita se existe uma rota curinga que cobre esse prefixo (ex.: /admin/*)
+      const coveredByWildcard = Array.from(routePaths).some((p) => {
+        if (!p.endsWith("/*")) return false;
+        const base = p.slice(0, -2); // remove "/*"
+        return t === base || t.startsWith(`${base}/`);
+      });
+      if (coveredByWildcard) return false;
       // aceita se existe alguma rota que comece com esse path
       const hasPrefix = Array.from(routePaths).some(
         (p) => p === t || p.startsWith(`${t}/`)
