@@ -55,9 +55,10 @@ describe("DevocionalMobileShell (M9)", () => {
       expect(screen.getByText(kicker)).toBeInTheDocument();
 
       // BottomNav (identificado pela navegação principal)
-      expect(screen.getByRole("navigation")).toBeInTheDocument();
-      expect(screen.getByText("Átrio")).toBeInTheDocument();
-      expect(screen.getByText("Oração")).toBeInTheDocument();
+      const nav = screen.getByRole("navigation");
+      expect(nav).toBeInTheDocument();
+      expect(nav.textContent).toContain("Átrio");
+      expect(nav.textContent).toContain("Oração");
     },
   );
 });
