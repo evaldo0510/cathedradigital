@@ -139,6 +139,15 @@ const Rosary: React.FC = () => {
         step: stepIndex,
         label: `${s.name}|${currentMode}|${mysteryIndex}|${Math.round(elapsedMs)}|${startedAt}`,
       });
+      // Breadcrumb para "Voltar ao Rosário" em telas externas (ex.: Glossário).
+      markRosaryReturn({
+        setName: s.name,
+        mysteryLabel: `${mysteryIndex + 1}º mistério`,
+        mysteryIndex,
+        stepIndex,
+        elapsedMs: Math.round(elapsedMs),
+        startedAt,
+      });
     },
     [selectedSet],
   );
