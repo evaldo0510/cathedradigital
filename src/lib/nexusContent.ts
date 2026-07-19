@@ -18,7 +18,12 @@ const BIBLE_ABBR_BY_LOWER = new Map(BIBLE_CANON.map(b => [b.abbr.toLowerCase(), 
 
 function parseBibleReference(ref: string | null | undefined): { book?: string; chapter?: number; verse?: number } {
   if (!ref || typeof ref !== 'string') return {};
-  const m = ref.trim().match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.]\s*(\d+))?/);
+  // Normaliza prefixo romano ("I Co" → "1 Co", "II Sm" → "2 Sm", "III Jo" → "3 Jo").
+  // Só aplica quando romano é seguido por espaço, evitando conflito com "Is", "It" etc.
+  const ROMAN: Record<string, string> = { I: '1', II: '2', III: '3' };
+  const normalized = ref.trim().replace(/^(III|II|I)\s+/i, (_, r) => `${ROMAN[r.toUpperCase()]} `);
+  // Separadores aceitos entre capítulo e versículo: , : . -
+  const m = normalized.match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.\-]\s*(\d+))?/);
   if (!m) return {};
   const rawBook = m[1].replace(/\s+/g, '').toLowerCase();
   const abbr = BIBLE_ABBR_BY_LOWER.get(rawBook);
