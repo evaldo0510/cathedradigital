@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const AXE_REPORT_DIR = join('playwright-report', 'axe', 'liturgia-tabs');
+mkdirSync(AXE_REPORT_DIR, { recursive: true });
 
 /**
  * Executa axe-core no meio da alternância de abas da Liturgia
