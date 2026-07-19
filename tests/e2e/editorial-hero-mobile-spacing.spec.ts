@@ -7,16 +7,27 @@ import { test, expect, devices } from '@playwright/test';
  * - Se o padding topo real for < 24px, falha (proxy para colagem visual).
  */
 
-const HEROS = [
-  { route: '/biblia', name: 'Bible' },
-  { route: '/magisterio', name: 'Magisterium' },
-  { route: '/santos', name: 'Saints' },
+// Cobertura completa das páginas que consomem EditorialHero.
+// Ao adicionar uma nova rota que use <EditorialHero>, inclua-a aqui.
+export const EDITORIAL_HERO_ROUTES = [
+  { route: '/biblia', name: 'Bible', variant: 'legacy' as const },
+  { route: '/magisterio', name: 'Magisterium', variant: 'legacy' as const },
+  { route: '/santos', name: 'Saints', variant: 'legacy' as const },
+  { route: '/biblioteca', name: 'Biblioteca', variant: 'editorial' as const },
 ];
 
+const HEROS = EDITORIAL_HERO_ROUTES;
 const MOBILE_WIDTHS = [320, 375, 414];
-const MIN_MOBILE_TOP_PADDING = 24; // px — abaixo disso consideramos "colado"
+const MIN_MOBILE_TOP_PADDING_LEGACY = 24; // px — abaixo disso consideramos "colado"
+const MIN_MOBILE_TOP_PADDING_EDITORIAL = 16; // editorial usa escala fluida, tolerância menor
 
-for (const { route, name } of HEROS) {
+
+for (const { route, name, variant: expectedVariant } of HEROS) {
+  const minTop =
+    expectedVariant === 'legacy'
+      ? MIN_MOBILE_TOP_PADDING_LEGACY
+      : MIN_MOBILE_TOP_PADDING_EDITORIAL;
+
   for (const width of MOBILE_WIDTHS) {
     test(`${name} hero @${width}px não fica colado no topo`, async ({ browser }) => {
       const ctx = await browser.newContext({
@@ -33,7 +44,7 @@ for (const { route, name } of HEROS) {
       );
       expect
         .soft(paddingTop, `${name} @${width}px paddingTop=${paddingTop}`)
-        .toBeGreaterThanOrEqual(MIN_MOBILE_TOP_PADDING);
+        .toBeGreaterThanOrEqual(minTop);
 
       await hero.screenshot({
         path: `test-results/hero-${name}-${width}.png`,
@@ -55,20 +66,21 @@ for (const { route, name } of HEROS) {
     const mHero = mPage.locator('[data-editorial-hero]').first();
     await Promise.all([dHero.waitFor({ state: 'visible' }), mHero.waitFor({ state: 'visible' })]);
 
-    const [dPad, mPad, variant] = await Promise.all([
+    const [dPad, mPad, variant, topSpacing] = await Promise.all([
       dHero.evaluate((el) => parseFloat(getComputedStyle(el).paddingTop || '0')),
       mHero.evaluate((el) => parseFloat(getComputedStyle(el).paddingTop || '0')),
       dHero.getAttribute('data-variant'),
+      dHero.getAttribute('data-top-spacing'),
     ]);
-    // Ambos > 0 e mobile ≥ MIN
     expect.soft(dPad, `${name} desktop paddingTop`).toBeGreaterThan(0);
-    expect.soft(mPad, `${name} mobile paddingTop`).toBeGreaterThanOrEqual(MIN_MOBILE_TOP_PADDING);
+    expect.soft(mPad, `${name} mobile paddingTop`).toBeGreaterThanOrEqual(minTop);
+    expect.soft(variant, `${name} variant`).toBe(expectedVariant);
     // Variant legacy DEVE ter topSpacing safe (default do componente).
-    if (variant === 'legacy') {
-      const topSpacing = await dHero.getAttribute('data-top-spacing');
+    if (expectedVariant === 'legacy') {
       expect.soft(topSpacing, `${name} topSpacing`).toBe('safe');
     }
     await desktopCtx.close();
     await mobileCtx.close();
   });
 }
+

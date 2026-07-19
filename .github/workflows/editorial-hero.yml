@@ -1,0 +1,98 @@
+name: Editorial Hero — Spacing & Visual Regression
+
+# Gate rápido dedicado aos heros editoriais. Falha o PR quando:
+#   - um EditorialHero volta a "colar" no topo em mobile (paddingTop < 24px legacy / 16px editorial)
+#   - o pixel-diff desktop×mobile do hero regride além do threshold
+#   - uma rota nova de EditorialHero não foi adicionada em EDITORIAL_HERO_ROUTES
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'src/components/editorial/**'
+      - 'src/components/cathedra/BibleHome.tsx'
+      - 'src/components/cathedra/Magisterium.tsx'
+      - 'src/components/cathedra/Saints.tsx'
+      - 'src/components/cathedra/BibliotecaPage.tsx'
+      - 'tests/e2e/editorial-hero-*.spec.ts'
+      - 'tests/e2e/__snapshots__/editorial-hero-*/**'
+      - 'playwright.config.ts'
+      - '.github/workflows/editorial-hero.yml'
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: editorial-hero-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  editorial-hero:
+    name: Editorial Hero (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('**/bun.lockb', '**/package.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: bunx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Install Playwright OS deps
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: bunx playwright install-deps ${{ matrix.project }}
+
+      - name: Build app
+        run: bun run build
+
+      - name: Start preview server
+        run: |
+          bun run preview --port 8080 --host 127.0.0.1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8080 >/dev/null; then
+              echo "preview is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "preview failed to start"; exit 1
+
+      - name: Run Editorial Hero specs
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            --project=${{ matrix.project }} \
+            tests/e2e/editorial-hero-mobile-spacing.spec.ts \
+            tests/e2e/editorial-hero-visual-regression.spec.ts
+
+      - name: Upload diffs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editorial-hero-diff-${{ matrix.project }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+          if-no-files-found: ignore
