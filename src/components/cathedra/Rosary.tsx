@@ -200,26 +200,6 @@ const Rosary: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /* Sessão de oração                                                           */
   /* -------------------------------------------------------------------------- */
-  // Handlers estáveis para evitar re-render/loop no <RosarySession/>.
-  const saveRef = useRef(save);
-  useEffect(() => {
-    saveRef.current = save;
-  }, [save]);
-
-  const handleClose = useCallback(() => setIsPraying(false), []);
-  const handleProgress = useCallback(
-    (stepIndex: number, mysteryIndex: number, currentMode: RosaryMode) => {
-      if (!selectedSet) return;
-      const s = MYSTERY_SETS[selectedSet];
-      saveRef.current({
-        section: selectedSet,
-        step: stepIndex,
-        label: `${s.name}|${currentMode}|${mysteryIndex}`,
-      });
-    },
-    [selectedSet],
-  );
-
   if (isPraying) {
     return (
       <RosarySession
@@ -232,6 +212,7 @@ const Rosary: React.FC = () => {
       />
     );
   }
+
 
 
   /* -------------------------------------------------------------------------- */
