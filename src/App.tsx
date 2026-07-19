@@ -86,6 +86,8 @@ const ItinerariumDetailPage = lazy(() => import('./components/cathedra/Itinerari
 const ItinerariumStepPage = lazy(() => import('./components/cathedra/ItinerariumStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
+const AtriumBibleReader = lazy(() => import('./pages/AtriumBibleReader'));
+const AtriumCatechismReader = lazy(() => import('./pages/AtriumCatechismReader'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
@@ -464,9 +466,11 @@ const AppLayout: React.FC = () => {
               <Route path="/dev/editorial" element={<Suspense fallback={<LoadingFallback />}><EditorialShowcase /></Suspense>} />
 
 
-              <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
+              <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><AtriumBibleReader /></Suspense>} />
+              <Route path="/bible-legacy" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
-              <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
+              <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
+              <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
