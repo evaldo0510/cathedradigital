@@ -82,15 +82,16 @@ export function formatNexusContent(data: any, type: string): TagContent {
   else if (data.type === 'catechism') fallbackReference = 'Catecismo';
   else if (data.type === 'magisterium') fallbackReference = 'Magistério';
 
-  const baseMeta: any = {
-    ...(data.metadata || {}),
-    tags: data.tags || []
-  };
+  // Normaliza metadata com zod: aceita apenas objeto plano; qualquer outra
+  // forma (array, null, string, number) vira {} — evita spread inseguro.
+  const safeMeta = NexusMetadataSchema.parse((data as any)?.metadata);
+  const safeTags = Array.isArray((data as any)?.tags) ? (data as any).tags : [];
+  const baseMeta: any = { ...safeMeta, tags: safeTags };
 
   // Enriquecimento: itens bíblicos frequentemente vêm com metadata {} no banco.
   // Parseia reference_id para popular book/chapter/verse, evitando reason:no-route.
-  if (data.type === 'bible' && (!baseMeta.book || !baseMeta.chapter)) {
-    const parsed = parseBibleReference(data.reference_id);
+  if (data?.type === 'bible' && (!baseMeta.book || !baseMeta.chapter)) {
+    const parsed = parseBibleReference((data as any)?.reference_id);
     if (parsed.book && parsed.chapter) {
       baseMeta.book = baseMeta.book || parsed.book;
       baseMeta.chapter = baseMeta.chapter || parsed.chapter;
