@@ -32,6 +32,8 @@ const Rosary: React.FC = () => {
   const [mode, setMode] = useState<RosaryMode>("guiado");
   const [intention, setIntention] = useState("");
   const [resumeStepIndex, setResumeStepIndex] = useState<number | undefined>(undefined);
+  const [resumeElapsedMs, setResumeElapsedMs] = useState<number>(0);
+  const [resumeStartedAt, setResumeStartedAt] = useState<string | undefined>(undefined);
 
   const { progress, loaded, save } = useDevotionalProgress("rosary");
   const { setIndex, setFavorite } = useDevotionalReader();
@@ -45,13 +47,16 @@ const Rosary: React.FC = () => {
     if (section && MYSTERY_SETS[section]) {
       setSelectedSet(section);
     }
-    // Decodificar label = `${name}|${mode}|${mysteryIndex}`
+    // Decodificar label = `${name}|${mode}|${mysteryIndex}|${elapsedMs}|${startedAt}`
     if (progress.label) {
       const parts = String(progress.label).split("|");
       const savedMode = parts[1] as RosaryMode | undefined;
       if (savedMode === "contemplativo" || savedMode === "guiado" || savedMode === "automatico") {
         setMode(savedMode);
       }
+      const savedElapsed = Number(parts[3]);
+      if (Number.isFinite(savedElapsed) && savedElapsed > 0) setResumeElapsedMs(savedElapsed);
+      if (parts[4]) setResumeStartedAt(parts[4]);
     }
     if (typeof progress.step === "number" && progress.step > 0) {
       setResumeStepIndex(progress.step);
@@ -72,6 +77,8 @@ const Rosary: React.FC = () => {
           onSelect: () => {
             setSelectedSet(key);
             setResumeStepIndex(undefined);
+            setResumeElapsedMs(0);
+            setResumeStartedAt(undefined);
           },
         };
       }),
@@ -99,13 +106,19 @@ const Rosary: React.FC = () => {
   }, [save]);
   const handleClose = useCallback(() => setIsPraying(false), []);
   const handleProgress = useCallback(
-    (stepIndex: number, mysteryIndex: number, currentMode: RosaryMode) => {
+    (
+      stepIndex: number,
+      mysteryIndex: number,
+      currentMode: RosaryMode,
+      elapsedMs: number,
+      startedAt: string,
+    ) => {
       if (!selectedSet) return;
       const s = MYSTERY_SETS[selectedSet];
       saveRef.current({
         section: selectedSet,
         step: stepIndex,
-        label: `${s.name}|${currentMode}|${mysteryIndex}`,
+        label: `${s.name}|${currentMode}|${mysteryIndex}|${Math.round(elapsedMs)}|${startedAt}`,
       });
     },
     [selectedSet],
