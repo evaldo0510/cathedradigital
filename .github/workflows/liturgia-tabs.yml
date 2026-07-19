@@ -44,6 +44,9 @@ jobs:
             tests/e2e/liturgia-tabs-a11y.spec.ts \
             tests/e2e/liturgia-tabs-toggle.spec.ts \
             tests/e2e/liturgia-tabs-focus-ring.spec.ts \
+            tests/e2e/liturgia-tabs-aria.spec.ts \
+            tests/e2e/liturgia-tabs-dark-responsive.spec.ts \
+            tests/e2e/liturgia-tabs-panel-content.spec.ts \
             --project=chromium --reporter=list,html
 
       - name: Upload Playwright HTML report
