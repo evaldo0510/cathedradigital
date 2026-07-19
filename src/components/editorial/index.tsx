@@ -520,3 +520,66 @@ export const EditorialFooter: React.FC<EditorialFooterProps> = ({
     </div>
   </footer>
 );
+
+/* ------------------------------------------------------------------ */
+/* ReaderHeader — cabeçalho editorial dos Readers (R2)                */
+/* ------------------------------------------------------------------ */
+
+export interface EditorialReaderHeaderProps
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+  /** Kicker versalete dourado (ex: "Sagrada Escritura · Evangelho"). */
+  kicker?: React.ReactNode;
+  /** Título editorial em serif italic (ex: "João · Capítulo 6"). */
+  title: React.ReactNode;
+  /** Subtítulo em Karla, discreto (ex: "Novo Testamento · São João Apóstolo"). */
+  subtitle?: React.ReactNode;
+  /** Metadados marginais opcionais (autor/data/categoria). */
+  meta?: React.ReactNode;
+  /** Alinhamento do bloco. Default: center. */
+  align?: 'center' | 'left';
+}
+
+export const EditorialReaderHeader: React.FC<EditorialReaderHeaderProps> = ({
+  kicker,
+  title,
+  subtitle,
+  meta,
+  align = 'center',
+  className,
+  ...rest
+}) => (
+  <header
+    className={cn(
+      'relative py-spacing-2xl',
+      align === 'center' ? 'text-center' : 'text-left',
+      className,
+    )}
+    {...rest}
+  >
+    {kicker && (
+      <p className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium mb-spacing-md">
+        {kicker}
+      </p>
+    )}
+    <h1 className="font-serif italic text-primary text-4xl md:text-5xl leading-tight">
+      {title}
+    </h1>
+    {subtitle && (
+      <p className="font-sans text-primary/60 text-sm md:text-base mt-spacing-md max-w-xl mx-auto">
+        {subtitle}
+      </p>
+    )}
+    <div
+      aria-hidden
+      className={cn(
+        'h-px w-16 bg-secondary/40 mt-spacing-lg',
+        align === 'center' && 'mx-auto',
+      )}
+    />
+    {meta && (
+      <div className="mt-spacing-md text-[10px] uppercase tracking-[0.28em] text-primary/50">
+        {meta}
+      </div>
+    )}
+  </header>
+);

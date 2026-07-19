@@ -6,6 +6,7 @@ import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 
 interface Verse {
   number: number;
@@ -72,79 +73,41 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
   return (
     <div className="relative pb-32">
-      {/* Book Title & Context */}
-      <div className="px-6 py-10 text-center space-y-4">
-        <motion.h2 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="font-display text-4xl text-primary/80 uppercase tracking-tighter"
-        >
-          {book.name}
-        </motion.h2>
-        
-        {book.description && (
-          <p className="text-sm font-serif italic text-primary/60 max-w-xs mx-auto">
-            {book.description}
-          </p>
-        )}
+      {/* Cabeçalho editorial — padrão R2 (Reader Universal) */}
+      <EditorialReaderHeader
+        kicker={`Sagrada Escritura${book.category ? ` · ${book.category}` : ''}`}
+        title={<>{book.name} <span className="text-primary/40">·</span> Capítulo {chapter}</>}
+        subtitle={book.chapterTitles?.[chapter] || book.description}
+        meta={book.author ? `${book.author}${book.date ? ` · ${book.date}` : ''}` : undefined}
+      />
 
-        <div className="flex items-center justify-center gap-4 py-4">
-          <div className="h-px w-8 bg-primary/10" />
-          <span className="font-display text-xl text-secondary">Capítulo {chapter}</span>
-          <div className="h-px w-8 bg-primary/10" />
-        </div>
-
-        {book.chapterTitles?.[chapter] && (
-          <motion.h3 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-lg font-display text-primary/70 italic max-w-sm mx-auto"
-          >
-            {book.chapterTitles[chapter]}
-          </motion.h3>
-        )}
-        
-        {chapter === 1 && (book.context || book.author || book.themes) && (
-          <div className="mt-8 p-6 rounded-3xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
-             <div className="flex items-center justify-between">
-               <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Introdução ao Livro</span>
-               {book.category && <span className="text-[10px] font-black uppercase tracking-widest text-primary/30">{book.category}</span>}
-             </div>
-             
-             {book.context && (
-               <p className="text-sm font-serif leading-relaxed text-primary/70">
-                 {book.context}
-               </p>
-             )}
-
-             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-primary/5">
-                {book.author && (
-                  <div>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block">Autor</span>
-                    <span className="text-xs font-serif text-primary/60">{book.author}</span>
-                  </div>
-                )}
-                {book.date && (
-                  <div>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block">Data</span>
-                    <span className="text-xs font-serif text-primary/60">{book.date}</span>
-                  </div>
-                )}
-             </div>
-
-             {book.themes && (
-               <div className="pt-2">
-                 <span className="text-[9px] font-bold uppercase tracking-widest text-primary/40 block mb-1">Temas Principais</span>
-                 <div className="flex flex-wrap gap-2">
-                   {book.themes.map(t => (
-                     <span key={t} className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-primary/5 text-primary/50">{t}</span>
-                   ))}
-                 </div>
-               </div>
-             )}
+      {/* Introdução ao livro — só no capítulo 1 */}
+      {chapter === 1 && (book.context || book.themes) && (
+        <div className="max-w-2xl mx-auto px-6 -mt-spacing-md mb-spacing-2xl">
+          <div className="p-6 rounded-2xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
+            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+              Introdução ao livro
+            </span>
+            {book.context && (
+              <p className="text-sm font-serif italic leading-relaxed text-primary/70">
+                {book.context}
+              </p>
+            )}
+            {book.themes && (
+              <div className="pt-2 border-t border-primary/5">
+                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 block mb-2">
+                  Temas principais
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {book.themes.map(t => (
+                    <span key={t} className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-secondary/10 text-secondary/80">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Verses Container */}
       <div 
@@ -185,7 +148,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 )}
               >
                 <div className="flex items-start gap-4">
-                  <sup className="mt-2 text-[10px] font-black text-secondary/40 select-none tabular-nums">
+                  <sup className="mt-2 text-[10px] font-medium text-secondary/70 select-none tabular-nums tracking-wider">
                     {v.number}
                   </sup>
                   <p className={cn(
@@ -241,6 +204,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
       {/* Bloco de continuidade — fim do capítulo */}
       <div className="px-spacing-lg pb-spacing-2xl">
+        <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
         <div className="mb-spacing-lg">
           <NexusBubbles />
         </div>
