@@ -188,9 +188,23 @@ const MissalPage: React.FC = () => {
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">
-                {section.parts.map((part, i) => (
+                {section.parts.map((part, i) => {
+                  const contentId = `${section.id}:${slugify(part.label)}`;
+                  const fav = isFavorited('missal_part', contentId);
+                  return (
                   <div key={i} className="p-spacing-md space-y-spacing-sm">
-                    <h4 className="text-premium-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
+                    <div className="flex items-start justify-between gap-spacing-sm">
+                      <h4 className="text-premium-sm font-black uppercase tracking-widest text-primary flex-1">{part.label}</h4>
+                      <button
+                        type="button"
+                        aria-label={fav ? `Remover ${part.label} dos favoritos` : `Adicionar ${part.label} aos favoritos`}
+                        aria-pressed={fav}
+                        onClick={() => handleFavPart(section.id, part.label, part.text)}
+                        className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors ${fav ? 'text-secondary' : 'text-muted-foreground hover:text-primary'}`}
+                      >
+                        <Star className={`h-4 w-4 ${fav ? 'fill-current' : ''}`} />
+                      </button>
+                    </div>
                     {showRubrics && part.rubric && (
                       <p className="text-premium-xs text-primary font-medium italic bg-secondary/5 rounded-premium-full px-spacing-md py-spacing-xs border border-secondary/10">
                         ✠ {part.rubric}
@@ -201,7 +215,8 @@ const MissalPage: React.FC = () => {
                     )}
                     <p className="text-premium-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
