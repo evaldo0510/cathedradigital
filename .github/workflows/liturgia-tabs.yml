@@ -58,6 +58,10 @@ jobs:
             tests/e2e/liturgia-tabs-aria-linkage.spec.ts \
             tests/e2e/liturgia-tabs-axe-theme-dynamic.spec.ts \
             tests/e2e/liturgia-tabs-axe-tab-switch-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-reduced-motion-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-overflow-scroll.spec.ts \
+            tests/e2e/liturgia-tabs-console-clean.spec.ts \
+            tests/e2e/liturgia-tabs-roving-focus-dynamic.spec.ts \
             --project=chromium --reporter=list,html
 
       - name: Upload Playwright HTML report
