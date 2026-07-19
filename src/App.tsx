@@ -95,6 +95,9 @@ const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
 const AtriumMagisteriumViewer = lazy(() => import('./pages/AtriumMagisteriumViewer'));
 
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
+const AtriumCommunityPage = lazy(() => import('./pages/AtriumCommunityPage'));
+const AtriumCommunityPostPage = lazy(() => import('./pages/AtriumCommunityPostPage'));
+const AtriumCommunityProfilePage = lazy(() => import('./pages/AtriumCommunityProfilePage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
