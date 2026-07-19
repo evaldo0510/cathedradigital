@@ -257,6 +257,8 @@ const AtriumBuscarPage: React.FC = () => {
           </section>
         )}
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
