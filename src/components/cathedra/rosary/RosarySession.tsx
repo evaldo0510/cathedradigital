@@ -651,17 +651,29 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   }
 
   if (phase.kind === "fatima") {
+    const isFinal = phase.mysteryIndex === 4;
     return (
-      <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+      <div className="space-y-spacing-lg text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/75">
           {phase.mysteryIndex + 1}º Mistério · Oração de Fátima
         </p>
         <p className="italic font-serif text-premium-lg text-secondary/85 leading-relaxed max-w-prose mx-auto">
           {PRAYER_TEXT.fatima.text}
         </p>
+
+        {/* Continuação inteligente por mistério (não apenas no closing). */}
+        {mystery && !isFinal && (
+          <MysteryContinuation
+            mystery={mystery}
+            setKey={set.key}
+            onCtaClick={onCtaClick}
+          />
+        )}
       </div>
     );
   }
+
+
 
   // closing
   const finalMystery = set.mysteries[4];
