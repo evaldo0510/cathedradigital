@@ -213,6 +213,10 @@ const CATEGORY_COLORS: Record<string, string> = {
 const LitaniesPage: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const { setIndex, setFavorite } = useDevotionalReader();
+  const openingRef = useRef<HTMLDivElement | null>(null);
+  const invocationsRef = useRef<HTMLDivElement | null>(null);
+  const closingRef = useRef<HTMLDivElement | null>(null);
 
   const filtered = useMemo(() => {
     if (!searchQuery) return LITANIES;
@@ -221,6 +225,45 @@ const LitaniesPage: React.FC = () => {
   }, [searchQuery]);
 
   const litany = LITANIES.find(l => l.id === selectedId);
+
+  // Publica o índice de seções e o alvo favoritável enquanto uma ladainha está aberta.
+  useEffect(() => {
+    if (!litany) {
+      setIndex('Índice', []);
+      setFavorite(null);
+      return;
+    }
+    const scrollTo = (el: HTMLElement | null) =>
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const items = [
+      ...(litany.opening
+        ? [{ id: 'opening', label: 'Abertura', hint: 'Kyrie', onSelect: () => scrollTo(openingRef.current) }]
+        : []),
+      {
+        id: 'invocations',
+        label: 'Invocações',
+        hint: `${litany.invocations.length} súplicas`,
+        onSelect: () => scrollTo(invocationsRef.current),
+      },
+      ...(litany.closing
+        ? [{ id: 'closing', label: 'Encerramento', hint: 'Agnus Dei', onSelect: () => scrollTo(closingRef.current) }]
+        : []),
+    ];
+    setIndex(litany.title, items);
+    setFavorite({
+      contentType: 'litany',
+      contentId: litany.id,
+      title: litany.title,
+      content: litany.latin ?? null,
+      url: '/litanies',
+      metadata: { category: litany.category },
+    });
+    return () => {
+      setIndex('Índice', []);
+      setFavorite(null);
+    };
+  }, [litany, setIndex, setFavorite]);
+
 
   if (litany) {
     return (
