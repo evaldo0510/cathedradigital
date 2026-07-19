@@ -25,14 +25,19 @@ const ROUTES: Record<RouteKey, RouteEntry> = {
   'env.formar-se':        { template: '/jornadas' },
   'env.pesquisar':        { template: '/buscar' },
   'env.minha-jornada':    { template: '/hoje' },
-  'study.composed':       { template: '/estudar/tema/:slug',                requires: ['slug'] },
-  'study.bible':          { template: '/estudar/biblia/:book/:chapter',    requires: ['book', 'chapter'] },
-  'study.catechism':      { template: '/estudar/catecismo/:paragraph',     requires: ['paragraph'] },
-  'study.magisterium':    { template: '/estudar/magisterio/:doc',          requires: ['doc'] },
-  'study.father':         { template: '/estudar/padres/:slug',             requires: ['slug'] },
-  'study.saint':          { template: '/estudar/santos/:slug',             requires: ['slug'] },
-  'pray.lectio':          { template: '/rezar/lectio/:slug',               requires: ['slug'] },
-  'pray.liturgy-today':   { template: '/rezar/liturgia/hoje' },
+  // Rotas de estudo — alinhadas às rotas reais registradas em src/App.tsx.
+  // Antes usavam prefixo /estudar/* que não existe e causava 404 no Nexus.
+  'study.composed':       { template: '/temas/:slug',                     requires: ['slug'] },
+  'study.bible':          { template: '/bible?book=:book&chapter=:chapter', requires: ['book', 'chapter'] },
+  'study.catechism':      { template: '/catechism?p=:paragraph',           requires: ['paragraph'] },
+  'study.magisterium':    { template: '/magisterium/:doc',                 requires: ['doc'] },
+  // TODO: não existe rota canônica para Padres da Igreja. Aponta para /biblioteca
+  // provisoriamente para evitar 404 até definição de produto.
+  'study.father':         { template: '/biblioteca?padre=:slug',           requires: ['slug'] },
+  'study.saint':          { template: '/santos/:slug',                     requires: ['slug'] },
+  // Rotas de oração — alinhadas ao App.tsx (/lectio, /liturgia).
+  'pray.lectio':          { template: '/lectio?slug=:slug',                requires: ['slug'] },
+  'pray.liturgy-today':   { template: '/liturgia' },
 };
 
 function apply(template: string, params: Params): string {
