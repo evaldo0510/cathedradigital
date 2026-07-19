@@ -25,6 +25,7 @@ import {
 } from "./rosary/mysteries";
 import { RosaryArt } from "./rosary/RosaryArt";
 import { RosarySession, type RosaryMode } from "./rosary/RosarySession";
+import { markRosaryReturn, clearRosaryReturn } from "@/lib/rosaryReturnContext";
 
 function formatElapsed(ms: number): string {
   if (!ms || ms < 1000) return "0min";
