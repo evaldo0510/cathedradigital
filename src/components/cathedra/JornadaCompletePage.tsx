@@ -442,27 +442,33 @@ const JornadaCompletePage: React.FC = () => {
 
           <div className="mt-4 flex justify-center">
             <button
-              onClick={shareCertificate}
+              onClick={() => {
+                if (!canShareCertificate) {
+                  toast.error(
+                    !hasCertificateData
+                      ? 'Dados da jornada indisponíveis.'
+                      : 'Conclua todas as etapas antes de compartilhar o certificado.',
+                  );
+                  return;
+                }
+                setShowPreview(true);
+              }}
               disabled={sharing || !canShareCertificate}
               aria-disabled={!canShareCertificate}
               aria-label={
                 canShareCertificate
-                  ? 'Compartilhar certificado'
+                  ? 'Visualizar e compartilhar certificado'
                   : 'Conclua todas as etapas para compartilhar o certificado'
               }
               title={
                 canShareCertificate
-                  ? 'Compartilhar certificado'
+                  ? 'Visualizar antes de compartilhar'
                   : 'Conclua todas as etapas para liberar'
               }
               className="inline-flex items-center gap-2 border border-stitch-outline-variant/40 px-5 py-2.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {sharing ? (
-                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              ) : (
-                <Share2 className="h-3.5 w-3.5" />
-              )}
-              {sharing ? 'Gerando imagem…' : 'Compartilhar Certificado'}
+              <Eye className="h-3.5 w-3.5" />
+              Visualizar e Compartilhar
             </button>
           </div>
         </motion.section>
