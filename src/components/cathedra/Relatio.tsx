@@ -387,6 +387,7 @@ const Relatio: React.FC<RelatioProps> = ({
                               <Button
                                 variant="ghost"
                                 size="icon"
+                                aria-label={isFav ? `Remover ${item.title} dos favoritos` : `Salvar ${item.title} nos favoritos`}
                                 className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5"
                                 onClick={(e) => {
                                   e.stopPropagation();
