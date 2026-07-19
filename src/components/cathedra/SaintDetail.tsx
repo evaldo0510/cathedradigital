@@ -117,7 +117,14 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
       {/* Content Area */}
       <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
-        
+
+        <EditorialReaderHeader
+          kicker={`Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+          title={saint.name}
+          subtitle={saint.title}
+          meta={[saint.feastDay && `Festa · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
+        />
+
         {/* Top Icons.Info Strip */}
         <div className="flex flex-wrap items-center gap-spacing-lg">
           <div className="flex items-center gap-spacing-sm">
