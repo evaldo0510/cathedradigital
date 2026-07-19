@@ -1,36 +1,29 @@
 import { test, expect } from '@playwright/test';
-import { EDITORIAL_HERO_ROUTES } from './editorial-hero-mobile-spacing.spec';
+import {
+  EDITORIAL_HERO_ROUTES,
+  VISUAL_VIEWPORTS,
+  MASK_SELECTORS,
+  getMaxDiff,
+} from './editorial-hero.config';
 
 /**
  * Regressão visual pixel-diff dos EditorialHero.
  *
- * Estratégia:
- * - Captura screenshot do elemento [data-editorial-hero] em desktop (1280)
- *   e em mobile (375) para cada rota.
- * - Compara com baseline (playwright-snapshots) via toHaveScreenshot.
- *   Falha automaticamente se:
- *     - padding do topo mudar (hero volta a "colar")
- *     - tipografia/alinhamento regredirem
- *     - badge/ícone mudarem de posição
+ * Cobre viewports extremos (320) + tablet (768) além de 375/1280 para
+ * reduzir risco de regressões que passam nos breakpoints "seguros".
  *
- * Complementa o check de paddingTop (mobile-spacing) capturando drift visual
- * que valores computados não detectam (ex.: transform, font metrics, filete).
+ * Configuração centralizada em `editorial-hero.config.ts`
+ * (breakpoints, thresholds e overrides por rota/variant).
  *
- * Como atualizar baselines legítimas:
- *   bunx playwright test editorial-hero-visual-regression --update-snapshots
+ * Atualizar baselines:
+ *   bun run test:editorial-hero:update
  */
 
-const VIEWPORTS = [
-  { name: 'desktop', width: 1280, height: 900 },
-  { name: 'mobile', width: 375, height: 900 },
-] as const;
+for (const routeCfg of EDITORIAL_HERO_ROUTES) {
+  const { route, name } = routeCfg;
+  const maxDiff = getMaxDiff(routeCfg);
 
-// Máscaras para conteúdo volátil (data dinâmica, contagens, etc.).
-// Vazio por default — heros são estáticos. Adicione seletores aqui se surgir flake.
-const MASK_SELECTORS: string[] = [];
-
-for (const { route, name } of EDITORIAL_HERO_ROUTES) {
-  for (const vp of VIEWPORTS) {
+  for (const vp of VISUAL_VIEWPORTS) {
     test(`visual: ${name} hero @${vp.name}`, async ({ browser }) => {
       const ctx = await browser.newContext({
         viewport: { width: vp.width, height: vp.height },
@@ -41,26 +34,25 @@ for (const { route, name } of EDITORIAL_HERO_ROUTES) {
       await page.goto(route, { waitUntil: 'domcontentloaded' });
       const hero = page.locator('[data-editorial-hero]').first();
       await hero.waitFor({ state: 'visible', timeout: 20_000 });
-      // Aguardar fontes para evitar diff por fallback → serif final.
-      await page.evaluate(() => (document as unknown as { fonts: { ready: Promise<void> } }).fonts.ready);
-      // Pequena estabilização para animações CSS de entrada.
+      await page.evaluate(() =>
+        (document as unknown as { fonts: { ready: Promise<void> } }).fonts.ready,
+      );
       await page.waitForTimeout(400);
 
       await expect(hero).toHaveScreenshot(`hero-${name}-${vp.name}.png`, {
         mask: MASK_SELECTORS.map((s) => page.locator(s)),
         animations: 'disabled',
-        maxDiffPixelRatio: 0.03,
+        maxDiffPixelRatio: maxDiff,
       });
       await ctx.close();
     });
   }
 
   test(`visual: ${name} — proporção topo do hero coerente entre desktop e mobile`, async ({ browser }) => {
-    // Complementa o pixel-diff: valida que o primeiro elemento interno do hero
-    // NUNCA encosta na borda superior (proxy para "colagem" que sobrevive a
-    // mudanças de padding via classe utilitária).
+    const desktop = VISUAL_VIEWPORTS.find((v) => v.name === 'desktop-1280')!;
+    const mobile = VISUAL_VIEWPORTS.find((v) => v.name === 'mobile-375')!;
     const results: Record<string, number> = {};
-    for (const vp of VIEWPORTS) {
+    for (const vp of [desktop, mobile]) {
       const ctx = await browser.newContext({
         viewport: { width: vp.width, height: vp.height },
       });
@@ -78,8 +70,7 @@ for (const { route, name } of EDITORIAL_HERO_ROUTES) {
       results[vp.name] = gap;
       await ctx.close();
     }
-    // Mobile deve ter respiro ≥ 24px; desktop ≥ 12px.
-    expect.soft(results.mobile, `${name} mobile gap topo`).toBeGreaterThanOrEqual(24);
-    expect.soft(results.desktop, `${name} desktop gap topo`).toBeGreaterThanOrEqual(12);
+    expect.soft(results['mobile-375'], `${name} mobile gap topo`).toBeGreaterThanOrEqual(24);
+    expect.soft(results['desktop-1280'], `${name} desktop gap topo`).toBeGreaterThanOrEqual(12);
   });
 }
