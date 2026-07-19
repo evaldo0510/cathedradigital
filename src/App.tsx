@@ -532,14 +532,14 @@ const AppLayout: React.FC = () => {
               <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
 
               {/* Liturgia & Oração */}
-              <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><LiturgiaPage /></Suspense>} />
+              <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Liturgia"><LiturgiaPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/calendar" element={<Suspense fallback={<LoadingFallback />}><LiturgicalCalendarPage /></Suspense>} />
-              <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><MissalPage /></Suspense>} />
-              <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><BreviaryPage /></Suspense>} />
-              <Route path="/rosary" element={<Suspense fallback={<LoadingFallback />}><Rosary /></Suspense>} />
-              <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><ViaCrucis /></Suspense>} />
-              <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><LitaniesPage /></Suspense>} />
-              <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><PrayerPage /></Suspense>} />
+              <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Missal" kicker="Cathedra · Missal"><MissalPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Breviário" kicker="Cathedra · Liturgia das Horas"><BreviaryPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/rosary" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rosário" kicker="Cathedra · Rosário"><Rosary /></DevocionalMobileShell></Suspense>} />
+              <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Via Crucis" kicker="Cathedra · Via Crucis"><ViaCrucis /></DevocionalMobileShell></Suspense>} />
+              <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Ladainhas" kicker="Cathedra · Ladainhas"><LitaniesPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações"><PrayerPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/prayers" element={<Navigate to="/oracao" replace />} />
               <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
               <Route path="/contemplatio" element={<Suspense fallback={<LoadingFallback />}><ContemplatioPage /></Suspense>} />
