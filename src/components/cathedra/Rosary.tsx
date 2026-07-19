@@ -321,7 +321,12 @@ const Rosary: React.FC = () => {
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/70">
               {set.day} · {set.latin}
             </p>
-            <h1 className="font-display text-premium-3xl md:text-premium-4xl text-foreground">
+            <h1
+              ref={preparationHeadingRef}
+              id="rosary-preparation-heading"
+              tabIndex={-1}
+              className="font-display text-premium-3xl md:text-premium-4xl text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-premium-sm"
+            >
               {set.name}
             </h1>
             <p className="text-premium-sm text-muted-foreground font-serif italic">
