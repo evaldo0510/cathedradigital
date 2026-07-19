@@ -226,7 +226,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 onClick={() => updateDensity(d)}
                 className={cn(
                   "px-spacing-sm py-spacing-2xs min-h-11 text-[8px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-300",
-                  density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-muted-foreground/60 hover:text-primary"
+                  density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-foreground hover:text-primary"
                 )}
               >
                 {d === 'subtle' ? 'Subtil' : d === 'normal' ? 'Normal' : 'Profunda'}
