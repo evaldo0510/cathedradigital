@@ -31,6 +31,8 @@ import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
 import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+
 
 const MIN_DOC_LEN = 500;
 
