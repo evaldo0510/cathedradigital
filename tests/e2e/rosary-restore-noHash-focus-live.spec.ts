@@ -151,7 +151,13 @@ test.describe('desktop · restauração sem hash — tab order + BFCache + aria-
 
 // -------------------------------- MOBILE -----------------------------------
 test.describe('mobile · restaurar Rosário via histórico sem hash', () => {
-  test.use({ ...devices['iPhone 12'] });
+  test.use({
+    ...devices['iPhone 12'],
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on',
+  });
+  test.describe.configure({ retries: process.env.CI ? 4 : 1 });
 
   test('back/forward sem hash foca cabeçalho e anuncia modo', async ({ page }) => {
     await seedSession(page, 'guiado');
