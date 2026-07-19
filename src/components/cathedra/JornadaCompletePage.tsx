@@ -110,15 +110,20 @@ const JornadaCompletePage: React.FC = () => {
       setTotalSteps(totalRes.count || 0);
       setCompletedSteps(progressRes.data?.length || 0);
 
-      if (progressRes.data) {
-        const stepIds = progressRes.data.map((p) => p.step_id);
-        const { data: steps } = await supabase
-          .from('journey_steps')
-          .select('id, title, step_order')
-          .in('id', stepIds)
-          .order('step_order', { ascending: true });
+      // Buscar TODAS as etapas para calcular pendentes + títulos das reflexões
+      const { data: allSteps } = await supabase
+        .from('journey_steps')
+        .select('id, title, step_order')
+        .eq('journey_id', id!)
+        .order('step_order', { ascending: true });
 
-        const stepMap = new Map(steps?.map((s) => [s.id, s.title]) || []);
+      const doneIds = new Set(progressRes.data?.map((p) => p.step_id) || []);
+      if (allSteps) {
+        setPendingSteps(allSteps.filter((s) => !doneIds.has(s.id)));
+      }
+
+      if (progressRes.data) {
+        const stepMap = new Map(allSteps?.map((s) => [s.id, s.title]) || []);
         setReflections(
           progressRes.data
             .filter((p) => p.reflection)
