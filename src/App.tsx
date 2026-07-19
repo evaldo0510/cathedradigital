@@ -570,6 +570,7 @@ const AppLayout: React.FC = () => {
               <Route path="/jornadas/:id" element={<Suspense fallback={<LoadingFallback />}><JornadaDetailPage /></Suspense>} />
               <Route path="/jornadas/:id/step" element={<Suspense fallback={<LoadingFallback />}><JornadaStepPage /></Suspense>} />
               <Route path="/jornadas/:id/complete" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
+              <Route path="/jornadas/:id/conclusao" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
 
               {/* Comunidade */}
               <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><AtriumCommunityPage /></Suspense>} />

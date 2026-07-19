@@ -8,13 +8,14 @@
  * e barra de ação inferior discreta.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import {
   ArrowLeft,
+  Award,
   ArrowRight,
   BookOpen,
   Check,
@@ -76,9 +77,15 @@ const JornadaStepPage: React.FC = () => {
   const [reflection, setReflection] = useState('');
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [completing, setCompleting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
   const [nextStep, setNextStep] = useState<any>(null);
+  const [prevStep, setPrevStep] = useState<any>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [saintImage, setSaintImage] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const restoredScrollRef = useRef(false);
+  const storageKey = stepId ? `cathedra:journey-step:${stepId}` : null;
 
   const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
   const stepProgress = useMemo(
@@ -142,9 +149,20 @@ const JornadaStepPage: React.FC = () => {
 
       if (allSteps && stepRes.data) {
         const currentIndex = allSteps.findIndex((s) => s.id === stepId);
-        if (currentIndex !== -1 && currentIndex < allSteps.length - 1) {
-          setNextStep(allSteps[currentIndex + 1]);
+        if (currentIndex !== -1) {
+          if (currentIndex > 0) setPrevStep(allSteps[currentIndex - 1]);
+          else setPrevStep(null);
+          if (currentIndex < allSteps.length - 1) setNextStep(allSteps[currentIndex + 1]);
+          else setNextStep(null);
         }
+      }
+
+      // Retomar seção expandida salva
+      if (storageKey) {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+          if (saved.expandedSection) setExpandedSection(saved.expandedSection);
+        } catch { /* noop */ }
       }
 
       if (user && stepRes.data) {
@@ -168,7 +186,8 @@ const JornadaStepPage: React.FC = () => {
 
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
-    setSaving(true);
+    setCompleting(true);
+    setStatusMessage('Concluindo etapa…');
     try {
       const { error } = await supabase.from('journey_progress').upsert(
         {
@@ -200,10 +219,18 @@ const JornadaStepPage: React.FC = () => {
       }
 
       setCompleted(true);
+      setStatusMessage('Etapa concluída.');
+      toast.success('Etapa concluída.');
+      // Se for a última, direciona para conclusão da jornada
+      if (!nextStep && journeyId) {
+        setTimeout(() => navigate(`/jornadas/${journeyId}/conclusao`), 600);
+      }
     } catch (err) {
       console.error('Failed to complete step:', err);
+      setStatusMessage('Erro ao concluir. Tente novamente.');
+      toast.error('Não foi possível concluir a etapa.');
     } finally {
-      setSaving(false);
+      setCompleting(false);
     }
   };
 
@@ -244,9 +271,83 @@ const JornadaStepPage: React.FC = () => {
     return content[key] || null;
   };
 
+  const persistLocal = useCallback((patch: Record<string, any>) => {
+    if (!storageKey) return;
+    try {
+      const prev = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      localStorage.setItem(storageKey, JSON.stringify({ ...prev, ...patch, ts: Date.now() }));
+    } catch { /* noop */ }
+  }, [storageKey]);
+
   const toggleSection = (key: string) => {
-    setExpandedSection((prev) => (prev === key ? null : key));
+    setExpandedSection((prev) => {
+      const next = prev === key ? null : key;
+      persistLocal({ expandedSection: next });
+      return next;
+    });
   };
+
+  // Retomar scroll do usuário na volta à etapa
+  useEffect(() => {
+    if (loading || !step || restoredScrollRef.current || !storageKey || !scrollRef.current) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      if (typeof saved.scrollY === 'number' && saved.scrollY > 0) {
+        requestAnimationFrame(() => {
+          scrollRef.current?.scrollTo({ top: saved.scrollY, behavior: 'auto' });
+        });
+      }
+    } catch { /* noop */ }
+    restoredScrollRef.current = true;
+  }, [loading, step, storageKey]);
+
+  // Persistir scroll (throttled)
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !storageKey) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        persistLocal({ scrollY: el.scrollTop });
+        raf = 0;
+      });
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [storageKey, persistLocal, loading]);
+
+  // Atalhos de teclado: ← → navega entre etapas; Alt+Enter conclui
+  useEffect(() => {
+    const isTypingTarget = (t: EventTarget | null) => {
+      const el = t as HTMLElement | null;
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || el.isContentEditable;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+      if (e.key === 'ArrowRight' && nextStep) {
+        e.preventDefault();
+        navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`);
+      } else if (e.key === 'ArrowLeft' && prevStep) {
+        e.preventDefault();
+        navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`);
+      } else if (e.key === 'Escape') {
+        navigate(`/jornadas/${journeyId}`);
+      } else if (e.altKey && e.key === 'Enter' && !completed && !completing) {
+        e.preventDefault();
+        completeStep();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+     
+  }, [nextStep, prevStep, journeyId, completed, completing]);
+
 
   if (loading) {
     return createPortal(
@@ -337,7 +438,7 @@ const JornadaStepPage: React.FC = () => {
       </header>
 
       {/* ─── Conteúdo rolável ─────────────────────────── */}
-      <div className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto">
+      <div ref={scrollRef} className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto" role="main" aria-label={`Etapa ${step.step_order} de ${totalSteps}: ${step.title}`}>
         <div className="mx-auto w-full max-w-[720px] px-5 pb-32 pt-10 md:px-8 md:pt-14">
           {/* Hero */}
           <motion.section
@@ -406,7 +507,8 @@ const JornadaStepPage: React.FC = () => {
                     type="button"
                     onClick={() => toggleSection(key)}
                     aria-expanded={isExpanded}
-                    className="flex w-full items-center gap-4 px-5 py-4 text-left"
+                    aria-controls={`section-panel-${key}`}
+                    className="flex w-full items-center gap-4 px-5 py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
                   >
                     <span className="font-stitch-display text-[20px] italic leading-none text-stitch-secondary/40">
                       {String(i + 1).padStart(2, '0')}
@@ -440,6 +542,9 @@ const JornadaStepPage: React.FC = () => {
                   <AnimatePresence initial={false}>
                     {isExpanded && (
                       <motion.div
+                        id={`section-panel-${key}`}
+                        role="region"
+                        aria-label={label}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -534,15 +639,38 @@ const JornadaStepPage: React.FC = () => {
       {/* ─── Ação inferior ────────────────────────────── */}
       <div className="flex-shrink-0 border-t border-stitch-secondary/10 bg-stitch-background/95 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:px-16">
         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-2">
+          {/* Anúncios para leitores de tela */}
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {statusMessage}
+          </div>
+
           <div className="flex gap-2">
+            {/* Navegação entre etapas (sempre visível) */}
+            <button
+              type="button"
+              onClick={() => prevStep && navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`)}
+              disabled={!prevStep}
+              aria-label={prevStep ? `Etapa anterior: ${prevStep.title}` : 'Sem etapa anterior'}
+              title="Etapa anterior (←)"
+              className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center border border-stitch-outline-variant/40 text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+
             {!completed && (
               <button
                 onClick={handleSaveReflection}
-                disabled={saving || !reflection.trim()}
-                className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-4 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={saving || completing || !reflection.trim()}
+                aria-busy={saving}
+                aria-label={reflection.trim() ? 'Salvar reflexão' : 'Escreva uma reflexão para habilitar'}
+                title="Salvar reflexão"
+                className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-4 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {saving ? (
-                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  <>
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Salvando…
+                  </>
                 ) : (
                   <>
                     <Save className="h-3.5 w-3.5" /> Salvar
@@ -550,22 +678,45 @@ const JornadaStepPage: React.FC = () => {
                 )}
               </button>
             )}
+
             <button
-              onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
-              disabled={saving}
+              onClick={
+                completed
+                  ? () =>
+                      nextStep
+                        ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
+                        : navigate(`/jornadas/${journeyId}/conclusao`)
+                  : completeStep
+              }
+              disabled={completing || saving}
+              aria-busy={completing}
+              aria-label={
+                completed
+                  ? nextStep
+                    ? `Próxima etapa: ${nextStep.title}`
+                    : 'Ir para a conclusão da jornada'
+                  : 'Concluir esta etapa'
+              }
+              title={completed ? 'Próxima etapa (→)' : 'Concluir etapa (Alt+Enter)'}
               className={`${
-                completed ? 'w-full' : 'flex-[2]'
-              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 disabled:opacity-50`}
+                completed ? 'flex-1' : 'flex-[2]'
+              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
             >
-              {saving ? (
+              {completing ? (
                 <>
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Salvando…
+                  Concluindo…
                 </>
               ) : completed ? (
-                <>
-                  <ArrowLeft className="h-3.5 w-3.5" /> Voltar à Jornada
-                </>
+                nextStep ? (
+                  <>
+                    Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
+                  </>
+                ) : (
+                  <>
+                    <Award className="h-3.5 w-3.5" /> Conclusão
+                  </>
+                )
               ) : (
                 <>
                   <Check className="h-3.5 w-3.5" /> Concluir Etapa
@@ -573,14 +724,6 @@ const JornadaStepPage: React.FC = () => {
               )}
             </button>
           </div>
-          {completed && nextStep && (
-            <button
-              onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-              className="inline-flex w-full items-center justify-center gap-2 border border-stitch-secondary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-secondary transition-colors hover:bg-stitch-secondary hover:text-stitch-primary"
-            >
-              Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          )}
         </div>
       </div>
     </motion.div>,
