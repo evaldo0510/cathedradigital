@@ -527,6 +527,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               saint={selectedSaint} 
               onClose={() => setSelectedSaint(null)} 
               autoReflect={autoReflect}
+              legacy={legacyReader}
             />
           )}
         </AnimatePresence>
