@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getSearchTermsForTag } from './tagNormalization';
 import { getAllLocalCatechism } from '@/data/catechism';
+import { BIBLE_CANON } from './bibleCanon';
 
 export interface TagContent {
   id: string;
@@ -8,6 +9,23 @@ export interface TagContent {
   content_text: string;
   title: string;
   metadata: any;
+}
+
+// FIX BOLHA NEXUS BÍBLIA: metadata vem vazia no banco; deriva book/chapter/verse
+// a partir de reference_id ("Jo 14, 6", "1Cor 13,4", "Mt 11, 29") para que
+// resolveLink()/BibleVersePopover funcionem e o item não seja filtrado como no-route.
+const BIBLE_ABBR_BY_LOWER = new Map(BIBLE_CANON.map(b => [b.abbr.toLowerCase(), b.abbr]));
+
+function parseBibleReference(ref: string | null | undefined): { book?: string; chapter?: number; verse?: number } {
+  if (!ref || typeof ref !== 'string') return {};
+  const m = ref.trim().match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.]\s*(\d+))?/);
+  if (!m) return {};
+  const rawBook = m[1].replace(/\s+/g, '').toLowerCase();
+  const abbr = BIBLE_ABBR_BY_LOWER.get(rawBook);
+  if (!abbr) return {};
+  const chapter = Number(m[2]);
+  const verse = m[3] ? Number(m[3]) : undefined;
+  return { book: abbr, chapter, verse };
 }
 
 /**
@@ -33,15 +51,28 @@ export function formatNexusContent(data: any, type: string): TagContent {
   else if (data.type === 'catechism') fallbackReference = 'Catecismo';
   else if (data.type === 'magisterium') fallbackReference = 'Magistério';
 
+  const baseMeta: any = {
+    ...(data.metadata || {}),
+    tags: data.tags || []
+  };
+
+  // Enriquecimento: itens bíblicos frequentemente vêm com metadata {} no banco.
+  // Parseia reference_id para popular book/chapter/verse, evitando reason:no-route.
+  if (data.type === 'bible' && (!baseMeta.book || !baseMeta.chapter)) {
+    const parsed = parseBibleReference(data.reference_id);
+    if (parsed.book && parsed.chapter) {
+      baseMeta.book = baseMeta.book || parsed.book;
+      baseMeta.chapter = baseMeta.chapter || parsed.chapter;
+      if (parsed.verse && !baseMeta.verse) baseMeta.verse = parsed.verse;
+    }
+  }
+
   return {
     id: data.id,
     type: data.type,
     content_text: data.content_text || '',
     title: data.reference_id || data.title || fallbackReference,
-    metadata: {
-      ...(data.metadata || {}),
-      tags: data.tags || []
-    }
+    metadata: baseMeta,
   };
 }
 
