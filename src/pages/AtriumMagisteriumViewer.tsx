@@ -36,6 +36,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
 
   return (
     <>
+      <MobileTopBar kicker={kicker} title={meta?.title ?? 'Magistério'} showBack />
       <EditorialReaderChrome
         kicker={kicker}
         title={title}
@@ -45,6 +46,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
       <Suspense fallback={null}>
         <MagisteriumViewer />
       </Suspense>
+      <MobileBottomNav />
     </>
   );
 };
