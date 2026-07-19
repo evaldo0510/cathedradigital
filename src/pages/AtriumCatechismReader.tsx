@@ -52,6 +52,11 @@ const AtriumCatechismReader: React.FC = () => {
   if (pParam && chrome) {
     return (
       <Suspense fallback={<CatechismSkeleton />}>
+        <MobileTopBar
+          kicker={`Cathedra · ${chrome.kicker}`}
+          title={chrome.title}
+          showBack
+        />
         <EditorialReaderChrome
           kicker={`Cathedra · ${chrome.kicker}`}
           title={chrome.title}
@@ -59,6 +64,7 @@ const AtriumCatechismReader: React.FC = () => {
           backHref={AppRoute.CATECHISM}
         />
         <Catechism />
+        <MobileBottomNav />
       </Suspense>
     );
   }
