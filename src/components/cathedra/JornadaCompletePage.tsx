@@ -358,6 +358,42 @@ const JornadaCompletePage: React.FC = () => {
           )}
         </div>
 
+        {/* ─── Etapas pendentes (só quando incompleta) ─────────────── */}
+        {!isJourneyComplete && pendingSteps.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-10"
+            aria-labelledby="pending-steps-heading"
+          >
+            <h2
+              id="pending-steps-heading"
+              className="mb-4 flex items-center gap-2 font-stitch-display text-[20px] italic text-stitch-primary md:text-[24px]"
+            >
+              <Circle className="h-4 w-4 text-destructive" /> Etapas pendentes
+            </h2>
+            <ul className="space-y-2">
+              {pendingSteps.map((s) => (
+                <li key={s.id}>
+                  <button
+                    onClick={() => navigate(`/jornadas/${id}/step?step=${s.id}`)}
+                    className="group flex w-full items-center gap-4 border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-4 text-left transition-colors hover:border-stitch-secondary/50"
+                    aria-label={`Ir para etapa ${s.step_order}: ${s.title}`}
+                  >
+                    <span className="font-stitch-display text-[18px] italic leading-none text-stitch-secondary/60">
+                      {String(s.step_order).padStart(2, '0')}
+                    </span>
+                    <span className="flex-1 font-stitch-body text-[14px] text-stitch-on-surface">
+                      {s.title}
+                    </span>
+                    <ChevronRight className="h-4 w-4 flex-shrink-0 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-stitch-secondary" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+        )}
+
         {/* ─── Certificado ───────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
