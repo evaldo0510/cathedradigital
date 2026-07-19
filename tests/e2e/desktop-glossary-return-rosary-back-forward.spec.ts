@@ -169,4 +169,34 @@ test.describe('desktop · back/forward + aria-label por modo + Tab a11y', () => 
     expect(reached, `primeiro radio não recebeu foco em ${MAX_TABS} Tabs`).toBe(true);
     await expect(firstRadio).toBeFocused();
   });
+
+  test('Shift+Tab a partir do radiogroup volta até o cabeçalho', async ({ page }) => {
+    await seedSession(page, 'guiado');
+    await page.goto('/glossario', { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('rosary-return-button').click();
+    await page.waitForURL(/\/rosary\b/);
+
+    const heading = page.locator('#rosary-preparation-heading');
+    await expect(heading).toBeFocused({ timeout: 10_000 });
+
+    // Foca o primeiro radio programaticamente e Shift+Tab de volta.
+    const firstRadio = page.locator('input[name="rosary-mode-choose"]').first();
+    await firstRadio.focus();
+    await expect(firstRadio).toBeFocused();
+
+    const MAX_SHIFT_TABS = 40;
+    let reachedHeading = false;
+    for (let i = 0; i < MAX_SHIFT_TABS; i += 1) {
+      await page.keyboard.press('Shift+Tab');
+      if (await heading.evaluate((el) => el === document.activeElement)) {
+        reachedHeading = true;
+        break;
+      }
+    }
+    expect(
+      reachedHeading,
+      `Shift+Tab a partir do primeiro radio não retornou ao cabeçalho em ${MAX_SHIFT_TABS} tentativas`,
+    ).toBe(true);
+    await expect(heading).toBeFocused();
+  });
 });
