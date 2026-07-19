@@ -348,6 +348,18 @@ const AdminDashboard: React.FC = () => {
               <p className="text-premium-xs opacity-50 mt-spacing-xs">Monitore vulnerabilidades detectadas.</p>
             </CathedraCard>
 
+            <CathedraCard 
+              className="p-spacing-lg cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              onClick={() => navigate('/admin/glossario')}
+            >
+              <div className="flex items-center justify-between mb-spacing-md">
+                <Icons.BookMarked className="text-primary" />
+                <Badge variant="outline">Léxico</Badge>
+              </div>
+              <h3 className="font-bold">Editor de Verbetes</h3>
+              <p className="text-premium-xs opacity-50 mt-spacing-xs">Crie, edite e publique termos teológicos.</p>
+            </CathedraCard>
+
           </div>
           
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
