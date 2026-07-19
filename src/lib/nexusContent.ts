@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { getSearchTermsForTag } from './tagNormalization';
 import { getAllLocalCatechism } from '@/data/catechism';
@@ -16,12 +17,34 @@ export interface TagContent {
 // resolveLink()/BibleVersePopover funcionem e o item não seja filtrado como no-route.
 const BIBLE_ABBR_BY_LOWER = new Map(BIBLE_CANON.map(b => [b.abbr.toLowerCase(), b.abbr]));
 
-function parseBibleReference(ref: string | null | undefined): { book?: string; chapter?: number; verse?: number } {
-  if (!ref || typeof ref !== 'string') return {};
+// Schemas zod para normalização segura em runtime — evitam que payloads
+// malformados vindos do banco/cache atinjam o parser e produzam NaN/undefined
+// silenciosos no resolveLink.
+export const ReferenceIdSchema = z
+  .unknown()
+  .transform((v) => (typeof v === 'string' ? v.trim() : ''))
+  .pipe(z.string().max(120));
+
+export const NexusMetadataSchema = z
+  .unknown()
+  .transform((v) => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : {}))
+  .pipe(z.record(z.string(), z.unknown()));
+
+export const ParsedBibleReferenceSchema = z.object({
+  book: z.string().min(1).optional(),
+  chapter: z.number().int().positive().optional(),
+  verse: z.number().int().positive().optional(),
+});
+
+export type ParsedBibleReference = z.infer<typeof ParsedBibleReferenceSchema>;
+
+function parseBibleReference(ref: unknown): ParsedBibleReference {
+  const safe = ReferenceIdSchema.safeParse(ref);
+  if (!safe.success || !safe.data) return {};
   // Normaliza prefixo romano ("I Co" → "1 Co", "II Sm" → "2 Sm", "III Jo" → "3 Jo").
   // Só aplica quando romano é seguido por espaço, evitando conflito com "Is", "It" etc.
   const ROMAN: Record<string, string> = { I: '1', II: '2', III: '3' };
-  const normalized = ref.trim().replace(/^(III|II|I)\s+/i, (_, r) => `${ROMAN[r.toUpperCase()]} `);
+  const normalized = safe.data.replace(/^(III|II|I)\s+/i, (_, r) => `${ROMAN[r.toUpperCase()]} `);
   // Separadores aceitos entre capítulo e versículo: , : . -
   const m = normalized.match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.\-]\s*(\d+))?/);
   if (!m) return {};
@@ -30,8 +53,11 @@ function parseBibleReference(ref: string | null | undefined): { book?: string; c
   if (!abbr) return {};
   const chapter = Number(m[2]);
   const verse = m[3] ? Number(m[3]) : undefined;
-  return { book: abbr, chapter, verse };
+  const out = ParsedBibleReferenceSchema.safeParse({ book: abbr, chapter, verse });
+  return out.success ? out.data : {};
 }
+
+export { parseBibleReference };
 
 /**
  * Standardizes the formatting of spiritual and journey content.
@@ -56,15 +82,16 @@ export function formatNexusContent(data: any, type: string): TagContent {
   else if (data.type === 'catechism') fallbackReference = 'Catecismo';
   else if (data.type === 'magisterium') fallbackReference = 'Magistério';
 
-  const baseMeta: any = {
-    ...(data.metadata || {}),
-    tags: data.tags || []
-  };
+  // Normaliza metadata com zod: aceita apenas objeto plano; qualquer outra
+  // forma (array, null, string, number) vira {} — evita spread inseguro.
+  const safeMeta = NexusMetadataSchema.parse((data as any)?.metadata);
+  const safeTags = Array.isArray((data as any)?.tags) ? (data as any).tags : [];
+  const baseMeta: any = { ...safeMeta, tags: safeTags };
 
   // Enriquecimento: itens bíblicos frequentemente vêm com metadata {} no banco.
   // Parseia reference_id para popular book/chapter/verse, evitando reason:no-route.
-  if (data.type === 'bible' && (!baseMeta.book || !baseMeta.chapter)) {
-    const parsed = parseBibleReference(data.reference_id);
+  if (data?.type === 'bible' && (!baseMeta.book || !baseMeta.chapter)) {
+    const parsed = parseBibleReference((data as any)?.reference_id);
     if (parsed.book && parsed.chapter) {
       baseMeta.book = baseMeta.book || parsed.book;
       baseMeta.chapter = baseMeta.chapter || parsed.chapter;
