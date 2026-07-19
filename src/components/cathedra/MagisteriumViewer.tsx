@@ -721,7 +721,9 @@ const MagisteriumViewer: React.FC = () => {
               }}
             />
           )}
+          <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto" />
           <Relatio 
+
             context={{
               type: 'magisterium',
               id: id,
