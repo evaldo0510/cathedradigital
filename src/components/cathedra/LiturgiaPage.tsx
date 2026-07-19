@@ -214,7 +214,7 @@ const LiturgiaPage: React.FC = () => {
               onClick={() => setSearchParams({ tab: tab.id })}
               onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
             >
-              {tab.icon} <span className="hidden xs:inline sm:inline">{tab.label}</span>
+              {tab.icon} <span>{tab.label}</span>
             </Button>
           ))}
         </div>
