@@ -145,6 +145,7 @@ const Rosary: React.FC = () => {
         mysteryLabel: `${mysteryIndex + 1}º mistério`,
         mysteryIndex,
         stepIndex,
+        mode: currentMode,
         elapsedMs: Math.round(elapsedMs),
         startedAt,
       });
