@@ -512,6 +512,9 @@ const AppLayout: React.FC = () => {
               {/* Biblioteca */}
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><AtriumBibliotecaPage /></Suspense>} />
               <Route path="/biblioteca-legacy" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              {/* Rota canônica dos Padres/Doutores — redireciona para /santos/:id (mesma fonte de dados). */}
+              <Route path="/biblioteca/padres/:slug" element={<PadresRedirect />} />
+
               
               {/* Itineraria */}
               <Route path="/itineraria" element={<Suspense fallback={<LoadingFallback />}><ItinerariaPage /></Suspense>} />
