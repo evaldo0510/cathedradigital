@@ -30,8 +30,10 @@ const CASES: Array<{ key: string; params?: Record<string, string | number>; labe
   { key: 'pray.liturgy-today', label: 'Liturgia de hoje' },
 ];
 
-const VIEWPORTS: Array<{ name: 'desktop' | 'mobile'; width: number; height: number }> = [
+const VIEWPORTS: Array<{ name: 'desktop' | 'tablet' | 'mobile-lg' | 'mobile'; width: number; height: number }> = [
   { name: 'desktop', width: 1280, height: 800 },
+  { name: 'tablet', width: 768, height: 1024 }, // iPad retrato
+  { name: 'mobile-lg', width: 414, height: 896 }, // iPhone 11 Pro Max / XR
   { name: 'mobile', width: 390, height: 844 }, // iPhone 12/13/14
 ];
 
