@@ -91,6 +91,8 @@ const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
 const AtriumBibleReader = lazy(() => import('./pages/AtriumBibleReader'));
 const AtriumCatechismReader = lazy(() => import('./pages/AtriumCatechismReader'));
 const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
+const AtriumMagisteriumViewer = lazy(() => import('./pages/AtriumMagisteriumViewer'));
+
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
@@ -477,7 +479,9 @@ const AppLayout: React.FC = () => {
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
-              <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
+              <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><AtriumMagisteriumViewer /></Suspense>} />
+              <Route path="/magisterium-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
+
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
               <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
