@@ -630,6 +630,87 @@ const JornadaCompletePage: React.FC = () => {
           "Combati o bom combate, terminei a corrida, guardei a fé." — 2Tm 4,7
         </p>
       </main>
+
+      {/* ─── Preview do Certificado ────────────────────────────── */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-stitch-display italic">
+              Pré-visualização do Certificado
+            </DialogTitle>
+            <DialogDescription>
+              Confira o que será compartilhado antes de prosseguir.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div
+              className="relative overflow-hidden border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-6 text-center"
+              style={{
+                backgroundImage:
+                  'url("https://www.transparenttextures.com/patterns/parchment.png")',
+              }}
+            >
+              <div className="pointer-events-none absolute inset-2 border border-stitch-secondary/20" />
+              <div className="relative">
+                <Award className="mx-auto h-6 w-6 text-stitch-secondary" />
+                <p className="mt-3 font-stitch-body text-[9px] font-bold uppercase tracking-[0.3em] text-stitch-secondary">
+                  Certificado de Conclusão
+                </p>
+                <p className="mt-2 font-stitch-display text-[18px] italic text-stitch-primary">
+                  {journey?.title}
+                </p>
+                <p className="mt-3 font-stitch-body text-[11px] italic text-stitch-on-surface-variant">
+                  Concluída em {completionDate}
+                </p>
+              </div>
+            </div>
+
+            <dl className="space-y-2 border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 font-stitch-body text-[12px]">
+              <div className="flex justify-between gap-3">
+                <dt className="text-stitch-on-surface-variant">Jornada</dt>
+                <dd className="text-right text-stitch-primary">{journey?.title}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-stitch-on-surface-variant">Etapas</dt>
+                <dd className="text-stitch-primary">{completedSteps}/{totalSteps}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-stitch-on-surface-variant">XP conquistado</dt>
+                <dd className="text-stitch-primary">{xpAwarded > 0 ? `+${xpAwarded}` : '—'}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-stitch-on-surface-variant">Distintivos</dt>
+                <dd className="text-stitch-primary">{newBadges.length || '—'}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            <button
+              onClick={() => setShowPreview(false)}
+              className="border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant hover:text-stitch-primary"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={async () => {
+                setShowPreview(false);
+                await shareCertificate();
+              }}
+              disabled={sharing}
+              className="inline-flex items-center gap-2 bg-stitch-primary px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-primary-foreground hover:bg-stitch-primary/90 disabled:opacity-50"
+            >
+              {sharing ? (
+                <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                <Share2 className="h-3 w-3" />
+              )}
+              {sharing ? 'Gerando…' : 'Compartilhar'}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
