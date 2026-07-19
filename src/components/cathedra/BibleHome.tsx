@@ -6,6 +6,9 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { BibleBook, BIBLE_DATA } from '@/data/bible-books';
+import { EditorialHero } from '@/components/editorial';
+
+
 
 
 interface BibleHomeProps {
@@ -22,20 +25,28 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
   return (
     <div className="space-y-8 pb-12 max-w-lg mx-auto px-4">
       {/* Hero Section */}
-      <div className="text-center space-y-4 pt-4">
-        <div className="relative inline-block">
-          <Icons.BookOpen className="w-12 h-12 mx-auto text-secondary/20" />
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full"
-          />
-        </div>
-        <h1 className="text-3xl font-display font-light uppercase tracking-[0.2em] text-primary">Sacra Biblia</h1>
-        <p className="text-sm italic text-primary/60 font-serif leading-relaxed px-4">
-          "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."
-        </p>
-      </div>
+      <EditorialHero
+        variant="legacy"
+        align="center"
+        size="sm"
+        rule={false}
+        className="pt-4 pb-0 !py-0"
+        icon={
+          <div className="relative inline-block">
+            <Icons.BookOpen className="w-12 h-12 mx-auto text-secondary/20" />
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full"
+            />
+          </div>
+        }
+        title="Sacra Biblia"
+        titleClassName="text-3xl font-display font-light uppercase tracking-[0.2em] text-primary max-w-none"
+        subtitle={'"Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."'}
+        subtitleClassName="text-sm italic text-primary/60 font-serif leading-relaxed px-4 mt-4 max-w-none"
+      />
+
 
       {/* Continue Reading Widget */}
       <div className="grid grid-cols-1 gap-4">

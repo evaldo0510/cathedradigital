@@ -1,62 +1,79 @@
-# Reconstrução da Linguagem Visual — Editorial*
+## Sprint E2 — Migração de Heros com Fidelidade Visual (Caminho B)
 
-Escopo grande demais para 1 execução. Divido em 6 sprints entregáveis. Cada sprint = 1 aprovação sua antes de seguir.
+Objetivo: mover TODOS os heros das páginas de conteúdo para `EditorialHero`, **preservando exatamente** o visual atual de cada página. Zero regressão visual. Nenhuma mudança de lógica ou rotas.
 
-**Regras invioláveis (todas as sprints):**
-- Zero mudança de lógica, rotas, hooks, services, queries, contratos de props de domínio.
-- Apenas troca de wrapper visual + consumo de tokens `stitch-*`.
-- Nenhuma primitiva Editorial* importa hook de domínio ou faz fetch.
-- Cada sprint entrega antes×depois validado via Playwright (desktop + mobile SE).
+### 1. Extensão do EditorialHero (fundação)
 
----
+Adicionar props ao `EditorialHero` em `src/components/editorial/index.tsx` sem quebrar chamadas atuais:
 
-## Sprint E1 — Primitivas faltantes (fundação)
-Criar em `src/components/editorial/` (sem consumir ainda):
-1. `EditorialKicker` — versalete dourado standalone
-2. `EditorialMeta` — linha contextual discreta
-3. `EditorialDivider gold-marker` — variante com marcador central
-4. `EditorialProgress` — barra dourada 2px + marcador
-5. `EditorialQuote` + `EditorialMarginalia` — citação e numeração marginal
-6. `EditorialEmptyState` — vazio contemplativo
-7. `EditorialBreadcrumb` — trilha em versalete
-8. `EditorialCTA` — botão editorial (fio inferior dourado)
-9. `EditorialPanel` — para Nexus/popovers
-10. `EditorialBookCover` — capa 3D com linho
-11. `EditorialTimeline` + `EditorialChapterCard` — Jornadas
+- `variant?: 'editorial' | 'legacy'` — default `editorial` (Cormorant italic + kicker dourado). `legacy` = Sans (Karla) sem italic, para páginas que ainda usam o visual antigo.
+- `align?: 'left' | 'center'` — default `left`.
+- `icon?: React.ReactNode` — ícone Lucide opcional exibido ao lado/acima do kicker.
+- `badges?: React.ReactNode` — slot para pílulas/tags já usadas na Home, Jornadas, About.
+- `background?: 'none' | 'parchment' | 'gradient'` — permite reproduzir gradientes atuais (About, Jornadas).
+- `size?: 'sm' | 'md' | 'lg'` — controla escala de título e padding vertical.
+- `titleClassName`, `subtitleClassName`, `kickerClassName` — escapes tipográficos por página.
 
-Entrega: primitivas + storybook mínimo em rota `/dev/editorial` (dev-only).
+Chamadas atuais (BibliotecaPage, Readers) continuam funcionando sem alteração.
 
-## Sprint E2 — Camada A: Heros de página
-Migrar para `EditorialHero`:
-- `HomeUnified`, `AboutPage`, `JornadasPage`, `BibleHome`, `GlobalSearchPage`
-- `CommunityPage`, `DogmasPage`, `AparicoesPage`, `EncyclopediaPage`, `BreviaryPage`, `AZFaithPage`, `AchievementsPage`, `FavoritesPage`, `DiagnosticoPage`
+### 2. Inventário e classificação dos 14 heros
 
-## Sprint E3 — Camada B: Readers restantes
-Aplicar `EditorialReaderHeader` em:
-- `AquinasOpera`, `DocumentViewer`, bloco de leitura de `Bible.tsx`
+Cada hero é classificado como **editorial** (já no padrão Logos 2030) ou **legacy** (visual atual preservado via `variant="legacy"`).
 
-## Sprint E4 — Camada C: Seções, dividers, breadcrumbs
-Substituir `<section>`/`<hr>`/breadcrumbs ad-hoc por `EditorialSection` + `EditorialHeader` + `EditorialDivider` + `EditorialBreadcrumb` nas páginas já migradas em E2/E3.
+| # | Arquivo | Rota | Variante |
+|---|---------|------|----------|
+| 1 | `AboutPage.tsx` | `/sobre` | legacy + gradient |
+| 2 | `BibleHome.tsx` | `/bible` | legacy |
+| 3 | `BibliotecaPage.tsx` | `/biblioteca` | editorial (já feito — só normalizar) |
+| 4 | `JornadasPage.tsx` | `/jornadas` | legacy + gradient + badges |
+| 5 | `Magisterium.tsx` | `/magisterio` | legacy |
+| 6 | `CheckoutPage.tsx` | `/checkout` | legacy sm |
+| 7 | `formacao/FormacaoHero.tsx` | `/formacao` | legacy + badges |
+| 8 | `HomeUnified.tsx` (hero interno autenticado) | `/` | legacy + badges |
+| 9 | `SearchPage` / `/buscar` | `/buscar` | legacy sm |
+| 10 | `SaintsPage` | `/santos` | legacy |
+| 11 | `PrayerPage` | `/oracoes` | legacy |
+| 12 | `LiturgyPage` | `/liturgia` | legacy |
+| 13 | `NexusHub` / atalhos | `/nexus` | legacy sm |
+| 14 | `AdminSEO` / painéis admin | `/admin/seo` | legacy sm |
 
-## Sprint E5 — Camada D: Popovers e Nexus
-Aplicar `EditorialPanel` em:
-- `BibleVersePopover`, `CatechismPopover`, `BibleDictionaryPopover`, painel lateral Nexus, `CrossReferencePanel`
+Confirmar cada um durante a migração (arquivos podem variar de nome).
 
-## Sprint E6 — Camada E+F: Jornadas + capas + rodapé
-- Timeline de `JornadasPage` → `EditorialTimeline` + `EditorialChapterCard`
-- Capas inline de `BibliotecaPage` → `EditorialBookCover`
-- `Footer.tsx` → consumir `EditorialFooter`
-- Cleanup: remover cores hardcoded remanescentes
+### 3. Batches de execução
 
----
+**Batch A — Fundação + páginas de conteúdo principal (5 heros):**
+Biblioteca (normalizar), BibleHome, Magisterium, SaintsPage, PrayerPage.
 
-## Critérios de aceite (por sprint)
-- Build passa
-- Rotas atingidas idênticas em navegação, dados e estado
-- Screenshots antes×depois anexados (desktop 1280 + mobile 375)
-- Sem regressão de acessibilidade (contraste AA, focus visível)
-- Nenhum import de domínio dentro de `src/components/editorial/`
+**Batch B — Fluxos verticais (5 heros):**
+AboutPage, JornadasPage, FormacaoHero, LiturgyPage, HomeUnified.
 
----
+**Batch C — Utilitários (4 heros):**
+CheckoutPage, SearchPage, NexusHub, AdminSEO.
 
-**Começo pela Sprint E1 (primitivas) — só fundação, zero impacto em telas existentes. Aprova?**
+Cada batch:
+1. Ler o hero atual.
+2. Substituir markup pela chamada `<EditorialHero variant="legacy" ...>` mantendo tokens e classes existentes via `titleClassName`/`subtitleClassName`.
+3. Rodar o dev server e comparar visualmente via Playwright (desktop 1280 + mobile 375).
+4. Anotar diffs no relatório `docs/reskin/E2-migration.md`.
+
+### 4. Critérios de aceite
+
+- Diff visual ≤ 2px em cada hero (mesma fonte, mesmo padding, mesmas cores).
+- Zero mudança de rota, zero mudança de dados, zero remoção de badges/CTAs.
+- `EditorialHero` continua funcionando nas chamadas atuais sem alteração.
+- Relatório com screenshots antes/depois por página em `docs/reskin/E2-migration.md`.
+
+### 5. Fora de escopo
+
+- Landing `HeroSection` cinematográfica (partículas/parallax) — permanece intocada.
+- Nenhum reskin visual novo (isso é o Batch D da Sprint E3, fora desta sprint).
+- Nenhuma refatoração de lógica de página.
+
+### Detalhes técnicos
+
+- Todos os tokens continuam `stitch-*`. Nenhuma cor hardcoded.
+- `variant="legacy"` aplica `font-stitch-sans`, `not-italic`, kicker sem tracking exagerado.
+- `background="gradient"` reutiliza o gradiente que já existe em `index.css` (não cria novo).
+- Testes: adicionar smoke test em `tests/e2e/editorial-hero-migration.spec.ts` verificando que cada rota renderiza `<section data-editorial-hero>` sem erro de console.
+
+Quer que eu execute agora começando pelo **Batch A**?
