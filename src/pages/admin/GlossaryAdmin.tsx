@@ -215,10 +215,22 @@ export default function GlossaryAdmin() {
           <h1 className="text-2xl font-semibold mt-1">Léxico Teológico</h1>
           <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
         </div>
-        <Button onClick={startNew} variant="secondary"><Plus className="h-4 w-4 mr-2" />Novo verbete</Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowPreview((v) => !v)}
+            aria-pressed={showPreview}
+            title={showPreview ? "Ocultar preview" : "Mostrar preview"}
+          >
+            {showPreview ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+            {showPreview ? "Ocultar preview" : "Mostrar preview"}
+          </Button>
+          <Button onClick={startNew} variant="secondary"><Plus className="h-4 w-4 mr-2" />Novo verbete</Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+      <div className={`grid grid-cols-1 gap-6 ${showPreview ? "lg:grid-cols-[300px_minmax(0,1fr)_minmax(0,1fr)]" : "lg:grid-cols-[380px_1fr]"}`}>
+
         {/* Lista */}
         <Card className="h-fit">
           <CardHeader className="pb-3">
