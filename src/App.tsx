@@ -90,6 +90,7 @@ const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage')
 const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
 const AtriumBibleReader = lazy(() => import('./pages/AtriumBibleReader'));
 const AtriumCatechismReader = lazy(() => import('./pages/AtriumCatechismReader'));
+const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
@@ -573,6 +574,10 @@ const AppLayout: React.FC = () => {
               <Route path="/security" element={<Navigate to="/admin/security" replace />} />
               <Route path="/catechism-explorer" element={<Navigate to="/catechism" replace />} />
 
+              {/* Nexus público — Etapa 7 */}
+              <Route path="/nexus" element={<Suspense fallback={<LoadingFallback />}><AtriumNexusPage /></Suspense>} />
+
+
 
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={
@@ -617,8 +622,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/saints" element={<SaintsAdmin />} />
                       <Route path="/admin/pg-stat-statements" element={<PgStatStatements />} />
                       <Route path="/axe-contrast" element={<AxeContrastReport />} />
-                      <Route path="/nexus" element={<NexusAdmin />} />
                       <Route path="/admin/nexus" element={<NexusAdmin />} />
+
 
 
 
