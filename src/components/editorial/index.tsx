@@ -169,6 +169,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
   badges,
   background,
   size = 'md',
+  topSpacing,
   titleClassName,
   subtitleClassName,
   kickerClassName,
@@ -178,14 +179,20 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
   const bg = background ?? (parchment ? 'parchment' : 'none');
   const centered = align === 'center';
   const isLegacy = variant === 'legacy';
+  const resolvedTopSpacing = topSpacing ?? (isLegacy ? 'safe' : 'default');
+  const paddingClass =
+    resolvedTopSpacing === 'default'
+      ? HERO_SIZE_PAD[size]
+      : HERO_TOP_SPACING[resolvedTopSpacing];
 
   return (
     <section
       data-editorial-hero
       data-variant={variant}
+      data-top-spacing={resolvedTopSpacing}
       className={cn(
         'relative overflow-hidden',
-        HERO_SIZE_PAD[size],
+        paddingClass,
         className,
       )}
       {...rest}
