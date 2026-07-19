@@ -122,10 +122,8 @@ function safeTitle(raw: unknown): string | null {
   return cleaned || null;
 }
 
-function safeText(raw: unknown): string {
-  if (typeof raw !== 'string') return '';
-  return raw.replace(/\b(undefined|NaN)\b/g, '').trim();
-}
+
+
 
 
 /**
