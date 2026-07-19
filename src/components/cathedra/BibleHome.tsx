@@ -6,6 +6,9 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { BibleBook, BIBLE_DATA } from '@/data/bible-books';
+import { EditorialHero } from '@/components/editorial';
+
+
 
 
 interface BibleHomeProps {
