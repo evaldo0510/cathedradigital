@@ -32,12 +32,39 @@ export const initSentry = () => {
             message: error.message,
           };
 
-          // Add breadcrumb for the last few actions before the crash
           Sentry.addBreadcrumb({
             category: 'error',
             message: `Crash captured: ${error.message}`,
             level: 'error',
           });
+        }
+
+        // Enriquecer com contexto do momento do erro
+        if (typeof window !== "undefined") {
+          const root = document.documentElement;
+          const theme = root.classList.contains("dark")
+            ? "dark"
+            : root.classList.contains("light")
+              ? "light"
+              : "unknown";
+          const active = document.activeElement as HTMLElement | null;
+          event.tags = {
+            ...(event.tags ?? {}),
+            route: window.location.pathname,
+            theme,
+          };
+          event.contexts = {
+            ...(event.contexts ?? {}),
+            runtime_ctx: {
+              route: window.location.pathname + window.location.search,
+              hash: window.location.hash,
+              theme,
+              viewport: `${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio}`,
+              focused: active && active !== document.body
+                ? `${active.tagName.toLowerCase()}${active.id ? "#" + active.id : ""}${active.getAttribute("aria-label") ? ` [${active.getAttribute("aria-label")}]` : ""}`
+                : null,
+            },
+          };
         }
         return event;
       },
