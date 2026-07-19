@@ -62,7 +62,19 @@ jobs:
             tests/e2e/liturgia-tabs-overflow-scroll.spec.ts \
             tests/e2e/liturgia-tabs-console-clean.spec.ts \
             tests/e2e/liturgia-tabs-roving-focus-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-arrow-wrap.spec.ts \
             --project=chromium --reporter=list,html
+
+      - name: Run cross-browser guard (WebKit) — foco visível, roving tabindex, ARIA linkage, wrap
+        env:
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            tests/e2e/liturgia-tabs-aria-linkage.spec.ts \
+            tests/e2e/liturgia-tabs-roving-focus-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-focus-ring.spec.ts \
+            tests/e2e/liturgia-tabs-arrow-wrap.spec.ts \
+            --project=webkit --reporter=list,html
 
       - name: Upload Playwright HTML report
         if: always()
@@ -71,6 +83,15 @@ jobs:
           name: liturgia-tabs-html-report
           path: playwright-report/
           retention-days: 14
+
+      - name: Upload axe-core detailed reports (per breakpoint/theme/tab)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liturgia-tabs-axe-reports
+          path: playwright-report/axe/**/*.json
+          retention-days: 14
+          if-no-files-found: warn
 
       - name: Upload visual diffs & screenshots (on failure)
         if: failure()
