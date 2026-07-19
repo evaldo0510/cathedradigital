@@ -264,17 +264,32 @@ const AtriumCommunityPage: React.FC = () => {
               ))}
             </div>
           ) : emptyState ? (
-            <div className="text-center py-16 space-y-3">
-              <Sparkles className="w-8 h-8 mx-auto text-primary/60" />
-              <p className="text-muted-foreground">
-                Ainda não há discussões nesta categoria.
+            <div className="text-center py-20 space-y-5 max-w-lg mx-auto" role="status" aria-live="polite">
+              <Sparkles className="w-8 h-8 mx-auto text-primary/50" aria-hidden />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/15 bg-primary/5 text-[10px] uppercase tracking-[0.3em] text-primary font-semibold">
+                Silentium
+              </div>
+              <h2 className="font-serif text-2xl md:text-3xl leading-snug text-foreground">
+                A praça ainda repousa em silêncio
+              </h2>
+              <p className="text-muted-foreground font-serif italic text-base leading-relaxed">
+                Nenhuma partilha aprovada por aqui — nem toda estação tem palavras.
+                Volte em breve ou seja a primeira voz a ecoar nesta categoria.
               </p>
-              {user && (
+              {user ? (
                 <button
                   onClick={() => setShowNew(true)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-xs font-bold uppercase tracking-widest hover:opacity-90"
+                >
+                  <Plus className="w-4 h-4" aria-hidden />
+                  Abrir a primeira partilha
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate(AppRoute.LOGIN)}
                   className="text-primary text-sm font-semibold underline underline-offset-4"
                 >
-                  Seja o primeiro a partilhar
+                  Entrar para partilhar
                 </button>
               )}
             </div>
