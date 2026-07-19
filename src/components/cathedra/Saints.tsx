@@ -189,20 +189,28 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </script>
 
       <div ref={ref} className="space-y-spacing-xl pb-spacing-3xl">
-        <header className="text-center space-y-spacing-md">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary border border-primary/20"
-          >
-            <Icons.Calendar className="w-spacing-sm h-spacing-sm" />
-            <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
-          </motion.div>
-          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground">Santos</h1>
-          <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
-            "Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2
-          </p>
-        </header>
+        <EditorialHero
+          variant="legacy"
+          align="center"
+          size="sm"
+          rule={false}
+          className="!pt-10 md:!pt-6 !pb-0"
+          icon={
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary border border-primary/20"
+            >
+              <Icons.Calendar className="w-spacing-sm h-spacing-sm" />
+              <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
+            </motion.div>
+          }
+          title="Santos"
+          titleClassName="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground max-w-none"
+          subtitle={'"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'}
+          subtitleClassName="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto mt-spacing-md"
+        />
+
 
         <div className="flex justify-center overflow-x-auto pb-spacing-md no-scrollbar">
           <div className="bg-secondary/50 p-spacing-2xs rounded-premium flex gap-spacing-2xs min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
