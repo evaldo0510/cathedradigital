@@ -236,3 +236,148 @@ describe('formatNexusContent — entradas inválidas retornam book/chapter/verse
   });
 });
 
+describe('formatNexusContent — abreviações alternativas (romano vs numérico)', () => {
+  const base = (reference_id: string) => ({
+    id: 'x', type: 'bible', content_text: 'v', reference_id, metadata: {},
+  });
+
+  it('parseia "1Co 13,4" (numérico colado)', () => {
+    const r = formatNexusContent(base('1Co 13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+
+  it('parseia "I Co 13,4" (romano I)', () => {
+    const r = formatNexusContent(base('I Co 13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+
+  it('parseia "II Sm 7,14" (romano II)', () => {
+    const r = formatNexusContent(base('II Sm 7,14'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '2Sm', chapter: 7, verse: 14 });
+  });
+
+  it('parseia "III Jo 1,4" (romano III)', () => {
+    const r = formatNexusContent(base('III Jo 1,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '3Jo', chapter: 1, verse: 4 });
+  });
+
+  it('romano em caixa baixa "i co 13,4" também funciona', () => {
+    const r = formatNexusContent(base('i co 13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+
+  it('não confunde "Is 40,1" (Isaías) com prefixo romano I', () => {
+    const r = formatNexusContent(base('Is 40,1'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Is', chapter: 40, verse: 1 });
+  });
+});
+
+describe('formatNexusContent — caracteres estranhos após versículo', () => {
+  const base = (reference_id: string) => ({
+    id: 'x', type: 'bible', content_text: 'v', reference_id, metadata: {},
+  });
+
+  it('parseia "Mt 11 : 29abc" ignorando lixo após o número', () => {
+    const r = formatNexusContent(base('Mt 11 : 29abc'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "Jo 14,6xyz!!" ignorando lixo', () => {
+    const r = formatNexusContent(base('Jo 14,6xyz!!'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 14, verse: 6 });
+  });
+
+  it('parseia "Sl 23 (repouso)" mantendo apenas capítulo', () => {
+    const r = formatNexusContent(base('Sl 23 (repouso)'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Sl', chapter: 23 });
+    expect(r.metadata.verse).toBeUndefined();
+  });
+
+  it('não quebra com emojis/símbolos misturados', () => {
+    const r = formatNexusContent(base('Mt 5,3 ✝️ bem-aventurados'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 5, verse: 3 });
+  });
+});
+
+describe('formatNexusContent — normalização de espaços internos', () => {
+  const base = (reference_id: string) => ({
+    id: 'x', type: 'bible', content_text: 'v', reference_id, metadata: {},
+  });
+
+  it('normaliza "1Co 13 , 4" (espaços em volta da vírgula)', () => {
+    const r = formatNexusContent(base('1Co 13 , 4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+
+  it('normaliza "Jo 1 : 14" (espaços em volta dos dois-pontos)', () => {
+    const r = formatNexusContent(base('Jo 1 : 14'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 1, verse: 14 });
+  });
+
+  it('normaliza "1Co    13,4" (múltiplos espaços entre livro e capítulo)', () => {
+    const r = formatNexusContent(base('1Co    13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+
+  it('normaliza tabs e espaços misturados "Jo\\t1\\t:\\t14"', () => {
+    const r = formatNexusContent(base('Jo \t1 \t: \t14'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 1, verse: 14 });
+  });
+});
+
+describe('formatNexusContent — vírgula repetida ou extra', () => {
+  const base = (reference_id: string) => ({
+    id: 'x', type: 'bible', content_text: 'v', reference_id, metadata: {},
+  });
+
+  it('parseia "Jo 14 , 6," (vírgula final)', () => {
+    const r = formatNexusContent(base('Jo 14 , 6,'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 14, verse: 6 });
+  });
+
+  it('parseia "Mt 11 , 29 ," (vírgula final com espaço)', () => {
+    const r = formatNexusContent(base('Mt 11 , 29 ,'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "Jo 14,,6" (vírgula dupla — pega apenas capítulo)', () => {
+    const r = formatNexusContent(base('Jo 14,,6'), 'bible');
+    // Com vírgula dupla, o parser não deve derivar versículo mas mantém book/chapter
+    expect(r.metadata.book).toBe('Jo');
+    expect(r.metadata.chapter).toBe(14);
+  });
+
+  it('parseia "Sl 23,," (só vírgulas soltas após capítulo)', () => {
+    const r = formatNexusContent(base('Sl 23,,'), 'bible');
+    expect(r.metadata.book).toBe('Sl');
+    expect(r.metadata.chapter).toBe(23);
+    expect(r.metadata.verse).toBeUndefined();
+  });
+});
+
+describe('formatNexusContent — hífen como separador', () => {
+  const base = (reference_id: string) => ({
+    id: 'x', type: 'bible', content_text: 'v', reference_id, metadata: {},
+  });
+
+  it('parseia "Mt 11-29" (hífen sem espaços)', () => {
+    const r = formatNexusContent(base('Mt 11-29'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "Jo 1-14" (hífen sem espaços)', () => {
+    const r = formatNexusContent(base('Jo 1-14'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 1, verse: 14 });
+  });
+
+  it('parseia "Mt 11 - 29" (hífen com espaços)', () => {
+    const r = formatNexusContent(base('Mt 11 - 29'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "1Co 13-4" (livro com prefixo + hífen)', () => {
+    const r = formatNexusContent(base('1Co 13-4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
+  });
+});
+
