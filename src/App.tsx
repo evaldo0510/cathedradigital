@@ -529,7 +529,7 @@ const AppLayout: React.FC = () => {
               <Route path="/temas/:slug" element={<Suspense fallback={<LoadingFallback />}><TemaDetailPage /></Suspense>} />
               {/* Glossário — rota canônica /glossario + redirects legados */}
               <Route path="/glossario" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
-              <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryTermPage /></Suspense>} />
               <Route path="/glossary" element={<Navigate to="/glossario" replace />} />
               <Route path="/glossary/:slug" element={<Navigate to="/glossario" replace />} />
               <Route path="/az-faith" element={<Navigate to="/glossario" replace />} />
