@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +12,17 @@ import { Button } from '@/components/ui/button';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
+
+const LAST_TERM_STORAGE_KEY = 'cathedra:glossary:last-term';
+
+export function slugifyTerm(term: string): string {
+  return term
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
 
 interface GlossaryTerm {
   id: string;
@@ -98,6 +109,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const GlossaryPage: React.FC = () => {
   const navigate = useNavigate();
+  const { slug } = useParams<{ slug?: string }>();
   const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('Todos');
@@ -132,16 +144,53 @@ const GlossaryPage: React.FC = () => {
     fetchTerms();
   }, []);
 
+  // Resolve slug from URL → abre o termo correspondente.
+  // Fallback: sem slug, restaura o último termo aberto (continuidade salva).
   useEffect(() => {
-    if (expandedId) {
-      const el = document.getElementById(`term-${expandedId}`);
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
+    if (loading || terms.length === 0) return;
+
+    if (slug) {
+      const match = terms.find(t => slugifyTerm(t.term) === slug);
+      if (match) {
+        setExpandedId(match.id);
+        try {
+          localStorage.setItem(LAST_TERM_STORAGE_KEY, slug);
+        } catch { /* storage indisponível */ }
       }
+      return;
     }
-  }, [expandedId]);
+
+    // Sem slug: tenta restaurar o último termo.
+    try {
+      const lastSlug = localStorage.getItem(LAST_TERM_STORAGE_KEY);
+      if (lastSlug) {
+        const match = terms.find(t => slugifyTerm(t.term) === lastSlug);
+        if (match) setExpandedId(match.id);
+      }
+    } catch { /* storage indisponível */ }
+  }, [slug, loading, terms]);
+
+  // Ao expandir manualmente, persiste como último termo e atualiza URL.
+  useEffect(() => {
+    if (!expandedId) return;
+    const term = terms.find(t => t.id === expandedId);
+    if (!term) return;
+    const termSlug = slugifyTerm(term.term);
+    try {
+      localStorage.setItem(LAST_TERM_STORAGE_KEY, termSlug);
+    } catch { /* storage indisponível */ }
+    // Atualiza URL sem recarregar (só se diferente).
+    if (slug !== termSlug) {
+      window.history.replaceState(null, '', `/glossario/${termSlug}`);
+    }
+
+    const el = document.getElementById(`term-${expandedId}`);
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [expandedId, terms, slug]);
 
   const categories = useMemo(() => {
 
