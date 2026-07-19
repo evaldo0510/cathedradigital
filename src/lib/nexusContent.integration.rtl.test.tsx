@@ -93,5 +93,47 @@ for (const mode of ['light', 'dark'] as const) {
       unmount();
       document.body.removeChild(container);
     });
+
+    it('normaliza query string book/chapter/verse para múltiplos formatos válidos', () => {
+      const cases: Array<{ ref: string; href: string }> = [
+        { ref: 'Mt 11, 29', href: '/bible?book=Mt&ch=11&verse=29' },
+        { ref: '1Co 13:4', href: '/bible?book=1Co&ch=13&verse=4' },
+        { ref: 'I Co 13, 4', href: '/bible?book=1Co&ch=13&verse=4' },
+        { ref: 'Jo 1-14', href: '/bible?book=Jo&ch=1&verse=14' },
+        { ref: 'Sl 23', href: '/bible?book=Sl&ch=23' }, // capítulo sem versículo
+      ];
+      for (const { ref, href } of cases) {
+        const item = formatNexusContent(
+          { id: `k-${ref}`, type: 'bible', reference_id: ref, metadata: {}, content_text: '' },
+          'bible'
+        );
+        const container = document.createElement('div');
+        container.setAttribute('dir', 'rtl');
+        if (mode === 'dark') container.classList.add('dark');
+        document.body.appendChild(container);
+        const { getByRole, unmount } = render(<NexusBubbleSim items={[item]} />, { container });
+        const link = getByRole('link') as HTMLAnchorElement;
+        expect(link.getAttribute('href')).toBe(href);
+        expect(link.getAttribute('href')).not.toMatch(/undefined|NaN|null/i);
+        unmount();
+        document.body.removeChild(container);
+      }
+    });
+
+    it('sanitiza títulos com tokens "undefined"/"NaN" (fallback UI seguro)', () => {
+      const dirty = formatNexusContent(
+        { id: 'd1', type: 'bible', reference_id: 'undefined', metadata: {}, content_text: '' },
+        'bible'
+      );
+      expect(dirty.title).toBe('Escritura');
+      expect(dirty.title).not.toMatch(/undefined|NaN|null/i);
+
+      const middle = formatNexusContent(
+        { id: 'd2', type: 'catechism', reference_id: 'CIC undefined §NaN', metadata: { paragraph: 1 }, content_text: '' },
+        'catechism'
+      );
+      expect(middle.title).not.toMatch(/undefined|NaN/);
+    });
   });
 }
+
