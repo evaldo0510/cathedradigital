@@ -526,9 +526,14 @@ const AppLayout: React.FC = () => {
 
               <Route path="/temas" element={<Suspense fallback={<LoadingFallback />}><TemasPage /></Suspense>} />
               <Route path="/temas/:slug" element={<Suspense fallback={<LoadingFallback />}><TemaDetailPage /></Suspense>} />
-              <Route path="/encyclopedia" element={<Suspense fallback={<LoadingFallback />}><AZFaithPage /></Suspense>} />
-              <Route path="/az-faith" element={<Suspense fallback={<LoadingFallback />}><AZFaithPage /></Suspense>} />
-              <Route path="/glossary" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              {/* Glossário — rota canônica /glossario + redirects legados */}
+              <Route path="/glossario" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              <Route path="/glossary" element={<Navigate to="/glossario" replace />} />
+              <Route path="/glossary/:slug" element={<Navigate to="/glossario" replace />} />
+              <Route path="/az-faith" element={<Navigate to="/glossario" replace />} />
+              <Route path="/encyclopedia" element={<Navigate to="/glossario" replace />} />
+
               <Route path="/aquinas" element={<Suspense fallback={<LoadingFallback />}><AquinasOpera /></Suspense>} />
               <Route path="/guia-modulos" element={<Suspense fallback={<LoadingFallback />}><ModulesGuidePage /></Suspense>} />
 
