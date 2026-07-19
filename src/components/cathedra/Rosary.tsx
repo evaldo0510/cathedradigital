@@ -92,6 +92,26 @@ const Rosary: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSet]);
 
+  /* Handlers estáveis (devem ficar antes de qualquer return condicional). */
+  const saveRef = useRef(save);
+  useEffect(() => {
+    saveRef.current = save;
+  }, [save]);
+  const handleClose = useCallback(() => setIsPraying(false), []);
+  const handleProgress = useCallback(
+    (stepIndex: number, mysteryIndex: number, currentMode: RosaryMode) => {
+      if (!selectedSet) return;
+      const s = MYSTERY_SETS[selectedSet];
+      saveRef.current({
+        section: selectedSet,
+        step: stepIndex,
+        label: `${s.name}|${currentMode}|${mysteryIndex}`,
+      });
+    },
+    [selectedSet],
+  );
+
+
 
   /* -------------------------------------------------------------------------- */
   /* Landing — seleção do conjunto                                              */
