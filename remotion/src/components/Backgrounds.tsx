@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { COLORS } from "./theme";
+import { COLORS } from "../theme";
 
 // Parchment texture built with layered radial gradients + subtle drift.
 export const ParchmentBackground: React.FC<{ intensity?: number }> = ({
