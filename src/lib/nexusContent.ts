@@ -102,11 +102,31 @@ export function formatNexusContent(data: any, type: string): TagContent {
   return {
     id: data.id,
     type: data.type,
-    content_text: data.content_text || '',
-    title: data.reference_id || data.title || fallbackReference,
+    content_text: safeText(data.content_text),
+    title: safeTitle(data.reference_id) ?? safeTitle(data.title) ?? fallbackReference,
     metadata: baseMeta,
   };
 }
+
+/**
+ * Fallback de UI: nunca renderiza "undefined", "NaN" ou "null" como texto
+ * visível. Retorna string trimada ou null se o valor não for exibível.
+ */
+function safeTitle(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null;
+  const t = raw.trim();
+  if (!t) return null;
+  if (/^(undefined|null|nan)$/i.test(t)) return null;
+  // Remove tokens "undefined"/"NaN" no meio (ex.: "Mt undefined:NaN").
+  const cleaned = t.replace(/\b(undefined|NaN|null)\b/gi, '').replace(/\s+/g, ' ').trim();
+  return cleaned || null;
+}
+
+function safeText(raw: unknown): string {
+  if (typeof raw !== 'string') return '';
+  return raw.replace(/\b(undefined|NaN)\b/g, '').trim();
+}
+
 
 /**
  * Fetches and formats content for a specific tag.
