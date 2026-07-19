@@ -365,6 +365,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   size="icon"
                                   disabled={isOpeningLogos}
                                   className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
+                                  aria-label={`Pedir explicação à Logos IA sobre ${item.title}`}
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
