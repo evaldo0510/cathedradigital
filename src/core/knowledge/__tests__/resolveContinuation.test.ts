@@ -55,4 +55,62 @@ describe('resolveContinuation', () => {
     // Já valida que a função não quebra com nó válido sem vizinhos.
     expect(Array.isArray(r)).toBe(true);
   });
+
+  it('cada sugestão contém uma URL absoluta iniciando com "/"', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      themeIds: ['theme:esperanca'],
+    });
+    expect(r.length).toBeGreaterThan(0);
+    for (const s of r) {
+      expect(s.target.url).toMatch(/^\//);
+    }
+  });
+
+  it('mapeia a intent "meet" para nós saint/father (regra por kind)', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      themeIds: ['theme:esperanca'],
+    });
+    for (const s of r.filter((x) => x.intent === 'meet')) {
+      expect(['saint', 'father']).toContain(s.target.node.kind);
+    }
+  });
+
+  it('mapeia a intent "pray" apenas para nós prayer', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      themeIds: ['theme:esperanca'],
+    });
+    for (const s of r.filter((x) => x.intent === 'pray')) {
+      expect(s.target.node.kind).toBe('prayer');
+    }
+  });
+
+  it('respeita o teto de 4 sugestões mesmo em temas com muitas arestas', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      themeIds: ['theme:esperanca'],
+    });
+    expect(r.length).toBeLessThanOrEqual(4);
+  });
+
+  it('exclui a própria âncora dos resultados', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      themeIds: ['theme:esperanca'],
+    });
+    expect(r.some((s) => s.target.node.id === 'theme:esperanca')).toBe(false);
+  });
+
+  it('combina themeIds + currentId sem duplicar sugestões', () => {
+    const r = resolveContinuation({
+      currentKind: 'bible',
+      currentId: 'bible:joao:6',
+      themeIds: ['theme:esperanca'],
+    });
+    const ids = r.map((s) => s.target.node.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });
+
