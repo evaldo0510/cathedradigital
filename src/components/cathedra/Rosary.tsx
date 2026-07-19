@@ -58,21 +58,58 @@ const Rosary: React.FC = () => {
   const { progress, loaded, save } = useDevotionalProgress("rosary");
   const { setIndex, setFavorite } = useDevotionalReader();
 
-  // Retorno vindo do Glossário (ou qualquer origem com #preparation): move
-  // o foco ao cabeçalho da preparação assim que o conjunto for restaurado.
-  // Cabeçalho recebe tabIndex={-1} para ser programaticamente focável sem
-  // entrar na ordem natural de tab — padrão de "skip focus" acessível.
+  // Move o foco ao cabeçalho da preparação em três cenários:
+  //   1) Navegação intencional com `#preparation` (ex.: botão do Glossário).
+  //   2) Restauração via histórico do navegador (back/forward) — usuário
+  //      já esteve numa sessão e voltou pelo botão do sistema, então o
+  //      hash pode já ter sido limpo. `PerformanceNavigationTiming.type`
+  //      === "back_forward" cobre esse caso.
+  //   3) Popstate ao vivo dentro da SPA (ex.: BFCache/Firefox restore).
+  // Cabeçalho tem tabIndex={-1} para ser focável sem entrar na ordem de tab.
+  const didFocusHeadingRef = useRef(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.location.hash !== "#preparation") return;
     if (!loaded || !selectedSet || isPraying) return;
+    if (didFocusHeadingRef.current) return;
+
+    const hasHash = window.location.hash === "#preparation";
+    const navEntry = performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    const isHistoryRestore = navEntry?.type === "back_forward";
+
+    if (!hasHash && !isHistoryRestore) return;
+
     const raf = window.requestAnimationFrame(() => {
       preparationHeadingRef.current?.focus();
-      // Remove o hash sem recarregar nem empurrar entrada no histórico.
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      didFocusHeadingRef.current = true;
+      if (hasHash) {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
     });
     return () => window.cancelAnimationFrame(raf);
   }, [loaded, selectedSet, isPraying]);
+
+  // Popstate/BFCache: usuário volta ao Rosário sem trigger de re-render de
+  // rota. Reseta a flag e força novo foco após rehidratação do estado.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = () => {
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => {
+        if (preparationHeadingRef.current && !isPraying) {
+          preparationHeadingRef.current.focus();
+          didFocusHeadingRef.current = true;
+        }
+      });
+    };
+    window.addEventListener("popstate", handler);
+    window.addEventListener("pageshow", handler);
+    return () => {
+      window.removeEventListener("popstate", handler);
+      window.removeEventListener("pageshow", handler);
+    };
+  }, [isPraying]);
 
   const todaySet = useMemo(() => suggestSetForToday(), []);
 
