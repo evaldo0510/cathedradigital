@@ -58,7 +58,7 @@ const VIRTUE_TO_JOURNEY: Record<string, { id: string, name: string }> = {
   'missão': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
 };
 
-const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean; legacy?: boolean }> = ({ saint, onClose, autoReflect = false, legacy = false }) => {
   const { isPremium } = useAuth();
   const navigate = useNavigate();
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
@@ -111,12 +111,14 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
-        <EditorialReaderChrome
-          kicker={`Cathedra · Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
-          title={saint.name}
-          subtitle={saint.title}
-          shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
-        />
+        {!legacy && (
+          <EditorialReaderChrome
+            kicker={`Cathedra · Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+            title={saint.name}
+            subtitle={saint.title}
+            shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
+          />
+        )}
 
         <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-xl">
 

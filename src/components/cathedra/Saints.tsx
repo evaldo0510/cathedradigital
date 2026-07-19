@@ -27,7 +27,8 @@ import { EditorialHero } from '@/components/editorial';
 
 
 
-const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
+const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((props, ref) => {
+  const { legacyReader = false } = props;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
@@ -526,6 +527,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               saint={selectedSaint} 
               onClose={() => setSelectedSaint(null)} 
               autoReflect={autoReflect}
+              legacy={legacyReader}
             />
           )}
         </AnimatePresence>
