@@ -10,6 +10,17 @@
  * /estudar/* e /rezar/* inexistentes, resultando em 404 ao clicar no Nexus.
  */
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const EVIDENCE_DIR = path.resolve('playwright-report/nexus-evidence');
+const FAILURES_LOG = path.join(EVIDENCE_DIR, 'failures.log');
+fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
+
+function appendFailure(entry: Record<string, unknown>) {
+  const line = JSON.stringify({ ts: new Date().toISOString(), ...entry });
+  fs.appendFileSync(FAILURES_LOG, line + '\n');
+}
 
 // Params plausíveis para cada rota que exige placeholders.
 // Escolhidos a partir de slugs/valores reais existentes no banco/rotas.
