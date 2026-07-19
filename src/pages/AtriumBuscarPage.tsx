@@ -303,6 +303,9 @@ const AtriumBuscarPage: React.FC = () => {
         open={pickerOpen}
         onOpenChange={setPickerOpen}
         selectionOnly
+        initialSelection={
+          hasBibleFilter ? { abbr: livro, chapter: Number(capitulo) } : null
+        }
         onSelect={(sel) => {
           const next = new URLSearchParams(searchParams);
           next.set('livro', sel.abbr);
