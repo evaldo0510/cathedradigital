@@ -73,6 +73,7 @@ jobs:
           bunx playwright test \
             tests/e2e/bottom-nav-and-redirects-no-404.spec.ts \
             tests/e2e/nav-auth-admin-snapshots.spec.ts \
+            tests/e2e/legacy-redirects-status-codes.spec.ts \
             --project=chromium \
             --reporter=list
       - name: Upload Playwright report
