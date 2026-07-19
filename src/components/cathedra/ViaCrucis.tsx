@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { Icons } from '../../constants';
@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
 import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
+
+const VIA_METHOD_LABEL: Record<'landing' | 'journey', string> = {
+  landing: 'contemplativo',
+  journey: 'guiado',
+};
+
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
@@ -30,11 +36,89 @@ const ViaCrucis: React.FC = () => {
   const { progress, loaded, save } = useDevotionalProgress('viacrucis');
   const { setIndex, setFavorite } = useDevotionalReader();
 
+  // Ref para cabeçalho da tela ativa (landing ou estação). Focado UMA ÚNICA
+  // VEZ ao restaurar via histórico (back/forward), popstate na SPA, hash
+  // `#via-sacra`, ou BFCache (pageshow persisted=true).
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const didFocusHeadingRef = useRef(false);
+  const [restoreAnnouncement, setRestoreAnnouncement] = useState('');
+
   useEffect(() => {
     if (loaded && progress.step != null) {
       setCurrentStation(Math.max(0, Math.min(STATIONS.length - 1, progress.step - 1)));
+      if (progress.section === 'station') setIsJourney(true);
     }
-  }, [loaded, progress.step]);
+  }, [loaded, progress.step, progress.section]);
+
+  const focusHeading = useCallback(
+    (reason: 'hash' | 'history' | 'bfcache' | 'popstate') => {
+      if (typeof window === 'undefined') return;
+      const el = headingRef.current;
+      if (!el) return;
+      if (document.activeElement === el) {
+        didFocusHeadingRef.current = true;
+        return;
+      }
+      el.focus();
+      didFocusHeadingRef.current = true;
+      if (reason !== 'hash') {
+        const method = isJourney ? VIA_METHOD_LABEL.journey : VIA_METHOD_LABEL.landing;
+        const state = isJourney
+          ? `estação ${currentStation + 1} de ${STATIONS.length}`
+          : 'introdução';
+        setRestoreAnnouncement('');
+        window.requestAnimationFrame(() => {
+          setRestoreAnnouncement(`Via Sacra restaurada no modo ${method}, ${state}.`);
+        });
+      }
+    },
+    [isJourney, currentStation],
+  );
+
+  // Foco na entrada: hash `#via-sacra` ou restauração via histórico.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!loaded) return;
+    if (didFocusHeadingRef.current) return;
+
+    const hasHash = window.location.hash === '#via-sacra';
+    const navEntry = performance.getEntriesByType('navigation')[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    const isHistoryRestore = navEntry?.type === 'back_forward';
+
+    if (!hasHash && !isHistoryRestore) return;
+
+    const raf = window.requestAnimationFrame(() => {
+      focusHeading(hasHash ? 'hash' : 'history');
+      if (hasHash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [loaded, focusHeading]);
+
+  // Popstate/BFCache: foco disparado UMA ÚNICA VEZ por evento. pageshow
+  // inicial (persisted=false) é ignorado para evitar loop de refoco.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onPopstate = () => {
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => focusHeading('popstate'));
+    };
+    const onPageshow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      didFocusHeadingRef.current = false;
+      window.requestAnimationFrame(() => focusHeading('bfcache'));
+    };
+    window.addEventListener('popstate', onPopstate);
+    window.addEventListener('pageshow', onPageshow);
+    return () => {
+      window.removeEventListener('popstate', onPopstate);
+      window.removeEventListener('pageshow', onPageshow);
+    };
+  }, [focusHeading]);
+
 
   useEffect(() => {
     if (isJourney) {
@@ -71,14 +155,31 @@ const ViaCrucis: React.FC = () => {
   if (!isJourney) {
     return (
       <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+          data-testid="via-sacra-restore-live"
+        >
+          {restoreAnnouncement}
+        </div>
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
             <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
-          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
+          <h1
+            id="via-sacra-heading"
+            ref={headingRef}
+            tabIndex={-1}
+            className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+          >
+            Via Crucis
+          </h1>
           <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
         </motion.div>
+
 
         <div className="flex justify-center">
           <Button onClick={() => setIsJourney(true)} size="lg" className="h-spacing-3xl px-spacing-xl gap-spacing-sm rounded-premium-full shadow-premium-hover">
@@ -111,6 +212,15 @@ const ViaCrucis: React.FC = () => {
 
   return (
     <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        data-testid="via-sacra-restore-live"
+      >
+        {restoreAnnouncement}
+      </div>
       {/* Navigation */}
       <div className="flex items-center justify-between px-spacing-xs">
         <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-premium-full shadow-premium-md gap-spacing-xs">
@@ -142,12 +252,21 @@ const ViaCrucis: React.FC = () => {
         <div className="relative text-center space-y-spacing-lg">
           <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-premium-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
           <div className="space-y-spacing-xs">
-            <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
+            <h2
+              id="via-sacra-heading"
+              ref={headingRef}
+              tabIndex={-1}
+              className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-md"
+            >
+              {station.title}
+            </h2>
             <p className="text-premium-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-spacing-xs">
               <Icons.BookOpen className="w-spacing-md h-spacing-md" /> {station.scripture}
             </p>
           </div>
         </div>
+
+
 
         <div className="relative space-y-spacing-2xl max-w-spacing-2xl mx-auto">
           <div className="space-y-spacing-md">
