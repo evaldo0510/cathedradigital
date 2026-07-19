@@ -104,16 +104,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       {/* Icons.Image Sidebar */}
       <div className="w-full md:w-spacing-xs/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
         <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        
-        <div className="absolute bottom-spacing-xl left-spacing-xl right-spacing-xl text-white space-y-spacing-xs">
-          <span className="text-premium-xs font-black uppercase tracking-widest bg-primary px-spacing-sm py-spacing-2xs rounded-premium-full mb-spacing-md inline-block">
-            {CATEGORY_LABELS[saint.category] || saint.category}
-          </span>
-          <h2 className="text-premium-4xl font-serif font-bold leading-tight">{saint.name}</h2>
-          <p className="text-primary font-serif italic text-premium-lg opacity-90">{saint.title}</p>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </div>
+
 
       {/* Content Area */}
       <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
