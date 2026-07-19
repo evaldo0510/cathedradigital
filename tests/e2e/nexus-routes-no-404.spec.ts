@@ -30,31 +30,41 @@ const CASES: Array<{ key: string; params?: Record<string, string | number>; labe
   { key: 'pray.liturgy-today', label: 'Liturgia de hoje' },
 ];
 
-test.describe('Nexus — todos os links navegam sem 404', () => {
-  for (const c of CASES) {
-    test(`${c.key} → ${c.label} não gera 404`, async ({ page }) => {
-      // Resolve URL dentro do próprio app usando o RouteRegistry (fonte da verdade).
-      await page.goto('/', { waitUntil: 'domcontentloaded' });
-      const url = await page.evaluate(
-        async ({ key, params }) => {
-          const mod = await import('/src/core/navigation/RouteRegistry.ts');
-          return mod.RouteRegistry.resolve(key as never, params ?? {});
-        },
-        { key: c.key, params: c.params ?? {} }
-      );
+const VIEWPORTS: Array<{ name: 'desktop' | 'mobile'; width: number; height: number }> = [
+  { name: 'desktop', width: 1280, height: 800 },
+  { name: 'mobile', width: 390, height: 844 }, // iPhone 12/13/14
+];
 
-      expect(url, `URL resolvida para ${c.key}`).toBeTruthy();
-      // Nenhum link do Nexus pode voltar a apontar para prefixos antigos.
-      expect(url.startsWith('/estudar/'), 'não deve usar /estudar/*').toBe(false);
-      expect(url.startsWith('/rezar/'), 'não deve usar /rezar/*').toBe(false);
+for (const vp of VIEWPORTS) {
+  test.describe(`Nexus — todos os links navegam sem 404 [${vp.name}]`, () => {
+    test.use({ viewport: { width: vp.width, height: vp.height } });
 
-      const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
-      // O app é SPA: o HTTP status é 200 mesmo para rotas inexistentes.
-      // A prova real de 404 é o componente NotFound renderizar `<h1>404</h1>`.
-      expect(response?.status(), 'status HTTP').toBeLessThan(400);
+    for (const c of CASES) {
+      test(`[${vp.name}] ${c.key} → ${c.label} não gera 404`, async ({ page }) => {
+        // Resolve URL dentro do próprio app usando o RouteRegistry (fonte da verdade).
+        await page.goto('/', { waitUntil: 'domcontentloaded' });
+        const url = await page.evaluate(
+          async ({ key, params }) => {
+            const mod = await import('/src/core/navigation/RouteRegistry.ts');
+            return mod.RouteRegistry.resolve(key as never, params ?? {});
+          },
+          { key: c.key, params: c.params ?? {} }
+        );
 
-      const notFound = page.locator('h1', { hasText: /^404$/ });
-      await expect(notFound, `rota ${url} não pode renderizar NotFound`).toHaveCount(0);
-    });
-  }
-});
+        expect(url, `URL resolvida para ${c.key}`).toBeTruthy();
+        // Nenhum link do Nexus pode voltar a apontar para prefixos antigos.
+        expect(url.startsWith('/estudar/'), 'não deve usar /estudar/*').toBe(false);
+        expect(url.startsWith('/rezar/'), 'não deve usar /rezar/*').toBe(false);
+
+        const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+        // O app é SPA: o HTTP status é 200 mesmo para rotas inexistentes.
+        // A prova real de 404 é o componente NotFound renderizar `<h1>404</h1>`.
+        expect(response?.status(), 'status HTTP').toBeLessThan(400);
+
+        const notFound = page.locator('h1', { hasText: /^404$/ });
+        await expect(notFound, `rota ${url} não pode renderizar NotFound no ${vp.name}`).toHaveCount(0);
+      });
+    }
+  });
+}
+
