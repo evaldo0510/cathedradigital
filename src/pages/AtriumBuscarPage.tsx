@@ -297,6 +297,17 @@ const AtriumBuscarPage: React.FC = () => {
       </main>
 
       <MobileBottomNav />
+      <BiblePickerSheet
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        selectionOnly
+        onSelect={(sel) => {
+          const next = new URLSearchParams(searchParams);
+          next.set('livro', sel.abbr);
+          next.set('capitulo', String(sel.chapter));
+          setSearchParams(next, { replace: true });
+        }}
+      />
     </div>
   );
 };
