@@ -30,7 +30,6 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
         align="center"
         size="sm"
         rule={false}
-        className="!pt-10 md:!pt-6 !pb-0"
         icon={
           <div className="relative inline-block">
             <Icons.BookOpen className="w-12 h-12 mx-auto text-secondary/20" />
