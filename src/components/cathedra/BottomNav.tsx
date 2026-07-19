@@ -192,7 +192,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     mainItems.push({
       label: 'Atalhos',
       route: '',
-      icon: Icons.Sparkles,
+      icon: AtalhosIcon,
       isMenu: false,
       isAtalhos: true,
     });
