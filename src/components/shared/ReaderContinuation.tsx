@@ -27,7 +27,8 @@ export type ReaderContinuationKind =
   | 'magisterium'
   | 'saint'
   | 'journey-step'
-  | 'prayer';
+  | 'prayer'
+  | 'glossary-term';
 
 export interface ReaderContinuationContext {
   kind: ReaderContinuationKind;
