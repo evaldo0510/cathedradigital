@@ -108,6 +108,9 @@ const AtriumBibleReader: React.FC = () => {
 
 const BibleLanding: React.FC = () => {
   const [testament, setTestament] = useState<Testament>('Antigo Testamento');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const last = getBibleLastRead();
+  const lastBook = last ? findBookByAbbr(last.abbr) : undefined;
 
   const categories = useMemo(() => BIBLE_DATA[testament] ?? [], [testament]);
   const bookCount = useMemo(
@@ -131,7 +134,23 @@ const BibleLanding: React.FC = () => {
         <meta property="og:title" content="Cathedra — Sagrada Escritura" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar
+        kicker="Cathedra"
+        title="Bíblia"
+        transparent
+        actions={
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            aria-label="Escolher livro e capítulo"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+          >
+            <LayoutGrid className="h-5 w-5" />
+          </button>
+        }
+      />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* Hero */}
         <section className="border-b border-stitch-secondary/10 pb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
