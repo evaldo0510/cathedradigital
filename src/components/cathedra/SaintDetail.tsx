@@ -100,6 +100,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           type="button"
           onClick={() => {
             const targetId = (saint as any).slug || saint.id;
+            try {
+              localStorage.setItem('cathedra:saints:reader-variant', legacy ? 'new' : 'legacy');
+            } catch { /* ignore */ }
             navigate(legacy ? `/santos/${targetId}` : `/saints-legacy/${targetId}`);
           }}
           aria-label={legacy ? 'Ver versão nova do Reader' : 'Ver versão anterior do Reader'}

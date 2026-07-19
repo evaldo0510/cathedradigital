@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { useOfficialSaint } from '@/hooks/useSaints';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
@@ -40,6 +40,23 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Aplica preferência salva (legacy vs novo) ao abrir um santo por URL
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const pref = localStorage.getItem('cathedra:saints:reader-variant');
+      if (pref === 'legacy' && !legacyReader) {
+        navigate(`/saints-legacy/${id}`, { replace: true });
+        return;
+      }
+      if (pref === 'new' && legacyReader) {
+        navigate(`/santos/${id}`, { replace: true });
+        return;
+      }
+    } catch { /* ignore */ }
+  }, [id, legacyReader, navigate]);
 
   useEffect(() => {
     if (id) {
