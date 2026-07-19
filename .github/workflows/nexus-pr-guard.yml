@@ -36,6 +36,21 @@ jobs:
             src/lib/nexusContent.property.test.ts \
             src/lib/nexusContent.integration.rtl.test.tsx \
             src/lib/nexusIntegration.test.ts
+      - name: Coverage gate (nexusContent core)
+        run: |
+          bunx vitest run --coverage \
+            src/lib/nexusContent.test.ts \
+            src/lib/nexusContent.property.test.ts \
+            src/lib/nexusContent.integration.rtl.test.tsx
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-coverage
+          path: coverage
+          retention-days: 14
+          if-no-files-found: ignore
+
 
   playwright-nexus-rtl-dark:
     name: Playwright Nexus / RTL / dark
