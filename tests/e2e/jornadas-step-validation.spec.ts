@@ -16,9 +16,28 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-const JOURNEY_ID = process.env.E2E_JOURNEY_ID;
-const STEP_ID = process.env.E2E_JOURNEY_STEP_ID;
+// Descoberta automática: se as env vars não estiverem definidas, tenta ler
+// .e2e-ids.json (gerado por `bun run test:jornadas:discover`).
+function loadIds() {
+  let jid = process.env.E2E_JOURNEY_ID;
+  let sid = process.env.E2E_JOURNEY_STEP_ID;
+  const cache = join(process.cwd(), '.e2e-ids.json');
+  if ((!jid || !sid) && existsSync(cache)) {
+    try {
+      const parsed = JSON.parse(readFileSync(cache, 'utf-8'));
+      jid = jid || parsed.E2E_JOURNEY_ID;
+      sid = sid || parsed.E2E_JOURNEY_STEP_ID;
+    } catch {
+      /* ignora cache inválido */
+    }
+  }
+  return { JOURNEY_ID: jid, STEP_ID: sid };
+}
+
+const { JOURNEY_ID, STEP_ID } = loadIds();
 const HAS_AUTH = process.env.LOVABLE_BROWSER_AUTH_STATUS === 'injected';
 
 const STORAGE_KEY = process.env.LOVABLE_BROWSER_SUPABASE_STORAGE_KEY;
@@ -27,7 +46,7 @@ const SESSION_JSON = process.env.LOVABLE_BROWSER_SUPABASE_SESSION_JSON;
 test.describe('Jornadas — validação, autosave e preview de certificado', () => {
   test.skip(
     !JOURNEY_ID || !STEP_ID || !HAS_AUTH,
-    'Requer E2E_JOURNEY_ID, E2E_JOURNEY_STEP_ID e sessão Supabase injetada.',
+    'Requer IDs (auto-descobertos via `bun run test:jornadas:discover`) e sessão Supabase injetada.',
   );
 
   test.beforeEach(async ({ page, context }) => {

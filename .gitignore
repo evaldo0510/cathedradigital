@@ -42,3 +42,6 @@ summary.json
 translations.html
 bible-regression-test.js
 visual-audit-report.json
+
+# E2E discovered IDs cache
+.e2e-ids.json
