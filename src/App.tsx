@@ -663,6 +663,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/bible-import-jobs/:id" element={<BibleImportJobDetail />} />
                       <Route path="/admin/bible-gate-pendencies" element={<BibleGatePendencies />} />
                       <Route path="/admin/client-errors" element={<ClientErrors />} />
+                      <Route path="/admin/runtime-errors" element={<RuntimeErrors />} />
                       <Route path="/admin/bible-sprint1" element={<BibleSprint1Admin />} />
                       <Route path="/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo-status" element={<SEOStatusPage />} />
