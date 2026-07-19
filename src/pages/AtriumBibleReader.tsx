@@ -174,7 +174,29 @@ const BibleLanding: React.FC = () => {
               <span className="font-stitch-body">Buscar passagem…</span>
             </Link>
           </div>
+
+          {/* Ações rápidas: picker + continuar */}
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
+            >
+              <LayoutGrid className="h-4 w-4 text-stitch-secondary" />
+              Escolher livro
+            </button>
+            {last && lastBook && (
+              <Link
+                to={buildBibleUrl({ abbr: last.abbr, chapter: last.chapter })}
+                className="inline-flex items-center gap-2 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary"
+              >
+                Continuar em {lastBook.name} {last.chapter}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
         </section>
+
 
         {/* Testament switcher */}
         <section className="pt-10">
