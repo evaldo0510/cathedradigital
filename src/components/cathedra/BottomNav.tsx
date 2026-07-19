@@ -90,7 +90,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       "min-w-[48px] min-h-[48px]", 
       isActive 
         ? 'text-[#c9a84c]' 
-        : 'text-muted-foreground/40 hover:text-[#c9a84c]/70'
+        : 'text-foreground/80 hover:text-[#c9a84c]'
     )}
   >
     {isActive && (
