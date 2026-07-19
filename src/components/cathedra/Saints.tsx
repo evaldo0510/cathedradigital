@@ -71,11 +71,25 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
   useEffect(() => {
     if (id) {
+      try { localStorage.setItem('cathedra:saints:last-id', id); } catch { /* ignore */ }
       getSaintById(id).then(saint => {
         if (saint) setSelectedSaint(saint);
       });
     }
   }, [id]);
+
+  // Sem id na URL: retoma o último santo aberto respeitando a variante preferida
+  useEffect(() => {
+    if (id) return;
+    try {
+      const lastId = localStorage.getItem('cathedra:saints:last-id');
+      if (!lastId) return;
+      const pref = localStorage.getItem('cathedra:saints:reader-variant');
+      const base = pref === 'legacy' ? '/saints-legacy/' : '/santos/';
+      navigate(`${base}${lastId}`, { replace: true });
+    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ─── Queries ───
   
