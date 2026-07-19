@@ -312,6 +312,8 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
     if (!context.graphNodeId && (!context.themeIds || context.themeIds.length === 0)) {
       return [];
     }
+    // 'glossary-term' ainda não é resolvido pelo KnowledgeGraph — cai no fallback editorial.
+    if (context.kind === 'glossary-term') return [];
     return resolveContinuation({
       currentKind: context.kind === 'journey-step' ? 'journey-step' : context.kind,
       currentId: context.graphNodeId,
