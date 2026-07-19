@@ -73,6 +73,7 @@ jobs:
         run: |
           bunx playwright test \
             tests/e2e/nexus-bible-rtl-visual.spec.ts \
+            tests/e2e/nexus-bible-multi-viewport.spec.ts \
             tests/e2e/nexus-bible-catechism.spec.ts \
             tests/e2e/nexus-visual-diff.spec.ts \
             tests/e2e/nexus-visual-regression.spec.ts \
@@ -81,6 +82,7 @@ jobs:
             tests/e2e/mobile-footer-bottomnav-dark-keyboard.spec.ts \
             tests/e2e/reading-settings-popover-darkmode.spec.ts \
             --reporter=line,html
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
