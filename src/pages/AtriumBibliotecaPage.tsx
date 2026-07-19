@@ -286,6 +286,8 @@ const AtriumBibliotecaPage: React.FC = () => {
           </div>
         </section>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
