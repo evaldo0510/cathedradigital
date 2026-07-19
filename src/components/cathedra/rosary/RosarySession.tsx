@@ -40,8 +40,18 @@ interface Props {
   intention: string;
   initialMode: RosaryMode;
   initialStepIndex?: number;
+  /** Tempo já rezado antes desta retomada (ms). Somado ao cronômetro atual. */
+  initialElapsedMs?: number;
+  /** ISO da 1ª vez que esta sessão começou (mantido através de reloads). */
+  initialStartedAt?: string;
   onClose: () => void;
-  onProgress: (stepIndex: number, mysteryIndex: number, mode: RosaryMode) => void;
+  onProgress: (
+    stepIndex: number,
+    mysteryIndex: number,
+    mode: RosaryMode,
+    elapsedMs: number,
+    startedAt: string,
+  ) => void;
 }
 
 /* -------------------------------------------------------------------------- */
