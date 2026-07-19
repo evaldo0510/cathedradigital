@@ -26,7 +26,8 @@ export type ReaderContinuationKind =
   | 'catechism'
   | 'magisterium'
   | 'saint'
-  | 'journey-step';
+  | 'journey-step'
+  | 'prayer';
 
 export interface ReaderContinuationContext {
   kind: ReaderContinuationKind;
@@ -50,6 +51,10 @@ export interface ReaderContinuationContext {
     journeyId?: string;
     nextStepId?: string;
     theme?: string;
+    /** Slug da próxima oração (para kind='prayer'). */
+    nextPrayerSlug?: string;
+    /** Categoria atual da oração (para agrupar sugestões). */
+    prayerCategory?: string;
   };
 }
 
@@ -199,6 +204,33 @@ function buildSuggestions(ctx: ReaderContinuationContext): Suggestion[] {
       });
       break;
     }
+    case 'prayer': {
+      const { nextPrayerSlug } = meta;
+      if (nextPrayerSlug) {
+        out.push({
+          label: 'Próxima oração',
+          description: 'Continuar no Livro de Orações',
+          href: `/oracao/${nextPrayerSlug}`,
+          icon: Icons.ChevronRight,
+          variant: 'primary',
+        });
+      }
+      out.push({
+        label: 'Voltar ao índice',
+        description: 'Livro de Orações',
+        href: '/oracao',
+        icon: Icons.Book,
+        variant: 'secondary',
+      });
+      out.push({
+        label: 'Meditar na Escritura',
+        description: 'Buscar passagens relacionadas',
+        href: '/bible',
+        icon: Icons.Flame,
+        variant: 'secondary',
+      });
+      break;
+    }
   }
 
   // Fallback universal — sempre presente ao menos como âncora.
@@ -230,6 +262,7 @@ const KIND_TITLE: Record<ReaderContinuationKind, string> = {
   magisterium: 'Aprofundar a contemplação',
   saint: 'Continuar pela comunhão dos santos',
   'journey-step': 'Seguir na formação',
+  prayer: 'Continuar na oração',
 };
 
 const KIND_EPIGRAPH: Record<ReaderContinuationKind, string> = {
@@ -238,6 +271,7 @@ const KIND_EPIGRAPH: Record<ReaderContinuationKind, string> = {
   magisterium: '“Fides quaerens intellectum.” — Sto. Anselmo',
   saint: '“Ide, e fazei o mesmo.” — Lc 10,37',
   'journey-step': '“Corramos com perseverança a prova que nos está proposta.” — Hb 12,1',
+  prayer: '“Orai sem cessar.” — 1Ts 5,17',
 };
 
 export interface ReaderContinuationProps {
