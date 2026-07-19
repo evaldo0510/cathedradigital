@@ -69,6 +69,7 @@ const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumVi
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
+const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
