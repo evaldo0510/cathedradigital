@@ -190,6 +190,31 @@ const AtriumBuscarPage: React.FC = () => {
             )}
           </form>
 
+          {/* Filtro Bíblia: Livro / Capítulo */}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+              Filtrar
+            </span>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-3 py-1.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary"
+            >
+              <BookFilterIcon className="h-3.5 w-3.5 text-stitch-secondary" />
+              {livro && capitulo ? `${livro.toUpperCase()} ${capitulo}` : 'Livro / Capítulo'}
+            </button>
+            {(livro || capitulo) && (
+              <button
+                type="button"
+                onClick={clearBibleFilter}
+                className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant hover:text-stitch-primary"
+              >
+                Limpar filtro
+              </button>
+            )}
+          </div>
+
+
           {/* Sugestões */}
           {!hasQuery && (
             <div className="mt-6 flex flex-wrap items-center gap-2">
