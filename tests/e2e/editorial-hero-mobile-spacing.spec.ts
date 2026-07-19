@@ -1,34 +1,26 @@
-import { test, expect, devices } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import {
+  EDITORIAL_HERO_ROUTES,
+  MOBILE_SPACING_WIDTHS,
+  TOP_SPACING_EXPECTED_MOBILE,
+  TOP_SPACING_EXPECTED_DESKTOP,
+  getMinMobileTop,
+} from './editorial-hero.config';
+
+// Reexport para compatibilidade com specs antigos.
+export { EDITORIAL_HERO_ROUTES } from './editorial-hero.config';
 
 /**
- * Regressão visual dos EditorialHero legacy:
+ * Regressão de espaçamento dos EditorialHero legacy/editorial.
  * - Garante que o hero nunca fica "colado no topo" no mobile.
- * - Compara consistência entre desktop e mobile em múltiplas larguras.
- * - Se o padding topo real for < 24px, falha (proxy para colagem visual).
+ * - Valida diretamente o padding computado por `data-top-spacing`.
  */
 
-// Cobertura completa das páginas que consomem EditorialHero.
-// Ao adicionar uma nova rota que use <EditorialHero>, inclua-a aqui.
-export const EDITORIAL_HERO_ROUTES = [
-  { route: '/biblia', name: 'Bible', variant: 'legacy' as const },
-  { route: '/magisterio', name: 'Magisterium', variant: 'legacy' as const },
-  { route: '/santos', name: 'Saints', variant: 'legacy' as const },
-  { route: '/biblioteca', name: 'Biblioteca', variant: 'editorial' as const },
-];
+for (const routeCfg of EDITORIAL_HERO_ROUTES) {
+  const { route, name, variant: expectedVariant } = routeCfg;
+  const minTop = getMinMobileTop(routeCfg);
 
-const HEROS = EDITORIAL_HERO_ROUTES;
-const MOBILE_WIDTHS = [320, 375, 414];
-const MIN_MOBILE_TOP_PADDING_LEGACY = 24; // px — abaixo disso consideramos "colado"
-const MIN_MOBILE_TOP_PADDING_EDITORIAL = 16; // editorial usa escala fluida, tolerância menor
-
-
-for (const { route, name, variant: expectedVariant } of HEROS) {
-  const minTop =
-    expectedVariant === 'legacy'
-      ? MIN_MOBILE_TOP_PADDING_LEGACY
-      : MIN_MOBILE_TOP_PADDING_EDITORIAL;
-
-  for (const width of MOBILE_WIDTHS) {
+  for (const width of MOBILE_SPACING_WIDTHS) {
     test(`${name} hero @${width}px não fica colado no topo`, async ({ browser }) => {
       const ctx = await browser.newContext({
         viewport: { width, height: 800 },
@@ -75,12 +67,32 @@ for (const { route, name, variant: expectedVariant } of HEROS) {
     expect.soft(dPad, `${name} desktop paddingTop`).toBeGreaterThan(0);
     expect.soft(mPad, `${name} mobile paddingTop`).toBeGreaterThanOrEqual(minTop);
     expect.soft(variant, `${name} variant`).toBe(expectedVariant);
-    // Variant legacy DEVE ter topSpacing safe (default do componente).
     if (expectedVariant === 'legacy') {
       expect.soft(topSpacing, `${name} topSpacing`).toBe('safe');
     }
+
+    // Asserção direta do topSpacing (complementa o proxy do gap).
+    const key = topSpacing ?? 'default';
+    const expectedMobile = TOP_SPACING_EXPECTED_MOBILE[key];
+    const expectedDesktop = TOP_SPACING_EXPECTED_DESKTOP[key];
+    if (expectedMobile) {
+      expect
+        .soft(mPad, `${name} mobile paddingTop dentro da faixa esperada (topSpacing=${key})`)
+        .toBeGreaterThanOrEqual(expectedMobile.min);
+      expect
+        .soft(mPad, `${name} mobile paddingTop dentro da faixa esperada (topSpacing=${key})`)
+        .toBeLessThanOrEqual(expectedMobile.max);
+    }
+    if (expectedDesktop) {
+      expect
+        .soft(dPad, `${name} desktop paddingTop dentro da faixa esperada (topSpacing=${key})`)
+        .toBeGreaterThanOrEqual(expectedDesktop.min);
+      expect
+        .soft(dPad, `${name} desktop paddingTop dentro da faixa esperada (topSpacing=${key})`)
+        .toBeLessThanOrEqual(expectedDesktop.max);
+    }
+
     await desktopCtx.close();
     await mobileCtx.close();
   });
 }
-

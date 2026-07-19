@@ -99,3 +99,23 @@ componha apenas essas classes no `className`, deixando o `topSpacing` cuidar do 
 - Usar cores fora do namespace `stitch-*` sem justificar em PR.
 - Override de `padding-top`/`padding-bottom` no `className` do `EditorialHero` — use `topSpacing`.
 
+## Regressão visual do EditorialHero
+
+Configuração centralizada: `tests/e2e/editorial-hero.config.ts`
+(breakpoints — 320, 375, 768, 1280 — thresholds `maxDiffPixelRatio`,
+faixas esperadas de `paddingTop` por `topSpacing` e overrides por rota).
+
+Comandos:
+
+```bash
+# Rodar suíte (specs de spacing + pixel-diff)
+bun run test:editorial-hero
+
+# Atualizar baselines e destacar quais imagens mudaram
+bun run test:editorial-hero:update
+```
+
+No CI (`.github/workflows/editorial-hero.yml`), quando não há baseline
+salva o workflow gera automaticamente e sobe como artefato
+`editorial-hero-baselines-seed-*` para você commitar no PR.
+
