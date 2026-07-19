@@ -95,12 +95,26 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-premium-hover border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
-      <Button 
-        onClick={onClose} 
-        className="absolute top-spacing-lg right-spacing-lg p-spacing-sm bg-foreground/10 hover:bg-foreground/20 rounded-premium-full  text-foreground transition-all z-20"
-      >
-        <Icons.X className="w-spacing-md h-spacing-md" />
-      </Button>
+      <div className="absolute top-spacing-lg right-spacing-lg z-20 flex items-center gap-spacing-xs">
+        <button
+          type="button"
+          onClick={() => {
+            const targetId = (saint as any).slug || saint.id;
+            navigate(legacy ? `/santos/${targetId}` : `/saints-legacy/${targetId}`);
+          }}
+          aria-label={legacy ? 'Ver versão nova do Reader' : 'Ver versão anterior do Reader'}
+          title={legacy ? 'Versão nova' : 'Versão anterior'}
+          className="h-spacing-2xl px-spacing-md rounded-premium-full bg-foreground/10 hover:bg-foreground/20 text-foreground font-stitch-body text-[11px] font-bold uppercase tracking-[0.18em] transition-all"
+        >
+          {legacy ? 'Versão nova' : 'Versão anterior'}
+        </button>
+        <Button
+          onClick={onClose}
+          className="p-spacing-sm bg-foreground/10 hover:bg-foreground/20 rounded-premium-full text-foreground transition-all"
+        >
+          <Icons.X className="w-spacing-md h-spacing-md" />
+        </Button>
+      </div>
 
       {/* Icons.Image Sidebar */}
       <div className="w-full md:w-2/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
