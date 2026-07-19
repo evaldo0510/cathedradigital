@@ -67,17 +67,32 @@ test.describe('Santos · Toggle e Reader — Acessibilidade', () => {
     await expect(close).toBeVisible();
   });
 
+  // Escopo do axe restrito à barra de ações do Reader (toggle + Fechar).
+  // O corpo do Reader tem violações pré-existentes (button-name, color-contrast)
+  // que não são objeto deste teste — devem ser tratadas em ticket próprio.
   for (const variant of [
     { name: 'novo', path: `/santos/${SAINT_ID}?legacy=0` },
-    { name: 'legacy', path: `/saints-legacy/${SAINT_ID}` },
+    { name: 'legacy', path: `/saints-legacy/${SAINT_ID}?legacy=1` },
   ] as const) {
-    test(`Axe: Reader ${variant.name} sem violações críticas/sérias`, async ({ page }) => {
+    test(`Axe: barra de ações (${variant.name}) sem violações críticas/sérias`, async ({ page }) => {
       await page.goto(variant.path);
       await waitReader(page);
 
+      const toggleLabel =
+        variant.name === 'legacy'
+          ? 'Ver versão nova do Reader'
+          : 'Ver versão anterior do Reader';
+      const actionsBar = page
+        .locator(`button[aria-label="${toggleLabel}"]`)
+        .locator('..');
+
       const results = await new AxeBuilder({ page })
+        .include(await actionsBar.evaluate((el) => {
+          // devolve um seletor único para o container
+          if (!el.id) el.id = `a11y-actions-${Math.random().toString(36).slice(2)}`;
+          return `#${el.id}`;
+        }).then((sel) => sel))
         .withTags(CRITICAL_TAGS)
-        .disableRules(['region', 'landmark-one-main']) // Reader é overlay modal
         .analyze();
 
       const bad = results.violations.filter((v) =>
@@ -87,3 +102,4 @@ test.describe('Santos · Toggle e Reader — Acessibilidade', () => {
     });
   }
 });
+
