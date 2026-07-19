@@ -36,6 +36,15 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   useAutoFocus();
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
+  const bibleLivro = searchParams.get('livro') ?? '';
+  const bibleCapitulo = searchParams.get('capitulo') ?? '';
+  const hasBibleFilter = Boolean(bibleLivro && bibleCapitulo);
+  const clearBibleFilter = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('livro');
+    next.delete('capitulo');
+    setSearchParams(next, { replace: true });
+  };
 
   // Sincroniza URL ↔ estado: mudanças externas (link, back/forward) hidratam o input.
   useEffect(() => {
