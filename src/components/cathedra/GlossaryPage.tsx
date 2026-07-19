@@ -12,6 +12,12 @@ import { Button } from '@/components/ui/button';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
+import {
+  getRosaryReturn,
+  clearRosaryReturn,
+  formatElapsedShort,
+  type RosaryReturnContext,
+} from '@/lib/rosaryReturnContext';
 
 const LAST_TERM_STORAGE_KEY = 'cathedra:glossary:last-term';
 
