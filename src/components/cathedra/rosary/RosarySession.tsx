@@ -756,10 +756,69 @@ const TextToggle: React.FC<{ showText: boolean; onToggle: () => void }> = ({
     type="button"
     onClick={onToggle}
     aria-pressed={!showText}
-    className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/50 hover:text-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+    className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/75 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded px-2 py-1"
   >
     {showText ? "Ocultar texto" : "Mostrar texto"}
   </button>
+);
+
+/* -------------------------------------------------------------------------- */
+/* Continuação inteligente por mistério                                       */
+/* -------------------------------------------------------------------------- */
+
+interface MysteryContinuationProps {
+  mystery: Mystery;
+  setKey: MysterySet;
+  onCtaClick: (evt: { label: string; href: string; kind: string }) => void;
+}
+
+const MysteryContinuation: React.FC<MysteryContinuationProps> = ({
+  mystery,
+  setKey,
+  onCtaClick,
+}) => (
+  <section
+    aria-label={`Aprofundar o mistério ${mystery.title}`}
+    className="mt-spacing-lg border-t border-secondary/25 pt-spacing-lg text-left"
+  >
+    <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80 text-center">
+      Aprofundar “{mystery.title}”
+    </p>
+    {mystery.links.length > 0 && (
+      <ul className="mt-spacing-md flex flex-col gap-spacing-sm">
+        {mystery.links.map((l) => (
+          <li key={l.href}>
+            <Link
+              to={l.href}
+              onClick={() =>
+                onCtaClick({ label: l.label, href: l.href, kind: `rosary-link:${l.kind}` })
+              }
+              className="flex items-center gap-3 min-h-11 px-4 py-3 rounded-premium-lg border border-secondary/25 bg-secondary/[0.05] text-secondary hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 w-20">
+                {l.eyebrow ?? l.kind}
+              </span>
+              <span className="font-serif">{l.label}</span>
+              <Icons.ChevronRight className="w-4 h-4 ml-auto opacity-70" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    )}
+    <div className="mt-spacing-md">
+      <ReaderContinuation
+        context={{
+          kind: "prayer",
+          id: `rosary:${setKey}:${mystery.id}`,
+          themeIds: mystery.themeIds,
+          meta: { prayerCategory: "marianas" },
+        }}
+        onCtaClick={(evt) =>
+          onCtaClick({ ...evt, kind: `reader-continuation:${mystery.id}` })
+        }
+      />
+    </div>
+  </section>
 );
 
 export default RosarySession;
