@@ -279,6 +279,28 @@ const JornadaCompletePage: React.FC = () => {
           que foi lido se torne oração, e o que foi orado se torne vida.
         </p>
 
+        {/* ─── Barra de progresso final ─────────────── */}
+        <div className="mt-8 max-w-[520px]" role="group" aria-label="Progresso da jornada">
+          <div className="flex items-baseline justify-between font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
+            <span>Progresso</span>
+            <span className="text-stitch-secondary">100% · Completa</span>
+          </div>
+          <div
+            className="mt-2 h-[2px] w-full overflow-hidden bg-stitch-surface-container-high"
+            role="progressbar"
+            aria-valuenow={100}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 1.2, ease: 'easeOut' }}
+              className="h-full bg-stitch-secondary"
+            />
+          </div>
+        </div>
+
         {/* ─── Certificado ───────────────────────────── */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
