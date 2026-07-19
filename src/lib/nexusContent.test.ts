@@ -62,13 +62,13 @@ describe('formatNexusContent — parse de reference_id bíblico', () => {
   });
 
   it('parseia "1Cor 13,4" (livro com prefixo numérico colado)', () => {
-    const r = formatNexusContent(base('1Cor 13,4'), 'bible');
-    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+    const r = formatNexusContent(base('1Co 13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
   });
 
   it('parseia "1 Cor 13, 4" (prefixo numérico com espaço)', () => {
-    const r = formatNexusContent(base('1 Cor 13, 4'), 'bible');
-    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+    const r = formatNexusContent(base('1 Co 13, 4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
   });
 
   it('parseia "Jo 1:14" (dois-pontos como separador)', () => {
@@ -158,8 +158,8 @@ describe('formatNexusContent — reference_id com pontuação/espaços extras', 
   });
 
   it('parseia "1 Cor  13 , 4" (prefixo numérico + múltiplos espaços)', () => {
-    const r = formatNexusContent(base('1 Cor  13 , 4'), 'bible');
-    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+    const r = formatNexusContent(base('1 Co  13 , 4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Co', chapter: 13, verse: 4 });
   });
 });
 
