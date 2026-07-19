@@ -5,18 +5,44 @@ import { Step } from './lectio/constants';
 import LectioIntro from './lectio/LectioIntro';
 import LectioStep from './lectio/LectioStep';
 import LectioConclusio from './lectio/LectioConclusio';
+import LectioNotesSheet from './lectio/LectioNotesSheet';
+import { LectioMobileNav } from './lectio/LectioMobileNav';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import {
+  useLectioProgress,
+  getLectioProgress,
+  getLastLectio,
+} from './lectio/useLectioProgress';
 
 const LectioDivina: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialRef = searchParams.get('ref') || '';
-  const [currentStep, setCurrentStep] = useState<Step>(initialRef ? 'lectio' : 'intro');
-  const [selectedPassage, setSelectedPassage] = useState(initialRef);
-  const [notes, setNotes] = useState<Record<string, string>>({});
-  const [seconds, setSeconds] = useState(0);
+
+  // Hidratação inicial a partir do localStorage
+  const restored = React.useMemo(() => {
+    if (initialRef) return getLectioProgress(initialRef);
+    return getLastLectio();
+  }, [initialRef]);
+
+  const [selectedPassage, setSelectedPassage] = useState(initialRef || restored?.passage || '');
+  const [currentStep, setCurrentStep] = useState<Step>(
+    restored?.step ?? (initialRef ? 'lectio' : 'intro'),
+  );
+  const [notes, setNotes] = useState<Record<string, string>>(restored?.notes ?? {});
+  const [seconds, setSeconds] = useState(restored?.seconds ?? 0);
   const [bibleText, setBibleText] = useState<{ number: number; text: string }[]>([]);
   const [isBibleLoading, setIsBibleLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Persistência automática (localStorage)
+  useLectioProgress({
+    passage: selectedPassage,
+    step: currentStep,
+    notes,
+    seconds,
+    enabled: currentStep !== 'intro',
+  });
 
   // Auto-start timer when leaving intro
   useEffect(() => {
@@ -76,8 +102,16 @@ const LectioDivina: React.FC = () => {
   }, [selectedPassage, currentStep]);
 
   const handleStart = () => {
-    setCurrentStep('lectio');
-    setSeconds(0);
+    // Se já há progresso salvo para esta passagem, retoma; senão zera
+    const existing = getLectioProgress(selectedPassage);
+    if (existing) {
+      setCurrentStep(existing.step === 'intro' ? 'lectio' : existing.step);
+      setNotes(existing.notes);
+      setSeconds(existing.seconds);
+    } else {
+      setCurrentStep('lectio');
+      setSeconds(0);
+    }
   };
 
   const handleRestart = () => {
@@ -92,40 +126,74 @@ const LectioDivina: React.FC = () => {
     setBibleText([]);
   };
 
-  if (currentStep === 'intro') {
-    return (
-      <LectioIntro
-        selectedPassage={selectedPassage}
-        onPassageChange={setSelectedPassage}
-        onStart={handleStart}
-      />
-    );
-  }
-
-  if (currentStep === 'conclusio') {
-    return (
-      <LectioConclusio
-        selectedPassage={selectedPassage}
-        notes={notes}
-        seconds={seconds}
-        onRestart={handleRestart}
-      />
-    );
-  }
-
-  return (
-    <LectioStep
-      currentStep={currentStep}
-      selectedPassage={selectedPassage}
+  const notesSheet = (
+    <LectioNotesSheet
+      passage={selectedPassage}
       notes={notes}
       onNotesChange={setNotes}
-      seconds={seconds}
-      bibleText={bibleText}
-      isBibleLoading={isBibleLoading}
-      bibleError={bibleError}
-      onBack={handleBack}
-      onStepChange={setCurrentStep}
+      currentStep={currentStep === 'intro' || currentStep === 'conclusio' ? undefined : currentStep}
+      onGoToStep={(s) => setCurrentStep(s)}
     />
+  );
+
+  const showLectioNav = currentStep !== 'intro' && currentStep !== 'conclusio';
+
+  return (
+    <>
+      {currentStep === 'intro' && (
+        <>
+          <LectioIntro
+            selectedPassage={selectedPassage}
+            onPassageChange={setSelectedPassage}
+            onStart={handleStart}
+          />
+          <MobileBottomNav />
+        </>
+      )}
+
+      {currentStep === 'conclusio' && (
+        <>
+          <LectioConclusio
+            selectedPassage={selectedPassage}
+            notes={notes}
+            seconds={seconds}
+            onRestart={handleRestart}
+          />
+          <MobileBottomNav />
+        </>
+      )}
+
+      {showLectioNav && (
+        <>
+          {/* Barra flutuante desktop + mobile para abrir notas rapidamente */}
+          <div className="fixed right-4 top-20 z-30 hidden md:block">
+            {notesSheet}
+          </div>
+          <div className="md:hidden fixed right-3 bottom-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+12px)] z-30">
+            {notesSheet}
+          </div>
+
+          <LectioStep
+            currentStep={currentStep as Exclude<Step, 'intro' | 'conclusio'>}
+            selectedPassage={selectedPassage}
+            notes={notes}
+            onNotesChange={setNotes}
+            seconds={seconds}
+            bibleText={bibleText}
+            isBibleLoading={isBibleLoading}
+            bibleError={bibleError}
+            onBack={handleBack}
+            onStepChange={setCurrentStep}
+          />
+
+          <LectioMobileNav
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+            disabled={isBibleLoading}
+          />
+        </>
+      )}
+    </>
   );
 };
 
