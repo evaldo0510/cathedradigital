@@ -76,7 +76,46 @@ jobs:
           done
           echo "preview failed to start"; exit 1
 
+      - name: Detect missing baselines
+        id: baselines
+        run: |
+          shopt -s globstar nullglob
+          count=0
+          for f in tests/e2e/editorial-hero-visual-regression.spec.ts-snapshots/**/*.png tests/e2e/__snapshots__/editorial-hero-visual-regression.spec.ts/**/*.png; do
+            [ -e "$f" ] && count=$((count+1))
+          done
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -eq 0 ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Nenhuma baseline encontrada — rodando --update-snapshots para gerar seed."
+          else
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Seed baselines (quando ausentes)
+        if: steps.baselines.outputs.missing == 'true'
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
+          CI: 'true'
+        run: |
+          bunx playwright test \
+            --project=${{ matrix.project }} \
+            tests/e2e/editorial-hero-visual-regression.spec.ts \
+            --update-snapshots || true
+
+      - name: Upload seeded baselines
+        if: steps.baselines.outputs.missing == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: editorial-hero-baselines-seed-${{ matrix.project }}
+          path: |
+            tests/e2e/editorial-hero-visual-regression.spec.ts-snapshots/
+            tests/e2e/__snapshots__/editorial-hero-visual-regression.spec.ts/
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Run Editorial Hero specs
+        if: steps.baselines.outputs.missing != 'true'
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
           CI: 'true'
