@@ -106,6 +106,8 @@ const AtriumBuscarPage: React.FC = () => {
   }, [urlQuery]);
 
   const hasQuery = urlQuery.trim().length >= 2;
+  const hasBibleFilter = Boolean(livro && capitulo);
+  const showResults = hasQuery || hasBibleFilter;
 
   const submit = (value: string) => {
     const next = new URLSearchParams(searchParams);
