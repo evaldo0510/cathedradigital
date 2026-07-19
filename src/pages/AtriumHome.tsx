@@ -229,10 +229,10 @@ const AtriumHome: React.FC = () => {
                   </span>
                   <span className="text-xs opacity-60">{today}</span>
                 </div>
-                <h3 className="mb-4 font-stitch-display text-[28px] italic leading-tight">
+                <h3 className="mb-4 font-stitch-display text-[28px] italic leading-tight text-stitch-primary-foreground">
                   {saintOfDay}
                 </h3>
-                <p className="font-stitch-body text-[16px] italic leading-relaxed opacity-80">
+                <p className="font-stitch-body text-[16px] italic leading-relaxed text-stitch-primary-foreground/90">
                   {saintQuote}
                 </p>
                 {liturgy?.season && (
