@@ -96,7 +96,10 @@ const SUGGESTIONS = [
 const AtriumBuscarPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlQuery = searchParams.get('q') ?? '';
+  const livro = searchParams.get('livro') ?? '';
+  const capitulo = searchParams.get('capitulo') ?? '';
   const [draft, setDraft] = useState(urlQuery);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     setDraft(urlQuery);
@@ -110,6 +113,14 @@ const AtriumBuscarPage: React.FC = () => {
     else next.delete('q');
     setSearchParams(next, { replace: true });
   };
+
+  const clearBibleFilter = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('livro');
+    next.delete('capitulo');
+    setSearchParams(next, { replace: true });
+  };
+
 
   return (
     <div
