@@ -25,7 +25,7 @@ const PrayerDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { prayer, loading, error } = usePrayer(slug);
   const { prayers } = usePrayers();
-  const { items: favorites, add, remove } = useDevotionalFavorites('prayer');
+  const { items: favorites, toggle } = useDevotionalFavorites('prayer');
 
   const isFavorite = useMemo(
     () => (prayer ? favorites.some((f) => f.content_id === prayer.id) : false),
@@ -42,14 +42,8 @@ const PrayerDetailPage: React.FC = () => {
 
   const toggleFavorite = async () => {
     if (!prayer) return;
-    if (isFavorite) {
-      const fav = favorites.find((f) => f.content_id === prayer.id);
-      if (fav) {
-        await remove(fav.id);
-        toast.success('Removida dos favoritos');
-      }
-    } else {
-      await add({
+    try {
+      await toggle({
         contentType: 'prayer',
         contentId: prayer.id,
         title: prayer.title,
@@ -57,7 +51,14 @@ const PrayerDetailPage: React.FC = () => {
         url: `/oracao/${prayer.slug}`,
         metadata: { category: prayer.category },
       });
-      toast.success('Adicionada aos favoritos');
+      toast.success(isFavorite ? 'Removida dos favoritos' : 'Adicionada aos favoritos');
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Erro ao atualizar favorito';
+      if (msg === 'auth-required') {
+        toast.error('Entre para salvar favoritos.');
+      } else {
+        toast.error(msg);
+      }
     }
   };
 
