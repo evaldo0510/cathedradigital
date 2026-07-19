@@ -542,6 +542,9 @@ const JornadaStepPage: React.FC = () => {
                   <AnimatePresence initial={false}>
                     {isExpanded && (
                       <motion.div
+                        id={`section-panel-${key}`}
+                        role="region"
+                        aria-label={label}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
