@@ -202,7 +202,7 @@ const Relatio: React.FC<RelatioProps> = ({
             <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
           </div>
           <div>
-            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/10 group-hover:text-primary/30 transition-all duration-1000">Relatio Contextual</h3>
+            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/80 group-hover:text-primary transition-all duration-1000">Relatio Contextual</h3>
           </div>
         </div>
         <div className="flex items-center gap-spacing-md">
@@ -226,7 +226,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 onClick={() => updateDensity(d)}
                 className={cn(
                   "px-spacing-sm py-spacing-2xs min-h-11 text-[8px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-300",
-                  density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-muted-foreground/60 hover:text-primary"
+                  density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-foreground hover:text-primary"
                 )}
               >
                 {d === 'subtle' ? 'Subtil' : d === 'normal' ? 'Normal' : 'Profunda'}
@@ -340,18 +340,18 @@ const Relatio: React.FC<RelatioProps> = ({
                                 {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                               </div>
                               <div className="space-y-spacing-3xs">
-                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 group-hover:text-primary transition-colors">
                                   {item.type === 'bible' ? 'Escritura' : 
                                    item.type === 'catechism' ? 'Catecismo' : 
                                    item.type === 'magisterium' ? 'Magistério' : 
                                    item.type === 'saint' ? 'Tradição' : 'Jornada'}
                                 </p>
                                 <div className="flex items-center gap-spacing-xs">
-                                  <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
+                                  <span className="text-[8px] font-bold text-foreground uppercase tracking-widest">
                                     {item.reason}
                                   </span>
                                   <div className={cn("w-spacing-2xs h-spacing-2xs rounded-premium-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
-                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-secondary/60")}>
+                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-primary/80")}>
                                     {strengthLabel}
                                   </span>
                                 </div>
@@ -365,6 +365,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   size="icon"
                                   disabled={isOpeningLogos}
                                   className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
+                                  aria-label={`Pedir explicação à Logos IA sobre ${item.title}`}
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -386,6 +387,7 @@ const Relatio: React.FC<RelatioProps> = ({
                               <Button
                                 variant="ghost"
                                 size="icon"
+                                aria-label={isFav ? `Remover ${item.title} dos favoritos` : `Salvar ${item.title} nos favoritos`}
                                 className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -407,7 +409,7 @@ const Relatio: React.FC<RelatioProps> = ({
                           
                           <div className="flex-1 space-y-spacing-xs">
                             <h4 className="text-premium-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
-                            <p className="text-premium-sm text-muted-foreground leading-relaxed line-clamp-spacing-sm font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
+                            <p className="text-premium-sm text-foreground/80 leading-relaxed line-clamp-spacing-sm font-serif italic font-light group-hover:text-foreground transition-colors duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
                             </p>
                           </div>

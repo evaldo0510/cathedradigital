@@ -696,7 +696,7 @@ export const EditorialReaderHeader: React.FC<EditorialReaderHeaderProps> = ({
       )}
     />
     {meta && (
-      <div className="mt-spacing-md text-[10px] uppercase tracking-[0.28em] text-primary/50">
+      <div className="mt-spacing-md text-[10px] uppercase tracking-[0.28em] text-primary/80">
         {meta}
       </div>
     )}
