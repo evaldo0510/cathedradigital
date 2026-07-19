@@ -89,6 +89,7 @@ export default function GlossaryAdmin() {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<GlossaryTerm>>(EMPTY);
+  const [showPreview, setShowPreview] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
