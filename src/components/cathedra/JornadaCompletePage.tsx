@@ -198,6 +198,14 @@ const JornadaCompletePage: React.FC = () => {
 
   const shareCertificate = async () => {
     if (!certificateRef.current) return;
+    if (!canShareCertificate) {
+      toast.error(
+        !hasCertificateData
+          ? 'Dados da jornada indisponíveis.'
+          : 'Conclua todas as etapas antes de compartilhar o certificado.',
+      );
+      return;
+    }
     setSharing(true);
     try {
       const { default: html2canvas } = await import('html2canvas');
