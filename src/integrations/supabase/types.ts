@@ -1335,31 +1335,46 @@ export type Database = {
       }
       bible_favorites: {
         Row: {
-          book_abbr: string
-          chapter: number
-          content: string
+          book_abbr: string | null
+          chapter: number | null
+          content: string | null
+          content_id: string | null
+          content_type: string
           created_at: string
           id: string
+          metadata: Json
+          title: string | null
+          url: string | null
           user_id: string
-          verse_number: number
+          verse_number: number | null
         }
         Insert: {
-          book_abbr: string
-          chapter: number
-          content: string
+          book_abbr?: string | null
+          chapter?: number | null
+          content?: string | null
+          content_id?: string | null
+          content_type?: string
           created_at?: string
           id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
           user_id: string
-          verse_number: number
+          verse_number?: number | null
         }
         Update: {
-          book_abbr?: string
-          chapter?: number
-          content?: string
+          book_abbr?: string | null
+          chapter?: number | null
+          content?: string | null
+          content_id?: string | null
+          content_type?: string
           created_at?: string
           id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
           user_id?: string
-          verse_number?: number
+          verse_number?: number | null
         }
         Relationships: []
       }

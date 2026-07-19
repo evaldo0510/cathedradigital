@@ -318,6 +318,21 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
+      <button
+        type="button"
+        onClick={() => navigate('/profile/favorites')}
+        className="w-full flex items-center justify-between gap-spacing-md p-spacing-md rounded-premium border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors text-left"
+      >
+        <div className="flex items-center gap-spacing-md">
+          <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
+          <div>
+            <p className="text-premium-sm font-bold text-foreground">Meus Favoritos</p>
+            <p className="text-premium-xs text-muted-foreground">Versículos, orações e trechos salvos</p>
+          </div>
+        </div>
+        <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />
+      </button>
+
       <CathedraCard className="p-spacing-xl space-y-spacing-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>

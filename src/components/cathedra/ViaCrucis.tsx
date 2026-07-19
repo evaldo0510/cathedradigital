@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
+import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
+import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
@@ -25,6 +27,46 @@ const STATIONS = [
 const ViaCrucis: React.FC = () => {
   const [currentStation, setCurrentStation] = useState(0);
   const [isJourney, setIsJourney] = useState(false);
+  const { progress, loaded, save } = useDevotionalProgress('viacrucis');
+  const { setIndex, setFavorite } = useDevotionalReader();
+
+  useEffect(() => {
+    if (loaded && progress.step != null) {
+      setCurrentStation(Math.max(0, Math.min(STATIONS.length - 1, progress.step - 1)));
+    }
+  }, [loaded, progress.step]);
+
+  useEffect(() => {
+    if (isJourney) {
+      save({ section: 'station', step: currentStation + 1, label: STATIONS[currentStation].title });
+    }
+  }, [currentStation, isJourney, save]);
+
+  useEffect(() => {
+    setIndex(
+      'Estações da Via Sacra',
+      STATIONS.map((s, i) => ({
+        id: String(s.num),
+        label: `${s.num}. ${s.title}`,
+        hint: s.scripture,
+        active: isJourney && i === currentStation,
+        onSelect: () => {
+          setCurrentStation(i);
+          setIsJourney(true);
+        },
+      })),
+    );
+    const cur = STATIONS[currentStation];
+    setFavorite({
+      contentType: 'viacrucis_station',
+      contentId: `station-${cur.num}`,
+      title: `Via Crucis — ${cur.num}ª Estação: ${cur.title}`,
+      content: cur.prayer,
+      url: '/viacrucis',
+      metadata: { station: cur.num, scripture: cur.scripture },
+    });
+  }, [currentStation, isJourney, setIndex, setFavorite]);
+
 
   if (!isJourney) {
     return (

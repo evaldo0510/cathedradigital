@@ -69,6 +69,7 @@ const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
+const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const Index = lazy(() => import('./pages/Index'));
@@ -499,6 +500,7 @@ const AppLayout: React.FC = () => {
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
+              <Route path="/profile/favorites" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfileFavoritesPage /></AuthGuard></Suspense>} />
               <Route path="/spiritual-profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualProfile /></AuthGuard></Suspense>} />
               <Route path="/onboarding" element={<Suspense fallback={<LoadingFallback />}><OnboardingPage /></Suspense>} />
 
