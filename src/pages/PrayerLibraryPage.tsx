@@ -8,9 +8,8 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
-import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+
 import {
   usePrayers,
   PRAYER_CATEGORY_LABEL,
@@ -48,12 +47,7 @@ const PrayerLibraryPage: React.FC = () => {
 
   return (
     <>
-      <MobileTopBar kicker="Cathedra · Orações" title="Livro de Orações" />
-      <EditorialReaderChrome
-        kicker="Cathedra · Orações"
-        title="Livro de Orações"
-        subtitle="Tradição viva da Igreja"
-      />
+
 
       <main className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
         {/* Hero editorial breve */}
