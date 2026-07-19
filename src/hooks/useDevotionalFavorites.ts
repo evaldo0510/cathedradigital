@@ -71,7 +71,7 @@ export function useDevotionalFavorites(filterContentType?: string) {
         title: input.title,
         content: input.content ?? null,
         url: input.url ?? null,
-        metadata: input.metadata ?? {},
+        metadata: (input.metadata ?? {}) as any,
       });
       if (error && !String(error.message).includes("duplicate")) throw error;
       await load();
