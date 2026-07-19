@@ -337,6 +337,25 @@ const PrayerPage: React.FC = () => {
   const todayData = MYSTERY_DATA[todayKey];
   const [intention, setIntention] = useState('');
   const [prayingMystery, setPrayingMystery] = useState<MysteryKey | null>(null);
+  const { isFavorited, toggle } = useDevotionalFavorites();
+
+  const handleTogglePrayer = async (key: string, title: string, text: string) => {
+    try {
+      const wasFav = isFavorited('prayer', key);
+      await toggle({
+        contentType: 'prayer',
+        contentId: key,
+        title,
+        content: text,
+        url: '/oracao',
+      });
+      toast.success(wasFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(msg === 'auth-required' ? 'Faça login para favoritar' : 'Erro ao salvar favorito');
+    }
+  };
+
 
   if (prayingMystery) {
     return createPortal(
