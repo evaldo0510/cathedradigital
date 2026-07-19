@@ -15,7 +15,15 @@ import { test, expect, devices, type Page } from '@playwright/test';
 test.use({
   ...devices['Desktop Chrome'],
   viewport: { width: 1440, height: 900 },
+  // Foco/histórico é sensível a timing entre browsers no CI — mantém trace
+  // e vídeo em todas as execuções desta suíte para diagnóstico rápido.
+  trace: 'on',
+  screenshot: 'on',
+  video: 'on',
 });
+// Retries adicionais só para cenários de foco/back-forward, que dependem
+// de rAF + eventos assíncronos (popstate/pageshow) e podem ser flakey no CI.
+test.describe.configure({ retries: process.env.CI ? 4 : 1 });
 
 const ROSARY_RETURN_KEY = 'cathedra:rosary:return';
 const DEVOTIONAL_KEY = 'cathedra:devotional-progress:rosary';
