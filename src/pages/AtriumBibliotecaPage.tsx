@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 type Collection = {
   title: string;
