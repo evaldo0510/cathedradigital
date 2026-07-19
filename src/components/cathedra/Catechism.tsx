@@ -475,8 +475,15 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <CatechismPendingProvider>
-        <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
+        <ContemplativeLayout>
           <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
+            <EditorialReaderHeader
+              kicker={`Catecismo · ${selectedPart.part}`}
+              title={selectedSection.title}
+              subtitle={selectedPart.title}
+              meta={`§${startPara} — §${endPara}`}
+            />
+
             {/* Unified Reading Navigation */}
             <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
                <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
