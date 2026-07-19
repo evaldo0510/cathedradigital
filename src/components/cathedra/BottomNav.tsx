@@ -11,6 +11,15 @@ import { LangContext } from '@/contexts/LangContext';
 import { APP_ROUTES } from '@/config/routes';
 import { SmartActionSheet } from './SmartActionButton';
 
+/**
+ * Ícone dedicado do item "Atalhos": Sparkles renderizado mais fino que os
+ * demais para pesar menos visualmente, mesmo herdando `size` do BottomNavItem.
+ * Ignora `strokeWidth` passado pelo pai — traço travado em 1.3.
+ */
+const AtalhosIcon: React.FC<{ size?: number; className?: string }> = ({ size = 18, className }) => (
+  <Icons.Sparkles size={size} strokeWidth={1.3} className={className} aria-hidden="true" />
+);
+
 /* ── Ripple helper ── */
 function useRipple() {
   const rippleRef = useRef<HTMLSpanElement | null>(null);
@@ -183,7 +192,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     mainItems.push({
       label: 'Atalhos',
       route: '',
-      icon: Icons.Sparkles,
+      icon: AtalhosIcon,
       isMenu: false,
       isAtalhos: true,
     });
