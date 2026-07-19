@@ -84,7 +84,9 @@ const JornadaStepPage: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [saintImage, setSaintImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const reflectionRef = useRef<HTMLTextAreaElement | null>(null);
   const restoredScrollRef = useRef(false);
+  const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const storageKey = stepId ? `cathedra:journey-step:${stepId}` : null;
 
   const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
@@ -175,6 +177,14 @@ const JornadaStepPage: React.FC = () => {
         if (progress) {
           setCompleted(true);
           setReflection(progress.reflection || '');
+        } else if (storageKey) {
+          // Retomar rascunho de reflexão salvo localmente
+          try {
+            const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            if (typeof saved.draftReflection === 'string' && saved.draftReflection.trim()) {
+              setReflection(saved.draftReflection);
+            }
+          } catch { /* noop */ }
         }
       }
     } catch (err) {
@@ -329,6 +339,24 @@ const JornadaStepPage: React.FC = () => {
       if (raf) cancelAnimationFrame(raf);
     };
   }, [storageKey, persistLocal, loading]);
+
+  // Autosave do rascunho de reflexão (debounced 500ms). Não persiste após conclusão.
+  useEffect(() => {
+    if (!storageKey || completed || loading) return;
+    const handle = window.setTimeout(() => {
+      persistLocal({ draftReflection: reflection });
+      if (reflection.trim()) setDraftSavedAt(Date.now());
+    }, 500);
+    return () => window.clearTimeout(handle);
+  }, [reflection, storageKey, persistLocal, completed, loading]);
+
+  // Limpar rascunho ao concluir para liberar o localStorage
+  useEffect(() => {
+    if (completed && storageKey) {
+      persistLocal({ draftReflection: '' });
+      setDraftSavedAt(null);
+    }
+  }, [completed, storageKey, persistLocal]);
 
   // Atalhos de teclado: ← → navega entre etapas; Alt+Enter conclui
   useEffect(() => {
@@ -625,6 +653,8 @@ const JornadaStepPage: React.FC = () => {
               </p>
             )}
             <Textarea
+              ref={reflectionRef}
+              id="reflection-textarea"
               placeholder="Escreva sua reflexão aqui. Suas palavras são privadas."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
@@ -648,6 +678,7 @@ const JornadaStepPage: React.FC = () => {
                       ? 'text-destructive'
                       : 'text-stitch-on-surface-variant/70'
                   }
+                  data-testid="reflection-status"
                 >
                   {reflectionRequired
                     ? reflectionValid
@@ -655,7 +686,14 @@ const JornadaStepPage: React.FC = () => {
                       : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir.`
                     : 'Opcional — escreva se quiser guardar a reflexão.'}
                 </span>
-                <span className="text-stitch-on-surface-variant/60">{reflectionCount}</span>
+                <span className="flex items-center gap-3 text-stitch-on-surface-variant/60">
+                  {draftSavedAt && reflection.trim() && (
+                    <span aria-live="polite" className="normal-case tracking-normal italic">
+                      Rascunho salvo
+                    </span>
+                  )}
+                  <span>{reflectionCount}</span>
+                </span>
               </div>
             )}
           </motion.section>
@@ -723,17 +761,29 @@ const JornadaStepPage: React.FC = () => {
             )}
 
             <button
-              onClick={
-                completed
-                  ? () =>
-                      nextStep
-                        ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
-                        : navigate(`/jornadas/${journeyId}/conclusao`)
-                  : completeStep
-              }
-              disabled={completing || saving || (!completed && !canComplete)}
+              data-testid="complete-step-btn"
+              onClick={() => {
+                if (completing || saving) return;
+                if (completed) {
+                  return nextStep
+                    ? navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)
+                    : navigate(`/jornadas/${journeyId}/conclusao`);
+                }
+                if (!canComplete) {
+                  const msg = reflectionRequired
+                    ? reflectionCount === 0
+                      ? 'Escreva sua reflexão para concluir esta etapa.'
+                      : `Reflexão muito curta — escreva ao menos ${MIN_REFLECTION_LEN} caracteres (faltam ${MIN_REFLECTION_LEN - reflectionCount}).`
+                    : 'Dados incompletos.';
+                  setStatusMessage(msg);
+                  toast.error(msg);
+                  reflectionRef.current?.focus();
+                  return;
+                }
+                completeStep();
+              }}
               aria-busy={completing}
-              aria-disabled={!completed && !canComplete}
+              aria-disabled={!completed && (!canComplete || completing || saving)}
               aria-label={
                 completed
                   ? nextStep
@@ -743,10 +793,18 @@ const JornadaStepPage: React.FC = () => {
                     ? 'Concluir esta etapa'
                     : `Escreva ao menos ${MIN_REFLECTION_LEN} caracteres para concluir`
               }
-              title={completed ? 'Próxima etapa (→)' : canComplete ? 'Concluir etapa (Alt+Enter)' : 'Escreva sua reflexão para habilitar'}
+              title={
+                completed
+                  ? 'Próxima etapa (→)'
+                  : canComplete
+                    ? 'Concluir etapa (Alt+Enter)'
+                    : reflectionCount === 0
+                      ? 'Escreva sua reflexão para habilitar'
+                      : `Faltam ${MIN_REFLECTION_LEN - reflectionCount} caracteres`
+              }
               className={`${
                 completed ? 'flex-1' : 'flex-[2]'
-              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background disabled:opacity-50`}
+              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background aria-disabled:cursor-not-allowed aria-disabled:opacity-50`}
             >
               {completing ? (
                 <>
