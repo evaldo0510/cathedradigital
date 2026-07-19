@@ -39,3 +39,86 @@ describe('formatNexusContent', () => {
     expect(formatted.content_text).toBe('');
   });
 });
+
+describe('formatNexusContent — parse de reference_id bíblico', () => {
+  const base = (reference_id: string, metadata: any = {}) => ({
+    id: 'x',
+    type: 'bible',
+    content_text: 'v',
+    reference_id,
+    metadata,
+  });
+
+  it('parseia "Jo 14, 6" (livro curto + capítulo, versículo com espaço)', () => {
+    const r = formatNexusContent(base('Jo 14, 6'), 'bible');
+    expect(r.metadata.book).toBe('Jo');
+    expect(r.metadata.chapter).toBe(14);
+    expect(r.metadata.verse).toBe(6);
+  });
+
+  it('parseia "Mt 11,29" (sem espaço após vírgula)', () => {
+    const r = formatNexusContent(base('Mt 11,29'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "1Cor 13,4" (livro com prefixo numérico colado)', () => {
+    const r = formatNexusContent(base('1Cor 13,4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+  });
+
+  it('parseia "1 Cor 13, 4" (prefixo numérico com espaço)', () => {
+    const r = formatNexusContent(base('1 Cor 13, 4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+  });
+
+  it('parseia "Jo 1:14" (dois-pontos como separador)', () => {
+    const r = formatNexusContent(base('Jo 1:14'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 1, verse: 14 });
+  });
+
+  it('parseia referência de capítulo sem versículo ("Sl 23")', () => {
+    const r = formatNexusContent(base('Sl 23'), 'bible');
+    expect(r.metadata.book).toBe('Sl');
+    expect(r.metadata.chapter).toBe(23);
+    expect(r.metadata.verse).toBeUndefined();
+  });
+
+  it('não sobrescreve metadata pré-existente', () => {
+    const r = formatNexusContent(
+      base('Jo 14, 6', { book: 'Mt', chapter: 5, verse: 3 }),
+      'bible',
+    );
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 5, verse: 3 });
+  });
+
+  it('preenche apenas verse quando book/chapter já vieram', () => {
+    const r = formatNexusContent(
+      base('Jo 14, 6', { book: 'Jo', chapter: 14 }),
+      'bible',
+    );
+    // parser só roda quando falta book OU chapter, então metadata permanece sem verse
+    expect(r.metadata.book).toBe('Jo');
+    expect(r.metadata.chapter).toBe(14);
+  });
+
+  it('ignora reference_id inválido sem quebrar', () => {
+    const r = formatNexusContent(base('livro-invalido 99'), 'bible');
+    expect(r.metadata.book).toBeUndefined();
+    expect(r.metadata.chapter).toBeUndefined();
+  });
+
+  it('ignora quando reference_id é nulo/vazio', () => {
+    const r1 = formatNexusContent({ id: '1', type: 'bible', reference_id: null }, 'bible');
+    const r2 = formatNexusContent({ id: '2', type: 'bible', reference_id: '' }, 'bible');
+    expect(r1.metadata.book).toBeUndefined();
+    expect(r2.metadata.book).toBeUndefined();
+  });
+
+  it('não parseia quando type !== "bible"', () => {
+    const r = formatNexusContent(
+      { id: '1', type: 'catechism', reference_id: 'Jo 14, 6', metadata: {} },
+      'catechism',
+    );
+    expect(r.metadata.book).toBeUndefined();
+  });
+});
