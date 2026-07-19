@@ -71,6 +71,7 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
+const AtriumHome = lazy(() => import('./pages/AtriumHome'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
@@ -455,10 +456,12 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
-              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
+              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><AtriumHome /></Suspense>} />
+              <Route path="/home-v3" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
               <Route path="/legacy-home" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/dev/editorial" element={<Suspense fallback={<LoadingFallback />}><EditorialShowcase /></Suspense>} />
+
 
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
