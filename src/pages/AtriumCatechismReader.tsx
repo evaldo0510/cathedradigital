@@ -90,7 +90,7 @@ const CatechismLanding: React.FC = () => {
       </Helmet>
 
       <MobileTopBar
-        variant="transparent"
+        transparent
         kicker="Cathedra"
         title="Catecismo"
       />
