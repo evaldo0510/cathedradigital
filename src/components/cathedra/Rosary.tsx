@@ -452,13 +452,20 @@ const Rosary: React.FC = () => {
           <h3 className="text-premium-2xl font-serif font-bold text-secondary">Oração Final</h3>
           <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-secondary/50">Salve Rainha</p>
         </div>
-        <div className="bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
+        <button
+          type="button"
+          aria-expanded={showPrayer === 'salve'}
+          aria-controls="rosary-prayer-salve"
+          onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}
+          className="w-full text-left bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+        >
           <div className="flex items-center justify-between mb-spacing-xs">
-            <p className="font-bold text-premium-sm text-secondary/90">{PRAYERS.salveRainha.title}</p>
-            <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
+            <span className="font-bold text-premium-sm text-secondary/90">{PRAYERS.salveRainha.title}</span>
+            <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} aria-hidden />
           </div>
-          {showPrayer === 'salve' && <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
-        </div>
+          {showPrayer === 'salve' && <p id="rosary-prayer-salve" className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
+        </button>
+
         <div className="text-center space-y-spacing-md py-spacing-xl">
           <div className="relative inline-block font-serif">
             <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
