@@ -2,10 +2,13 @@ import { Button } from '@/components/ui/button';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
+import { toast } from 'sonner';
 import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import DeepContentSection from './DeepContentSection';
+import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 
 import PrayerAudioPlayer from './PrayerAudioPlayer';
 
@@ -334,6 +337,25 @@ const PrayerPage: React.FC = () => {
   const todayData = MYSTERY_DATA[todayKey];
   const [intention, setIntention] = useState('');
   const [prayingMystery, setPrayingMystery] = useState<MysteryKey | null>(null);
+  const { isFavorited, toggle } = useDevotionalFavorites();
+
+  const handleTogglePrayer = async (key: string, title: string, text: string) => {
+    try {
+      const wasFav = isFavorited('prayer', key);
+      await toggle({
+        contentType: 'prayer',
+        contentId: key,
+        title,
+        content: text,
+        url: '/oracao',
+      });
+      toast.success(wasFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(msg === 'auth-required' ? 'Faça login para favoritar' : 'Erro ao salvar favorito');
+    }
+  };
+
 
   if (prayingMystery) {
     return createPortal(
@@ -498,22 +520,35 @@ const PrayerPage: React.FC = () => {
                 { key: 'aveMaria', title: 'Ave Maria', icon: Icons.Star },
                 { key: 'gloria', title: 'Glória ao Pai', icon: Icons.Sparkles },
                 { key: 'salveRainha', title: 'Salve Rainha', icon: Icons.Heart },
-              ].map(p => (
+              ].map(p => {
+                const text = PRAYERS[p.key as keyof typeof PRAYERS];
+                const fav = isFavorited('prayer', p.key);
+                return (
                 <div key={p.key} className="p-spacing-md rounded-premium bg-muted/30 border border-border/50 space-y-spacing-sm hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-spacing-sm">
                     <p className="font-serif font-bold text-premium-sm flex-1">{p.title}</p>
+                    <button
+                      type="button"
+                      aria-label={fav ? `Remover ${p.title} dos favoritos` : `Adicionar ${p.title} aos favoritos`}
+                      aria-pressed={fav}
+                      onClick={() => handleTogglePrayer(p.key, p.title, text)}
+                      className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors ${fav ? 'text-secondary' : 'text-muted-foreground hover:text-primary'}`}
+                    >
+                      <Star className={`h-4 w-4 ${fav ? 'fill-current' : ''}`} />
+                    </button>
                     <ShareButton
                       title={p.title}
-                      text={`${p.title}\n\n${PRAYERS[p.key as keyof typeof PRAYERS]}`}
+                      text={`${p.title}\n\n${text}`}
                       size="sm"
                       className="border-0 p-spacing-0 hover:bg-transparent"
                     />
                   </div>
                   <p className="text-premium-xs text-muted-foreground font-serif leading-relaxed line-clamp-spacing-sm group-hover:line-clamp-none transition-all cursor-default">
-                    {PRAYERS[p.key as keyof typeof PRAYERS]}
+                    {text}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           

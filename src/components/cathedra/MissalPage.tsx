@@ -1,6 +1,10 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Star } from 'lucide-react';
+import { toast } from 'sonner';
 import { Icons } from '../../constants';
+import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
+import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 
 
 interface MissalSection {
@@ -72,10 +76,61 @@ const MISSAL_SECTIONS: MissalSection[] = [
   },
 ];
 
+function slugify(str: string): string {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60);
+}
+
 const MissalPage: React.FC = () => {
   const [showLatin, setShowLatin] = useState(false);
   const [showRubrics, setShowRubrics] = useState(true);
   const [expandedSection, setExpandedSection] = useState<string | null>('entrance');
+  const { setIndex, setFavorite } = useDevotionalReader();
+  const { isFavorited, toggle } = useDevotionalFavorites();
+
+  // Publica o índice de partes do Missal para o shell mobile.
+  useEffect(() => {
+    const items = MISSAL_SECTIONS.map(section => ({
+      id: section.id,
+      label: section.title,
+      hint: section.subtitle,
+      active: expandedSection === section.id,
+      onSelect: () => {
+        setExpandedSection(section.id);
+        requestAnimationFrame(() =>
+          document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+        );
+      },
+    }));
+    setIndex('Ordo Missæ', items);
+    setFavorite(null);
+    return () => setIndex('Índice', []);
+  }, [expandedSection, setIndex, setFavorite]);
+
+  const handleFavPart = async (sectionId: string, partLabel: string, partText: string) => {
+    const contentId = `${sectionId}:${slugify(partLabel)}`;
+    try {
+      const wasFav = isFavorited('missal_part', contentId);
+      await toggle({
+        contentType: 'missal_part',
+        contentId,
+        title: partLabel,
+        content: partText,
+        url: `/missal#missal-${sectionId}`,
+        metadata: { sectionId },
+      });
+      toast.success(wasFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(msg === 'auth-required' ? 'Faça login para favoritar' : 'Erro ao salvar favorito');
+    }
+  };
+
 
   return (
     <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl">
@@ -133,9 +188,23 @@ const MissalPage: React.FC = () => {
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">
-                {section.parts.map((part, i) => (
+                {section.parts.map((part, i) => {
+                  const contentId = `${section.id}:${slugify(part.label)}`;
+                  const fav = isFavorited('missal_part', contentId);
+                  return (
                   <div key={i} className="p-spacing-md space-y-spacing-sm">
-                    <h4 className="text-premium-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
+                    <div className="flex items-start justify-between gap-spacing-sm">
+                      <h4 className="text-premium-sm font-black uppercase tracking-widest text-primary flex-1">{part.label}</h4>
+                      <button
+                        type="button"
+                        aria-label={fav ? `Remover ${part.label} dos favoritos` : `Adicionar ${part.label} aos favoritos`}
+                        aria-pressed={fav}
+                        onClick={() => handleFavPart(section.id, part.label, part.text)}
+                        className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors ${fav ? 'text-secondary' : 'text-muted-foreground hover:text-primary'}`}
+                      >
+                        <Star className={`h-4 w-4 ${fav ? 'fill-current' : ''}`} />
+                      </button>
+                    </div>
                     {showRubrics && part.rubric && (
                       <p className="text-premium-xs text-primary font-medium italic bg-secondary/5 rounded-premium-full px-spacing-md py-spacing-xs border border-secondary/10">
                         ✠ {part.rubric}
@@ -146,7 +215,8 @@ const MissalPage: React.FC = () => {
                     )}
                     <p className="text-premium-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

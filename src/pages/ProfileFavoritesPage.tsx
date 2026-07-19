@@ -18,6 +18,7 @@ const TYPE_LABEL: Record<string, string> = {
   breviary_hour: "Breviário",
   prayer: "Orações",
   litany: "Ladainhas",
+  missal_part: "Missal",
 };
 
 export default function ProfileFavoritesPage() {
