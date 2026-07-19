@@ -170,6 +170,7 @@ const BibleImportJobs = lazy(() => import('./pages/admin/BibleImportJobs'));
 const BibleImportJobDetail = lazy(() => import('./pages/admin/BibleImportJobDetail'));
 const ClientErrors = lazy(() => import('./pages/admin/ClientErrors'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
+const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
