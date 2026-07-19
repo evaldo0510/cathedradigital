@@ -54,15 +54,40 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
   const hasReaderParams = sp.get('book') || sp.get('view');
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const abbr = sp.get('book');
+  const chapterStr = sp.get('chapter') ?? sp.get('c');
+
+  // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
+  useEffect(() => {
+    if (!abbr || !chapterStr) return;
+    const n = Number(chapterStr);
+    if (!Number.isFinite(n)) return;
+    setBibleLastRead({ abbr, chapter: n });
+  }, [abbr, chapterStr]);
 
   if (hasReaderParams) {
-    const abbr = sp.get('book');
-    const chapter = sp.get('chapter') ?? sp.get('c');
     const book = findBookByAbbr(abbr);
     const title = book ? book.name : 'Sagrada Escritura';
-    const subtitle = chapter ? `Capítulo ${chapter}` : undefined;
+    const subtitle = chapterStr ? `Capítulo ${chapterStr}` : undefined;
     return (
       <Suspense fallback={<BibleSkeleton />}>
+        <MobileTopBar
+          kicker="Cathedra · Bíblia"
+          title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
+          showBack
+          actions={
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Escolher livro e capítulo"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+            >
+              <LayoutGrid className="h-5 w-5" />
+            </button>
+          }
+        />
         <EditorialReaderChrome
           kicker="Cathedra · Lectio Divina"
           title={title}
@@ -72,6 +97,7 @@ const AtriumBibleReader: React.FC = () => {
         <BibleReadGate>
           <Bible />
         </BibleReadGate>
+        <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
       </Suspense>
     );
   }
