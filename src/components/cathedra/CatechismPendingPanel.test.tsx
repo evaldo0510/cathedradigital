@@ -5,6 +5,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 
+class RO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+(globalThis as any).ResizeObserver = (globalThis as any).ResizeObserver || RO;
+if (!(HTMLElement.prototype as any).hasPointerCapture) {
+  (HTMLElement.prototype as any).hasPointerCapture = () => false;
+  (HTMLElement.prototype as any).releasePointerCapture = () => {};
+  (HTMLElement.prototype as any).setPointerCapture = () => {};
+}
+if (!(HTMLElement.prototype as any).scrollIntoView) {
+  (HTMLElement.prototype as any).scrollIntoView = () => {};
+}
+
 vi.mock('sonner', () => ({
   toast: Object.assign(vi.fn(), {
     success: vi.fn(),
