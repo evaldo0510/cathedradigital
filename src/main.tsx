@@ -7,9 +7,11 @@ import { prefetchCoreModules } from "./lib/prefetch";
 import { initLiturgicalPrefetchGuard } from "./lib/litcalPrefetchGuard";
 import { registerSW } from 'virtual:pwa-register';
 import { initSentry } from "./lib/sentry";
+import { initRuntimeErrorLogger } from "./lib/runtimeErrorLogger";
 
 initLiturgicalPrefetchGuard();
 initSentry();
+initRuntimeErrorLogger();
 
 if (import.meta.env.DEV) {
   const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
