@@ -71,7 +71,7 @@ const JornadaCompletePage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [journeyRes, progressRes, nextRes] = await Promise.all([
+      const [journeyRes, progressRes, nextRes, totalRes] = await Promise.all([
         supabase.from('journeys').select('*').eq('id', id!).single(),
         supabase
           .from('journey_progress')
@@ -86,9 +86,15 @@ const JornadaCompletePage: React.FC = () => {
           .neq('id', id!)
           .order('sort_order', { ascending: true })
           .limit(3),
+        supabase
+          .from('journey_steps')
+          .select('*', { count: 'exact', head: true })
+          .eq('journey_id', id!),
       ]);
 
       if (journeyRes.data) setJourney(journeyRes.data);
+      setTotalSteps(totalRes.count || 0);
+      setCompletedSteps(progressRes.data?.length || 0);
 
       if (progressRes.data) {
         const stepIds = progressRes.data.map((p) => p.step_id);
