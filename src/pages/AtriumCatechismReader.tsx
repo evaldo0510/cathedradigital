@@ -13,6 +13,8 @@ import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
 
