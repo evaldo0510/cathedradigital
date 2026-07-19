@@ -437,7 +437,7 @@ const JornadaStepPage: React.FC = () => {
       </header>
 
       {/* ─── Conteúdo rolável ─────────────────────────── */}
-      <div className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto">
+      <div ref={scrollRef} className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto" role="main" aria-label={`Etapa ${step.step_order} de ${totalSteps}: ${step.title}`}>
         <div className="mx-auto w-full max-w-[720px] px-5 pb-32 pt-10 md:px-8 md:pt-14">
           {/* Hero */}
           <motion.section
