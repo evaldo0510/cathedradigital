@@ -118,9 +118,10 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         </button>
         <Button
           onClick={onClose}
+          aria-label="Fechar"
           className="p-spacing-sm bg-foreground/10 hover:bg-foreground/20 rounded-premium-full text-foreground transition-all"
         >
-          <Icons.X className="w-spacing-md h-spacing-md" />
+          <Icons.X className="w-spacing-md h-spacing-md" aria-hidden="true" />
         </Button>
       </div>
 
