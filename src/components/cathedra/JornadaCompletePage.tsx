@@ -303,22 +303,40 @@ const JornadaCompletePage: React.FC = () => {
         <div className="mt-8 max-w-[520px]" role="group" aria-label="Progresso da jornada">
           <div className="flex items-baseline justify-between font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
             <span>Progresso</span>
-            <span className="text-stitch-secondary">100% · Completa</span>
+            <span className={isJourneyComplete ? 'text-stitch-secondary' : 'text-destructive'}>
+              {totalSteps > 0
+                ? `${Math.round((completedSteps / totalSteps) * 100)}% · ${completedSteps}/${totalSteps}`
+                : '—'}
+              {isJourneyComplete ? ' · Completa' : ''}
+            </span>
           </div>
           <div
             className="mt-2 h-[2px] w-full overflow-hidden bg-stitch-surface-container-high"
             role="progressbar"
-            aria-valuenow={100}
+            aria-valuenow={totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0}
             aria-valuemin={0}
             aria-valuemax={100}
           >
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: '100%' }}
+              animate={{
+                width: totalSteps > 0 ? `${(completedSteps / totalSteps) * 100}%` : '0%',
+              }}
               transition={{ duration: 1.2, ease: 'easeOut' }}
               className="h-full bg-stitch-secondary"
             />
           </div>
+          {!isJourneyComplete && totalSteps > 0 && (
+            <p
+              role="alert"
+              className="mt-3 font-stitch-body text-[12px] italic text-destructive"
+            >
+              Você ainda tem {totalSteps - completedSteps} etapa
+              {totalSteps - completedSteps === 1 ? '' : 's'} pendente
+              {totalSteps - completedSteps === 1 ? '' : 's'}. Conclua-as para liberar o
+              certificado.
+            </p>
+          )}
         </div>
 
         {/* ─── Certificado ───────────────────────────── */}
