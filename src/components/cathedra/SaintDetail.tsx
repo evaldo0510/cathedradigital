@@ -387,6 +387,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           }}
         />
 
+        </div>
       </div>
     </motion.div>
   </motion.div>
