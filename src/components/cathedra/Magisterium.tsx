@@ -74,6 +74,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import ContemplativeLayout from './ContemplativeLayout';
+import { EditorialHero } from '@/components/editorial';
 import ReadingMark from './ReadingMark';
 import { CathedraCard } from './CathedraCard';
 import { cn } from '@/lib/utils';
@@ -483,11 +484,7 @@ const Magisterium: React.FC = () => {
   };
 
   return (
-    <ContemplativeLayout
-      subtitle="Magisterium Ecclesiae"
-      title="Magistério"
-      icon={Icons.ScrollText}
-    >
+    <ContemplativeLayout>
       <SEOHead 
         title="Magistério da Igreja | Cathedra" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
@@ -507,7 +504,27 @@ const Magisterium: React.FC = () => {
         })}
       </script>
 
+      <EditorialHero
+        variant="legacy"
+        align="center"
+        size="sm"
+        rule={false}
+        className="!py-0 header-margin-rhythm px-spacing-md md:px-spacing-xl"
+        icon={
+          <Icons.ScrollText
+            className="w-spacing-md h-spacing-md md:w-spacing-xl md:h-spacing-xl text-primary/20 mx-auto transition-all duration-1000"
+            strokeWidth={1.2}
+            aria-hidden="true"
+          />
+        }
+        kicker="Magisterium Ecclesiae"
+        kickerClassName="text-[8px] md:text-[10px] font-semibold uppercase text-primary/70 tracking-premium-widest md:tracking-[1.2em] mb-spacing-sm md:mb-spacing-lg"
+        title="Magistério"
+        titleClassName="mb-spacing-md max-w-none"
+      />
+
       <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+
         {/* Unified Search & Filters */}
         <div className="space-y-spacing-xl">
           <div className="relative group w-full">
