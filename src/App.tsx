@@ -85,6 +85,7 @@ const ItinerariaPage = lazy(() => import('./components/cathedra/ItinerariaPage')
 const ItinerariumDetailPage = lazy(() => import('./components/cathedra/ItinerariumDetailPage'));
 const ItinerariumStepPage = lazy(() => import('./components/cathedra/ItinerariumStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
@@ -488,7 +489,8 @@ const AppLayout: React.FC = () => {
               <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
 
               {/* Biblioteca */}
-              <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><AtriumBibliotecaPage /></Suspense>} />
+              <Route path="/biblioteca-legacy" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
               
               {/* Itineraria */}
               <Route path="/itineraria" element={<Suspense fallback={<LoadingFallback />}><ItinerariaPage /></Suspense>} />
