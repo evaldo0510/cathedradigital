@@ -184,6 +184,22 @@ export default function GlossaryAdmin() {
     catch { return "[]"; }
   }, [form.nexus_refs]);
 
+  const previewData: GlossaryPreviewData = useMemo(() => ({
+    term: form.term ?? "",
+    category: form.category ?? null,
+    definition: form.definition ?? "",
+    interpretation: form.interpretation ?? null,
+    practical_application: form.practical_application ?? null,
+    bible_verses: form.bible_verses ?? [],
+    catechism_references: form.catechism_references ?? [],
+    magisterium_references: form.magisterium_references ?? [],
+    saints_refs: form.saints_refs ?? [],
+    fathers_refs: form.fathers_refs ?? [],
+    prayer_refs: form.prayer_refs ?? [],
+    journey_refs: form.journey_refs ?? [],
+    nexus_refs: (form.nexus_refs as any) ?? [],
+  }), [form]);
+
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Helmet><title>Admin — Léxico Teológico</title></Helmet>
