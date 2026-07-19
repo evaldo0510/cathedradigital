@@ -50,6 +50,8 @@ import { CatechismPendingProvider, useCatechismPending } from '@/contexts/Catech
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
@@ -302,7 +304,7 @@ const LazyParagraph: React.FC<{
     >
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
-          <span id={`heading-p${p}`} className="text-premium-lg md:text-premium-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
+          <span id={`heading-p${p}`} className="text-premium-base md:text-premium-lg font-display tracking-[0.18em] text-secondary/70 uppercase">§{p}</span>
           <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <Button
               variant="ghost"
@@ -473,8 +475,15 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <CatechismPendingProvider>
-        <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
+        <ContemplativeLayout>
           <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
+            <EditorialReaderHeader
+              kicker={`Catecismo · ${selectedPart.part}`}
+              title={selectedSection.title}
+              subtitle={selectedPart.title}
+              meta={`§${startPara} — §${endPara}`}
+            />
+
             {/* Unified Reading Navigation */}
             <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
                <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
@@ -531,9 +540,11 @@ const Catechism: React.FC = memo(() => {
               ))}
             </div>
 
-            <div className="mt-spacing-xl pt-spacing-xl md:mt-spacing-4xl md:pt-spacing-4xl border-t border-primary/5">
+            <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
+            <div>
                <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
             </div>
+
           </div>
           <CatechismDiagnosticPanel />
         </ContemplativeLayout>
@@ -543,8 +554,15 @@ const Catechism: React.FC = memo(() => {
 
   if (viewMode === 'sections' && selectedPart) {
     return (
-      <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
+      <ContemplativeLayout>
         <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
+          <EditorialReaderHeader
+            kicker={`Catecismo · ${selectedPart.part}`}
+            title={selectedPart.title}
+            subtitle="Selecione uma seção para iniciar a leitura"
+            meta={`${selectedPart.sections.length} seções`}
+          />
+
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Voltar às Partes
