@@ -31,6 +31,8 @@ import {
   Route as RouteIcon,
   Megaphone,
 } from 'lucide-react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   useResume,
   useLiturgyToday,
