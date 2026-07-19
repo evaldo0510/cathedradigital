@@ -1,48 +1,72 @@
-import React, { useState, useEffect, useMemo } from 'react';
+/**
+ * JornadaStepPage — refino editorial Logos 2030.
+ *
+ * Preserva integralmente a lógica de leitura (variantes por nível, reflexão,
+ * conclusão, próxima etapa, Nexus e ReaderContinuation). Apenas realinha
+ * o visual ao padrão stitch-*: hero editorial, meta em versalete,
+ * barra de progresso sóbria, seções em cartões editoriais numerados
+ * e barra de ação inferior discreta.
+ */
+
+import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-
-import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Clock,
+  Hand,
+  Lock,
+  PenLine,
+  Save,
+  ShieldQuestion,
+  Sparkles,
+  X,
+} from 'lucide-react';
+
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import { AppRoute } from '@/types';
-import ProConversionBanner from './ProConversionBanner';
-import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
 import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
-const SECTION_CONFIG = [
-  { key: 'padh', label: 'A Palavra', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, isPremium: false },
-  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-spacing-md h-spacing-md" />, isPremium: false },
-  { key: 'practical_direction', label: 'Prática do Dia', icon: <Icons.Hand className="w-spacing-md h-spacing-md" />, isPremium: true },
-  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <Icons.PenLine className="w-spacing-md h-spacing-md" />, isPremium: true },
-  
-  // Legacy / Hybrid mappings
-  { key: 'intro', label: 'Introdução', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" />, isPremium: false },
-  { key: 'reflection', label: 'Reflexão', icon: <Icons.PenLine className="w-spacing-md h-spacing-md" />, isPremium: true },
-  { key: 'practice', label: 'Prática', icon: <Icons.Hand className="w-spacing-md h-spacing-md" />, isPremium: true },
-  { key: 'prayer', label: 'Oração', icon: <Icons.Sparkles className="w-spacing-md h-spacing-md" />, isPremium: true },
-];
+type SectionDef = {
+  key: string;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  isPremium: boolean;
+};
 
-type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
+const SECTION_CONFIG: SectionDef[] = [
+  { key: 'padh', label: 'A Palavra', Icon: Sparkles, isPremium: false },
+  { key: 'interpretation', label: 'Reflexão', Icon: BookOpen, isPremium: false },
+  { key: 'practical_direction', label: 'Prática do Dia', Icon: Hand, isPremium: true },
+  { key: 'guided_exercise', label: 'Exercício Espiritual', Icon: PenLine, isPremium: true },
+  // Legacy / hybrid
+  { key: 'intro', label: 'Introdução', Icon: BookOpen, isPremium: false },
+  { key: 'reflection', label: 'Reflexão', Icon: PenLine, isPremium: true },
+  { key: 'practice', label: 'Prática', Icon: Hand, isPremium: true },
+  { key: 'prayer', label: 'Oração', Icon: Sparkles, isPremium: true },
+];
 
 const JornadaStepPage: React.FC = () => {
   const { id: journeyId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
-  const { user, profile, userLevel: userLevelClass, isPremium: isUserPremium } = useAuth();
+  const { user, userLevel: userLevelClass, isPremium: isUserPremium } = useAuth();
   const { saveLastRead } = useReadingMarks();
 
   const [step, setStep] = useState<any>(null);
@@ -54,15 +78,17 @@ const JornadaStepPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [nextStep, setNextStep] = useState<any>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [saintImage, setSaintImage] = useState<string | null>(null);
 
   const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
-  const stepProgress = useMemo(() => totalSteps > 0 ? (step?.step_order / totalSteps) * 100 : 0, [step, totalSteps]);
-
-  const [saintImage, setSaintImage] = useState<string | null>(null);
+  const stepProgress = useMemo(
+    () => (totalSteps > 0 && step ? (step.step_order / totalSteps) * 100 : 0),
+    [step, totalSteps],
+  );
 
   useEffect(() => {
     if (!step?.subtitle) return;
-    getSaintBySubtitle(step.subtitle).then(s => {
+    getSaintBySubtitle(step.subtitle).then((s) => {
       if (s?.image) setSaintImage(s.image);
     });
   }, [step?.subtitle]);
@@ -70,24 +96,21 @@ const JornadaStepPage: React.FC = () => {
   useEffect(() => {
     if (stepId && journeyId && step?.title) {
       loadData();
-      
-      // Persistir ponto de leitura sincronizado
       saveLastRead({
         content_type: 'journey',
         content_id: stepId,
         label: `${step.title} (${journeyTitle || 'Jornada'})`,
         url: `/jornadas/${journeyId}/step?step=${stepId}`,
-        is_last_read: true
+        is_last_read: true,
       });
-      
-      // Histórico geral
       supabase.from('user_history').insert({
         user_id: user?.id,
         title: step.title,
         route: `/jornadas/${journeyId}/step?step=${stepId}`,
-        type: 'journey'
+        type: 'journey',
       } as any);
     }
+     
   }, [stepId, journeyId, step?.title, journeyTitle, user?.id]);
 
   const loadData = async () => {
@@ -102,7 +125,7 @@ const JornadaStepPage: React.FC = () => {
       if (stepRes.data) {
         setStep(stepRes.data);
         const dataContent = stepRes.data.content as Record<string, any>;
-        const firstWithContent = SECTION_CONFIG.find(s => {
+        const firstWithContent = SECTION_CONFIG.find((s) => {
           const val = dataContent[s.key] || dataContent[`${s.key}_iniciante`];
           return !!val;
         });
@@ -111,15 +134,14 @@ const JornadaStepPage: React.FC = () => {
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
       setTotalSteps(countRes.count || 0);
 
-      // Load next step
       const { data: allSteps } = await supabase
         .from('journey_steps')
         .select('*')
         .eq('journey_id', journeyId!)
         .order('step_order', { ascending: true });
-      
+
       if (allSteps && stepRes.data) {
-        const currentIndex = allSteps.findIndex(s => s.id === stepId);
+        const currentIndex = allSteps.findIndex((s) => s.id === stepId);
         if (currentIndex !== -1 && currentIndex < allSteps.length - 1) {
           setNextStep(allSteps[currentIndex + 1]);
         }
@@ -148,26 +170,32 @@ const JornadaStepPage: React.FC = () => {
     if (!user || !journeyId || !stepId) return;
     setSaving(true);
     try {
-      // 1. Core progress update - must be awaited to show completion
-      const { error } = await supabase.from('journey_progress').upsert({
-        user_id: user.id,
-        journey_id: journeyId,
-        step_id: stepId,
-        reflection: reflection.trim() || null,
-      }, { onConflict: 'user_id,step_id' });
-
-      if (error) throw error;
-
-      // 2. Secondary saves are backgrounded to improve perceived speed
-      if (reflection.trim()) {
-        supabase.from('spiritual_journal').insert([{
+      const { error } = await supabase.from('journey_progress').upsert(
+        {
           user_id: user.id,
-          content: reflection.trim(),
           journey_id: journeyId,
           step_id: stepId,
-          entry_date: new Date().toISOString().split('T')[0],
-        }]).then(({ error }) => { if (error) console.error('BG Journal save failed:', error); });
-        
+          reflection: reflection.trim() || null,
+        },
+        { onConflict: 'user_id,step_id' },
+      );
+      if (error) throw error;
+
+      if (reflection.trim()) {
+        supabase
+          .from('spiritual_journal')
+          .insert([
+            {
+              user_id: user.id,
+              content: reflection.trim(),
+              journey_id: journeyId,
+              step_id: stepId,
+              entry_date: new Date().toISOString().split('T')[0],
+            },
+          ])
+          .then(({ error }) => {
+            if (error) console.error('BG Journal save failed:', error);
+          });
         saveUserPsychology(user.id, reflection.trim(), `journey_${journeyId}`);
       }
 
@@ -183,325 +211,311 @@ const JornadaStepPage: React.FC = () => {
     if (!user || !reflection.trim()) return;
     setSaving(true);
     try {
-      const { error } = await supabase.from('reading_reflections').insert([{
-        user_id: user.id,
-        reading_type: 'journey',
-        content: reflection.trim(),
-        context_id: `journey_${journeyId}_step_${stepId}`
-      }]);
-
+      const { error } = await supabase.from('reading_reflections').insert([
+        {
+          user_id: user.id,
+          reading_type: 'journey',
+          content: reflection.trim(),
+          context_id: `journey_${journeyId}_step_${stepId}`,
+        },
+      ]);
       if (error) throw error;
-      toast.success("Reflexão salva no seu perfil.");
+      toast.success('Reflexão salva no seu perfil.');
     } catch (err) {
       console.error('Failed to save reflection:', err);
-      toast.error("Erro ao salvar reflexão.");
+      toast.error('Erro ao salvar reflexão.');
     } finally {
       setSaving(false);
     }
   };
 
-
   const getVariantContent = (key: string, content: any): string | null => {
     if (!content) return null;
-    
-    // If it's a string, return it
     if (typeof content[key] === 'string') return content[key];
-    
-    // If it's an object with variants
     if (content[key] && typeof content[key] === 'object') {
-      return content[key][userLevelClass] || content[key]['iniciante'] || Object.values(content[key])[0] as string;
+      return (
+        content[key][userLevelClass] ||
+        content[key]['iniciante'] ||
+        (Object.values(content[key])[0] as string)
+      );
     }
-    
-    // Try separate keys (e.g. reflection_iniciante)
     const variantKey = `${key}_${userLevelClass}`;
     if (content[variantKey]) return content[variantKey];
-    
     return content[key] || null;
   };
 
   const toggleSection = (key: string) => {
-    setExpandedSection(prev => prev === key ? null : key);
+    setExpandedSection((prev) => (prev === key ? null : key));
   };
 
   if (loading) {
     return createPortal(
-      <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
-        <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-stitch-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-stitch-secondary border-t-transparent" />
       </div>,
-      document.body
+      document.body,
     );
   }
 
   if (!step) {
     return createPortal(
-      <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
-        <div className="text-center space-y-spacing-md">
-          <p className="text-muted-foreground">Etapa não encontrada.</p>
-          <Button onClick={() => navigate(-1)} className="text-primary underline text-premium-sm">Voltar</Button>
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-stitch-background">
+        <div className="space-y-4 text-center">
+          <p className="font-stitch-body text-stitch-on-surface-variant">Etapa não encontrada.</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="border-b border-stitch-secondary/40 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary hover:border-stitch-secondary"
+          >
+            Voltar
+          </button>
         </div>
       </div>,
-      document.body
+      document.body,
     );
   }
+
+  const bibleRef = content.bible_ref;
+  const finalPrompt =
+    getVariantContent('final_question', content) ||
+    getVariantContent('journal_prompt', content) ||
+    getVariantContent('question', content);
 
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden"
+      className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-stitch-background text-stitch-on-background"
+      style={{
+        backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
+      }}
     >
-      {/* Immersive Header */}
-      <div className="flex-shrink-0 px-spacing-md pt-[max(0.75rem,env(safe-area-inset-top))] pb-spacing-sm border-b border-border/50">
-        <div className="flex items-center gap-spacing-sm max-w-spacing-2xl mx-auto">
-          <Button
+      {/* ─── Header editorial ─────────────────────────── */}
+      <header className="flex-shrink-0 border-b border-stitch-secondary/10 bg-stitch-background/95 px-5 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:px-16">
+        <div className="mx-auto flex w-full max-w-[900px] items-center gap-4">
+          <button
             onClick={() => navigate(`/jornadas/${journeyId}`)}
-            className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
+            aria-label="Fechar etapa"
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-stitch-outline-variant/40 text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-secondary"
           >
-            <Icons.X className="w-spacing-md h-spacing-md text-foreground" />
-          </Button>
-          <div className="flex-1 min-w-spacing-0">
-            <div className="flex items-center gap-spacing-xs">
-              <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
-              <div className="group relative">
-                <span className="cursor-help px-spacing-2xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-spacing-2xs">
-                  {userLevelClass} <Icons.ShieldQuestion className="w-spacing-xs h-spacing-xs opacity-50" />
+            <X className="h-4 w-4" />
+          </button>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
+              <span className="truncate">{journeyTitle}</span>
+              <span className="text-stitch-outline-variant">·</span>
+              <span className="text-stitch-on-surface-variant">
+                Etapa {step.step_order}/{totalSteps}
+              </span>
+              <span className="text-stitch-outline-variant">·</span>
+              <span className="group relative inline-flex cursor-help items-center gap-1 text-stitch-on-surface-variant">
+                {userLevelClass}
+                <ShieldQuestion className="h-3 w-3 opacity-60" />
+                <span className="pointer-events-none invisible absolute left-0 top-full z-50 mt-2 w-64 rounded border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest p-3 text-left font-stitch-body text-[11px] normal-case tracking-normal text-stitch-on-surface opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+                  <span className="mb-1 block font-bold uppercase tracking-[0.15em] text-stitch-secondary">
+                    Conteúdo adaptado
+                  </span>
+                  <span className="opacity-80">
+                    {userLevelClass === 'iniciante' && 'Nível Iniciante: conteúdo simplificado e guiado.'}
+                    {userLevelClass === 'intermediário' && 'Nível Intermediário: reflexão e aprofundamento.'}
+                    {userLevelClass === 'avançado' && 'Nível Avançado: profundidade e confrontação.'}
+                  </span>
                 </span>
-                <div className="absolute left-0 top-full mt-spacing-xs w-spacing-4xl p-spacing-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-premium-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                  <p className="font-bold mb-spacing-2xs">Conteúdo Adaptado</p>
-                  <p className="opacity-80">
-                    {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
-                    {userLevelClass === 'intermediário' && "Nível Intermediário: foco em reflexão e aprofundamento."}
-                    {userLevelClass === 'avançado' && "Nível Avançado: foco em profundidade e confrontação."}
-                  </p>
-                </div>
-              </div>
+              </span>
             </div>
-
-            <p className="text-premium-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
-          <span className="text-premium-xs font-bold text-muted-foreground flex items-center gap-spacing-2xs">
-            <Icons.Clock className="w-spacing-sm h-spacing-sm" /> {step.duration_minutes}min
+          <span className="hidden flex-shrink-0 items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant md:inline-flex">
+            <Clock className="h-3 w-3" /> {step.duration_minutes}min
           </span>
-
         </div>
-        <div className="max-w-spacing-2xl mx-auto mt-spacing-xs">
-          <Progress value={stepProgress} className="h-spacing-2xs" />
+        {/* Barra sóbria */}
+        <div className="mx-auto mt-3 h-[2px] w-full max-w-[900px] overflow-hidden bg-stitch-surface-container-high">
+          <div
+            className="h-full bg-stitch-secondary transition-all duration-500"
+            style={{ width: `${stepProgress}%` }}
+          />
         </div>
-      </div>
+      </header>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-auto">
-        <div className="max-w-spacing-2xl mx-auto px-spacing-md py-spacing-lg space-y-spacing-lg pb-spacing-4xl">
-          {/* Step Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+      {/* ─── Conteúdo rolável ─────────────────────────── */}
+      <div className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto">
+        <div className="mx-auto w-full max-w-[720px] px-5 pb-32 pt-10 md:px-8 md:pt-14">
+          {/* Hero */}
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-spacing-xs"
+            className="border-b border-stitch-secondary/10 pb-8 text-center"
           >
             {saintImage && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-spacing-4xl h-spacing-4xl mx-auto mb-spacing-md rounded-premium-full overflow-hidden border-2 border-primary/20 shadow-premium-hover"
+                className="mx-auto mb-6 h-24 w-24 overflow-hidden rounded-full border border-stitch-secondary/30 shadow-sm"
               >
-                <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
+                <SacredImage src={saintImage} alt={step.subtitle || ''} className="h-full w-full object-cover" />
               </motion.div>
             )}
-            <h1 className="text-premium-2xl md:text-premium-3xl font-bold font-serif text-foreground">{step.title}</h1>
+            {bibleRef && (
+              <span className="mb-3 inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
+                <BookOpen className="h-3 w-3" /> {bibleRef}
+              </span>
+            )}
+            <h1 className="font-stitch-display text-[30px] italic leading-[38px] text-stitch-primary md:text-[44px] md:leading-[54px] md:tracking-[-0.01em]">
+              {step.title}
+            </h1>
             {step.subtitle && (
-              <p className="text-premium-sm text-muted-foreground italic">{step.subtitle}</p>
+              <p className="mt-3 font-stitch-body text-[16px] italic text-stitch-on-surface-variant md:text-[17px]">
+                {step.subtitle}
+              </p>
             )}
-            {content.bible_ref && (
-              <div className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-premium-xs font-black uppercase tracking-wider mx-auto">
-                <Icons.BookOpen className="w-spacing-sm h-spacing-sm" /> {content.bible_ref}
-              </div>
-            )}
-            
-            <div className="flex justify-center pt-spacing-xs">
-              <AudioContentPlayer 
-                text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map(s => getVariantContent(s.key, content)).filter(Boolean).join('. ')}`}
+            <div className="mt-6 flex justify-center md:hidden">
+              <span className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
+                <Clock className="h-3 w-3" /> {step.duration_minutes} min
+              </span>
+            </div>
+            <div className="mt-6 flex justify-center">
+              <AudioContentPlayer
+                text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map((s) => getVariantContent(s.key, content))
+                  .filter(Boolean)
+                  .join('. ')}`}
                 title="Ouvir conteúdo"
               />
             </div>
-          </motion.div>
+          </motion.section>
 
-          {/* Content Sections */}
-          {SECTION_CONFIG.map(({ key, label, icon, isPremium: sectionIsPremium }, i) => {
-            const sectionContent = getVariantContent(key, content);
-            if (!sectionContent) return null;
-            const isExpanded = expandedSection === key;
-            const isLocked = sectionIsPremium && !isUserPremium;
+          {/* Seções */}
+          <div className="mt-10 space-y-3">
+            {SECTION_CONFIG.map(({ key, label, Icon, isPremium: sectionIsPremium }, i) => {
+              const sectionContent = getVariantContent(key, content);
+              if (!sectionContent) return null;
+              const isExpanded = expandedSection === key;
+              const isLocked = sectionIsPremium && !isUserPremium;
 
-            return (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.05 }}
-              >
-                <Button
-                  onClick={() => toggleSection(key)}
-                  className={`w-full flex items-center gap-spacing-sm p-spacing-md rounded-t-2xl transition-all text-left ${
+              return (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 + i * 0.04 }}
+                  className={`border transition-colors ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border shadow-premium-md'
-                      : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
-                  } ${isLocked ? 'opacity-70' : ''}`}
+                      ? 'border-stitch-secondary/40 bg-stitch-surface-container-lowest'
+                      : 'border-stitch-outline-variant/25 bg-stitch-surface-container-lowest/60 hover:border-stitch-secondary/30'
+                  } ${isLocked ? 'opacity-90' : ''}`}
                 >
-                  <span className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center flex-shrink-0 ${
-                    isExpanded ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {isLocked ? <Icons.Lock className="w-spacing-md h-spacing-md" /> : icon}
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-spacing-xs">
-                      <span className={`text-premium-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(key)}
+                    aria-expanded={isExpanded}
+                    className="flex w-full items-center gap-4 px-5 py-4 text-left"
+                  >
+                    <span className="font-stitch-display text-[20px] italic leading-none text-stitch-secondary/40">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span
+                      className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
+                        isExpanded ? 'bg-stitch-secondary text-stitch-primary' : 'bg-stitch-surface-container-high text-stitch-on-surface-variant'
+                      }`}
+                    >
+                      {isLocked ? <Lock className="h-3.5 w-3.5" /> : <Icon className="h-3.5 w-3.5" />}
+                    </span>
+                    <span className="flex flex-1 flex-wrap items-center gap-2">
+                      <span
+                        className={`font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] ${
+                          isExpanded ? 'text-stitch-primary' : 'text-stitch-on-surface-variant'
+                        }`}
+                      >
                         {label}
                       </span>
                       {sectionIsPremium && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-xs uppercase font-black px-spacing-2xs py-spacing-0">PRO</Badge>
+                        <span className="inline-flex items-center gap-1 font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">
+                          <Sparkles className="h-2.5 w-2.5" /> PRO
+                        </span>
                       )}
-                    </div>
-                  </div>
-                  <Icons.ChevronDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </Button>
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 text-stitch-on-surface-variant transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    />
+                  </button>
 
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-spacing-md relative min-h-[140px]">
-                        {isLocked ? (
-                          <div className="space-y-spacing-md py-spacing-md text-center">
-                            <div className="blur-[6px] select-none pointer-events-none opacity-40">
-                              <p className="text-premium-sm font-serif line-clamp-spacing-md">
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="relative px-5 pb-6 pt-2 md:px-8">
+                          {isLocked ? (
+                            <div className="relative">
+                              <p className="select-none pointer-events-none whitespace-pre-line font-stitch-body text-[16px] leading-[28px] text-stitch-on-surface-variant opacity-40 blur-[5px]">
                                 {sectionContent}
                               </p>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-transparent via-stitch-surface-container-lowest/95 to-stitch-surface-container-lowest px-6 text-center">
+                                <Sparkles className="h-6 w-6 text-stitch-secondary" />
+                                <p className="max-w-[220px] font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
+                                  Continue aprofundando essa experiência.
+                                </p>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(AppRoute.PRICING);
+                                  }}
+                                  className="mt-1 inline-flex items-center gap-2 bg-stitch-primary px-5 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90"
+                                >
+                                  Desbloquear PRO <ArrowRight className="h-3 w-3" />
+                                </button>
+                              </div>
                             </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-spacing-lg space-y-spacing-md rounded-b-2xl">
-                              <Icons.Sparkles className="w-spacing-xl h-spacing-xl text-primary animate-pulse" />
-                              <p className="text-premium-sm font-bold text-foreground max-w-[180px] leading-relaxed">
-                                Continue aprofundando essa experiência
-                              </p>
-                              <Button 
-                                size="sm" 
-                                className="font-bold text-premium-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigate(AppRoute.PRICING);
-                                }}
-                              >
-                                Desbloquear PRO
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <p className={`text-premium-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'padh' ? 'text-premium-lg italic text-primary text-center' : ''}`}>
-                            {sectionContent}
-                          </p>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+                          ) : (
+                            <p
+                              className={`whitespace-pre-line font-stitch-body text-[16px] leading-[30px] text-stitch-on-surface md:text-[17px] md:leading-[32px] ${
+                                key === 'padh'
+                                  ? 'border-l-2 border-stitch-secondary/40 pl-5 font-stitch-display text-[19px] italic leading-[32px] text-stitch-primary md:text-[22px] md:leading-[36px]'
+                                  : ''
+                              }`}
+                            >
+                              {sectionContent}
+                            </p>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </div>
 
-          {/* Journal / Reflection */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
+          {/* Reflexão */}
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="space-y-spacing-sm"
+            transition={{ delay: 0.35 }}
+            className="mt-12 border-t border-stitch-secondary/10 pt-8"
           >
-            <div className="flex items-center gap-spacing-xs">
-              <Icons.PenLine className="w-spacing-md h-spacing-md text-primary" />
-              <h3 className="text-premium-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
-            </div>
-
-            {(getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
-              <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md">
-                <p className="text-premium-sm text-foreground/80 italic font-serif">
-                  {getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
-                </p>
-              </div>
+            <span className="mb-3 flex items-center gap-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
+              <PenLine className="h-3 w-3" /> Pergunta Final
+            </span>
+            {finalPrompt && (
+              <p className="mb-5 border-l-2 border-stitch-secondary/30 pl-5 font-stitch-display text-[19px] italic leading-[30px] text-stitch-primary md:text-[21px] md:leading-[32px]">
+                {finalPrompt}
+              </p>
             )}
-
-
             <Textarea
-              placeholder="Escreva sua reflexão aqui... Suas palavras são privadas e só você pode ver."
+              placeholder="Escreva sua reflexão aqui. Suas palavras são privadas."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              className="min-h-[120px] resize-none text-premium-sm bg-card border-border"
+              className="min-h-[140px] resize-none border-stitch-outline-variant/40 bg-stitch-surface-container-lowest font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:border-stitch-secondary focus-visible:ring-0"
               disabled={completed}
             />
-          </motion.div>
-        </div>
-      </div>
+          </motion.section>
 
-      {/* Fixed Bottom Action */}
-      <div className="flex-shrink-0 border-t border-border/50 bg-background  px-spacing-md py-spacing-sm pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <div className="max-w-spacing-2xl mx-auto">
-          <div className="flex gap-spacing-xs">
-            {!completed && (
-              <Button
-                onClick={handleSaveReflection}
-                disabled={saving || !reflection.trim()}
-                variant="outline"
-                className="flex-1 rounded-premium-full h-spacing-2xl text-premium-xs uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
-              >
-                {saving ? (
-                  <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
-                ) : (
-                  <><Icons.Save className="w-spacing-md h-spacing-md mr-spacing-xs" /> Salvar</>
-                )}
-              </Button>
-            )}
-            
-            <Button
-              onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
-              disabled={saving}
-              className={`${completed ? 'w-full' : 'flex-[2]'} h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-spacing-sm`}
-            >
-              {saving ? (
-                <>
-                  <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
-                  Salvando...
-                </>
-              ) : completed ? (
-                <>
-                  <Icons.ArrowLeft className="w-spacing-md h-spacing-md" />
-                  Voltar à Jornada
-                </>
-              ) : (
-                <>
-                  <Icons.Check className="w-spacing-md h-spacing-md" />
-                  Concluir Etapa
-                </>
-              )}
-            </Button>
-          </div>
-          {completed && nextStep && (
-            <div className="mt-spacing-sm">
-              <Button
-                onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-spacing-xs"
-              >
-                Próxima Etapa
-                <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
-              </Button>
-            </div>
-          )}
+          {/* Nexus + continuação após conclusão */}
           {completed && (
-            <>
-              <div className="mb-spacing-lg">
-                <NexusBubbles />
-              </div>
+            <div className="mt-12 space-y-8 border-t border-stitch-secondary/10 pt-8">
+              <NexusBubbles />
               <ReaderContinuation
                 context={{
                   kind: 'journey-step',
@@ -512,12 +526,65 @@ const JornadaStepPage: React.FC = () => {
                   },
                 }}
               />
-            </>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ─── Ação inferior ────────────────────────────── */}
+      <div className="flex-shrink-0 border-t border-stitch-secondary/10 bg-stitch-background/95 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:px-16">
+        <div className="mx-auto flex w-full max-w-[720px] flex-col gap-2">
+          <div className="flex gap-2">
+            {!completed && (
+              <button
+                onClick={handleSaveReflection}
+                disabled={saving || !reflection.trim()}
+                className="inline-flex flex-1 items-center justify-center gap-2 border border-stitch-outline-variant/40 px-4 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:text-stitch-secondary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {saving ? (
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                ) : (
+                  <>
+                    <Save className="h-3.5 w-3.5" /> Salvar
+                  </>
+                )}
+              </button>
+            )}
+            <button
+              onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
+              disabled={saving}
+              className={`${
+                completed ? 'w-full' : 'flex-[2]'
+              } inline-flex items-center justify-center gap-2 bg-stitch-primary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-primary-foreground transition-colors hover:bg-stitch-primary/90 disabled:opacity-50`}
+            >
+              {saving ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  Salvando…
+                </>
+              ) : completed ? (
+                <>
+                  <ArrowLeft className="h-3.5 w-3.5" /> Voltar à Jornada
+                </>
+              ) : (
+                <>
+                  <Check className="h-3.5 w-3.5" /> Concluir Etapa
+                </>
+              )}
+            </button>
+          </div>
+          {completed && nextStep && (
+            <button
+              onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
+              className="inline-flex w-full items-center justify-center gap-2 border border-stitch-secondary px-5 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.22em] text-stitch-secondary transition-colors hover:bg-stitch-secondary hover:text-stitch-primary"
+            >
+              Próxima Etapa <ChevronRight className="h-3.5 w-3.5" />
+            </button>
           )}
         </div>
       </div>
     </motion.div>,
-    document.body
+    document.body,
   );
 };
 
