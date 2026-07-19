@@ -14,8 +14,9 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft } from "lucide-react";
+import { Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import GlossaryTermPreview, { type GlossaryPreviewData } from "@/components/admin/GlossaryTermPreview";
 
 type Status = "draft" | "review" | "published";
 
@@ -88,6 +89,7 @@ export default function GlossaryAdmin() {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<GlossaryTerm>>(EMPTY);
+  const [showPreview, setShowPreview] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -182,6 +184,22 @@ export default function GlossaryAdmin() {
     catch { return "[]"; }
   }, [form.nexus_refs]);
 
+  const previewData: GlossaryPreviewData = useMemo(() => ({
+    term: form.term ?? "",
+    category: form.category ?? null,
+    definition: form.definition ?? "",
+    interpretation: form.interpretation ?? null,
+    practical_application: form.practical_application ?? null,
+    bible_verses: form.bible_verses ?? [],
+    catechism_references: form.catechism_references ?? [],
+    magisterium_references: form.magisterium_references ?? [],
+    saints_refs: form.saints_refs ?? [],
+    fathers_refs: form.fathers_refs ?? [],
+    prayer_refs: form.prayer_refs ?? [],
+    journey_refs: form.journey_refs ?? [],
+    nexus_refs: (form.nexus_refs as any) ?? [],
+  }), [form]);
+
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Helmet><title>Admin — Léxico Teológico</title></Helmet>
@@ -197,10 +215,22 @@ export default function GlossaryAdmin() {
           <h1 className="text-2xl font-semibold mt-1">Léxico Teológico</h1>
           <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
         </div>
-        <Button onClick={startNew} variant="secondary"><Plus className="h-4 w-4 mr-2" />Novo verbete</Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowPreview((v) => !v)}
+            aria-pressed={showPreview}
+            title={showPreview ? "Ocultar preview" : "Mostrar preview"}
+          >
+            {showPreview ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+            {showPreview ? "Ocultar preview" : "Mostrar preview"}
+          </Button>
+          <Button onClick={startNew} variant="secondary"><Plus className="h-4 w-4 mr-2" />Novo verbete</Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+      <div className={`grid grid-cols-1 gap-6 ${showPreview ? "lg:grid-cols-[300px_minmax(0,1fr)_minmax(0,1fr)]" : "lg:grid-cols-[380px_1fr]"}`}>
+
         {/* Lista */}
         <Card className="h-fit">
           <CardHeader className="pb-3">
@@ -350,6 +380,22 @@ export default function GlossaryAdmin() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Preview em tempo real */}
+        {showPreview && (
+          <Card className="h-fit lg:sticky lg:top-4">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base">Preview</CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">Espelha o reader público em tempo real.</p>
+              </div>
+              <Badge variant="outline" className="uppercase tracking-wider text-[10px]">Ao vivo</Badge>
+            </CardHeader>
+            <CardContent className="p-3 max-h-[80vh] overflow-auto">
+              <GlossaryTermPreview data={previewData} />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
