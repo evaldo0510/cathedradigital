@@ -79,6 +79,7 @@ const Saints = lazy(() => import('./components/cathedra/Saints'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const AtriumJornadasPage = lazy(() => import('./pages/AtriumJornadasPage'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
