@@ -399,6 +399,16 @@ const Rosary: React.FC = () => {
             >
               {set.name}
             </h1>
+            {/* Anúncio aria-live para restauração de sessão (histórico/BFCache/popstate). */}
+            <p
+              data-testid="rosary-restore-live"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="sr-only"
+            >
+              {restoreAnnouncement}
+            </p>
             <p className="text-premium-sm text-muted-foreground font-serif italic">
               {set.epigraph}
             </p>
