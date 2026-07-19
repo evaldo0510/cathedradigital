@@ -122,3 +122,44 @@ describe('formatNexusContent — parse de reference_id bíblico', () => {
     expect(r.metadata.book).toBeUndefined();
   });
 });
+
+describe('formatNexusContent — reference_id com pontuação/espaços extras', () => {
+  const base = (reference_id: string) => ({
+    id: 'x',
+    type: 'bible',
+    content_text: 'v',
+    reference_id,
+    metadata: {},
+  });
+
+  it('parseia "Jo 14 , 6" (espaço antes e depois da vírgula)', () => {
+    const r = formatNexusContent(base('Jo 14 , 6'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 14, verse: 6 });
+  });
+
+  it('parseia "Mt 11 : 29" (dois-pontos com espaço)', () => {
+    const r = formatNexusContent(base('Mt 11 : 29'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "Jo 14 . 6" (ponto como separador com espaços)', () => {
+    const r = formatNexusContent(base('Jo 14 . 6'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 14, verse: 6 });
+  });
+
+  it('parseia "Jo.  14, 6" (ponto após abreviação + espaços duplos)', () => {
+    const r = formatNexusContent(base('Jo.  14, 6'), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Jo', chapter: 14, verse: 6 });
+  });
+
+  it('parseia "  Mt   11,29  " (espaços em volta e no meio)', () => {
+    const r = formatNexusContent(base('  Mt   11,29  '), 'bible');
+    expect(r.metadata).toMatchObject({ book: 'Mt', chapter: 11, verse: 29 });
+  });
+
+  it('parseia "1 Cor  13 , 4" (prefixo numérico + múltiplos espaços)', () => {
+    const r = formatNexusContent(base('1 Cor  13 , 4'), 'bible');
+    expect(r.metadata).toMatchObject({ book: '1Cor', chapter: 13, verse: 4 });
+  });
+});
+
