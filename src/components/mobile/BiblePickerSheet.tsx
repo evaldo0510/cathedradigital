@@ -36,6 +36,8 @@ interface BiblePickerSheetProps {
   /** Se true, ao escolher, dispara `onSelect` e não navega. */
   selectionOnly?: boolean;
   onSelect?: (sel: BibleLastRead) => void;
+  /** Pré-seleciona livro (e capítulo) ao abrir — sincroniza com URL. */
+  initialSelection?: BibleLastRead | null;
 }
 
 /**
@@ -47,6 +49,7 @@ export function BiblePickerSheet({
   onOpenChange,
   selectionOnly = false,
   onSelect,
+  initialSelection,
 }: BiblePickerSheetProps) {
   const navigate = useNavigate();
   const [testament, setTestament] = useState<Testament>("Novo Testamento");
@@ -54,21 +57,27 @@ export function BiblePickerSheet({
 
   useEffect(() => {
     if (!open) return;
-    // Ao abrir, reseta para escolha de livro; pré-seleciona testamento pelo último lido.
-    const last = getBibleLastRead();
-    if (last) {
+    // Prioridade: seleção vinda da URL > último lido em localStorage.
+    const seed = initialSelection ?? getBibleLastRead();
+    if (seed) {
       for (const t of Object.keys(BIBLE_DATA) as Testament[]) {
-        const found = BIBLE_DATA[t].some((c) =>
-          c.books.some((b) => b.abbr.toLowerCase() === last.abbr.toLowerCase()),
-        );
-        if (found) {
-          setTestament(t);
-          break;
+        for (const cat of BIBLE_DATA[t]) {
+          const found = cat.books.find(
+            (b) => b.abbr.toLowerCase() === seed.abbr.toLowerCase(),
+          );
+          if (found) {
+            setTestament(t);
+            // Se veio da URL, entra direto no grid de capítulos do livro atual.
+            if (initialSelection) setBook(found);
+            else setBook(null);
+            return;
+          }
         }
       }
     }
     setBook(null);
-  }, [open]);
+  }, [open, initialSelection]);
+
 
   const categories = useMemo(() => BIBLE_DATA[testament] ?? [], [testament]);
 
