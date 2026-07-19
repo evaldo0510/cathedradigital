@@ -15,7 +15,11 @@ import { test, expect, devices } from '@playwright/test';
 test.use({
   ...devices['Desktop Chrome'],
   viewport: { width: 1440, height: 900 },
+  trace: 'on',
+  screenshot: 'on',
+  video: 'on',
 });
+test.describe.configure({ retries: process.env.CI ? 4 : 1 });
 
 const ROSARY_RETURN_KEY = 'cathedra:rosary:return';
 const DEVOTIONAL_KEY = 'cathedra:devotional-progress:rosary';
