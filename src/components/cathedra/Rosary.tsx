@@ -26,12 +26,32 @@ import {
 import { RosaryArt } from "./rosary/RosaryArt";
 import { RosarySession, type RosaryMode } from "./rosary/RosarySession";
 
+function formatElapsed(ms: number): string {
+  if (!ms || ms < 1000) return "0min";
+  const totalMin = Math.floor(ms / 60000);
+  if (totalMin < 60) return `${totalMin}min`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return m ? `${h}h${String(m).padStart(2, "0")}` : `${h}h`;
+}
+
+function formatStartedAt(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
+}
+
 const Rosary: React.FC = () => {
   const [selectedSet, setSelectedSet] = useState<MysterySet | null>(null);
   const [isPraying, setIsPraying] = useState(false);
   const [mode, setMode] = useState<RosaryMode>("guiado");
   const [intention, setIntention] = useState("");
   const [resumeStepIndex, setResumeStepIndex] = useState<number | undefined>(undefined);
+  const [resumeElapsedMs, setResumeElapsedMs] = useState<number>(0);
+  const [resumeStartedAt, setResumeStartedAt] = useState<string | undefined>(undefined);
 
   const { progress, loaded, save } = useDevotionalProgress("rosary");
   const { setIndex, setFavorite } = useDevotionalReader();
@@ -45,13 +65,16 @@ const Rosary: React.FC = () => {
     if (section && MYSTERY_SETS[section]) {
       setSelectedSet(section);
     }
-    // Decodificar label = `${name}|${mode}|${mysteryIndex}`
+    // Decodificar label = `${name}|${mode}|${mysteryIndex}|${elapsedMs}|${startedAt}`
     if (progress.label) {
       const parts = String(progress.label).split("|");
       const savedMode = parts[1] as RosaryMode | undefined;
       if (savedMode === "contemplativo" || savedMode === "guiado" || savedMode === "automatico") {
         setMode(savedMode);
       }
+      const savedElapsed = Number(parts[3]);
+      if (Number.isFinite(savedElapsed) && savedElapsed > 0) setResumeElapsedMs(savedElapsed);
+      if (parts[4]) setResumeStartedAt(parts[4]);
     }
     if (typeof progress.step === "number" && progress.step > 0) {
       setResumeStepIndex(progress.step);
@@ -72,6 +95,8 @@ const Rosary: React.FC = () => {
           onSelect: () => {
             setSelectedSet(key);
             setResumeStepIndex(undefined);
+            setResumeElapsedMs(0);
+            setResumeStartedAt(undefined);
           },
         };
       }),
@@ -99,13 +124,19 @@ const Rosary: React.FC = () => {
   }, [save]);
   const handleClose = useCallback(() => setIsPraying(false), []);
   const handleProgress = useCallback(
-    (stepIndex: number, mysteryIndex: number, currentMode: RosaryMode) => {
+    (
+      stepIndex: number,
+      mysteryIndex: number,
+      currentMode: RosaryMode,
+      elapsedMs: number,
+      startedAt: string,
+    ) => {
       if (!selectedSet) return;
       const s = MYSTERY_SETS[selectedSet];
       saveRef.current({
         section: selectedSet,
         step: stepIndex,
-        label: `${s.name}|${currentMode}|${mysteryIndex}`,
+        label: `${s.name}|${currentMode}|${mysteryIndex}|${Math.round(elapsedMs)}|${startedAt}`,
       });
     },
     [selectedSet],
@@ -227,6 +258,8 @@ const Rosary: React.FC = () => {
         intention={intention}
         initialMode={mode}
         initialStepIndex={resumeStepIndex}
+        initialElapsedMs={resumeElapsedMs}
+        initialStartedAt={resumeStartedAt}
         onClose={handleClose}
         onProgress={handleProgress}
       />
@@ -271,23 +304,31 @@ const Rosary: React.FC = () => {
 
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-spacing-sm">
           {canResume && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsPraying(true)}
-              className="min-h-11 rounded-premium-full border-secondary/40 text-foreground"
-            >
-              <Icons.ChevronRight className="w-4 h-4 mr-1" />
-              Retomar oração
-            </Button>
+            <div className="flex flex-col items-end gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsPraying(true)}
+                className="min-h-11 rounded-premium-full border-secondary/50 text-foreground focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-describedby="rosary-resume-hint"
+              >
+                <Icons.ChevronRight className="w-4 h-4 mr-1" />
+                Retomar oração
+              </Button>
+              <p id="rosary-resume-hint" className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
+                {formatElapsed(resumeElapsedMs)} rezados{resumeStartedAt ? ` · ${formatStartedAt(resumeStartedAt)}` : ""}
+              </p>
+            </div>
           )}
           <Button
             type="button"
             onClick={() => {
               setResumeStepIndex(0);
+              setResumeElapsedMs(0);
+              setResumeStartedAt(new Date().toISOString());
               setIsPraying(true);
             }}
-            className="min-h-12 rounded-premium-full bg-foreground text-background px-6 font-black uppercase tracking-[0.18em] text-[11px] shadow-premium-hover hover:bg-primary hover:text-primary-foreground"
+            className="min-h-12 rounded-premium-full bg-foreground text-background px-6 font-black uppercase tracking-[0.18em] text-[11px] shadow-premium-hover hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {canResume ? "Começar novamente" : "Iniciar Oração"}
           </Button>

@@ -40,8 +40,18 @@ interface Props {
   intention: string;
   initialMode: RosaryMode;
   initialStepIndex?: number;
+  /** Tempo já rezado antes desta retomada (ms). Somado ao cronômetro atual. */
+  initialElapsedMs?: number;
+  /** ISO da 1ª vez que esta sessão começou (mantido através de reloads). */
+  initialStartedAt?: string;
   onClose: () => void;
-  onProgress: (stepIndex: number, mysteryIndex: number, mode: RosaryMode) => void;
+  onProgress: (
+    stepIndex: number,
+    mysteryIndex: number,
+    mode: RosaryMode,
+    elapsedMs: number,
+    startedAt: string,
+  ) => void;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -148,6 +158,8 @@ export const RosarySession: React.FC<Props> = ({
   intention,
   initialMode,
   initialStepIndex = 0,
+  initialElapsedMs = 0,
+  initialStartedAt,
   onClose,
   onProgress,
 }) => {
@@ -164,7 +176,15 @@ export const RosarySession: React.FC<Props> = ({
     [stepIndex],
   );
 
-  /* ---------- Telemetria ---------- */
+  /* ---------- Cronômetro (soma tempo acumulado + sessão atual) ---------- */
+  const startedAtRef = useRef<string>(initialStartedAt ?? new Date().toISOString());
+  const sessionStartMsRef = useRef<number>(Date.now());
+  const elapsedMs = useCallback(
+    () => initialElapsedMs + (Date.now() - sessionStartMsRef.current),
+    [initialElapsedMs],
+  );
+
+  /* ---------- Telemetria (disparo único por evento) ---------- */
   const startedRef = useRef(false);
   useEffect(() => {
     if (!startedRef.current) {
@@ -173,35 +193,62 @@ export const RosarySession: React.FC<Props> = ({
         set: set.key,
         mode,
         resumedFromStep: initialStepIndex,
+        resumedElapsedMs: initialElapsedMs,
+        startedAt: startedAtRef.current,
       });
     }
-  }, [set.key, mode, initialStepIndex]);
+  }, [set.key, mode, initialStepIndex, initialElapsedMs]);
 
-  const lastAnnouncedMysteryRef = useRef<number>(-1);
+  const startedMysteriesRef = useRef<Set<number>>(new Set());
+  const completedMysteriesRef = useRef<Set<number>>(new Set());
+  const completedSessionRef = useRef(false);
   useEffect(() => {
-    if (phase.kind === "announce" && phase.mysteryIndex !== lastAnnouncedMysteryRef.current) {
-      lastAnnouncedMysteryRef.current = phase.mysteryIndex;
+    if (
+      phase.kind === "announce" &&
+      phase.mysteryIndex >= 0 &&
+      !startedMysteriesRef.current.has(phase.mysteryIndex)
+    ) {
+      startedMysteriesRef.current.add(phase.mysteryIndex);
       telemetry.log("rosary.mystery_started", "info", {
         set: set.key,
         mysteryIndex: phase.mysteryIndex,
         title: set.mysteries[phase.mysteryIndex]?.title,
       });
     }
-    if (phase.kind === "fatima") {
+    if (
+      phase.kind === "fatima" &&
+      phase.mysteryIndex >= 0 &&
+      !completedMysteriesRef.current.has(phase.mysteryIndex)
+    ) {
+      completedMysteriesRef.current.add(phase.mysteryIndex);
       telemetry.log("rosary.mystery_completed", "info", {
         set: set.key,
         mysteryIndex: phase.mysteryIndex,
+        title: set.mysteries[phase.mysteryIndex]?.title,
+        elapsedMs: elapsedMs(),
       });
     }
-    if (phase.kind === "closing") {
-      telemetry.log("rosary.completed", "info", { set: set.key, mode });
+    if (phase.kind === "closing" && !completedSessionRef.current) {
+      completedSessionRef.current = true;
+      telemetry.log("rosary.completed", "info", {
+        set: set.key,
+        mode,
+        durationMs: elapsedMs(),
+        startedAt: startedAtRef.current,
+      });
     }
-  }, [phase.kind, phase.mysteryIndex, set, mode]);
+  }, [phase.kind, phase.mysteryIndex, set, mode, elapsedMs]);
 
   /* ---------- Persistência ---------- */
   useEffect(() => {
-    onProgress(stepIndex, Math.max(0, phase.mysteryIndex), mode);
-  }, [stepIndex, phase.mysteryIndex, mode, onProgress]);
+    onProgress(
+      stepIndex,
+      Math.max(0, phase.mysteryIndex),
+      mode,
+      elapsedMs(),
+      startedAtRef.current,
+    );
+  }, [stepIndex, phase.mysteryIndex, mode, onProgress, elapsedMs]);
 
   /* ---------- Automático ---------- */
   useEffect(() => {
@@ -303,7 +350,7 @@ export const RosarySession: React.FC<Props> = ({
         </Button>
 
         <div className="flex flex-col items-center text-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+          <span className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
             {set.latin}
           </span>
           <span className="text-premium-sm font-serif text-secondary/85">{set.name}</span>
@@ -319,7 +366,7 @@ export const RosarySession: React.FC<Props> = ({
                 "cursor-pointer rounded-premium-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] transition-all min-h-8",
                 mode === m
                   ? "bg-secondary text-primary"
-                  : "text-secondary/60 hover:text-secondary",
+                  : "text-secondary/80 hover:text-secondary",
               )}
             >
               <input
@@ -440,7 +487,7 @@ export const RosarySession: React.FC<Props> = ({
             </Button>
           )}
 
-          <div className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/50 hidden md:block">
+          <div className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 hidden md:block">
             {stepIndex}/{TOTAL_STEPS - 1}
           </div>
         </div>
@@ -477,7 +524,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "intro") {
     return (
       <div className="space-y-spacing-lg text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           Orações Iniciais
         </p>
         <h2 className="font-display text-premium-3xl text-secondary">Sinal da Cruz</h2>
@@ -486,13 +533,13 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         </p>
         {intention && (
           <blockquote className="mt-spacing-md mx-auto max-w-prose rounded-premium border border-secondary/15 bg-secondary/[0.04] p-spacing-md">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/50">
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Intenção
             </p>
             <p className="mt-1 italic font-serif text-secondary/80">“{intention}”</p>
           </blockquote>
         )}
-        <p className="text-premium-xs text-secondary/50 font-serif italic max-w-prose mx-auto">
+        <p className="text-premium-xs text-secondary/80 font-serif italic max-w-prose mx-auto">
           Sinal da Cruz · Credo · Pai-Nosso · 3 Ave-Marias (Fé, Esperança, Caridade) · Glória.
         </p>
         <details className="text-left mt-spacing-lg">
@@ -508,7 +555,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "announce" && mystery) {
     return (
       <div className="space-y-spacing-lg text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério
         </p>
         <h2 className="font-display text-premium-3xl md:text-premium-4xl text-secondary leading-tight">
@@ -528,13 +575,13 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         </p>
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md mt-spacing-lg text-left">
           <div className="rounded-premium border border-secondary/15 bg-secondary/[0.03] p-spacing-md">
-            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/55">
+            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Intenção sugerida
             </dt>
             <dd className="mt-2 font-serif text-secondary/85">{mystery.intention}</dd>
           </div>
           <div className="rounded-premium border border-secondary/15 bg-secondary/[0.03] p-spacing-md">
-            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/55">
+            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Fruto espiritual
             </dt>
             <dd className="mt-2 font-serif text-secondary/85">{mystery.fruit}</dd>
@@ -547,7 +594,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "our-father") {
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Pai-Nosso
         </p>
         <h2 className="font-display text-premium-2xl text-secondary">Pai Nosso</h2>
@@ -565,7 +612,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
     const n = phase.beadIndex + 1;
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Ave-Maria
         </p>
         <div
@@ -589,7 +636,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "glory") {
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Glória
         </p>
         <h2 className="font-display text-premium-2xl text-secondary">Glória ao Pai</h2>
@@ -604,23 +651,35 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   }
 
   if (phase.kind === "fatima") {
+    const isFinal = phase.mysteryIndex === 4;
     return (
-      <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+      <div className="space-y-spacing-lg text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/75">
           {phase.mysteryIndex + 1}º Mistério · Oração de Fátima
         </p>
         <p className="italic font-serif text-premium-lg text-secondary/85 leading-relaxed max-w-prose mx-auto">
           {PRAYER_TEXT.fatima.text}
         </p>
+
+        {/* Continuação inteligente por mistério (não apenas no closing). */}
+        {mystery && !isFinal && (
+          <MysteryContinuation
+            mystery={mystery}
+            setKey={set.key}
+            onCtaClick={onCtaClick}
+          />
+        )}
       </div>
     );
   }
+
+
 
   // closing
   const finalMystery = set.mysteries[4];
   return (
     <div className="space-y-spacing-xl text-center">
-      <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+      <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
         Oração Final
       </p>
       <h2 className="font-display text-premium-3xl text-secondary">Salve Rainha</h2>
@@ -633,7 +692,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         <p className="mt-spacing-md font-display text-premium-2xl text-secondary">
           Rosário completo.
         </p>
-        <p className="text-premium-sm text-secondary/60 font-serif italic max-w-prose mx-auto">
+        <p className="text-premium-sm text-secondary/80 font-serif italic max-w-prose mx-auto">
           {set.epigraph}
         </p>
       </div>
@@ -644,7 +703,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
           aria-label="Aprofundar este mistério"
           className="mt-spacing-2xl border-t border-secondary/20 pt-spacing-xl text-left"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60 text-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80 text-center">
             Aprofundar “{finalMystery.title}”
           </p>
           <ul className="mt-spacing-md flex flex-col gap-spacing-sm">
@@ -657,7 +716,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
                   }
                   className="flex items-center gap-3 min-h-11 px-4 py-3 rounded-premium-lg border border-secondary/20 bg-secondary/[0.04] text-secondary/90 hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                 >
-                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/55 w-20">
+                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 w-20">
                     {l.eyebrow ?? l.kind}
                   </span>
                   <span className="font-serif">{l.label}</span>
@@ -697,10 +756,69 @@ const TextToggle: React.FC<{ showText: boolean; onToggle: () => void }> = ({
     type="button"
     onClick={onToggle}
     aria-pressed={!showText}
-    className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/50 hover:text-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded"
+    className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/75 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded px-2 py-1"
   >
     {showText ? "Ocultar texto" : "Mostrar texto"}
   </button>
+);
+
+/* -------------------------------------------------------------------------- */
+/* Continuação inteligente por mistério                                       */
+/* -------------------------------------------------------------------------- */
+
+interface MysteryContinuationProps {
+  mystery: Mystery;
+  setKey: MysterySet;
+  onCtaClick: (evt: { label: string; href: string; kind: string }) => void;
+}
+
+const MysteryContinuation: React.FC<MysteryContinuationProps> = ({
+  mystery,
+  setKey,
+  onCtaClick,
+}) => (
+  <section
+    aria-label={`Aprofundar o mistério ${mystery.title}`}
+    className="mt-spacing-lg border-t border-secondary/25 pt-spacing-lg text-left"
+  >
+    <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80 text-center">
+      Aprofundar “{mystery.title}”
+    </p>
+    {mystery.links.length > 0 && (
+      <ul className="mt-spacing-md flex flex-col gap-spacing-sm">
+        {mystery.links.map((l) => (
+          <li key={l.href}>
+            <Link
+              to={l.href}
+              onClick={() =>
+                onCtaClick({ label: l.label, href: l.href, kind: `rosary-link:${l.kind}` })
+              }
+              className="flex items-center gap-3 min-h-11 px-4 py-3 rounded-premium-lg border border-secondary/25 bg-secondary/[0.05] text-secondary hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 w-20">
+                {l.eyebrow ?? l.kind}
+              </span>
+              <span className="font-serif">{l.label}</span>
+              <Icons.ChevronRight className="w-4 h-4 ml-auto opacity-70" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    )}
+    <div className="mt-spacing-md">
+      <ReaderContinuation
+        context={{
+          kind: "prayer",
+          id: `rosary:${setKey}:${mystery.id}`,
+          themeIds: mystery.themeIds,
+          meta: { prayerCategory: "marianas" },
+        }}
+        onCtaClick={(evt) =>
+          onCtaClick({ ...evt, kind: `reader-continuation:${mystery.id}` })
+        }
+      />
+    </div>
+  </section>
 );
 
 export default RosarySession;
