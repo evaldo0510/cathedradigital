@@ -148,7 +148,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 )}
               >
                 <div className="flex items-start gap-4">
-                  <sup className="mt-2 text-[10px] font-black text-secondary/40 select-none tabular-nums">
+                  <sup className="mt-2 text-[10px] font-medium text-secondary/70 select-none tabular-nums tracking-wider">
                     {v.number}
                   </sup>
                   <p className={cn(
