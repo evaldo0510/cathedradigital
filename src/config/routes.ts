@@ -37,7 +37,7 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/rosary', label: 'Rosário', icon: Icons.Hash, showInMenu: true, category: 'content' },
   { path: '/viacrucis', label: 'Via Sacra', icon: Icons.Activity, showInMenu: true, category: 'content' },
   { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: true, category: 'content' },
-  { path: '/glossary', label: 'Glossário', icon: Icons.BookOpen, showInMenu: true, category: 'content' },
+  { path: '/glossario', label: 'Glossário', icon: Icons.BookOpen, showInMenu: true, category: 'content' },
 
   // Órfãs catalogadas (rota real existe, showInMenu:false — decisão editorial futura)
   // ONDA 1: sair da condição de órfã sem promover ao menu.
