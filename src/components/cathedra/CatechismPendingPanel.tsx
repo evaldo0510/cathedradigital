@@ -342,6 +342,13 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runStatus, paused, inRange.length]);
 
+  const errorRows = useMemo(
+    () => Object.values(results)
+      .filter(r => r.status === 'error' || (r.status === 'backoff' && r.errorCode))
+      .sort((a, b) => a.paragraph - b.paragraph),
+    [results],
+  );
+
   if (inRange.length === 0 && Object.keys(results).length === 0) return null;
 
   const buildExportRows = (): ParaState[] => {
@@ -355,12 +362,6 @@ const CatechismPendingPanel: React.FC<Props> = ({ startPara, endPara, onJumpTo }
     return rows;
   };
 
-  const errorRows = useMemo(
-    () => Object.values(results)
-      .filter(r => r.status === 'error' || (r.status === 'backoff' && r.errorCode))
-      .sort((a, b) => a.paragraph - b.paragraph),
-    [results],
-  );
 
   const exportJSON = () => {
     const payload = {
