@@ -13,6 +13,8 @@ import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
 
@@ -50,6 +52,11 @@ const AtriumCatechismReader: React.FC = () => {
   if (pParam && chrome) {
     return (
       <Suspense fallback={<CatechismSkeleton />}>
+        <MobileTopBar
+          kicker={`Cathedra · ${chrome.kicker}`}
+          title={chrome.title}
+          showBack
+        />
         <EditorialReaderChrome
           kicker={`Cathedra · ${chrome.kicker}`}
           title={chrome.title}
@@ -57,6 +64,7 @@ const AtriumCatechismReader: React.FC = () => {
           backHref={AppRoute.CATECHISM}
         />
         <Catechism />
+        <MobileBottomNav />
       </Suspense>
     );
   }
@@ -81,7 +89,13 @@ const CatechismLanding: React.FC = () => {
         <meta property="og:title" content="Cathedra — Catecismo da Igreja Católica" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar
+        transparent
+        kicker="Cathedra"
+        title="Catecismo"
+      />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-10 md:px-16 md:pb-16 md:pt-14 animate-fade-in">
         {/* Hero */}
         <section className="border-b border-stitch-secondary/10 pb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
@@ -177,6 +191,8 @@ const CatechismLanding: React.FC = () => {
           </p>
         </section>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };

@@ -106,6 +106,8 @@ const AtriumBuscarPage: React.FC = () => {
   }, [urlQuery]);
 
   const hasQuery = urlQuery.trim().length >= 2;
+  const hasBibleFilter = Boolean(livro && capitulo);
+  const showResults = hasQuery || hasBibleFilter;
 
   const submit = (value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -235,7 +237,7 @@ const AtriumBuscarPage: React.FC = () => {
         </section>
 
         {/* ─── Resultados (delegação) ou Territórios ────────────────── */}
-        {hasQuery ? (
+        {showResults ? (
           <section className="pt-10">
             <Suspense
               fallback={
@@ -301,6 +303,9 @@ const AtriumBuscarPage: React.FC = () => {
         open={pickerOpen}
         onOpenChange={setPickerOpen}
         selectionOnly
+        initialSelection={
+          hasBibleFilter ? { abbr: livro, chapter: Number(capitulo) } : null
+        }
         onSelect={(sel) => {
           const next = new URLSearchParams(searchParams);
           next.set('livro', sel.abbr);
