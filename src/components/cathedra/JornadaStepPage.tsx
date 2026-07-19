@@ -186,6 +186,12 @@ const JornadaStepPage: React.FC = () => {
 
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
+    // Validação: se há pergunta final, a reflexão é obrigatória (mínimo 10 chars).
+    if (reflectionRequired && !reflectionValid) {
+      setStatusMessage('Escreva sua reflexão antes de concluir (mínimo 10 caracteres).');
+      toast.error('Escreva sua reflexão antes de concluir (mínimo 10 caracteres).');
+      return;
+    }
     setCompleting(true);
     setStatusMessage('Concluindo etapa…');
     try {
