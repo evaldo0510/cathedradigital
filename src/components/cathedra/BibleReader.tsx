@@ -204,6 +204,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
       {/* Bloco de continuidade — fim do capítulo */}
       <div className="px-spacing-lg pb-spacing-2xl">
+        <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
         <div className="mb-spacing-lg">
           <NexusBubbles />
         </div>
