@@ -26,6 +26,7 @@ import { initGA4AutoTracking } from './lib/analytics';
 import CathedralSidebar from './components/cathedra/Sidebar';
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
+const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
 import CathedralFooter from './components/cathedra/Footer';
 import NotFound from './pages/NotFound';
 import BottomNav from './components/cathedra/BottomNav';
