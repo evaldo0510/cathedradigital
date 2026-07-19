@@ -42,21 +42,32 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Aplica preferência salva (legacy vs novo) ao abrir um santo por URL
+  // Aplica preferência (query ?legacy=1 tem prioridade, senão localStorage)
   useEffect(() => {
     if (!id) return;
     try {
-      const pref = localStorage.getItem('cathedra:saints:reader-variant');
-      if (pref === 'legacy' && !legacyReader) {
-        navigate(`/saints-legacy/${id}`, { replace: true });
-        return;
+      const qp = searchParams.get('legacy');
+      let want: 'legacy' | 'new' | null = null;
+      if (qp === '1') want = 'legacy';
+      else if (qp === '0') want = 'new';
+      else {
+        const pref = localStorage.getItem('cathedra:saints:reader-variant');
+        if (pref === 'legacy') want = 'legacy';
+        else if (pref === 'new') want = 'new';
       }
-      if (pref === 'new' && legacyReader) {
-        navigate(`/santos/${id}`, { replace: true });
-        return;
+      if (!want) return;
+      // Persiste preferência quando vem da URL
+      if (qp === '1' || qp === '0') {
+        localStorage.setItem('cathedra:saints:reader-variant', want);
+      }
+      const suffix = searchParams.toString() ? `?${searchParams.toString()}` : '';
+      if (want === 'legacy' && !legacyReader) {
+        navigate(`/saints-legacy/${id}${suffix}`, { replace: true });
+      } else if (want === 'new' && legacyReader) {
+        navigate(`/santos/${id}${suffix}`, { replace: true });
       }
     } catch { /* ignore */ }
-  }, [id, legacyReader, navigate]);
+  }, [id, legacyReader, navigate, searchParams]);
 
   useEffect(() => {
     if (id) {

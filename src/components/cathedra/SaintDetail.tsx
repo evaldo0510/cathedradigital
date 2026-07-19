@@ -100,10 +100,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           type="button"
           onClick={() => {
             const targetId = (saint as any).slug || saint.id;
+            const nextLegacy = !legacy;
             try {
-              localStorage.setItem('cathedra:saints:reader-variant', legacy ? 'new' : 'legacy');
+              localStorage.setItem('cathedra:saints:reader-variant', nextLegacy ? 'legacy' : 'new');
             } catch { /* ignore */ }
-            navigate(legacy ? `/santos/${targetId}` : `/saints-legacy/${targetId}`);
+            const params = new URLSearchParams(window.location.search);
+            params.set('legacy', nextLegacy ? '1' : '0');
+            const qs = params.toString();
+            const base = nextLegacy ? `/saints-legacy/${targetId}` : `/santos/${targetId}`;
+            navigate(qs ? `${base}?${qs}` : base);
           }}
           aria-label={legacy ? 'Ver versão nova do Reader' : 'Ver versão anterior do Reader'}
           title={legacy ? 'Versão nova' : 'Versão anterior'}
