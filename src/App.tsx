@@ -90,6 +90,7 @@ const ItinerariumDetailPage = lazy(() => import('./components/cathedra/Itinerari
 const ItinerariumStepPage = lazy(() => import('./components/cathedra/ItinerariumStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
+const PadresRedirect = lazy(() => import('./pages/PadresRedirect'));
 const AtriumBibleReader = lazy(() => import('./pages/AtriumBibleReader'));
 const AtriumCatechismReader = lazy(() => import('./pages/AtriumCatechismReader'));
 const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
@@ -513,7 +514,7 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><AtriumBibliotecaPage /></Suspense>} />
               <Route path="/biblioteca-legacy" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
               {/* Rota canônica dos Padres/Doutores — redireciona para /santos/:id (mesma fonte de dados). */}
-              <Route path="/biblioteca/padres/:slug" element={<PadresRedirect />} />
+              <Route path="/biblioteca/padres/:slug" element={<Suspense fallback={<LoadingFallback />}><PadresRedirect /></Suspense>} />
 
               
               {/* Itineraria */}
