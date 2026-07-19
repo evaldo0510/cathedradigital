@@ -76,9 +76,15 @@ const JornadaStepPage: React.FC = () => {
   const [reflection, setReflection] = useState('');
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [completing, setCompleting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
   const [nextStep, setNextStep] = useState<any>(null);
+  const [prevStep, setPrevStep] = useState<any>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [saintImage, setSaintImage] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const restoredScrollRef = useRef(false);
+  const storageKey = stepId ? `cathedra:journey-step:${stepId}` : null;
 
   const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
   const stepProgress = useMemo(
