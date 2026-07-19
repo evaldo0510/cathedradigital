@@ -235,22 +235,34 @@ const GlossaryPage: React.FC = () => {
         <div
           role="region"
           aria-label="Retomar sessão do Rosário"
+          aria-live="polite"
           className="sticky top-2 z-30 mx-auto max-w-3xl rounded-premium border border-secondary/40 bg-card/95 backdrop-blur shadow-premium p-spacing-sm flex items-center gap-spacing-sm"
+          data-testid="rosary-return-region"
         >
           <Icons.ArrowLeft className="w-5 h-5 text-secondary shrink-0" aria-hidden="true" />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80">
               Sessão em andamento
             </p>
-            <p className="text-premium-sm text-foreground font-serif truncate">
-              {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · modo {ROSARY_MODE_LABEL[rosaryReturn.mode]} · {formatElapsedShort(rosaryReturn.elapsedMs)} rezados
+            <p
+              id="rosary-return-summary"
+              className="text-premium-sm text-foreground font-serif truncate"
+            >
+              {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · modo{' '}
+              <strong className="font-serif font-bold">
+                {ROSARY_MODE_LABEL[rosaryReturn.mode]}
+              </strong>{' '}
+              · {formatElapsedShort(rosaryReturn.elapsedMs)} rezados
             </p>
           </div>
           <Button
             type="button"
             onClick={handleReturnToRosary}
+            data-testid="rosary-return-button"
+            data-mode={rosaryReturn.mode}
             className="min-h-11 rounded-premium-full bg-secondary text-secondary-foreground font-black uppercase text-premium-xs tracking-widest px-spacing-md hover:bg-secondary/90 focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label={`Voltar ao Rosário — ${rosaryReturn.setName}, ${rosaryReturn.mysteryLabel}, modo ${ROSARY_MODE_LABEL[rosaryReturn.mode]}, ${formatElapsedShort(rosaryReturn.elapsedMs)} rezados`}
+            aria-label={`Voltar ao Rosário — retomar ${rosaryReturn.setName}, ${rosaryReturn.mysteryLabel}, modo ${ROSARY_MODE_LABEL[rosaryReturn.mode]}, ${formatElapsedShort(rosaryReturn.elapsedMs)} já rezados`}
+            aria-describedby="rosary-return-summary"
           >
             Voltar ao Rosário
           </Button>
