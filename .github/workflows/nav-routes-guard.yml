@@ -1,0 +1,84 @@
+name: Nav & Redirects Guard
+
+# Falha o build se qualquer rota da bottom nav, redirect legado ou sub-rota
+# de /admin/* deixar de resolver. Executa:
+#  - vitest (inclui src/test/BottomNavRoutesResolvable.test.ts)
+#  - Playwright E2E dos specs de navegação
+#  - Script de cobertura (falha se MobileBottomNav tiver rota sem teste)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: nav-routes-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-and-unit:
+    name: Static + Unit (vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps
+        run: bun install --frozen-lockfile
+      - name: Vitest — BottomNavRoutesResolvable + suite
+        run: bun run test -- src/test/BottomNavRoutesResolvable.test.ts
+      - name: Nav coverage report
+        run: bun run scripts/nav-coverage-report.ts
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nav-coverage-report
+          path: REPORTS/nav-coverage.md
+
+  e2e-nav:
+    name: Playwright — nav + redirects + auth + admin
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps
+        run: bun install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Build app
+        run: bun run build
+      - name: Start preview server
+        run: bunx vite preview --host 127.0.0.1 --port 8080 &
+      - name: Wait for server
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://127.0.0.1:8080 > /dev/null; then
+              echo "Server up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Server not responding"; exit 1
+      - name: Run E2E — nav specs
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:8080
+        run: |
+          bunx playwright test \
+            tests/e2e/bottom-nav-and-redirects-no-404.spec.ts \
+            tests/e2e/nav-auth-admin-snapshots.spec.ts \
+            --project=chromium \
+            --reporter=list
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-nav
+          path: playwright-report/
+          retention-days: 7
