@@ -85,6 +85,7 @@ const ItinerariaPage = lazy(() => import('./components/cathedra/ItinerariaPage')
 const ItinerariumDetailPage = lazy(() => import('./components/cathedra/ItinerariumDetailPage'));
 const ItinerariumStepPage = lazy(() => import('./components/cathedra/ItinerariumStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
