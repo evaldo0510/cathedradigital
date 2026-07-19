@@ -95,6 +95,9 @@ const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
 const AtriumMagisteriumViewer = lazy(() => import('./pages/AtriumMagisteriumViewer'));
 
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
+const AtriumCommunityPage = lazy(() => import('./pages/AtriumCommunityPage'));
+const AtriumCommunityPostPage = lazy(() => import('./pages/AtriumCommunityPostPage'));
+const AtriumCommunityProfilePage = lazy(() => import('./pages/AtriumCommunityProfilePage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
@@ -551,7 +554,10 @@ const AppLayout: React.FC = () => {
               <Route path="/jornadas/:id/complete" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
 
               {/* Comunidade */}
-              <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><CommunityPage /></Suspense>} />
+              <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><AtriumCommunityPage /></Suspense>} />
+              <Route path="/community/post/:id" element={<Suspense fallback={<LoadingFallback />}><AtriumCommunityPostPage /></Suspense>} />
+              <Route path="/community/user/:userId" element={<Suspense fallback={<LoadingFallback />}><AtriumCommunityProfilePage /></Suspense>} />
+              <Route path="/community-legacy" element={<Suspense fallback={<LoadingFallback />}><CommunityPage /></Suspense>} />
 
               {/* Conquistas & Favoritos */}
               <Route path="/favorites" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><FavoritesPage /></AuthGuard></Suspense>} />
