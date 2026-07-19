@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,9 +14,14 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import {
+  Loader2, Plus, Save, Send, Trash2, ExternalLink, ArrowLeft,
+  Eye, EyeOff, Check, AlertCircle, Search, ChevronUp, ChevronDown, X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import GlossaryTermPreview, { type GlossaryPreviewData } from "@/components/admin/GlossaryTermPreview";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useDocumentSearch } from "@/hooks/useDocumentSearch";
 
 type Status = "draft" | "review" | "published";
 
@@ -82,6 +87,36 @@ const STATUS_BADGE: Record<Status, { label: string; variant: "secondary" | "outl
   published: { label: "Publicado", variant: "default" },
 };
 
+const DRAFT_KEY = (id: string | null) => `glossary-admin-draft:${id ?? "new"}`;
+
+// 11 campos editoriais obrigatórios para publicação
+type FieldId =
+  | "definition" | "interpretation" | "practical_application"
+  | "bible_verses" | "catechism_references" | "magisterium_references"
+  | "saints_refs" | "fathers_refs" | "journey_refs" | "prayer_refs" | "nexus_refs";
+
+const REQUIRED_FIELDS: { id: FieldId; label: string; kind: "text" | "list" | "json" }[] = [
+  { id: "definition", label: "1. Definição", kind: "text" },
+  { id: "interpretation", label: "2. Interpretação", kind: "text" },
+  { id: "practical_application", label: "3. Aplicação prática", kind: "text" },
+  { id: "bible_verses", label: "4. Bíblia", kind: "list" },
+  { id: "catechism_references", label: "5. Catecismo", kind: "list" },
+  { id: "magisterium_references", label: "6. Magistério", kind: "list" },
+  { id: "saints_refs", label: "7. Santos", kind: "list" },
+  { id: "fathers_refs", label: "8. Padres da Igreja", kind: "list" },
+  { id: "journey_refs", label: "9. Jornada", kind: "list" },
+  { id: "prayer_refs", label: "10. Oração", kind: "list" },
+  { id: "nexus_refs", label: "11. Nexus", kind: "json" },
+];
+
+function isFieldFilled(form: Partial<GlossaryTerm>, f: (typeof REQUIRED_FIELDS)[number]): boolean {
+  const v = (form as any)[f.id];
+  if (f.kind === "text") return typeof v === "string" && v.trim().length > 0;
+  if (f.kind === "list") return Array.isArray(v) && v.length > 0;
+  if (f.kind === "json") return Array.isArray(v) && v.length > 0;
+  return false;
+}
+
 export default function GlossaryAdmin() {
   const [items, setItems] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,6 +125,9 @@ export default function GlossaryAdmin() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<GlossaryTerm>>(EMPTY);
   const [showPreview, setShowPreview] = useState(true);
+  const [autosavedAt, setAutosavedAt] = useState<Date | null>(null);
+  const [previewQuery, setPreviewQuery] = useState("");
+  const previewRef = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -115,23 +153,72 @@ export default function GlossaryAdmin() {
     );
   }, [items, filter]);
 
+  // ---- Autosave (localStorage) ----
+  const debouncedForm = useDebounce(form, 800);
+  const skipNextAutosave = useRef(true);
+  useEffect(() => {
+    // não autosalvar imediatamente ao trocar de seleção
+    if (skipNextAutosave.current) {
+      skipNextAutosave.current = false;
+      return;
+    }
+    try {
+      localStorage.setItem(DRAFT_KEY(selectedId), JSON.stringify({
+        savedAt: new Date().toISOString(),
+        form: debouncedForm,
+      }));
+      setAutosavedAt(new Date());
+    } catch { /* quota */ }
+  }, [debouncedForm, selectedId]);
+
+  const restoreDraftFor = (id: string | null, fallback: Partial<GlossaryTerm>) => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY(id));
+      if (raw) {
+        const parsed = JSON.parse(raw) as { savedAt: string; form: Partial<GlossaryTerm> };
+        if (parsed?.form) {
+          setAutosavedAt(new Date(parsed.savedAt));
+          return parsed.form;
+        }
+      }
+    } catch { /* ignore */ }
+    setAutosavedAt(null);
+    return fallback;
+  };
+
   const select = (row: GlossaryTerm) => {
+    skipNextAutosave.current = true;
     setSelectedId(row.id);
-    setForm(row);
+    setForm(restoreDraftFor(row.id, row));
   };
 
   const startNew = () => {
+    skipNextAutosave.current = true;
     setSelectedId(null);
-    setForm(EMPTY);
+    setForm(restoreDraftFor(null, EMPTY));
   };
 
   const patch = <K extends keyof GlossaryTerm>(key: K, value: GlossaryTerm[K]) => {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
+  // ---- Validação dos 11 campos ----
+  const fieldChecks = useMemo(
+    () => REQUIRED_FIELDS.map((f) => ({ ...f, ok: isFieldFilled(form, f) })),
+    [form],
+  );
+  const missingFields = fieldChecks.filter((f) => !f.ok);
+  const canPublish =
+    (form.term?.trim().length ?? 0) > 0 &&
+    missingFields.length === 0;
+
   const save = async (publish = false) => {
     if (!form.term?.trim()) return toast.error("Termo é obrigatório");
-    if (!form.definition?.trim()) return toast.error("Definição é obrigatória");
+    if (publish && !canPublish) {
+      return toast.error(
+        `Não é possível publicar: ${missingFields.length} campo(s) obrigatório(s) pendentes.`,
+      );
+    }
 
     setSaving(true);
     const slug = (form.slug?.trim() || slugify(form.term));
@@ -164,8 +251,16 @@ export default function GlossaryAdmin() {
     setSaving(false);
     if (res.error) return toast.error("Erro ao salvar: " + res.error.message);
     toast.success(publish ? "Verbete publicado" : "Verbete salvo");
-    setForm(res.data as GlossaryTerm);
-    setSelectedId((res.data as GlossaryTerm).id);
+    const saved = res.data as GlossaryTerm;
+    // limpa rascunho local após persistir
+    try {
+      localStorage.removeItem(DRAFT_KEY(selectedId));
+      if (!selectedId) localStorage.removeItem(DRAFT_KEY(null));
+    } catch { /* ignore */ }
+    skipNextAutosave.current = true;
+    setForm(saved);
+    setSelectedId(saved.id);
+    setAutosavedAt(null);
     void load();
   };
 
@@ -174,6 +269,7 @@ export default function GlossaryAdmin() {
     if (!confirm("Excluir este verbete? Esta ação não pode ser desfeita.")) return;
     const { error } = await supabase.from("glossary").delete().eq("id", selectedId);
     if (error) return toast.error("Erro ao excluir: " + error.message);
+    try { localStorage.removeItem(DRAFT_KEY(selectedId)); } catch { /* ignore */ }
     toast.success("Verbete excluído");
     startNew();
     void load();
@@ -200,6 +296,19 @@ export default function GlossaryAdmin() {
     nexus_refs: (form.nexus_refs as any) ?? [],
   }), [form]);
 
+  // Busca dentro do preview
+  const previewSearch = useDocumentSearch(previewRef, previewQuery, previewData);
+
+  const openInNewTab = () => {
+    const slug = form.slug?.trim() || (form.term ? slugify(form.term) : "");
+    if (!slug) return toast.error("Defina um termo/slug antes de abrir o preview.");
+    window.open(`/glossario/${slug}?preview=1`, "_blank", "noopener,noreferrer");
+  };
+
+  const autosavedLabel = autosavedAt
+    ? `Rascunho salvo às ${autosavedAt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`
+    : "Alterações não salvas localmente";
+
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Helmet><title>Admin — Léxico Teológico</title></Helmet>
@@ -224,6 +333,9 @@ export default function GlossaryAdmin() {
           >
             {showPreview ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
             {showPreview ? "Ocultar preview" : "Mostrar preview"}
+          </Button>
+          <Button variant="outline" onClick={openInNewTab} title="Abrir preview em nova aba">
+            <ExternalLink className="h-4 w-4 mr-2" />Nova aba
           </Button>
           <Button onClick={startNew} variant="secondary"><Plus className="h-4 w-4 mr-2" />Novo verbete</Button>
         </div>
@@ -285,15 +397,20 @@ export default function GlossaryAdmin() {
           <CardHeader className="pb-3 flex flex-row items-start justify-between gap-4">
             <div>
               <CardTitle className="text-base">{selectedId ? "Editar verbete" : "Novo verbete"}</CardTitle>
-              {form.slug && (
-                <a
-                  href={`/glossario/${form.slug}`}
-                  target="_blank" rel="noreferrer"
-                  className="text-xs text-muted-foreground inline-flex items-center gap-1 mt-1 hover:underline"
-                >
-                  /glossario/{form.slug} <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
+              <div className="flex items-center gap-3 mt-1 flex-wrap">
+                {form.slug && (
+                  <a
+                    href={`/glossario/${form.slug}`}
+                    target="_blank" rel="noreferrer"
+                    className="text-xs text-muted-foreground inline-flex items-center gap-1 hover:underline"
+                  >
+                    /glossario/{form.slug} <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+                <span className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
+                  <Save className="h-3 w-3" />{autosavedLabel}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               {selectedId && (
@@ -305,13 +422,37 @@ export default function GlossaryAdmin() {
                 {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
                 Salvar
               </Button>
-              <Button size="sm" onClick={() => save(true)} disabled={saving}>
+              <Button
+                size="sm"
+                onClick={() => save(true)}
+                disabled={saving || !canPublish}
+                title={canPublish ? "Publicar verbete" : `${missingFields.length} campo(s) pendentes`}
+              >
                 <Send className="h-4 w-4 mr-1" />Publicar
               </Button>
             </div>
           </CardHeader>
 
           <CardContent className="space-y-6">
+            {/* Checklist de publicação */}
+            <div className={`rounded-md border p-3 text-sm ${canPublish ? "border-emerald-500/40 bg-emerald-500/5" : "border-amber-500/40 bg-amber-500/5"}`}>
+              <div className="flex items-center gap-2 font-medium">
+                {canPublish
+                  ? <><Check className="h-4 w-4 text-emerald-600" />Pronto para publicar</>
+                  : <><AlertCircle className="h-4 w-4 text-amber-600" />{missingFields.length} de 11 campos pendentes</>}
+              </div>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+                {fieldChecks.map((f) => (
+                  <div key={f.id} className="flex items-center gap-2 text-xs">
+                    {f.ok
+                      ? <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                      : <AlertCircle className="h-3.5 w-3.5 text-amber-600 shrink-0" />}
+                    <span className={f.ok ? "text-muted-foreground" : "text-foreground"}>{f.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Metadados */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -351,22 +492,27 @@ export default function GlossaryAdmin() {
             </div>
 
             {/* 11 seções */}
-            <SectionText label="1. Definição *" value={form.definition ?? ""} onChange={(v) => patch("definition", v)} rows={4} />
-            <SectionText label="2. Interpretação" value={form.interpretation ?? ""} onChange={(v) => patch("interpretation", v)} rows={5} />
-            <SectionText label="3. Aplicação prática" value={form.practical_application ?? ""} onChange={(v) => patch("practical_application", v)} rows={4} />
+            <SectionText required label="1. Definição *" value={form.definition ?? ""} onChange={(v) => patch("definition", v)} rows={4} filled={fieldChecks[0].ok} />
+            <SectionText required label="2. Interpretação *" value={form.interpretation ?? ""} onChange={(v) => patch("interpretation", v)} rows={5} filled={fieldChecks[1].ok} />
+            <SectionText required label="3. Aplicação prática *" value={form.practical_application ?? ""} onChange={(v) => patch("practical_application", v)} rows={4} filled={fieldChecks[2].ok} />
 
-            <SectionList label="4. Bíblia" hint="Uma referência por linha (ex.: Jo 3,16)" value={form.bible_verses} onChange={(v) => patch("bible_verses", v)} />
-            <SectionList label="5. Catecismo" hint="Parágrafos do CIC (ex.: 1996, 1997)" value={form.catechism_references} onChange={(v) => patch("catechism_references", v)} />
-            <SectionList label="6. Magistério" hint="Documentos citados" value={form.magisterium_references} onChange={(v) => patch("magisterium_references", v)} />
-            <SectionList label="7. Santos" hint="Slugs ou nomes de santos" value={form.saints_refs} onChange={(v) => patch("saints_refs", v)} />
-            <SectionList label="8. Padres da Igreja" hint="Slugs de padres" value={form.fathers_refs} onChange={(v) => patch("fathers_refs", v)} />
-            <SectionList label="9. Jornada" hint="UUIDs de jornadas relacionadas" value={form.journey_refs} onChange={(v) => patch("journey_refs", v)} />
-            <SectionList label="10. Oração" hint="Slugs de orações" value={form.prayer_refs} onChange={(v) => patch("prayer_refs", v)} />
+            <SectionList required filled={fieldChecks[3].ok} label="4. Bíblia *" hint="Uma referência por linha (ex.: Jo 3,16)" value={form.bible_verses} onChange={(v) => patch("bible_verses", v)} />
+            <SectionList required filled={fieldChecks[4].ok} label="5. Catecismo *" hint="Parágrafos do CIC (ex.: 1996, 1997)" value={form.catechism_references} onChange={(v) => patch("catechism_references", v)} />
+            <SectionList required filled={fieldChecks[5].ok} label="6. Magistério *" hint="Documentos citados" value={form.magisterium_references} onChange={(v) => patch("magisterium_references", v)} />
+            <SectionList required filled={fieldChecks[6].ok} label="7. Santos *" hint="Slugs ou nomes de santos" value={form.saints_refs} onChange={(v) => patch("saints_refs", v)} />
+            <SectionList required filled={fieldChecks[7].ok} label="8. Padres da Igreja *" hint="Slugs de padres" value={form.fathers_refs} onChange={(v) => patch("fathers_refs", v)} />
+            <SectionList required filled={fieldChecks[8].ok} label="9. Jornada *" hint="UUIDs de jornadas relacionadas" value={form.journey_refs} onChange={(v) => patch("journey_refs", v)} />
+            <SectionList required filled={fieldChecks[9].ok} label="10. Oração *" hint="Slugs de orações" value={form.prayer_refs} onChange={(v) => patch("prayer_refs", v)} />
 
             <div>
-              <Label>11. Nexus (JSON)</Label>
+              <Label className="flex items-center gap-2">
+                11. Nexus (JSON) *
+                {fieldChecks[10].ok
+                  ? <Check className="h-3.5 w-3.5 text-emerald-600" />
+                  : <AlertCircle className="h-3.5 w-3.5 text-amber-600" />}
+              </Label>
               <Textarea
-                className="font-mono text-xs"
+                className={`font-mono text-xs ${fieldChecks[10].ok ? "" : "border-amber-500/50"}`}
                 rows={6}
                 value={nexusText}
                 onChange={(e) => {
@@ -384,15 +530,53 @@ export default function GlossaryAdmin() {
         {/* Preview em tempo real */}
         {showPreview && (
           <Card className="h-fit lg:sticky lg:top-4">
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-base">Preview</CardTitle>
-                <p className="text-xs text-muted-foreground mt-1">Espelha o reader público em tempo real.</p>
+            <CardHeader className="pb-3">
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-base">Preview</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">Espelha o reader público em tempo real.</p>
+                </div>
+                <Badge variant="outline" className="uppercase tracking-wider text-[10px]">Ao vivo</Badge>
               </div>
-              <Badge variant="outline" className="uppercase tracking-wider text-[10px]">Ao vivo</Badge>
+              <div className="mt-3 relative">
+                <Search className="h-3.5 w-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Input
+                  value={previewQuery}
+                  onChange={(e) => setPreviewQuery(e.target.value)}
+                  placeholder="Buscar no preview…"
+                  className="pl-7 pr-24 h-8 text-xs"
+                  aria-label="Buscar no preview"
+                />
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+                  {previewQuery.trim().length >= 2 && (
+                    <span className="text-[10px] text-muted-foreground mr-1 tabular-nums">
+                      {previewSearch.total > 0 ? `${previewSearch.current}/${previewSearch.total}` : "0"}
+                    </span>
+                  )}
+                  <Button
+                    type="button" size="icon" variant="ghost" className="h-6 w-6"
+                    onClick={previewSearch.goPrev} disabled={previewSearch.total === 0}
+                    aria-label="Ocorrência anterior"
+                  ><ChevronUp className="h-3.5 w-3.5" /></Button>
+                  <Button
+                    type="button" size="icon" variant="ghost" className="h-6 w-6"
+                    onClick={previewSearch.goNext} disabled={previewSearch.total === 0}
+                    aria-label="Próxima ocorrência"
+                  ><ChevronDown className="h-3.5 w-3.5" /></Button>
+                  {previewQuery && (
+                    <Button
+                      type="button" size="icon" variant="ghost" className="h-6 w-6"
+                      onClick={() => setPreviewQuery("")}
+                      aria-label="Limpar busca"
+                    ><X className="h-3.5 w-3.5" /></Button>
+                  )}
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-3 max-h-[80vh] overflow-auto">
-              <GlossaryTermPreview data={previewData} />
+              <div ref={previewRef}>
+                <GlossaryTermPreview data={previewData} />
+              </div>
             </CardContent>
           </Card>
         )}
@@ -402,27 +586,43 @@ export default function GlossaryAdmin() {
 }
 
 function SectionText({
-  label, value, onChange, rows = 4,
-}: { label: string; value: string; onChange: (v: string) => void; rows?: number }) {
+  label, value, onChange, rows = 4, filled, required,
+}: { label: string; value: string; onChange: (v: string) => void; rows?: number; filled?: boolean; required?: boolean }) {
   return (
     <div>
-      <Label>{label}</Label>
-      <Textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} />
+      <Label className="flex items-center gap-2">
+        {label}
+        {required && (filled
+          ? <Check className="h-3.5 w-3.5 text-emerald-600" />
+          : <AlertCircle className="h-3.5 w-3.5 text-amber-600" />)}
+      </Label>
+      <Textarea
+        rows={rows}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={required && !filled ? "border-amber-500/50" : ""}
+      />
     </div>
   );
 }
 
 function SectionList({
-  label, hint, value, onChange,
-}: { label: string; hint?: string; value: string[] | null | undefined; onChange: (v: string[]) => void }) {
+  label, hint, value, onChange, filled, required,
+}: { label: string; hint?: string; value: string[] | null | undefined; onChange: (v: string[]) => void; filled?: boolean; required?: boolean }) {
   return (
     <div>
-      <Label>{label}</Label>
+      <Label className="flex items-center gap-2">
+        {label}
+        {required && (filled
+          ? <Check className="h-3.5 w-3.5 text-emerald-600" />
+          : <AlertCircle className="h-3.5 w-3.5 text-amber-600" />)}
+      </Label>
       <Textarea
         rows={3}
         value={joinList(value)}
         onChange={(e) => onChange(parseList(e.target.value))}
         placeholder={hint}
+        className={required && !filled ? "border-amber-500/50" : ""}
       />
       {hint && <p className="text-xs text-muted-foreground mt-1">{hint}</p>}
     </div>
