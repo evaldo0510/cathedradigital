@@ -350,7 +350,7 @@ export const RosarySession: React.FC<Props> = ({
         </Button>
 
         <div className="flex flex-col items-center text-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+          <span className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
             {set.latin}
           </span>
           <span className="text-premium-sm font-serif text-secondary/85">{set.name}</span>
@@ -366,7 +366,7 @@ export const RosarySession: React.FC<Props> = ({
                 "cursor-pointer rounded-premium-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] transition-all min-h-8",
                 mode === m
                   ? "bg-secondary text-primary"
-                  : "text-secondary/60 hover:text-secondary",
+                  : "text-secondary/80 hover:text-secondary",
               )}
             >
               <input
@@ -487,7 +487,7 @@ export const RosarySession: React.FC<Props> = ({
             </Button>
           )}
 
-          <div className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/50 hidden md:block">
+          <div className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 hidden md:block">
             {stepIndex}/{TOTAL_STEPS - 1}
           </div>
         </div>
@@ -524,7 +524,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "intro") {
     return (
       <div className="space-y-spacing-lg text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           Orações Iniciais
         </p>
         <h2 className="font-display text-premium-3xl text-secondary">Sinal da Cruz</h2>
@@ -533,13 +533,13 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         </p>
         {intention && (
           <blockquote className="mt-spacing-md mx-auto max-w-prose rounded-premium border border-secondary/15 bg-secondary/[0.04] p-spacing-md">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/50">
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Intenção
             </p>
             <p className="mt-1 italic font-serif text-secondary/80">“{intention}”</p>
           </blockquote>
         )}
-        <p className="text-premium-xs text-secondary/50 font-serif italic max-w-prose mx-auto">
+        <p className="text-premium-xs text-secondary/80 font-serif italic max-w-prose mx-auto">
           Sinal da Cruz · Credo · Pai-Nosso · 3 Ave-Marias (Fé, Esperança, Caridade) · Glória.
         </p>
         <details className="text-left mt-spacing-lg">
@@ -555,7 +555,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "announce" && mystery) {
     return (
       <div className="space-y-spacing-lg text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério
         </p>
         <h2 className="font-display text-premium-3xl md:text-premium-4xl text-secondary leading-tight">
@@ -575,13 +575,13 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         </p>
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md mt-spacing-lg text-left">
           <div className="rounded-premium border border-secondary/15 bg-secondary/[0.03] p-spacing-md">
-            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/55">
+            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Intenção sugerida
             </dt>
             <dd className="mt-2 font-serif text-secondary/85">{mystery.intention}</dd>
           </div>
           <div className="rounded-premium border border-secondary/15 bg-secondary/[0.03] p-spacing-md">
-            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/55">
+            <dt className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary/80">
               Fruto espiritual
             </dt>
             <dd className="mt-2 font-serif text-secondary/85">{mystery.fruit}</dd>
@@ -594,7 +594,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "our-father") {
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Pai-Nosso
         </p>
         <h2 className="font-display text-premium-2xl text-secondary">Pai Nosso</h2>
@@ -612,7 +612,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
     const n = phase.beadIndex + 1;
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Ave-Maria
         </p>
         <div
@@ -636,7 +636,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   if (phase.kind === "glory") {
     return (
       <div className="space-y-spacing-md text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
           {phase.mysteryIndex + 1}º Mistério · Glória
         </p>
         <h2 className="font-display text-premium-2xl text-secondary">Glória ao Pai</h2>
@@ -679,7 +679,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
   const finalMystery = set.mysteries[4];
   return (
     <div className="space-y-spacing-xl text-center">
-      <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60">
+      <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80">
         Oração Final
       </p>
       <h2 className="font-display text-premium-3xl text-secondary">Salve Rainha</h2>
@@ -692,7 +692,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
         <p className="mt-spacing-md font-display text-premium-2xl text-secondary">
           Rosário completo.
         </p>
-        <p className="text-premium-sm text-secondary/60 font-serif italic max-w-prose mx-auto">
+        <p className="text-premium-sm text-secondary/80 font-serif italic max-w-prose mx-auto">
           {set.epigraph}
         </p>
       </div>
@@ -703,7 +703,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
           aria-label="Aprofundar este mistério"
           className="mt-spacing-2xl border-t border-secondary/20 pt-spacing-xl text-left"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/60 text-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary/80 text-center">
             Aprofundar “{finalMystery.title}”
           </p>
           <ul className="mt-spacing-md flex flex-col gap-spacing-sm">
@@ -716,7 +716,7 @@ const PhaseContent: React.FC<PhaseContentProps> = ({
                   }
                   className="flex items-center gap-3 min-h-11 px-4 py-3 rounded-premium-lg border border-secondary/20 bg-secondary/[0.04] text-secondary/90 hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                 >
-                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/55 w-20">
+                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80 w-20">
                     {l.eyebrow ?? l.kind}
                   </span>
                   <span className="font-serif">{l.label}</span>
