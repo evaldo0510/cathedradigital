@@ -48,12 +48,7 @@ const PrayerLibraryPage: React.FC = () => {
 
   return (
     <>
-      <MobileTopBar kicker="Cathedra · Orações" title="Livro de Orações" />
-      <EditorialReaderChrome
-        kicker="Cathedra · Orações"
-        title="Livro de Orações"
-        subtitle="Tradição viva da Igreja"
-      />
+
 
       <main className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
         {/* Hero editorial breve */}
