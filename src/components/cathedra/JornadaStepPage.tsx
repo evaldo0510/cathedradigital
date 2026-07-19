@@ -270,9 +270,83 @@ const JornadaStepPage: React.FC = () => {
     return content[key] || null;
   };
 
+  const persistLocal = useCallback((patch: Record<string, any>) => {
+    if (!storageKey) return;
+    try {
+      const prev = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      localStorage.setItem(storageKey, JSON.stringify({ ...prev, ...patch, ts: Date.now() }));
+    } catch { /* noop */ }
+  }, [storageKey]);
+
   const toggleSection = (key: string) => {
-    setExpandedSection((prev) => (prev === key ? null : key));
+    setExpandedSection((prev) => {
+      const next = prev === key ? null : key;
+      persistLocal({ expandedSection: next });
+      return next;
+    });
   };
+
+  // Retomar scroll do usuário na volta à etapa
+  useEffect(() => {
+    if (loading || !step || restoredScrollRef.current || !storageKey || !scrollRef.current) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      if (typeof saved.scrollY === 'number' && saved.scrollY > 0) {
+        requestAnimationFrame(() => {
+          scrollRef.current?.scrollTo({ top: saved.scrollY, behavior: 'auto' });
+        });
+      }
+    } catch { /* noop */ }
+    restoredScrollRef.current = true;
+  }, [loading, step, storageKey]);
+
+  // Persistir scroll (throttled)
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !storageKey) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        persistLocal({ scrollY: el.scrollTop });
+        raf = 0;
+      });
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [storageKey, persistLocal, loading]);
+
+  // Atalhos de teclado: ← → navega entre etapas; Alt+Enter conclui
+  useEffect(() => {
+    const isTypingTarget = (t: EventTarget | null) => {
+      const el = t as HTMLElement | null;
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || el.isContentEditable;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return;
+      if (e.key === 'ArrowRight' && nextStep) {
+        e.preventDefault();
+        navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`);
+      } else if (e.key === 'ArrowLeft' && prevStep) {
+        e.preventDefault();
+        navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`);
+      } else if (e.key === 'Escape') {
+        navigate(`/jornadas/${journeyId}`);
+      } else if (e.altKey && e.key === 'Enter' && !completed && !completing) {
+        e.preventDefault();
+        completeStep();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+     
+  }, [nextStep, prevStep, journeyId, completed, completing]);
+
 
   if (loading) {
     return createPortal(
