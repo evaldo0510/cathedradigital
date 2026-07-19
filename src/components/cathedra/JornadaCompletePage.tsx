@@ -42,7 +42,13 @@ const JornadaCompletePage: React.FC = () => {
   const [xpAwarded, setXpAwarded] = useState(0);
   const [newBadges, setNewBadges] = useState<string[]>([]);
   const [rewardsProcessed, setRewardsProcessed] = useState(false);
+  const [totalSteps, setTotalSteps] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState(0);
   const certificateRef = useRef<HTMLDivElement>(null);
+
+  const isJourneyComplete = totalSteps > 0 && completedSteps >= totalSteps;
+  const hasCertificateData = !!(journey?.title);
+  const canShareCertificate = hasCertificateData && isJourneyComplete;
 
   useEffect(() => {
     if (id && user) loadData();
