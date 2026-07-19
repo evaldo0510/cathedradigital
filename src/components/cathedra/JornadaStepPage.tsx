@@ -340,6 +340,24 @@ const JornadaStepPage: React.FC = () => {
     };
   }, [storageKey, persistLocal, loading]);
 
+  // Autosave do rascunho de reflexão (debounced 500ms). Não persiste após conclusão.
+  useEffect(() => {
+    if (!storageKey || completed || loading) return;
+    const handle = window.setTimeout(() => {
+      persistLocal({ draftReflection: reflection });
+      if (reflection.trim()) setDraftSavedAt(Date.now());
+    }, 500);
+    return () => window.clearTimeout(handle);
+  }, [reflection, storageKey, persistLocal, completed, loading]);
+
+  // Limpar rascunho ao concluir para liberar o localStorage
+  useEffect(() => {
+    if (completed && storageKey) {
+      persistLocal({ draftReflection: '' });
+      setDraftSavedAt(null);
+    }
+  }, [completed, storageKey, persistLocal]);
+
   // Atalhos de teclado: ← → navega entre etapas; Alt+Enter conclui
   useEffect(() => {
     const isTypingTarget = (t: EventTarget | null) => {
