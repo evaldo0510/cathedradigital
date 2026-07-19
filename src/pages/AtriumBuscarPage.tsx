@@ -22,6 +22,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const GlobalSearchPage = lazy(
   () => import('@/components/cathedra/GlobalSearchPage'),
@@ -124,7 +126,9 @@ const AtriumBuscarPage: React.FC = () => {
         <meta property="og:title" content="Cathedra — Pesquisa" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar kicker="Cathedra" title="Pesquisa" transparent />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="border-b border-stitch-secondary/10 pb-10">
           <div className="max-w-3xl">
@@ -253,6 +257,8 @@ const AtriumBuscarPage: React.FC = () => {
           </section>
         )}
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };
