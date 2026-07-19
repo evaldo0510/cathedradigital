@@ -58,7 +58,7 @@ const VIRTUE_TO_JOURNEY: Record<string, { id: string, name: string }> = {
   'missão': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
 };
 
-const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean; legacy?: boolean }> = ({ saint, onClose, autoReflect = false, legacy = false }) => {
   const { isPremium } = useAuth();
   const navigate = useNavigate();
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
