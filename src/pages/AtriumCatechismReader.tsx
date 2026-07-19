@@ -89,7 +89,13 @@ const CatechismLanding: React.FC = () => {
         <meta property="og:title" content="Cathedra — Catecismo da Igreja Católica" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <MobileTopBar
+        variant="transparent"
+        kicker="Cathedra"
+        title="Catecismo"
+      />
+
+      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-10 md:px-16 md:pb-16 md:pt-14 animate-fade-in">
         {/* Hero */}
         <section className="border-b border-stitch-secondary/10 pb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
