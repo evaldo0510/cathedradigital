@@ -55,7 +55,14 @@ async function seedSession(page: Page, mode: Mode) {
 
 // ------------------------------- DESKTOP -----------------------------------
 test.describe('desktop · restauração sem hash — tab order + BFCache + aria-live', () => {
-  test.use({ ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } });
+  test.use({
+    ...devices['Desktop Chrome'],
+    viewport: { width: 1440, height: 900 },
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on',
+  });
+  test.describe.configure({ retries: process.env.CI ? 4 : 1 });
 
   test('ordem de tabulação a partir do cabeçalho após restauração sem hash', async ({ page }) => {
     await seedSession(page, 'guiado');
@@ -144,7 +151,13 @@ test.describe('desktop · restauração sem hash — tab order + BFCache + aria-
 
 // -------------------------------- MOBILE -----------------------------------
 test.describe('mobile · restaurar Rosário via histórico sem hash', () => {
-  test.use({ ...devices['iPhone 12'] });
+  test.use({
+    ...devices['iPhone 12'],
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on',
+  });
+  test.describe.configure({ retries: process.env.CI ? 4 : 1 });
 
   test('back/forward sem hash foca cabeçalho e anuncia modo', async ({ page }) => {
     await seedSession(page, 'guiado');
