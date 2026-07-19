@@ -1,0 +1,51 @@
+name: a11y mobile (axe WCAG AA)
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/e2e/a11y-mobile.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - '.github/workflows/a11y-mobile.yml'
+  push:
+    branches: [main]
+
+jobs:
+  a11y-mobile:
+    name: axe WCAG AA · mobile 390x844 · gate serious+critical
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build
+        run: bun run build
+
+      - name: Run axe mobile suite
+        env:
+          CI: 'true'
+        run: bunx playwright test tests/e2e/a11y-mobile.spec.ts --reporter=line,html
+
+      - name: Upload a11y report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-mobile-report
+          path: |
+            playwright-report
+            reports/a11y-mobile
+          retention-days: 14
+          if-no-files-found: ignore
