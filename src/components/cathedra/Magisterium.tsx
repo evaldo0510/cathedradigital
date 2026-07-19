@@ -74,6 +74,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import ContemplativeLayout from './ContemplativeLayout';
+import { EditorialHero } from '@/components/editorial';
 import ReadingMark from './ReadingMark';
 import { CathedraCard } from './CathedraCard';
 import { cn } from '@/lib/utils';
