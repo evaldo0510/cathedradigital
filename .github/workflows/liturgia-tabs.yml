@@ -57,6 +57,7 @@ jobs:
             tests/e2e/liturgia-tabs-forced-colors.spec.ts \
             tests/e2e/liturgia-tabs-aria-linkage.spec.ts \
             tests/e2e/liturgia-tabs-axe-theme-dynamic.spec.ts \
+            tests/e2e/liturgia-tabs-axe-tab-switch-dynamic.spec.ts \
             --project=chromium --reporter=list,html
 
       - name: Upload Playwright HTML report
