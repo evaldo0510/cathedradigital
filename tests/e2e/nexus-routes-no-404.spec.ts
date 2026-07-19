@@ -10,6 +10,17 @@
  * /estudar/* e /rezar/* inexistentes, resultando em 404 ao clicar no Nexus.
  */
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const EVIDENCE_DIR = path.resolve('playwright-report/nexus-evidence');
+const FAILURES_LOG = path.join(EVIDENCE_DIR, 'failures.log');
+fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
+
+function appendFailure(entry: Record<string, unknown>) {
+  const line = JSON.stringify({ ts: new Date().toISOString(), ...entry });
+  fs.appendFileSync(FAILURES_LOG, line + '\n');
+}
 
 // Params plausíveis para cada rota que exige placeholders.
 // Escolhidos a partir de slugs/valores reais existentes no banco/rotas.
@@ -42,7 +53,8 @@ for (const vp of VIEWPORTS) {
     test.use({ viewport: { width: vp.width, height: vp.height } });
 
     for (const c of CASES) {
-      test(`[${vp.name}] ${c.key} → ${c.label} não gera 404`, async ({ page }) => {
+      test(`[${vp.name}] ${c.key} → ${c.label} não gera 404`, async ({ page }, testInfo) => {
+        const slug = `${vp.name}__${c.key.replace(/\W+/g, '-')}`;
         // Resolve URL dentro do próprio app usando o RouteRegistry (fonte da verdade).
         await page.goto('/', { waitUntil: 'domcontentloaded' });
         const url = await page.evaluate(
@@ -55,18 +67,44 @@ for (const vp of VIEWPORTS) {
 
         expect(url, `URL resolvida para ${c.key}`).toBeTruthy();
         // Nenhum link do Nexus pode voltar a apontar para prefixos antigos.
-        expect(url.startsWith('/estudar/'), 'não deve usar /estudar/*').toBe(false);
-        expect(url.startsWith('/rezar/'), 'não deve usar /rezar/*').toBe(false);
+        expect(url.startsWith('/estudar/'), 'RouteRegistry não deve emitir /estudar/*').toBe(false);
+        expect(url.startsWith('/rezar/'), 'RouteRegistry não deve emitir /rezar/*').toBe(false);
 
-        const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
-        // O app é SPA: o HTTP status é 200 mesmo para rotas inexistentes.
-        // A prova real de 404 é o componente NotFound renderizar `<h1>404</h1>`.
-        expect(response?.status(), 'status HTTP').toBeLessThan(400);
+        try {
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
+          // O app é SPA: o HTTP status é 200 mesmo para rotas inexistentes.
+          // A prova real de 404 é o componente NotFound renderizar `<h1>404</h1>`.
+          expect(response?.status(), 'status HTTP').toBeLessThan(400);
 
-        const notFound = page.locator('h1', { hasText: /^404$/ });
-        await expect(notFound, `rota ${url} não pode renderizar NotFound no ${vp.name}`).toHaveCount(0);
+          const notFound = page.locator('h1', { hasText: /^404$/ });
+          await expect(notFound, `rota ${url} não pode renderizar NotFound no ${vp.name}`).toHaveCount(0);
+
+          // Guarda de redirecionamento: a URL final após navegação SPA
+          // não pode escorregar para prefixos antigos.
+          const finalPath = new URL(page.url()).pathname;
+          expect(finalPath.startsWith('/estudar/'), `redirecionou para /estudar/* (${finalPath})`).toBe(false);
+          expect(finalPath.startsWith('/rezar/'), `redirecionou para /rezar/* (${finalPath})`).toBe(false);
+        } catch (err) {
+          // Evidência no CI: screenshot + log estruturado da rota que falhou.
+          const shotPath = path.join(EVIDENCE_DIR, `${slug}.png`);
+          await page.screenshot({ path: shotPath }).catch(() => {});
+          appendFailure({
+            viewport: vp.name,
+            key: c.key,
+            resolvedUrl: url,
+            finalUrl: page.url(),
+            screenshot: shotPath,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          await testInfo.attach(`nexus-failure-${slug}.png`, {
+            path: shotPath,
+            contentType: 'image/png',
+          }).catch(() => {});
+          throw err;
+        }
       });
     }
   });
 }
+
 
