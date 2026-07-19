@@ -18,8 +18,8 @@ const FIXTURES: Record<RouteKey, Record<string, string | number>> = {
   'study.bible': { book: 'joao', chapter: 6 },
   'study.catechism': { paragraph: 1817 },
   'study.magisterium': { doc: 'spe-salvi' },
-  'study.father': { slug: 'santo-agostinho' },
-  'study.saint': { slug: 'santa-teresinha' },
+  'study.father': { slug: 'agostinho' },
+  'study.saint': { slug: 'teresinha' },
   'pray.lectio': { slug: 'domingo-14-tempo-comum' },
   'pray.liturgy-today': {},
 };

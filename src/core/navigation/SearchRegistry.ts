@@ -64,15 +64,15 @@ const CORPUS: SearchResult[] = [
   },
   {
     id: 'f1', label: 'São João Crisóstomo', hint: KIND_LABEL.father, kind: 'father', action: 'open-profile',
-    targetPath: RouteRegistry.resolve('study.father', { slug: 'sao-joao-crisostomo' }),
+    targetPath: RouteRegistry.resolve('study.father', { slug: 's-joao-crisostomo-0913' }),
   },
   {
     id: 'f2', label: 'Santo Agostinho', hint: KIND_LABEL.father, kind: 'father', action: 'open-profile',
-    targetPath: RouteRegistry.resolve('study.father', { slug: 'santo-agostinho' }),
+    targetPath: RouteRegistry.resolve('study.father', { slug: 'agostinho' }),
   },
   {
     id: 's1', label: 'Santo Tomás de Aquino', hint: KIND_LABEL.saint, kind: 'saint', action: 'open-profile',
-    targetPath: RouteRegistry.resolve('study.saint', { slug: 'santo-tomas-de-aquino' }),
+    targetPath: RouteRegistry.resolve('study.saint', { slug: 'thomas-aquinas' }),
   },
   {
     id: 'c1', label: 'CIC §§ 1996-2005 (Graça)', hint: KIND_LABEL.catechism, kind: 'catechism', action: 'open-document',

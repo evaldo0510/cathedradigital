@@ -31,9 +31,9 @@ const ROUTES: Record<RouteKey, RouteEntry> = {
   'study.bible':          { template: '/bible?book=:book&chapter=:chapter', requires: ['book', 'chapter'] },
   'study.catechism':      { template: '/catechism?p=:paragraph',           requires: ['paragraph'] },
   'study.magisterium':    { template: '/magisterium/:doc',                 requires: ['doc'] },
-  // TODO: não existe rota canônica para Padres da Igreja. Aponta para /biblioteca
-  // provisoriamente para evitar 404 até definição de produto.
-  'study.father':         { template: '/biblioteca?padre=:slug',           requires: ['slug'] },
+  // Rota canônica dos Padres/Doutores. Redireciona internamente para /santos/:slug
+  // (Padres estão na tabela `saints` com category='doctor').
+  'study.father':         { template: '/biblioteca/padres/:slug',          requires: ['slug'] },
   'study.saint':          { template: '/santos/:slug',                     requires: ['slug'] },
   // Rotas de oração — alinhadas ao App.tsx (/lectio, /liturgia).
   'pray.lectio':          { template: '/lectio?slug=:slug',                requires: ['slug'] },
