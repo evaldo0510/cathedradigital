@@ -124,6 +124,14 @@ export interface EditorialHeroProps extends Omit<React.HTMLAttributes<HTMLElemen
   background?: 'none' | 'parchment' | 'gradient';
   /** Escala vertical + tipográfica. Default: `md`. */
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * Padrão de espaçamento superior/inferior do hero.
+   * - `default`: usa a escala editorial completa (HERO_SIZE_PAD).
+   * - `safe`: respiro seguro no mobile para heros que ficam logo abaixo do header
+   *   (`pt-10 pb-0` no mobile, `md:pt-6 md:pb-0` no desktop). Default para `variant="legacy"`.
+   * - `flush`: sem padding vertical (`py-0`), quando o container pai já controla ritmo.
+   */
+  topSpacing?: 'default' | 'safe' | 'flush';
   /** Escapes tipográficos por página. */
   titleClassName?: string;
   subtitleClassName?: string;
@@ -134,6 +142,11 @@ const HERO_SIZE_PAD: Record<NonNullable<EditorialHeroProps['size']>, string> = {
   sm: 'py-[calc(var(--stitch-editorial-stack)*0.75)] md:py-[calc(var(--stitch-editorial-stack)*1)]',
   md: 'py-[calc(var(--stitch-editorial-stack)*1.25)] md:py-[calc(var(--stitch-editorial-stack)*2)]',
   lg: 'py-[calc(var(--stitch-editorial-stack)*1.75)] md:py-[calc(var(--stitch-editorial-stack)*2.5)]',
+};
+
+const HERO_TOP_SPACING: Record<'safe' | 'flush', string> = {
+  safe: 'pt-10 pb-0 md:pt-6 md:pb-0',
+  flush: 'py-0',
 };
 
 const HERO_TITLE_SIZE: Record<NonNullable<EditorialHeroProps['size']>, string> = {
