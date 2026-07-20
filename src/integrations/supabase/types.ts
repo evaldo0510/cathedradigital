@@ -2387,6 +2387,30 @@ export type Database = {
           },
         ]
       }
+      glossary_permissions: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       governance_audit_log: {
         Row: {
           actor_id: string | null
@@ -6331,6 +6355,11 @@ export type Database = {
           retry_count: number
           status: string
         }[]
+      }
+      glossary_role_for: { Args: { _uid: string }; Returns: string }
+      has_glossary_role: {
+        Args: { _min: string; _uid: string }
+        Returns: boolean
       }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
