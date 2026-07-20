@@ -86,14 +86,14 @@ export function MobileTopBar({
           </p>
         )}
         {title && (
-          <h1
+          <p
             className={cn(
               "font-[var(--font-stitch-display)] text-[18px] leading-tight",
               "text-stitch-on-surface truncate",
             )}
           >
             {title}
-          </h1>
+          </p>
         )}
       </div>
 
