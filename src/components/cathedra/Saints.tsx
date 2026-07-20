@@ -322,7 +322,20 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 
               <div className="w-full space-y-spacing-lg">
-                {isLoadingDaily ? (
+                <span className="sr-only" role="status" aria-live="polite">
+                  {isLoadingDaily
+                    ? 'Carregando santos do dia.'
+                    : isDailyError
+                      ? 'Falha ao carregar santos do dia.'
+                      : `${displaySaints.length} santo(s) encontrado(s) para a data selecionada.`}
+                </span>
+                {isDailyError ? (
+                  <SaintsFetchError
+                    message={dailyError instanceof Error ? dailyError.message : undefined}
+                    onRetry={() => refetchDaily()}
+                    isRetrying={isRefetchingDaily}
+                  />
+                ) : isLoadingDaily ? (
                   <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
                   displaySaints.map(saint => (
