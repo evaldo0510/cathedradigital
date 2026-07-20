@@ -387,6 +387,7 @@ const GlossaryPage: React.FC = () => {
               key={term.id}
               title={term.term}
               subtitle={term.definition}
+              subtitleNode={highlightText(term.definition, searchQuery)}
               score={term.similarityScore}
               icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
