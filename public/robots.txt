@@ -11,9 +11,14 @@ Disallow: /catechism/integrity
 Disallow: /catechism/verify
 Disallow: /checkout
 Disallow: /checkout/result
+Disallow: /dev/editorial
+Disallow: /dev/mobile
 Disallow: /diagnostics
 Disallow: /diario
 Disallow: /favorites
+Disallow: /home
+Disallow: /home-v3
+Disallow: /legacy-home
 Disallow: /login
 Disallow: /offline
 Disallow: /profile
