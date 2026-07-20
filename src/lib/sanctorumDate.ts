@@ -20,7 +20,12 @@ export function parseISODateLocal(s: string | null | undefined): Date | null {
   if (!s) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
   if (!m) return null;
-  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  // Usar setFullYear evita a expansão automática de anos 0–99 para 1900–1999.
+  const d = new Date(2000, 0, 1);
+  d.setFullYear(year, month - 1, day);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
