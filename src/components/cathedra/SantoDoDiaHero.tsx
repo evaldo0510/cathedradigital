@@ -157,6 +157,8 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
     { key: 'vida', label: 'Vida', enabled: true },
     { key: 'legado', label: 'Legado', enabled: true },
     { key: 'meditacao', label: 'Meditação', enabled: true },
+  ];
+
   return (
     <motion.article
       ref={articleRef as any}
