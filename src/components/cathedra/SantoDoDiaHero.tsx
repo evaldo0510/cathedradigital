@@ -295,7 +295,11 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Frase marcante (opcional) */}
         {frase && (
-          <blockquote className="relative pl-spacing-lg border-l-2 border-primary/50">
+          <blockquote
+            id="santo-do-dia-frase"
+            ref={(el) => { sectionRefs.current.frase = el; }}
+            className="relative pl-spacing-lg border-l-2 border-primary/50 scroll-mt-32"
+          >
             <Icons.Quote className="absolute -left-spacing-xs -top-spacing-xs w-spacing-md h-spacing-md text-primary/60 bg-card px-spacing-3xs" />
             <p className="font-serif italic text-premium-xl md:text-premium-2xl text-foreground leading-relaxed">
               {renderWithRefs(frase, 'quote')}
@@ -305,7 +309,12 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Blocos editoriais */}
         <div className="grid md:grid-cols-2 gap-spacing-xl">
-          <section aria-labelledby="bloco-vida" className="space-y-spacing-sm">
+          <section
+            id="santo-do-dia-vida"
+            ref={(el) => { sectionRefs.current.vida = el; }}
+            aria-labelledby="bloco-vida"
+            className="space-y-spacing-sm scroll-mt-32"
+          >
             <h3
               id="bloco-vida"
               className="flex items-center gap-spacing-xs text-primary text-premium-small font-black uppercase tracking-[0.2em]"
@@ -313,12 +322,19 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
               <Icons.BookOpen className="w-spacing-sm h-spacing-sm" />
               Vida
             </h3>
-            <p className="font-serif text-premium-base leading-[1.75] text-foreground/90 line-clamp-[8]">
+            <p
+              className={`font-serif text-premium-base leading-[1.75] text-foreground/90 whitespace-pre-line ${expanded ? '' : 'line-clamp-[8]'}`}
+            >
               {renderWithRefs(vida, 'vida')}
             </p>
           </section>
 
-          <section aria-labelledby="bloco-legado" className="space-y-spacing-sm">
+          <section
+            id="santo-do-dia-legado"
+            ref={(el) => { sectionRefs.current.legado = el; }}
+            aria-labelledby="bloco-legado"
+            className="space-y-spacing-sm scroll-mt-32"
+          >
             <h3
               id="bloco-legado"
               className="flex items-center gap-spacing-xs text-primary text-premium-small font-black uppercase tracking-[0.2em]"
@@ -334,8 +350,10 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Meditação — bloco de largura total, contemplativo */}
         <section
+          id="santo-do-dia-meditacao"
+          ref={(el) => { sectionRefs.current.meditacao = el; }}
           aria-labelledby="bloco-meditacao"
-          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm"
+          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm scroll-mt-32"
         >
           <h3
             id="bloco-meditacao"
@@ -348,6 +366,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             {renderWithRefs(meditacao, 'meditacao')}
           </p>
         </section>
+
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-spacing-sm pt-spacing-xs">
