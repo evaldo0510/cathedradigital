@@ -408,10 +408,27 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
           'focus-visible:outline-none transition-colors',
         )}
       >
-        {term.category && (
-          <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary block mb-2">
-            {term.category}
-          </span>
+        {(term.category || term.editorial_completeness) && (
+          <div className="flex items-center gap-3 mb-2">
+            {term.category && (
+              <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+                {term.category}
+              </span>
+            )}
+            {term.editorial_completeness && COMPLETENESS_DOT[term.editorial_completeness] && (
+              <span
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-stitch-on-surface-variant"
+                title={`Grau editorial: ${COMPLETENESS_DOT[term.editorial_completeness].label}`}
+                aria-label={`Grau editorial: ${COMPLETENESS_DOT[term.editorial_completeness].label}`}
+              >
+                <span
+                  className={cn('h-1.5 w-1.5 rounded-full', COMPLETENESS_DOT[term.editorial_completeness].color)}
+                  aria-hidden="true"
+                />
+                {COMPLETENESS_DOT[term.editorial_completeness].label}
+              </span>
+            )}
+          </div>
         )}
         <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background group-hover:text-stitch-secondary transition-colors">
           {highlight ? (
