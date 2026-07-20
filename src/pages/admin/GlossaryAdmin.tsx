@@ -330,7 +330,10 @@ export default function GlossaryAdmin() {
             <span>/</span><span>Léxico</span>
           </div>
           <h1 className="text-2xl font-semibold mt-1">Léxico Teológico</h1>
-          <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
+            {role && <RoleBadge role={role} />}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Button
