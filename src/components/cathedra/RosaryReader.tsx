@@ -139,6 +139,46 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
         </div>
       </div>
 
+      {/* Introdução editorial — visível apenas no primeiro bloco, fora do foco. */}
+      {idx === 0 && !focus && (prayer.explanation || prayer.subtitle || prayer.meditation) && (
+        <section
+          aria-labelledby="prayer-intro-heading"
+          className="mb-10 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/40 p-5 md:p-6"
+        >
+          <h2
+            id="prayer-intro-heading"
+            className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
+          >
+            Introdução
+          </h2>
+          {prayer.subtitle && (
+            <p className="mb-3 font-stitch-display text-lg italic leading-relaxed text-stitch-on-surface">
+              {prayer.subtitle}
+            </p>
+          )}
+          {prayer.explanation && (
+            <div className="mb-4">
+              <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+                Contexto
+              </p>
+              <p className="whitespace-pre-line font-stitch-body text-sm leading-relaxed text-stitch-on-surface">
+                {prayer.explanation}
+              </p>
+            </div>
+          )}
+          {prayer.meditation && (
+            <div>
+              <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+                Como rezar
+              </p>
+              <p className="whitespace-pre-line font-stitch-body text-sm leading-relaxed text-stitch-on-surface">
+                {prayer.meditation}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* Cabeçalho do bloco */}
       <header className="mb-8 text-center">
         <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
