@@ -290,9 +290,9 @@ const LiturgiaPage: React.FC = () => {
 
               {prayerOfDay && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="premium-card p-spacing-xl space-y-spacing-md relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Icons.Prayer className="w-spacing-3xl h-spacing-3xl" /></div>
+                  <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Icons.Church className="w-spacing-3xl h-spacing-3xl" /></div>
                   <div className="flex items-center gap-spacing-sm relative z-10">
-                    <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Prayer className="w-spacing-md h-spacing-md" /></div>
+                    <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
                     <div>
                       <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">Oração do Dia</p>
                       {prayerOfDay.kicker && <p className="text-premium-xs font-medium text-muted-foreground mt-spacing-3xs">{prayerOfDay.kicker}</p>}
