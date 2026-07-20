@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
+import { highlightText } from '@/lib/highlightText';
 
 
 import { RelevanceBadge } from './RelevanceBadge';
@@ -19,6 +20,9 @@ import {
   ROSARY_MODE_LABEL,
   type RosaryReturnContext,
 } from '@/lib/rosaryReturnContext';
+
+type SortMode = 'relevance' | 'alpha-asc' | 'alpha-desc';
+
 
 const LAST_TERM_STORAGE_KEY = 'cathedra:glossary:last-term';
 
