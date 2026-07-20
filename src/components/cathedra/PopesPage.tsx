@@ -340,6 +340,9 @@ const PopesPage: React.FC = () => {
             {JSON.stringify(popePersonLd)}
           </script>
         )}
+        <script type="application/ld+json" data-testid="popes-itemlist-jsonld">
+          {JSON.stringify(popesItemListLd)}
+        </script>
       </Helmet>
 
       <SanctorumHero
@@ -349,7 +352,7 @@ const PopesPage: React.FC = () => {
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
 
-      <SanctorumDateNav value={date} onChange={setDate} />
+      <SanctorumDateNav value={date} onChange={handleDateChange} />
 
 
       <AnimatePresence mode="wait">
