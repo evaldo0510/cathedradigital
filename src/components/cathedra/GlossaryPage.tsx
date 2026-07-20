@@ -326,19 +326,38 @@ const GlossaryPage: React.FC = () => {
         isSearching={isSearchPending}
       />
 
-      {/* Category tabs */}
+      {/* Category tabs + Sort */}
       {!loading && terms.length > 0 && (
-        <div className="flex gap-spacing-xs justify-center flex-wrap">
-          {categories.map(cat => (
-            <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
-                category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-              }`}>
-              {cat}
-            </Button>
-          ))}
+        <div className="space-y-spacing-xs">
+          <div className="flex gap-spacing-xs justify-center flex-wrap">
+            {categories.map(cat => (
+              <Button key={cat} onClick={() => setCategory(cat)}
+                aria-pressed={category === cat}
+                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
+                  category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                }`}>
+                {cat}
+              </Button>
+            ))}
+          </div>
+          <div className="flex justify-center items-center gap-spacing-xs">
+            <label htmlFor="glossary-sort" className="text-premium-xs uppercase tracking-widest text-muted-foreground">
+              Ordenar
+            </label>
+            <select
+              id="glossary-sort"
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value as SortMode)}
+              className="bg-card border border-border rounded-premium px-spacing-sm py-spacing-2xs text-premium-xs font-bold uppercase tracking-widest text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            >
+              <option value="relevance">Relevância</option>
+              <option value="alpha-asc">A → Z</option>
+              <option value="alpha-desc">Z → A</option>
+            </select>
+          </div>
         </div>
       )}
+
 
       {/* Stats */}
       {!loading && (
