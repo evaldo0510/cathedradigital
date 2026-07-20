@@ -676,15 +676,47 @@ const GlossaryTermPage: React.FC = () => {
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'DefinedTerm',
-            name: term.term,
-            description,
-            inDefinedTermSet: {
-              '@type': 'DefinedTermSet',
-              name: 'Léxico Teológico Cathedra',
-            },
-            url: canonical,
-            ...(term.category && { termCode: term.category }),
+            '@graph': [
+              {
+                '@type': 'DefinedTerm',
+                name: term.term,
+                description,
+                inDefinedTermSet: {
+                  '@type': 'DefinedTermSet',
+                  name: 'Léxico Teológico Cathedra',
+                  url: 'https://www.cathedradigital.com.br/glossario',
+                },
+                url: canonical,
+                ...(term.category && { termCode: term.category }),
+              },
+              {
+                '@type': 'Article',
+                headline: term.term,
+                description,
+                inLanguage: 'pt-BR',
+                articleSection: term.category ?? 'Léxico Teológico',
+                url: canonical,
+                mainEntityOfPage: canonical,
+                dateModified: term.updated_at,
+                ...(term.reviewed_at && { dateReviewed: term.reviewed_at }),
+                author: { '@type': 'Organization', name: 'Cathedra Digital' },
+                publisher: {
+                  '@type': 'Organization',
+                  name: 'Cathedra Digital',
+                  url: 'https://www.cathedradigital.com.br',
+                },
+              },
+              ...(Array.isArray(term.faq) && term.faq.length > 0
+                ? [{
+                    '@type': 'FAQPage',
+                    mainEntity: term.faq.map((f) => ({
+                      '@type': 'Question',
+                      name: f.question,
+                      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+                    })),
+                  }]
+                : []),
+            ],
           })}
         </script>
       </Helmet>
