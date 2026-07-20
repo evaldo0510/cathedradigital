@@ -122,6 +122,17 @@ const JornadaDetailPage: React.FC = () => {
 
   const nextStep = nextStepIndex >= 0 ? steps[nextStepIndex] : null;
 
+  const autoNexus = useMemo(() => {
+    if (!journey) return null;
+    return resolveJourneyAutoNexus({
+      id: journey.id,
+      title: journey.title,
+      subtitle: journey.subtitle,
+      category: journey.category,
+      tags: journey.tags,
+    });
+  }, [journey]);
+
   const primaryCta = useMemo(() => {
     if (!steps.length) return null;
     if (isJourneyComplete) {
