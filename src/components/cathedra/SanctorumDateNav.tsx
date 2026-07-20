@@ -90,17 +90,21 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
 
   return (
-    <div className={cn('flex flex-col items-center gap-spacing-lg', className)}>
+    <div
+      className={cn('flex flex-col items-center gap-spacing-lg', className)}
+      role="group"
+      aria-label={ariaLabel}
+    >
       <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
         <Button
-          onClick={() => onChange(subDays(value, 1))}
+          onClick={() => change(subDays(value, 1), 'prev-day')}
           className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Dia anterior"
         >
           <Icons.ChevronLeft className="w-spacing-md h-spacing-md" />
         </Button>
 
-        <div className="text-center min-w-[200px]">
+        <div className="text-center min-w-[200px]" aria-live="polite" aria-atomic="true">
           <h2 className="text-premium-2xl font-serif font-bold text-foreground">
             {format(value, "dd 'de' MMMM", { locale: ptBR })}
           </h2>
@@ -110,7 +114,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
         </div>
 
         <Button
-          onClick={() => onChange(addDays(value, 1))}
+          onClick={() => change(addDays(value, 1), 'next-day')}
           className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Próximo dia"
         >
@@ -120,7 +124,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
       <div className="flex flex-wrap items-center justify-center gap-spacing-xs">
         <Button
-          onClick={() => onChange(subDays(value, 7))}
+          onClick={() => change(subDays(value, 7), 'prev-week')}
           aria-label="Semana anterior"
           className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
         >
@@ -128,7 +132,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Semana
         </Button>
         <Button
-          onClick={() => onChange(new Date())}
+          onClick={() => change(new Date(), 'today')}
           disabled={isToday(value)}
           aria-label="Ir para hoje"
           aria-current={isToday(value) ? 'date' : undefined}
@@ -143,7 +147,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Hoje
         </Button>
         <Button
-          onClick={() => onChange(addDays(value, 7))}
+          onClick={() => change(addDays(value, 7), 'next-week')}
           aria-label="Próxima semana"
           className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
         >
@@ -179,11 +183,15 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
       </div>
 
-      <div className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar">
+      <div
+        className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar"
+        role="group"
+        aria-label="Tira de dias"
+      >
         {strip.map((date, i) => (
           <Button
             key={i}
-            onClick={() => onChange(date)}
+            onClick={() => change(date, 'strip')}
             className={`flex flex-col items-center justify-center min-w-[56px] h-spacing-3xl rounded-premium-full border transition-all ${
               isSameDay(date, value)
                 ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
@@ -198,6 +206,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             <span className="text-premium-lg font-serif font-bold">{format(date, 'dd')}</span>
           </Button>
         ))}
+
       </div>
     </div>
   );
