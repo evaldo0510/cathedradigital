@@ -195,8 +195,30 @@ function parseReignYears(reign: string): [number, number] {
 }
 
 const PopesPage: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [date, setDate] = useState<Date>(new Date());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialDate = parseISODateLocal(searchParams.get('date')) ?? new Date();
+  const initialSearch = searchParams.get('q') ?? '';
+  const [search, setSearch] = useState(initialSearch);
+  const [date, setDate] = useState<Date>(initialDate);
+  const [isPending, startTransition] = useTransition();
+  const deferredSearch = useDeferredValue(search);
+  const isFiltering = isPending || deferredSearch !== search;
+
+  // Persistir data + busca na URL (?date=YYYY-MM-DD&q=...)
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    next.set('date', toISODateLocal(date));
+    if (search.trim()) next.set('q', search.trim());
+    else next.delete('q');
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, search]);
+
+  const handleDateChange = (d: Date) => {
+    startTransition(() => setDate(d));
+  };
 
   const year = date.getFullYear();
 
@@ -208,14 +230,14 @@ const PopesPage: React.FC = () => {
   }, [year]);
 
   const filteredPopes = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const q = deferredSearch.trim().toLowerCase();
     if (!q) return POPES_DATA;
     return POPES_DATA.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.title.toLowerCase().includes(q),
     );
-  }, [search]);
+  }, [deferredSearch]);
 
   const reigningKicker = reigningPope
     ? `Sanctorum · Papa reinante em ${year}`
