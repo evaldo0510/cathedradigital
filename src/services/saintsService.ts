@@ -163,6 +163,14 @@ export const getSaintById = async (id: string): Promise<Saint | null> => {
   return formatSaint(data);
 };
 
+const parseJson = <T>(v: any, fallback: T): T => {
+  if (v === null || v === undefined) return fallback;
+  if (typeof v === 'string') {
+    try { return JSON.parse(v) as T; } catch { return fallback; }
+  }
+  return v as T;
+};
+
 export const formatSaint = (dbSaint: any): Saint => {
   return {
     ...dbSaint,
@@ -171,9 +179,22 @@ export const formatSaint = (dbSaint: any): Saint => {
     feastDayNum: dbSaint.feast_day_num,
     patronOf: dbSaint.patron_of || [],
     fullBio: dbSaint.full_bio,
-    works: Array.isArray(dbSaint.works) ? dbSaint.works : (typeof dbSaint.works === 'string' ? JSON.parse(dbSaint.works) : (dbSaint.works || [])),
-    bibleRefs: Array.isArray(dbSaint.bible_refs) ? dbSaint.bible_refs : (typeof dbSaint.bible_refs === 'string' ? JSON.parse(dbSaint.bible_refs) : (dbSaint.bible_refs || [])),
+    works: Array.isArray(dbSaint.works) ? dbSaint.works : parseJson(dbSaint.works, []),
+    bibleRefs: Array.isArray(dbSaint.bible_refs) ? dbSaint.bible_refs : parseJson(dbSaint.bible_refs, []),
     catechismRefs: dbSaint.catechism_refs || [],
-    churchDocRefs: Array.isArray(dbSaint.church_doc_refs) ? dbSaint.church_doc_refs : (typeof dbSaint.church_doc_refs === 'string' ? JSON.parse(dbSaint.church_doc_refs) : (dbSaint.church_doc_refs || [])),
+    churchDocRefs: Array.isArray(dbSaint.church_doc_refs) ? dbSaint.church_doc_refs : parseJson(dbSaint.church_doc_refs, []),
+    // Sanctorum 2.0
+    biographyFull: parseJson(dbSaint.biography_full, {}),
+    historicalContext: dbSaint.historical_context ?? undefined,
+    century: dbSaint.century ?? undefined,
+    timeline: parseJson(dbSaint.timeline, []),
+    miracles: parseJson(dbSaint.miracles, []),
+    iconography: parseJson(dbSaint.iconography, {}),
+    patronages: dbSaint.patronages || [],
+    curiosities: dbSaint.curiosities || [],
+    sources: parseJson(dbSaint.sources, []),
+    spiritualPractice: parseJson(dbSaint.spiritual_practice, {}),
+    quotesRich: parseJson(dbSaint.quotes_rich, []),
+    contentStatus: dbSaint.content_status ?? 'stub',
   };
 };

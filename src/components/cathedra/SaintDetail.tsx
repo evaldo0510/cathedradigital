@@ -25,6 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
 
 export const CATEGORY_LABELS: Record<string, string> = {
@@ -224,6 +225,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           subtitle={saint.title}
           meta={[saint.feastDay && `Festa · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
         />
+        {saint.contentStatus && saint.contentStatus !== 'complete' && (
+          <div className="-mt-spacing-lg">
+            <SanctumCurationBadge status={saint.contentStatus} />
+          </div>
+        )}
+
 
         {/* Top Icons.Info Strip */}
         <div className="flex flex-wrap items-center gap-spacing-lg">
@@ -313,11 +320,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           }}
         />
 
+        {/* Sanctorum 2.0 — capítulos editoriais, timeline, iconografia, vida espiritual */}
+        <SanctumEditorial saint={saint} />
+
         {/* Deep Content - Textos e Livros */}
         <DeepContentSection 
           content={saint as any} 
           title="Meditação e Aprofundamento" 
         />
+
 
         {/* Icons.Quote & Practical Application */}
         <div className="grid md:grid-cols-2 gap-spacing-xl">
