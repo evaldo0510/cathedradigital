@@ -356,25 +356,9 @@ function RefList({
 /* Nexus 100% automático via KnowledgeGraph                            */
 /* ------------------------------------------------------------------ */
 
-/**
- * Indica a fonte de cada conexão renderizada: nó (`kind`) e ID canônico do
- * KnowledgeGraph. Deixa explícito que o vínculo é gerado automaticamente
- * pelo grafo, e não por relações hardcoded na UI.
- */
-function NexusSourceBadge({ node }: { node: ResolvedNode['node'] }) {
-  return (
-    <span
-      className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest px-2 py-[2px] font-stitch-label text-[10px] uppercase tracking-[0.16em] text-stitch-on-surface-variant"
-      title={`Fonte automática: KnowledgeGraph → ${node.id}`}
-      aria-label={`Fonte automática KnowledgeGraph, tipo ${node.kind}, id ${node.id}`}
-    >
-      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-stitch-secondary" />
-      <span>{node.kind}</span>
-      <span aria-hidden="true" className="text-stitch-outline-variant">·</span>
-      <code className="font-mono text-[10px] normal-case tracking-normal text-stitch-on-surface">{node.id}</code>
-    </span>
-  );
-}
+// NexusSourceBadge foi extraído para src/components/nexus/NexusSourceBadge.tsx
+// (reutilizado por Jornadas e futuros módulos, mantendo tudo automático).
+import { NexusSourceBadge } from '@/components/nexus/NexusSourceBadge';
 
 
 function AutoNexusList({
