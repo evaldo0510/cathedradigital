@@ -875,130 +875,58 @@ const GlossaryTermPage: React.FC = () => {
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
                   {k === 'bible' && (
-                    <RefList
-                      items={term.bible_verses}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.bible}
                       emptyLabel="Passagens bíblicas ainda não indicadas."
-                      renderItem={(ref) => (
-                        <Link
-                          to={buildPassageUrl({ kind: 'bible', ref, highlight: term.term })}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                          aria-label={`Abrir ${ref} na Bíblia`}
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'catechism' && (
-                    <RefList
-                      items={term.catechism_references}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.catechism}
                       emptyLabel="Referências do Catecismo ainda não indicadas."
-                      renderItem={(ref) => {
-                        const num = ref.replace(/\D+/g, '');
-                        return (
-                          <Link
-                            to={
-                              num
-                                ? buildPassageUrl({ kind: 'catechism', paragraph: num, highlight: term.term })
-                                : '/catechism'
-                            }
-                            className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                            aria-label={`Abrir §${num || ref} no Catecismo`}
-                          >
-                            §{num || ref}
-                          </Link>
-                        );
-                      }}
                     />
                   )}
                   {k === 'magisterium' && (
-                    <RefList
-                      items={term.magisterium_references}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.magisterium}
                       emptyLabel="Documentos do Magistério ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={buildPassageUrl({ kind: 'magisterium', id: ref, highlight: term.term })}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                          aria-label={`Abrir ${ref} no Magistério`}
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'saints' && (
-                    <RefList
-                      items={term.saints_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.saint}
                       emptyLabel="Santos relacionados ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/saints/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'fathers' && (
-                    <RefList
-                      items={term.fathers_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.father}
                       emptyLabel="Padres relacionados ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/padres/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'liturgy' && (
-                    <RefList
-                      items={term.liturgy_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.liturgy}
                       emptyLabel="Referências litúrgicas ainda não indicadas."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/liturgia?ref=${encodeURIComponent(ref)}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'prayer' && (
-                    <RefList
-                      items={term.prayer_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.prayer}
                       emptyLabel="Oração relacionada ainda não indicada."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/prayers/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'journey' && (
-                    <RefList
-                      items={term.journey_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.journey}
                       emptyLabel="Jornada sugerida ainda não indicada."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/jornadas/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          Abrir jornada
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'faq' && <FaqBlock items={term.faq} />}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
-                  {k === 'nexus' && <NexusList refs={term.nexus_refs} />}
+                  {k === 'nexus' && (
+                    <NexusFullList byKind={autoNexus.byKind} labels={autoNexus.labels} />
+                  )}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
               );
