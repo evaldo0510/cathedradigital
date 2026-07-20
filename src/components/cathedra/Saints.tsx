@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
+import SanctorumClampNotice from './SanctorumClampNotice';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import { trackEvent } from '@/lib/analytics';
 
@@ -300,6 +301,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 exit={{ opacity: 0, y: -20 }}
               >
               <SanctorumDateNav value={selectedDate} onChange={setSelectedDate} analyticsPage="saints" />
+
+              {dateWasClamped && (
+                <SanctorumClampNotice
+                  received={rawDateParam}
+                  replacedWith={toISODateLocal(initialDate)}
+                />
+              )}
+
+
 
 
               <div className="w-full space-y-spacing-lg">

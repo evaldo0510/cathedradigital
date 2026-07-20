@@ -14,6 +14,7 @@ import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
 import { trackEvent } from '@/lib/analytics';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
+import SanctorumClampNotice from './SanctorumClampNotice';
 
 
 
@@ -358,6 +359,15 @@ const PopesPage: React.FC = () => {
       />
 
       <SanctorumDateNav value={date} onChange={handleDateChange} analyticsPage="popes" />
+
+      {dateWasClamped && (
+        <SanctorumClampNotice
+          received={rawDateParam}
+          replacedWith={toISODateLocal(initialDate)}
+        />
+      )}
+
+
 
 
       <AnimatePresence mode="wait">
