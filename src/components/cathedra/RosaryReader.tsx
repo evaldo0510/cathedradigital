@@ -121,7 +121,16 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
       {/* Cabeçalho do bloco */}
       <header className="mb-8 text-center">
         <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-          {current.kind === 'mystery' ? 'Mistério' : current.kind === 'decade' ? 'Dezena' : current.kind}
+          {({
+            mystery: 'Mistério',
+            decade: 'Dezena',
+            station: 'Estação',
+            hour: 'Hora Litúrgica',
+            meditation: 'Meditação',
+            prayer: 'Oração',
+            closing: 'Encerramento',
+            intro: 'Introdução',
+          } as Record<string, string>)[current.kind] ?? current.kind}
         </p>
         <h2 className="mt-3 font-stitch-display text-3xl md:text-4xl leading-tight text-stitch-on-surface">
           {current.title}
