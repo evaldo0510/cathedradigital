@@ -157,9 +157,15 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
     { key: 'vida', label: 'Vida', enabled: true },
     { key: 'legado', label: 'Legado', enabled: true },
     { key: 'meditacao', label: 'Meditação', enabled: true },
-  ];
-
-
+  return (
+    <motion.article
+      ref={articleRef as any}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative overflow-hidden rounded-[2.5rem] border border-border/60 bg-card shadow-premium-hover"
+      aria-labelledby="santo-do-dia-title"
+    >
       {/* Hero — imagem + overlay editorial */}
       <div className="relative">
         <div className="relative h-[38vh] min-h-[320px] md:h-[52vh] md:min-h-[420px] w-full overflow-hidden">
