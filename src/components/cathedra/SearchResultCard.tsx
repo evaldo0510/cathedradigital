@@ -17,6 +17,8 @@ export interface SearchResultCardProps {
   title: string;
   /** Optional secondary line (subtitle, definition snippet, etc.). */
   subtitle?: string | null;
+  /** Optional rich subtitle (e.g. with highlighted matches). Falls back to `subtitle`. */
+  subtitleNode?: React.ReactNode;
   /** Similarity score in [0, 1]. Passed to RelevanceBadge. */
   score?: number | null;
   /** Optional leading icon or emoji element. */
@@ -41,6 +43,7 @@ export interface SearchResultCardProps {
 export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCardProps>(({
   title,
   subtitle,
+  subtitleNode,
   score,
   icon,
   onClick,
@@ -88,8 +91,8 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       )}
       <div className="flex-1 min-w-spacing-0">
         <p className="editorial-display text-lg text-foreground truncate leading-snug">{title}</p>
-        {subtitle && (
-          <p className="font-serif italic text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{subtitle}</p>
+        {(subtitleNode ?? subtitle) && (
+          <p className="font-serif italic text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{subtitleNode ?? subtitle}</p>
         )}
       </div>
 

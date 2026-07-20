@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
+import { highlightText } from '@/lib/highlightText';
 
 
 import { RelevanceBadge } from './RelevanceBadge';
@@ -19,6 +20,9 @@ import {
   ROSARY_MODE_LABEL,
   type RosaryReturnContext,
 } from '@/lib/rosaryReturnContext';
+
+type SortMode = 'relevance' | 'alpha-asc' | 'alpha-desc';
+
 
 const LAST_TERM_STORAGE_KEY = 'cathedra:glossary:last-term';
 
@@ -117,12 +121,17 @@ const CATEGORY_COLORS: Record<string, string> = {
 const GlossaryPage: React.FC = () => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState('Todos');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState(() => searchParams.get('category') || 'Todos');
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
+  const [sortMode, setSortMode] = useState<SortMode>(
+    () => (searchParams.get('sort') as SortMode) || 'relevance',
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
+
 
   // Detecta se o usuário veio de uma sessão ativa do Rosário.
   useEffect(() => {
@@ -220,11 +229,37 @@ const GlossaryPage: React.FC = () => {
   }, [terms]);
 
   const filtered = useMemo(() => {
-    // When the user is searching, prefer the relevance-ranked RPC results
+    // Quando o usuário busca, o RPC já devolve por relevância.
     const base = searchResults ?? terms;
-    if (category === 'Todos') return base;
-    return base.filter(d => d.category === category);
-  }, [category, terms, searchResults]);
+    const byCategory = category === 'Todos' ? base : base.filter(d => d.category === category);
+    if (sortMode === 'alpha-asc') {
+      return [...byCategory].sort((a, b) => a.term.localeCompare(b.term, 'pt'));
+    }
+    if (sortMode === 'alpha-desc') {
+      return [...byCategory].sort((a, b) => b.term.localeCompare(a.term, 'pt'));
+    }
+    // 'relevance': mantém a ordem de searchResults; para o catálogo (sem busca),
+    // relevância cai para ordem natural (alfabética do fetch).
+    return byCategory;
+  }, [category, terms, searchResults, sortMode]);
+
+  // Sincroniza filtros com a URL para deep-linking (?q=, ?category=, ?sort=).
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    const setOrDel = (key: string, val: string, def: string) => {
+      if (val && val !== def) next.set(key, val);
+      else next.delete(key);
+    };
+    setOrDel('q', searchQuery.trim(), '');
+    setOrDel('category', category, 'Todos');
+    setOrDel('sort', sortMode, 'relevance');
+    // Evita ciclos: só grava se mudou
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category, sortMode]);
+
 
   const enrichedCount = useMemo(() => terms.filter(t => ENRICHMENTS[t.term]).length, [terms]);
 
@@ -291,19 +326,38 @@ const GlossaryPage: React.FC = () => {
         isSearching={isSearchPending}
       />
 
-      {/* Category tabs */}
+      {/* Category tabs + Sort */}
       {!loading && terms.length > 0 && (
-        <div className="flex gap-spacing-xs justify-center flex-wrap">
-          {categories.map(cat => (
-            <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
-                category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-              }`}>
-              {cat}
-            </Button>
-          ))}
+        <div className="space-y-spacing-xs">
+          <div className="flex gap-spacing-xs justify-center flex-wrap">
+            {categories.map(cat => (
+              <Button key={cat} onClick={() => setCategory(cat)}
+                aria-pressed={category === cat}
+                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
+                  category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                }`}>
+                {cat}
+              </Button>
+            ))}
+          </div>
+          <div className="flex justify-center items-center gap-spacing-xs">
+            <label htmlFor="glossary-sort" className="text-premium-xs uppercase tracking-widest text-muted-foreground">
+              Ordenar
+            </label>
+            <select
+              id="glossary-sort"
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value as SortMode)}
+              className="bg-card border border-border rounded-premium px-spacing-sm py-spacing-2xs text-premium-xs font-bold uppercase tracking-widest text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            >
+              <option value="relevance">Relevância</option>
+              <option value="alpha-asc">A → Z</option>
+              <option value="alpha-desc">Z → A</option>
+            </select>
+          </div>
         </div>
       )}
+
 
       {/* Stats */}
       {!loading && (
@@ -333,6 +387,7 @@ const GlossaryPage: React.FC = () => {
               key={term.id}
               title={term.term}
               subtitle={term.definition}
+              subtitleNode={highlightText(term.definition, searchQuery)}
               score={term.similarityScore}
               icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
@@ -376,9 +431,9 @@ const GlossaryPage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-premium-base font-bold text-foreground">{term.term}</h3>
+                    <h3 className="text-premium-base font-bold text-foreground">{highlightText(term.term, searchQuery)}</h3>
                     {!isExpanded && (
-                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{term.definition}</p>
+                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{highlightText(term.definition, searchQuery)}</p>
                     )}
                   </div>
                   <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -389,7 +444,7 @@ const GlossaryPage: React.FC = () => {
                     {/* Layer 1: Simple definition */}
                     <div className="space-y-spacing-2xs">
                       <p className="text-premium-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
-                      <p className="text-foreground/90 leading-relaxed font-serif">{term.definition}</p>
+                      <p className="text-foreground/90 leading-relaxed font-serif">{highlightText(term.definition, searchQuery)}</p>
                     </div>
 
                     {enrichment && (
