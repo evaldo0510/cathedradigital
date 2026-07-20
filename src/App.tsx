@@ -13,6 +13,7 @@ import { LangContext, LangProvider } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
+import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
 import * as Sentry from "@sentry/react";
@@ -629,6 +630,28 @@ const AppLayout: React.FC = () => {
               <Route path="/nexus" element={<Suspense fallback={<LoadingFallback />}><AtriumNexusPage /></Suspense>} />
 
 
+
+              {/* Painel editorial do Glossário — acessível a editores/revisores/admins */}
+              <Route
+                path="/admin/glossario"
+                element={
+                  <Suspense fallback={<LoadingFallback />}>
+                    <GlossaryAdminGuard>
+                      <GlossaryAdmin />
+                    </GlossaryAdminGuard>
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/glossary"
+                element={
+                  <Suspense fallback={<LoadingFallback />}>
+                    <GlossaryAdminGuard>
+                      <GlossaryAdmin />
+                    </GlossaryAdminGuard>
+                  </Suspense>
+                }
+              />
 
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={
