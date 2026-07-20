@@ -163,6 +163,12 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
         )}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <PrayerTTSButton text={bodyForTTS(current)} />
+          <PrayerFavoriteButton
+            contentType="prayer"
+            contentId={prayer.slug}
+            title={prayer.title}
+            url={`/oracao/${prayer.slug}`}
+          />
           <button
             type="button"
             onClick={() => setFocus((f) => !f)}
@@ -174,6 +180,17 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
             {focus ? 'Sair do foco' : 'Modo foco'}
           </button>
         </div>
+        {!focus && (
+          <div className="mt-4 flex flex-col items-center gap-3">
+            <PrayerModeSelector
+              mode={mode}
+              onChange={setMode}
+              autoIntervalMs={autoIntervalMs}
+              onIntervalChange={setAutoIntervalMs}
+            />
+            <PrayerAudioPlayer audioUrl={prayer.audio_url} label={`Áudio: ${prayer.title}`} />
+          </div>
+        )}
       </header>
 
       {/* Corpo */}
