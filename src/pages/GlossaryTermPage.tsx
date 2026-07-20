@@ -1,22 +1,24 @@
 /**
- * GlossaryTermPage — Reader editorial do Léxico Teológico (CAT-13.1).
+ * GlossaryTermPage — Reader editorial do Léxico Teológico (SEG-2 Onda 2).
  *
  * Rota: /glossario/:slug
  *
- * Renderiza um verbete completo com o chrome editorial Logos 2030
- * (EditorialReaderChrome + EditorialHero + primitives) em 11 seções ordenadas
- * por `sections_order` (definido no banco). Seções sem conteúdo mostram
- * EditorialEmptyState discreto ("Em preparação"), permitindo publicação
- * incremental sem quebrar o layout.
- *
- * Escrita/edição: apenas via /admin (CAT-13.1c). Aqui é somente leitura pública.
+ * Template oficial da Enciclopédia Católica Viva. Renderiza um verbete
+ * completo com o chrome editorial Logos 2030 e todas as seções previstas
+ * na Onda 2: definição curta, definição completa, contexto histórico,
+ * interpretação, aplicação, Meditação Logos, referências (Bíblia,
+ * Catecismo, Magistério, Santos, Padres, Liturgia, Oração, Jornada),
+ * FAQ, próximos passos, Nexus completo e bibliografia. Além disso,
+ * Favoritar, Compartilhar (via chrome), registro em user_history e
+ * rodapé de versão/revisão teológica.
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { BookmarkPlus, BookmarkCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { EditorialShell, EditorialHero } from '@/components/editorial';
+import { EditorialShell, EditorialHero, EditorialDivider } from '@/components/editorial';
 import {
   EditorialKicker,
   EditorialEmptyState,
@@ -26,6 +28,7 @@ import {
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { buildPassageUrl } from '@/lib/passageUrl';
+import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ */
@@ -34,16 +37,22 @@ import { cn } from '@/lib/utils';
 
 type SectionKey =
   | 'definition'
+  | 'context'
   | 'interpretation'
   | 'application'
+  | 'meditation'
   | 'bible'
   | 'catechism'
   | 'magisterium'
   | 'saints'
   | 'fathers'
-  | 'journey'
+  | 'liturgy'
   | 'prayer'
-  | 'nexus';
+  | 'journey'
+  | 'faq'
+  | 'next_steps'
+  | 'nexus'
+  | 'bibliography';
 
 interface NexusRef {
   kind?: string;
@@ -52,54 +61,94 @@ interface NexusRef {
   label?: string;
 }
 
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface NextStep {
+  label: string;
+  href?: string;
+  description?: string;
+}
+
+interface BibliographyItem {
+  title: string;
+  author?: string;
+  year?: string | number;
+  url?: string;
+}
+
 interface GlossaryTerm {
   id: string;
   slug: string | null;
   term: string;
   category: string | null;
+  short_definition: string | null;
   definition: string;
+  historical_context: string | null;
   interpretation: string | null;
   deep_interpretation: string | null;
   practical_application: string | null;
+  logos_meditation: string | null;
   bible_verses: string[] | null;
   catechism_references: string[] | null;
   magisterium_references: string[] | null;
   saints_refs: string[] | null;
   fathers_refs: string[] | null;
+  liturgy_refs: string[] | null;
   prayer_refs: string[] | null;
   journey_refs: string[] | null;
   nexus_refs: NexusRef[] | null;
+  faq: FaqItem[] | null;
+  next_steps: NextStep[] | null;
+  bibliography: BibliographyItem[] | null;
   sections_order: string[] | null;
   status: string | null;
+  version: number | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
   updated_at: string;
 }
 
 const DEFAULT_ORDER: SectionKey[] = [
   'definition',
+  'context',
   'interpretation',
   'application',
+  'meditation',
   'bible',
   'catechism',
   'magisterium',
   'saints',
   'fathers',
-  'journey',
+  'liturgy',
   'prayer',
+  'journey',
+  'faq',
+  'next_steps',
   'nexus',
+  'bibliography',
 ];
 
 const SECTION_META: Record<SectionKey, { kicker: string; title: string; anchor: string }> = {
   definition: { kicker: 'I · Fundamento', title: 'Definição', anchor: 'definicao' },
-  interpretation: { kicker: 'II · Contemplação', title: 'Interpretação teológica', anchor: 'interpretacao' },
-  application: { kicker: 'III · Vida', title: 'Aplicação prática', anchor: 'aplicacao' },
-  bible: { kicker: 'IV · Escritura', title: 'Bíblia', anchor: 'biblia' },
-  catechism: { kicker: 'V · Magistério vivo', title: 'Catecismo', anchor: 'catecismo' },
-  magisterium: { kicker: 'VI · Doutrina', title: 'Magistério', anchor: 'magisterio' },
-  saints: { kicker: 'VII · Comunhão', title: 'Santos relacionados', anchor: 'santos' },
-  fathers: { kicker: 'VIII · Tradição', title: 'Padres relacionados', anchor: 'padres' },
-  journey: { kicker: 'IX · Caminho', title: 'Jornada sugerida', anchor: 'jornada' },
-  prayer: { kicker: 'X · Oração', title: 'Oração relacionada', anchor: 'oracao' },
-  nexus: { kicker: 'XI · Nexus', title: 'Nexus completo', anchor: 'nexus' },
+  context: { kicker: 'II · Origem', title: 'Contexto histórico', anchor: 'contexto' },
+  interpretation: { kicker: 'III · Contemplação', title: 'Interpretação teológica', anchor: 'interpretacao' },
+  application: { kicker: 'IV · Vida', title: 'Aplicação prática', anchor: 'aplicacao' },
+  meditation: { kicker: 'V · Logos', title: 'Meditação Logos', anchor: 'meditacao' },
+  bible: { kicker: 'VI · Escritura', title: 'Fundamentação bíblica', anchor: 'biblia' },
+  catechism: { kicker: 'VII · Catequese', title: 'Fundamentação catequética', anchor: 'catecismo' },
+  magisterium: { kicker: 'VIII · Doutrina', title: 'Magistério relacionado', anchor: 'magisterio' },
+  saints: { kicker: 'IX · Comunhão', title: 'Santos relacionados', anchor: 'santos' },
+  fathers: { kicker: 'X · Tradição', title: 'Padres relacionados', anchor: 'padres' },
+  liturgy: { kicker: 'XI · Liturgia', title: 'Liturgia relacionada', anchor: 'liturgia' },
+  prayer: { kicker: 'XII · Oração', title: 'Orações relacionadas', anchor: 'oracao' },
+  journey: { kicker: 'XIII · Caminho', title: 'Jornadas sugeridas', anchor: 'jornada' },
+  faq: { kicker: 'XIV · Perguntas', title: 'Perguntas frequentes', anchor: 'faq' },
+  next_steps: { kicker: 'XV · Continuar', title: 'Próximos passos', anchor: 'proximos-passos' },
+  nexus: { kicker: 'XVI · Nexus', title: 'Nexus completo', anchor: 'nexus' },
+  bibliography: { kicker: 'XVII · Fontes', title: 'Bibliografia', anchor: 'bibliografia' },
 };
 
 /* ------------------------------------------------------------------ */
@@ -121,7 +170,6 @@ function useGlossaryTerm(slug: string | undefined) {
     setError(null);
 
     (async () => {
-      // Cast p/ any: colunas novas ainda não estão nos types gerados até rebuild.
       const { data, error: err } = await (supabase as any)
         .from('glossary')
         .select('*')
@@ -148,7 +196,35 @@ function useGlossaryTerm(slug: string | undefined) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Renderização de seções                                              */
+/* Registro em user_history                                            */
+/* ------------------------------------------------------------------ */
+
+function useHistoryRegistration(term: GlossaryTerm | null) {
+  useEffect(() => {
+    if (!term?.slug) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data: userRes } = await supabase.auth.getUser();
+        const userId = userRes?.user?.id;
+        if (!userId || cancelled) return;
+        await (supabase as any).from('user_history').insert({
+          user_id: userId,
+          route: `/glossario/${term.slug}`,
+          title: term.term,
+        });
+      } catch {
+        /* silencioso — histórico é opcional */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [term?.slug, term?.term]);
+}
+
+/* ------------------------------------------------------------------ */
+/* Renderização auxiliar                                               */
 /* ------------------------------------------------------------------ */
 
 function TextSection({ children }: { children: string | null | undefined }) {
@@ -164,8 +240,29 @@ function TextSection({ children }: { children: string | null | undefined }) {
   return (
     <div className="prose prose-stitch max-w-[68ch] mx-auto font-stitch-serif text-stitch-body leading-stitch-body text-stitch-ink">
       {children.split(/\n{2,}/).map((para, i) => (
-        <p key={i} className="mb-6">{para}</p>
+        <p key={i} className="mb-6">
+          {para}
+        </p>
       ))}
+    </div>
+  );
+}
+
+function MeditationBlock({ children }: { children: string | null | undefined }) {
+  if (!children || !children.trim()) {
+    return (
+      <EditorialEmptyState
+        kicker="Em preparação"
+        title="Meditação Logos ainda não escrita."
+        description="A reflexão contemplativa será publicada em breve."
+      />
+    );
+  }
+  return (
+    <div className="max-w-[62ch] mx-auto">
+      <EditorialQuote className="text-stitch-body-lg md:text-stitch-headline-sm">
+        {children}
+      </EditorialQuote>
     </div>
   );
 }
@@ -228,6 +325,130 @@ function NexusList({ refs }: { refs: NexusRef[] | null | undefined }) {
   );
 }
 
+function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
+  if (!items || items.length === 0) {
+    return (
+      <EditorialEmptyState
+        kicker="Em preparação"
+        title="Perguntas frequentes ainda não curadas."
+        description="Serão publicadas em breve."
+      />
+    );
+  }
+  return (
+    <div className="max-w-[68ch] mx-auto space-y-4">
+      {items.map((item, i) => (
+        <details
+          key={i}
+          className="group border border-stitch-outline-variant/40 rounded-[var(--stitch-radius-xl)] bg-stitch-surface-container-lowest overflow-hidden"
+        >
+          <summary className="cursor-pointer list-none px-6 py-4 flex items-baseline justify-between gap-4 font-stitch-display italic text-stitch-body-lg text-stitch-on-background hover:text-stitch-secondary transition-colors">
+            <span>{item.question}</span>
+            <span
+              aria-hidden="true"
+              className="font-stitch-label text-stitch-label-sm text-stitch-secondary transition-transform group-open:rotate-45"
+            >
+              +
+            </span>
+          </summary>
+          <div className="px-6 pb-6 pt-2 font-stitch-serif text-stitch-body text-stitch-on-surface leading-relaxed border-t border-stitch-outline-variant/30">
+            {item.answer.split(/\n{2,}/).map((p, k) => (
+              <p key={k} className="mb-3 last:mb-0">
+                {p}
+              </p>
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+function NextStepsBlock({ items }: { items: NextStep[] | null | undefined }) {
+  if (!items || items.length === 0) {
+    return (
+      <EditorialEmptyState
+        kicker="Em preparação"
+        title="Próximos passos ainda não indicados."
+        description="Serão publicados em breve."
+      />
+    );
+  }
+  return (
+    <ul className="max-w-[68ch] mx-auto grid gap-3 md:grid-cols-2">
+      {items.map((step, i) => {
+        const content = (
+          <>
+            <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary block mb-1">
+              Continuar →
+            </span>
+            <span className="font-stitch-display text-stitch-body-lg text-stitch-on-background block">
+              {step.label}
+            </span>
+            {step.description && (
+              <span className="mt-2 font-stitch-body text-stitch-body-sm text-stitch-on-surface-variant block">
+                {step.description}
+              </span>
+            )}
+          </>
+        );
+        return (
+          <li key={i}>
+            {step.href ? (
+              <Link
+                to={step.href}
+                className="block h-full p-5 border border-stitch-outline-variant/40 rounded-[var(--stitch-radius-xl)] bg-stitch-surface-container-lowest hover:border-stitch-secondary/60 transition-colors"
+              >
+                {content}
+              </Link>
+            ) : (
+              <div className="p-5 border border-stitch-outline-variant/40 rounded-[var(--stitch-radius-xl)] bg-stitch-surface-container-lowest">
+                {content}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function BibliographyBlock({ items }: { items: BibliographyItem[] | null | undefined }) {
+  if (!items || items.length === 0) {
+    return (
+      <EditorialEmptyState
+        kicker="Em preparação"
+        title="Bibliografia ainda não indicada."
+        description="Fontes serão publicadas em breve."
+      />
+    );
+  }
+  return (
+    <ol className="max-w-[68ch] mx-auto space-y-3 font-stitch-serif text-stitch-body-sm text-stitch-on-surface list-decimal list-inside">
+      {items.map((b, i) => (
+        <li key={i} className="pl-1">
+          {b.author && <span className="font-semibold">{b.author}. </span>}
+          <em>{b.title}</em>
+          {b.year && <span>, {b.year}</span>}
+          {b.url && (
+            <>
+              {' '}
+              <a
+                href={b.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary"
+              >
+                ver fonte
+              </a>
+            </>
+          )}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Página                                                              */
 /* ------------------------------------------------------------------ */
@@ -236,6 +457,9 @@ const GlossaryTermPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { term, loading, error } = useGlossaryTerm(slug);
+  const { toggleFavorite, isFavorite } = useFavorites('glossary');
+
+  useHistoryRegistration(term);
 
   const order = useMemo<SectionKey[]>(() => {
     const raw = term?.sections_order?.length ? term.sections_order : DEFAULT_ORDER;
@@ -283,7 +507,25 @@ const GlossaryTermPage: React.FC = () => {
 
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
-  const description = (term.definition ?? '').slice(0, 155);
+  const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
+  const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
+  const favorited = isFavorite('glossary', term.term);
+
+  const handleFavorite = () => {
+    toggleFavorite({
+      type: 'glossary',
+      title: term.term,
+      content: term.slug ? `/glossario/${term.slug}` : '',
+    });
+  };
+
+  const reviewedAt = term.reviewed_at
+    ? new Date(term.reviewed_at).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
 
   return (
     <>
@@ -296,6 +538,20 @@ const GlossaryTermPage: React.FC = () => {
         <meta property="og:type" content="article" />
         {canonical && <meta property="og:url" content={canonical} />}
         <meta name="twitter:card" content="summary" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'DefinedTerm',
+            name: term.term,
+            description,
+            inDefinedTermSet: {
+              '@type': 'DefinedTermSet',
+              name: 'Léxico Teológico Cathedra',
+            },
+            url: canonical,
+            ...(term.category && { termCode: term.category }),
+          })}
+        </script>
       </Helmet>
 
       <EditorialReaderChrome
@@ -307,11 +563,8 @@ const GlossaryTermPage: React.FC = () => {
       />
 
       <EditorialShell>
-        {/* Breadcrumb — mantém o termo visível ao navegar entre seções */}
-        <nav
-          aria-label="Trilha de navegação"
-          className="max-w-6xl mx-auto px-4 pt-6"
-        >
+        {/* Breadcrumb */}
+        <nav aria-label="Trilha de navegação" className="max-w-6xl mx-auto px-4 pt-6">
           <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
             <li>
               <Link to="/glossario" className="hover:text-stitch-secondary transition">
@@ -332,7 +585,10 @@ const GlossaryTermPage: React.FC = () => {
               </>
             )}
             <li aria-hidden="true" className="text-stitch-muted/50">/</li>
-            <li aria-current="page" className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm">
+            <li
+              aria-current="page"
+              className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm"
+            >
               {term.term}
             </li>
           </ol>
@@ -341,25 +597,45 @@ const GlossaryTermPage: React.FC = () => {
         <EditorialHero
           kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
           title={term.term}
-          subtitle={term.definition}
+          subtitle={heroSubtitle}
           size="md"
           parchment
+          action={
+            <button
+              type="button"
+              onClick={handleFavorite}
+              aria-pressed={favorited}
+              className={cn(
+                'inline-flex items-center gap-2 px-4 py-2 border rounded-full',
+                'font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] transition-colors',
+                favorited
+                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
+                  : 'border-stitch-outline-variant/60 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
+              )}
+            >
+              {favorited ? (
+                <>
+                  <BookmarkCheck className="h-4 w-4" aria-hidden="true" />
+                  Favoritado
+                </>
+              ) : (
+                <>
+                  <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
+                  Favoritar
+                </>
+              )}
+            </button>
+          }
         />
 
         {/* Sumário lateral (desktop) */}
         <div className="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 mt-8">
-          <nav
-            aria-label="Sumário do verbete"
-            className="hidden lg:block sticky top-32 self-start"
-          >
+          <nav aria-label="Sumário do verbete" className="hidden lg:block sticky top-32 self-start">
             <EditorialKicker className="mb-4">Sumário</EditorialKicker>
             <ol className="space-y-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.16em] text-stitch-muted">
               {order.map((k) => (
                 <li key={k}>
-                  <a
-                    href={`#${SECTION_META[k].anchor}`}
-                    className="hover:text-stitch-secondary transition"
-                  >
+                  <a href={`#${SECTION_META[k].anchor}`} className="hover:text-stitch-secondary transition">
                     {SECTION_META[k].title}
                   </a>
                 </li>
@@ -389,10 +665,12 @@ const GlossaryTermPage: React.FC = () => {
                   </header>
 
                   {k === 'definition' && <TextSection>{term.definition}</TextSection>}
+                  {k === 'context' && <TextSection>{term.historical_context}</TextSection>}
                   {k === 'interpretation' && (
                     <TextSection>{term.interpretation ?? term.deep_interpretation}</TextSection>
                   )}
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
+                  {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
                   {k === 'bible' && (
                     <RefList
                       items={term.bible_verses}
@@ -473,16 +751,16 @@ const GlossaryTermPage: React.FC = () => {
                       )}
                     />
                   )}
-                  {k === 'journey' && (
+                  {k === 'liturgy' && (
                     <RefList
-                      items={term.journey_refs}
-                      emptyLabel="Jornada sugerida ainda não indicada."
+                      items={term.liturgy_refs}
+                      emptyLabel="Referências litúrgicas ainda não indicadas."
                       renderItem={(ref) => (
                         <Link
-                          to={`/jornadas/${ref}`}
+                          to={`/liturgia?ref=${encodeURIComponent(ref)}`}
                           className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
                         >
-                          Abrir jornada
+                          {ref}
                         </Link>
                       )}
                     />
@@ -501,7 +779,24 @@ const GlossaryTermPage: React.FC = () => {
                       )}
                     />
                   )}
+                  {k === 'journey' && (
+                    <RefList
+                      items={term.journey_refs}
+                      emptyLabel="Jornada sugerida ainda não indicada."
+                      renderItem={(ref) => (
+                        <Link
+                          to={`/jornadas/${ref}`}
+                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                        >
+                          Abrir jornada
+                        </Link>
+                      )}
+                    />
+                  )}
+                  {k === 'faq' && <FaqBlock items={term.faq} />}
+                  {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
                   {k === 'nexus' && <NexusList refs={term.nexus_refs} />}
+                  {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
               );
             })}
@@ -517,6 +812,39 @@ const GlossaryTermPage: React.FC = () => {
                 meta: { theme: term.category ?? undefined },
               }}
             />
+
+            {/* Rodapé de versão / revisão teológica */}
+            <footer className="mt-16 pt-8 border-t border-stitch-outline-variant/40 max-w-[68ch] mx-auto">
+              <EditorialDivider variant="gold-fade" className="mb-6" />
+              <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
+                <div>
+                  <dt className="text-stitch-secondary/80">Versão</dt>
+                  <dd className="mt-1 text-stitch-on-background">v{term.version ?? 1}</dd>
+                </div>
+                <div>
+                  <dt className="text-stitch-secondary/80">Status</dt>
+                  <dd className="mt-1 text-stitch-on-background">
+                    {term.status === 'published'
+                      ? 'Publicado'
+                      : term.status === 'review'
+                      ? 'Em revisão'
+                      : 'Rascunho'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-stitch-secondary/80">Revisor</dt>
+                  <dd className="mt-1 text-stitch-on-background normal-case tracking-normal font-stitch-serif">
+                    {term.reviewed_by ?? '—'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-stitch-secondary/80">Revisão</dt>
+                  <dd className="mt-1 text-stitch-on-background normal-case tracking-normal font-stitch-serif">
+                    {reviewedAt ?? 'Sem revisão registrada'}
+                  </dd>
+                </div>
+              </dl>
+            </footer>
           </div>
         </div>
       </EditorialShell>
