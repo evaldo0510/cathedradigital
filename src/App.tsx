@@ -172,6 +172,7 @@ const ClientErrors = lazy(() => import('./pages/admin/ClientErrors'));
 const RuntimeErrors = lazy(() => import('./pages/admin/RuntimeErrors'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
+const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
