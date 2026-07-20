@@ -28,6 +28,7 @@ import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import SanctorumClampNotice from './SanctorumClampNotice';
 import SantoDoDiaHero from './SantoDoDiaHero';
+import SantoDoDiaHeroSkeleton, { SantoDoDiaSecondaryListSkeleton } from './SantoDoDiaHeroSkeleton';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import { trackEvent } from '@/lib/analytics';
 
