@@ -152,11 +152,11 @@ Deno.serve(async (req) => {
 
       // 3. verses
       const rows = verses.map((v) => ({
-        chapter_id: chUp.data.id, number: v.number, text: v.text,
+        chapter_id: chUp.data.id, number: v.number, text: v.text, translation_id: translationId,
       }));
       const vUp = await supabase
         .from('bible_verses')
-        .upsert(rows, { onConflict: 'chapter_id,number' });
+        .upsert(rows, { onConflict: 'chapter_id,translation_id,number' });
       if (vUp.error) throw new Error(`verses upsert: ${vUp.error.message}`);
 
       entry.status = 'imported';
