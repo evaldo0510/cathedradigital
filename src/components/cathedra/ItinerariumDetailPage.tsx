@@ -226,13 +226,11 @@ const ItinerariumDetailPage: React.FC = () => {
 
             <EditorialGoldMarker />
 
-            <EditorialMeta
-              items={[
-                { label: 'Capítulos', value: String(steps.length) },
-                { label: 'Duração estimada', value: `${itinerarium.estimated_days} dias` },
-                { label: 'Nível', value: itinerarium.difficulty || '—' },
-              ]}
-            />
+            <div className="flex flex-wrap items-center gap-x-spacing-lg gap-y-spacing-xs">
+              <EditorialMeta>{steps.length} capítulos</EditorialMeta>
+              <EditorialMeta>{itinerarium.estimated_days} dias</EditorialMeta>
+              <EditorialMeta>Nível · {itinerarium.difficulty || '—'}</EditorialMeta>
+            </div>
 
             <div className="flex flex-wrap items-center gap-spacing-sm pt-spacing-md">
               {resumeStep && (
