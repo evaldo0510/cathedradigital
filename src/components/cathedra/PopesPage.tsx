@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useTransition, useDeferredValue } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
@@ -7,9 +8,25 @@ import SacredImage from './SacredImage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
+
+/** Formata data local em YYYY-MM-DD (sem timezone drift). */
+function toISODateLocal(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function parseISODateLocal(s: string | null): Date | null {
+  if (!s) return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return Number.isNaN(d.getTime()) ? null : d;
+}
 
 
 interface Pope {
@@ -178,8 +195,30 @@ function parseReignYears(reign: string): [number, number] {
 }
 
 const PopesPage: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [date, setDate] = useState<Date>(new Date());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialDate = parseISODateLocal(searchParams.get('date')) ?? new Date();
+  const initialSearch = searchParams.get('q') ?? '';
+  const [search, setSearch] = useState(initialSearch);
+  const [date, setDate] = useState<Date>(initialDate);
+  const [isPending, startTransition] = useTransition();
+  const deferredSearch = useDeferredValue(search);
+  const isFiltering = isPending || deferredSearch !== search;
+
+  // Persistir data + busca na URL (?date=YYYY-MM-DD&q=...)
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    next.set('date', toISODateLocal(date));
+    if (search.trim()) next.set('q', search.trim());
+    else next.delete('q');
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, search]);
+
+  const handleDateChange = (d: Date) => {
+    startTransition(() => setDate(d));
+  };
 
   const year = date.getFullYear();
 
@@ -191,14 +230,14 @@ const PopesPage: React.FC = () => {
   }, [year]);
 
   const filteredPopes = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const q = deferredSearch.trim().toLowerCase();
     if (!q) return POPES_DATA;
     return POPES_DATA.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.title.toLowerCase().includes(q),
     );
-  }, [search]);
+  }, [deferredSearch]);
 
   const reigningKicker = reigningPope
     ? `Sanctorum · Papa reinante em ${year}`
@@ -226,6 +265,48 @@ const PopesPage: React.FC = () => {
           : undefined,
       }
     : null;
+
+  // JSON-LD ItemList: cada papa filtrado como Person com período de reinado.
+  const popesItemListLd = useMemo(() => {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Papas da Igreja Católica',
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      numberOfItems: filteredPopes.length,
+      itemListElement: filteredPopes.map((p, idx) => {
+        const [start, end] = parseReignYears(p.reign);
+        const person: Record<string, unknown> = {
+          '@type': 'Person',
+          '@id': `${popeCanonical}#${p.id}`,
+          name: p.name,
+          alternateName: p.title,
+          description: p.bio,
+          image: p.image,
+          jobTitle: 'Papa da Igreja Católica',
+          knowsAbout: p.contributions,
+          hasOccupation: {
+            '@type': 'Role',
+            roleName: 'Papa',
+            startDate: String(start),
+            endDate: /presente/i.test(p.reign) ? undefined : String(end),
+          },
+          citation: [
+            `Enciclopédia Católica — verbete "${p.name}"`,
+            `Annuario Pontificio (Santa Sé) — pontificado ${p.reign}`,
+          ],
+        };
+        if (p.motto) {
+          person.subjectOf = { '@type': 'Quotation', text: p.motto };
+        }
+        return {
+          '@type': 'ListItem',
+          position: idx + 1,
+          item: person,
+        };
+      }),
+    };
+  }, [filteredPopes, popeCanonical]);
 
   return (
     <div className="w-full space-y-spacing-xl pb-spacing-3xl px-spacing-md">
@@ -259,6 +340,9 @@ const PopesPage: React.FC = () => {
             {JSON.stringify(popePersonLd)}
           </script>
         )}
+        <script type="application/ld+json" data-testid="popes-itemlist-jsonld">
+          {JSON.stringify(popesItemListLd)}
+        </script>
       </Helmet>
 
       <SanctorumHero
@@ -268,7 +352,7 @@ const PopesPage: React.FC = () => {
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
 
-      <SanctorumDateNav value={date} onChange={setDate} />
+      <SanctorumDateNav value={date} onChange={handleDateChange} />
 
 
       <AnimatePresence mode="wait">
@@ -336,8 +420,38 @@ const PopesPage: React.FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-        {filteredPopes.map((pope, idx) => (
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg"
+        aria-busy={isFiltering}
+        aria-live="polite"
+        data-testid="popes-grid"
+      >
+        {isFiltering ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={`skeleton-${i}`}
+              data-testid="pope-skeleton"
+              className="rounded-premium-lg overflow-hidden border border-border/50"
+            >
+              <Skeleton className="h-spacing-4xl w-full" />
+              <div className="p-spacing-md space-y-spacing-sm">
+                <Skeleton className="h-spacing-md w-1/3" />
+                <Skeleton className="h-spacing-sm w-full" />
+                <Skeleton className="h-spacing-sm w-5/6" />
+                <Skeleton className="h-spacing-sm w-2/3" />
+              </div>
+            </div>
+          ))
+        ) : filteredPopes.length === 0 ? (
+          <div
+            className="md:col-span-2 text-center text-premium-sm text-muted-foreground font-serif italic py-spacing-xl"
+            role="status"
+            data-testid="popes-empty"
+          >
+            Nenhum papa encontrado para "{deferredSearch}".
+          </div>
+        ) : (
+          filteredPopes.map((pope, idx) => (
           <motion.div
             key={pope.id}
             initial={{ opacity: 0, y: 20 }}
@@ -397,7 +511,8 @@ const PopesPage: React.FC = () => {
               </div>
             </Card>
           </motion.div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
