@@ -302,6 +302,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               >
               <SanctorumDateNav value={selectedDate} onChange={setSelectedDate} analyticsPage="saints" />
 
+              {dateWasClamped && (
+                <SanctorumClampNotice
+                  received={rawDateParam}
+                  replacedWith={toISODateLocal(initialDate)}
+                />
+              )}
+
+
+
 
               <div className="w-full space-y-spacing-lg">
                 {isLoadingDaily ? (
