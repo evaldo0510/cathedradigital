@@ -147,12 +147,20 @@ const JornadaStepPage: React.FC = () => {
   }, [stepId, journeyId, step?.title, journeyTitle, user?.id]);
 
   const loadData = async () => {
-    setLoading(true);
+    // Se a etapa já foi pré-carregada, mostra imediatamente sem spinner.
+    const cachedStep = stepId ? STEP_PREFETCH_CACHE.get(stepId) : null;
+    if (cachedStep) {
+      setStep(cachedStep);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     try {
       // Uma única leva paralela: step atual, título da jornada, todos os passos e progresso.
-      // Antes fazíamos 3 queries + fetch de allSteps + fetch de progresso em série; agora tudo junto.
       const [stepRes, journeyRes, allStepsRes, progressRes] = await Promise.all([
-        supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
+        cachedStep
+          ? Promise.resolve({ data: cachedStep } as any)
+          : supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
         supabase.from('journeys').select('title').eq('id', journeyId!).single(),
         supabase
           .from('journey_steps')
@@ -171,6 +179,7 @@ const JornadaStepPage: React.FC = () => {
 
       if (stepRes.data) {
         setStep(stepRes.data);
+        STEP_PREFETCH_CACHE.set(stepRes.data.id, stepRes.data);
         const dataContent = stepRes.data.content as Record<string, any>;
         const firstWithContent = SECTION_CONFIG.find((s) => {
           const val = dataContent[s.key] || dataContent[`${s.key}_iniciante`];
@@ -182,11 +191,15 @@ const JornadaStepPage: React.FC = () => {
 
       const allSteps = allStepsRes.data ?? [];
       setTotalSteps(allSteps.length);
+      let prev: any = null;
+      let next: any = null;
       if (allSteps.length && stepRes.data) {
         const currentIndex = allSteps.findIndex((s: any) => s.id === stepId);
         if (currentIndex !== -1) {
-          setPrevStep(currentIndex > 0 ? (allSteps[currentIndex - 1] as any) : null);
-          setNextStep(currentIndex < allSteps.length - 1 ? (allSteps[currentIndex + 1] as any) : null);
+          prev = currentIndex > 0 ? (allSteps[currentIndex - 1] as any) : null;
+          next = currentIndex < allSteps.length - 1 ? (allSteps[currentIndex + 1] as any) : null;
+          setPrevStep(prev);
+          setNextStep(next);
         }
       }
 
@@ -212,6 +225,12 @@ const JornadaStepPage: React.FC = () => {
           } catch { /* noop */ }
         }
       }
+
+      // Prefetch prev/next em idle-time para deixar a navegação imediata.
+      scheduleIdle(() => {
+        if (prev?.id) prefetchStep(prev.id);
+        if (next?.id) prefetchStep(next.id);
+      });
     } catch (err) {
       console.error(err);
     } finally {
