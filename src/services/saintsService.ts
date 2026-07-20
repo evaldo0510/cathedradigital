@@ -10,9 +10,17 @@ const LIST_COLUMNS =
 export const getSaintsByDate = async (month: number, day: number): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .eq('feast_month', month)
     .eq('feast_day_num', day);
+
+  if (error) {
+    console.error('Error fetching saints by date:', error);
+    return [];
+  }
+
+  return (data || []).map(formatSaint);
+};
 
   if (error) {
     console.error('Error fetching saints by date:', error);
