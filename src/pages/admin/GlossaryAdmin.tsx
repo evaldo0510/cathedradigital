@@ -24,6 +24,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useDocumentSearch } from "@/hooks/useDocumentSearch";
 import { useGlossaryRole, type GlossaryRole } from "@/hooks/useGlossaryRole";
 import GlossaryPermissionsPanel from "@/components/admin/GlossaryPermissionsPanel";
+import GlossaryBulkPublishPanel from "@/components/admin/GlossaryBulkPublishPanel";
 
 type Status = "draft" | "review" | "published";
 
@@ -598,6 +599,7 @@ export default function GlossaryAdmin() {
           </Card>
         )}
       </div>
+      {canUserPublish && <GlossaryBulkPublishPanel onPublished={() => void load()} />}
       {role === 'admin' && <GlossaryPermissionsPanel />}
     </div>
   );
