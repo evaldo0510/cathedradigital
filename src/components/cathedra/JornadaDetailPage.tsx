@@ -268,6 +268,7 @@ const JornadaDetailPage: React.FC = () => {
               {!isLocked && primaryCta && (
                 <Link
                   to={primaryCta.to}
+                  data-testid="jornada-cta"
                   className="group inline-flex items-center justify-center gap-2 bg-stitch-primary px-7 py-3 font-stitch-body text-[13px] font-bold uppercase tracking-[0.18em] text-stitch-primary-foreground transition-all hover:bg-stitch-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
                 >
                   {primaryCta.label}
