@@ -13,35 +13,7 @@ import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
 import { trackEvent } from '@/lib/analytics';
-
-/** Formata data local em YYYY-MM-DD (sem timezone drift). */
-function toISODateLocal(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-function parseISODateLocal(s: string | null): Date | null {
-  if (!s) return null;
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
-  if (!m) return null;
-  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-
-/**
- * Valida a data recebida via URL. Aceita ano entre 30 d.C. (pontificado de
- * São Pedro) e o ano corrente + 1. Fora disso retorna null para que o caller
- * caia no default (hoje) e corrija a URL.
- */
-const MIN_YEAR = 30;
-function clampReignDate(d: Date | null): Date | null {
-  if (!d) return null;
-  const y = d.getFullYear();
-  const max = new Date().getFullYear() + 1;
-  if (y < MIN_YEAR || y > max) return null;
-  return d;
-}
+import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 
 
 
