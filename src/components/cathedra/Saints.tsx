@@ -300,6 +300,62 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                   </Button>
                 </div>
 
+                {/* Atalhos: Hoje · Semana anterior/próxima · Escolher data (Popover) */}
+                <div className="flex flex-wrap items-center justify-center gap-spacing-xs">
+                  <Button
+                    onClick={() => setSelectedDate(subDays(selectedDate, 7))}
+                    aria-label="Semana anterior"
+                    className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+                  >
+                    <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                    Semana
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedDate(new Date())}
+                    disabled={isToday(selectedDate)}
+                    aria-label="Ir para hoje"
+                    aria-current={isToday(selectedDate) ? 'date' : undefined}
+                    className={cn(
+                      'h-spacing-xl px-spacing-lg rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all',
+                      isToday(selectedDate)
+                        ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 cursor-default'
+                        : 'bg-card border border-border text-foreground hover:border-primary/30 hover:text-primary'
+                    )}
+                  >
+                    <Icons.Calendar className="w-spacing-sm h-spacing-sm mr-spacing-2xs" aria-hidden="true" />
+                    Hoje
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedDate(addDays(selectedDate, 7))}
+                    aria-label="Próxima semana"
+                    className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+                  >
+                    Semana
+                    <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
+                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        aria-label="Escolher data no calendário"
+                        className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+                      >
+                        <Icons.Calendar className="w-spacing-sm h-spacing-sm mr-spacing-2xs" aria-hidden="true" />
+                        Calendário
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 pointer-events-auto" align="center">
+                      <CalendarPicker
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(d) => d && setSelectedDate(d)}
+                        initialFocus
+                        locale={ptBR}
+                        className={cn('p-3 pointer-events-auto')}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
                 <div className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar">
                   {dateStrip.map((date, i) => (
                     <Button
