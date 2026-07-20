@@ -56,4 +56,51 @@ describe('SanctorumDateNav', () => {
     const strip = container.querySelector('.overflow-x-auto')!;
     expect(strip.querySelectorAll('button').length).toBe(5);
   });
+
+  describe('pills cabem no mobile (largura fixa 56px)', () => {
+    it('abreviação do dia da semana tem no máximo 3 caracteres (sem estourar 56px)', () => {
+      const date = new Date(2026, 0, 15); // qui — cobre dom..sáb na tira de 7
+      const { container } = render(
+        <SanctorumDateNav value={date} onChange={() => {}} />,
+      );
+      const strip = container.querySelector('.overflow-x-auto')!;
+      const pills = strip.querySelectorAll('button');
+      const nomesCompletos = /segunda|terça|quarta|quinta|sexta|sábado|domingo/i;
+
+      pills.forEach((pill) => {
+        const abbr = pill.querySelector('span')!.textContent!.trim();
+        expect(abbr.length).toBeLessThanOrEqual(3);
+        expect(abbr).not.toMatch(nomesCompletos);
+      });
+    });
+
+    it('cada pill mantém min-width de 56px e layout em coluna (abreviação + dia)', () => {
+      const date = new Date(2026, 0, 15);
+      const { container } = render(
+        <SanctorumDateNav value={date} onChange={() => {}} />,
+      );
+      const strip = container.querySelector('.overflow-x-auto')!;
+      const pills = strip.querySelectorAll('button');
+
+      expect(pills.length).toBe(7);
+      pills.forEach((pill) => {
+        expect(pill.className).toContain('min-w-[56px]');
+        expect(pill.className).toContain('flex-col');
+        const spans = pill.querySelectorAll('span');
+        expect(spans.length).toBe(2);
+        expect(spans[1].textContent).toMatch(/^\d{2}$/);
+      });
+    });
+
+    it('tira permite scroll horizontal e não quebra em várias linhas no mobile', () => {
+      const date = new Date(2026, 0, 15);
+      const { container } = render(
+        <SanctorumDateNav value={date} onChange={() => {}} />,
+      );
+      const strip = container.querySelector('.overflow-x-auto')!;
+      expect(strip.className).toContain('overflow-x-auto');
+      expect(strip.className).toContain('max-w-full');
+      expect(strip.className).not.toContain('flex-wrap');
+    });
+  });
 });
