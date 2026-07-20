@@ -31,17 +31,24 @@ export function highlightText(
   );
   if (tokens.length === 0) return text;
 
-  const nText = norm(text);
-  const pattern = new RegExp(tokens.map((t) => escapeRegExp(norm(t))).join('|'), 'g');
+  // Constrói normalizado + mapa de índices para o texto original,
+  // preservando pontos de corte mesmo com diacríticos removidos.
+  let nText = '';
+  const map: number[] = []; // map[i] = índice no `text` para o char i em `nText`
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i].normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    for (let k = 0; k < ch.length; k++) map.push(i);
+    nText += ch;
+  }
 
-  // Percorre índices no texto normalizado, mas fatiando o original
-  // (comprimento por caractere é preservado após NFD porque removemos combining marks).
+  const pattern = new RegExp(tokens.map((t) => escapeRegExp(norm(t))).join('|'), 'g');
   const nodes: React.ReactNode[] = [];
   let lastIndex = 0;
   let m: RegExpExecArray | null;
   while ((m = pattern.exec(nText)) !== null) {
-    const start = m.index;
-    const end = start + m[0].length;
+    if (m[0].length === 0) { pattern.lastIndex++; continue; }
+    const start = map[m.index];
+    const end = (map[m.index + m[0].length - 1] ?? start) + 1;
     if (start > lastIndex) nodes.push(text.slice(lastIndex, start));
     nodes.push(
       <mark key={`m-${start}`} className={className}>
@@ -49,7 +56,6 @@ export function highlightText(
       </mark>,
     );
     lastIndex = end;
-    if (m[0].length === 0) pattern.lastIndex++;
   }
   if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
   return nodes;
