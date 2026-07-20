@@ -266,6 +266,48 @@ const PopesPage: React.FC = () => {
       }
     : null;
 
+  // JSON-LD ItemList: cada papa filtrado como Person com período de reinado.
+  const popesItemListLd = useMemo(() => {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Papas da Igreja Católica',
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      numberOfItems: filteredPopes.length,
+      itemListElement: filteredPopes.map((p, idx) => {
+        const [start, end] = parseReignYears(p.reign);
+        const person: Record<string, unknown> = {
+          '@type': 'Person',
+          '@id': `${popeCanonical}#${p.id}`,
+          name: p.name,
+          alternateName: p.title,
+          description: p.bio,
+          image: p.image,
+          jobTitle: 'Papa da Igreja Católica',
+          knowsAbout: p.contributions,
+          hasOccupation: {
+            '@type': 'Role',
+            roleName: 'Papa',
+            startDate: String(start),
+            endDate: /presente/i.test(p.reign) ? undefined : String(end),
+          },
+          citation: [
+            `Enciclopédia Católica — verbete "${p.name}"`,
+            `Annuario Pontificio (Santa Sé) — pontificado ${p.reign}`,
+          ],
+        };
+        if (p.motto) {
+          person.subjectOf = { '@type': 'Quotation', text: p.motto };
+        }
+        return {
+          '@type': 'ListItem',
+          position: idx + 1,
+          item: person,
+        };
+      }),
+    };
+  }, [filteredPopes, popeCanonical]);
+
   return (
     <div className="w-full space-y-spacing-xl pb-spacing-3xl px-spacing-md">
       <SEOHead
