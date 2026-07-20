@@ -3983,27 +3983,39 @@ export type Database = {
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
+          biography_full: Json
           born: string | null
           catechism_refs: number[] | null
           category: string | null
+          century: number | null
           church_doc_refs: Json | null
           content_hash: string | null
+          content_status: Database["public"]["Enums"]["saint_content_status"]
           created_at: string | null
+          curiosities: string[]
           died: string | null
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
           full_bio: string | null
+          historical_context: string | null
+          iconography: Json
           id: string
           image: string | null
           last_scraped_at: string | null
+          miracles: Json
           name: string
           patron_of: string[] | null
+          patronages: string[]
           prayer: string | null
           prayer_source_url: string | null
           quotes: string[] | null
+          quotes_rich: Json
           source_name: string | null
           source_url: string | null
+          sources: Json
+          spiritual_practice: Json
+          timeline: Json
           title: string | null
           updated_at: string | null
           virtues: string[] | null
@@ -4013,27 +4025,39 @@ export type Database = {
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
+          biography_full?: Json
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
+          century?: number | null
           church_doc_refs?: Json | null
           content_hash?: string | null
+          content_status?: Database["public"]["Enums"]["saint_content_status"]
           created_at?: string | null
+          curiosities?: string[]
           died?: string | null
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
           full_bio?: string | null
+          historical_context?: string | null
+          iconography?: Json
           id: string
           image?: string | null
           last_scraped_at?: string | null
+          miracles?: Json
           name: string
           patron_of?: string[] | null
+          patronages?: string[]
           prayer?: string | null
           prayer_source_url?: string | null
           quotes?: string[] | null
+          quotes_rich?: Json
           source_name?: string | null
           source_url?: string | null
+          sources?: Json
+          spiritual_practice?: Json
+          timeline?: Json
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
@@ -4043,27 +4067,39 @@ export type Database = {
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
+          biography_full?: Json
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
+          century?: number | null
           church_doc_refs?: Json | null
           content_hash?: string | null
+          content_status?: Database["public"]["Enums"]["saint_content_status"]
           created_at?: string | null
+          curiosities?: string[]
           died?: string | null
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
           full_bio?: string | null
+          historical_context?: string | null
+          iconography?: Json
           id?: string
           image?: string | null
           last_scraped_at?: string | null
+          miracles?: Json
           name?: string
           patron_of?: string[] | null
+          patronages?: string[]
           prayer?: string | null
           prayer_source_url?: string | null
           quotes?: string[] | null
+          quotes_rich?: Json
           source_name?: string | null
           source_url?: string | null
+          sources?: Json
+          spiritual_practice?: Json
+          timeline?: Json
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
@@ -6362,27 +6398,39 @@ export type Database = {
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
+          biography_full: Json
           born: string | null
           catechism_refs: number[] | null
           category: string | null
+          century: number | null
           church_doc_refs: Json | null
           content_hash: string | null
+          content_status: Database["public"]["Enums"]["saint_content_status"]
           created_at: string | null
+          curiosities: string[]
           died: string | null
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
           full_bio: string | null
+          historical_context: string | null
+          iconography: Json
           id: string
           image: string | null
           last_scraped_at: string | null
+          miracles: Json
           name: string
           patron_of: string[] | null
+          patronages: string[]
           prayer: string | null
           prayer_source_url: string | null
           quotes: string[] | null
+          quotes_rich: Json
           source_name: string | null
           source_url: string | null
+          sources: Json
+          spiritual_practice: Json
+          timeline: Json
           title: string | null
           updated_at: string | null
           virtues: string[] | null
@@ -6438,6 +6486,7 @@ export type Database = {
         | "momentos_do_dia"
         | "eucaristica"
         | "confissao_defuntos"
+      saint_content_status: "stub" | "partial" | "complete"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -6577,6 +6626,7 @@ export const Constants = {
         "eucaristica",
         "confissao_defuntos",
       ],
+      saint_content_status: ["stub", "partial", "complete"],
     },
   },
 } as const
