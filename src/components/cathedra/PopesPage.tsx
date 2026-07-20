@@ -14,6 +14,7 @@ import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
 import { trackEvent } from '@/lib/analytics';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
+import SanctorumClampNotice from './SanctorumClampNotice';
 
 
 
