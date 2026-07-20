@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -17,6 +17,8 @@ interface SantoDoDiaHeroProps {
   date: Date;
   onOpen: (reflect?: boolean) => void;
 }
+
+type SectionKey = 'frase' | 'vida' | 'legado' | 'meditacao';
 
 /**
  * Extrai o século (ex.: "Séc. IV", "Séc. XIX–XX") a partir de campos textuais
