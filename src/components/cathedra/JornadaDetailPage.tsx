@@ -281,7 +281,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Intro narrativa + quote editorial ─────── */}
         {(journey.narrative_intro || journey.hero_quote) && (
-          <section className="pt-12">
+          <section data-testid="jornada-intro" className="pt-12">
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
               {journey.narrative_intro ? (
                 <div className="max-w-[68ch] font-stitch-body text-[17px] leading-[30px] text-stitch-on-background md:text-[18px] md:leading-[32px]">
