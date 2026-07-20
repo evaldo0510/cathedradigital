@@ -209,7 +209,7 @@ const JornadaDetailPage: React.FC = () => {
         </Link>
 
         {/* ─── Hero editorial ─────────────────────────── */}
-        <section className="relative mt-6 overflow-hidden border-b border-stitch-secondary/10 pb-12">
+        <section data-testid="jornada-hero" className="relative mt-6 overflow-hidden border-b border-stitch-secondary/10 pb-12">
           {journey.hero_image_url && (
             <div
               aria-hidden
