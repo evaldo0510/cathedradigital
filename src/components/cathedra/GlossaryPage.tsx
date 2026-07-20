@@ -431,9 +431,9 @@ const GlossaryPage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-premium-base font-bold text-foreground">{term.term}</h3>
+                    <h3 className="text-premium-base font-bold text-foreground">{highlightText(term.term, searchQuery)}</h3>
                     {!isExpanded && (
-                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{term.definition}</p>
+                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{highlightText(term.definition, searchQuery)}</p>
                     )}
                   </div>
                   <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
