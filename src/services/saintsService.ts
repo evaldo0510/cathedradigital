@@ -102,7 +102,7 @@ export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | nul
 export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .order('name')
     .limit(limit);
 
