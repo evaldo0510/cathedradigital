@@ -200,6 +200,33 @@ const PopesPage: React.FC = () => {
     );
   }, [search]);
 
+  const reigningKicker = reigningPope
+    ? `Sanctorum · Papa reinante em ${year}`
+    : `Sanctorum · Papas · ${year}`;
+  const reigningTitle = reigningPope
+    ? `${reigningPope.name} — ${reigningPope.title} · Os Papas · Cathedra Digital`
+    : `Os Papas · ${year} · Cathedra Digital`;
+  const reigningDescription = reigningPope
+    ? `${reigningPope.name} (${reigningPope.reign}) — ${reigningPope.bio}`.slice(0, 160)
+    : `Sucessores de Pedro em ${year}. Conheça vida, lema e legado dos principais papas.`;
+  const popeCanonical = `${SEO_CONFIG.BASE_URL}/papas`;
+  const popePersonLd = reigningPope
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: reigningPope.name,
+        alternateName: reigningPope.title,
+        description: reigningPope.bio,
+        image: reigningPope.image,
+        jobTitle: 'Papa da Igreja Católica',
+        knowsAbout: reigningPope.contributions,
+        url: popeCanonical,
+        subjectOf: reigningPope.motto
+          ? { '@type': 'Quotation', text: reigningPope.motto }
+          : undefined,
+      }
+    : null;
+
   return (
     <div className="w-full space-y-spacing-xl pb-spacing-3xl px-spacing-md">
       <SEOHead
@@ -207,6 +234,32 @@ const PopesPage: React.FC = () => {
         description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais."
         path="/papas"
       />
+
+      <Helmet key={reigningPope?.id ?? `no-pope-${year}`}>
+        <title>{reigningTitle}</title>
+        <meta name="description" content={reigningDescription} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="Cathedra Digital" />
+        <meta property="og:title" content={reigningTitle} />
+        <meta property="og:description" content={reigningDescription} />
+        <meta property="og:url" content={popeCanonical} />
+        {reigningPope && (
+          <>
+            <meta property="og:image" content={reigningPope.image} />
+            <meta property="og:image:secure_url" content={reigningPope.image} />
+            <meta property="og:image:alt" content={`${reigningKicker} · ${reigningPope.name}`} />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={reigningPope.name} />
+            <meta name="twitter:description" content={reigningDescription} />
+            <meta name="twitter:image" content={reigningPope.image} />
+          </>
+        )}
+        {popePersonLd && (
+          <script type="application/ld+json" data-testid="pope-jsonld">
+            {JSON.stringify(popePersonLd)}
+          </script>
+        )}
+      </Helmet>
 
       <SanctorumHero
         variant="category"
@@ -216,6 +269,7 @@ const PopesPage: React.FC = () => {
       />
 
       <SanctorumDateNav value={date} onChange={setDate} />
+
 
       <AnimatePresence mode="wait">
         {reigningPope ? (
