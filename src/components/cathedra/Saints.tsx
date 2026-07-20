@@ -236,13 +236,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
       </script>
 
       <div ref={ref} className="space-y-spacing-xl pb-spacing-3xl">
-        <EditorialHero
-          variant="editorial"
-          align="center"
-          size="md"
-          parchment
-          rule
-          kicker="Sanctorum Pro"
+        <SanctorumHero
           title="Vidas dos Santos"
           subtitle={'"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'}
         />
