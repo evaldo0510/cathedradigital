@@ -1,11 +1,17 @@
 /**
- * JornadaDetailPage — refino editorial Logos 2030.
+ * JornadaDetailPage — refino editorial Logos 2030 (SEG-3 / Jornada Editorial).
  *
- * Alinha o detalhe da jornada ao padrão de /jornadas (tokens stitch-*):
- *  - Hero editorial com kicker, título serifado e meta em versalete
- *  - Barra de progresso sóbria
- *  - Timeline vertical de etapas (índice · tipo · duração · CTA)
- *  - Preserva toda a lógica de leitura, progresso e locks PRO
+ * Sem alteração de banco ou rotas. Aproveita campos já existentes em `journeys`:
+ * hero_kicker, hero_quote, hero_image_url, narrative_intro, closing_message,
+ * estimated_days, difficulty, subtitle.
+ *
+ * Camadas editoriais:
+ *  1. Hero com backdrop opcional (hero_image_url), kicker versalete e quote.
+ *  2. Intro narrativa (narrative_intro) em coluna 68ch.
+ *  3. "Próxima etapa" destacada antes da timeline.
+ *  4. Timeline vertical dignificada (índice, tipo, tempo, CTA).
+ *  5. Bloco de conclusão com closing_message.
+ *  6. "Continuar depois" — jornadas relacionadas (mesma categoria).
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -32,6 +38,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { EditorialQuote } from '@/components/editorial/primitives';
 
 const STEP_META: Record<string, { label: string; Icon: React.ComponentType<{ className?: string }> }> = {
   reading: { label: 'Leitura', Icon: BookOpen },
@@ -54,11 +61,11 @@ const JornadaDetailPage: React.FC = () => {
   const [journey, setJourney] = useState<any>(null);
   const [steps, setSteps] = useState<any[]>([]);
   const [completedStepIds, setCompletedStepIds] = useState<Set<string>>(new Set());
+  const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) loadJourney();
-     
   }, [id, user]);
 
   const loadJourney = async () => {
@@ -68,15 +75,27 @@ const JornadaDetailPage: React.FC = () => {
         supabase.from('journeys').select('*').eq('id', id!).single(),
         supabase.from('journey_steps').select('*').eq('journey_id', id!).order('step_order', { ascending: true }),
       ]);
-      if (journeyRes.data) setJourney(journeyRes.data);
+      const j = journeyRes.data;
+      if (j) setJourney(j);
       if (stepsRes.data) setSteps(stepsRes.data);
-      if (user) {
+      if (user && j) {
         const { data: progress } = await supabase
           .from('journey_progress')
           .select('step_id')
           .eq('user_id', user.id)
           .eq('journey_id', id!);
         if (progress) setCompletedStepIds(new Set(progress.map((p) => p.step_id)));
+      }
+      if (j?.category) {
+        const { data: rel } = await supabase
+          .from('journeys')
+          .select('id, title, subtitle, category, difficulty, estimated_days')
+          .eq('category', j.category)
+          .eq('is_active', true)
+          .neq('id', j.id)
+          .order('sort_order', { ascending: true })
+          .limit(3);
+        if (rel) setRelated(rel);
       }
     } catch (err) {
       console.error('Failed to load journey:', err);
@@ -98,6 +117,8 @@ const JornadaDetailPage: React.FC = () => {
     }
     return -1;
   }, [steps, completedStepIds]);
+
+  const nextStep = nextStepIndex >= 0 ? steps[nextStepIndex] : null;
 
   const primaryCta = useMemo(() => {
     if (!steps.length) return null;
@@ -143,6 +164,9 @@ const JornadaDetailPage: React.FC = () => {
     );
   }
 
+  const kicker = journey.hero_kicker || journey.category || 'Jornada';
+  const canonical = `https://www.cathedradigital.com.br/jornadas/${journey.id}`;
+
   return (
     <div
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
@@ -153,84 +177,176 @@ const JornadaDetailPage: React.FC = () => {
       <Helmet>
         <title>{journey.title} — Cathedra</title>
         {journey.description && <meta name="description" content={journey.description} />}
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={`${journey.title} — Cathedra`} />
+        {journey.description && <meta property="og:description" content={journey.description} />}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonical} />
+        {journey.hero_image_url && <meta property="og:image" content={journey.hero_image_url} />}
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
       <main className="mx-auto w-full max-w-[1120px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
         {/* Breadcrumb */}
         <Link
           to={AppRoute.JORNADAS}
-          className="inline-flex items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant transition-colors hover:text-stitch-secondary"
+          className="inline-flex items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant transition-colors hover:text-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
         >
           <ArrowLeft className="h-3 w-3" /> Formação
         </Link>
 
         {/* ─── Hero editorial ─────────────────────────── */}
-        <section className="mt-6 border-b border-stitch-secondary/10 pb-10">
-          <span className="mb-2 flex items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-            <Compass className="h-3 w-3" />
-            {journey.category ?? 'Jornada'}
-            {journey.is_premium && (
-              <>
-                <span className="text-stitch-outline-variant">·</span>
-                <span className="inline-flex items-center gap-1 text-stitch-secondary">
-                  <Sparkles className="h-3 w-3" /> PRO
-                </span>
-              </>
-            )}
-          </span>
-          <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[52px] md:leading-[60px] md:tracking-[-0.02em]">
-            {journey.title}
-          </h1>
-          {journey.subtitle && (
-            <p className="mt-3 font-stitch-body text-[16px] italic leading-[26px] text-stitch-on-surface-variant md:text-[18px]">
-              {journey.subtitle}
-            </p>
+        <section className="relative mt-6 overflow-hidden border-b border-stitch-secondary/10 pb-12">
+          {journey.hero_image_url && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 -z-0 opacity-[0.08]"
+              style={{
+                backgroundImage: `url("${journey.hero_image_url}")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
           )}
-          {journey.description && (
-            <p className="mt-6 max-w-[68ch] font-stitch-body text-[17px] leading-[30px] text-stitch-on-surface-variant md:text-[19px] md:leading-[32px]">
-              {journey.description}
-            </p>
-          )}
-
-          {/* Meta + CTA */}
-          <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
-              <span className="inline-flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" />
-                ~{journey.estimated_days ?? journey.duration_days ?? '—'} dias
-              </span>
-              <span className="text-stitch-outline-variant">·</span>
-              <span>{totalSteps} etapas</span>
-              {journey.difficulty && (
+          <div className="relative">
+            <span className="mb-3 flex flex-wrap items-center gap-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+              <Compass className="h-3 w-3" />
+              {kicker}
+              {journey.is_premium && (
                 <>
                   <span className="text-stitch-outline-variant">·</span>
-                  <span>{DIFFICULTY_LABELS[journey.difficulty] ?? journey.difficulty}</span>
+                  <span className="inline-flex items-center gap-1 text-stitch-secondary">
+                    <Sparkles className="h-3 w-3" /> PRO
+                  </span>
                 </>
               )}
-            </div>
-
-            {!isLocked && primaryCta && (
-              <Link
-                to={primaryCta.to}
-                className="group inline-flex items-center justify-center gap-2 bg-stitch-primary px-7 py-3 font-stitch-body text-[13px] font-bold uppercase tracking-[0.18em] text-stitch-primary-foreground transition-all hover:bg-stitch-primary/90"
-              >
-                {primaryCta.label}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+            </span>
+            <h1 className="font-stitch-display text-[34px] italic leading-[42px] text-stitch-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
+              {journey.title}
+            </h1>
+            {journey.subtitle && (
+              <p className="mt-3 max-w-[62ch] font-stitch-body text-[16px] italic leading-[26px] text-stitch-on-surface-variant md:text-[18px]">
+                {journey.subtitle}
+              </p>
             )}
+            {journey.description && (
+              <p className="mt-6 max-w-[68ch] font-stitch-body text-[17px] leading-[30px] text-stitch-on-surface-variant md:text-[19px] md:leading-[32px]">
+                {journey.description}
+              </p>
+            )}
+
+            {/* Meta + CTA */}
+            <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" />
+                  ~{journey.estimated_days ?? '—'} dias
+                </span>
+                <span className="text-stitch-outline-variant">·</span>
+                <span>{totalSteps} etapas</span>
+                {journey.difficulty && (
+                  <>
+                    <span className="text-stitch-outline-variant">·</span>
+                    <span>{DIFFICULTY_LABELS[journey.difficulty] ?? journey.difficulty}</span>
+                  </>
+                )}
+              </div>
+
+              {!isLocked && primaryCta && (
+                <Link
+                  to={primaryCta.to}
+                  className="group inline-flex items-center justify-center gap-2 bg-stitch-primary px-7 py-3 font-stitch-body text-[13px] font-bold uppercase tracking-[0.18em] text-stitch-primary-foreground transition-all hover:bg-stitch-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
+                >
+                  {primaryCta.label}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              )}
+            </div>
           </div>
         </section>
 
+        {/* ─── Intro narrativa + quote editorial ─────── */}
+        {(journey.narrative_intro || journey.hero_quote) && (
+          <section className="pt-12">
+            <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
+              {journey.narrative_intro ? (
+                <div className="max-w-[68ch] font-stitch-body text-[17px] leading-[30px] text-stitch-on-background md:text-[18px] md:leading-[32px]">
+                  {String(journey.narrative_intro).split(/\n\n+/).map((para: string, i: number) => (
+                    <p key={i} className={i === 0 ? '' : 'mt-5'}>
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <div />
+              )}
+              {journey.hero_quote && (
+                <EditorialQuote className="text-[20px] md:text-[22px]">
+                  {journey.hero_quote}
+                </EditorialQuote>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ─── Próxima Etapa (destaque) ──────────────── */}
+        {!isLocked && nextStep && !isJourneyComplete && (
+          <section className="pt-14">
+            <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
+              A próxima etapa
+            </span>
+            <Link
+              to={`/jornadas/${id}/step?step=${nextStep.id}`}
+              className="mt-3 group flex flex-col gap-5 border border-stitch-secondary/40 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary hover:shadow-lg md:flex-row md:items-center md:justify-between md:p-8"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-3">
+                  <span className="font-stitch-display text-[28px] italic leading-none text-stitch-secondary/60">
+                    {String(nextStepIndex + 1).padStart(2, '0')}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">
+                    {(() => {
+                      const M = STEP_META[nextStep.step_type] ?? STEP_META.reading;
+                      return (
+                        <>
+                          <M.Icon className="h-3 w-3" /> {M.label}
+                        </>
+                      );
+                    })()}
+                  </span>
+                  <span className="text-stitch-outline-variant">·</span>
+                  <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+                    <Clock className="mr-1 inline h-3 w-3" />
+                    {nextStep.duration_minutes ?? 5} min
+                  </span>
+                </div>
+                <h3 className="mt-3 font-stitch-display text-[24px] italic leading-snug text-stitch-primary md:text-[28px]">
+                  {nextStep.title}
+                </h3>
+                {nextStep.description && (
+                  <p className="mt-2 max-w-[60ch] font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface-variant">
+                    {nextStep.description}
+                  </p>
+                )}
+              </div>
+              <span className="inline-flex flex-shrink-0 items-center gap-2 self-start bg-stitch-primary px-6 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-primary-foreground transition-all group-hover:bg-stitch-primary/90 md:self-auto">
+                {completedCount === 0 ? 'Iniciar' : 'Continuar'}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </section>
+        )}
+
         {/* ─── Progresso ─────────────────────────────── */}
         {totalSteps > 0 && !isLocked && (
-          <section className="pt-10">
+          <section className="pt-12">
             <div className="mb-3 flex items-center justify-between font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em]">
               <span className="text-stitch-on-surface-variant">Progresso</span>
               <span className="text-stitch-secondary">
                 {completedCount}/{totalSteps} · {progressPercent}%
               </span>
             </div>
-            <div className="h-[3px] w-full overflow-hidden bg-stitch-surface-container-high">
+            <div className="h-[3px] w-full overflow-hidden bg-stitch-surface-container-high" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
               <div
                 className="h-full bg-stitch-secondary transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
@@ -243,16 +359,16 @@ const JornadaDetailPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-8 flex flex-col items-start gap-4 border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-6 md:flex-row md:items-center md:justify-between"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-stitch-secondary/15">
                     <Award className="h-6 w-6 text-stitch-secondary" />
                   </div>
                   <div>
-                    <p className="flex items-center gap-2 font-stitch-display text-[18px] italic text-stitch-primary">
+                    <p className="flex items-center gap-2 font-stitch-display text-[20px] italic text-stitch-primary">
                       <PartyPopper className="h-4 w-4 text-stitch-secondary" /> Jornada concluída
                     </p>
-                    <p className="mt-1 font-stitch-body text-[13px] text-stitch-on-surface-variant">
-                      Veja seu certificado e reflexões finais.
+                    <p className="mt-1 max-w-[52ch] font-stitch-body text-[14px] leading-relaxed text-stitch-on-surface-variant">
+                      {journey.closing_message ?? 'Veja seu certificado e as reflexões finais desta jornada.'}
                     </p>
                   </div>
                 </div>
@@ -360,7 +476,7 @@ const JornadaDetailPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => navigate(`/jornadas/${id}/step?step=${step.id}`)}
-                          className={`inline-flex flex-shrink-0 items-center gap-2 self-start px-5 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] transition-all md:self-auto ${
+                          className={`inline-flex flex-shrink-0 items-center gap-2 self-start px-5 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background md:self-auto ${
                             isNext
                               ? 'bg-stitch-primary text-stitch-primary-foreground hover:bg-stitch-primary/90'
                               : 'border border-stitch-outline-variant/40 text-stitch-primary hover:border-stitch-secondary hover:text-stitch-secondary'
@@ -377,6 +493,49 @@ const JornadaDetailPage: React.FC = () => {
             </ol>
           )}
         </section>
+
+        {/* ─── Continuar depois — jornadas relacionadas ─── */}
+        {related.length > 0 && (
+          <section className="pt-16">
+            <div className="mb-6 flex items-baseline justify-between">
+              <h2 className="font-stitch-display text-[22px] italic leading-[30px] text-stitch-primary md:text-[26px]">
+                Continuar depois
+              </h2>
+              <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
+                {kicker}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {related.map((r) => (
+                <Link
+                  key={r.id}
+                  to={`/jornadas/${r.id}`}
+                  className="group relative flex flex-col border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-5 transition-all hover:border-stitch-secondary/40 hover:shadow-md"
+                >
+                  <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
+                  <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">
+                    {r.category ?? 'Jornada'}
+                  </span>
+                  <h3 className="mt-1 font-stitch-display text-[18px] leading-snug text-stitch-primary group-hover:text-stitch-secondary">
+                    {r.title}
+                  </h3>
+                  {r.subtitle && (
+                    <p className="mt-2 line-clamp-2 font-stitch-body text-[13px] text-stitch-on-surface-variant">
+                      {r.subtitle}
+                    </p>
+                  )}
+                  <div className="mt-4 flex items-center justify-between font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+                    <span>
+                      {r.estimated_days ? `~${r.estimated_days} dias` : '—'}
+                      {r.difficulty ? ` · ${DIFFICULTY_LABELS[r.difficulty] ?? r.difficulty}` : ''}
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 text-stitch-secondary transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ─── Lock PRO ──────────────────────────────── */}
         {isLocked && (
