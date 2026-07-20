@@ -64,7 +64,7 @@ export const searchSaints = async (query: string): Promise<SaintWithScore[]> => 
 export const getSaintsByCategory = async (category: string): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .eq('category', category)
     .order('name');
 
