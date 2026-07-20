@@ -185,7 +185,7 @@ function parseReignYears(reign: string): [number, number] {
 const PopesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const rawDateParam = searchParams.get('date');
-  const { date: initialDate, wasClamped: dateWasClamped, received: rawDateReceived } =
+  const { date: initialDate, wasClamped: dateWasClamped } =
     resolveSanctorumDateParam(rawDateParam);
   const initialSearch = searchParams.get('q') ?? '';
   const [search, setSearch] = useState(initialSearch);
