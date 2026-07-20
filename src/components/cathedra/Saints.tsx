@@ -27,6 +27,7 @@ import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import SanctorumClampNotice from './SanctorumClampNotice';
+import SantoDoDiaHero from './SantoDoDiaHero';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import { trackEvent } from '@/lib/analytics';
 
@@ -369,75 +370,62 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 ) : isLoadingDaily ? (
                   <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
-                  displaySaints.map(saint => (
-                    <motion.div
-                      key={saint.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="premium-card overflow-hidden group relative transition-all"
-                    >
-                      <div className="flex flex-col md:flex-row h-full">
-                        <div className="w-full md:w-spacing-2xs/3 h-spacing-4xl md:h-auto relative">
-                          <SacredImage 
-                            src={saint.image} 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                            alt={saint.name} 
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                          <div className="absolute bottom-spacing-lg left-spacing-lg right-spacing-lg text-white">
-                            <span className="text-premium-xs font-black uppercase tracking-widest bg-primary px-spacing-xs py-spacing-2xs rounded-premium-full mb-spacing-xs inline-block">
-                              {CATEGORY_LABELS[saint.category] || saint.category}
-                            </span>
-                            <h3 className="text-premium-2xl font-serif font-bold">{saint.name}</h3>
-                          </div>
+                  <>
+                    {/* Santo do Dia — hero editorial com ficha em blocos */}
+                    <SantoDoDiaHero
+                      saint={displaySaints[0]}
+                      date={selectedDate}
+                      onOpen={(reflect) => handleOpenSaint(displaySaints[0], reflect)}
+                    />
+
+                    {displaySaints.length > 1 && (
+                      <section aria-labelledby="tambem-celebrados" className="space-y-spacing-lg pt-spacing-lg">
+                        <div className="flex items-baseline justify-between border-b border-border/60 pb-spacing-xs">
+                          <h3
+                            id="tambem-celebrados"
+                            className="font-serif text-premium-xl text-foreground"
+                          >
+                            Também celebrados hoje
+                          </h3>
+                          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                            {displaySaints.length - 1} {displaySaints.length - 1 === 1 ? 'memória' : 'memórias'}
+                          </span>
                         </div>
-
-                        <div className="flex-1 p-spacing-xl space-y-spacing-lg">
-                          <div>
-                            <p className="text-premium-lg text-primary font-serif italic mb-spacing-md">"{saint.title}"</p>
-                            <p className="text-muted-foreground leading-relaxed line-clamp-spacing-md font-serif italic">
-                              {saint.bio}
-                            </p>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-spacing-md">
-                            <div className="space-y-spacing-2xs">
-                              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
-                              <div className="flex flex-wrap gap-spacing-2xs">
-                                {saint.virtues?.slice(0, 1).map(v => (
-                                  <span key={v} className="px-spacing-xs py-spacing-2xs bg-primary/10 text-primary text-premium-xs font-black uppercase rounded-premium-full">{v}</span>
-                                ))}
-                              </div>
-                            </div>
-                            <div className="space-y-spacing-2xs text-right">
-                              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
-                              <p className="text-premium-xs font-bold text-foreground truncate">{saint.patronOf?.[0] || '—'}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col gap-spacing-sm">
-                            <Button
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                          {displaySaints.slice(1).map((saint) => (
+                            <button
+                              key={saint.id}
+                              type="button"
                               onClick={() => handleOpenSaint(saint, false)}
-                              variant="secondary"
-                              className="w-full"
+                              className="group text-left premium-card overflow-hidden flex focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                              aria-label={`Abrir ficha de ${saint.name}`}
                             >
-                              <Icons.BookOpen className="w-spacing-md h-spacing-md" />
-                              Conhecer História
-                            </Button>
-
-                            <Button
-                              onClick={() => handleOpenSaint(saint, true)}
-                              variant="primary"
-                              className="w-full"
-                            >
-                              <Icons.Sparkles className="w-spacing-md h-spacing-md group-hover:rotate-12 transition-transform" />
-                              Refletir com Logos
-                            </Button>
-                          </div>
+                              <div className="w-spacing-4xl h-auto shrink-0 relative overflow-hidden">
+                                <SacredImage
+                                  src={saint.image}
+                                  alt={saint.name}
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              </div>
+                              <div className="flex-1 p-spacing-md space-y-spacing-2xs">
+                                <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">
+                                  {CATEGORY_LABELS[saint.category] || 'Testemunha da Fé'}
+                                </p>
+                                <h4 className="font-serif text-premium-lg text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-spacing-2xs">
+                                  {saint.name}
+                                </h4>
+                                {saint.title && (
+                                  <p className="text-premium-xs text-muted-foreground font-serif italic line-clamp-spacing-2xs">
+                                    {saint.title}
+                                  </p>
+                                )}
+                              </div>
+                            </button>
+                          ))}
                         </div>
-                      </div>
-                    </motion.div>
-                  ))
+                      </section>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-spacing-3xl bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-spacing-md">
                     <Icons.Star className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
