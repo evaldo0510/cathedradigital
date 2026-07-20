@@ -25,6 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
 
 export const CATEGORY_LABELS: Record<string, string> = {
