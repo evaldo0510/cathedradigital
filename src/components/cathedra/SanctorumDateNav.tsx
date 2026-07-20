@@ -107,10 +107,12 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Semana
           <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
         </Button>
-        <Popover>
+        <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               aria-label="Escolher data no calendário"
+              aria-haspopup="dialog"
+              aria-expanded={calendarOpen}
               className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
             >
               <Icons.Calendar className="w-spacing-sm h-spacing-sm mr-spacing-2xs" aria-hidden="true" />
@@ -121,13 +123,17 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             <CalendarPicker
               mode="single"
               selected={value}
-              onSelect={(d) => d && onChange(d)}
+              defaultMonth={value}
+              onSelect={handleCalendarSelect}
               initialFocus
               locale={ptBR}
+              modifiers={{ today: new Date() }}
+              modifiersClassNames={{ today: 'ring-2 ring-primary/60 ring-offset-1 ring-offset-background' }}
               className={cn('p-3 pointer-events-auto')}
             />
           </PopoverContent>
         </Popover>
+
       </div>
 
       <div className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar">
