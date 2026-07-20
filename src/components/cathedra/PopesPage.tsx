@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
+import { trackEvent } from '@/lib/analytics';
 
 /** Formata data local em YYYY-MM-DD (sem timezone drift). */
 function toISODateLocal(d: Date): string {
