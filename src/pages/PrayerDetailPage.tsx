@@ -9,9 +9,9 @@
  * - ReaderContinuation (kind='prayer') sugerindo próxima oração
  * - Referências: Bíblia, Catecismo, santos, glossário
  */
-import React, { useMemo } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Loader2, Star, Clock, BookOpen, Church } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Loader2, Star, Clock, BookOpen, Church, ArrowLeft, Minus, Plus } from 'lucide-react';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
