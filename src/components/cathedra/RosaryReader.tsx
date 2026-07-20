@@ -60,6 +60,20 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
     setIndex(idx + 1);
   }, [setIndex, idx, blocks.length, markCompleted]);
 
+  // Modo Contemplativo = tela limpa (foco absoluto). Sincroniza focus↔mode.
+  useEffect(() => {
+    if (mode === 'contemplative' && !focus) setFocus(true);
+    if (mode !== 'contemplative' && focus && mode !== 'guided') setFocus(false);
+  }, [mode, focus]);
+
+  // Modo Automático — timer com auto-avanço.
+  usePrayerAutoAdvance({
+    enabled: mode === 'auto',
+    intervalMs: autoIntervalMs,
+    onAdvance: goNext,
+    key: `${idx}-${autoIntervalMs}`,
+  });
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
