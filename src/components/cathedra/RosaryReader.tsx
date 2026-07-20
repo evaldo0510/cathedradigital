@@ -13,7 +13,12 @@ import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome'
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
+import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
+import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
+import PrayerFavoriteButton from '@/components/prayer/PrayerFavoriteButton';
+import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { usePrayerSession } from '@/hooks/usePrayerSession';
+import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 import { isPrayerBlockArray, type PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 
@@ -40,6 +45,8 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
 
   const { state, setIndex, markCompleted } = usePrayerSession(prayer.id, blockIds);
   const [focus, setFocus] = useState(false);
+  const [mode, setMode] = useState<PrayerMode>('guided');
+  const [autoIntervalMs, setAutoIntervalMs] = useState(30000);
 
   const idx = Math.min(state.currentBlockIndex, Math.max(0, blocks.length - 1));
   const current = blocks[idx];
@@ -52,6 +59,20 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
     }
     setIndex(idx + 1);
   }, [setIndex, idx, blocks.length, markCompleted]);
+
+  // Modo Contemplativo = tela limpa (foco absoluto). Sincroniza focus↔mode.
+  useEffect(() => {
+    if (mode === 'contemplative' && !focus) setFocus(true);
+    if (mode !== 'contemplative' && focus && mode !== 'guided') setFocus(false);
+  }, [mode, focus]);
+
+  // Modo Automático — timer com auto-avanço.
+  usePrayerAutoAdvance({
+    enabled: mode === 'auto',
+    intervalMs: autoIntervalMs,
+    onAdvance: goNext,
+    key: `${idx}-${autoIntervalMs}`,
+  });
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -118,6 +139,46 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
         </div>
       </div>
 
+      {/* Introdução editorial — visível apenas no primeiro bloco, fora do foco. */}
+      {idx === 0 && !focus && (prayer.explanation || prayer.subtitle || prayer.meditation) && (
+        <section
+          aria-labelledby="prayer-intro-heading"
+          className="mb-10 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/40 p-5 md:p-6"
+        >
+          <h2
+            id="prayer-intro-heading"
+            className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
+          >
+            Introdução
+          </h2>
+          {prayer.subtitle && (
+            <p className="mb-3 font-stitch-display text-lg italic leading-relaxed text-stitch-on-surface">
+              {prayer.subtitle}
+            </p>
+          )}
+          {prayer.explanation && (
+            <div className="mb-4">
+              <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+                Contexto
+              </p>
+              <p className="whitespace-pre-line font-stitch-body text-sm leading-relaxed text-stitch-on-surface">
+                {prayer.explanation}
+              </p>
+            </div>
+          )}
+          {prayer.meditation && (
+            <div>
+              <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+                Como rezar
+              </p>
+              <p className="whitespace-pre-line font-stitch-body text-sm leading-relaxed text-stitch-on-surface">
+                {prayer.meditation}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* Cabeçalho do bloco */}
       <header className="mb-8 text-center">
         <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
@@ -142,6 +203,12 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
         )}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <PrayerTTSButton text={bodyForTTS(current)} />
+          <PrayerFavoriteButton
+            contentType="prayer"
+            contentId={prayer.slug}
+            title={prayer.title}
+            url={`/oracao/${prayer.slug}`}
+          />
           <button
             type="button"
             onClick={() => setFocus((f) => !f)}
@@ -153,6 +220,17 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
             {focus ? 'Sair do foco' : 'Modo foco'}
           </button>
         </div>
+        {!focus && (
+          <div className="mt-4 flex flex-col items-center gap-3">
+            <PrayerModeSelector
+              mode={mode}
+              onChange={setMode}
+              autoIntervalMs={autoIntervalMs}
+              onIntervalChange={setAutoIntervalMs}
+            />
+            <PrayerAudioPlayer audioUrl={prayer.audio_url} label={`Áudio: ${prayer.title}`} />
+          </div>
+        )}
       </header>
 
       {/* Corpo */}
@@ -267,6 +345,19 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
           {idx === blocks.length - 1 ? null : <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
         </button>
       </nav>
+
+      {/* Continuidade — visível ao chegar no último bloco, fora do foco. */}
+      {idx === blocks.length - 1 && !focus && (
+        <div className="mt-16">
+          <ReaderContinuation
+            context={{
+              kind: 'prayer',
+              id: prayer.slug,
+              meta: { prayerCategory: prayer.category },
+            }}
+          />
+        </div>
+      )}
     </article>
   );
 
