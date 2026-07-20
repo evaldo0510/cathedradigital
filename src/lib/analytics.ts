@@ -3,12 +3,14 @@
  * Can be expanded to use PostHog, Mixpanel, etc.
  */
 
-type EventName = 
-  | 'social_link_click' 
-  | 'newsletter_signup' 
-  | 'navigation_click' 
-  | 'conversion' 
-  | 'error';
+type EventName =
+  | 'social_link_click'
+  | 'newsletter_signup'
+  | 'navigation_click'
+  | 'conversion'
+  | 'error'
+  | 'sanctorum_date_change'
+  | 'sanctorum_date_clamped';
 
 export const trackEvent = (name: EventName, properties?: Record<string, any>) => {
   // In development, log the event
