@@ -62,16 +62,23 @@ describe('parseISODateLocal', () => {
 });
 
 describe('clampSanctorumDate', () => {
+  // Helper para evitar a expansão automática de anos 0–99 do Date().
+  const mkDate = (y: number, m = 0, d = 1) => {
+    const x = new Date(2000, 0, 1);
+    x.setFullYear(y, m, d);
+    return x;
+  };
+
   it('aceita datas dentro do intervalo [MIN_SANCTORUM_YEAR, anoAtual + 1]', () => {
     const currentYear = new Date().getFullYear();
-    expect(clampSanctorumDate(new Date(MIN_SANCTORUM_YEAR, 0, 1))).not.toBeNull();
-    expect(clampSanctorumDate(new Date(currentYear, 5, 10))).not.toBeNull();
-    expect(clampSanctorumDate(new Date(currentYear + 1, 11, 31))).not.toBeNull();
+    expect(clampSanctorumDate(mkDate(MIN_SANCTORUM_YEAR, 0, 1))).not.toBeNull();
+    expect(clampSanctorumDate(mkDate(currentYear, 5, 10))).not.toBeNull();
+    expect(clampSanctorumDate(mkDate(currentYear + 1, 11, 31))).not.toBeNull();
   });
 
   it('rejeita ano anterior a MIN_SANCTORUM_YEAR', () => {
-    expect(clampSanctorumDate(new Date(MIN_SANCTORUM_YEAR - 1, 0, 1))).toBeNull();
-    expect(clampSanctorumDate(new Date(0, 0, 1))).toBeNull();
+    expect(clampSanctorumDate(mkDate(MIN_SANCTORUM_YEAR - 1))).toBeNull();
+    expect(clampSanctorumDate(mkDate(0))).toBeNull();
   });
 
   it('rejeita ano maior que anoAtual + 1', () => {
