@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { format, addDays, subDays, isSameDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Icons } from '@/constants';
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/lib/analytics';
 
 /**
  * SanctorumDateNav — Navegação de datas reutilizável para páginas Sanctorum
@@ -17,13 +18,28 @@ import { cn } from '@/lib/utils';
  *  3. Tira horizontal com 7 dias (−3 … +3) para toque rápido.
  *
  * A11y: cada botão tem aria-label; "Hoje" usa aria-current="date";
- * dias da tira usam aria-pressed.
+ * dias da tira usam aria-pressed; grupo com role="group" e aria-label.
+ *
+ * Analytics: emite `sanctorum_date_change` com `{ method, date }`.
  */
+export type SanctorumDateChangeMethod =
+  | 'prev-day'
+  | 'next-day'
+  | 'prev-week'
+  | 'next-week'
+  | 'today'
+  | 'calendar'
+  | 'strip';
+
 export interface SanctorumDateNavProps {
   value: Date;
   onChange: (date: Date) => void;
   /** Nº de dias na tira horizontal (default 7, sempre ímpar). */
   stripDays?: number;
+  /** Rótulo do grupo para leitores de tela. */
+  ariaLabel?: string;
+  /** Identifica a página que hospeda o nav nos eventos de analytics. */
+  analyticsPage?: string;
   className?: string;
 }
 
@@ -31,6 +47,8 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
   value,
   onChange,
   stripDays = 7,
+  ariaLabel = 'Navegação por data',
+  analyticsPage,
   className,
 }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -39,11 +57,36 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
     addDays(subDays(value, half), i),
   );
 
+  const emit = useCallback(
+    (method: SanctorumDateChangeMethod, next: Date) => {
+      try {
+        trackEvent('sanctorum_date_change', {
+          method,
+          date: next.toISOString().slice(0, 10),
+          page: analyticsPage,
+        });
+      } catch {
+        /* analytics never bloqueia UX */
+      }
+    },
+    [analyticsPage],
+  );
+
+  const change = useCallback(
+    (next: Date, method: SanctorumDateChangeMethod) => {
+      emit(method, next);
+      onChange(next);
+    },
+    [emit, onChange],
+  );
+
   const handleCalendarSelect = (d: Date | undefined) => {
     if (!d) return;
-    onChange(d);
+    change(d, 'calendar');
     setCalendarOpen(false);
   };
+
+
 
 
   return (
