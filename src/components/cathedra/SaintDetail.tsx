@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
@@ -7,6 +8,7 @@ import PassageActions from '@/components/shared/PassageActions';
 import DocumentViewer from './DocumentViewer';
 import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
+import SaintDetailTabs from './SaintDetailTabs';
 import { type Saint } from '@/data/saints';
 
 import { AppRoute } from '@/types';
@@ -23,6 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { SEO_CONFIG } from '@/config/seo';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
