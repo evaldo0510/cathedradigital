@@ -35,8 +35,12 @@ const ROUTES: Record<RouteKey, RouteEntry> = {
   // (Padres estão na tabela `saints` com category='doctor').
   'study.father':         { template: '/biblioteca/padres/:slug',          requires: ['slug'] },
   'study.saint':          { template: '/santos/:slug',                     requires: ['slug'] },
-  // Rotas de oração — alinhadas ao App.tsx (/lectio, /liturgia).
+  'study.glossary':       { template: '/glossario/:slug',                  requires: ['slug'] },
+  'study.journey':        { template: '/jornadas/:id',                     requires: ['id'] },
+  'study.liturgy':        { template: '/liturgia?ref=:ref',                requires: ['ref'] },
+  // Rotas de oração — alinhadas ao App.tsx (/lectio, /oracao, /liturgia).
   'pray.lectio':          { template: '/lectio?slug=:slug',                requires: ['slug'] },
+  'pray.prayer':          { template: '/oracao/:slug',                     requires: ['slug'] },
   'pray.liturgy-today':   { template: '/liturgia' },
 };
 
