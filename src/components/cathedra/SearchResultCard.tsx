@@ -17,6 +17,8 @@ export interface SearchResultCardProps {
   title: string;
   /** Optional secondary line (subtitle, definition snippet, etc.). */
   subtitle?: string | null;
+  /** Optional rich subtitle (e.g. with highlighted matches). Falls back to `subtitle`. */
+  subtitleNode?: React.ReactNode;
   /** Similarity score in [0, 1]. Passed to RelevanceBadge. */
   score?: number | null;
   /** Optional leading icon or emoji element. */
