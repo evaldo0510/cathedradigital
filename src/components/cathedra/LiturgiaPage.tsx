@@ -287,6 +287,31 @@ const LiturgiaPage: React.FC = () => {
                   <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-spacing-xl" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" /></Button>
                 </motion.div>
               )}
+
+              {prayerOfDay && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="premium-card p-spacing-xl space-y-spacing-md relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Icons.Prayer className="w-spacing-3xl h-spacing-3xl" /></div>
+                  <div className="flex items-center gap-spacing-sm relative z-10">
+                    <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Prayer className="w-spacing-md h-spacing-md" /></div>
+                    <div>
+                      <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">Oração do Dia</p>
+                      {prayerOfDay.kicker && <p className="text-premium-xs font-medium text-muted-foreground mt-spacing-3xs">{prayerOfDay.kicker}</p>}
+                    </div>
+                  </div>
+                  <div className="relative z-10">
+                    <h3 className="text-premium-xl md:text-premium-2xl font-display font-black text-primary">{prayerOfDay.title}</h3>
+                    {prayerOfDay.subtitle && <p className="text-premium-sm font-serif italic text-muted-foreground mt-spacing-2xs">{prayerOfDay.subtitle}</p>}
+                  </div>
+                  <div className="flex items-center justify-between pt-spacing-md border-t border-border/40 relative z-10">
+                    {prayerOfDay.estimated_seconds ? (
+                      <span className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {Math.max(1, Math.round(prayerOfDay.estimated_seconds / 60))} min</span>
+                    ) : <span />}
+                    <Button variant="secondary" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={() => navigate(`/oracao/${prayerOfDay.slug}`)}>
+                      Rezar agora <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
             </div>
           )}
           {activeTab === 'missal' && <div id="panel-missal" role="tabpanel" aria-labelledby="tab-missal" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><MissalPage /></div>}
