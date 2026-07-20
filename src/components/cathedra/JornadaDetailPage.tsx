@@ -530,7 +530,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Nexus Theologicus (100% automático) ───── */}
         {autoNexus && autoNexus.total > 0 && (
-          <section id="nexus" className="pt-16">
+          <section id="nexus" data-testid="jornada-nexus" className="pt-16">
             <div className="mb-6 flex items-baseline justify-between">
               <h2 className="font-stitch-display text-[24px] italic leading-[32px] text-stitch-primary md:text-[28px]">
                 Nexus Theologicus
