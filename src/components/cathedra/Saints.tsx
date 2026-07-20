@@ -25,8 +25,6 @@ import { toast } from 'sonner';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 
 
