@@ -1,18 +1,32 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+/**
+ * GlossaryPage — Índice editorial do Léxico Teológico (SEG-2 Onda 2).
+ *
+ * Rota: /glossario
+ *
+ * Enciclopédia católica viva no padrão Logos 2030:
+ *  - Hero editorial
+ *  - Busca instantânea (fuzzy pg_trgm + unaccent)
+ *  - Índice A–Z sticky para navegação rápida
+ *  - Filtro por categorias editoriais
+ *  - Grid de verbetes como cartões que abrem a página definitiva
+ *    do verbete (/glossario/:slug) — sem expansão inline.
+ */
+
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
-import { AppRoute } from '@/types';
-import { Button } from '@/components/ui/button';
-import { highlightText } from '@/lib/highlightText';
-
-
-import { RelevanceBadge } from './RelevanceBadge';
-import { FuzzySearchInput } from './FuzzySearchInput';
-import { SearchResultCard } from './SearchResultCard';
+import {
+  EditorialShell,
+  EditorialHero,
+  EditorialDivider,
+} from '@/components/editorial';
+import {
+  EditorialKicker,
+  EditorialEmptyState,
+} from '@/components/editorial/primitives';
 import {
   getRosaryReturn,
   clearRosaryReturn,
@@ -20,11 +34,7 @@ import {
   ROSARY_MODE_LABEL,
   type RosaryReturnContext,
 } from '@/lib/rosaryReturnContext';
-
-type SortMode = 'relevance' | 'alpha-asc' | 'alpha-desc';
-
-
-const LAST_TERM_STORAGE_KEY = 'cathedra:glossary:last-term';
+import { cn } from '@/lib/utils';
 
 export function slugifyTerm(term: string): string {
   return term
@@ -37,86 +47,22 @@ export function slugifyTerm(term: string): string {
 
 interface GlossaryTerm {
   id: string;
+  slug: string | null;
   term: string;
+  short_definition: string | null;
   definition: string;
-  category: string;
-  journey_id?: string;
+  category: string | null;
+  status: string | null;
   similarityScore?: number;
 }
 
-/* ── P.A.D.H. enrichment for featured terms ── */
-interface TermEnrichment {
-  padh: string;
-  question: string;
-  relatedVerse?: string;
-  relatedRoute?: string;
-  relatedLabel?: string;
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+function firstLetter(term: string): string {
+  const clean = term.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const ch = (clean[0] ?? '').toUpperCase();
+  return /[A-Z]/.test(ch) ? ch : '#';
 }
-
-const ENRICHMENTS: Record<string, TermEnrichment> = {
-  'Graça': {
-    padh: '"Não é algo que você conquista…\né algo que te encontra quando você para de fugir."',
-    question: 'Onde você ainda acha que precisa merecer?',
-    relatedVerse: 'Ef 2,8',
-    relatedRoute: AppRoute.LECTIO_DIVINA,
-    relatedLabel: 'Viver essa Palavra',
-  },
-  'Pecado': {
-    padh: '"Nem sempre é erro…\nàs vezes é distância."',
-    question: 'Onde você se afastou de si mesmo?',
-    relatedVerse: 'Rm 3,23',
-    relatedRoute: AppRoute.POENITENTIA,
-    relatedLabel: 'Exame de Consciência',
-  },
-  'Fé': {
-    padh: '"Fé não é enxergar…\né continuar mesmo sem mapa."',
-    question: 'O que você só vai entender depois de confiar?',
-    relatedVerse: 'Hb 11,1',
-    relatedRoute: AppRoute.LECTIO_DIVINA,
-    relatedLabel: 'Viver essa Palavra',
-  },
-  'Transubstanciação': {
-    padh: '"A aparência permanece…\nmas a essência já é outra.\nAssim como você, quando decide mudar por dentro."',
-    question: 'O que em você parece o mesmo, mas já mudou?',
-    relatedVerse: 'Lc 22,19',
-    relatedRoute: AppRoute.MISSAL,
-    relatedLabel: 'Entender a Missa',
-  },
-  'Escatologia': {
-    padh: '"O fim não é destruição…\né o momento em que tudo finalmente faz sentido."',
-    question: 'Se hoje fosse o último dia, o que você faria diferente?',
-    relatedRoute: AppRoute.CATECHISM,
-    relatedLabel: 'Ver no Catecismo',
-  },
-  'Eclesiologia': {
-    padh: '"A Igreja não é o prédio…\né o povo que se encontra para não caminhar sozinho."',
-    question: 'Onde você encontra pertencimento?',
-    relatedRoute: AppRoute.COMMUNITY,
-    relatedLabel: 'Comunidade',
-  },
-  'Soteriologia': {
-    padh: '"Salvação não é fuga…\né voltar pra casa depois de tanto tempo perdido."',
-    question: 'De que você precisa ser salvo hoje?',
-    relatedVerse: 'Jo 3,16',
-    relatedRoute: AppRoute.LECTIO_DIVINA,
-    relatedLabel: 'Viver essa Palavra',
-  },
-  'Mariologia': {
-    padh: '"Ela não pediu para ser escolhida…\nmas disse sim quando foi."',
-    question: 'Qual "sim" você está adiando?',
-    relatedVerse: 'Lc 1,38',
-    relatedRoute: AppRoute.ROSARY,
-    relatedLabel: 'Rezar o Rosário',
-  },
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Eucaristia': 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary',
-  'Teologia Sistemática': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
-  'Igreja': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  'Sacramentos': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  'Teologia da Graça': 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
-};
 
 const GlossaryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -126,14 +72,14 @@ const GlossaryPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(() => searchParams.get('category') || 'Todos');
   const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
-  const [sortMode, setSortMode] = useState<SortMode>(
-    () => (searchParams.get('sort') as SortMode) || 'relevance',
-  );
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
+  // Se a rota veio como /glossario/:slug (legado), redireciona para a página definitiva.
+  useEffect(() => {
+    if (slug) navigate(`/glossario/${slug}`, { replace: true });
+  }, [slug, navigate]);
 
-  // Detecta se o usuário veio de uma sessão ativa do Rosário.
   useEffect(() => {
     setRosaryReturn(getRosaryReturn());
   }, []);
@@ -141,12 +87,9 @@ const GlossaryPage: React.FC = () => {
   const handleReturnToRosary = () => {
     clearRosaryReturn();
     setRosaryReturn(null);
-    // Hash sinaliza para o /rosary mover o foco ao cabeçalho da preparação,
-    // preservando o fluxo de teclado após uma navegação SPA.
     navigate('/rosary#preparation');
   };
 
-  // Server-side fuzzy search (pg_trgm + unaccent) via shared hook.
   const { results: searchResults, isPending: isSearchPending } = useFuzzySearch<GlossaryTerm>({
     rpc: 'search_glossary_fuzzy',
     query: searchQuery,
@@ -156,364 +99,346 @@ const GlossaryPage: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchTerms = async () => {
+    let cancelled = false;
+    (async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('glossary')
-        .select('*')
+        .select('id, slug, term, short_definition, definition, category, status')
         .order('term', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching glossary:', error);
-      } else {
-        setTerms(data || []);
-      }
+      if (cancelled) return;
+      if (error) console.error('Erro ao carregar glossário:', error);
+      setTerms((data as GlossaryTerm[]) || []);
       setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
     };
-
-    fetchTerms();
   }, []);
 
-  // Resolve slug from URL → abre o termo correspondente.
-  // Fallback: sem slug, restaura o último termo aberto (continuidade salva).
-  useEffect(() => {
-    if (loading || terms.length === 0) return;
-
-    if (slug) {
-      const match = terms.find(t => slugifyTerm(t.term) === slug);
-      if (match) {
-        setExpandedId(match.id);
-        try {
-          localStorage.setItem(LAST_TERM_STORAGE_KEY, slug);
-        } catch { /* storage indisponível */ }
-      }
-      return;
-    }
-
-    // Sem slug: tenta restaurar o último termo.
-    try {
-      const lastSlug = localStorage.getItem(LAST_TERM_STORAGE_KEY);
-      if (lastSlug) {
-        const match = terms.find(t => slugifyTerm(t.term) === lastSlug);
-        if (match) setExpandedId(match.id);
-      }
-    } catch { /* storage indisponível */ }
-  }, [slug, loading, terms]);
-
-  // Ao expandir manualmente, persiste como último termo e atualiza URL.
-  useEffect(() => {
-    if (!expandedId) return;
-    const term = terms.find(t => t.id === expandedId);
-    if (!term) return;
-    const termSlug = slugifyTerm(term.term);
-    try {
-      localStorage.setItem(LAST_TERM_STORAGE_KEY, termSlug);
-    } catch { /* storage indisponível */ }
-    // Atualiza URL sem recarregar (só se diferente).
-    if (slug !== termSlug) {
-      window.history.replaceState(null, '', `/glossario/${termSlug}`);
-    }
-
-    const el = document.getElementById(`term-${expandedId}`);
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
-  }, [expandedId, terms, slug]);
-
   const categories = useMemo(() => {
-
-    const cats = new Set(terms.map(t => t.category).filter(Boolean));
-    return ['Todos', ...Array.from(cats)];
+    const cats = new Set(terms.map((t) => t.category).filter(Boolean) as string[]);
+    return ['Todos', ...Array.from(cats).sort((a, b) => a.localeCompare(b, 'pt'))];
   }, [terms]);
 
   const filtered = useMemo(() => {
-    // Quando o usuário busca, o RPC já devolve por relevância.
-    const base = searchResults ?? terms;
-    const byCategory = category === 'Todos' ? base : base.filter(d => d.category === category);
-    if (sortMode === 'alpha-asc') {
-      return [...byCategory].sort((a, b) => a.term.localeCompare(b.term, 'pt'));
-    }
-    if (sortMode === 'alpha-desc') {
-      return [...byCategory].sort((a, b) => b.term.localeCompare(a.term, 'pt'));
-    }
-    // 'relevance': mantém a ordem de searchResults; para o catálogo (sem busca),
-    // relevância cai para ordem natural (alfabética do fetch).
-    return byCategory;
-  }, [category, terms, searchResults, sortMode]);
+    const base = searchQuery.trim().length >= 2 && searchResults ? searchResults : terms;
+    return category === 'Todos' ? base : base.filter((t) => t.category === category);
+  }, [terms, searchResults, searchQuery, category]);
 
-  // Sincroniza filtros com a URL para deep-linking (?q=, ?category=, ?sort=).
+  // Agrupamento A–Z (só quando não há busca ativa)
+  const grouped = useMemo(() => {
+    const map = new Map<string, GlossaryTerm[]>();
+    for (const t of filtered) {
+      const letter = firstLetter(t.term);
+      const arr = map.get(letter) ?? [];
+      arr.push(t);
+      map.set(letter, arr);
+    }
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, 'pt'));
+  }, [filtered]);
+
+  const availableLetters = useMemo(() => new Set(grouped.map(([l]) => l)), [grouped]);
+
+  // Sincroniza URL
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
-    const setOrDel = (key: string, val: string, def: string) => {
-      if (val && val !== def) next.set(key, val);
-      else next.delete(key);
-    };
-    setOrDel('q', searchQuery.trim(), '');
-    setOrDel('category', category, 'Todos');
-    setOrDel('sort', sortMode, 'relevance');
-    // Evita ciclos: só grava se mudou
+    if (searchQuery.trim()) next.set('q', searchQuery.trim());
+    else next.delete('q');
+    if (category !== 'Todos') next.set('category', category);
+    else next.delete('category');
     if (next.toString() !== searchParams.toString()) {
       setSearchParams(next, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, category, sortMode]);
+  }, [searchQuery, category]);
 
-
-  const enrichedCount = useMemo(() => terms.filter(t => ENRICHMENTS[t.term]).length, [terms]);
+  const isSearching = searchQuery.trim().length >= 2;
 
   return (
     <>
-    <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Glossário", path: "/glossary" }]} />
-    <div className="max-w-5xl mx-auto space-y-spacing-xl">
-      {/* Voltar ao Rosário — restaura mistério, dezena e tempo (persistidos no /rosary). */}
-      {rosaryReturn && (
-        <div
-          role="region"
-          aria-label="Retomar sessão do Rosário"
-          aria-live="polite"
-          className="sticky top-2 z-30 mx-auto max-w-3xl rounded-premium border border-secondary/40 bg-card/95 backdrop-blur shadow-premium p-spacing-sm flex items-center gap-spacing-sm"
-          data-testid="rosary-return-region"
-        >
-          <Icons.ArrowLeft className="w-5 h-5 text-secondary shrink-0" aria-hidden="true" />
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-secondary/80">
-              Sessão em andamento
-            </p>
-            <p
-              id="rosary-return-summary"
-              className="text-premium-sm text-foreground font-serif truncate"
-            >
-              {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · modo{' '}
-              <strong className="font-serif font-bold">
-                {ROSARY_MODE_LABEL[rosaryReturn.mode]}
-              </strong>{' '}
-              · {formatElapsedShort(rosaryReturn.elapsedMs)} rezados
-            </p>
-          </div>
-          <Button
-            type="button"
-            onClick={handleReturnToRosary}
-            data-testid="rosary-return-button"
-            data-mode={rosaryReturn.mode}
-            className="min-h-11 rounded-premium-full bg-secondary text-secondary-foreground font-black uppercase text-premium-xs tracking-widest px-spacing-md hover:bg-secondary/90 focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label={`Voltar ao Rosário — retomar ${rosaryReturn.setName}, ${rosaryReturn.mysteryLabel}, modo ${ROSARY_MODE_LABEL[rosaryReturn.mode]}, ${formatElapsedShort(rosaryReturn.elapsedMs)} já rezados`}
-            aria-describedby="rosary-return-summary"
-          >
-            Voltar ao Rosário
-          </Button>
-        </div>
-      )}
-      {/* Header */}
-      <div className="text-center space-y-spacing-sm">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-          <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
-        </div>
-        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
-          "Nem toda palavra é só significado… algumas são portas."
-        </p>
-      </div>
-
-      {/* Icons.Search */}
-      <FuzzySearchInput
-        className="max-w-spacing-md mx-auto"
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Digite uma palavra ou sentimento…"
-        isSearching={isSearchPending}
+      <SEOHead
+        title="Léxico Teológico"
+        description="Enciclopédia católica viva: definições editoriais, contexto histórico, Escritura, Catecismo, Magistério, Santos e Liturgia interconectados no Nexus."
+        path="/glossario"
+        keywords="glossário teológico, léxico católico, enciclopédia teológica, definições católicas"
+        breadcrumbs={[{ name: 'Início', path: '/' }, { name: 'Léxico', path: '/glossario' }]}
       />
 
-      {/* Category tabs + Sort */}
-      {!loading && terms.length > 0 && (
-        <div className="space-y-spacing-xs">
-          <div className="flex gap-spacing-xs justify-center flex-wrap">
-            {categories.map(cat => (
-              <Button key={cat} onClick={() => setCategory(cat)}
-                aria-pressed={category === cat}
-                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
-                  category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-                }`}>
-                {cat}
-              </Button>
-            ))}
-          </div>
-          <div className="flex justify-center items-center gap-spacing-xs">
-            <label htmlFor="glossary-sort" className="text-premium-xs uppercase tracking-widest text-muted-foreground">
-              Ordenar
-            </label>
-            <select
-              id="glossary-sort"
-              value={sortMode}
-              onChange={(e) => setSortMode(e.target.value as SortMode)}
-              className="bg-card border border-border rounded-premium px-spacing-sm py-spacing-2xs text-premium-xs font-bold uppercase tracking-widest text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+      <EditorialShell>
+        {/* Sessão do Rosário — retomar */}
+        {rosaryReturn && (
+          <div
+            role="region"
+            aria-label="Retomar sessão do Rosário"
+            aria-live="polite"
+            className="sticky top-2 z-30 mx-auto max-w-3xl my-6 rounded-[var(--stitch-radius-xl)] border border-stitch-secondary/40 bg-stitch-surface-container-lowest/95 backdrop-blur p-4 flex items-center gap-4"
+          >
+            <div className="flex-1 min-w-0">
+              <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary/80">
+                Sessão em andamento
+              </p>
+              <p className="font-stitch-serif text-stitch-body-sm text-stitch-on-background truncate">
+                {rosaryReturn.setName} · {rosaryReturn.mysteryLabel} · modo{' '}
+                <strong>{ROSARY_MODE_LABEL[rosaryReturn.mode]}</strong> ·{' '}
+                {formatElapsedShort(rosaryReturn.elapsedMs)}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleReturnToRosary}
+              className="shrink-0 px-4 py-2 border border-stitch-secondary text-stitch-secondary uppercase tracking-[0.24em] font-stitch-label text-stitch-label-sm hover:bg-stitch-secondary/10 transition"
             >
-              <option value="relevance">Relevância</option>
-              <option value="alpha-asc">A → Z</option>
-              <option value="alpha-desc">Z → A</option>
-            </select>
-          </div>
-        </div>
-      )}
-
-
-      {/* Stats */}
-      {!loading && (
-        <div className="flex justify-center gap-spacing-lg text-center">
-          <div>
-            <p className="text-premium-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Termos</p>
-          </div>
-          <div>
-            <p className="text-premium-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
-          </div>
-          <div>
-            <p className="text-premium-2xl font-serif font-bold text-foreground">{enrichedCount}</p>
-            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Com reflexão</p>
-          </div>
-        </div>
-      )}
-
-      {/* Icons.Search results as SearchResultCards */}
-      {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
-        <div className="space-y-spacing-xs">
-          <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
-          <AnimatePresence mode="popLayout">
-          {searchResults.map((term, i) => (
-            <SearchResultCard
-              key={term.id}
-              title={term.term}
-              subtitle={term.definition}
-              subtitleNode={highlightText(term.definition, searchQuery)}
-              score={term.similarityScore}
-              icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
-              onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
-              index={i}
-            />
-          ))}
-          </AnimatePresence>
-        </div>
-      )}
-
-      {/* Glossary list */}
-      <div className="space-y-spacing-sm">
-        {loading ? (
-          <div className="flex justify-center py-spacing-2xl">
-            <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
-          </div>
-        ) : filtered.length > 0 ? (
-          filtered.map(term => {
-            const enrichment = ENRICHMENTS[term.term];
-            const isExpanded = expandedId === term.id;
-
-            return (
-              <div key={term.id} id={`term-${term.id}`}
-                className={`bg-card border rounded-premium-full overflow-hidden transition-all ${
-                  isExpanded ? 'border-primary/40 shadow-premium' : 'border-border hover:border-primary/30'
-                }`}>
-                <Button
-                  onClick={() => setExpandedId(isExpanded ? null : term.id)}
-                  className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
-                >
-                  <div className="flex-1 min-w-spacing-0">
-                    <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
-                      {term.category && (
-                        <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
-                          {term.category}
-                        </span>
-                      )}
-                      {enrichment && (
-                        <span className="px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
-                          <Icons.Sparkles className="w-spacing-xs h-spacing-xs inline mr-spacing-2xs" /> Com reflexão
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-premium-base font-bold text-foreground">{highlightText(term.term, searchQuery)}</h3>
-                    {!isExpanded && (
-                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{highlightText(term.definition, searchQuery)}</p>
-                    )}
-                  </div>
-                  <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </Button>
-
-                {isExpanded && (
-                  <div className="px-spacing-lg pb-spacing-lg space-y-spacing-md border-t border-border pt-spacing-md">
-                    {/* Layer 1: Simple definition */}
-                    <div className="space-y-spacing-2xs">
-                      <p className="text-premium-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
-                      <p className="text-foreground/90 leading-relaxed font-serif">{highlightText(term.definition, searchQuery)}</p>
-                    </div>
-
-                    {enrichment && (
-                      <>
-                        {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-premium p-spacing-md text-center space-y-spacing-xs">
-                          <p className="text-premium-xs font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
-                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-premium-sm">{enrichment.padh}</p>
-                        </div>
-
-                        {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-premium p-spacing-md text-center space-y-spacing-xs">
-                          <p className="text-premium-xs font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
-                          <p className="text-foreground font-bold text-premium-base">{enrichment.question}</p>
-                        </div>
-
-                        {/* Related verse */}
-                        {enrichment.relatedVerse && (
-                          <div className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground">
-                            <Icons.Book className="w-spacing-md h-spacing-md text-primary" />
-                            <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
-                          </div>
-                        )}
-
-                        {/* Journey Icons.Link */}
-                        {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
-                            <div className="flex items-center gap-spacing-xs">
-                              <Icons.Compass className="w-spacing-md h-spacing-md text-primary" />
-                              <p className="text-premium-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
-                            </div>
-                            <p className="text-premium-xs text-foreground/80 leading-relaxed">
-                              Transforme este conhecimento em hábito com uma jornada curta de 3 a 7 dias.
-                            </p>
-                            <Button 
-                              onClick={() => navigate(`/jornadas/${term.journey_id}`)}
-                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-xs tracking-widest py-spacing-md"
-                            >
-                              Iniciar Jornada Prática
-                            </Button>
-                          </div>
-                        )}
-
-                        {/* CTA */}
-                        {enrichment.relatedRoute && (
-                          <Button
-                            onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-spacing-sm rounded-premium-full bg-foreground text-background font-black uppercase text-premium-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-spacing-xs group"
-                          >
-                            <Icons.Heart className="w-spacing-md h-spacing-md group-hover:scale-110 transition-transform" />
-                            {enrichment.relatedLabel || 'Aprofundar'}
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        ) : (
-          <div className="text-center py-spacing-2xl bg-muted/20 rounded-premium">
-            <Icons.Search className="w-spacing-xl h-spacing-xl text-muted-foreground mx-auto mb-spacing-sm" />
-            <p className="text-muted-foreground">Nenhum termo encontrado.</p>
-            <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">Tente buscar por outro sentimento ou palavra.</p>
+              Voltar ao Rosário
+            </button>
           </div>
         )}
-      </div>
-    </div>
+
+        <EditorialHero
+          meta="Enciclopédia católica viva"
+          kicker="Lexicon Theologicum"
+          title="Palavras que revelam"
+          subtitle="Cada verbete é uma porta: Escritura, Tradição, Magistério, Liturgia e Santos se encontram em torno de um conceito para conduzir o estudo, a contemplação e a vida."
+          size="lg"
+          parchment
+        />
+
+        {/* Busca instantânea */}
+        <div className="max-w-2xl mx-auto px-4 -mt-4 mb-10">
+          <label htmlFor="glossary-search" className="sr-only">
+            Buscar verbete
+          </label>
+          <div className="relative">
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-stitch-on-surface-variant"
+              aria-hidden="true"
+            />
+            <input
+              id="glossary-search"
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Digite uma palavra ou conceito…"
+              className={cn(
+                'w-full pl-12 pr-12 py-4 rounded-full',
+                'bg-stitch-surface-container-lowest border border-stitch-outline-variant/60',
+                'font-stitch-serif text-stitch-body text-stitch-on-background',
+                'placeholder:text-stitch-on-surface-variant/70',
+                'focus-visible:outline-none focus-visible:border-stitch-secondary focus-visible:ring-2 focus-visible:ring-stitch-secondary/30',
+              )}
+            />
+            {isSearchPending && (
+              <span className="absolute right-5 top-1/2 -translate-y-1/2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+                buscando…
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Categorias editoriais */}
+        {!loading && categories.length > 1 && (
+          <div className="max-w-5xl mx-auto px-4 mb-8">
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((cat) => {
+                const active = category === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategory(cat)}
+                    aria-pressed={active}
+                    className={cn(
+                      'px-4 py-2 rounded-full border font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] transition-colors',
+                      active
+                        ? 'border-stitch-secondary bg-stitch-secondary text-stitch-on-secondary'
+                        : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
+                    )}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Índice A–Z (só quando não há busca) */}
+        {!isSearching && !loading && (
+          <nav
+            aria-label="Índice A–Z"
+            className="sticky top-16 z-20 bg-stitch-background/90 backdrop-blur border-y border-stitch-outline-variant/30 py-3 mb-10"
+          >
+            <ol className="flex flex-wrap justify-center gap-x-2 gap-y-1 max-w-5xl mx-auto px-4">
+              {ALPHABET.map((letter) => {
+                const enabled = availableLetters.has(letter);
+                return (
+                  <li key={letter}>
+                    {enabled ? (
+                      <a
+                        href={`#letra-${letter}`}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-full font-stitch-label text-stitch-label-sm uppercase text-stitch-secondary hover:bg-stitch-secondary/10 transition-colors"
+                        aria-label={`Ir para letra ${letter}`}
+                      >
+                        {letter}
+                      </a>
+                    ) : (
+                      <span
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-full font-stitch-label text-stitch-label-sm uppercase text-stitch-on-surface-variant/40"
+                        aria-disabled="true"
+                      >
+                        {letter}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
+        )}
+
+        {/* Estatísticas */}
+        {!loading && (
+          <div className="max-w-4xl mx-auto px-4 mb-10">
+            <EditorialDivider variant="gold-fade" className="mb-6" />
+            <dl className="grid grid-cols-3 gap-6 text-center font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-on-surface-variant">
+              <div>
+                <dt className="text-stitch-secondary/70">Verbetes</dt>
+                <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
+                  {filtered.length}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-stitch-secondary/70">Categorias</dt>
+                <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
+                  {categories.length - 1}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-stitch-secondary/70">Publicados</dt>
+                <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
+                  {terms.filter((t) => t.status === 'published').length}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        )}
+
+        {/* Conteúdo */}
+        <div ref={listRef} className="max-w-5xl mx-auto px-4 pb-24">
+          {loading ? (
+            <div className="flex justify-center py-24">
+              <div className="h-10 w-10 border-2 border-stitch-secondary border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : filtered.length === 0 ? (
+            <EditorialEmptyState
+              kicker={isSearching ? 'Nenhum resultado' : 'Léxico vazio'}
+              title={
+                isSearching
+                  ? `Nenhum verbete encontrado para "${searchQuery}".`
+                  : 'Nenhum verbete disponível ainda.'
+              }
+              description={
+                isSearching
+                  ? 'Experimente outro termo ou remova o filtro de categoria.'
+                  : 'Novos verbetes serão publicados em breve.'
+              }
+            />
+          ) : isSearching ? (
+            // Resultados de busca em lista contínua
+            <ul className="grid gap-4 md:grid-cols-2">
+              {filtered.map((t) => (
+                <TermCard key={t.id} term={t} highlight={searchQuery} />
+              ))}
+            </ul>
+          ) : (
+            // Agrupamento A–Z
+            <div className="space-y-16">
+              {grouped.map(([letter, items]) => (
+                <section key={letter} id={`letra-${letter}`} className="scroll-mt-32">
+                  <header className="flex items-baseline gap-6 mb-8">
+                    <span
+                      aria-hidden="true"
+                      className="font-stitch-display text-stitch-display-lg text-stitch-secondary leading-none"
+                    >
+                      {letter}
+                    </span>
+                    <EditorialKicker>
+                      {items.length} {items.length === 1 ? 'verbete' : 'verbetes'}
+                    </EditorialKicker>
+                    <div className="flex-1 h-px bg-stitch-outline-variant/40" />
+                  </header>
+                  <ul className="grid gap-4 md:grid-cols-2">
+                    {items.map((t) => (
+                      <TermCard key={t.id} term={t} />
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          )}
+        </div>
+      </EditorialShell>
+    </>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/* Card do verbete                                                     */
+/* ------------------------------------------------------------------ */
+
+const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, highlight }) => {
+  const to = term.slug ? `/glossario/${term.slug}` : `/glossario/${slugifyTerm(term.term)}`;
+  const summary = term.short_definition?.trim() || term.definition.slice(0, 160);
+
+  return (
+    <li>
+      <Link
+        to={to}
+        className={cn(
+          'group block h-full p-6 rounded-[var(--stitch-radius-xl)]',
+          'bg-stitch-surface-container-lowest border border-stitch-outline-variant/40',
+          'hover:border-stitch-secondary/60 focus-visible:border-stitch-secondary',
+          'focus-visible:outline-none transition-colors',
+        )}
+      >
+        {term.category && (
+          <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary block mb-2">
+            {term.category}
+          </span>
+        )}
+        <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background group-hover:text-stitch-secondary transition-colors">
+          {highlight ? (
+            <HighlightedText text={term.term} query={highlight} />
+          ) : (
+            term.term
+          )}
+        </h3>
+        <p className="mt-3 font-stitch-serif text-stitch-body-sm text-stitch-on-surface-variant line-clamp-3">
+          {summary}
+        </p>
+        <span
+          aria-hidden="true"
+          className="mt-4 inline-flex items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary group-hover:tracking-[0.28em] transition-[letter-spacing]"
+        >
+          Abrir verbete →
+        </span>
+      </Link>
+    </li>
+  );
+};
+
+const HighlightedText: React.FC<{ text: string; query: string }> = ({ text, query }) => {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-stitch-secondary/20 text-inherit rounded px-0.5">
+        {text.slice(idx, idx + q.length)}
+      </mark>
+      {text.slice(idx + q.length)}
     </>
   );
 };
