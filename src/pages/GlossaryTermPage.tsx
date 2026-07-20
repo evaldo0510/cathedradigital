@@ -489,6 +489,7 @@ function NexusFullList({
                   <span className="font-medium">{r.node.label}</span>
                 </>
               )}
+              <NexusSourceBadge node={r.node} />
             </div>
           </li>
         );
