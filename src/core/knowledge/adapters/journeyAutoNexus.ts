@@ -8,6 +8,7 @@
 
 import { KnowledgeGraph } from '../KnowledgeGraph';
 import type { KnowledgeNodeId, ResolvedNode } from '../types';
+import { recordNexusMetric } from './nexusMetrics';
 
 export interface JourneyLike {
   id: string;
