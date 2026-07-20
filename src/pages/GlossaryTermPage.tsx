@@ -410,6 +410,7 @@ function AutoNexusList({
               {r.node.summary && (
                 <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.node.summary}</p>
               )}
+              <NexusSourceBadge node={r.node} />
             </div>
           </li>
         );
