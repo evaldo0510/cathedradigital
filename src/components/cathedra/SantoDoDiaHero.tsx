@@ -214,6 +214,51 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
       {/* Ficha editorial em blocos */}
       <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+        {/* Modo de leitura — nav de seções + toggle expandir/recolher */}
+        <div
+          className="sticky top-[64px] z-10 -mx-spacing-lg md:-mx-spacing-2xl px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
+          role="toolbar"
+          aria-label="Modo de leitura da ficha"
+        >
+          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto">
+            <ul className="flex items-center gap-spacing-2xs">
+              {sectionNav
+                .filter((s) => s.enabled)
+                .map((s) => (
+                  <li key={s.key}>
+                    <button
+                      type="button"
+                      onClick={() => scrollToSection(s.key)}
+                      className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                    >
+                      {s.label}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleExpanded}
+            aria-expanded={expanded}
+            aria-controls="santo-do-dia-vida"
+          >
+            {expanded ? (
+              <>
+                <Icons.ChevronUp className="w-spacing-md h-spacing-md" />
+                Recolher
+              </>
+            ) : (
+              <>
+                <Icons.ChevronDown className="w-spacing-md h-spacing-md" />
+                Expandir leitura
+              </>
+            )}
+          </Button>
+        </div>
+
+
         {/* Meta-strip */}
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md border-b border-border/60 pb-spacing-lg">
           <div className="space-y-spacing-3xs">
