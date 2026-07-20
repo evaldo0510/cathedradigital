@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
@@ -7,6 +8,7 @@ import PassageActions from '@/components/shared/PassageActions';
 import DocumentViewer from './DocumentViewer';
 import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
+import SaintDetailTabs from './SaintDetailTabs';
 import { type Saint } from '@/data/saints';
 
 import { AppRoute } from '@/types';
@@ -23,6 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { SEO_CONFIG } from '@/config/seo';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -79,8 +82,69 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     return VIRTUE_TO_JOURNEY['paciência']; // Default
   }, [saint.virtues]);
 
+  // SEO: Schema.org Person + ReligiousOccasion (dia de festa)
+  const canonicalPath = `/santos/${(saint as any).slug || saint.id}`;
+  const canonicalUrl = `${SEO_CONFIG.BASE_URL}${canonicalPath}`;
+  const seoDescription = (saint.bio || saint.fullBio || `Vida, virtudes e testemunho de ${saint.name}.`)
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160);
+  const personLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: saint.name,
+    alternateName: saint.title || undefined,
+    description: seoDescription,
+    url: canonicalUrl,
+    image: typeof saint.image === 'string' ? saint.image : Array.isArray(saint.image) ? saint.image[0] : undefined,
+    birthDate: saint.born || undefined,
+    deathDate: saint.died || undefined,
+    knowsAbout: saint.virtues && saint.virtues.length > 0 ? saint.virtues : undefined,
+    sameAs: (saint as any).url || undefined,
+    ...(saint.quotes && saint.quotes[0]
+      ? {
+          subjectOf: {
+            '@type': 'Quotation',
+            text: saint.quotes[0],
+          },
+        }
+      : {}),
+  };
+  const occasionLd: Record<string, unknown> | null = saint.feastDay
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        additionalType: 'https://schema.org/ReligiousOccasion',
+        name: `Festa de ${saint.name}`,
+        description: `Memória litúrgica de ${saint.name} — ${saint.feastDay}.`,
+        about: { '@type': 'Person', name: saint.name },
+        eventSchedule: {
+          '@type': 'Schedule',
+          repeatFrequency: 'P1Y',
+          byMonthDay: (saint as any).feastDayNum || undefined,
+          byMonth: (saint as any).feastMonth || undefined,
+        },
+        url: canonicalUrl,
+      }
+    : null;
+
   return (
     <>
+    <Helmet>
+      <title>{`${saint.name}${saint.title ? ' — ' + saint.title : ''} · Sanctorum · Cathedra Digital`}</title>
+      <meta name="description" content={seoDescription} />
+      <link rel="canonical" href={canonicalUrl} />
+      <meta property="og:type" content="profile" />
+      <meta property="og:title" content={saint.name} />
+      <meta property="og:description" content={seoDescription} />
+      <meta property="og:url" content={canonicalUrl} />
+      {typeof saint.image === 'string' && <meta property="og:image" content={saint.image} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={saint.name} />
+      <meta name="twitter:description" content={seoDescription} />
+      <script type="application/ld+json">{JSON.stringify(personLd)}</script>
+      {occasionLd && <script type="application/ld+json">{JSON.stringify(occasionLd)}</script>}
+    </Helmet>
     <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -230,35 +294,16 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
         </div>
 
-        {/* Short Biography */}
-        <section className="space-y-spacing-md">
-          <div className="flex items-center gap-spacing-xs text-primary">
-            <Icons.Info className="w-spacing-md h-spacing-md" />
-            <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Sua História</h3>
-          </div>
-          <div className="prose prose-sm dark:prose-invert max-w-none">
-            <p className="text-premium-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-spacing-lg py-spacing-2xs">
-              {parseTheologicalReferences(saint.bio).map((seg, i) => {
-                if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
-                if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
-                return <span key={i}>{seg.value}</span>;
-              })}
-            </p>
-            {saint.fullBio && (
-              <div className="mt-spacing-lg text-muted-foreground leading-relaxed text-premium-sm space-y-spacing-md">
-                {saint.fullBio.split('\n\n').map((paragraph, pIdx) => (
-                  <p key={pIdx}>
-                    {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
-                      if (seg.type === 'bibleRef') return <BibleVersePopover key={sIdx} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
-                      if (seg.type === 'catechismRef') return <CatechismPopover key={sIdx} paragraph={seg.paragraph!} />;
-                      return <span key={sIdx}>{seg.value}</span>;
-                    })}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Abas: História · Virtude · Padroeiro(a) · Refletir com Logos */}
+        <SaintDetailTabs
+          saint={saint}
+          autoReflect={autoReflect}
+          onReflect={() => {
+            const targetId = (saint as any).slug || saint.id;
+            navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
+            onClose();
+          }}
+        />
 
         {/* Deep Content - Textos e Livros */}
         <DeepContentSection 
