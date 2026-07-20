@@ -354,7 +354,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Progresso ─────────────────────────────── */}
         {totalSteps > 0 && !isLocked && (
-          <section className="pt-12">
+          <section data-testid="jornada-progress" className="pt-12">
             <div className="mb-3 flex items-center justify-between font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em]">
               <span className="text-stitch-on-surface-variant">Progresso</span>
               <span className="text-stitch-secondary">
