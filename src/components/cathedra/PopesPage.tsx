@@ -185,12 +185,8 @@ function parseReignYears(reign: string): [number, number] {
 const PopesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const rawDateParam = searchParams.get('date');
-  const parsedDate = parseISODateLocal(rawDateParam);
-  const clamped = clampReignDate(parsedDate);
-  // Se o param existia mas era inválido/fora do intervalo, sinaliza para
-  // reescrever a URL com a data de hoje e emite analytics.
-  const dateWasClamped = !!rawDateParam && (!parsedDate || !clamped);
-  const initialDate = clamped ?? new Date();
+  const { date: initialDate, wasClamped: dateWasClamped, received: rawDateReceived } =
+    resolveSanctorumDateParam(rawDateParam);
   const initialSearch = searchParams.get('q') ?? '';
   const [search, setSearch] = useState(initialSearch);
   const [date, setDate] = useState<Date>(initialDate);
