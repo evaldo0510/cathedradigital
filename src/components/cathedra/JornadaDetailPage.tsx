@@ -39,6 +39,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { EditorialQuote } from '@/components/editorial/primitives';
+import { resolveJourneyAutoNexus } from '@/core/knowledge/adapters/journeyAutoNexus';
+import { NexusSourceBadge } from '@/components/nexus/NexusSourceBadge';
 
 const STEP_META: Record<string, { label: string; Icon: React.ComponentType<{ className?: string }> }> = {
   reading: { label: 'Leitura', Icon: BookOpen },
