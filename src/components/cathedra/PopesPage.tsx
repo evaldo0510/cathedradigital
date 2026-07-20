@@ -239,9 +239,6 @@ const PopesPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [isPending, startTransition] = useTransition();
-  const deferredSearch = useDeferredValue(search);
-  const isFiltering = isPending || deferredSearch !== search;
 
   // Persistir data + busca na URL (?date=YYYY-MM-DD&q=...)
   useEffect(() => {
