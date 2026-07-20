@@ -158,7 +158,7 @@ describe('SanctorumDateNav', () => {
       const abbrs = Array.from(strip.querySelectorAll('button > span:first-child')).map((s) =>
         s.textContent!.trim().toLowerCase(),
       );
-      const validas = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+      const validas = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'sáb'];
       abbrs.forEach((a) => expect(validas).toContain(a));
     });
   });
