@@ -46,10 +46,33 @@ test.describe('Glossário — todas as seções de conexões preenchidas', () =>
         expect(href.startsWith('/') || href.startsWith('http'), `href inválido: ${href}`).toBeTruthy();
       }
 
-      // Badge de fonte do KnowledgeGraph deve estar presente em cada item.
+      // NexusSourceBadge: cada item deve mostrar tooltip "Fonte automática:
+      // KnowledgeGraph → <id>" e renderizar visualmente `<kind> · <id>`.
       const badges = section.locator('[title^="Fonte automática: KnowledgeGraph"]');
       const badgeCount = await badges.count();
       expect(badgeCount, `seção "${title}" deve exibir badges de fonte automática`).toBeGreaterThan(0);
+
+      for (let i = 0; i < badgeCount; i++) {
+        const badge = badges.nth(i);
+        const tooltip = (await badge.getAttribute('title')) ?? '';
+        const ariaLabel = (await badge.getAttribute('aria-label')) ?? '';
+
+        // Tooltip precisa citar a fonte automática e um ID canônico kind:slug[...].
+        const tooltipMatch = tooltip.match(/^Fonte automática: KnowledgeGraph → ([a-z]+):([a-z0-9][a-z0-9\-:]*)$/);
+        expect(tooltipMatch, `tooltip inválido em "${title}": "${tooltip}"`).not.toBeNull();
+        const [, kind, rest] = tooltipMatch!;
+        const id = `${kind}:${rest}`;
+
+        // aria-label deve ecoar kind e id (acessibilidade).
+        expect(ariaLabel, `aria-label sem kind em "${title}"`).toContain(`tipo ${kind}`);
+        expect(ariaLabel, `aria-label sem id em "${title}"`).toContain(`id ${id}`);
+
+        // Visualmente deve exibir "<kind> · <id>" (kind em texto + <code> com id).
+        const kindText = (await badge.locator('span', { hasText: new RegExp(`^${kind}$`) }).first().textContent()) ?? '';
+        expect(kindText.trim(), `kind visível ausente em "${title}"`).toBe(kind);
+        const codeText = (await badge.locator('code').first().textContent()) ?? '';
+        expect(codeText.trim(), `id canônico ausente no <code> em "${title}"`).toBe(id);
+      }
     }
 
     for (const { anchor, title } of OPTIONAL_ANCHORS) {
