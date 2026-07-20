@@ -345,6 +345,19 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
           {idx === blocks.length - 1 ? null : <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
         </button>
       </nav>
+
+      {/* Continuidade — visível ao chegar no último bloco, fora do foco. */}
+      {idx === blocks.length - 1 && !focus && (
+        <div className="mt-16">
+          <ReaderContinuation
+            context={{
+              kind: 'prayer',
+              id: prayer.slug,
+              meta: { prayerCategory: prayer.category },
+            }}
+          />
+        </div>
+      )}
     </article>
   );
 
