@@ -27,9 +27,10 @@ import {
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
-import { buildPassageUrl } from '@/lib/passageUrl';
 import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
+import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
+import type { ResolvedNode } from '@/core/knowledge';
 
 /* ------------------------------------------------------------------ */
 /* Tipos                                                               */
@@ -351,62 +352,84 @@ function RefList({
   );
 }
 
-const NEXUS_KIND_LABEL: Record<string, string> = {
-  glossary: 'Verbete',
-  term: 'Verbete',
-  catechism: 'Catecismo',
-  bible: 'Escritura',
-  saint: 'Santo',
-  father: 'Padre da Igreja',
-  magisterium: 'Magistério',
-  journey: 'Jornada',
-  prayer: 'Oração',
-  liturgy: 'Liturgia',
-};
+/* ------------------------------------------------------------------ */
+/* Nexus 100% automático via KnowledgeGraph                            */
+/* ------------------------------------------------------------------ */
 
-function resolveNexusHref(r: NexusRef): string | null {
-  const target = (r.target ?? '').toString().trim();
-  if (!target) return null;
-  const kind = (r.kind ?? '').toLowerCase();
-  switch (kind) {
-    case 'glossary':
-    case 'term':
-    case 'verbete':
-      return `/glossario/${encodeURIComponent(target)}`;
-    case 'catechism':
-    case 'cic': {
-      const n = Number(target);
-      return Number.isFinite(n) && n > 0 ? `/catechism?p=${n}` : '/catechism';
-    }
-    case 'bible':
-    case 'escritura':
-      return `/bible?ref=${encodeURIComponent(target)}`;
-    case 'saint':
-    case 'santo':
-      return `/santos/${encodeURIComponent(target)}`;
-    case 'father':
-    case 'padre':
-      return `/padres/${encodeURIComponent(target)}`;
-    case 'journey':
-    case 'jornada':
-    case 'formacao':
-      return `/formacao/${encodeURIComponent(target)}`;
-    case 'prayer':
-    case 'oracao':
-      return `/oracoes/${encodeURIComponent(target)}`;
-    case 'liturgy':
-    case 'liturgia':
-      return `/liturgia/${encodeURIComponent(target)}`;
-    case 'magisterium':
-    case 'magisterio':
-      return `/magisterio/${encodeURIComponent(target)}`;
-    default:
-      return null;
+function AutoNexusList({
+  nodes,
+  emptyLabel,
+  fallbackKindLabel,
+}: {
+  nodes: ResolvedNode[] | undefined;
+  emptyLabel: string;
+  fallbackKindLabel?: string;
+}) {
+  if (!nodes || nodes.length === 0) {
+    return (
+      <EditorialEmptyState
+        kicker="Em preparação"
+        title={emptyLabel}
+        description="As conexões serão publicadas em breve."
+      />
+    );
   }
+  return (
+    <ul className="max-w-[68ch] mx-auto space-y-4 font-stitch-serif text-stitch-body text-stitch-ink">
+      {nodes.map((r) => {
+        const href = r.url;
+        return (
+          <li key={r.node.id} className="flex gap-3 items-baseline">
+            <EditorialGoldMarker />
+            <div className="flex-1">
+              {href ? (
+                <Link
+                  to={href}
+                  className="text-stitch-ink hover:text-stitch-secondary transition-colors"
+                  aria-label={`Abrir ${r.node.label}`}
+                >
+                  {fallbackKindLabel && (
+                    <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
+                      {fallbackKindLabel}
+                    </span>
+                  )}
+                  <span className="font-medium underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors">
+                    {r.node.label}
+                  </span>
+                </Link>
+              ) : (
+                <>
+                  {fallbackKindLabel && (
+                    <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
+                      {fallbackKindLabel}
+                    </span>
+                  )}
+                  <span className="font-medium">{r.node.label}</span>
+                </>
+              )}
+              {r.node.summary && (
+                <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.node.summary}</p>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
-function NexusList({ refs }: { refs: NexusRef[] | null | undefined }) {
-  if (!refs || refs.length === 0) {
+function NexusFullList({
+  byKind,
+  labels,
+}: {
+  byKind: Record<string, ResolvedNode[]>;
+  labels: Record<string, string>;
+}) {
+  const all: Array<{ kindKey: string; node: ResolvedNode }> = [];
+  for (const [kindKey, list] of Object.entries(byKind)) {
+    for (const node of list) all.push({ kindKey, node });
+  }
+  if (all.length === 0) {
     return (
       <EditorialEmptyState
         kicker="Em preparação"
@@ -417,41 +440,33 @@ function NexusList({ refs }: { refs: NexusRef[] | null | undefined }) {
   }
   return (
     <ul className="max-w-[68ch] mx-auto space-y-4 font-stitch-serif text-stitch-body text-stitch-ink">
-      {refs.map((r, i) => {
-        const href = resolveNexusHref(r);
-        const kindLabel = NEXUS_KIND_LABEL[(r.kind ?? '').toLowerCase()] ?? (r.kind ?? 'Nexus');
-        const label = r.label ?? r.target ?? '—';
-        const body = (
-          <>
-            <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-              {kindLabel}
-            </span>
-            <span
-              className={cn(
-                'font-medium',
-                href && 'underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors',
-              )}
-            >
-              {label}
-            </span>
-          </>
-        );
+      {all.map(({ kindKey, node: r }) => {
+        const kindLabel = labels[kindKey] ?? kindKey;
         return (
-          <li key={i} className="flex gap-3 items-baseline">
+          <li key={`${kindKey}:${r.node.id}`} className="flex gap-3 items-baseline">
             <EditorialGoldMarker />
             <div className="flex-1">
-              {href ? (
+              {r.url ? (
                 <Link
-                  to={href}
+                  to={r.url}
                   className="text-stitch-ink hover:text-stitch-secondary transition-colors"
-                  aria-label={`Abrir ${kindLabel}: ${label}`}
+                  aria-label={`Abrir ${kindLabel}: ${r.node.label}`}
                 >
-                  {body}
+                  <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
+                    {kindLabel}
+                  </span>
+                  <span className="font-medium underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors">
+                    {r.node.label}
+                  </span>
                 </Link>
               ) : (
-                body
+                <>
+                  <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
+                    {kindLabel}
+                  </span>
+                  <span className="font-medium">{r.node.label}</span>
+                </>
               )}
-              {r.note && <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.note}</p>}
             </div>
           </li>
         );
@@ -643,6 +658,7 @@ const GlossaryTermPage: React.FC = () => {
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
+  const autoNexus = resolveAutoNexus(term);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
 
@@ -859,130 +875,58 @@ const GlossaryTermPage: React.FC = () => {
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
                   {k === 'bible' && (
-                    <RefList
-                      items={term.bible_verses}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.bible}
                       emptyLabel="Passagens bíblicas ainda não indicadas."
-                      renderItem={(ref) => (
-                        <Link
-                          to={buildPassageUrl({ kind: 'bible', ref, highlight: term.term })}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                          aria-label={`Abrir ${ref} na Bíblia`}
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'catechism' && (
-                    <RefList
-                      items={term.catechism_references}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.catechism}
                       emptyLabel="Referências do Catecismo ainda não indicadas."
-                      renderItem={(ref) => {
-                        const num = ref.replace(/\D+/g, '');
-                        return (
-                          <Link
-                            to={
-                              num
-                                ? buildPassageUrl({ kind: 'catechism', paragraph: num, highlight: term.term })
-                                : '/catechism'
-                            }
-                            className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                            aria-label={`Abrir §${num || ref} no Catecismo`}
-                          >
-                            §{num || ref}
-                          </Link>
-                        );
-                      }}
                     />
                   )}
                   {k === 'magisterium' && (
-                    <RefList
-                      items={term.magisterium_references}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.magisterium}
                       emptyLabel="Documentos do Magistério ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={buildPassageUrl({ kind: 'magisterium', id: ref, highlight: term.term })}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                          aria-label={`Abrir ${ref} no Magistério`}
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'saints' && (
-                    <RefList
-                      items={term.saints_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.saint}
                       emptyLabel="Santos relacionados ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/saints/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'fathers' && (
-                    <RefList
-                      items={term.fathers_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.father}
                       emptyLabel="Padres relacionados ainda não indicados."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/padres/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'liturgy' && (
-                    <RefList
-                      items={term.liturgy_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.liturgy}
                       emptyLabel="Referências litúrgicas ainda não indicadas."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/liturgia?ref=${encodeURIComponent(ref)}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'prayer' && (
-                    <RefList
-                      items={term.prayer_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.prayer}
                       emptyLabel="Oração relacionada ainda não indicada."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/prayers/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          {ref}
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'journey' && (
-                    <RefList
-                      items={term.journey_refs}
+                    <AutoNexusList
+                      nodes={autoNexus.byKind.journey}
                       emptyLabel="Jornada sugerida ainda não indicada."
-                      renderItem={(ref) => (
-                        <Link
-                          to={`/jornadas/${ref}`}
-                          className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
-                        >
-                          Abrir jornada
-                        </Link>
-                      )}
                     />
                   )}
                   {k === 'faq' && <FaqBlock items={term.faq} />}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
-                  {k === 'nexus' && <NexusList refs={term.nexus_refs} />}
+                  {k === 'nexus' && (
+                    <NexusFullList byKind={autoNexus.byKind} labels={autoNexus.labels} />
+                  )}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
               );

@@ -17,7 +17,10 @@ export type KnowledgeNodeKind =
   | 'council'
   | 'canon'
   | 'prayer'
-  | 'application';
+  | 'application'
+  | 'glossary'
+  | 'journey'
+  | 'liturgy';
 
 /** Tipo semântico de uma aresta entre dois nós. */
 export type KnowledgeRelationKind =
