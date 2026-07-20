@@ -186,6 +186,22 @@ const LiturgiaPage: React.FC = () => {
   const padhReflection = useMemo(() => PADH_REFLECTIONS[today.getDate() % PADH_REFLECTIONS.length], [today]);
   const { data: saintsToday = [] } = useSaintsToday();
 
+  const { data: prayerOfDay } = useQuery({
+    queryKey: ['prayer-of-day', dateKey],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('prayers')
+        .select('slug, title, subtitle, kicker, category, estimated_seconds')
+        .eq('is_published', true)
+        .order('order_index', { ascending: true });
+      if (error) throw error;
+      if (!data || data.length === 0) return null;
+      const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
+      return data[dayOfYear % data.length];
+    },
+    staleTime: 1000 * 60 * 60,
+  });
+
   const navigateToLectio = (ref?: string) => {
     const q = ref ? `?ref=${encodeURIComponent(ref)}` : '';
     navigate(`${AppRoute.LECTIO_DIVINA}${q}`);
