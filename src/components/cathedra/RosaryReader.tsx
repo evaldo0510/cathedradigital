@@ -45,6 +45,8 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
 
   const { state, setIndex, markCompleted } = usePrayerSession(prayer.id, blockIds);
   const [focus, setFocus] = useState(false);
+  const [mode, setMode] = useState<PrayerMode>('guided');
+  const [autoIntervalMs, setAutoIntervalMs] = useState(30000);
 
   const idx = Math.min(state.currentBlockIndex, Math.max(0, blocks.length - 1));
   const current = blocks[idx];
