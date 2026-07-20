@@ -27,9 +27,10 @@ import {
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
-import { buildPassageUrl } from '@/lib/passageUrl';
 import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
+import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
+import type { ResolvedNode } from '@/core/knowledge';
 
 /* ------------------------------------------------------------------ */
 /* Tipos                                                               */
