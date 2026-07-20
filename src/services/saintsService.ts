@@ -22,13 +22,7 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
   return (data || []).map(formatSaint);
 };
 
-  if (error) {
-    console.error('Error fetching saints by date:', error);
-    return [];
-  }
 
-  return (data || []).map(formatSaint);
-};
 
 export interface SaintWithScore extends Saint {
   similarityScore?: number;
