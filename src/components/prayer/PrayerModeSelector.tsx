@@ -8,7 +8,7 @@
  * Missal e Orações. Somente experiência — nenhum conteúdo é alterado.
  */
 import React from 'react';
-import { BookOpen, Circle, Timer } from 'lucide-react';
+import { BookOpen, Circle, Timer, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type PrayerMode = 'guided' | 'contemplative' | 'auto';
@@ -20,7 +20,7 @@ interface Props {
   onIntervalChange?: (ms: number) => void;
 }
 
-const OPTIONS: Array<{ id: PrayerMode; label: string; icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>; hint: string }> = [
+const OPTIONS: Array<{ id: PrayerMode; label: string; icon: LucideIcon; hint: string }> = [
   { id: 'guided', label: 'Guiado', icon: BookOpen, hint: 'Passo a passo, avanço manual' },
   { id: 'contemplative', label: 'Contemplativo', icon: Circle, hint: 'Tela limpa, sem UI' },
   { id: 'auto', label: 'Automático', icon: Timer, hint: 'Avança sozinho' },
