@@ -177,7 +177,8 @@ const PopesPage: React.FC = () => {
       />
 
       <SanctorumHero
-        kicker="Sanctorum · Vicarius Christi"
+        variant="category"
+        kind="pope"
         title="Os Papas"
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
