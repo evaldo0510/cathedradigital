@@ -11,6 +11,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PopesPage from './PopesPage';
+import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 
 // Silencia framer-motion em testes.
 vi.mock('framer-motion', async () => {
