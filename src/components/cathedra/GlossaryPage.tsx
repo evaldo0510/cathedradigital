@@ -111,7 +111,7 @@ const GlossaryPage: React.FC = () => {
       setLoading(true);
       const { data, error } = await (supabase as any)
         .from('glossary')
-        .select('id, slug, term, short_definition, definition, category, status')
+        .select('id, slug, term, short_definition, definition, category, status, editorial_completeness')
         .order('term', { ascending: true });
       if (cancelled) return;
       if (error) console.error('Erro ao carregar glossário:', error);
