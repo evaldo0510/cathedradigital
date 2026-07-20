@@ -107,14 +107,59 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
   const meditacao = (saint as any).aplicacaoPratica || FICHA_FALLBACK.meditacao;
   const frase = saint.quotes?.[0];
 
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-[2.5rem] border border-border/60 bg-card shadow-premium-hover"
-      aria-labelledby="santo-do-dia-title"
-    >
+  const [expanded, setExpanded] = useState(false);
+  const articleRef = useRef<HTMLElement>(null);
+  const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
+    frase: null,
+    vida: null,
+    legado: null,
+    meditacao: null,
+  });
+
+  const toggleExpanded = useCallback(() => {
+    // Preserva a rolagem: mantém a distância do topo do artigo à viewport.
+    const el = articleRef.current;
+    const before = el?.getBoundingClientRect().top ?? 0;
+    setExpanded((prev) => {
+      const next = !prev;
+      requestAnimationFrame(() => {
+        const after = articleRef.current?.getBoundingClientRect().top ?? 0;
+        const delta = after - before;
+        if (delta !== 0) window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+      });
+      return next;
+    });
+  }, []);
+
+  const scrollToSection = useCallback(
+    (key: SectionKey) => {
+      const jump = () => {
+        const node = sectionRefs.current[key];
+        if (!node) return;
+        const y = node.getBoundingClientRect().top + window.scrollY - 96;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        // Foco acessível sem re-scroll do browser.
+        node.setAttribute('tabindex', '-1');
+        (node as HTMLElement).focus({ preventScroll: true });
+      };
+      if (!expanded) {
+        setExpanded(true);
+        requestAnimationFrame(() => requestAnimationFrame(jump));
+      } else {
+        jump();
+      }
+    },
+    [expanded],
+  );
+
+  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean }> = [
+    { key: 'frase', label: 'Frase', enabled: Boolean(frase) },
+    { key: 'vida', label: 'Vida', enabled: true },
+    { key: 'legado', label: 'Legado', enabled: true },
+    { key: 'meditacao', label: 'Meditação', enabled: true },
+  ];
+
+
       {/* Hero — imagem + overlay editorial */}
       <div className="relative">
         <div className="relative h-[38vh] min-h-[320px] md:h-[52vh] md:min-h-[420px] w-full overflow-hidden">
