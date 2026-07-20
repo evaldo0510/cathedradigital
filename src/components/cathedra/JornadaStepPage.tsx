@@ -43,6 +43,30 @@ import SacredImage from './SacredImage';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
+/**
+ * Cache em memória para prefetch de etapas vizinhas (prev/next).
+ * Chave: stepId. Valor: linha completa do journey_steps.
+ * Populado em background após o load da etapa corrente e consumido
+ * na navegação por seta/atalho — deixa a transição imediata.
+ */
+const STEP_PREFETCH_CACHE = new Map<string, any>();
+const prefetchStep = async (stepId: string): Promise<void> => {
+  if (!stepId || STEP_PREFETCH_CACHE.has(stepId)) return;
+  const { data } = await supabase
+    .from('journey_steps')
+    .select('*')
+    .eq('id', stepId)
+    .single();
+  if (data) STEP_PREFETCH_CACHE.set(stepId, data);
+};
+const scheduleIdle = (fn: () => void) => {
+  if (typeof (window as any).requestIdleCallback === 'function') {
+    (window as any).requestIdleCallback(fn, { timeout: 1200 });
+  } else {
+    setTimeout(fn, 200);
+  }
+};
+
 type SectionDef = {
   key: string;
   label: string;
@@ -123,12 +147,20 @@ const JornadaStepPage: React.FC = () => {
   }, [stepId, journeyId, step?.title, journeyTitle, user?.id]);
 
   const loadData = async () => {
-    setLoading(true);
+    // Se a etapa já foi pré-carregada, mostra imediatamente sem spinner.
+    const cachedStep = stepId ? STEP_PREFETCH_CACHE.get(stepId) : null;
+    if (cachedStep) {
+      setStep(cachedStep);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     try {
       // Uma única leva paralela: step atual, título da jornada, todos os passos e progresso.
-      // Antes fazíamos 3 queries + fetch de allSteps + fetch de progresso em série; agora tudo junto.
       const [stepRes, journeyRes, allStepsRes, progressRes] = await Promise.all([
-        supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
+        cachedStep
+          ? Promise.resolve({ data: cachedStep } as any)
+          : supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
         supabase.from('journeys').select('title').eq('id', journeyId!).single(),
         supabase
           .from('journey_steps')
@@ -147,6 +179,7 @@ const JornadaStepPage: React.FC = () => {
 
       if (stepRes.data) {
         setStep(stepRes.data);
+        STEP_PREFETCH_CACHE.set(stepRes.data.id, stepRes.data);
         const dataContent = stepRes.data.content as Record<string, any>;
         const firstWithContent = SECTION_CONFIG.find((s) => {
           const val = dataContent[s.key] || dataContent[`${s.key}_iniciante`];
@@ -158,11 +191,15 @@ const JornadaStepPage: React.FC = () => {
 
       const allSteps = allStepsRes.data ?? [];
       setTotalSteps(allSteps.length);
+      let prev: any = null;
+      let next: any = null;
       if (allSteps.length && stepRes.data) {
         const currentIndex = allSteps.findIndex((s: any) => s.id === stepId);
         if (currentIndex !== -1) {
-          setPrevStep(currentIndex > 0 ? (allSteps[currentIndex - 1] as any) : null);
-          setNextStep(currentIndex < allSteps.length - 1 ? (allSteps[currentIndex + 1] as any) : null);
+          prev = currentIndex > 0 ? (allSteps[currentIndex - 1] as any) : null;
+          next = currentIndex < allSteps.length - 1 ? (allSteps[currentIndex + 1] as any) : null;
+          setPrevStep(prev);
+          setNextStep(next);
         }
       }
 
@@ -188,6 +225,12 @@ const JornadaStepPage: React.FC = () => {
           } catch { /* noop */ }
         }
       }
+
+      // Prefetch prev/next em idle-time para deixar a navegação imediata.
+      scheduleIdle(() => {
+        if (prev?.id) prefetchStep(prev.id);
+        if (next?.id) prefetchStep(next.id);
+      });
     } catch (err) {
       console.error(err);
     } finally {
@@ -390,8 +433,45 @@ const JornadaStepPage: React.FC = () => {
 
   if (loading) {
     return createPortal(
-      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-stitch-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-stitch-secondary border-t-transparent" />
+      <div
+        role="status"
+        aria-live="polite"
+        aria-label="Carregando etapa"
+        className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-stitch-background text-stitch-on-background"
+        style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}
+      >
+        {/* Header skeleton */}
+        <div className="flex-shrink-0 border-b border-stitch-secondary/10 bg-stitch-background/95 px-5 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:px-16">
+          <div className="mx-auto flex w-full max-w-[900px] items-center gap-4">
+            <div className="h-9 w-9 flex-shrink-0 animate-pulse rounded-full bg-stitch-outline-variant/20" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="h-3 w-40 animate-pulse rounded bg-stitch-outline-variant/20" />
+              <div className="h-1 w-full animate-pulse rounded-full bg-stitch-outline-variant/10" />
+            </div>
+          </div>
+        </div>
+        {/* Corpo editorial skeleton */}
+        <div className="flex-1 overflow-hidden px-5 py-10 md:px-16">
+          <div className="mx-auto w-full max-w-[720px] space-y-8">
+            <div className="space-y-3 text-center">
+              <div className="mx-auto h-3 w-24 animate-pulse rounded bg-stitch-outline-variant/20" />
+              <div className="mx-auto h-9 w-3/4 animate-pulse rounded bg-stitch-outline-variant/25" />
+              <div className="mx-auto h-4 w-1/2 animate-pulse rounded bg-stitch-outline-variant/15" />
+            </div>
+            <div className="mx-auto h-px w-16 bg-stitch-secondary/30" />
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="space-y-3 rounded-lg border border-stitch-outline-variant/20 p-5">
+                <div className="h-4 w-32 animate-pulse rounded bg-stitch-outline-variant/20" />
+                <div className="space-y-2">
+                  <div className="h-3 w-full animate-pulse rounded bg-stitch-outline-variant/15" />
+                  <div className="h-3 w-11/12 animate-pulse rounded bg-stitch-outline-variant/15" />
+                  <div className="h-3 w-4/5 animate-pulse rounded bg-stitch-outline-variant/15" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <span className="sr-only">Carregando etapa da jornada…</span>
       </div>,
       document.body,
     );

@@ -2,10 +2,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { type Saint } from '@/data/saints';
 import { combinedSimilarity } from '@/lib/similarity';
 
+// Colunas mínimas para listagens/cards (evita puxar full_bio, works e refs
+// pesados). Detalhes (getSaintById) continuam com select('*').
+const LIST_COLUMNS =
+  'id, name, title, category, feast_day, feast_month, feast_day_num, image, patron_of, virtues, subtitle';
+
 export const getSaintsByDate = async (month: number, day: number): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .eq('feast_month', month)
     .eq('feast_day_num', day);
 
@@ -16,6 +21,8 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
 
   return (data || []).map(formatSaint);
 };
+
+
 
 export interface SaintWithScore extends Saint {
   similarityScore?: number;
@@ -57,7 +64,7 @@ export const searchSaints = async (query: string): Promise<SaintWithScore[]> => 
 export const getSaintsByCategory = async (category: string): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .eq('category', category)
     .order('name');
 
@@ -72,7 +79,7 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
 export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .contains('virtues', [virtue])
     .limit(10);
 
@@ -95,7 +102,7 @@ export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | nul
 export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .order('name')
     .limit(limit);
 
