@@ -201,7 +201,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             aria-pressed={isSameDay(date, value)}
           >
             <span className="text-premium-xs font-black uppercase tracking-tighter mb-spacing-2xs">
-              {format(date, 'EEE', { locale: ptBR }).replace('.', '')}
+              {format(date, 'EEEEEE', { locale: ptBR }).replace('.', '')}
             </span>
             <span className="text-premium-lg font-serif font-bold">{format(date, 'dd')}</span>
           </Button>
