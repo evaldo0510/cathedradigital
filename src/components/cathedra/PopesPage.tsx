@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
@@ -8,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
+import { SEO_CONFIG } from '@/config/seo';
 
 
 interface Pope {
