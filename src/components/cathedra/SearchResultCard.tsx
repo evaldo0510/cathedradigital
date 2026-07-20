@@ -91,8 +91,8 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       )}
       <div className="flex-1 min-w-spacing-0">
         <p className="editorial-display text-lg text-foreground truncate leading-snug">{title}</p>
-        {subtitle && (
-          <p className="font-serif italic text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{subtitle}</p>
+        {(subtitleNode ?? subtitle) && (
+          <p className="font-serif italic text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{subtitleNode ?? subtitle}</p>
         )}
       </div>
 
