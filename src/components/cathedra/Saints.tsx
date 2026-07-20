@@ -240,6 +240,9 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
       <div ref={ref} className="space-y-spacing-xl pb-spacing-3xl">
         <SanctorumHero
+          variant={viewMode === 'daily' ? 'saintOfDay' : viewMode === 'popes' ? 'category' : viewMode === 'writers' ? 'category' : 'page'}
+          kind={viewMode === 'popes' ? 'pope' : viewMode === 'writers' ? 'doctor' : undefined}
+          date={viewMode === 'daily' ? selectedDate : undefined}
           title="Vidas dos Santos"
           subtitle={'"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'}
         />
