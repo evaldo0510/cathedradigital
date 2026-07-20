@@ -10,7 +10,8 @@ import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
+import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
+import SaintsFetchError from './SaintsFetchError';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 
@@ -127,12 +128,20 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const { data: officialSaint } = useOfficialSaint();
 
   // Daily Saints from Icons.Database
-  const { data: localSaints = [], isLoading: isLoadingDaily } = useQuery({
+  const {
+    data: localSaints = [],
+    isLoading: isLoadingDaily,
+    isError: isDailyError,
+    error: dailyError,
+    refetch: refetchDaily,
+    isFetching: isRefetchingDaily,
+  } = useQuery({
     queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
-    queryFn: () => getSaintsByDate(selectedDate.getMonth() + 1, selectedDate.getDate()),
+    queryFn: () => getSaintsByDateOrThrow(selectedDate.getMonth() + 1, selectedDate.getDate()),
     enabled: viewMode === 'daily',
     staleTime: 1000 * 60 * 30, // 30min — santos do dia mudam só à meia-noite
     gcTime: 1000 * 60 * 60,
+    retry: 1,
   });
 
   // Mode-based Saints (Writers, Popes, All)
@@ -313,7 +322,20 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 
               <div className="w-full space-y-spacing-lg">
-                {isLoadingDaily ? (
+                <span className="sr-only" role="status" aria-live="polite">
+                  {isLoadingDaily
+                    ? 'Carregando santos do dia.'
+                    : isDailyError
+                      ? 'Falha ao carregar santos do dia.'
+                      : `${displaySaints.length} santo(s) encontrado(s) para a data selecionada.`}
+                </span>
+                {isDailyError ? (
+                  <SaintsFetchError
+                    message={dailyError instanceof Error ? dailyError.message : undefined}
+                    onRetry={() => refetchDaily()}
+                    isRetrying={isRefetchingDaily}
+                  />
+                ) : isLoadingDaily ? (
                   <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
                   displaySaints.map(saint => (
