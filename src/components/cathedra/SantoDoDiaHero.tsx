@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -17,6 +17,8 @@ interface SantoDoDiaHeroProps {
   date: Date;
   onOpen: (reflect?: boolean) => void;
 }
+
+type SectionKey = 'frase' | 'vida' | 'legado' | 'meditacao';
 
 /**
  * Extrai o século (ex.: "Séc. IV", "Séc. XIX–XX") a partir de campos textuais
@@ -105,8 +107,61 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
   const meditacao = (saint as any).aplicacaoPratica || FICHA_FALLBACK.meditacao;
   const frase = saint.quotes?.[0];
 
+  const [expanded, setExpanded] = useState(false);
+  const articleRef = useRef<HTMLElement>(null);
+  const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
+    frase: null,
+    vida: null,
+    legado: null,
+    meditacao: null,
+  });
+
+  const toggleExpanded = useCallback(() => {
+    // Preserva a rolagem: mantém a distância do topo do artigo à viewport.
+    const el = articleRef.current;
+    const before = el?.getBoundingClientRect().top ?? 0;
+    setExpanded((prev) => {
+      const next = !prev;
+      requestAnimationFrame(() => {
+        const after = articleRef.current?.getBoundingClientRect().top ?? 0;
+        const delta = after - before;
+        if (delta !== 0) window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+      });
+      return next;
+    });
+  }, []);
+
+  const scrollToSection = useCallback(
+    (key: SectionKey) => {
+      const jump = () => {
+        const node = sectionRefs.current[key];
+        if (!node) return;
+        const y = node.getBoundingClientRect().top + window.scrollY - 96;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        // Foco acessível sem re-scroll do browser.
+        node.setAttribute('tabindex', '-1');
+        (node as HTMLElement).focus({ preventScroll: true });
+      };
+      if (!expanded) {
+        setExpanded(true);
+        requestAnimationFrame(() => requestAnimationFrame(jump));
+      } else {
+        jump();
+      }
+    },
+    [expanded],
+  );
+
+  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean }> = [
+    { key: 'frase', label: 'Frase', enabled: Boolean(frase) },
+    { key: 'vida', label: 'Vida', enabled: true },
+    { key: 'legado', label: 'Legado', enabled: true },
+    { key: 'meditacao', label: 'Meditação', enabled: true },
+  ];
+
   return (
     <motion.article
+      ref={articleRef as any}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -159,6 +214,51 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
       {/* Ficha editorial em blocos */}
       <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+        {/* Modo de leitura — nav de seções + toggle expandir/recolher */}
+        <div
+          className="sticky top-[64px] z-10 -mx-spacing-lg md:-mx-spacing-2xl px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
+          role="toolbar"
+          aria-label="Modo de leitura da ficha"
+        >
+          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto">
+            <ul className="flex items-center gap-spacing-2xs">
+              {sectionNav
+                .filter((s) => s.enabled)
+                .map((s) => (
+                  <li key={s.key}>
+                    <button
+                      type="button"
+                      onClick={() => scrollToSection(s.key)}
+                      className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                    >
+                      {s.label}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleExpanded}
+            aria-expanded={expanded}
+            aria-controls="santo-do-dia-vida"
+          >
+            {expanded ? (
+              <>
+                <Icons.ChevronUp className="w-spacing-md h-spacing-md" />
+                Recolher
+              </>
+            ) : (
+              <>
+                <Icons.ChevronDown className="w-spacing-md h-spacing-md" />
+                Expandir leitura
+              </>
+            )}
+          </Button>
+        </div>
+
+
         {/* Meta-strip */}
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md border-b border-border/60 pb-spacing-lg">
           <div className="space-y-spacing-3xs">
@@ -195,7 +295,11 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Frase marcante (opcional) */}
         {frase && (
-          <blockquote className="relative pl-spacing-lg border-l-2 border-primary/50">
+          <blockquote
+            id="santo-do-dia-frase"
+            ref={(el) => { sectionRefs.current.frase = el; }}
+            className="relative pl-spacing-lg border-l-2 border-primary/50 scroll-mt-32"
+          >
             <Icons.Quote className="absolute -left-spacing-xs -top-spacing-xs w-spacing-md h-spacing-md text-primary/60 bg-card px-spacing-3xs" />
             <p className="font-serif italic text-premium-xl md:text-premium-2xl text-foreground leading-relaxed">
               {renderWithRefs(frase, 'quote')}
@@ -205,7 +309,12 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Blocos editoriais */}
         <div className="grid md:grid-cols-2 gap-spacing-xl">
-          <section aria-labelledby="bloco-vida" className="space-y-spacing-sm">
+          <section
+            id="santo-do-dia-vida"
+            ref={(el) => { sectionRefs.current.vida = el; }}
+            aria-labelledby="bloco-vida"
+            className="space-y-spacing-sm scroll-mt-32"
+          >
             <h3
               id="bloco-vida"
               className="flex items-center gap-spacing-xs text-primary text-premium-small font-black uppercase tracking-[0.2em]"
@@ -213,12 +322,19 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
               <Icons.BookOpen className="w-spacing-sm h-spacing-sm" />
               Vida
             </h3>
-            <p className="font-serif text-premium-base leading-[1.75] text-foreground/90 line-clamp-[8]">
+            <p
+              className={`font-serif text-premium-base leading-[1.75] text-foreground/90 whitespace-pre-line ${expanded ? '' : 'line-clamp-[8]'}`}
+            >
               {renderWithRefs(vida, 'vida')}
             </p>
           </section>
 
-          <section aria-labelledby="bloco-legado" className="space-y-spacing-sm">
+          <section
+            id="santo-do-dia-legado"
+            ref={(el) => { sectionRefs.current.legado = el; }}
+            aria-labelledby="bloco-legado"
+            className="space-y-spacing-sm scroll-mt-32"
+          >
             <h3
               id="bloco-legado"
               className="flex items-center gap-spacing-xs text-primary text-premium-small font-black uppercase tracking-[0.2em]"
@@ -234,8 +350,10 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
 
         {/* Meditação — bloco de largura total, contemplativo */}
         <section
+          id="santo-do-dia-meditacao"
+          ref={(el) => { sectionRefs.current.meditacao = el; }}
           aria-labelledby="bloco-meditacao"
-          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm"
+          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm scroll-mt-32"
         >
           <h3
             id="bloco-meditacao"
@@ -248,6 +366,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             {renderWithRefs(meditacao, 'meditacao')}
           </p>
         </section>
+
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-spacing-sm pt-spacing-xs">
