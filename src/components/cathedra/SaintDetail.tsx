@@ -82,8 +82,69 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     return VIRTUE_TO_JOURNEY['paciência']; // Default
   }, [saint.virtues]);
 
+  // SEO: Schema.org Person + ReligiousOccasion (dia de festa)
+  const canonicalPath = `/santos/${(saint as any).slug || saint.id}`;
+  const canonicalUrl = `${SEO_CONFIG.BASE_URL}${canonicalPath}`;
+  const seoDescription = (saint.bio || saint.fullBio || `Vida, virtudes e testemunho de ${saint.name}.`)
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160);
+  const personLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: saint.name,
+    alternateName: saint.title || undefined,
+    description: seoDescription,
+    url: canonicalUrl,
+    image: typeof saint.image === 'string' ? saint.image : Array.isArray(saint.image) ? saint.image[0] : undefined,
+    birthDate: saint.born || undefined,
+    deathDate: saint.died || undefined,
+    knowsAbout: saint.virtues && saint.virtues.length > 0 ? saint.virtues : undefined,
+    sameAs: (saint as any).url || undefined,
+    ...(saint.quotes && saint.quotes[0]
+      ? {
+          subjectOf: {
+            '@type': 'Quotation',
+            text: saint.quotes[0],
+          },
+        }
+      : {}),
+  };
+  const occasionLd: Record<string, unknown> | null = saint.feastDay
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        additionalType: 'https://schema.org/ReligiousOccasion',
+        name: `Festa de ${saint.name}`,
+        description: `Memória litúrgica de ${saint.name} — ${saint.feastDay}.`,
+        about: { '@type': 'Person', name: saint.name },
+        eventSchedule: {
+          '@type': 'Schedule',
+          repeatFrequency: 'P1Y',
+          byMonthDay: (saint as any).feastDayNum || undefined,
+          byMonth: (saint as any).feastMonth || undefined,
+        },
+        url: canonicalUrl,
+      }
+    : null;
+
   return (
     <>
+    <Helmet>
+      <title>{`${saint.name}${saint.title ? ' — ' + saint.title : ''} · Sanctorum · Cathedra Digital`}</title>
+      <meta name="description" content={seoDescription} />
+      <link rel="canonical" href={canonicalUrl} />
+      <meta property="og:type" content="profile" />
+      <meta property="og:title" content={saint.name} />
+      <meta property="og:description" content={seoDescription} />
+      <meta property="og:url" content={canonicalUrl} />
+      {typeof saint.image === 'string' && <meta property="og:image" content={saint.image} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={saint.name} />
+      <meta name="twitter:description" content={seoDescription} />
+      <script type="application/ld+json">{JSON.stringify(personLd)}</script>
+      {occasionLd && <script type="application/ld+json">{JSON.stringify(occasionLd)}</script>}
+    </Helmet>
     <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
