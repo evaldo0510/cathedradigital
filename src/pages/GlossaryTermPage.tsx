@@ -682,6 +682,11 @@ const GlossaryTermPage: React.FC = () => {
           }
         />
 
+        {/* Selo de completude editorial */}
+        <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
+          <CompletenessBadge value={term.editorial_completeness} />
+        </div>
+
         {/* Sumário lateral (desktop) */}
         <div className="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 mt-8">
           <nav aria-label="Sumário do verbete" className="hidden lg:block sticky top-32 self-start">
