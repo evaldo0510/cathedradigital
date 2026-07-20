@@ -24,6 +24,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useDocumentSearch } from "@/hooks/useDocumentSearch";
 import { useGlossaryRole, type GlossaryRole } from "@/hooks/useGlossaryRole";
 import GlossaryPermissionsPanel from "@/components/admin/GlossaryPermissionsPanel";
+import GlossaryBulkPublishPanel from "@/components/admin/GlossaryBulkPublishPanel";
 
 type Status = "draft" | "review" | "published";
 
