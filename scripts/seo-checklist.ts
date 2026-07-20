@@ -141,6 +141,47 @@ checks.push({
   detail: hasGscMeta ? 'Meta google-site-verification presente.' : 'Sem meta google-site-verification (configurar via /admin/seo-status após conectar GSC).',
 });
 
+// 6) Glossário no sitemap + RSS
+const SUPABASE_URL = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? 'https://gpwrpmoniglarqwfyryp.supabase.co';
+const SUPABASE_ANON = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '';
+if (SUPABASE_ANON && sitemap) {
+  try {
+    const restRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/glossary?select=slug&status=eq.published&slug=not.is.null`,
+      { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } },
+    );
+    if (restRes.ok) {
+      const slugs = (await restRes.json() as Array<{ slug: string }>).map((r) => r.slug);
+      const missing = slugs.filter((s) => !sitemap.includes(`/glossario/${s}`));
+      checks.push({
+        id: 'glossary_in_sitemap',
+        label: `Verbetes do Glossário no sitemap (${slugs.length} publicados)`,
+        status: missing.length === 0 ? 'pass' : 'fail',
+        detail: missing.length === 0 ? 'Todos presentes.' : `Faltando: ${missing.join(', ')}`,
+      });
+
+      // RSS
+      const rssRes = await fetch(`${SUPABASE_URL}/functions/v1/glossary-rss?format=rss`, {
+        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
+      });
+      if (rssRes.ok) {
+        const body = await rssRes.text();
+        const missingRss = slugs.filter((s) => !body.includes(`/glossario/${s}`));
+        checks.push({
+          id: 'glossary_in_rss',
+          label: 'Verbetes do Glossário no feed RSS',
+          status: missingRss.length === 0 ? 'pass' : 'warn',
+          detail: missingRss.length === 0 ? 'Todos presentes no feed.' : `Faltando no RSS: ${missingRss.join(', ')}`,
+        });
+      } else {
+        checks.push({ id: 'glossary_in_rss', label: 'Feed RSS glossário', status: 'warn', detail: `RSS HTTP ${rssRes.status}` });
+      }
+    }
+  } catch (e) {
+    checks.push({ id: 'glossary_in_sitemap', label: 'Verbetes do Glossário no sitemap', status: 'warn', detail: `Erro: ${e instanceof Error ? e.message : String(e)}` });
+  }
+}
+
 const summary = {
   pass: checks.filter((c) => c.status === 'pass').length,
   warn: checks.filter((c) => c.status === 'warn').length,
