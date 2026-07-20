@@ -6435,6 +6435,7 @@ export type Database = {
         Args: { _contribution_id: string; _reviewer_notes?: string }
         Returns: undefined
       }
+      resolve_user_id_by_email: { Args: { _email: string }; Returns: string }
       run_manual_security_scan: { Args: never; Returns: string }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
