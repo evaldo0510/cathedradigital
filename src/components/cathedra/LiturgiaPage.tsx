@@ -306,7 +306,7 @@ const LiturgiaPage: React.FC = () => {
                     {prayerOfDay.estimated_seconds ? (
                       <span className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {Math.max(1, Math.round(prayerOfDay.estimated_seconds / 60))} min</span>
                     ) : <span />}
-                    <Button variant="secondary" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={() => navigate(`/oracao/${prayerOfDay.slug}`)}>
+                    <Button variant="secondary" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={() => navigate(`/oracao/${prayerOfDay.slug}?from=liturgia`)}>
                       Rezar agora <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
                     </Button>
                   </div>
