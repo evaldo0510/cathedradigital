@@ -125,10 +125,24 @@ const JornadaStepPage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [stepRes, journeyRes, countRes] = await Promise.all([
+      // Uma única leva paralela: step atual, título da jornada, todos os passos e progresso.
+      // Antes fazíamos 3 queries + fetch de allSteps + fetch de progresso em série; agora tudo junto.
+      const [stepRes, journeyRes, allStepsRes, progressRes] = await Promise.all([
         supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
         supabase.from('journeys').select('title').eq('id', journeyId!).single(),
-        supabase.from('journey_steps').select('*', { count: 'exact', head: true }).eq('journey_id', journeyId!),
+        supabase
+          .from('journey_steps')
+          .select('id, step_order, title, subtitle, step_type, duration_minutes, is_free, journey_id')
+          .eq('journey_id', journeyId!)
+          .order('step_order', { ascending: true }),
+        user
+          ? supabase
+              .from('journey_progress')
+              .select('id, reflection')
+              .eq('user_id', user.id)
+              .eq('step_id', stepId!)
+              .maybeSingle()
+          : Promise.resolve({ data: null } as any),
       ]);
 
       if (stepRes.data) {
@@ -141,21 +155,14 @@ const JornadaStepPage: React.FC = () => {
         if (firstWithContent) setExpandedSection(firstWithContent.key);
       }
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
-      setTotalSteps(countRes.count || 0);
 
-      const { data: allSteps } = await supabase
-        .from('journey_steps')
-        .select('*')
-        .eq('journey_id', journeyId!)
-        .order('step_order', { ascending: true });
-
-      if (allSteps && stepRes.data) {
-        const currentIndex = allSteps.findIndex((s) => s.id === stepId);
+      const allSteps = allStepsRes.data ?? [];
+      setTotalSteps(allSteps.length);
+      if (allSteps.length && stepRes.data) {
+        const currentIndex = allSteps.findIndex((s: any) => s.id === stepId);
         if (currentIndex !== -1) {
-          if (currentIndex > 0) setPrevStep(allSteps[currentIndex - 1]);
-          else setPrevStep(null);
-          if (currentIndex < allSteps.length - 1) setNextStep(allSteps[currentIndex + 1]);
-          else setNextStep(null);
+          setPrevStep(currentIndex > 0 ? (allSteps[currentIndex - 1] as any) : null);
+          setNextStep(currentIndex < allSteps.length - 1 ? (allSteps[currentIndex + 1] as any) : null);
         }
       }
 
@@ -168,17 +175,11 @@ const JornadaStepPage: React.FC = () => {
       }
 
       if (user && stepRes.data) {
-        const { data: progress } = await supabase
-          .from('journey_progress')
-          .select('id, reflection')
-          .eq('user_id', user.id)
-          .eq('step_id', stepId!)
-          .maybeSingle();
+        const progress = (progressRes as any)?.data;
         if (progress) {
           setCompleted(true);
           setReflection(progress.reflection || '');
         } else if (storageKey) {
-          // Retomar rascunho de reflexão salvo localmente
           try {
             const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
             if (typeof saved.draftReflection === 'string' && saved.draftReflection.trim()) {
