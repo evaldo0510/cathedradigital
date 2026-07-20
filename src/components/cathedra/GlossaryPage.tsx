@@ -121,12 +121,17 @@ const CATEGORY_COLORS: Record<string, string> = {
 const GlossaryPage: React.FC = () => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState('Todos');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState(() => searchParams.get('category') || 'Todos');
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
+  const [sortMode, setSortMode] = useState<SortMode>(
+    () => (searchParams.get('sort') as SortMode) || 'relevance',
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
+
 
   // Detecta se o usuário veio de uma sessão ativa do Rosário.
   useEffect(() => {
