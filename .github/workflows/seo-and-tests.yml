@@ -45,6 +45,9 @@ jobs:
       - name: Gerar sitemap.xml + robots.txt
         run: bun run scripts/generate-sitemap.ts
 
+      - name: Auditar relações hardcoded no Glossário e adapters
+        run: bun run scripts/audit-glossary-hardcoded.ts
+
       - name: Rodar SEO checklist
         run: bun run scripts/seo-checklist.ts
 
@@ -85,7 +88,7 @@ jobs:
       - name: Instalar Chromium (Playwright)
         run: bunx playwright install --with-deps chromium
       - name: Rodar E2E SEO Glossário
-        run: bunx playwright test tests/e2e/glossary-seo.spec.ts --project=chromium
+        run: bunx playwright test tests/e2e/glossary-seo.spec.ts tests/e2e/glossary-nexus-sections.spec.ts --project=chromium
         env:
           CI: 'true'
       - name: Publicar relatório Playwright

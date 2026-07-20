@@ -356,6 +356,27 @@ function RefList({
 /* Nexus 100% automático via KnowledgeGraph                            */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Indica a fonte de cada conexão renderizada: nó (`kind`) e ID canônico do
+ * KnowledgeGraph. Deixa explícito que o vínculo é gerado automaticamente
+ * pelo grafo, e não por relações hardcoded na UI.
+ */
+function NexusSourceBadge({ node }: { node: ResolvedNode['node'] }) {
+  return (
+    <span
+      className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest px-2 py-[2px] font-stitch-label text-[10px] uppercase tracking-[0.16em] text-stitch-on-surface-variant"
+      title={`Fonte automática: KnowledgeGraph → ${node.id}`}
+      aria-label={`Fonte automática KnowledgeGraph, tipo ${node.kind}, id ${node.id}`}
+    >
+      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-stitch-secondary" />
+      <span>{node.kind}</span>
+      <span aria-hidden="true" className="text-stitch-outline-variant">·</span>
+      <code className="font-mono text-[10px] normal-case tracking-normal text-stitch-on-surface">{node.id}</code>
+    </span>
+  );
+}
+
+
 function AutoNexusList({
   nodes,
   emptyLabel,
@@ -410,6 +431,7 @@ function AutoNexusList({
               {r.node.summary && (
                 <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.node.summary}</p>
               )}
+              <NexusSourceBadge node={r.node} />
             </div>
           </li>
         );
@@ -467,6 +489,7 @@ function NexusFullList({
                   <span className="font-medium">{r.node.label}</span>
                 </>
               )}
+              <NexusSourceBadge node={r.node} />
             </div>
           </li>
         );
@@ -658,7 +681,7 @@ const GlossaryTermPage: React.FC = () => {
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
-  const autoNexus = resolveAutoNexus(term);
+  const autoNexus = useMemo(() => resolveAutoNexus(term), [term]);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
 

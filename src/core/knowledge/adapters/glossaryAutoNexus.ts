@@ -246,7 +246,53 @@ function dedupe(nodes: ResolvedNode[]): ResolvedNode[] {
   return out;
 }
 
+/* ------------------------------------------------------------------ */
+/* Cache LRU (memoização por fingerprint)                              */
+/* ------------------------------------------------------------------ */
+
+const CACHE_MAX = 64;
+const cache = new Map<string, AutoNexusResult>();
+
+function fingerprint(term: GlossaryLike): string {
+  const join = (xs: string[] | null | undefined) => (xs ?? []).join('|');
+  return [
+    term.slug ?? '',
+    join(term.bible_verses),
+    join(term.catechism_references),
+    join(term.magisterium_references),
+    join(term.saints_refs),
+    join(term.fathers_refs),
+    join(term.liturgy_refs),
+    join(term.prayer_refs),
+    join(term.journey_refs),
+    (term.nexus_refs ?? []).map((r) => `${r?.kind ?? ''}:${r?.target ?? ''}`).join('|'),
+  ].join('#');
+}
+
+/** Testes/hot-reload podem limpar a cache. */
+export function clearAutoNexusCache(): void {
+  cache.clear();
+}
+
 export function resolveAutoNexus(term: GlossaryLike): AutoNexusResult {
+  const key = fingerprint(term);
+  const hit = cache.get(key);
+  if (hit) {
+    // move-to-end para LRU simples
+    cache.delete(key);
+    cache.set(key, hit);
+    return hit;
+  }
+  const result = computeAutoNexus(term);
+  cache.set(key, result);
+  if (cache.size > CACHE_MAX) {
+    const first = cache.keys().next().value;
+    if (first !== undefined) cache.delete(first);
+  }
+  return result;
+}
+
+function computeAutoNexus(term: GlossaryLike): AutoNexusResult {
   const byKind: Record<string, ResolvedNode[]> = {};
   const push = (kindKey: string, id: KnowledgeNodeId) => {
     const resolved = KnowledgeGraph.resolve(id);
