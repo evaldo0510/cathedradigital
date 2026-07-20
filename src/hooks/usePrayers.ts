@@ -29,6 +29,13 @@ export interface Prayer {
   related_catechism: number[];
   related_saints: string[];
   related_glossary: string[];
+  // Sub-sprint 1 SEG — campos editoriais expandidos
+  blocks?: unknown;
+  audio_url?: string | null;
+  duration_min?: number | null;
+  bible_refs?: unknown;
+  catechism_refs?: number[];
+  content_status?: 'stub' | 'partial' | 'complete';
 }
 
 export const PRAYER_CATEGORY_LABEL: Record<PrayerCategory, string> = {

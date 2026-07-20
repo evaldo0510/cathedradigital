@@ -20,6 +20,8 @@ import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import RosaryReader from '@/components/cathedra/RosaryReader';
+import { isPrayerBlockArray } from '@/types/prayer';
 
 const FONT_STEPS = [
   { key: 'sm', label: 'A', textClass: 'text-xl md:text-[22px]', latinClass: 'text-lg' },
@@ -113,6 +115,13 @@ const PrayerDetailPage: React.FC = () => {
   }
 
   const kicker = prayer.kicker ?? `Cathedra · ${PRAYER_CATEGORY_LABEL[prayer.category]}`;
+
+  // Sub-sprint 1 SEG — leitor contemplativo por blocos (Rosário/Via-Sacra/Horas)
+  const hasBlocks = isPrayerBlockArray(prayer.blocks) && prayer.blocks.length > 0;
+  const isLegacy = searchParams.get('legacy') === '1';
+  if (hasBlocks && !isLegacy) {
+    return <RosaryReader prayer={prayer} kicker={kicker} />;
+  }
 
   return (
     <>
