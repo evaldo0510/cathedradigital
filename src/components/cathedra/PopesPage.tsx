@@ -159,21 +159,50 @@ const POPES_DATA: Pope[] = [
   }
 ];
 
+/**
+ * Extrai [anoInício, anoFim] do texto de "reign".
+ * "Presente" resolve para o ano corrente.
+ */
+function parseReignYears(reign: string): [number, number] {
+  const currentYear = new Date().getFullYear();
+  const matches = reign.match(/\d{1,4}/g) ?? [];
+  const start = matches[0] ? parseInt(matches[0], 10) : 0;
+  const end = matches[1]
+    ? parseInt(matches[1], 10)
+    : /presente/i.test(reign)
+      ? currentYear
+      : start;
+  return [start, end];
+}
+
 const PopesPage: React.FC = () => {
   const [search, setSearch] = useState('');
-  
+  const [date, setDate] = useState<Date>(new Date());
+
+  const year = date.getFullYear();
+
+  const reigningPope = useMemo(() => {
+    return POPES_DATA.find((p) => {
+      const [start, end] = parseReignYears(p.reign);
+      return year >= start && year <= end;
+    });
+  }, [year]);
+
   const filteredPopes = useMemo(() => {
-    return POPES_DATA.filter(p => 
-      p.name.toLowerCase().includes(search.toLowerCase()) || 
-      p.title.toLowerCase().includes(search.toLowerCase())
+    const q = search.trim().toLowerCase();
+    if (!q) return POPES_DATA;
+    return POPES_DATA.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.title.toLowerCase().includes(q),
     );
   }, [search]);
 
   return (
     <div className="w-full space-y-spacing-xl pb-spacing-3xl px-spacing-md">
-      <SEOHead 
-        title="Os Papas - Sucessores de Pedro" 
-        description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais." 
+      <SEOHead
+        title="Os Papas - Sucessores de Pedro"
+        description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais."
         path="/papas"
       />
 
@@ -183,6 +212,61 @@ const PopesPage: React.FC = () => {
         title="Os Papas"
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
+
+      <SanctorumDateNav value={date} onChange={setDate} />
+
+      <AnimatePresence mode="wait">
+        {reigningPope ? (
+          <motion.div
+            key={reigningPope.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className="max-w-3xl mx-auto"
+            aria-live="polite"
+          >
+            <Card className="overflow-hidden border-primary/40 bg-gradient-to-br from-primary/5 to-transparent">
+              <CardContent className="p-spacing-lg flex flex-col md:flex-row gap-spacing-lg items-center">
+                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-premium-full overflow-hidden border-2 border-primary/40 shrink-0">
+                  <SacredImage
+                    src={reigningPope.image}
+                    alt={reigningPope.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 text-center md:text-left space-y-spacing-xs">
+                  <p className="text-premium-xs font-black uppercase tracking-widest text-primary">
+                    Papa reinante em {year}
+                  </p>
+                  <h3 className="text-premium-2xl font-serif font-bold text-foreground">
+                    {reigningPope.name}
+                  </h3>
+                  <p className="text-premium-sm font-serif italic text-muted-foreground">
+                    {reigningPope.title} · {reigningPope.reign}
+                  </p>
+                  {reigningPope.motto && (
+                    <p className="text-premium-xs font-serif italic text-primary">
+                      "{reigningPope.motto}"
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="no-pope"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-center text-premium-sm text-muted-foreground font-serif italic"
+            aria-live="polite"
+          >
+            Nenhum papa deste acervo estava reinando em {year}.
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="relative w-full mx-auto">
         <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
