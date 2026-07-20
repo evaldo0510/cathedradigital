@@ -43,6 +43,30 @@ import SacredImage from './SacredImage';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 
+/**
+ * Cache em memória para prefetch de etapas vizinhas (prev/next).
+ * Chave: stepId. Valor: linha completa do journey_steps.
+ * Populado em background após o load da etapa corrente e consumido
+ * na navegação por seta/atalho — deixa a transição imediata.
+ */
+const STEP_PREFETCH_CACHE = new Map<string, any>();
+const prefetchStep = async (stepId: string): Promise<void> => {
+  if (!stepId || STEP_PREFETCH_CACHE.has(stepId)) return;
+  const { data } = await supabase
+    .from('journey_steps')
+    .select('*')
+    .eq('id', stepId)
+    .single();
+  if (data) STEP_PREFETCH_CACHE.set(stepId, data);
+};
+const scheduleIdle = (fn: () => void) => {
+  if (typeof (window as any).requestIdleCallback === 'function') {
+    (window as any).requestIdleCallback(fn, { timeout: 1200 });
+  } else {
+    setTimeout(fn, 200);
+  }
+};
+
 type SectionDef = {
   key: string;
   label: string;
