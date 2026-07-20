@@ -1,0 +1,97 @@
+name: SEO & Tests (PR Gate)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: seo-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://gpwrpmoniglarqwfyryp.supabase.co' }}
+  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+  VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://gpwrpmoniglarqwfyryp.supabase.co' }}
+  VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+jobs:
+  vitest:
+    name: Vitest (unit + integridade editorial)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Run Vitest
+        run: bunx vitest run --reporter=default
+
+  seo-assets:
+    name: Sitemap · robots · SEO checklist · indexing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+
+      - name: Gerar sitemap.xml + robots.txt
+        run: bun run scripts/generate-sitemap.ts
+
+      - name: Rodar SEO checklist
+        run: bun run scripts/seo-checklist.ts
+
+      - name: Checklist de indexação do Glossário
+        run: bun run scripts/glossary-indexing-checklist.ts
+
+      - name: Falhar se sitemap/robots ficaram fora de sync
+        run: |
+          if ! git diff --quiet -- public/sitemap.xml public/robots.txt; then
+            echo "::error::sitemap.xml/robots.txt desatualizados. Rode: bun run scripts/generate-sitemap.ts"
+            git --no-pager diff -- public/sitemap.xml public/robots.txt
+            exit 1
+          fi
+
+      - name: Publicar relatórios SEO
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-reports
+          path: |
+            public/sitemap.xml
+            public/robots.txt
+            public/seo-checklist-report.json
+            public/glossary-indexing-report.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  playwright:
+    name: Playwright E2E (SEO Glossário)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Instalar Chromium (Playwright)
+        run: bunx playwright install --with-deps chromium
+      - name: Rodar E2E SEO Glossário
+        run: bunx playwright test tests/e2e/glossary-seo.spec.ts --project=chromium
+        env:
+          CI: 'true'
+      - name: Publicar relatório Playwright
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 14
