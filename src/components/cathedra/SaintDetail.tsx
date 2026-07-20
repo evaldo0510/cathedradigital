@@ -135,13 +135,21 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       <meta name="description" content={seoDescription} />
       <link rel="canonical" href={canonicalUrl} />
       <meta property="og:type" content="profile" />
-      <meta property="og:title" content={saint.name} />
+      <meta property="og:site_name" content="Cathedra Digital" />
+      <meta property="og:title" content={`${saint.name}${saint.title ? ' — ' + saint.title : ''}`} />
       <meta property="og:description" content={seoDescription} />
       <meta property="og:url" content={canonicalUrl} />
-      {typeof saint.image === 'string' && <meta property="og:image" content={saint.image} />}
+      {typeof saint.image === 'string' && (
+        <>
+          <meta property="og:image" content={saint.image} />
+          <meta property="og:image:secure_url" content={saint.image} />
+          <meta property="og:image:alt" content={`Sanctorum · ${saint.name}${saint.feastDay ? ' · ' + saint.feastDay : ''}`} />
+        </>
+      )}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={saint.name} />
       <meta name="twitter:description" content={seoDescription} />
+      {typeof saint.image === 'string' && <meta name="twitter:image" content={saint.image} />}
       <script type="application/ld+json">{JSON.stringify(personLd)}</script>
       {occasionLd && <script type="application/ld+json">{JSON.stringify(occasionLd)}</script>}
     </Helmet>

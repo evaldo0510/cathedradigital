@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format, addDays, subDays, isSameDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Icons } from '@/constants';
@@ -33,10 +33,18 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
   stripDays = 7,
   className,
 }) => {
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const half = Math.floor(stripDays / 2);
   const strip = Array.from({ length: stripDays }).map((_, i) =>
     addDays(subDays(value, half), i),
   );
+
+  const handleCalendarSelect = (d: Date | undefined) => {
+    if (!d) return;
+    onChange(d);
+    setCalendarOpen(false);
+  };
+
 
   return (
     <div className={cn('flex flex-col items-center gap-spacing-lg', className)}>
@@ -99,10 +107,12 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Semana
           <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
         </Button>
-        <Popover>
+        <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               aria-label="Escolher data no calendário"
+              aria-haspopup="dialog"
+              aria-expanded={calendarOpen}
               className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
             >
               <Icons.Calendar className="w-spacing-sm h-spacing-sm mr-spacing-2xs" aria-hidden="true" />
@@ -113,13 +123,17 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             <CalendarPicker
               mode="single"
               selected={value}
-              onSelect={(d) => d && onChange(d)}
+              defaultMonth={value}
+              onSelect={handleCalendarSelect}
               initialFocus
               locale={ptBR}
+              modifiers={{ today: new Date() }}
+              modifiersClassNames={{ today: 'ring-2 ring-primary/60 ring-offset-1 ring-offset-background' }}
               className={cn('p-3 pointer-events-auto')}
             />
           </PopoverContent>
         </Popover>
+
       </div>
 
       <div className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar">
