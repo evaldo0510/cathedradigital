@@ -1,0 +1,2 @@
+ALTER TABLE public.itineraria ADD COLUMN IF NOT EXISTS metadata jsonb NOT NULL DEFAULT '{}'::jsonb;
+COMMENT ON COLUMN public.itineraria.metadata IS 'Campos editoriais opcionais: presentation (texto longo), objectives (array), prerequisites (array), complementary_readings (array {title,url,source}), related_modules (array {label,to,kind}).';

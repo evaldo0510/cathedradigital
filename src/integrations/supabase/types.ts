@@ -2585,6 +2585,7 @@ export type Database = {
           id: string
           is_active: boolean | null
           is_premium: boolean | null
+          metadata: Json
           sort_order: number | null
           subtitle: string | null
           tags: string[] | null
@@ -2602,6 +2603,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           is_premium?: boolean | null
+          metadata?: Json
           sort_order?: number | null
           subtitle?: string | null
           tags?: string[] | null
@@ -2619,6 +2621,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           is_premium?: boolean | null
+          metadata?: Json
           sort_order?: number | null
           subtitle?: string | null
           tags?: string[] | null
