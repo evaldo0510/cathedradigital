@@ -225,6 +225,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           subtitle={saint.title}
           meta={[saint.feastDay && `Festa · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
         />
+        {saint.contentStatus && saint.contentStatus !== 'complete' && (
+          <div className="-mt-spacing-lg">
+            <SanctumCurationBadge status={saint.contentStatus} />
+          </div>
+        )}
+
 
         {/* Top Icons.Info Strip */}
         <div className="flex flex-wrap items-center gap-spacing-lg">
