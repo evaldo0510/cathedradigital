@@ -66,7 +66,10 @@ export function getPrivateRoutes(allRoutes: string[]) {
     '/home-v3', '/legacy-home', '/home', '/dev/editorial', '/dev/mobile',
   ];
 
-  return allRoutes.filter(route => {
+  const fromEnum = allRoutes.filter(route => {
     return route.startsWith('/admin') || privateList.includes(route);
   });
+  // Também incluir rotas de dev/preview mesmo que não estejam declaradas no enum
+  const devOnly = privateList.filter(r => !fromEnum.includes(r));
+  return [...fromEnum, ...devOnly];
 }
