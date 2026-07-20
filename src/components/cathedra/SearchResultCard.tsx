@@ -43,6 +43,7 @@ export interface SearchResultCardProps {
 export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCardProps>(({
   title,
   subtitle,
+  subtitleNode,
   score,
   icon,
   onClick,
