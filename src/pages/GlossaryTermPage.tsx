@@ -351,6 +351,60 @@ function RefList({
   );
 }
 
+const NEXUS_KIND_LABEL: Record<string, string> = {
+  glossary: 'Verbete',
+  term: 'Verbete',
+  catechism: 'Catecismo',
+  bible: 'Escritura',
+  saint: 'Santo',
+  father: 'Padre da Igreja',
+  magisterium: 'Magistério',
+  journey: 'Jornada',
+  prayer: 'Oração',
+  liturgy: 'Liturgia',
+};
+
+function resolveNexusHref(r: NexusRef): string | null {
+  const target = (r.target ?? '').toString().trim();
+  if (!target) return null;
+  const kind = (r.kind ?? '').toLowerCase();
+  switch (kind) {
+    case 'glossary':
+    case 'term':
+    case 'verbete':
+      return `/glossario/${encodeURIComponent(target)}`;
+    case 'catechism':
+    case 'cic': {
+      const n = Number(target);
+      return Number.isFinite(n) && n > 0 ? `/catechism?p=${n}` : '/catechism';
+    }
+    case 'bible':
+    case 'escritura':
+      return `/bible?ref=${encodeURIComponent(target)}`;
+    case 'saint':
+    case 'santo':
+      return `/santos/${encodeURIComponent(target)}`;
+    case 'father':
+    case 'padre':
+      return `/padres/${encodeURIComponent(target)}`;
+    case 'journey':
+    case 'jornada':
+    case 'formacao':
+      return `/formacao/${encodeURIComponent(target)}`;
+    case 'prayer':
+    case 'oracao':
+      return `/oracoes/${encodeURIComponent(target)}`;
+    case 'liturgy':
+    case 'liturgia':
+      return `/liturgia/${encodeURIComponent(target)}`;
+    case 'magisterium':
+    case 'magisterio':
+      return `/magisterio/${encodeURIComponent(target)}`;
+    default:
+      return null;
+  }
+}
+
 function NexusList({ refs }: { refs: NexusRef[] | null | undefined }) {
   if (!refs || refs.length === 0) {
     return (
@@ -363,18 +417,45 @@ function NexusList({ refs }: { refs: NexusRef[] | null | undefined }) {
   }
   return (
     <ul className="max-w-[68ch] mx-auto space-y-4 font-stitch-serif text-stitch-body text-stitch-ink">
-      {refs.map((r, i) => (
-        <li key={i} className="flex gap-3 items-baseline">
-          <EditorialGoldMarker />
-          <div className="flex-1">
+      {refs.map((r, i) => {
+        const href = resolveNexusHref(r);
+        const kindLabel = NEXUS_KIND_LABEL[(r.kind ?? '').toLowerCase()] ?? (r.kind ?? 'Nexus');
+        const label = r.label ?? r.target ?? '—';
+        const body = (
+          <>
             <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-              {r.kind ?? 'Nexus'}
+              {kindLabel}
             </span>
-            <span className="font-medium">{r.label ?? r.target ?? '—'}</span>
-            {r.note && <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.note}</p>}
-          </div>
-        </li>
-      ))}
+            <span
+              className={cn(
+                'font-medium',
+                href && 'underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors',
+              )}
+            >
+              {label}
+            </span>
+          </>
+        );
+        return (
+          <li key={i} className="flex gap-3 items-baseline">
+            <EditorialGoldMarker />
+            <div className="flex-1">
+              {href ? (
+                <Link
+                  to={href}
+                  className="text-stitch-ink hover:text-stitch-secondary transition-colors"
+                  aria-label={`Abrir ${kindLabel}: ${label}`}
+                >
+                  {body}
+                </Link>
+              ) : (
+                body
+              )}
+              {r.note && <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.note}</p>}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }
