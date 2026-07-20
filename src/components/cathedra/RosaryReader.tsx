@@ -13,7 +13,12 @@ import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome'
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
+import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
+import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
+import PrayerFavoriteButton from '@/components/prayer/PrayerFavoriteButton';
+import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { usePrayerSession } from '@/hooks/usePrayerSession';
+import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 import { isPrayerBlockArray, type PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 
