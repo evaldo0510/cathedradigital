@@ -305,12 +305,13 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Próxima Etapa (destaque) ──────────────── */}
         {!isLocked && nextStep && !isJourneyComplete && (
-          <section className="pt-14">
+          <section data-testid="jornada-next-step" className="pt-14">
             <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
               A próxima etapa
             </span>
             <Link
               to={`/jornadas/${id}/step?step=${nextStep.id}`}
+              data-testid="jornada-next-step-link"
               className="mt-3 group flex flex-col gap-5 border border-stitch-secondary/40 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary hover:shadow-lg md:flex-row md:items-center md:justify-between md:p-8"
             >
               <div className="min-w-0 flex-1">
