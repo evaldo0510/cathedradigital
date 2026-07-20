@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format, addDays, subDays, isSameDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Icons } from '@/constants';
@@ -33,10 +33,18 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
   stripDays = 7,
   className,
 }) => {
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const half = Math.floor(stripDays / 2);
   const strip = Array.from({ length: stripDays }).map((_, i) =>
     addDays(subDays(value, half), i),
   );
+
+  const handleCalendarSelect = (d: Date | undefined) => {
+    if (!d) return;
+    onChange(d);
+    setCalendarOpen(false);
+  };
+
 
   return (
     <div className={cn('flex flex-col items-center gap-spacing-lg', className)}>
