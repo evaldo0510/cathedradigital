@@ -44,8 +44,18 @@ export interface JourneyAutoNexusResult {
 const CACHE_MAX = 64;
 const cache = new Map<string, JourneyAutoNexusResult>();
 
-function fingerprint(j: JourneyLike): string {
-  return [j.id, j.title ?? '', j.subtitle ?? '', j.category ?? '', (j.tags ?? []).join('|')].join('#');
+/**
+ * Fingerprint determinístico da jornada. Exportado para permitir cobertura
+ * por testes unitários (`_fingerprintJourney`) e uso pelo `nexusMetrics`.
+ */
+export function _fingerprintJourney(j: JourneyLike): string {
+  return [
+    j.id,
+    j.title ?? '',
+    j.subtitle ?? '',
+    j.category ?? '',
+    (j.tags ?? []).join('|'),
+  ].join('#');
 }
 
 export function clearJourneyAutoNexusCache(): void {
@@ -79,12 +89,18 @@ function collectTerms(j: JourneyLike): string[] {
   return Array.from(set);
 }
 
+function nowMs(): number {
+  return typeof performance !== 'undefined' ? performance.now() : Date.now();
+}
+
 export function resolveJourneyAutoNexus(journey: JourneyLike): JourneyAutoNexusResult {
-  const key = fingerprint(journey);
+  const key = _fingerprintJourney(journey);
+  const started = nowMs();
   const hit = cache.get(key);
   if (hit) {
     cache.delete(key);
     cache.set(key, hit);
+    recordNexusMetric({ adapter: 'journey', hit: true, ms: nowMs() - started, key });
     return hit;
   }
 
@@ -114,5 +130,6 @@ export function resolveJourneyAutoNexus(journey: JourneyLike): JourneyAutoNexusR
     const first = cache.keys().next().value;
     if (first !== undefined) cache.delete(first);
   }
+  recordNexusMetric({ adapter: 'journey', hit: false, ms: nowMs() - started, key });
   return result;
 }
