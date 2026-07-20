@@ -20,7 +20,11 @@ const FIXTURES: Record<RouteKey, Record<string, string | number>> = {
   'study.magisterium': { doc: 'spe-salvi' },
   'study.father': { slug: 'agostinho' },
   'study.saint': { slug: 'teresinha' },
+  'study.glossary': { slug: 'esperanca' },
+  'study.journey': { id: 'sete-dias' },
+  'study.liturgy': { ref: 'domingo-4-advento' },
   'pray.lectio': { slug: 'domingo-14-tempo-comum' },
+  'pray.prayer': { slug: 'pai-nosso' },
   'pray.liturgy-today': {},
 };
 
