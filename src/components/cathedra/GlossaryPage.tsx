@@ -53,8 +53,15 @@ interface GlossaryTerm {
   definition: string;
   category: string | null;
   status: string | null;
+  editorial_completeness: 'complete' | 'expanding' | 'reviewed_theologically' | null;
   similarityScore?: number;
 }
+
+const COMPLETENESS_DOT: Record<string, { color: string; label: string }> = {
+  complete: { color: 'bg-emerald-500', label: 'Completo' },
+  expanding: { color: 'bg-amber-500', label: 'Em expansão' },
+  reviewed_theologically: { color: 'bg-sky-500', label: 'Revisado teologicamente' },
+};
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
