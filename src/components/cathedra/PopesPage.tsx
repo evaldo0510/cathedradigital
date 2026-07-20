@@ -6,6 +6,7 @@ import SacredImage from './SacredImage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { SanctorumHero } from './SanctorumHero';
 
 
 interface Pope {
