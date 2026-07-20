@@ -22,6 +22,28 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
   return (data || []).map(formatSaint);
 };
 
+/**
+ * Variante que lança a exceção em vez de silenciar o erro. Use em telas
+ * onde o usuário precisa poder tentar novamente (React Query `isError`).
+ */
+export const getSaintsByDateOrThrow = async (
+  month: number,
+  day: number,
+): Promise<Saint[]> => {
+  const { data, error } = await supabase
+    .from('saints')
+    .select(LIST_COLUMNS)
+    .eq('feast_month', month)
+    .eq('feast_day_num', day);
+
+  if (error) {
+    console.error('Error fetching saints by date:', error);
+    throw new Error(error.message || 'Falha ao carregar santos do dia.');
+  }
+
+  return (data || []).map(formatSaint);
+};
+
 
 
 export interface SaintWithScore extends Saint {
