@@ -307,6 +307,37 @@ const GlossaryTermPage: React.FC = () => {
       />
 
       <EditorialShell>
+        {/* Breadcrumb — mantém o termo visível ao navegar entre seções */}
+        <nav
+          aria-label="Trilha de navegação"
+          className="max-w-6xl mx-auto px-4 pt-6"
+        >
+          <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
+            <li>
+              <Link to="/glossario" className="hover:text-stitch-secondary transition">
+                Léxico
+              </Link>
+            </li>
+            {term.category && (
+              <>
+                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                <li>
+                  <Link
+                    to={`/glossario?category=${encodeURIComponent(term.category)}`}
+                    className="hover:text-stitch-secondary transition"
+                  >
+                    {term.category}
+                  </Link>
+                </li>
+              </>
+            )}
+            <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+            <li aria-current="page" className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm">
+              {term.term}
+            </li>
+          </ol>
+        </nav>
+
         <EditorialHero
           kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
           title={term.term}
