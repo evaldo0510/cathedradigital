@@ -890,7 +890,13 @@ const GlossaryTermPage: React.FC = () => {
             {/* Rodapé de versão / revisão teológica */}
             <footer className="mt-16 pt-8 border-t border-stitch-outline-variant/40 max-w-[68ch] mx-auto">
               <EditorialDivider variant="gold-fade" className="mb-6" />
-              <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
+              <dl className="grid grid-cols-2 md:grid-cols-5 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
+                <div>
+                  <dt className="text-stitch-secondary/80">Grau editorial</dt>
+                  <dd className="mt-1">
+                    <CompletenessBadge value={term.editorial_completeness} />
+                  </dd>
+                </div>
                 <div>
                   <dt className="text-stitch-secondary/80">Versão</dt>
                   <dd className="mt-1 text-stitch-on-background">v{term.version ?? 1}</dd>
