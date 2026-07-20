@@ -19,7 +19,7 @@ import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
 import { Button } from '@/components/ui/button';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { format, addDays, subDays, isSameDay, isToday } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
