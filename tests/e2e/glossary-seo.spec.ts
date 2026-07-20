@@ -43,19 +43,17 @@ test.describe('Glossário — SEO por verbete', () => {
       await page.goto(path, { waitUntil: 'networkidle' });
 
       const title = await page.title();
-      const desc = await page
-        .locator('meta[name="description"]')
-        .first()
-        .getAttribute('content');
-      const canonical = await page
-        .locator('link[rel="canonical"]')
-        .first()
-        .getAttribute('href');
-      const ogTitle = await page.locator('meta[property="og:title"]').first().getAttribute('content');
-      const ogDesc = await page.locator('meta[property="og:description"]').first().getAttribute('content');
-      const ogType = await page.locator('meta[property="og:type"]').first().getAttribute('content');
-      const ogUrl = await page.locator('meta[property="og:url"]').first().getAttribute('content');
-      const twCard = await page.locator('meta[name="twitter:card"]').first().getAttribute('content');
+      // Helmet APPENDS tags marcadas com data-rh="true"; usar `.last()` para pegar
+      // o valor efetivo (Helmet vence a versão estática do index.html).
+      const attr = async (sel: string, name: string) =>
+        page.locator(sel).last().getAttribute(name);
+      const desc = await attr('meta[name="description"]', 'content');
+      const canonical = await attr('link[rel="canonical"]', 'href');
+      const ogTitle = await attr('meta[property="og:title"]', 'content');
+      const ogDesc = await attr('meta[property="og:description"]', 'content');
+      const ogType = await attr('meta[property="og:type"]', 'content');
+      const ogUrl = await attr('meta[property="og:url"]', 'content');
+      const twCard = await attr('meta[name="twitter:card"]', 'content');
 
       const push = (msg: string) => failures.push(`${t.slug}: ${msg}`);
       if (!title?.includes(t.term)) push(`<title> sem o termo (${title})`);
