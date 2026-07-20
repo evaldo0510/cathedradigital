@@ -229,11 +229,37 @@ const GlossaryPage: React.FC = () => {
   }, [terms]);
 
   const filtered = useMemo(() => {
-    // When the user is searching, prefer the relevance-ranked RPC results
+    // Quando o usuário busca, o RPC já devolve por relevância.
     const base = searchResults ?? terms;
-    if (category === 'Todos') return base;
-    return base.filter(d => d.category === category);
-  }, [category, terms, searchResults]);
+    const byCategory = category === 'Todos' ? base : base.filter(d => d.category === category);
+    if (sortMode === 'alpha-asc') {
+      return [...byCategory].sort((a, b) => a.term.localeCompare(b.term, 'pt'));
+    }
+    if (sortMode === 'alpha-desc') {
+      return [...byCategory].sort((a, b) => b.term.localeCompare(a.term, 'pt'));
+    }
+    // 'relevance': mantém a ordem de searchResults; para o catálogo (sem busca),
+    // relevância cai para ordem natural (alfabética do fetch).
+    return byCategory;
+  }, [category, terms, searchResults, sortMode]);
+
+  // Sincroniza filtros com a URL para deep-linking (?q=, ?category=, ?sort=).
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    const setOrDel = (key: string, val: string, def: string) => {
+      if (val && val !== def) next.set(key, val);
+      else next.delete(key);
+    };
+    setOrDel('q', searchQuery.trim(), '');
+    setOrDel('category', category, 'Todos');
+    setOrDel('sort', sortMode, 'relevance');
+    // Evita ciclos: só grava se mudou
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category, sortMode]);
+
 
   const enrichedCount = useMemo(() => terms.filter(t => ENRICHMENTS[t.term]).length, [terms]);
 
