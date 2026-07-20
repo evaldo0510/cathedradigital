@@ -22,6 +22,7 @@ import type {
   ResolvedNode,
 } from '../types';
 import type { RouteKey } from '@/core/navigation';
+import { recordNexusMetric } from './nexusMetrics';
 
 /* ------------------------------------------------------------------ */
 /* Termo de entrada — subset agnóstico ao Supabase                     */
