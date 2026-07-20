@@ -420,8 +420,38 @@ const PopesPage: React.FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-        {filteredPopes.map((pope, idx) => (
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg"
+        aria-busy={isFiltering}
+        aria-live="polite"
+        data-testid="popes-grid"
+      >
+        {isFiltering ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={`skeleton-${i}`}
+              data-testid="pope-skeleton"
+              className="rounded-premium-lg overflow-hidden border border-border/50"
+            >
+              <Skeleton className="h-spacing-4xl w-full" />
+              <div className="p-spacing-md space-y-spacing-sm">
+                <Skeleton className="h-spacing-md w-1/3" />
+                <Skeleton className="h-spacing-sm w-full" />
+                <Skeleton className="h-spacing-sm w-5/6" />
+                <Skeleton className="h-spacing-sm w-2/3" />
+              </div>
+            </div>
+          ))
+        ) : filteredPopes.length === 0 ? (
+          <div
+            className="md:col-span-2 text-center text-premium-sm text-muted-foreground font-serif italic py-spacing-xl"
+            role="status"
+            data-testid="popes-empty"
+          >
+            Nenhum papa encontrado para "{deferredSearch}".
+          </div>
+        ) : (
+          filteredPopes.map((pope, idx) => (
           <motion.div
             key={pope.id}
             initial={{ opacity: 0, y: 20 }}
@@ -481,7 +511,8 @@ const PopesPage: React.FC = () => {
               </div>
             </Card>
           </motion.div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
