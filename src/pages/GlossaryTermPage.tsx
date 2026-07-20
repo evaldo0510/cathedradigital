@@ -658,6 +658,7 @@ const GlossaryTermPage: React.FC = () => {
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
+  const autoNexus = resolveAutoNexus(term);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
 
