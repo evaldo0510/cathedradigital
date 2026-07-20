@@ -22,6 +22,7 @@ import type {
   ResolvedNode,
 } from '../types';
 import type { RouteKey } from '@/core/navigation';
+import { recordNexusMetric } from './nexusMetrics';
 
 /* ------------------------------------------------------------------ */
 /* Termo de entrada — subset agnóstico ao Supabase                     */
@@ -253,7 +254,12 @@ function dedupe(nodes: ResolvedNode[]): ResolvedNode[] {
 const CACHE_MAX = 64;
 const cache = new Map<string, AutoNexusResult>();
 
-function fingerprint(term: GlossaryLike): string {
+/**
+ * Fingerprint determinístico do verbete. Mesmos inputs (na mesma ordem)
+ * produzem exatamente a mesma chave — exportado para permitir cobertura
+ * por testes unitários e uso pelo `nexusMetrics`.
+ */
+export function _fingerprintGlossary(term: GlossaryLike): string {
   const join = (xs: string[] | null | undefined) => (xs ?? []).join('|');
   return [
     term.slug ?? '',
@@ -275,12 +281,14 @@ export function clearAutoNexusCache(): void {
 }
 
 export function resolveAutoNexus(term: GlossaryLike): AutoNexusResult {
-  const key = fingerprint(term);
+  const key = _fingerprintGlossary(term);
+  const started = typeof performance !== 'undefined' ? performance.now() : Date.now();
   const hit = cache.get(key);
   if (hit) {
     // move-to-end para LRU simples
     cache.delete(key);
     cache.set(key, hit);
+    recordNexusMetric({ adapter: 'glossary', hit: true, ms: nowMs() - started, key });
     return hit;
   }
   const result = computeAutoNexus(term);
@@ -289,7 +297,12 @@ export function resolveAutoNexus(term: GlossaryLike): AutoNexusResult {
     const first = cache.keys().next().value;
     if (first !== undefined) cache.delete(first);
   }
+  recordNexusMetric({ adapter: 'glossary', hit: false, ms: nowMs() - started, key });
   return result;
+}
+
+function nowMs(): number {
+  return typeof performance !== 'undefined' ? performance.now() : Date.now();
 }
 
 function computeAutoNexus(term: GlossaryLike): AutoNexusResult {

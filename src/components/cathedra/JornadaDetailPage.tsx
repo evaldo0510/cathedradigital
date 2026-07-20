@@ -209,7 +209,7 @@ const JornadaDetailPage: React.FC = () => {
         </Link>
 
         {/* ─── Hero editorial ─────────────────────────── */}
-        <section className="relative mt-6 overflow-hidden border-b border-stitch-secondary/10 pb-12">
+        <section data-testid="jornada-hero" className="relative mt-6 overflow-hidden border-b border-stitch-secondary/10 pb-12">
           {journey.hero_image_url && (
             <div
               aria-hidden
@@ -250,7 +250,7 @@ const JornadaDetailPage: React.FC = () => {
 
             {/* Meta + CTA */}
             <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
+              <div data-testid="jornada-meta" className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
                 <span className="inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5" />
                   ~{journey.estimated_days ?? '—'} dias
@@ -268,6 +268,7 @@ const JornadaDetailPage: React.FC = () => {
               {!isLocked && primaryCta && (
                 <Link
                   to={primaryCta.to}
+                  data-testid="jornada-cta"
                   className="group inline-flex items-center justify-center gap-2 bg-stitch-primary px-7 py-3 font-stitch-body text-[13px] font-bold uppercase tracking-[0.18em] text-stitch-primary-foreground transition-all hover:bg-stitch-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
                 >
                   {primaryCta.label}
@@ -280,7 +281,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Intro narrativa + quote editorial ─────── */}
         {(journey.narrative_intro || journey.hero_quote) && (
-          <section className="pt-12">
+          <section data-testid="jornada-intro" className="pt-12">
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
               {journey.narrative_intro ? (
                 <div className="max-w-[68ch] font-stitch-body text-[17px] leading-[30px] text-stitch-on-background md:text-[18px] md:leading-[32px]">
@@ -304,12 +305,13 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Próxima Etapa (destaque) ──────────────── */}
         {!isLocked && nextStep && !isJourneyComplete && (
-          <section className="pt-14">
+          <section data-testid="jornada-next-step" className="pt-14">
             <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
               A próxima etapa
             </span>
             <Link
               to={`/jornadas/${id}/step?step=${nextStep.id}`}
+              data-testid="jornada-next-step-link"
               className="mt-3 group flex flex-col gap-5 border border-stitch-secondary/40 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary hover:shadow-lg md:flex-row md:items-center md:justify-between md:p-8"
             >
               <div className="min-w-0 flex-1">
@@ -352,7 +354,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Progresso ─────────────────────────────── */}
         {totalSteps > 0 && !isLocked && (
-          <section className="pt-12">
+          <section data-testid="jornada-progress" className="pt-12">
             <div className="mb-3 flex items-center justify-between font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em]">
               <span className="text-stitch-on-surface-variant">Progresso</span>
               <span className="text-stitch-secondary">
@@ -397,7 +399,7 @@ const JornadaDetailPage: React.FC = () => {
         )}
 
         {/* ─── Timeline de etapas ────────────────────── */}
-        <section className="pt-14">
+        <section data-testid="jornada-timeline" className="pt-14">
           <div className="mb-6 flex items-baseline justify-between">
             <h2 className="font-stitch-display text-[24px] italic leading-[32px] text-stitch-primary md:text-[28px]">
               Etapas
@@ -509,7 +511,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Reflexão Logos ─────────────────────────── */}
         {(journey.closing_message || journey.hero_quote) && (
-          <section className="pt-16">
+          <section data-testid="jornada-reflexao" className="pt-16">
             <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-secondary">
               Reflexão Logos
             </span>
@@ -528,7 +530,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Nexus Theologicus (100% automático) ───── */}
         {autoNexus && autoNexus.total > 0 && (
-          <section id="nexus" className="pt-16">
+          <section id="nexus" data-testid="jornada-nexus" className="pt-16">
             <div className="mb-6 flex items-baseline justify-between">
               <h2 className="font-stitch-display text-[24px] italic leading-[32px] text-stitch-primary md:text-[28px]">
                 Nexus Theologicus

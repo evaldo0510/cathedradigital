@@ -33,6 +33,7 @@ import NotFound from './pages/NotFound';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { NexusMetricsOverlay } from '@/components/nexus/NexusMetricsOverlay';
 import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
@@ -774,6 +775,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 <ReadingSettingsProvider>
                   <TooltipProvider>
                     {children}
+                    <NexusMetricsOverlay />
                   </TooltipProvider>
                 </ReadingSettingsProvider>
               </LangProvider>
