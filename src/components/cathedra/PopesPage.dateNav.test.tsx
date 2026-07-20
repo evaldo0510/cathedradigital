@@ -131,9 +131,10 @@ describe('PopesPage — SanctorumDateNav', () => {
 
     const dialog = await screen.findByRole('dialog');
     expect(dialog).toBeInTheDocument();
-    // Botão "hoje" recebe modifiers.today do react-day-picker.
-    const todayBtn = within(dialog).getByRole('gridcell', { name: /hoje/i, hidden: true }) ||
-      within(dialog).getAllByRole('button').find((b) => b.className.includes('ring-primary'));
+    // O react-day-picker anota o dia atual com o modifier `today`, que virá com
+    // a classe ring-primary aplicada via modifiersClassNames.
+    const buttons = within(dialog).getAllByRole('button');
+    const todayBtn = buttons.find((b) => b.className.includes('ring-primary'));
     expect(todayBtn).toBeTruthy();
   });
 
