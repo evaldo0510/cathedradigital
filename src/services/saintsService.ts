@@ -79,7 +79,7 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
 export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(LIST_COLUMNS)
     .contains('virtues', [virtue])
     .limit(10);
 
