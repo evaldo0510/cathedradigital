@@ -136,7 +136,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       <div className="flex-1 overflow-y-auto no-scrollbar">
         {!legacy && (
           <EditorialReaderChrome
-            kicker={`Cathedra · Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+            kicker={`Sanctorum · ${CATEGORY_LABELS[saint.category] || saint.category}`}
             title={saint.name}
             subtitle={saint.title}
             shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
@@ -147,7 +147,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
         <EditorialReaderHeader
           className="pt-0"
-          kicker={`Santos · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+          kicker={`Sanctorum · ${CATEGORY_LABELS[saint.category] || saint.category}`}
           title={saint.name}
           subtitle={saint.title}
           meta={[saint.feastDay && `Festa · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}

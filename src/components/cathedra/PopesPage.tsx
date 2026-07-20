@@ -6,6 +6,7 @@ import SacredImage from './SacredImage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { SanctorumHero } from './SanctorumHero';
 
 
 interface Pope {
@@ -175,14 +176,11 @@ const PopesPage: React.FC = () => {
         path="/papas"
       />
 
-      <div className="text-center space-y-spacing-md">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-          <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
-        </div>
-        <h1 className="text-premium-4xl md:text-premium-5xl font-serif font-bold text-foreground">Os Papas</h1>
-        <p className="text-muted-foreground font-serif italic">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
-      </div>
+      <SanctorumHero
+        kicker="Sanctorum · Vicarius Christi"
+        title="Os Papas"
+        subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
+      />
 
       <div className="relative w-full mx-auto">
         <Icons.Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
