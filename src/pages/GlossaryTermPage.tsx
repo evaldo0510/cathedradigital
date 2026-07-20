@@ -724,7 +724,22 @@ const GlossaryTermPage: React.FC = () => {
                   </header>
 
                   {k === 'definition' && <TextSection>{term.definition}</TextSection>}
-                  {k === 'context' && <TextSection>{term.historical_context}</TextSection>}
+                  {k === 'context' && (
+                    <>
+                      {term.etymology && (
+                        <aside
+                          className="max-w-[68ch] mx-auto mb-6 px-5 py-4 border-l-2 border-stitch-secondary/60 bg-stitch-surface/40 rounded-r"
+                          aria-label="Etimologia"
+                        >
+                          <EditorialKicker className="mb-2">Etimologia</EditorialKicker>
+                          <p className="font-stitch-serif text-stitch-body-md text-stitch-on-background leading-relaxed">
+                            {term.etymology}
+                          </p>
+                        </aside>
+                      )}
+                      <TextSection>{term.historical_context}</TextSection>
+                    </>
+                  )}
                   {k === 'interpretation' && (
                     <TextSection>{term.interpretation ?? term.deep_interpretation}</TextSection>
                   )}
