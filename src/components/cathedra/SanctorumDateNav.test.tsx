@@ -104,5 +104,62 @@ describe('SanctorumDateNav', () => {
       expect(strip.className).toContain('max-w-full');
       expect(strip.className).not.toContain('flex-wrap');
     });
+
+    it('pills usam shrink-0 + whitespace-nowrap + max-w-[64px] como fallback de layout', () => {
+      const date = new Date(2026, 0, 15);
+      const { container } = render(
+        <SanctorumDateNav value={date} onChange={() => {}} />,
+      );
+      const pills = container.querySelector('.overflow-x-auto')!.querySelectorAll('button');
+      pills.forEach((pill) => {
+        expect(pill.className).toContain('shrink-0');
+        expect(pill.className).toContain('whitespace-nowrap');
+        expect(pill.className).toContain('max-w-[64px]');
+        const abbr = pill.querySelector('span')!;
+        expect(abbr.className).toContain('truncate');
+        expect(abbr.className).toContain('max-w-[3ch]');
+      });
+    });
+  });
+
+  describe('format pt-BR retorna siglas curtas de dia da semana', () => {
+    const casos: Array<[Date, string]> = [
+      [new Date(2026, 0, 18), 'dom'], // domingo
+      [new Date(2026, 0, 19), 'seg'], // segunda
+      [new Date(2026, 0, 20), 'ter'], // terça
+      [new Date(2026, 0, 21), 'qua'], // quarta
+      [new Date(2026, 0, 22), 'qui'], // quinta
+      [new Date(2026, 0, 23), 'sex'], // sexta
+      [new Date(2026, 0, 24), 'sáb'], // sábado
+    ];
+
+    casos.forEach(([date, esperado]) => {
+      it(`format(${date.toDateString()}, 'EEEEEE') → "${esperado}"`, () => {
+        const abbr = format(date, 'EEEEEE', { locale: ptBR }).replace('.', '').toLowerCase();
+        expect(abbr).toBe(esperado);
+        expect(abbr.length).toBeLessThanOrEqual(3);
+      });
+    });
+
+    it('EEEEEE nunca retorna o nome completo do dia', () => {
+      const nomesCompletos = /^(segunda|terça|quarta|quinta|sexta|sábado|domingo)/i;
+      const base = new Date(2026, 0, 18);
+      for (let i = 0; i < 7; i++) {
+        const abbr = format(addDays(base, i), 'EEEEEE', { locale: ptBR });
+        expect(abbr).not.toMatch(nomesCompletos);
+      }
+    });
+
+    it('componente renderiza as 7 siglas curtas na tira', () => {
+      const { container } = render(
+        <SanctorumDateNav value={new Date(2026, 0, 21)} onChange={() => {}} />,
+      );
+      const strip = container.querySelector('.overflow-x-auto')!;
+      const abbrs = Array.from(strip.querySelectorAll('button > span:first-child')).map((s) =>
+        s.textContent!.trim().toLowerCase(),
+      );
+      const validas = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+      abbrs.forEach((a) => expect(validas).toContain(a));
+    });
   });
 });
