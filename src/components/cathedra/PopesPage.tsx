@@ -281,6 +281,8 @@ const PopesPage: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="max-w-3xl mx-auto"
             aria-live="polite"
+            data-testid="reigning-pope-panel"
+            data-pope-id={reigningPope.id}
           >
             <Card className="overflow-hidden border-primary/40 bg-gradient-to-br from-primary/5 to-transparent">
               <CardContent className="p-spacing-lg flex flex-col md:flex-row gap-spacing-lg items-center">
