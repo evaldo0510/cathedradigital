@@ -21,11 +21,36 @@ import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
+const FONT_STEPS = [
+  { key: 'sm', label: 'A', textClass: 'text-xl md:text-[22px]', latinClass: 'text-lg' },
+  { key: 'md', label: 'A', textClass: 'text-2xl md:text-[26px]', latinClass: 'text-xl' },
+  { key: 'lg', label: 'A', textClass: 'text-[28px] md:text-[30px]', latinClass: 'text-2xl' },
+  { key: 'xl', label: 'A', textClass: 'text-[32px] md:text-[34px]', latinClass: 'text-[26px]' },
+] as const;
+type FontStepKey = typeof FONT_STEPS[number]['key'];
+const FONT_STORAGE_KEY = 'cathedra:prayer:font-size';
+
 const PrayerDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const { prayer, loading, error } = usePrayer(slug);
   const { prayers } = usePrayers();
   const { items: favorites, toggle } = useDevotionalFavorites('prayer');
+
+  const [fontKey, setFontKey] = useState<FontStepKey>('md');
+  useEffect(() => {
+    const stored = localStorage.getItem(FONT_STORAGE_KEY) as FontStepKey | null;
+    if (stored && FONT_STEPS.some((s) => s.key === stored)) setFontKey(stored);
+  }, []);
+  const fontStep = FONT_STEPS.find((s) => s.key === fontKey) ?? FONT_STEPS[1];
+  const fontIndex = FONT_STEPS.findIndex((s) => s.key === fontKey);
+  const changeFont = (delta: number) => {
+    const next = FONT_STEPS[Math.min(FONT_STEPS.length - 1, Math.max(0, fontIndex + delta))];
+    setFontKey(next.key);
+    localStorage.setItem(FONT_STORAGE_KEY, next.key);
+  };
+
+  const fromLiturgia = searchParams.get('from') === 'liturgia';
 
   const isFavorite = useMemo(
     () => (prayer ? favorites.some((f) => f.content_id === prayer.id) : false),
