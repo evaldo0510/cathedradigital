@@ -399,8 +399,9 @@ const GlossaryTermPage: React.FC = () => {
                       emptyLabel="Passagens bíblicas ainda não indicadas."
                       renderItem={(ref) => (
                         <Link
-                          to={`/bible?ref=${encodeURIComponent(ref)}`}
+                          to={buildPassageUrl({ kind: 'bible', ref, highlight: term.term })}
                           className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                          aria-label={`Abrir ${ref} na Bíblia`}
                         >
                           {ref}
                         </Link>
@@ -415,8 +416,13 @@ const GlossaryTermPage: React.FC = () => {
                         const num = ref.replace(/\D+/g, '');
                         return (
                           <Link
-                            to={num ? `/catechism?p=${num}` : '/catechism'}
+                            to={
+                              num
+                                ? buildPassageUrl({ kind: 'catechism', paragraph: num, highlight: term.term })
+                                : '/catechism'
+                            }
                             className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                            aria-label={`Abrir §${num || ref} no Catecismo`}
                           >
                             §{num || ref}
                           </Link>
@@ -430,8 +436,9 @@ const GlossaryTermPage: React.FC = () => {
                       emptyLabel="Documentos do Magistério ainda não indicados."
                       renderItem={(ref) => (
                         <Link
-                          to={`/magisterium/${encodeURIComponent(ref)}`}
+                          to={buildPassageUrl({ kind: 'magisterium', id: ref, highlight: term.term })}
                           className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                          aria-label={`Abrir ${ref} no Magistério`}
                         >
                           {ref}
                         </Link>
