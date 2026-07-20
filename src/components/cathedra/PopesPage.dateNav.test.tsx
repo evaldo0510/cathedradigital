@@ -11,7 +11,23 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PopesPage from './PopesPage';
-import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
+
+// Card usa useReadingSettings → substituímos por wrappers simples.
+vi.mock('@/components/ui/card', async () => {
+  const React = await import('react');
+  const make = (tag: string) =>
+    React.forwardRef(({ children, ...props }: any, ref: any) =>
+      React.createElement('div', { ref, ...props, 'data-mock': tag }, children),
+    );
+  return {
+    Card: make('card'),
+    CardContent: make('card-content'),
+    CardHeader: make('card-header'),
+    CardTitle: make('card-title'),
+    CardDescription: make('card-description'),
+    CardFooter: make('card-footer'),
+  };
+});
 
 // Silencia framer-motion em testes.
 vi.mock('framer-motion', async () => {
