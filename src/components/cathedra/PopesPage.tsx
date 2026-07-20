@@ -389,7 +389,7 @@ const PopesPage: React.FC = () => {
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
 
-      <SanctorumDateNav value={date} onChange={handleDateChange} />
+      <SanctorumDateNav value={date} onChange={handleDateChange} analyticsPage="popes" />
 
 
       <AnimatePresence mode="wait">
