@@ -100,6 +100,8 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
     queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
     queryFn: () => getSaintsByDate(selectedDate.getMonth() + 1, selectedDate.getDate()),
     enabled: viewMode === 'daily',
+    staleTime: 1000 * 60 * 30, // 30min — santos do dia mudam só à meia-noite
+    gcTime: 1000 * 60 * 60,
   });
 
   // Mode-based Saints (Writers, Popes, All)
@@ -112,6 +114,8 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
       return [];
     },
     enabled: ['writers', 'popes', 'all', 'cloud'].includes(viewMode),
+    staleTime: 1000 * 60 * 15, // 15min — catálogo é estável
+    gcTime: 1000 * 60 * 60,
   });
 
   // Debounced search to avoid one DB hit per keystroke
