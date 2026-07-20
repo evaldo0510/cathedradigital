@@ -29,12 +29,26 @@ export function extractRoutesFromTypesAST() {
   return routes;
 }
 
+/**
+ * Rotas presentes no enum AppRoute mas que não estão registradas em <Route>
+ * no App.tsx (ou foram descontinuadas). Mantidas no enum porque outras partes
+ * do código ainda referenciam a constante — mas NÃO devem ir para o sitemap.
+ */
+const STALE_ROUTES = new Set<string>([
+  '/catechism/explorer',
+  '/daily-liturgy',
+  '/diagnostico',
+  '/jornada-guiada',
+  '/mass',
+]);
+
 export function getPublicRoutes(allRoutes: string[]) {
+  const priv = new Set(getPrivateRoutes(allRoutes));
   return Array.from(new Set(['/', ...allRoutes.filter(route => {
-    // Public routes: no parameters, not starting with /admin, and not in the private list
-    return !route.includes(':') && 
-           !route.startsWith('/admin') && 
-           !getPrivateRoutes(allRoutes).includes(route);
+    return !route.includes(':') &&
+           !route.startsWith('/admin') &&
+           !priv.has(route) &&
+           !STALE_ROUTES.has(route);
   })])).sort((a, b) => {
     if (a === '/') return -1;
     if (b === '/') return 1;
@@ -44,13 +58,18 @@ export function getPublicRoutes(allRoutes: string[]) {
 
 export function getPrivateRoutes(allRoutes: string[]) {
   const privateList = [
-    '/login', '/checkout', '/profile', '/favorites', '/checkout/result', 
-    '/vendedor', '/transactions', '/a11y-audit', '/security-audit', 
-    '/catechism/integrity', '/catechism/health', '/catechism/verify', 
-    '/offline', '/cache-manager', '/diario', '/diagnostics', '/upgrade'
+    '/login', '/checkout', '/profile', '/favorites', '/checkout/result',
+    '/vendedor', '/transactions', '/a11y-audit', '/security-audit',
+    '/catechism/integrity', '/catechism/health', '/catechism/verify',
+    '/offline', '/cache-manager', '/diario', '/diagnostics', '/upgrade',
+    // Rotas de desenvolvimento / preview — não devem ser indexadas
+    '/home-v3', '/legacy-home', '/home', '/dev/editorial', '/dev/mobile',
   ];
-  
-  return allRoutes.filter(route => {
+
+  const fromEnum = allRoutes.filter(route => {
     return route.startsWith('/admin') || privateList.includes(route);
   });
+  // Também incluir rotas de dev/preview mesmo que não estejam declaradas no enum
+  const devOnly = privateList.filter(r => !fromEnum.includes(r));
+  return [...fromEnum, ...devOnly];
 }

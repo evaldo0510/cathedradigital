@@ -149,11 +149,13 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       size="icon"
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.PROFILE)}
                       className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
+                      aria-label={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
+                      title={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
                     >
                       {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        <img src={user.avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <Icons.User className="opacity-70" />
+                        <Icons.User className="opacity-70" aria-hidden="true" />
                       )}
                     </Button>
                   ) : (
