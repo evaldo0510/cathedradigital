@@ -188,6 +188,15 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
         role="group"
         aria-label="Tira de dias"
         data-testid="sanctorum-date-strip"
+        onKeyDown={(e) => {
+          if (e.key === 'Home') {
+            e.preventDefault();
+            change(strip[0], 'strip');
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            change(strip[strip.length - 1], 'strip');
+          }
+        }}
       >
         {strip.map((date, i) => (
           <Button
