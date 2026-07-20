@@ -2258,81 +2258,111 @@ export type Database = {
       glossary: {
         Row: {
           bible_verses: string[] | null
+          bibliography: Json | null
           catechism_references: string[] | null
           category: string | null
           created_at: string
           deep_interpretation: string | null
           definition: string
+          faq: Json | null
           fathers_refs: string[] | null
+          historical_context: string | null
           id: string
           interpretation: string | null
           journey_id: string | null
           journey_refs: string[] | null
           language: string
+          liturgy_refs: string[] | null
+          logos_meditation: string | null
           magisterium_references: string[] | null
+          next_steps: Json | null
           nexus_refs: Json | null
           practical_application: string | null
           prayer_refs: string[] | null
           published_at: string | null
           reference: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           saints_refs: string[] | null
           sections_order: string[] | null
+          short_definition: string | null
           slug: string | null
           status: string
           term: string
           updated_at: string
+          version: number
         }
         Insert: {
           bible_verses?: string[] | null
+          bibliography?: Json | null
           catechism_references?: string[] | null
           category?: string | null
           created_at?: string
           deep_interpretation?: string | null
           definition: string
+          faq?: Json | null
           fathers_refs?: string[] | null
+          historical_context?: string | null
           id?: string
           interpretation?: string | null
           journey_id?: string | null
           journey_refs?: string[] | null
           language?: string
+          liturgy_refs?: string[] | null
+          logos_meditation?: string | null
           magisterium_references?: string[] | null
+          next_steps?: Json | null
           nexus_refs?: Json | null
           practical_application?: string | null
           prayer_refs?: string[] | null
           published_at?: string | null
           reference?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           saints_refs?: string[] | null
           sections_order?: string[] | null
+          short_definition?: string | null
           slug?: string | null
           status?: string
           term: string
           updated_at?: string
+          version?: number
         }
         Update: {
           bible_verses?: string[] | null
+          bibliography?: Json | null
           catechism_references?: string[] | null
           category?: string | null
           created_at?: string
           deep_interpretation?: string | null
           definition?: string
+          faq?: Json | null
           fathers_refs?: string[] | null
+          historical_context?: string | null
           id?: string
           interpretation?: string | null
           journey_id?: string | null
           journey_refs?: string[] | null
           language?: string
+          liturgy_refs?: string[] | null
+          logos_meditation?: string | null
           magisterium_references?: string[] | null
+          next_steps?: Json | null
           nexus_refs?: Json | null
           practical_application?: string | null
           prayer_refs?: string[] | null
           published_at?: string | null
           reference?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           saints_refs?: string[] | null
           sections_order?: string[] | null
+          short_definition?: string | null
           slug?: string | null
           status?: string
           term?: string
           updated_at?: string
+          version?: number
         }
         Relationships: [
           {
@@ -6396,29 +6426,39 @@ export type Database = {
         Args: { result_limit?: number; search_query: string }
         Returns: {
           bible_verses: string[] | null
+          bibliography: Json | null
           catechism_references: string[] | null
           category: string | null
           created_at: string
           deep_interpretation: string | null
           definition: string
+          faq: Json | null
           fathers_refs: string[] | null
+          historical_context: string | null
           id: string
           interpretation: string | null
           journey_id: string | null
           journey_refs: string[] | null
           language: string
+          liturgy_refs: string[] | null
+          logos_meditation: string | null
           magisterium_references: string[] | null
+          next_steps: Json | null
           nexus_refs: Json | null
           practical_application: string | null
           prayer_refs: string[] | null
           published_at: string | null
           reference: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           saints_refs: string[] | null
           sections_order: string[] | null
+          short_definition: string | null
           slug: string | null
           status: string
           term: string
           updated_at: string
+          version: number
         }[]
         SetofOptions: {
           from: "*"
