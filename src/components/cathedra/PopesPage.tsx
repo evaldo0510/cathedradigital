@@ -28,6 +28,21 @@ function parseISODateLocal(s: string | null): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+/**
+ * Valida a data recebida via URL. Aceita ano entre 30 d.C. (pontificado de
+ * São Pedro) e o ano corrente + 1. Fora disso retorna null para que o caller
+ * caia no default (hoje) e corrija a URL.
+ */
+const MIN_YEAR = 30;
+function clampReignDate(d: Date | null): Date | null {
+  if (!d) return null;
+  const y = d.getFullYear();
+  const max = new Date().getFullYear() + 1;
+  if (y < MIN_YEAR || y > max) return null;
+  return d;
+}
+
+
 
 interface Pope {
   id: string;
