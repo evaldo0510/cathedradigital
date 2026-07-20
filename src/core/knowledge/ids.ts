@@ -39,6 +39,9 @@ export const KNOWLEDGE_KINDS: readonly KnowledgeNodeKind[] = [
   'canon',
   'prayer',
   'application',
+  'glossary',
+  'journey',
+  'liturgy',
 ] as const;
 
 const KIND_SET = new Set<string>(KNOWLEDGE_KINDS);
