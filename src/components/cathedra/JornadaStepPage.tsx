@@ -846,6 +846,9 @@ const JornadaStepPage: React.FC = () => {
 
             <button
               data-testid="complete-step-btn"
+              onMouseEnter={() => completed && nextStep?.id && prefetchStep(nextStep.id)}
+              onFocus={() => completed && nextStep?.id && prefetchStep(nextStep.id)}
+              onTouchStart={() => completed && nextStep?.id && prefetchStep(nextStep.id)}
               onClick={() => {
                 if (completing || saving) return;
                 if (completed) {
