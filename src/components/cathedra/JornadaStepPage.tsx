@@ -811,6 +811,9 @@ const JornadaStepPage: React.FC = () => {
             <button
               type="button"
               onClick={() => prevStep && navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`)}
+              onMouseEnter={() => prevStep?.id && prefetchStep(prevStep.id)}
+              onFocus={() => prevStep?.id && prefetchStep(prevStep.id)}
+              onTouchStart={() => prevStep?.id && prefetchStep(prevStep.id)}
               disabled={!prevStep}
               aria-label={prevStep ? `Etapa anterior: ${prevStep.title}` : 'Sem etapa anterior'}
               title="Etapa anterior (←)"
