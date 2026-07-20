@@ -211,9 +211,6 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
     }
   }, [searchParams, saintsForSelectedDate]);
 
-  const dateStrip = useMemo(() => {
-    return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
-  }, [selectedDate]);
 
   const displaySaints = viewMode === 'daily' ? saintsForSelectedDate : modeSaints;
 
