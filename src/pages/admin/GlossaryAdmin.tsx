@@ -599,6 +599,7 @@ export default function GlossaryAdmin() {
           </Card>
         )}
       </div>
+      {canUserPublish && <GlossaryBulkPublishPanel onPublished={() => void load()} />}
       {role === 'admin' && <GlossaryPermissionsPanel />}
     </div>
   );
