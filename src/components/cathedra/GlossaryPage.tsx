@@ -53,8 +53,15 @@ interface GlossaryTerm {
   definition: string;
   category: string | null;
   status: string | null;
+  editorial_completeness: 'complete' | 'expanding' | 'reviewed_theologically' | null;
   similarityScore?: number;
 }
+
+const COMPLETENESS_DOT: Record<string, { color: string; label: string }> = {
+  complete: { color: 'bg-emerald-500', label: 'Completo' },
+  expanding: { color: 'bg-amber-500', label: 'Em expansão' },
+  reviewed_theologically: { color: 'bg-sky-500', label: 'Revisado teologicamente' },
+};
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -104,7 +111,7 @@ const GlossaryPage: React.FC = () => {
       setLoading(true);
       const { data, error } = await (supabase as any)
         .from('glossary')
-        .select('id, slug, term, short_definition, definition, category, status')
+        .select('id, slug, term, short_definition, definition, category, status, editorial_completeness')
         .order('term', { ascending: true });
       if (cancelled) return;
       if (error) console.error('Erro ao carregar glossário:', error);
@@ -401,10 +408,27 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
           'focus-visible:outline-none transition-colors',
         )}
       >
-        {term.category && (
-          <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary block mb-2">
-            {term.category}
-          </span>
+        {(term.category || term.editorial_completeness) && (
+          <div className="flex items-center gap-3 mb-2">
+            {term.category && (
+              <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+                {term.category}
+              </span>
+            )}
+            {term.editorial_completeness && COMPLETENESS_DOT[term.editorial_completeness] && (
+              <span
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-stitch-on-surface-variant"
+                title={`Grau editorial: ${COMPLETENESS_DOT[term.editorial_completeness].label}`}
+                aria-label={`Grau editorial: ${COMPLETENESS_DOT[term.editorial_completeness].label}`}
+              >
+                <span
+                  className={cn('h-1.5 w-1.5 rounded-full', COMPLETENESS_DOT[term.editorial_completeness].color)}
+                  aria-hidden="true"
+                />
+                {COMPLETENESS_DOT[term.editorial_completeness].label}
+              </span>
+            )}
+          </div>
         )}
         <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background group-hover:text-stitch-secondary transition-colors">
           {highlight ? (

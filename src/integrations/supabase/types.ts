@@ -2264,6 +2264,8 @@ export type Database = {
           created_at: string
           deep_interpretation: string | null
           definition: string
+          editorial_completeness: string
+          etymology: string | null
           faq: Json | null
           fathers_refs: string[] | null
           historical_context: string | null
@@ -2300,6 +2302,8 @@ export type Database = {
           created_at?: string
           deep_interpretation?: string | null
           definition: string
+          editorial_completeness?: string
+          etymology?: string | null
           faq?: Json | null
           fathers_refs?: string[] | null
           historical_context?: string | null
@@ -2336,6 +2340,8 @@ export type Database = {
           created_at?: string
           deep_interpretation?: string | null
           definition?: string
+          editorial_completeness?: string
+          etymology?: string | null
           faq?: Json | null
           fathers_refs?: string[] | null
           historical_context?: string | null
@@ -6432,6 +6438,8 @@ export type Database = {
           created_at: string
           deep_interpretation: string | null
           definition: string
+          editorial_completeness: string
+          etymology: string | null
           faq: Json | null
           fathers_refs: string[] | null
           historical_context: string | null

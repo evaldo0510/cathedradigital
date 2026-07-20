@@ -86,6 +86,7 @@ interface GlossaryTerm {
   category: string | null;
   short_definition: string | null;
   definition: string;
+  etymology: string | null;
   historical_context: string | null;
   interpretation: string | null;
   deep_interpretation: string | null;
@@ -105,10 +106,63 @@ interface GlossaryTerm {
   bibliography: BibliographyItem[] | null;
   sections_order: string[] | null;
   status: string | null;
+  editorial_completeness: 'complete' | 'expanding' | 'reviewed_theologically' | null;
   version: number | null;
   reviewed_by: string | null;
   reviewed_at: string | null;
   updated_at: string;
+}
+
+const COMPLETENESS_META: Record<
+  'complete' | 'expanding' | 'reviewed_theologically',
+  { label: string; dot: string; ring: string; text: string }
+> = {
+  complete: {
+    label: 'Completo',
+    dot: 'bg-emerald-500',
+    ring: 'border-emerald-500/50 bg-emerald-500/10',
+    text: 'text-emerald-700 dark:text-emerald-300',
+  },
+  expanding: {
+    label: 'Em expansão',
+    dot: 'bg-amber-500',
+    ring: 'border-amber-500/50 bg-amber-500/10',
+    text: 'text-amber-700 dark:text-amber-300',
+  },
+  reviewed_theologically: {
+    label: 'Revisado teologicamente',
+    dot: 'bg-sky-500',
+    ring: 'border-sky-500/50 bg-sky-500/10',
+    text: 'text-sky-700 dark:text-sky-300',
+  },
+};
+
+function CompletenessBadge({
+  value,
+  className,
+}: {
+  value: GlossaryTerm['editorial_completeness'];
+  className?: string;
+}) {
+  const key = value ?? 'expanding';
+  const meta = COMPLETENESS_META[key];
+  if (!meta) return null;
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-2 px-3 py-1 rounded-full border',
+        'font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em]',
+        meta.ring,
+        meta.text,
+        className,
+      )}
+      title={`Grau editorial: ${meta.label}`}
+      aria-label={`Grau editorial do verbete: ${meta.label}`}
+    >
+      <span className={cn('h-2 w-2 rounded-full', meta.dot)} aria-hidden="true" />
+      {meta.label}
+    </span>
+  );
 }
 
 const DEFAULT_ORDER: SectionKey[] = [
@@ -628,6 +682,11 @@ const GlossaryTermPage: React.FC = () => {
           }
         />
 
+        {/* Selo de completude editorial */}
+        <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
+          <CompletenessBadge value={term.editorial_completeness} />
+        </div>
+
         {/* Sumário lateral (desktop) */}
         <div className="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 mt-8">
           <nav aria-label="Sumário do verbete" className="hidden lg:block sticky top-32 self-start">
@@ -665,7 +724,22 @@ const GlossaryTermPage: React.FC = () => {
                   </header>
 
                   {k === 'definition' && <TextSection>{term.definition}</TextSection>}
-                  {k === 'context' && <TextSection>{term.historical_context}</TextSection>}
+                  {k === 'context' && (
+                    <>
+                      {term.etymology && (
+                        <aside
+                          className="max-w-[68ch] mx-auto mb-6 px-5 py-4 border-l-2 border-stitch-secondary/60 bg-stitch-surface/40 rounded-r"
+                          aria-label="Etimologia"
+                        >
+                          <EditorialKicker className="mb-2">Etimologia</EditorialKicker>
+                          <p className="font-stitch-serif text-stitch-body-md text-stitch-on-background leading-relaxed">
+                            {term.etymology}
+                          </p>
+                        </aside>
+                      )}
+                      <TextSection>{term.historical_context}</TextSection>
+                    </>
+                  )}
                   {k === 'interpretation' && (
                     <TextSection>{term.interpretation ?? term.deep_interpretation}</TextSection>
                   )}
@@ -816,7 +890,13 @@ const GlossaryTermPage: React.FC = () => {
             {/* Rodapé de versão / revisão teológica */}
             <footer className="mt-16 pt-8 border-t border-stitch-outline-variant/40 max-w-[68ch] mx-auto">
               <EditorialDivider variant="gold-fade" className="mb-6" />
-              <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
+              <dl className="grid grid-cols-2 md:grid-cols-5 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
+                <div>
+                  <dt className="text-stitch-secondary/80">Grau editorial</dt>
+                  <dd className="mt-1">
+                    <CompletenessBadge value={term.editorial_completeness} />
+                  </dd>
+                </div>
                 <div>
                   <dt className="text-stitch-secondary/80">Versão</dt>
                   <dd className="mt-1 text-stitch-on-background">v{term.version ?? 1}</dd>
