@@ -162,4 +162,84 @@ describe('SanctorumDateNav', () => {
       abbrs.forEach((a) => expect(validas).toContain(a));
     });
   });
+
+  describe('rolagem e ordenação dos pills', () => {
+    it('pills permanecem na ordem cronológica após simular scroll horizontal', () => {
+      const date = new Date(2026, 0, 15); // qui
+      const { container } = render(
+        <SanctorumDateNav value={date} onChange={() => {}} />,
+      );
+      const strip = container.querySelector('.overflow-x-auto') as HTMLElement;
+      const pills = Array.from(strip.querySelectorAll('button'));
+
+      const diasAntes = pills.map((p) => Number(p.querySelectorAll('span')[1].textContent));
+      // stripDays=7, half=3 → 12,13,14,15,16,17,18
+      expect(diasAntes).toEqual([12, 13, 14, 15, 16, 17, 18]);
+
+      // simula scroll horizontal manual
+      strip.scrollLeft = 200;
+      strip.dispatchEvent(new Event('scroll'));
+
+      const diasDepois = Array.from(strip.querySelectorAll('button')).map((p) =>
+        Number(p.querySelectorAll('span')[1].textContent),
+      );
+      expect(diasDepois).toEqual(diasAntes); // ordem preservada
+      expect(strip.className).not.toContain('flex-wrap');
+    });
+  });
+
+  describe('modo RTL', () => {
+    it('mantém overflow-x-auto e min-w dos pills quando dir="rtl"', () => {
+      const date = new Date(2026, 0, 15);
+      const { container } = render(
+        <div dir="rtl">
+          <SanctorumDateNav value={date} onChange={() => {}} />
+        </div>,
+      );
+      const strip = container.querySelector('.overflow-x-auto') as HTMLElement;
+      expect(strip.className).toContain('overflow-x-auto');
+      expect(strip.className).not.toContain('flex-wrap');
+
+      // dir herdado deve ser rtl
+      expect(strip.closest('[dir="rtl"]')).not.toBeNull();
+
+      const pills = strip.querySelectorAll('button');
+      expect(pills.length).toBe(7);
+      pills.forEach((pill) => {
+        expect(pill.className).toContain('min-w-[56px]');
+        expect(pill.className).toContain('max-w-[64px]');
+        expect(pill.className).toContain('shrink-0');
+      });
+    });
+  });
+
+  describe('zoom / Dynamic Type', () => {
+    const zooms = [1.25, 1.5, 2.0];
+
+    zooms.forEach((zoom) => {
+      it(`pills mantêm max-w-[64px] e truncate com zoom ${zoom}x`, () => {
+        const date = new Date(2026, 0, 15);
+        const { container } = render(
+          <div style={{ fontSize: `${16 * zoom}px` }}>
+            <SanctorumDateNav value={date} onChange={() => {}} />
+          </div>,
+        );
+        const strip = container.querySelector('.overflow-x-auto') as HTMLElement;
+        const pills = strip.querySelectorAll('button');
+
+        pills.forEach((pill) => {
+          // limites de largura sobrevivem ao zoom
+          expect(pill.className).toContain('max-w-[64px]');
+          expect(pill.className).toContain('shrink-0');
+          const abbr = pill.querySelector('span')!;
+          expect(abbr.className).toContain('truncate');
+          expect(abbr.className).toContain('max-w-[3ch]');
+        });
+
+        // container ainda permite scroll horizontal (não vira flex-wrap)
+        expect(strip.className).toContain('overflow-x-auto');
+        expect(strip.className).not.toContain('flex-wrap');
+      });
+    });
+  });
 });
