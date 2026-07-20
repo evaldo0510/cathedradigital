@@ -22,6 +22,8 @@ import { Link } from "react-router-dom";
 import GlossaryTermPreview, { type GlossaryPreviewData } from "@/components/admin/GlossaryTermPreview";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDocumentSearch } from "@/hooks/useDocumentSearch";
+import { useGlossaryRole, type GlossaryRole } from "@/hooks/useGlossaryRole";
+import GlossaryPermissionsPanel from "@/components/admin/GlossaryPermissionsPanel";
 
 type Status = "draft" | "review" | "published";
 
@@ -202,19 +204,25 @@ export default function GlossaryAdmin() {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
+  // ---- Papel do usuário ----
+  const { role, canPublish: canUserPublish, canDelete: canUserDelete } = useGlossaryRole();
+
   // ---- Validação dos 11 campos ----
   const fieldChecks = useMemo(
     () => REQUIRED_FIELDS.map((f) => ({ ...f, ok: isFieldFilled(form, f) })),
     [form],
   );
   const missingFields = fieldChecks.filter((f) => !f.ok);
-  const canPublish =
-    (form.term?.trim().length ?? 0) > 0 &&
-    missingFields.length === 0;
+  const fieldsComplete =
+    (form.term?.trim().length ?? 0) > 0 && missingFields.length === 0;
+  const canPublish = fieldsComplete && canUserPublish;
 
   const save = async (publish = false) => {
     if (!form.term?.trim()) return toast.error("Termo é obrigatório");
-    if (publish && !canPublish) {
+    if (publish && !canUserPublish) {
+      return toast.error("Sua função não permite publicar verbetes.");
+    }
+    if (publish && !fieldsComplete) {
       return toast.error(
         `Não é possível publicar: ${missingFields.length} campo(s) obrigatório(s) pendentes.`,
       );
