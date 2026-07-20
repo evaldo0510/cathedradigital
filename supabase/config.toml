@@ -36,3 +36,7 @@ verify_jwt = true
 
 [functions.seo-validate-assets]
 verify_jwt = true
+
+[functions.glossary-rss]
+verify_jwt = false
+
