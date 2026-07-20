@@ -320,11 +320,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           }}
         />
 
+        {/* Sanctorum 2.0 — capítulos editoriais, timeline, iconografia, vida espiritual */}
+        <SanctumEditorial saint={saint} />
+
         {/* Deep Content - Textos e Livros */}
         <DeepContentSection 
           content={saint as any} 
           title="Meditação e Aprofundamento" 
         />
+
 
         {/* Icons.Quote & Practical Application */}
         <div className="grid md:grid-cols-2 gap-spacing-xl">
