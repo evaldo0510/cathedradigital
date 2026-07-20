@@ -399,7 +399,7 @@ const JornadaDetailPage: React.FC = () => {
         )}
 
         {/* ─── Timeline de etapas ────────────────────── */}
-        <section className="pt-14">
+        <section data-testid="jornada-timeline" className="pt-14">
           <div className="mb-6 flex items-baseline justify-between">
             <h2 className="font-stitch-display text-[24px] italic leading-[32px] text-stitch-primary md:text-[28px]">
               Etapas
