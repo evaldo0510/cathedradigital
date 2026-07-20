@@ -184,15 +184,16 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
       </div>
 
       <div
-        className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar"
+        className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar snap-x snap-mandatory scroll-smooth"
         role="group"
         aria-label="Tira de dias"
+        data-testid="sanctorum-date-strip"
       >
         {strip.map((date, i) => (
           <Button
             key={i}
             onClick={() => change(date, 'strip')}
-            className={`flex flex-col items-center justify-center min-w-[56px] h-spacing-3xl rounded-premium-full border transition-all ${
+            className={`flex flex-col items-center justify-center shrink-0 snap-start whitespace-nowrap min-w-[56px] max-w-[64px] h-spacing-3xl rounded-premium-full border transition-all ${
               isSameDay(date, value)
                 ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
                 : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
@@ -200,7 +201,10 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
             aria-pressed={isSameDay(date, value)}
           >
-            <span className="text-premium-xs font-black uppercase tracking-tighter mb-spacing-2xs">
+            <span
+              className="text-premium-xs font-black uppercase tracking-tighter mb-spacing-2xs truncate max-w-[3ch]"
+              title={format(date, 'EEEE', { locale: ptBR })}
+            >
               {format(date, 'EEEEEE', { locale: ptBR }).replace('.', '')}
             </span>
             <span className="text-premium-lg font-serif font-bold">{format(date, 'dd')}</span>
