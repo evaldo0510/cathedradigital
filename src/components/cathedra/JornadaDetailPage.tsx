@@ -511,7 +511,7 @@ const JornadaDetailPage: React.FC = () => {
 
         {/* ─── Reflexão Logos ─────────────────────────── */}
         {(journey.closing_message || journey.hero_quote) && (
-          <section className="pt-16">
+          <section data-testid="jornada-reflexao" className="pt-16">
             <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.24em] text-stitch-secondary">
               Reflexão Logos
             </span>
