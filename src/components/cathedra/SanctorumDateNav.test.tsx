@@ -130,7 +130,7 @@ describe('SanctorumDateNav', () => {
       [new Date(2026, 0, 21), 'qua'], // quarta
       [new Date(2026, 0, 22), 'qui'], // quinta
       [new Date(2026, 0, 23), 'sex'], // sexta
-      [new Date(2026, 0, 24), 'sáb'], // sábado
+      [new Date(2026, 0, 24), 'sab'], // sábado (date-fns retorna sem acento)
     ];
 
     casos.forEach(([date, esperado]) => {
