@@ -444,7 +444,7 @@ const GlossaryPage: React.FC = () => {
                     {/* Layer 1: Simple definition */}
                     <div className="space-y-spacing-2xs">
                       <p className="text-premium-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
-                      <p className="text-foreground/90 leading-relaxed font-serif">{term.definition}</p>
+                      <p className="text-foreground/90 leading-relaxed font-serif">{highlightText(term.definition, searchQuery)}</p>
                     </div>
 
                     {enrichment && (
