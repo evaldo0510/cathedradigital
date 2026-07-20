@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-27T21:37:28.754Z",
+  "generated_at": "2026-07-20T20:56:46.021Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 10,
-    "warn": 2,
+    "pass": 11,
+    "warn": 3,
     "fail": 0
   },
   "checks": [
@@ -11,7 +11,7 @@
       "id": "sitemap_exists",
       "label": "sitemap.xml presente",
       "status": "pass",
-      "detail": "48 URLs declaradas."
+      "detail": "81 URLs declaradas."
     },
     {
       "id": "sitemap_host",
@@ -65,19 +65,31 @@
       "id": "meta_canonical",
       "label": "canonical aponta para o domínio",
       "status": "warn",
-      "detail": "https://cathedradigital.lovable.app/"
+      "detail": "ausente"
     },
     {
       "id": "meta_og",
       "label": "Open Graph (og:title, og:url) presentes",
-      "status": "pass",
-      "detail": "og:title=true, og:url=true"
+      "status": "warn",
+      "detail": "og:title=true, og:url=false"
     },
     {
       "id": "gsc_meta",
       "label": "Google Search Console: meta verification",
       "status": "warn",
       "detail": "Sem meta google-site-verification (configurar via /admin/seo-status após conectar GSC)."
+    },
+    {
+      "id": "glossary_in_sitemap",
+      "label": "Verbetes do Glossário no sitemap (38 publicados)",
+      "status": "pass",
+      "detail": "Todos presentes."
+    },
+    {
+      "id": "glossary_in_rss",
+      "label": "Verbetes do Glossário no feed RSS",
+      "status": "pass",
+      "detail": "Todos presentes no feed."
     }
   ]
 }
