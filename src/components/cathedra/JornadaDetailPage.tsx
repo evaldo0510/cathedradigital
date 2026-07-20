@@ -250,7 +250,7 @@ const JornadaDetailPage: React.FC = () => {
 
             {/* Meta + CTA */}
             <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
+              <div data-testid="jornada-meta" className="flex flex-wrap items-center gap-x-5 gap-y-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant">
                 <span className="inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5" />
                   ~{journey.estimated_days ?? '—'} dias
