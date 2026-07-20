@@ -25,6 +25,7 @@ import {
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { buildPassageUrl } from '@/lib/passageUrl';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ */
@@ -306,6 +307,37 @@ const GlossaryTermPage: React.FC = () => {
       />
 
       <EditorialShell>
+        {/* Breadcrumb — mantém o termo visível ao navegar entre seções */}
+        <nav
+          aria-label="Trilha de navegação"
+          className="max-w-6xl mx-auto px-4 pt-6"
+        >
+          <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
+            <li>
+              <Link to="/glossario" className="hover:text-stitch-secondary transition">
+                Léxico
+              </Link>
+            </li>
+            {term.category && (
+              <>
+                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                <li>
+                  <Link
+                    to={`/glossario?category=${encodeURIComponent(term.category)}`}
+                    className="hover:text-stitch-secondary transition"
+                  >
+                    {term.category}
+                  </Link>
+                </li>
+              </>
+            )}
+            <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+            <li aria-current="page" className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm">
+              {term.term}
+            </li>
+          </ol>
+        </nav>
+
         <EditorialHero
           kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
           title={term.term}
@@ -367,8 +399,9 @@ const GlossaryTermPage: React.FC = () => {
                       emptyLabel="Passagens bíblicas ainda não indicadas."
                       renderItem={(ref) => (
                         <Link
-                          to={`/bible?ref=${encodeURIComponent(ref)}`}
+                          to={buildPassageUrl({ kind: 'bible', ref, highlight: term.term })}
                           className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                          aria-label={`Abrir ${ref} na Bíblia`}
                         >
                           {ref}
                         </Link>
@@ -383,8 +416,13 @@ const GlossaryTermPage: React.FC = () => {
                         const num = ref.replace(/\D+/g, '');
                         return (
                           <Link
-                            to={num ? `/catechism?p=${num}` : '/catechism'}
+                            to={
+                              num
+                                ? buildPassageUrl({ kind: 'catechism', paragraph: num, highlight: term.term })
+                                : '/catechism'
+                            }
                             className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                            aria-label={`Abrir §${num || ref} no Catecismo`}
                           >
                             §{num || ref}
                           </Link>
@@ -398,8 +436,9 @@ const GlossaryTermPage: React.FC = () => {
                       emptyLabel="Documentos do Magistério ainda não indicados."
                       renderItem={(ref) => (
                         <Link
-                          to={`/magisterium/${encodeURIComponent(ref)}`}
+                          to={buildPassageUrl({ kind: 'magisterium', id: ref, highlight: term.term })}
                           className="hover:text-stitch-secondary underline decoration-stitch-secondary/40 underline-offset-4"
+                          aria-label={`Abrir ${ref} no Magistério`}
                         >
                           {ref}
                         </Link>
