@@ -569,6 +569,17 @@ const Footer: React.FC = React.memo(() => {
                   Admin
                 </Button>
               )}
+              <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
+              <a
+                href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 inline-flex items-center"
+                style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
+                aria-label="Feed RSS do Léxico Teológico"
+              >
+                RSS Léxico
+              </a>
             </nav>
 
             <button
