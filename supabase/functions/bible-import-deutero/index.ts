@@ -62,6 +62,32 @@ Deno.serve(async (req) => {
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(url, key);
 
+  // Garante uma fonte de tradução para os versículos (bibliacatolica.com.br / Ave-Maria)
+  async function ensureAveMariaSource(): Promise<string> {
+    const code = 'ave-maria-bibliacatolica';
+    const { data: existing } = await supabase
+      .from('bible_translation_sources').select('id').eq('code', code).maybeSingle();
+    if (existing?.id) return existing.id as string;
+    const { data, error } = await supabase
+      .from('bible_translation_sources')
+      .insert({
+        code,
+        name: 'Bíblia Ave-Maria (bibliacatolica.com.br)',
+        language: 'pt-BR',
+        translation: 'Ave-Maria',
+        license: 'Uso não-comercial via bibliacatolica.com.br',
+        attribution: 'Edições Paulinas / bibliacatolica.com.br',
+        source_url: 'https://www.bibliacatolica.com.br/biblia-ave-maria/',
+        provider: 'bibliacatolica.com.br',
+        status: 'ready',
+        metadata: { imported_by: 'bible-import-deutero' },
+      })
+      .select('id').single();
+    if (error) throw new Error(`translation source: ${error.message}`);
+    return data.id as string;
+  }
+  const translationId = await ensureAveMariaSource();
+
   let body: any = {};
   try { body = await req.json(); } catch { /* ignore */ }
   const targets = Array.isArray(body?.targets) && body.targets.length
