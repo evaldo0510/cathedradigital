@@ -22,6 +22,8 @@ import { Link } from "react-router-dom";
 import GlossaryTermPreview, { type GlossaryPreviewData } from "@/components/admin/GlossaryTermPreview";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDocumentSearch } from "@/hooks/useDocumentSearch";
+import { useGlossaryRole, type GlossaryRole } from "@/hooks/useGlossaryRole";
+import GlossaryPermissionsPanel from "@/components/admin/GlossaryPermissionsPanel";
 
 type Status = "draft" | "review" | "published";
 
@@ -202,19 +204,25 @@ export default function GlossaryAdmin() {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
+  // ---- Papel do usuário ----
+  const { role, canPublish: canUserPublish, canDelete: canUserDelete } = useGlossaryRole();
+
   // ---- Validação dos 11 campos ----
   const fieldChecks = useMemo(
     () => REQUIRED_FIELDS.map((f) => ({ ...f, ok: isFieldFilled(form, f) })),
     [form],
   );
   const missingFields = fieldChecks.filter((f) => !f.ok);
-  const canPublish =
-    (form.term?.trim().length ?? 0) > 0 &&
-    missingFields.length === 0;
+  const fieldsComplete =
+    (form.term?.trim().length ?? 0) > 0 && missingFields.length === 0;
+  const canPublish = fieldsComplete && canUserPublish;
 
   const save = async (publish = false) => {
     if (!form.term?.trim()) return toast.error("Termo é obrigatório");
-    if (publish && !canPublish) {
+    if (publish && !canUserPublish) {
+      return toast.error("Sua função não permite publicar verbetes.");
+    }
+    if (publish && !fieldsComplete) {
       return toast.error(
         `Não é possível publicar: ${missingFields.length} campo(s) obrigatório(s) pendentes.`,
       );
@@ -322,7 +330,10 @@ export default function GlossaryAdmin() {
             <span>/</span><span>Léxico</span>
           </div>
           <h1 className="text-2xl font-semibold mt-1">Léxico Teológico</h1>
-          <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-sm text-muted-foreground">Criar, editar e publicar verbetes do glossário.</p>
+            {role && <RoleBadge role={role} />}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -413,7 +424,7 @@ export default function GlossaryAdmin() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {selectedId && (
+              {selectedId && canUserDelete && (
                 <Button variant="ghost" size="sm" onClick={remove} className="text-destructive">
                   <Trash2 className="h-4 w-4 mr-1" />Excluir
                 </Button>
@@ -426,7 +437,13 @@ export default function GlossaryAdmin() {
                 size="sm"
                 onClick={() => save(true)}
                 disabled={saving || !canPublish}
-                title={canPublish ? "Publicar verbete" : `${missingFields.length} campo(s) pendentes`}
+                title={
+                  !canUserPublish
+                    ? "Sua função (editor) não permite publicar. Peça a um revisor."
+                    : fieldsComplete
+                      ? "Publicar verbete"
+                      : `${missingFields.length} campo(s) pendentes`
+                }
               >
                 <Send className="h-4 w-4 mr-1" />Publicar
               </Button>
@@ -581,7 +598,28 @@ export default function GlossaryAdmin() {
           </Card>
         )}
       </div>
+      {role === 'admin' && <GlossaryPermissionsPanel />}
     </div>
+  );
+}
+
+const ROLE_LABEL: Record<GlossaryRole, string> = {
+  editor: 'Editor',
+  reviewer: 'Revisor',
+  admin: 'Administrador',
+};
+function RoleBadge({ role }: { role: GlossaryRole }) {
+  const tone =
+    role === 'admin' ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+    : role === 'reviewer' ? 'border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300'
+    : 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300';
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[11px] uppercase tracking-wider ${tone}`}
+      title={`Sua função no painel: ${ROLE_LABEL[role]}`}
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />{ROLE_LABEL[role]}
+    </span>
   );
 }
 
