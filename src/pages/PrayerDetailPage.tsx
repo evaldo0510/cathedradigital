@@ -157,6 +157,46 @@ const PrayerDetailPage: React.FC = () => {
               {isFavorite ? 'Favorita' : 'Favoritar'}
             </button>
           </div>
+
+          {/* Controles do modo de leitura */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            {fromLiturgia && (
+              <Link
+                to="/liturgia"
+                className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+                Voltar para Liturgia
+              </Link>
+            )}
+            <div
+              role="group"
+              aria-label="Tamanho da fonte"
+              className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/40 p-1"
+            >
+              <button
+                type="button"
+                onClick={() => changeFont(-1)}
+                disabled={fontIndex === 0}
+                aria-label="Diminuir fonte"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+              >
+                <Minus className="h-3.5 w-3.5" aria-hidden />
+              </button>
+              <span className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant" aria-live="polite">
+                {fontKey.toUpperCase()}
+              </span>
+              <button
+                type="button"
+                onClick={() => changeFont(1)}
+                disabled={fontIndex === FONT_STEPS.length - 1}
+                aria-label="Aumentar fonte"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden />
+              </button>
+            </div>
+          </div>
         </header>
 
         {/* Texto principal */}
@@ -164,9 +204,21 @@ const PrayerDetailPage: React.FC = () => {
           <h2 id="prayer-text" className="sr-only">
             Texto da oração
           </h2>
-          <p className="whitespace-pre-line font-stitch-display text-2xl leading-[1.55] text-stitch-on-surface md:text-[26px]">
-            {prayer.content}
-          </p>
+          <ol className="space-y-6 list-none">
+            {prayer.content.split(/\n\s*\n/).filter((p) => p.trim().length > 0).map((paragraph, i) => (
+              <li key={i} className="group relative pl-10">
+                <span
+                  aria-hidden
+                  className="absolute left-0 top-1 select-none font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary/60"
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <p className={cn('whitespace-pre-line font-stitch-display leading-[1.55] text-stitch-on-surface', fontStep.textClass)}>
+                  {paragraph}
+                </p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         {/* Latim */}
@@ -178,7 +230,7 @@ const PrayerDetailPage: React.FC = () => {
             >
               Em latim
             </h2>
-            <p className="whitespace-pre-line font-stitch-display text-xl italic leading-[1.55] text-stitch-on-surface-variant">
+            <p className={cn('whitespace-pre-line font-stitch-display italic leading-[1.55] text-stitch-on-surface-variant', fontStep.latinClass)}>
               {prayer.content_latin}
             </p>
           </section>
