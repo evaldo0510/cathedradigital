@@ -240,6 +240,62 @@ export default function SEOAdmin() {
         </div>
       </div>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Assets públicos & alertas</CardTitle>
+          <CardDescription>Sitemap, robots, feed e verificação rápida de meta tags do último audit.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <div className="grid gap-2 md:grid-cols-3">
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="rounded border p-3 hover:border-primary transition">
+              <div className="font-medium">sitemap.xml</div>
+              <div className="text-muted-foreground text-xs mt-1 break-all">/sitemap.xml</div>
+            </a>
+            <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="rounded border p-3 hover:border-primary transition">
+              <div className="font-medium">robots.txt</div>
+              <div className="text-muted-foreground text-xs mt-1 break-all">/robots.txt</div>
+            </a>
+            <a
+              href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded border p-3 hover:border-primary transition"
+            >
+              <div className="font-medium">Feed RSS · Léxico</div>
+              <div className="text-muted-foreground text-xs mt-1 break-all">glossary-rss?format=rss</div>
+            </a>
+          </div>
+          {(() => {
+            const last = audits[0];
+            if (!last) return <p className="text-muted-foreground">Sem auditorias ainda. Rode uma auditoria para ver os alertas.</p>;
+            const meta = last.meta_tags ?? {};
+            const missing: string[] = [];
+            if (!meta.title) missing.push("title");
+            if (!meta.description) missing.push("description");
+            if (!meta.canonical) missing.push("canonical");
+            if (!meta.ogTitle) missing.push("og:title");
+            if (!meta.ogImage) missing.push("og:image");
+            if (!meta.twitterCard) missing.push("twitter:card");
+            return (
+              <div className="rounded border p-3 space-y-1">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span>Última auditoria:</span>
+                  <span className="font-medium text-foreground break-all">{last.url}</span>
+                </div>
+                {missing.length === 0 ? (
+                  <div className="flex items-center gap-2 text-emerald-600"><CheckCircle2 className="h-4 w-4" /> Todas as meta tags principais presentes.</div>
+                ) : (
+                  <div className="flex items-center gap-2 text-amber-600"><AlertTriangle className="h-4 w-4" /> Faltando: {missing.join(", ")}</div>
+                )}
+                {validation?.robots.disallow_all && (
+                  <div className="flex items-center gap-2 text-destructive"><XCircle className="h-4 w-4" /> robots.txt está bloqueando toda a indexação (Disallow: /).</div>
+                )}
+              </div>
+            );
+          })()}
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2"><CardDescription>URLs auditadas</CardDescription></CardHeader>
