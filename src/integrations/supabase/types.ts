@@ -3485,12 +3485,64 @@ export type Database = {
         }
         Relationships: []
       }
+      prayer_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_block_id: string | null
+          current_block_index: number
+          elapsed_seconds: number
+          id: string
+          prayer_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_block_id?: string | null
+          current_block_index?: number
+          elapsed_seconds?: number
+          id?: string
+          prayer_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_block_id?: string | null
+          current_block_index?: number
+          elapsed_seconds?: number
+          id?: string
+          prayer_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_sessions_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prayers: {
         Row: {
+          audio_language: string | null
+          audio_transcript_url: string | null
+          audio_url: string | null
+          bible_refs: Json
+          blocks: Json
+          catechism_refs: number[]
           category: Database["public"]["Enums"]["prayer_category"]
           content: string
           content_latin: string | null
+          content_status: Database["public"]["Enums"]["content_curation_status"]
           created_at: string
+          duration_min: number | null
           estimated_seconds: number
           explanation: string | null
           id: string
@@ -3510,10 +3562,18 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          audio_language?: string | null
+          audio_transcript_url?: string | null
+          audio_url?: string | null
+          bible_refs?: Json
+          blocks?: Json
+          catechism_refs?: number[]
           category: Database["public"]["Enums"]["prayer_category"]
           content: string
           content_latin?: string | null
+          content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
+          duration_min?: number | null
           estimated_seconds?: number
           explanation?: string | null
           id?: string
@@ -3533,10 +3593,18 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          audio_language?: string | null
+          audio_transcript_url?: string | null
+          audio_url?: string | null
+          bible_refs?: Json
+          blocks?: Json
+          catechism_refs?: number[]
           category?: Database["public"]["Enums"]["prayer_category"]
           content?: string
           content_latin?: string | null
+          content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
+          duration_min?: number | null
           estimated_seconds?: number
           explanation?: string | null
           id?: string
@@ -6476,6 +6544,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      content_curation_status: "stub" | "partial" | "complete"
       prayer_category:
         | "fundamentais"
         | "marianas"
@@ -6615,6 +6684,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      content_curation_status: ["stub", "partial", "complete"],
       prayer_category: [
         "fundamentais",
         "marianas",
