@@ -321,13 +321,44 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 
 
-              <div className="w-full space-y-spacing-lg">
-                <span className="sr-only" role="status" aria-live="polite">
-                  {isLoadingDaily
-                    ? 'Carregando santos do dia.'
-                    : isDailyError
-                      ? 'Falha ao carregar santos do dia.'
-                      : `${displaySaints.length} santo(s) encontrado(s) para a data selecionada.`}
+              <div
+                className="w-full space-y-spacing-lg"
+                aria-busy={isLoadingDaily || isRefetchingDaily}
+              >
+                {/*
+                  Região aria-live polite: cobre loading → sucesso e ficam
+                  sincronizados com a quantidade renderizada. Erros ficam
+                  fora daqui — o <SaintsFetchError> já anuncia como alert
+                  assertivo, evitando duplicidade auditiva.
+                */}
+                <span
+                  className="sr-only"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {(() => {
+                    if (isDailyError) return '';
+                    const dateLabel = format(
+                      selectedDate,
+                      "d 'de' MMMM 'de' yyyy",
+                      { locale: ptBR },
+                    );
+                    if (isLoadingDaily) {
+                      return `Carregando santos do dia para ${dateLabel}.`;
+                    }
+                    if (isRefetchingDaily) {
+                      return `Atualizando santos do dia para ${dateLabel}.`;
+                    }
+                    const n = displaySaints.length;
+                    if (n === 0) {
+                      return `Nenhum santo encontrado para ${dateLabel}.`;
+                    }
+                    if (n === 1) {
+                      return `1 santo encontrado para ${dateLabel}.`;
+                    }
+                    return `${n} santos encontrados para ${dateLabel}.`;
+                  })()}
                 </span>
                 {isDailyError ? (
                   <SaintsFetchError
