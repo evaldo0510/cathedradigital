@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { format, addDays, subDays, isSameDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Icons } from '@/constants';
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/lib/analytics';
 
 /**
  * SanctorumDateNav — Navegação de datas reutilizável para páginas Sanctorum
@@ -17,13 +18,28 @@ import { cn } from '@/lib/utils';
  *  3. Tira horizontal com 7 dias (−3 … +3) para toque rápido.
  *
  * A11y: cada botão tem aria-label; "Hoje" usa aria-current="date";
- * dias da tira usam aria-pressed.
+ * dias da tira usam aria-pressed; grupo com role="group" e aria-label.
+ *
+ * Analytics: emite `sanctorum_date_change` com `{ method, date }`.
  */
+export type SanctorumDateChangeMethod =
+  | 'prev-day'
+  | 'next-day'
+  | 'prev-week'
+  | 'next-week'
+  | 'today'
+  | 'calendar'
+  | 'strip';
+
 export interface SanctorumDateNavProps {
   value: Date;
   onChange: (date: Date) => void;
   /** Nº de dias na tira horizontal (default 7, sempre ímpar). */
   stripDays?: number;
+  /** Rótulo do grupo para leitores de tela. */
+  ariaLabel?: string;
+  /** Identifica a página que hospeda o nav nos eventos de analytics. */
+  analyticsPage?: string;
   className?: string;
 }
 
@@ -31,6 +47,8 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
   value,
   onChange,
   stripDays = 7,
+  ariaLabel = 'Navegação por data',
+  analyticsPage,
   className,
 }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -39,25 +57,54 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
     addDays(subDays(value, half), i),
   );
 
+  const emit = useCallback(
+    (method: SanctorumDateChangeMethod, next: Date) => {
+      try {
+        trackEvent('sanctorum_date_change', {
+          method,
+          date: next.toISOString().slice(0, 10),
+          page: analyticsPage,
+        });
+      } catch {
+        /* analytics never bloqueia UX */
+      }
+    },
+    [analyticsPage],
+  );
+
+  const change = useCallback(
+    (next: Date, method: SanctorumDateChangeMethod) => {
+      emit(method, next);
+      onChange(next);
+    },
+    [emit, onChange],
+  );
+
   const handleCalendarSelect = (d: Date | undefined) => {
     if (!d) return;
-    onChange(d);
+    change(d, 'calendar');
     setCalendarOpen(false);
   };
 
 
+
+
   return (
-    <div className={cn('flex flex-col items-center gap-spacing-lg', className)}>
+    <div
+      className={cn('flex flex-col items-center gap-spacing-lg', className)}
+      role="group"
+      aria-label={ariaLabel}
+    >
       <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
         <Button
-          onClick={() => onChange(subDays(value, 1))}
+          onClick={() => change(subDays(value, 1), 'prev-day')}
           className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Dia anterior"
         >
           <Icons.ChevronLeft className="w-spacing-md h-spacing-md" />
         </Button>
 
-        <div className="text-center min-w-[200px]">
+        <div className="text-center min-w-[200px]" aria-live="polite" aria-atomic="true">
           <h2 className="text-premium-2xl font-serif font-bold text-foreground">
             {format(value, "dd 'de' MMMM", { locale: ptBR })}
           </h2>
@@ -67,7 +114,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
         </div>
 
         <Button
-          onClick={() => onChange(addDays(value, 1))}
+          onClick={() => change(addDays(value, 1), 'next-day')}
           className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Próximo dia"
         >
@@ -77,7 +124,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
       <div className="flex flex-wrap items-center justify-center gap-spacing-xs">
         <Button
-          onClick={() => onChange(subDays(value, 7))}
+          onClick={() => change(subDays(value, 7), 'prev-week')}
           aria-label="Semana anterior"
           className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
         >
@@ -85,7 +132,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Semana
         </Button>
         <Button
-          onClick={() => onChange(new Date())}
+          onClick={() => change(new Date(), 'today')}
           disabled={isToday(value)}
           aria-label="Ir para hoje"
           aria-current={isToday(value) ? 'date' : undefined}
@@ -100,7 +147,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           Hoje
         </Button>
         <Button
-          onClick={() => onChange(addDays(value, 7))}
+          onClick={() => change(addDays(value, 7), 'next-week')}
           aria-label="Próxima semana"
           className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
         >
@@ -136,11 +183,15 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
       </div>
 
-      <div className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar">
+      <div
+        className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar"
+        role="group"
+        aria-label="Tira de dias"
+      >
         {strip.map((date, i) => (
           <Button
             key={i}
-            onClick={() => onChange(date)}
+            onClick={() => change(date, 'strip')}
             className={`flex flex-col items-center justify-center min-w-[56px] h-spacing-3xl rounded-premium-full border transition-all ${
               isSameDay(date, value)
                 ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
@@ -155,6 +206,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             <span className="text-premium-lg font-serif font-bold">{format(date, 'dd')}</span>
           </Button>
         ))}
+
       </div>
     </div>
   );

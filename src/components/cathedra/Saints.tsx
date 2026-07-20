@@ -271,7 +271,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-              <SanctorumDateNav value={selectedDate} onChange={setSelectedDate} />
+              <SanctorumDateNav value={selectedDate} onChange={setSelectedDate} analyticsPage="saints" />
 
 
               <div className="w-full space-y-spacing-lg">

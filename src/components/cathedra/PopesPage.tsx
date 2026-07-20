@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
+import { trackEvent } from '@/lib/analytics';
 
 /** Formata data local em YYYY-MM-DD (sem timezone drift). */
 function toISODateLocal(d: Date): string {
@@ -27,6 +28,21 @@ function parseISODateLocal(s: string | null): Date | null {
   const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
   return Number.isNaN(d.getTime()) ? null : d;
 }
+
+/**
+ * Valida a data recebida via URL. Aceita ano entre 30 d.C. (pontificado de
+ * São Pedro) e o ano corrente + 1. Fora disso retorna null para que o caller
+ * caia no default (hoje) e corrija a URL.
+ */
+const MIN_YEAR = 30;
+function clampReignDate(d: Date | null): Date | null {
+  if (!d) return null;
+  const y = d.getFullYear();
+  const max = new Date().getFullYear() + 1;
+  if (y < MIN_YEAR || y > max) return null;
+  return d;
+}
+
 
 
 interface Pope {
@@ -196,13 +212,34 @@ function parseReignYears(reign: string): [number, number] {
 
 const PopesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialDate = parseISODateLocal(searchParams.get('date')) ?? new Date();
+  const rawDateParam = searchParams.get('date');
+  const parsedDate = parseISODateLocal(rawDateParam);
+  const clamped = clampReignDate(parsedDate);
+  // Se o param existia mas era inválido/fora do intervalo, sinaliza para
+  // reescrever a URL com a data de hoje e emite analytics.
+  const dateWasClamped = !!rawDateParam && (!parsedDate || !clamped);
+  const initialDate = clamped ?? new Date();
   const initialSearch = searchParams.get('q') ?? '';
   const [search, setSearch] = useState(initialSearch);
   const [date, setDate] = useState<Date>(initialDate);
   const [isPending, startTransition] = useTransition();
   const deferredSearch = useDeferredValue(search);
   const isFiltering = isPending || deferredSearch !== search;
+
+  useEffect(() => {
+    if (dateWasClamped) {
+      try {
+        trackEvent('sanctorum_date_clamped', {
+          page: 'popes',
+          received: rawDateParam,
+          replaced_with: toISODateLocal(initialDate),
+        });
+      } catch { /* noop */ }
+    }
+    // Só emite uma vez na montagem quando a URL veio bugada.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   // Persistir data + busca na URL (?date=YYYY-MM-DD&q=...)
   useEffect(() => {
@@ -352,7 +389,7 @@ const PopesPage: React.FC = () => {
         subtitle={'"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'}
       />
 
-      <SanctorumDateNav value={date} onChange={handleDateChange} />
+      <SanctorumDateNav value={date} onChange={handleDateChange} analyticsPage="popes" />
 
 
       <AnimatePresence mode="wait">
