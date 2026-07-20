@@ -25,6 +25,7 @@ import {
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { buildPassageUrl } from '@/lib/passageUrl';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ */
