@@ -36,7 +36,11 @@ export type RouteKey =
   | 'study.magisterium'   // /magisterium/:doc
   | 'study.father'        // /biblioteca?padre=:slug (TODO rota canônica)
   | 'study.saint'         // /santos/:slug
+  | 'study.glossary'      // /glossario/:slug
+  | 'study.journey'       // /jornadas/:id
+  | 'study.liturgy'       // /liturgia?ref=:ref
   | 'pray.lectio'         // /lectio?slug=:slug
+  | 'pray.prayer'         // /oracao/:slug
   | 'pray.liturgy-today'; // /liturgia
 
 /** Verbo semântico de ação — usado por SearchRegistry. */
