@@ -28,6 +28,7 @@ import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import SanctorumClampNotice from './SanctorumClampNotice';
 import SantoDoDiaHero from './SantoDoDiaHero';
+import SantoDoDiaHeroSkeleton, { SantoDoDiaSecondaryListSkeleton } from './SantoDoDiaHeroSkeleton';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import { trackEvent } from '@/lib/analytics';
 
@@ -368,7 +369,10 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                     isRetrying={isRefetchingDaily}
                   />
                 ) : isLoadingDaily ? (
-                  <SaintCardSkeleton />
+                  <>
+                    <SantoDoDiaHeroSkeleton />
+                    <SantoDoDiaSecondaryListSkeleton count={2} />
+                  </>
                 ) : displaySaints.length > 0 ? (
                   <>
                     {/* Santo do Dia — hero editorial com ficha em blocos */}
