@@ -25,13 +25,19 @@ import { toast } from 'sonner';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
+import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
+import { trackEvent } from '@/lib/analytics';
 
 
 
 
 const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((props, ref) => {
   const { legacyReader = false } = props;
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawDateParam = searchParams.get('date');
+  const { date: initialDate, wasClamped: dateWasClamped } =
+    resolveSanctorumDateParam(rawDateParam);
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
@@ -40,9 +46,31 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const viewModes = ['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const;
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Reescreve URL para hoje se ?date= veio inválido/fora do intervalo.
+  useEffect(() => {
+    if (!dateWasClamped) return;
+    try {
+      trackEvent('sanctorum_date_clamped', {
+        page: 'saints',
+        received: rawDateParam,
+        replaced_with: toISODateLocal(initialDate),
+      });
+    } catch { /* noop */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persistir data selecionada na URL (?date=YYYY-MM-DD)
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    next.set('date', toISODateLocal(selectedDate));
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
 
   // Aplica preferência (query ?legacy=1 tem prioridade, senão localStorage)
   useEffect(() => {

@@ -13,35 +13,7 @@ import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
 import { trackEvent } from '@/lib/analytics';
-
-/** Formata data local em YYYY-MM-DD (sem timezone drift). */
-function toISODateLocal(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-function parseISODateLocal(s: string | null): Date | null {
-  if (!s) return null;
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
-  if (!m) return null;
-  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-
-/**
- * Valida a data recebida via URL. Aceita ano entre 30 d.C. (pontificado de
- * São Pedro) e o ano corrente + 1. Fora disso retorna null para que o caller
- * caia no default (hoje) e corrija a URL.
- */
-const MIN_YEAR = 30;
-function clampReignDate(d: Date | null): Date | null {
-  if (!d) return null;
-  const y = d.getFullYear();
-  const max = new Date().getFullYear() + 1;
-  if (y < MIN_YEAR || y > max) return null;
-  return d;
-}
+import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 
 
 
@@ -213,12 +185,8 @@ function parseReignYears(reign: string): [number, number] {
 const PopesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const rawDateParam = searchParams.get('date');
-  const parsedDate = parseISODateLocal(rawDateParam);
-  const clamped = clampReignDate(parsedDate);
-  // Se o param existia mas era inválido/fora do intervalo, sinaliza para
-  // reescrever a URL com a data de hoje e emite analytics.
-  const dateWasClamped = !!rawDateParam && (!parsedDate || !clamped);
-  const initialDate = clamped ?? new Date();
+  const { date: initialDate, wasClamped: dateWasClamped } =
+    resolveSanctorumDateParam(rawDateParam);
   const initialSearch = searchParams.get('q') ?? '';
   const [search, setSearch] = useState(initialSearch);
   const [date, setDate] = useState<Date>(initialDate);
