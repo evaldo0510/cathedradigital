@@ -59,21 +59,19 @@ function renderPage(initialEntry = '/papas') {
   const utils = render(
     <HelmetProvider>
       <QueryClientProvider client={client}>
-        <ReadingSettingsProvider>
-          <MemoryRouter initialEntries={[initialEntry]}>
-            <Routes>
-              <Route
-                path="/papas"
-                element={
-                  <>
-                    <LocationSpy onLocation={(s) => locations.push(s)} />
-                    <PopesPage />
-                  </>
-                }
-              />
-            </Routes>
-          </MemoryRouter>
-        </ReadingSettingsProvider>
+        <MemoryRouter initialEntries={[initialEntry]}>
+          <Routes>
+            <Route
+              path="/papas"
+              element={
+                <>
+                  <LocationSpy onLocation={(s) => locations.push(s)} />
+                  <PopesPage />
+                </>
+              }
+            />
+          </Routes>
+        </MemoryRouter>
       </QueryClientProvider>
     </HelmetProvider>,
   );
