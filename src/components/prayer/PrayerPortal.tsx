@@ -247,7 +247,7 @@ const PrayerPortal: React.FC<Props> = ({
                       <dt className="font-stitch-body text-[10px] font-black uppercase tracking-[0.22em] text-stitch-secondary">
                         {item.label}
                       </dt>
-                      <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
+                      <dd className="mt-0.5 font-stitch-body font-medium text-foreground">
                         {item.value}
                       </dd>
                     </div>
