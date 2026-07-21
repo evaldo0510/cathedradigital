@@ -40,6 +40,7 @@ const buttonVariants = cva(
         pill: "h-auto px-3 py-1.5 text-[11px] uppercase [&_svg]:size-3.5 rounded-full",
         "pill-sm": "h-7 w-7 p-0 rounded-full [&_svg]:size-3.5",
       },
+    },
     defaultVariants: {
       variant: "default",
       size: "default",
