@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
+import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
 
 
 const FONT_STEPS = [
@@ -123,6 +124,12 @@ const PrayerDetailPage: React.FC = () => {
   // Sprint 1.0 — Prayer Engine v2: conteúdo servido 100% pelo banco hierárquico.
   const engineV2 = (prayer as { engine_version?: number }).engine_version === 2;
   const isLegacy = searchParams.get('legacy') === '1';
+
+  // Sprint 3 — Onda B: orações `breviario-*` injetam Próprio do dia inline.
+  const prayerMeta = (prayer as unknown as { meta?: { auto_injects_proper?: boolean } }).meta;
+  if (!isLegacy && prayer.slug.startsWith('breviario-') && prayerMeta?.auto_injects_proper) {
+    return <BreviaryHourInline prayer={prayer} />;
+  }
 
   if (engineV2 && !isLegacy) {
     if (hierarchy.loading) {
