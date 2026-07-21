@@ -88,11 +88,20 @@ const LiturgiaPage: React.FC = () => {
     isOfflineData,
   } = useDailyLiturgy(selectedDate);
 
-  const padhReflection = useMemo(
-    () => PADH_REFLECTIONS[selectedDate.getDate() % PADH_REFLECTIONS.length],
-    [selectedDate],
-  );
   const { data: saint } = useSaintOfDay(selectedDate);
+  const { meditation, isLoading: isMeditationLoading } = useLiturgyMeditation(
+    selectedIso,
+    readings ?? null,
+  );
+
+  const nexus = useMemo(() => {
+    if (!readings?.evangelho) return null;
+    return resolveLiturgyAutoNexus({
+      ref: readings.evangelho.referencia,
+      title: readings.liturgia ?? readings.dia ?? readings.evangelho.referencia,
+      season: readings.season ?? null,
+    });
+  }, [readings]);
 
   const { data: prayerOfDay } = useQuery({
     queryKey: ['prayer-of-day', selectedIso],
