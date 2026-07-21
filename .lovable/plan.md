@@ -1,75 +1,85 @@
-# Sprint 1.0 · Fase E — Persistência Hierárquica + Nexus Automático
+# Sprint 1 · Onda A — Liturgia do Dia
 
-Consolidar o Prayer Engine v2 como motor único de todas as devoções, partindo do Rosário. Zero conteúdo hardcoded, retomada exata, Nexus automático por bloco, marcadores espirituais e resumo pós-sessão.
+**Objetivo único desta onda:** entregar a base sólida da Liturgia do Dia — leituras, salmo, evangelho e navegação de data plena (ontem, hoje, amanhã, calendário). Sem comentários editoriais, sem Missal, sem Liturgia das Horas — isso vem nas ondas B e C.
 
-## Escopo desta entrega (ondas curtas, uma por vez)
+**Marco de aceite:** o usuário consegue acompanhar a liturgia de qualquer dia (passado, presente ou futuro do ano litúrgico) com leituras, salmo, evangelho, tempo/cor litúrgica e santo do dia unificado, tudo com performance e cache consistentes.
 
-Cada onda entra em um único ciclo de aprovação → build → verificação, sem começar a próxima antes da anterior estar validada.
+## O que muda
 
-### Onda 1 — Persistência hierárquica (backend + hook)
+### 1. Camada de provider (`LiturgyProvider`)
+Introduzir uma interface fina que isola quem entrega os dados da liturgia. Hoje há acoplamento direto à edge function `liturgical-calendar` dentro da página. Vai virar um contrato:
 
-- Aproveitar as colunas já existentes em `prayer_sessions` (`current_section_id`, `current_mystery_id`, `current_block_id`, `completed_block_ids`, `completed_mystery_ids`, `completed_section_ids`, `started_at`, `updated_at`, `finished_at`).
-- Migration mínima só para o que faltar: `bookmarks jsonb default '[]'` (marcadores espirituais unificados: favorito, reflexão, intenção, palavra tocada) e índice `(user_id, prayer_id) where finished_at is null` para retomada rápida.
-- Novo hook `usePrayerEngineSession(prayerId)`:
-  - `resume()` — devolve a sessão aberta mais recente ou cria uma nova.
-  - `advance(blockId)` — marca bloco concluído, avança cursor, dispara mystery/section conclusion quando todos os filhos concluem.
-  - `addBookmark(kind, data)` / `removeBookmark(id)`.
-  - `finish()` — grava `finished_at`, congela estatísticas.
-  - Autosave debounced (500ms) para não martelar o banco.
+```
+LiturgyProvider {
+  getDayLiturgy(date): Promise<DailyLiturgy>
+  getMonth(year, month): Promise<LiturgicalDay[]>
+}
+```
 
-### Onda 2 — Reader consome sessão hierárquica
+Implementação atual (`liturgia.up.railway.app` + `calapi.inadiutorium.cz`) fica encapsulada em `RailwayInAdiutoriumProvider`. Nenhuma troca de fonte agora — só o contorno para que a Sprint futura de "nova fonte oficial" seja plug-and-play.
 
-- `RosaryReader` (hoje state local) passa a hidratar do `usePrayerEngineSession`.
-- Ao entrar em `/oracao/rosario`: se houver sessão aberta, exibe **card de retomada** (“Você parou aqui · Mistério Doloroso III · Retomar / Recomeçar / Trocar mistérios”) — não recomeça sozinho.
-- Cada `PrayerBlock` renderizado dispara `advance(blockId)` quando o usuário conclui.
-- Barra de progresso passa a refletir `completed_block_ids.length / total`.
+### 2. Hook único `useDailyLiturgy(date)`
+Substitui o `useQuery` inline de `LiturgiaPage.tsx:152-184`. Centraliza:
+- React Query + IndexedDB (mesmo padrão de `useLiturgicalMonth`).
+- Prefetch dos ±3 dias adjacentes.
+- Métricas de hit/miss em `localStorage` (padrão já usado no calendário).
+- Modo offline com fallback ao cache local.
 
-### Onda 3 — Marcadores espirituais no leitor
+### 3. Navegação de data completa
+Hoje `goToNextDay` bloqueia futuro (`LiturgiaPage.tsx:144`). A liturgia é planejada; navegar para amanhã, próximo domingo ou qualquer data do ano litúrgico é essencial.
+- Remover o bloqueio de data futura.
+- Adicionar botão de calendário (popover com shadcn Calendar) para saltar para qualquer dia.
+- Atalhos: "Hoje", "Próximo domingo", "Próxima solenidade".
+- URL passa a refletir a data: `/liturgia?d=YYYY-MM-DD` (deep link + histórico do browser).
 
-- Componente `PrayerBookmarkBar` (⭐ favorito · 📝 reflexão · 🙏 intenção · 📖 palavra) ancorado por bloco.
-- Editor curto (bottom sheet) para reflexão/intenção/palavra; favorito é toggle.
-- Todos gravados em `prayer_sessions.bookmarks` com `{id, block_id, kind, text?, created_at}`.
+### 4. Unificação do "Santo do dia"
+Hoje há duas fontes desconectadas: `useSaintsToday` (LiturgiaPage) e `LiturgyAdapterMock` (Átrio). Consolidar num único hook `useSaintOfDay(date)` que:
+- Consome `saint-of-the-day` edge function (fonte oficial).
+- Fallback para `getSaintsByDate` (santoral local).
+- Alimenta tanto `LiturgiaPage` quanto `DailyLiturgy` (Átrio) e `Header`.
+- Remove o mock estático (`LiturgyAdapterMock.ts:4-9`).
 
-### Onda 4 — ReaderContinuation via Nexus automático
+### 5. Primitivas editoriais da Liturgia
+Extrair o `ReadingCard` inline (`LiturgiaPage.tsx:83-116`) para `src/components/cathedra/primitives/liturgy/`:
+- `LiturgyReadingCard` (primeira leitura, segunda leitura, evangelho — variantes)
+- `LiturgyPsalmCard` (com refrão destacado)
+- `LiturgyDayHeader` (tempo, cor, rank, data)
+- `LiturgyDateNav` (nav ontem/hoje/amanhã + calendário)
 
-- Adapter `prayerBlockAutoNexus(block, mystery, section)` sobre `KnowledgeRegistry` + `KnowledgeResolver` (mesmo padrão de `glossaryAutoNexus` / `journeyAutoNexus`), com cache LRU + métricas para o `NexusMetricsOverlay`.
-- Fonte das relações: `prayer_blocks.content.refs`, `prayer_mysteries.gospel_ref`, tags automáticas do texto do bloco (glossário + catecismo por regex já disponível no resolver).
-- `ReaderContinuation` no fim de cada bloco: Bíblia · Catecismo · Glossário · Santo · Próxima oração — 100% resolvido pelo KnowledgeGraph, com `NexusSourceBadge` já existente.
-- Zero string de rota hardcoded no reader — auditoria via `scripts/audit-glossary-hardcoded.ts` estendida para o diretório do reader.
+Prepara o terreno para as Ondas B (comentários) e C (Nexus) reaproveitarem os mesmos componentes sem reescrever.
 
-### Onda 5 — Resumo pós-sessão + próxima sugestão
+### 6. Nexus mínimo
+Manter o `liturgyAutoNexus` como está (busca semântica). Passar `title` e `season` reais da leitura do dia. Sem novos buckets — enriquecimento vem na Onda C.
 
-- Ao chamar `finish()`, tela `PrayerSessionSummary`:
-  - blocos, mistérios, minutos, reflexões, favoritos, intenções.
-  - “Próxima sugestão” — vem do KnowledgeGraph (relação `next_devotion`), fallback: próxima oração da mesma categoria ainda não concluída hoje.
+## Fora do escopo desta onda
 
-### Onda 6 — Analytics espiritual (leve, sem dashboard novo)
-
-- View SQL `prayer_stats_user`: orações concluídas, mistério mais rezado, tempo médio, sequência (streak) por dia, top 5 blocos revisitados.
-- Hook `usePrayerStats()` consumido no perfil espiritual existente (não cria página nova).
-
-## Fora do escopo desta fase
-
-- Áudio sincronizado por bloco (Fase F).
-- Modo offline (Fase G).
-- Gamificação / metas (Fase H).
-- Refatoração dos demais módulos (Orações, Glossário, Jornadas, Trilhas, Portal Litúrgico, Santos).
-
-O motor será testado no Rosário; as demais devoções passam a consumi-lo apenas após Fase E validada.
+- Comentários editoriais, Padres, Catecismo, Magistério, Meditação Logos → **Onda B**.
+- Integração Nexus profunda, glossário embutido, jornadas relacionadas, favoritos, histórico, compartilhamento → **Onda C**.
+- Missal completo → **Sprint 2**.
+- Liturgia das Horas → **Sprint 3**.
+- Nenhuma nova tabela no banco.
+- Nenhuma nova dependência externa.
 
 ## Detalhes técnicos
 
-- Tabelas tocadas: só `prayer_sessions` (add `bookmarks jsonb`, índice parcial de retomada). Nenhuma nova tabela.
-- RLS: `prayer_sessions` já é `auth.uid() = user_id`; policies mantidas.
-- Autosave: `advance()` faz `upsert` em uma única linha por sessão; debounced 500ms + flush no `beforeunload`.
-- Nexus adapter reutiliza `KnowledgeRegistry` — não vamos duplicar o resolver.
-- Contract test: `tests/e2e/rosary-resume.spec.ts` — reza 5 blocos, recarrega, valida retomada exata + `ReaderContinuation` visível + badge `kind · id`.
-- Auditoria de hardcoded estendida: `scripts/audit-rosary-hardcoded.ts` falha CI se houver `href=/biblia|/catecismo|/santos` fora do adapter.
+**Arquivos novos**
+- `src/core/liturgy/LiturgyProvider.ts` (interface + tipos)
+- `src/core/liturgy/providers/RailwayInAdiutoriumProvider.ts` (implementação atual)
+- `src/hooks/useDailyLiturgy.ts`
+- `src/hooks/useSaintOfDay.ts`
+- `src/components/cathedra/primitives/liturgy/` (4 componentes)
 
-## Como isso destrava as próximas fases
+**Arquivos alterados**
+- `src/components/cathedra/LiturgiaPage.tsx` — consome novo hook + navegação plena + deep link
+- `src/modules/atrium/components/Liturgy/DailyLiturgy.tsx` — passa a usar `useSaintOfDay`
+- `src/modules/atrium/adapters/mocks/LiturgyAdapterMock.ts` — removido
+- `src/core/knowledge/adapters/liturgyAutoNexus.ts` — só ajuste de input (título/season reais)
 
-Depois de Fase E validada, adicionar uma nova devoção (Via Sacra, LH, Novena, Ladainha) vira **puramente seed de conteúdo** em `prayer_sections/mysteries/blocks` + tags no `KnowledgeRegistry`. Sem código novo de leitor, sem novo state, sem novo Nexus.
+**Sem migração de banco. Sem nova edge function.**
 
-## Começo
+## Validação
+- Playwright E2E: abrir `/liturgia?d=2026-12-25` (Natal) e `/liturgia?d=2026-04-05` (Páscoa) — verificar leituras corretas, cor litúrgica, salmo com refrão, evangelho.
+- Testes unitários: `LiturgyProvider` contract, `useDailyLiturgy` cache/offline.
+- Métricas de hit/miss expostas no NexusMetricsOverlay (adicionar linha "Liturgy Provider").
 
-Se aprovar, abro **Onda 1** já em seguida: migration mínima (`bookmarks` + índice de retomada) + hook `usePrayerEngineSession`. Nada de reader ainda — só a fundação persistente.
+Confirma a Onda A? Assim que aprovar, executo end-to-end e entrego relatório antes×depois com métricas.
