@@ -1,6 +1,5 @@
 /**
- * nexusMetrics — coleta leve de métricas dos adapters do Nexus
- * (glossaryAutoNexus e journeyAutoNexus).
+ * nexusMetrics — coleta leve de métricas dos adapters do Nexus.
  *
  * - Sem efeitos colaterais em produção além de mutação de contadores.
  * - Sem I/O, sem rede: apenas um objeto in-memory.
@@ -12,7 +11,19 @@
  *   • `subscribeNexusMetrics` retorna uma função de unsubscribe.
  */
 
-export type NexusAdapter = 'glossary' | 'journey' | 'prayer';
+export type NexusAdapter =
+  | 'glossary'
+  | 'journey'
+  | 'prayer'
+  | 'bible'
+  | 'catechism'
+  | 'magisterium'
+  | 'saint'
+  | 'liturgy';
+
+export const NEXUS_ADAPTERS: readonly NexusAdapter[] = [
+  'glossary', 'journey', 'prayer', 'bible', 'catechism', 'magisterium', 'saint', 'liturgy',
+];
 
 export interface NexusMetricEvent {
   adapter: NexusAdapter;
@@ -34,10 +45,7 @@ export interface AdapterMetrics {
   lastAt: number | null;
 }
 
-export interface NexusMetricsSnapshot {
-  glossary: AdapterMetrics;
-  journey: AdapterMetrics;
-}
+export type NexusMetricsSnapshot = Record<NexusAdapter, AdapterMetrics>;
 
 const zero = (): AdapterMetrics => ({
   hits: 0,
@@ -47,10 +55,13 @@ const zero = (): AdapterMetrics => ({
   lastAt: null,
 });
 
-const state: NexusMetricsSnapshot = {
-  glossary: zero(),
-  journey: zero(),
-};
+function initialState(): NexusMetricsSnapshot {
+  const s = {} as NexusMetricsSnapshot;
+  for (const a of NEXUS_ADAPTERS) s[a] = zero();
+  return s;
+}
+
+const state: NexusMetricsSnapshot = initialState();
 
 type Listener = (snap: NexusMetricsSnapshot) => void;
 const listeners = new Set<Listener>();
@@ -61,7 +72,6 @@ export function recordNexusMetric(evt: NexusMetricEvent): void {
   if (evt.hit) bucket.hits += 1;
   else bucket.misses += 1;
   const total = bucket.hits + bucket.misses;
-  // Média incremental para evitar armazenar histórico.
   bucket.avgMs = bucket.avgMs + (evt.ms - bucket.avgMs) / total;
   bucket.lastMs = evt.ms;
   bucket.lastAt = Date.now();
@@ -73,8 +83,7 @@ export function getNexusMetricsSnapshot(): NexusMetricsSnapshot {
 }
 
 export function resetNexusMetrics(): void {
-  state.glossary = zero();
-  state.journey = zero();
+  for (const a of NEXUS_ADAPTERS) state[a] = zero();
   for (const l of listeners) l(cloneSnapshot());
 }
 
@@ -90,8 +99,7 @@ export function hitRate(m: AdapterMetrics): number {
 }
 
 function cloneSnapshot(): NexusMetricsSnapshot {
-  return {
-    glossary: { ...state.glossary },
-    journey: { ...state.journey },
-  };
+  const out = {} as NexusMetricsSnapshot;
+  for (const a of NEXUS_ADAPTERS) out[a] = { ...state[a] };
+  return out;
 }
