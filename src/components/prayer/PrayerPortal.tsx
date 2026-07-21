@@ -155,11 +155,26 @@ const PrayerPortal: React.FC<Props> = ({
     session.session && session.session.current_block_uuid && !session.session.completed_at,
   );
   const completedCount = session.session?.completed_mystery_ids?.length ?? 0;
-  const resumeLabel = dayMystery && completedCount > 0
-    ? `${completedCount}º mistério concluído`
-    : 'Retomar de onde parou';
 
-  const handleEnter = () => {
+  // Rótulo rico para retomada — ex.: "3º Mistério Doloroso".
+  const sectionShortLabel = useMemo(() => {
+    if (!activeSection?.title) return null;
+    // "Mistérios Dolorosos" → "Mistério Doloroso"
+    return activeSection.title
+      .replace(/^Mistérios?\s+/i, 'Mistério ')
+      .replace(/s$/, '');
+  }, [activeSection?.title]);
+  const resumeOrdinal = completedCount + 1;
+  const resumeTitle = sectionShortLabel
+    ? `${resumeOrdinal}º ${sectionShortLabel}`
+    : dayMystery?.title ?? 'Continuar oração';
+
+  const isReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  const [thresholdActive, setThresholdActive] = React.useState(false);
+
+  const commitEnter = () => {
     localStorage.setItem('cathedra.prayer.mode', mode);
     if (onEnter) return onEnter();
     const next = new URLSearchParams(searchParams);
@@ -168,16 +183,25 @@ const PrayerPortal: React.FC<Props> = ({
     setSearchParams(next, { replace: true });
   };
 
+  const handleEnter = () => {
+    if (isReducedMotion) return commitEnter();
+    setThresholdActive(true);
+    // 780ms = duração do keyframe portal-threshold
+    window.setTimeout(commitEnter, 700);
+  };
+
   const handleRestart = async () => {
     await session.reset();
     handleEnter();
   };
+
 
   return (
     <main
       className="mx-auto w-full max-w-[720px] px-5 pb-24 pt-10 md:px-8 md:pt-16"
       aria-labelledby="portal-title"
       data-testid="prayer-portal"
+      data-portal-oracao
     >
       {/* 1 — Hero limpo */}
       <EditorialHero align="center" as="header">
@@ -295,81 +319,96 @@ const PrayerPortal: React.FC<Props> = ({
         </div>
       </section>
 
-      {/* 5 — Continuar / Recomeçar */}
+      {/* 5 — Você parou aqui (promovido: vira o card mais forte) */}
       {hasOpenSession && (
         <section
           aria-labelledby="portal-resume"
-          className="mt-12 rounded-2xl border-2 border-stitch-secondary/60 bg-stitch-secondary/[0.08] px-6 py-6 md:px-8"
+          className={cn(
+            'mt-14 rounded-2xl border-2 border-stitch-secondary/70 px-6 py-7 md:px-9 md:py-8',
+            'bg-[linear-gradient(180deg,hsl(var(--stitch-secondary)/0.14),hsl(var(--stitch-secondary)/0.06))]',
+            'shadow-[0_12px_40px_-18px_hsl(var(--stitch-secondary)/0.5)]',
+          )}
           data-testid="portal-resume"
         >
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <span
-                id="portal-resume"
-                className="font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary"
-              >
-                Você tem uma oração em andamento
-              </span>
-              <p className="mt-1.5 font-stitch-display text-lg text-stitch-on-surface">
-                {resumeLabel}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="pill-active"
-                size="pill"
-                onClick={handleEnter}
-                data-testid="portal-continue"
-              >
-                <PlayCircle aria-hidden />
-                Continuar
-              </Button>
-              <Button
-                type="button"
-                variant="pill"
-                size="pill"
-                onClick={handleRestart}
-                data-testid="portal-restart"
-              >
-                <RotateCcw aria-hidden />
-                Recomeçar
-              </Button>
-            </div>
+          <span
+            id="portal-resume"
+            className="font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary"
+          >
+            Você parou no
+          </span>
+          <p className="mt-2 font-stitch-display text-2xl leading-tight text-foreground md:text-3xl">
+            {resumeTitle}
+          </p>
+          <div className="mt-6 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            <Button
+              type="button"
+              size="lg"
+              onClick={handleEnter}
+              data-testid="portal-continue"
+              className={cn(
+                'h-12 flex-1 rounded-full px-8',
+                'bg-stitch-secondary text-stitch-secondary-foreground hover:bg-stitch-secondary/90',
+                'font-stitch-body text-[12px] font-black uppercase tracking-[0.28em]',
+                'shadow-[0_8px_24px_-10px_hsl(var(--stitch-secondary)/0.55)]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2',
+              )}
+            >
+              <PlayCircle className="h-4 w-4" aria-hidden />
+              Continuar oração
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="lg"
+              onClick={handleRestart}
+              data-testid="portal-restart"
+              className="h-12 rounded-full px-6 font-stitch-body text-[12px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface hover:bg-stitch-secondary/10 hover:text-stitch-secondary"
+            >
+              <RotateCcw className="h-4 w-4" aria-hidden />
+              Recomeçar
+            </Button>
           </div>
         </section>
       )}
 
-      {/* 6 — ENTRAR EM ORAÇÃO */}
-      <div className="mt-16 flex flex-col items-center gap-3">
-        <Button
-          type="button"
-          size="lg"
-          onClick={handleEnter}
-          data-testid="portal-enter"
-          className={cn(
-            'h-14 min-w-[260px] rounded-full px-10',
-            'bg-stitch-secondary text-stitch-secondary-foreground hover:bg-stitch-secondary/90',
-            'font-stitch-body text-[13px] font-black uppercase tracking-[0.32em]',
-            'shadow-[0_10px_30px_-12px_hsl(var(--stitch-secondary)/0.55)]',
-            'transition-transform duration-200 hover:scale-[1.02]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2',
-          )}
-        >
-          Entrar em oração
-        </Button>
-        <p className="text-center font-stitch-body text-[12px] font-bold uppercase tracking-[0.24em] text-stitch-secondary">
-          Silêncio · Presença · Contemplação
-        </p>
+      {/* 6 — ENTRAR EM ORAÇÃO (CTA único quando não há sessão) */}
+      {!hasOpenSession && (
+        <div className="mt-16 flex flex-col items-center gap-3">
+          <Button
+            type="button"
+            size="lg"
+            onClick={handleEnter}
+            data-testid="portal-enter"
+            className={cn(
+              'h-14 min-w-[260px] rounded-full px-10',
+              'bg-stitch-secondary text-stitch-secondary-foreground hover:bg-stitch-secondary/90',
+              'font-stitch-body text-[13px] font-black uppercase tracking-[0.32em]',
+              'shadow-[0_10px_30px_-12px_hsl(var(--stitch-secondary)/0.55)]',
+              'transition-transform duration-200 hover:scale-[1.02]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2',
+            )}
+          >
+            Entrar em oração
+          </Button>
+          <p className="text-center font-stitch-body text-[12px] font-bold uppercase tracking-[0.24em] text-stitch-secondary">
+            Silêncio · Presença · Contemplação
+          </p>
+        </div>
+      )}
+
+      <div className="mt-10 flex justify-center">
         <Link
           to={backHref}
-          className="mt-4 font-stitch-body text-xs font-semibold uppercase tracking-widest text-stitch-on-surface hover:text-stitch-secondary"
+          className="font-stitch-body text-xs font-semibold uppercase tracking-widest text-stitch-on-surface hover:text-stitch-secondary"
         >
           {backLabel}
         </Link>
       </div>
+
+      {thresholdActive && <div data-portal-threshold aria-hidden="true" />}
     </main>
   );
 };
 
 export default PrayerPortal;
+
