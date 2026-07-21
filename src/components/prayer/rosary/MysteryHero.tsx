@@ -53,6 +53,10 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
             aria-hidden
             width={1024}
             height={1024}
+            loading="lazy"
+            decoding="async"
+            // @ts-expect-error fetchpriority é HTML nativo, ainda não tipado em React
+            fetchpriority="low"
             className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover"
           />
           <div

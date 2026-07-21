@@ -250,7 +250,14 @@ const LiturgiaPage: React.FC = () => {
               {meditation && (
                 <div className="space-y-spacing-xl">
                   {meditation.fallback && (
-                    <LiturgyMeditationFallbackNotice message={meditation.fallback_message} />
+                    <LiturgyMeditationFallbackNotice
+                      message={meditation.fallback_message}
+                      code={meditation.fallback_code}
+                      source={meditation.fallback_source}
+                      retryAt={meditation.fallback_retry_at}
+                      onRetry={retryMeditation}
+                      isRetrying={isMeditationFetching}
+                    />
                   )}
                   {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
                   {meditation.reading_key && (
