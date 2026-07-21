@@ -328,14 +328,14 @@ export const BreviaryContinuousReader: React.FC<Props> = ({
   }, [cursorKey, hours, isoDate]);
 
   // Sugestões Nexus para o final da sessão
-  const suggestions = useMemo(
+  const nexus = useMemo(
     () =>
       resolvePrayerAutoNexus({
-        prayerSlug: prayer.slug,
-        prayerTitle: prayer.title,
-        themeIds: liturgy?.season ? [`liturgy:${liturgy.season}`] : undefined,
+        slug: prayer.slug,
+        title: prayer.title,
+        category: (prayer as unknown as { category?: string | null }).category ?? null,
       }),
-    [prayer.slug, prayer.title, liturgy?.season],
+    [prayer],
   );
 
   return (
@@ -352,13 +352,11 @@ export const BreviaryContinuousReader: React.FC<Props> = ({
         </p>
       </footer>
 
-      {!celebrationMode && suggestions.length > 0 && (
+      {!celebrationMode && nexus.suggestions.length > 0 && (
         <div className="mt-spacing-xl">
           <ReaderContinuation
-            title="Continue na oração"
-            eyebrow="Nexus"
-            currentKind="prayer"
-            preresolvedSuggestions={suggestions}
+            context={{ kind: 'prayer', id: prayer.slug, title: prayer.title }}
+            suggestions={nexus.suggestions}
           />
         </div>
       )}
