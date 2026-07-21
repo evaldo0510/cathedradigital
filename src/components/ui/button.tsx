@@ -21,6 +21,11 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-premium-md shadow-secondary/10 hover:-translate-y-0.5",
         ghost: "hover:bg-primary/[0.02] hover:text-primary text-primary/60",
         link: "text-primary underline-offset-4 hover:underline",
+        // Pill variants — padrão editorial Stitch dos leitores premium (Rosário, Via Sacra, Orações).
+        // Preservam tipografia stitch-body e cores stitch-secondary; sobrescrevem base uppercase.
+        pill: "border border-stitch-outline-variant/40 bg-transparent text-stitch-on-surface-variant font-stitch-body normal-case tracking-widest hover:border-stitch-secondary/50 hover:text-stitch-on-surface shadow-none active:scale-100 hover:-translate-y-0",
+        "pill-active": "bg-stitch-secondary text-white font-stitch-body normal-case tracking-widest border border-transparent hover:bg-stitch-secondary/90 shadow-sm active:scale-100 hover:-translate-y-0",
+        "pill-toned": "border border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary font-stitch-body normal-case tracking-widest hover:bg-stitch-secondary/15 shadow-none active:scale-100 hover:-translate-y-0",
       },
       size: {
         default: "h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md",
