@@ -52,21 +52,25 @@ function push(path: string, level: Issue['level'], message: string) {
 function validateEntry(path: string, meta: RouteMeta) {
   const { title, description, canonicalPath, noindex } = meta;
 
-  // title
+  // title (comprimento só cobrado em rotas indexáveis)
   if (!title || title.trim().length < LIMITS.titleMin) {
     push(path, 'error', `title vazio ou curto demais (<${LIMITS.titleMin})`);
-  } else if (title.length > LIMITS.titleMax) {
+  } else if (!noindex && title.length > LIMITS.titleMax) {
     push(path, 'error', `title com ${title.length} chars (>${LIMITS.titleMax})`);
   }
   if (title && LOVABLE_DEFAULTS.some((d) => title.includes(d))) {
     push(path, 'error', `title usa default Lovable: "${title}"`);
   }
 
-  // description
-  if (!description || description.trim().length < LIMITS.descMin) {
-    push(path, 'error', `description vazia ou curta demais (<${LIMITS.descMin})`);
-  } else if (description.length > LIMITS.descMax) {
-    push(path, 'error', `description com ${description.length} chars (>${LIMITS.descMax})`);
+  // description (comprimento só cobrado em rotas indexáveis)
+  if (!description || description.trim().length === 0) {
+    push(path, 'error', `description vazia`);
+  } else if (!noindex) {
+    if (description.length < LIMITS.descMin) {
+      push(path, 'error', `description com ${description.length} chars (<${LIMITS.descMin})`);
+    } else if (description.length > LIMITS.descMax) {
+      push(path, 'error', `description com ${description.length} chars (>${LIMITS.descMax})`);
+    }
   }
   if (description && LOVABLE_DEFAULTS.some((d) => description.includes(d))) {
     push(path, 'error', `description usa default Lovable`);
