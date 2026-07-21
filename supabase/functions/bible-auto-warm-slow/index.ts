@@ -12,6 +12,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+import { assertCronOrAdmin } from '../_shared/admin-guard.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -55,6 +56,9 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
+
+  const guard = await assertCronOrAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
 
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }

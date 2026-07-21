@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Admins can manage settings" ON public.webhook_settings;

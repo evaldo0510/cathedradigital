@@ -1,13 +1,29 @@
 // Validates sitemap.xml and robots.txt served at the project's public base URL.
+// Restrito a admins (verify_jwt=true) + baseUrl restrito a allowlist para evitar SSRF.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { assertAdmin } from "../_shared/admin-guard.ts";
 
 const DEFAULT_BASE = "https://www.cathedradigital.com.br";
+const ALLOWED_BASES = new Set<string>([
+  "https://www.cathedradigital.com.br",
+  "https://cathedradigital.com.br",
+  "https://cathedradigital.lovable.app",
+]);
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const guard = await assertAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
   try {
     const body = await req.json().catch(() => ({}));
-    const baseUrl: string = body.baseUrl || DEFAULT_BASE;
+    const requested: string = body.baseUrl || DEFAULT_BASE;
+    if (!ALLOWED_BASES.has(requested)) {
+      return new Response(JSON.stringify({ error: "baseUrl not allowed" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const baseUrl = requested;
 
     const sitemapUrl = new URL("/sitemap.xml", baseUrl).toString();
     const robotsUrl = new URL("/robots.txt", baseUrl).toString();

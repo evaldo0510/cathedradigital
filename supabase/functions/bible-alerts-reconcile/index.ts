@@ -17,6 +17,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { findBookByAbbr, normalizeAbbr } from '../_shared/bibleCanon.ts';
 import { getOrCreateCorrelationId } from '../_shared/correlation.ts';
 import { makeResponder } from '../_shared/http-response.ts';
+import { assertCronOrAdmin } from '../_shared/admin-guard.ts';
 
 const LEGACY_UI_ABBREVS = ['Esd', 'Est', 'Pr', 'Ecl', '1 Cor', '2 Cor', '1Cor', '2Cor', 'Fl', '1 Pd', '2 Pd', '1Pd', '2Pd'];
 
@@ -31,6 +32,9 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const R = makeResponder(cid);
   if (req.method === 'OPTIONS') return R.cors();
+
+  const guard = await assertCronOrAdmin(req);
+  if (!guard.ok) return guard.response;
 
   const url = Deno.env.get('SUPABASE_URL')!;
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;

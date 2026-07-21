@@ -1,4 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { assertAdmin } from '../_shared/admin-guard.ts';
+
 
 type Result = { ok: boolean; message: string; latencyMs?: number };
 
@@ -73,6 +75,10 @@ const unlinkedMap: Record<string, string> = {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  const guard = await assertAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
+
 
   try {
     const { id } = await req.json();

@@ -1,19 +1,27 @@
+import DOMPurify from 'dompurify';
+import { useMemo } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface VerseNoteSupProps {
   index: number;
   label?: string;
-  /** HTML extracted from the Bolls comment (already sanitized server-side). */
+  /** HTML extracted from the Bolls comment. Sanitizado antes de renderizar. */
   contentHtml?: string;
 }
 
 /**
  * Pequena nota inline (sobrescrita) das traduções tipo NAA.
- * Substitui os caracteres "ⓐ ⓑ ⓒ" que poluíam o corpo do versículo
- * por um marcador discreto e clicável que abre uma referência cruzada.
  */
 export function VerseNoteSup({ index, label, contentHtml }: VerseNoteSupProps) {
   const display = label || String(index);
+  const safeHtml = useMemo(() => {
+    if (!contentHtml) return '';
+    return DOMPurify.sanitize(contentHtml, {
+      ALLOWED_TAGS: ['a', 'b', 'i', 'em', 'strong', 'span', 'br', 'sup', 'sub'],
+      ALLOWED_ATTR: ['href', 'title', 'target', 'rel', 'class'],
+      ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
+    });
+  }, [contentHtml]);
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -33,10 +41,10 @@ export function VerseNoteSup({ index, label, contentHtml }: VerseNoteSupProps) {
         <div className="text-[10px] uppercase tracking-[0.18em] text-secondary mb-1.5 font-bold">
           Referência
         </div>
-        {contentHtml ? (
+        {safeHtml ? (
           <div
             className="space-y-1 [&_a]:text-secondary [&_a]:underline [&_a]:underline-offset-2"
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
+            dangerouslySetInnerHTML={{ __html: safeHtml }}
           />
         ) : (
           <div className="text-primary/60 italic">Sem detalhe disponível.</div>
