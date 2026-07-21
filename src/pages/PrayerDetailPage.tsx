@@ -22,6 +22,7 @@ import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import RosaryReader from '@/components/cathedra/RosaryReader';
+import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
 import { isPrayerBlockArray } from '@/types/prayer';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 
