@@ -1,8 +1,15 @@
 // Runs a lightweight SEO audit against a list of URLs and stores results in seo_audits.
+// Restrito a admins + baseUrl restrito a allowlist para evitar SSRF.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { assertAdmin } from "../_shared/admin-guard.ts";
 
 const DEFAULT_BASE = "https://www.cathedradigital.com.br";
+const ALLOWED_BASES = new Set<string>([
+  "https://www.cathedradigital.com.br",
+  "https://cathedradigital.com.br",
+  "https://cathedradigital.lovable.app",
+]);
 const DEFAULT_PATHS = ["/", "/catechism", "/buscar", "/biblia", "/jornadas", "/santos"];
 
 interface Finding { type: string; severity: "low" | "medium" | "high"; message: string }
@@ -65,10 +72,19 @@ function analyze(url: string, data: ReturnType<typeof extract>) {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const guard = await assertAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
   try {
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const body = await req.json().catch(() => ({}));
-    const baseUrl: string = body.baseUrl || DEFAULT_BASE;
+    const requestedBase: string = body.baseUrl || DEFAULT_BASE;
+    if (!ALLOWED_BASES.has(requestedBase)) {
+      return new Response(JSON.stringify({ error: "baseUrl not allowed" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const baseUrl = requestedBase;
     const paths: string[] = Array.isArray(body.paths) && body.paths.length ? body.paths : DEFAULT_PATHS;
     const results = [];
     for (const p of paths) {
