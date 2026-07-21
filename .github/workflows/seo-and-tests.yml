@@ -111,3 +111,27 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 14
+
+  smoke-console:
+    name: Smoke E2E · rotas sem console.error / exception
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Instalar Chromium (Playwright)
+        run: bunx playwright install --with-deps chromium
+      - name: Rodar smoke de rotas (falha em qualquer console.error)
+        run: bunx playwright test tests/e2e/smoke-routes-clean-console.spec.ts --project=chromium
+        env:
+          CI: 'true'
+      - name: Publicar relatório do smoke
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-smoke-report
+          path: playwright-report
+          retention-days: 14
