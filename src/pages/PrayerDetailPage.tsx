@@ -40,6 +40,8 @@ const PrayerDetailPage: React.FC = () => {
   const { prayer, loading, error } = usePrayer(slug);
   const { prayers } = usePrayers();
   const { items: favorites, toggle } = useDevotionalFavorites('prayer');
+  const sectionSlug = searchParams.get('set') ?? undefined;
+  const hierarchy = usePrayerHierarchy(slug, sectionSlug);
 
   const [fontKey, setFontKey] = useState<FontStepKey>('md');
   useEffect(() => {
