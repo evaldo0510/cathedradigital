@@ -105,6 +105,7 @@ const AtriumCommunityPage = lazy(() => import('./pages/AtriumCommunityPage'));
 const AtriumCommunityPostPage = lazy(() => import('./pages/AtriumCommunityPostPage'));
 const AtriumCommunityProfilePage = lazy(() => import('./pages/AtriumCommunityProfilePage'));
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
+const DiaLiturgicoPage = lazy(() => import('./components/cathedra/DiaLiturgicoPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
 import { DevocionalMobileShell } from './components/mobile/DevocionalMobileShell';
