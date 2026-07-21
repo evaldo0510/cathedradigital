@@ -155,11 +155,26 @@ const PrayerPortal: React.FC<Props> = ({
     session.session && session.session.current_block_uuid && !session.session.completed_at,
   );
   const completedCount = session.session?.completed_mystery_ids?.length ?? 0;
-  const resumeLabel = dayMystery && completedCount > 0
-    ? `${completedCount}º mistério concluído`
-    : 'Retomar de onde parou';
 
-  const handleEnter = () => {
+  // Rótulo rico para retomada — ex.: "3º Mistério Doloroso".
+  const sectionShortLabel = useMemo(() => {
+    if (!activeSection?.title) return null;
+    // "Mistérios Dolorosos" → "Mistério Doloroso"
+    return activeSection.title
+      .replace(/^Mistérios?\s+/i, 'Mistério ')
+      .replace(/s$/, '');
+  }, [activeSection?.title]);
+  const resumeOrdinal = completedCount + 1;
+  const resumeTitle = sectionShortLabel
+    ? `${resumeOrdinal}º ${sectionShortLabel}`
+    : dayMystery?.title ?? 'Continuar oração';
+
+  const isReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  const [thresholdActive, setThresholdActive] = React.useState(false);
+
+  const commitEnter = () => {
     localStorage.setItem('cathedra.prayer.mode', mode);
     if (onEnter) return onEnter();
     const next = new URLSearchParams(searchParams);
@@ -168,10 +183,18 @@ const PrayerPortal: React.FC<Props> = ({
     setSearchParams(next, { replace: true });
   };
 
+  const handleEnter = () => {
+    if (isReducedMotion) return commitEnter();
+    setThresholdActive(true);
+    // 780ms = duração do keyframe portal-threshold
+    window.setTimeout(commitEnter, 700);
+  };
+
   const handleRestart = async () => {
     await session.reset();
     handleEnter();
   };
+
 
   return (
     <main
