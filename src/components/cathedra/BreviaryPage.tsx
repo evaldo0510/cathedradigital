@@ -26,6 +26,7 @@ import {
 } from '@/hooks/useLiturgyHoursOffice';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { PrayerEngineReader } from './PrayerEngineReader';
+import { BreviaryContinuousReader, type BreviaryHourBundle } from './BreviaryContinuousReader';
 import { LiturgyHoursOfficeCards } from './primitives/liturgy/LiturgyHoursOfficeCards';
 import { LiturgyDateNav } from './primitives/liturgy/LiturgyDateNav';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -38,6 +39,7 @@ import { useReaderTypography } from '@/hooks/useReaderTypography';
 import { preloadBreviaryOfflineAssets } from '@/lib/breviaryOfflinePreload';
 import { BreviaryShareButtons } from './primitives/liturgy/BreviaryShareButtons';
 import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyControl';
+import { useQueries } from '@tanstack/react-query';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
