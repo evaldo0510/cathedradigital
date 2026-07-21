@@ -725,6 +725,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/pg-stat-statements" element={<PgStatStatements />} />
                       <Route path="/axe-contrast" element={<AxeContrastReport />} />
                       <Route path="/admin/nexus" element={<NexusAdmin />} />
+                      <Route path="/admin/nexus-audit" element={<NexusAuditPage />} />
                       <Route path="/admin/glossary" element={<GlossaryAdmin />} />
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
                       <Route path="/admin/pray" element={<PrayerAdmin />} />
