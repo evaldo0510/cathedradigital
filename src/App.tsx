@@ -111,6 +111,9 @@ const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
+const NovenasPage = lazy(() => import('./pages/NovenasPage'));
+const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
+
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
