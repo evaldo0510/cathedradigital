@@ -120,7 +120,9 @@ export const LiturgyMeditationFallbackNotice: React.FC<FallbackNoticeProps> = ({
           )}
           {isCreditsExhausted && (
             <a
-              href="/settings?tab=plans"
+              href="https://docs.lovable.dev/introduction/plans-and-credits"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-spacing-2xs px-spacing-md py-spacing-2xs rounded-premium-full bg-secondary/20 text-primary text-premium-xs font-black uppercase tracking-widest hover:bg-secondary/30 transition-colors"
               aria-label="Abrir Planos e créditos"
             >
