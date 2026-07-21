@@ -72,7 +72,12 @@ interface Props {
   backHref?: string;
   /** Rótulo do link de retorno. */
   backLabel?: string;
+  /** Tema visual (halo, filete, tint). Default: `church`. */
+  theme?: PrayerPortalTheme;
+  /** Ícone de destaque exibido no Hero.Meta e circulo do highlight. */
+  accentIcon?: LucideIcon;
 }
+
 
 const OPENING_QUOTE: Record<string, { text: string; ref: string }> = {
   rosario: { text: 'Permanecei em mim, e eu em vós.', ref: 'Jo 15,4' },
