@@ -2,7 +2,7 @@
  * usePrayerHierarchy — hook React Query que carrega a hierarquia de uma oração
  * e devolve blocos achatados prontos para o Reader.
  *
- * Sprint 1.0 — o Reader legado (`RosaryReader`) consome `PrayerBlock[]`, então
+ * Sprint 1.0 — o Reader legado (`PrayerEngineReader`) consome `PrayerBlock[]`, então
  * fazemos o achatamento aqui até que a navegação hierárquica nativa entre.
  */
 import { useMemo } from 'react';
