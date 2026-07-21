@@ -64,7 +64,7 @@ async function fetchExisting(isoDate: string): Promise<LiturgyMeditationRow | nu
     .eq('iso_date', isoDate)
     .maybeSingle();
   if (error) return null;
-  return (data as LiturgyMeditationRow | null) ?? null;
+  return (data as unknown as LiturgyMeditationRow | null) ?? null;
 }
 
 async function generate(isoDate: string, readings: DailyLiturgy): Promise<LiturgyMeditationRow | null> {
