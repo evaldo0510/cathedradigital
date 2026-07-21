@@ -34,6 +34,10 @@ import { Icons } from '../../constants';
 import { flattenSectionToBlocks } from '@/prayer-engine/loadPrayerHierarchy';
 import SEOHead from '@/components/SEOHead';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useReaderTypography } from '@/hooks/useReaderTypography';
+import { preloadBreviaryOfflineAssets } from '@/lib/breviaryOfflinePreload';
+import { BreviaryShareButtons } from './primitives/liturgy/BreviaryShareButtons';
+import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyControl';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
@@ -188,6 +192,18 @@ const BreviaryPage: React.FC = () => {
     void prefetchAllHoursForDay(qc, isoDate, liturgy);
   }, [qc, isoDate, liturgy]);
 
+  // Pré-carregamento offline de assets estáticos (ícones/fonts/imagens brand)
+  // usados pelas telas do Breviário. Idempotente e silencioso.
+  useEffect(() => {
+    void preloadBreviaryOfflineAssets();
+  }, []);
+
+  // Deep link `?b=<blockId>` — restaura posição exata do trecho.
+  const initialBlockId = searchParams.get('b');
+
+  // Preferências de tipografia (persistidas cross-session, funciona offline).
+  const { wrapperStyle: typographyStyle } = useReaderTypography();
+
   // ── Reader ativo ──
   if (selectedHour && prayer && hierarchy && activeSection) {
     const section =
@@ -237,12 +253,25 @@ const BreviaryPage: React.FC = () => {
             </span>
           </div>
         )}
+        <div className="mx-auto max-w-3xl mb-spacing-sm flex flex-wrap items-center justify-between gap-spacing-2xs px-spacing-sm">
+          <ReaderTypographyControl />
+          <BreviaryShareButtons
+            hourSlug={selectedHour}
+            isoDate={isoDate}
+            isToday={isToday}
+            shareTitle={pageTitle}
+            bookmarkKey={`prayer-cursor:breviary:${selectedHour}:${isoDate}`}
+          />
+        </div>
         <PrayerEngineReader
           prayer={prayer}
           blocks={hourBlocks}
           mysteries={[]}
           activeSection={section}
           kicker={section.subtitle ?? undefined}
+          contextKey={`breviary:${selectedHour}:${isoDate}`}
+          initialBlockId={initialBlockId}
+          contentStyle={typographyStyle}
           prefaceSlot={
             <LiturgyHoursOfficeCards
               office={office}
