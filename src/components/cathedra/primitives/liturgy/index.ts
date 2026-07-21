@@ -4,6 +4,7 @@ export { LiturgyDayHeader, type LiturgyDayHeaderProps } from './LiturgyDayHeader
 export { LiturgyDateNav, type LiturgyDateNavProps } from './LiturgyDateNav';
 export {
   LiturgyMeditationSkeleton,
+  LiturgyMeditationFallbackNotice,
   LiturgyThemeCard,
   LiturgyReadingKeyCard,
   LiturgyTraditionCard,

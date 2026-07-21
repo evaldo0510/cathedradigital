@@ -28,6 +28,7 @@ import {
   LiturgyChurchHistoryCard,
   LiturgyActionCard,
   LiturgyMeditationSkeleton,
+  LiturgyMeditationFallbackNotice,
 } from './primitives/liturgy';
 import { useLiturgyMeditation } from '@/hooks/useLiturgyMeditation';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
@@ -248,6 +249,9 @@ const LiturgiaPage: React.FC = () => {
               {isMeditationLoading && !meditation && <LiturgyMeditationSkeleton />}
               {meditation && (
                 <div className="space-y-spacing-xl">
+                  {meditation.fallback && (
+                    <LiturgyMeditationFallbackNotice message={meditation.fallback_message} />
+                  )}
                   {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
                   {meditation.reading_key && (
                     <LiturgyReadingKeyCard text={meditation.reading_key} />
