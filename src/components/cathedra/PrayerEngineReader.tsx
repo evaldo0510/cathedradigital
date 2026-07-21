@@ -422,7 +422,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goNext, goPrev, focus]);
+  }, [goNextRhythmed, goPrev, focus]);
 
   const bookmarks = session.session?.bookmarks ?? [];
   const isFavoriteCurrent =
