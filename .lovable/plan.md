@@ -1,62 +1,84 @@
-# B.2.5.d — Universalização do Portal para novos módulos
 
-## Diagnóstico
+# Ciclo Editorial Fundacional — Fase 1
 
-Cinco módulos foram pedidos de uma vez. Cada um tem particularidades editoriais e de fluxo:
+Executar 27 entregas editoriais (7 Sacramentos + 10 Santos + 10 Verbetes) sem inflar o diff nem sacrificar profundidade. Cada onda entrega conteúdo pronto para publicação, com Nexus tecido no ato.
 
-- **Orações comuns**: já existem 9 orações em Engine v2 (Pai Nosso, Ave Maria, etc). Falta apenas o Portal padronizado.
-- **Novenas**: fluxo de 9 dias com progresso persistido — precisa de schema no banco (dias, intenções, meditações).
-- **Ladainhas**: fluxo de invocação/resposta iterativa — precisa de mecânica de repetição no Reader.
-- **Lectio Divina**: 5 etapas (Lectio, Meditatio, Oratio, Contemplatio, Actio) — precisa de tema próprio e temporizadores.
-- **Missal**: já existe (`MissaContinuousReader`) e está em uso. Só precisa do Portal como antessala.
+## Princípio
 
-Fazer tudo em uma sprint gera 5 esqueletos sem conteúdo real e polui o banco. Melhor entregar em ondas com gates.
+Uma onda = 1 lote pequeno + 1 gate de aprovação. Nenhuma refatoração de código durante o ciclo — só dados (`glossary`, `saints`, `nexus_relations`, orações v2 quando faltar). Componentes já homologados (Harmony, PrayerPortal, SaintDetail, GlossaryTermPage) consomem sem alteração.
 
-## Proposta: 3 ondas sequenciais
+## Eixos e ondas
 
-### Onda 1 — Fundação universal (esta sprint)
+### Eixo 1 — Os 7 Sacramentos (3 ondas)
 
-Objetivo: ativar o Portal em tudo que já está pronto na base, sem novas tabelas.
+Cada sacramento entrega, em uma única migration de dados:
 
-1. **Orações comuns via Portal** — `PrayerPortalStandalone` plugado nas 9 orações v2 existentes, com tema derivado do tipo:
-   - Pai Nosso, Ave Maria, Glória, Salve Rainha → `church` (dourado)
-   - Angelus → `noon`, Regina Caeli → `dawn`, Magnificat → `sunset`
-   - Credo, Te Deum → `church` com quote própria
-2. **Missal via Portal** — antessala contemplativa antes do `MissaContinuousReader`, tema `church`, com Escritura do dia como quote e "Entrar na Missa" como CTA.
-3. **Contrato universal**: expor `resolvePortalTheme(prayer)` em `src/lib/prayer/portalTheme.ts` centralizando o mapeamento (Rosário/Via Sacra/Breviário passam a consumir também).
+- Verbete `glossary` (deep_interpretation, etimologia, contexto histórico, FAQ×3-4, bibliografia×3-5, meditação Logos, 5-7 versículos, 4-5 §§CIC).
+- 6-10 arestas `nexus_relations` (≥3 bíblicas, ≥2 CIC, ≥1 patrística, verbetes irmãos).
+- Vínculo declarativo com orações v2 já existentes (Rosário, Comunhão Espiritual, etc.) e santos correlatos quando aplicável.
 
-Gate: screenshots dos 5 pontos de entrada, typecheck limpo, E2E do Portal universal.
+Ondas:
 
-### Onda 2 — Lectio Divina como Portal contemplativo
+- **S1.1** — Batismo · Crisma (Iniciação Δ Eucaristia já publicada)
+- **S1.2** — Penitência (Confissão já existe → enriquecer) · Unção dos Enfermos
+- **S1.3** — Ordem · Matrimônio + verbete-índice `sacramentos-de-servico`
 
-Objetivo: novo módulo, mas sem depender de conteúdo de terceiros — usa Evangelho do dia via `LiturgyProvider` (já existente).
+Gate: revisar S1.1 antes de S1.2.
 
-- Rota `/lectio` com Portal (tema `dawn`, ícone `BookOpen`, quote fixa "Fala, Senhor, teu servo escuta").
-- Reader com as 5 etapas em stepper, cada uma com temporizador contemplativo configurável (reaproveita `useContemplativeRhythm`).
-- Persistência local por dia (`localStorage` indexado por data litúrgica).
-- Sem novas tabelas — conteúdo bíblico já vem do Provider.
+### Eixo 2 — 10 Santos Fundamentais (3 ondas)
 
-Gate: fluxo E2E completo (portal → 5 etapas → conclusão), acessibilidade axe.
+Template homologado em São João Batista. Cada santo:
 
-### Onda 3 — Novenas e Ladainhas (requer conteúdo)
+- Ficha `saints` completa (bio curta/longa, contexto, virtudes, patronatos, iconografia, milagres, práticas espirituais).
+- 6-8 arestas `nexus_relations` (Bíblia, CIC, Magistério, verbetes, orações).
 
-Objetivo: módulos com conteúdo editorial próprio. Requerem decisões antes de codar.
+Ondas:
 
-- **Novenas**: schema `prayer_novena_days` (id, prayer_id, day_number, intention, meditation, prayer_block_ids). Portal mostra "Dia X de 9" com progresso, sessão salva no banco.
-- **Ladainhas**: reaproveita `prayer_blocks` com `kind='invocation'` + `response`. Reader com modo iteração (avanço automático opcional a cada invocação).
+- **S2.1 — Colunas apostólicas**: São Pedro · São Paulo · Nossa Senhora · São José
+- **S2.2 — Doutores**: Santo Agostinho · São Tomás de Aquino · Santa Teresa d'Ávila
+- **S2.3 — Santidade contemporânea + carisma**: Santa Teresinha · São Francisco de Assis (S. João Batista ✔ já feito)
 
-Bloqueio para começar: preciso de decisão editorial sobre **quais** novenas e ladainhas entrar primeiro (Novena do Sagrado Coração? Nossa Senhora? São José? Ladainha de Todos os Santos? de Nossa Senhora?).
+Gate: revisar S2.1 antes de S2.2.
 
-## Detalhes técnicos (para referência)
+### Eixo 3 — 10 Verbetes Fundamentais (2 ondas)
 
-- `resolvePortalTheme(prayer)`: função pura em `src/lib/prayer/portalTheme.ts` retornando `{ theme, accentIcon, quote }` a partir de `prayer.slug`/`prayer.kind`.
-- Reutiliza `PrayerPortal` já parametrizado (props `theme`, `accentIcon`, `quote`).
-- Missal: gate `?enter=1` em `/missa/hoje` antes de renderizar `MissaContinuousReader`.
-- Lectio: novo componente `LectioDivinaReader` seguindo padrão de `PrayerEngineReader`, sem tocar em `prayer_blocks`.
-- Ondas 2 e 3 abrem depois do gate da Onda 1.
+Template homologado em Sacramento. Divisão por afinidade:
 
-## Pergunta antes de começar
+- **S3.1 — Economia da Salvação**: Graça · Revelação · Tradição · Magistério · Salvação
+- **S3.2 — Vida Teologal e Santidade**: Igreja · Santidade · Misericórdia · Esperança · Caridade
 
-Aprovo executar **apenas a Onda 1** agora (Orações comuns + Missal via Portal + helper universal)?
+Reaproveita verbetes já publicados (Esperança Cristã → refinar em vez de duplicar).
 
-Se sim, sigo. Se quiser inverter prioridade (ex.: Lectio primeiro, ou já definir quais novenas), me diga antes.
+## Ordem de execução proposta
+
+```
+S1.1 → gate → S1.2 → gate → S1.3
+      ↓
+     S2.1 → gate → S2.2 → gate → S2.3
+      ↓
+     S3.1 → gate → S3.2
+      ↓
+   Ativar Library Curator Expert
+```
+
+Alternativa (paralela): S1.1 + S3.1 na mesma onda quando os verbetes se reforçam (Sacramentos ↔ Graça).
+
+## Métricas de gate
+
+Cada onda entrega relatório curto:
+
+- Verbetes novos com `editorial_completeness='complete'` (contagem).
+- Arestas `nexus_relations` inseridas (contagem).
+- Santos com `status='complete'` (contagem).
+- Zero regressão: rota renderiza (Playwright smoke).
+
+## Fora de escopo (nesta Fase 1)
+
+- Coleções, séries, prateleiras, recomendações → Library Curator, após conclusão.
+- Novas orações que não sejam pré-requisito direto de um sacramento (ex.: Rito do Batismo simplificado).
+- Refactor de UI. Se algo faltar visualmente, registrar como débito e seguir.
+
+## Decisão pedida
+
+1. Aprovar sequência linear (S1 → S2 → S3) **ou** intercalada (Sacramento + Verbete-irmão na mesma onda).
+2. Começar por **S1.1 (Batismo + Crisma)** agora?
