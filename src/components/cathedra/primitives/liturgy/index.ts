@@ -12,3 +12,4 @@ export {
   LiturgyChurchHistoryCard,
   LiturgyActionCard,
 } from './LiturgyMeditationBlocks';
+export { MissalProperCards, MissalProperSkeleton } from './MissalProperCards';
