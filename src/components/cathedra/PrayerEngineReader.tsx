@@ -143,6 +143,9 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   const current = blocks[cursorIndex];
   const isRosary = prayer.slug === 'rosario';
+  const palette = resolveMysteryPalette(activeSection?.slug);
+  const contemplative = mode === 'contemplative';
+
 
   const mysteriesInSection = useMemo(
     () =>
@@ -559,6 +562,31 @@ export const PrayerEngineReader: React.FC<Props> = ({
             />
           </div>
         </div>
+      ) : isRosary ? (
+        <div className="mb-10 flex flex-col items-center gap-4">
+          {activeSection && (
+            <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.32em] text-stitch-on-surface-variant">
+              {activeSection.title}
+            </p>
+          )}
+          <SpiritualProgressDots
+            total={mysteriesInSection.length}
+            currentIndex={Math.max(currentMysteryIndex, 0)}
+            ids={mysteriesInSection.map((m) => m.id)}
+            completedIds={session.session?.completed_mystery_ids ?? []}
+            accentClass={palette.accentClass}
+            label={
+              currentMystery
+                ? `Mistério ${currentMysteryIndex + 1} de ${mysteriesInSection.length} · ${currentMystery.title}`
+                : undefined
+            }
+          />
+          {aveCount > 0 && aveCurrentIdx >= 0 && (
+            <p className="font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
+              Ave-Maria {aveCurrentIdx + 1} <span className="opacity-60">de {aveCount}</span>
+            </p>
+          )}
+        </div>
       ) : (
         <div className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/30 p-4">
           <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
@@ -571,42 +599,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
             </p>
           )}
           {currentMystery && (
-            <>
-              <div className="mt-2 flex items-center justify-between font-stitch-body text-xs text-stitch-on-surface-variant">
-                <span>{currentMystery.title}</span>
-                <span>
-                  Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
-                </span>
-              </div>
-              <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
-                <div
-                  className="h-full bg-stitch-secondary/80 transition-all duration-500"
-                  style={{
-                    width: `${((currentMysteryIndex + 1) / mysteriesInSection.length) * 100}%`,
-                  }}
-                  aria-hidden
-                />
-              </div>
-            </>
-          )}
-          {aveCount > 0 && aveCurrentIdx >= 0 && (
-            <p className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
-              <span className="text-stitch-secondary">●</span> Ave-Maria {aveCurrentIdx + 1} de{' '}
-              {aveCount}
-            </p>
-          )}
-          <div className="mt-3 border-t border-stitch-outline-variant/30 pt-2">
-            <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
-              <span>Progresso geral</span>
-              <span>{overallPercent}%</span>
+            <div className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
+              {currentMystery.title} · Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
             </div>
-            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
-              <div
-                className="h-full bg-stitch-secondary transition-all duration-500"
-                style={{ width: `${overallPercent}%` }}
-                aria-hidden
-              />
-            </div>
+          )}
+          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
+            <div
+              className="h-full bg-stitch-secondary transition-all duration-500"
+              style={{ width: `${overallPercent}%` }}
+              aria-hidden
+            />
           </div>
         </div>
       )}
