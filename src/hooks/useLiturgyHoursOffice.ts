@@ -93,10 +93,15 @@ async function generate(
   return (data as { office?: LiturgyHoursOfficeRow })?.office ?? null;
 }
 
+export interface OfficeResolution {
+  office: LiturgyHoursOfficeRow | null;
+  source: 'remote' | 'cache' | 'generated' | 'none';
+}
+
 /**
  * Estratégia offline-first:
- *  1. IDB → hidrata instantaneamente se existir.
- *  2. Supabase table → autoridade (revalida IDB).
+ *  1. Supabase table → autoridade (revalida IDB).
+ *  2. IDB → fallback quando a rede falha (retorna `source: 'cache'`).
  *  3. Edge function → gera + persiste.
  * IDB é gravado a cada sucesso de rede.
  */
@@ -104,17 +109,20 @@ async function resolveOffice(
   isoDate: string,
   hour: HourSlug,
   readings: DailyLiturgy | null,
-): Promise<LiturgyHoursOfficeRow | null> {
+): Promise<OfficeResolution> {
   const remote = await fetchExisting(isoDate, hour);
   if (remote) {
     await cacheHoursOffice(isoDate, hour, remote);
-    return remote;
+    return { office: remote, source: 'remote' };
   }
   const cached = (await getCachedHoursOffice(isoDate, hour)) as LiturgyHoursOfficeRow | null;
-  if (cached) return cached;
+  if (cached) return { office: cached, source: 'cache' };
   const generated = await generate(isoDate, hour, readings);
-  if (generated) await cacheHoursOffice(isoDate, hour, generated);
-  return generated;
+  if (generated) {
+    await cacheHoursOffice(isoDate, hour, generated);
+    return { office: generated, source: 'generated' };
+  }
+  return { office: null, source: 'none' };
 }
 
 export function useLiturgyHoursOffice(
@@ -127,7 +135,7 @@ export function useLiturgyHoursOffice(
 
   const query = useQuery({
     queryKey: hour ? queryKeyFor(isoDate, hour) : ['liturgy-hours-office', isoDate, 'none'],
-    queryFn: async () => (hour ? resolveOffice(isoDate, hour, readings) : null),
+    queryFn: async () => (hour ? resolveOffice(isoDate, hour, readings) : { office: null, source: 'none' as const }),
     enabled,
     staleTime: 1000 * 60 * 60 * 24,
     gcTime: 1000 * 60 * 60 * 24 * 7,
@@ -144,14 +152,17 @@ export function useLiturgyHoursOffice(
       if (qc.getQueryData(key)) return;
       const cached = (await getCachedHoursOffice(isoDate, hour)) as LiturgyHoursOfficeRow | null;
       if (!cancelled && cached && !qc.getQueryData(key)) {
-        qc.setQueryData(key, cached);
+        qc.setQueryData(key, { office: cached, source: 'cache' as const });
       }
     })();
     return () => { cancelled = true; };
   }, [isoDate, hour, qc]);
 
+  const result = query.data ?? { office: null, source: 'none' as const };
   return {
-    office: query.data ?? null,
+    office: result.office,
+    source: result.source,
+    fromCache: result.source === 'cache',
     isLoading: query.isLoading,
     isError: query.isError,
   };
