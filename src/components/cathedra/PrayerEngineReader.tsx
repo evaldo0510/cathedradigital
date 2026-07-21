@@ -333,6 +333,27 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   const goPrev = useCallback(() => goTo(cursorIndex - 1), [goTo, cursorIndex]);
 
+  // Aplica a "pausa entre blocos" configurada em ritmo contemplativo às
+  // transições disparadas manualmente (Próximo, Continuar mistério, Encerramento).
+  // Não afeta o auto-avanço, que já é temporizado por `usePrayerAutoAdvance`.
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimerRef = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+  }, []);
+  const goNextRhythmed = useCallback(() => {
+    if (rhythm.pauseMs <= 0) {
+      goNext();
+      return;
+    }
+    setIsTransitioning(true);
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = window.setTimeout(() => {
+      goNext();
+      setIsTransitioning(false);
+    }, rhythm.pauseMs);
+  }, [goNext, rhythm.pauseMs]);
+
   // ── Persistência de cursor por sub-recurso (contextKey) ──
   // Ex.: Breviário grava/lê "prayer-cursor:breviary:laudes:2026-07-21" no
   // localStorage, garantindo retomada exata por Hora+data offline.
