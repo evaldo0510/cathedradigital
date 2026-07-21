@@ -37,24 +37,104 @@ export const LiturgyMeditationSkeleton: React.FC = () => (
   </div>
 );
 
-export const LiturgyMeditationFallbackNotice: React.FC<{ message?: string | null }> = ({ message }) => (
-  <motion.div
-    {...fade(0.02)}
-    className="border border-secondary/30 bg-secondary/5 rounded-[2rem] p-spacing-md flex items-start gap-spacing-sm"
-    role="status"
-    aria-live="polite"
-  >
-    <Icons.Info className="w-spacing-md h-spacing-md text-secondary shrink-0 mt-spacing-3xs" />
-    <div className="space-y-spacing-3xs">
-      <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">
-        Meditação em modo essencial
-      </p>
-      <p className="text-premium-sm leading-relaxed text-muted-foreground">
-        {message || 'O conteúdo editorial automático está temporariamente indisponível; mantivemos uma leitura orante local para não interromper a liturgia.'}
-      </p>
-    </div>
-  </motion.div>
-);
+interface FallbackNoticeProps {
+  message?: string | null;
+  code?: string;
+  source?: 'local-cache' | 'local-builder' | 'previous-day';
+  retryAt?: string;
+  onRetry?: () => void | Promise<void>;
+  isRetrying?: boolean;
+}
+
+function formatRelative(iso?: string): string | null {
+  if (!iso) return null;
+  const diffMs = new Date(iso).getTime() - Date.now();
+  if (Number.isNaN(diffMs)) return null;
+  if (diffMs <= 0) return 'a qualquer momento';
+  const minutes = Math.round(diffMs / 60_000);
+  if (minutes < 1) return 'em menos de 1 min';
+  if (minutes < 60) return `em ~${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  return `em ~${hours}h`;
+}
+
+export const LiturgyMeditationFallbackNotice: React.FC<FallbackNoticeProps> = ({
+  message,
+  code,
+  source,
+  retryAt,
+  onRetry,
+  isRetrying,
+}) => {
+  const isCreditsExhausted = code === 'ai_credits_exhausted';
+  const relative = formatRelative(retryAt);
+  const sourceLabel =
+    source === 'local-cache'
+      ? 'Exibindo a meditação editorial anterior deste dia (cache local).'
+      : source === 'previous-day'
+      ? 'Exibindo a meditação editorial mais recente disponível offline.'
+      : source === 'local-builder'
+      ? 'Roteiro orante essencial construído a partir das leituras do dia.'
+      : null;
+
+  return (
+    <motion.div
+      {...fade(0.02)}
+      className="border border-secondary/30 bg-secondary/5 rounded-[2rem] p-spacing-md flex items-start gap-spacing-sm"
+      role="status"
+      aria-live="polite"
+      data-fallback-code={code ?? 'ai_unavailable'}
+    >
+      <Icons.Info className="w-spacing-md h-spacing-md text-secondary shrink-0 mt-spacing-3xs" />
+      <div className="space-y-spacing-xs flex-1 min-w-0">
+        <p className={KICKER}>
+          {isCreditsExhausted ? 'Créditos de IA esgotados' : 'Meditação em modo essencial'}
+        </p>
+        <p className="text-premium-sm leading-relaxed text-muted-foreground">
+          {message || 'O conteúdo editorial automático está temporariamente indisponível; mantivemos uma leitura orante local para não interromper a liturgia.'}
+        </p>
+        {sourceLabel && (
+          <p className="text-premium-xs text-muted-foreground/80 italic">{sourceLabel}</p>
+        )}
+        {relative && (
+          <p className="text-premium-xs font-medium text-muted-foreground">
+            Próxima tentativa automática {relative}.
+          </p>
+        )}
+        <div className="flex flex-wrap gap-spacing-xs pt-spacing-2xs">
+          {onRetry && (
+            <button
+              type="button"
+              onClick={() => { void onRetry(); }}
+              disabled={isRetrying}
+              className="inline-flex items-center gap-spacing-2xs px-spacing-md py-spacing-2xs rounded-premium-full bg-primary text-white text-premium-xs font-black uppercase tracking-widest hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+              aria-label="Tentar gerar novamente a meditação editorial"
+            >
+              {isRetrying ? (
+                <Icons.Loader2 className="w-spacing-sm h-spacing-sm animate-spin" />
+              ) : (
+                <Icons.RefreshCw className="w-spacing-sm h-spacing-sm" />
+              )}
+              <span>{isRetrying ? 'Tentando…' : 'Tentar novamente'}</span>
+            </button>
+          )}
+          {isCreditsExhausted && (
+            <a
+              href="https://docs.lovable.dev/introduction/plans-and-credits"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-spacing-2xs px-spacing-md py-spacing-2xs rounded-premium-full bg-secondary/20 text-primary text-premium-xs font-black uppercase tracking-widest hover:bg-secondary/30 transition-colors"
+              aria-label="Abrir Planos e créditos"
+            >
+              <Icons.Zap className="w-spacing-sm h-spacing-sm" />
+              <span>Planos & créditos</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 // ── 1. Tema do dia ───────────────────────────────────────────────
 export const LiturgyThemeCard: React.FC<{ theme: string }> = ({ theme }) => (

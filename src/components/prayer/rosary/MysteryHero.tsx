@@ -2,7 +2,7 @@
  * MysteryHero — Hero contemplativo fullscreen exibido antes de cada dezena.
  * Não interfere no progresso: aparecer/desaparecer é decisão de UI apenas.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlayCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -19,9 +19,34 @@ interface Props {
 const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }) => {
   const meta = readMysteryMeta(mystery);
   const [fading, setFading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setFading(false);
+  }, [mystery.id]);
+
+  // Prioriza o download apenas quando o hero entra em viewport.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setIsVisible(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, [mystery.id]);
 
   const handleStart = () => {
@@ -39,13 +64,14 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
 
   return (
     <section
+      ref={sectionRef}
       aria-label={`Introdução contemplativa: ${mystery.title}`}
       className={cn(
         'relative isolate flex min-h-[70vh] w-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-stitch-outline-variant/30 px-6 py-16 transition-opacity duration-200 md:min-h-[80vh] md:px-12',
         fading ? 'opacity-0' : 'opacity-100',
       )}
     >
-      {hasImage ? (
+      {hasImage && isVisible ? (
         <>
           <img
             src={heroImage}
@@ -53,7 +79,11 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
             aria-hidden
             width={1024}
             height={1024}
-            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+            // @ts-expect-error fetchpriority é HTML nativo, ainda não tipado em React
+            fetchpriority="high"
+            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover animate-in fade-in duration-500"
           />
           <div
             aria-hidden
