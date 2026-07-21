@@ -22,6 +22,7 @@ registerLiturgyProvider(new RailwayInAdiutoriumProvider());
 initLiturgicalPrefetchGuard();
 initSentry();
 initRuntimeErrorLogger();
+initActionLogger();
 
 if (import.meta.env.DEV) {
   const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
