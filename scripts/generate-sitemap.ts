@@ -122,6 +122,25 @@ async function generateSitemap() {
   disallowList.forEach(route => {
     robotsTxt += `Disallow: ${route}\n`;
   });
+
+  // Bloqueia scrapers de treinamento de IA (conteúdo editorial protegido).
+  // Buscadores tradicionais (Googlebot, Bingbot) e crawlers de resposta com atribuição
+  // (Google-Extended off, PerplexityBot, OAI-SearchBot) permanecem permitidos.
+  const AI_TRAINING_BOTS = [
+    'GPTBot',
+    'ClaudeBot',
+    'anthropic-ai',
+    'CCBot',
+    'Google-Extended',
+    'Applebot-Extended',
+    'Meta-ExternalAgent',
+    'Bytespider',
+    'Amazonbot',
+  ];
+  AI_TRAINING_BOTS.forEach((bot) => {
+    robotsTxt += `\nUser-agent: ${bot}\nDisallow: /\n`;
+  });
+
   robotsTxt += `\nSitemap: ${BASE_URL}/sitemap.xml\n`;
 
   const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
