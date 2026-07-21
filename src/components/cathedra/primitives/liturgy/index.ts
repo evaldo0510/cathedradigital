@@ -13,3 +13,4 @@ export {
   LiturgyActionCard,
 } from './LiturgyMeditationBlocks';
 export { MissalProperCards, MissalProperSkeleton } from './MissalProperCards';
+export { LiturgyHoursOfficeCards, LiturgyHoursOfficeSkeleton } from './LiturgyHoursOfficeCards';
