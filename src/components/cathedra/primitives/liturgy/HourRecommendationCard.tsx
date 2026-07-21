@@ -13,9 +13,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { LITURGICAL_COLOR_HEX } from '@/lib/liturgicalColors';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import type { RecommendedHour } from '@/hooks/useRecommendedHour';
+
+const COLOR_DOT: Record<string, string> = {
+  'liturgical-green': 'bg-emerald-600',
+  'liturgical-white': 'bg-zinc-100 border border-zinc-400',
+  'liturgical-red': 'bg-red-700',
+  'liturgical-violet': 'bg-violet-700',
+  'liturgical-rose': 'bg-pink-400',
+  'liturgical-black': 'bg-neutral-900',
+};
 
 interface Props {
   recommendation: RecommendedHour | null;
@@ -38,7 +46,7 @@ export const HourRecommendationCard: React.FC<Props> = ({ recommendation, liturg
   const href = isToday ? `/oracao/${prayer.slug}` : `/oracao/${prayer.slug}?d=${isoDate}`;
   const isNow = reason === 'in-window' && isToday;
 
-  const colorHex = liturgy ? LITURGICAL_COLOR_HEX[liturgy.colorToken] : undefined;
+  const colorClass = liturgy?.colorToken ? COLOR_DOT[liturgy.colorToken] : undefined;
   const celebration = liturgy?.liturgia?.trim() || liturgy?.dia?.trim() || null;
 
   const eyebrow = isNow
@@ -70,11 +78,10 @@ export const HourRecommendationCard: React.FC<Props> = ({ recommendation, liturg
           )}
           {celebration && (
             <p className="mt-spacing-2xs flex items-center gap-spacing-2xs font-stitch-body text-premium-xs text-muted-foreground">
-              {colorHex && (
+              {colorClass && (
                 <span
                   aria-hidden="true"
-                  className="inline-block h-2 w-2 rounded-full border border-border/60"
-                  style={{ backgroundColor: colorHex }}
+                  className={`inline-block h-2 w-2 rounded-full ${colorClass}`}
                 />
               )}
               <span className="truncate">{celebration}</span>
