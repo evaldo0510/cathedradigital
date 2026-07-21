@@ -29,6 +29,10 @@ import PrayerFavoriteButton from '@/components/prayer/PrayerFavoriteButton';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
+import { VIA_SACRA_STATIONS } from '@/data/viaSacraStations';
+import StationContemplation from '@/components/prayer/viasacra/StationContemplation';
+import StationClosingCard from '@/components/prayer/viasacra/StationClosingCard';
+import FinalClosingCard from '@/components/prayer/viasacra/FinalClosingCard';
 
 const VIA_METHOD_LABEL: Record<'landing' | 'journey', string> = {
   landing: 'contemplativo',
