@@ -65,6 +65,14 @@ interface RequestBody {
   };
 }
 
+// ── Versionamento editorial ──────────────────────────────────────
+// Aumente EDITORIAL_VERSION sempre que o schema/prompt mudar a
+// ponto de invalidar meditações antigas. prompt_hash já detecta
+// mudança automática de texto — version é o marcador semântico.
+const EDITORIAL_VERSION = 1;
+const AI_PROVIDER = "lovable-ai-gateway";
+const AI_MODEL = "google/gemini-2.5-flash";
+
 const SYSTEM_PROMPT = `Você é um redator editorial católico romano, formado em teologia e liturgia,
 escrevendo em português do Brasil para o Cathedra — plataforma de estudo espiritual.
 
