@@ -38,7 +38,7 @@ export interface Collection {
   description: string | null;
   cover: string | null;
   category: string;
-  status: 'draft' | 'published' | 'archived';
+  status: 'draft' | 'review' | 'published' | 'archived';
   featured: boolean;
   nexus_refs: unknown[];
   metadata: Record<string, unknown> & { space?: string; eyebrow?: string };
