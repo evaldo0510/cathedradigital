@@ -36,9 +36,9 @@ const buttonVariants = cva(
         icon: "h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
         "icon-sm": "min-h-[44px] min-w-[44px] h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
         "icon-xs": "min-h-[44px] min-w-[44px] h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
-
-
-      },
+        // Pill sizes — compactos, para chips/toggles editoriais.
+        pill: "h-auto px-3 py-1.5 text-[11px] uppercase [&_svg]:size-3.5 rounded-full",
+        "pill-sm": "h-7 w-7 p-0 rounded-full [&_svg]:size-3.5",
     },
     defaultVariants: {
       variant: "default",
