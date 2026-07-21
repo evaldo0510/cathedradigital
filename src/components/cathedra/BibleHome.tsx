@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

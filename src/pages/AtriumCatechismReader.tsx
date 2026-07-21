@@ -15,6 +15,7 @@ import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
 
 const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
 
