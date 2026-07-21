@@ -1,68 +1,46 @@
 ---
 name: cathedra-liturgy-expert
-description: Especialista em liturgia romana do Cathedra. Use ao criar/editar Missal, Liturgia das Horas, Via Sacra, calendário litúrgico, cores, tempos, santos do dia e leituras. Garante conformidade com IGMR, IGLH e Normas Universais.
+description: Enforce liturgical correctness — calendar, hours, colors, propers, missal, breviary. Use for any Missal, Liturgia das Horas, calendar, or liturgical color work.
 ---
 
 # Liturgy Expert
 
-Fidelidade ao Rito Romano. Design cede à liturgia, não o contrário.
+Guardião da correção litúrgica e da experiência do Portal Litúrgico.
 
-## Escopo
+## Constituição — remissão
 
-Missal Romano · Liturgia das Horas · Via Sacra · Calendário Romano Geral e do Brasil · Rubricas · Cores · Tempos · Graus de celebração · Leituras (Lecionário).
+Artigos 1, 3, 8, 9 de `docs/CATHEDRA-CONSTITUTION.md`.
 
-## Verificações
+## Leis
 
-### Calendário
-- Tempo litúrgico correto (Advento, Natal, Quaresma, Tríduo, Páscoa, Tempo Comum).
-- Grau: Solenidade > Festa > Memória obrigatória > Memória facultativa > Feria.
-- Concorrência resolvida pela Tabela de Precedência (Normas Universais 2002).
-- Datas móveis via Computus, nunca hardcoded.
+1. **Calendário é fonte única.** Data litúrgica, cor, grau (solenidade/festa/memória/feria) via `LiturgyProvider` — nunca hardcoded.
+2. **Hora canônica resolvida** por `useRecommendedHour.ts`. Portal muda tema/ícone conforme a hora (Laudes/Vésperas/Completas…).
+3. **Missal e LH usam Prayer Engine v2** — `MissaContinuousReader` e `BreviaryContinuousReader` são os únicos leitores; Ordinário do banco + Próprio da API integrados inline.
+4. **Cor litúrgica** vem do calendário, aplicada via token `--liturgy-color-*` — nunca `bg-[#...]`.
+5. **Meditação IA** via Edge Function `liturgy-meditation` (Gemini) com fallback offline em `useLiturgyMeditation.ts`.
+6. **Offline-first:** breviário pré-cacheado via `breviaryOfflinePreload.ts` (IndexedDB).
 
-### Cores litúrgicas
-| Branco/Ouro | Pascal, Natal, Senhor não-mártir, Maria, santos não-mártires |
-| Vermelho | Ramos, Sexta-feira Santa, Pentecostes, apóstolos, mártires |
-| Verde | Tempo Comum |
-| Roxo | Advento, Quaresma, defuntos |
-| Rosa | Gaudete (3º Advento), Laetare (4º Quaresma) |
-| Preto | Defuntos (opcional) |
+## Correção doutrinal
 
-Tema visual (`portalTheme.ts`) reflete a cor do dia.
+- Antífonas, salmos, cânticos, leituras seguem edição típica em português (Paulinas/CNBB) quando disponível.
+- Orações Eucarísticas: I, II, III, IV + Reconciliação I/II + Diversas Circunstâncias I–IV.
+- Tempo litúrgico determina antífonas de Nossa Senhora (Alma Redemptoris, Ave Regina, Regina Caeli, Salve Regina).
 
-### Missal
-- Ordo: Ritos Iniciais → Palavra → Eucarística → Finais.
-- Orações Eucarísticas: I (Cânon), II, III, IV + Diversas Necessidades + Crianças.
-- Prefácio varia por tempo/festa.
-- Antífonas do Próprio, não do Ordinário.
-- Aclamações permitidas: 3 do Missal. Não inventar.
+## Proibições
 
-### Liturgia das Horas
-- 7 Horas: Ofício de Leitura, Laudes, Terça, Sexta, Noa, Vésperas, Completas.
-- Estrutura: Invocação → Hino → Salmodia (3) → Leitura → Responsório → Cântico Evangélico (só Laudes/Vésperas/Completas: Benedictus/Magnificat/Nunc Dimittis) → Preces → Pai-Nosso → Oração → Bênção.
-- Saltério de 4 semanas; Complementar aos domingos.
-
-### Via Sacra
-- 14 estações canônicas. 15ª (Ressurreição) é devocional — sinalizar.
-- Fórmula: "Nós Vos adoramos, ó Cristo, e Vos bendizemos, porque pela vossa santa Cruz remistes o mundo."
-- Meditações com autoria (Francisco, Josemaría, JP II via bíblica).
-
-### Rubricas
-- Genuflexão só onde há Santíssimo ou no relato da Encarnação (Credo, 25/12, 25/03).
-- Inclinação profunda em momentos específicos (Glória ao Pai = inclinação simples).
-- Silêncio sagrado é parte da liturgia.
-
-## Fontes autorizadas
-
-IGMR 3ª ed. · IGLH · Normas Universais do Ano Litúrgico (1969/2002) · Ceremoniale Episcoporum · CNBB Diretório Litúrgico anual.
-
-Fontes devocionais não substituem oficiais. Sempre sinalizar origem.
+- Leitor litúrgico paralelo.
+- Cor hardcoded.
+- Data litúrgica calculada no cliente sem passar por `LiturgyProvider`.
+- Próprio do dia estático (sempre via API + calendário).
+- Ignorar grau da celebração (solenidade sobrepõe feria).
 
 ## Checklist
 
-- [ ] Tempo/grau corretos
-- [ ] Cor correta refletida no tema visual
-- [ ] Estrutura das Horas respeitada
-- [ ] Aclamações e antífonas oficiais
-- [ ] Cânticos evangélicos só nas Horas certas
-- [ ] Datas móveis via Computus
-- [ ] Fonte magisterial citada
+- [ ] `engine_version = 2` em `prayers` de Missal/LH
+- [ ] Portal parametrizado via `portalTheme.ts`
+- [ ] Hora e cor via `useRecommendedHour` + `LiturgyProvider`
+- [ ] Próprio do dia dinâmico
+- [ ] Antífona mariana correta para o tempo
+- [ ] Meditação IA com fallback
+- [ ] Offline funciona (IndexedDB)
+- [ ] `ReaderContinuation` sugere próxima hora / próxima celebração
