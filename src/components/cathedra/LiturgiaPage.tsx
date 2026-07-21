@@ -20,21 +20,21 @@ import {
   LiturgyDayHeader,
   LiturgyPsalmCard,
   LiturgyReadingCard,
+  LiturgyThemeCard,
+  LiturgyReadingKeyCard,
+  LiturgyTraditionCard,
+  LiturgyLogosCard,
+  LiturgyFinalPrayerCard,
+  LiturgyChurchHistoryCard,
+  LiturgyActionCard,
+  LiturgyMeditationSkeleton,
 } from './primitives/liturgy';
+import { useLiturgyMeditation } from '@/hooks/useLiturgyMeditation';
+import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { resolveLiturgyAutoNexus } from '@/core/knowledge/adapters/liturgyAutoNexus';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
-
-const PADH_REFLECTIONS = [
-  'A pressa revela onde a confiança ainda não chegou.',
-  'Toda oração é um ato de coragem: você está admitindo que não está no controle.',
-  'Deus não fala alto — Ele fala fundo.',
-  'O silêncio não é vazio… é onde Deus começa a frase.',
-  'A fé não elimina a dúvida — ela caminha ao lado dela.',
-  'Você não precisa entender tudo. Precisa confiar em Quem entende.',
-  'A verdadeira força não é resistir sozinho — é aceitar ser carregado.',
-  'Nem toda escuta é ouvir… às vezes Deus fala no silêncio entre as palavras.',
-];
 
 function parseRefToRoute(ref: string): string {
   const match = ref.match(/^(\d?\s?[A-Za-zÀ-ú]+)\s+(\d+)/);
@@ -88,11 +88,20 @@ const LiturgiaPage: React.FC = () => {
     isOfflineData,
   } = useDailyLiturgy(selectedDate);
 
-  const padhReflection = useMemo(
-    () => PADH_REFLECTIONS[selectedDate.getDate() % PADH_REFLECTIONS.length],
-    [selectedDate],
-  );
   const { data: saint } = useSaintOfDay(selectedDate);
+  const { meditation, isLoading: isMeditationLoading } = useLiturgyMeditation(
+    selectedIso,
+    readings ?? null,
+  );
+
+  const nexus = useMemo(() => {
+    if (!readings?.evangelho) return null;
+    return resolveLiturgyAutoNexus({
+      ref: readings.evangelho.referencia,
+      title: readings.liturgia ?? readings.dia ?? readings.evangelho.referencia,
+      season: readings.season ?? null,
+    });
+  }, [readings]);
 
   const { data: prayerOfDay } = useQuery({
     queryKey: ['prayer-of-day', selectedIso],
@@ -235,11 +244,32 @@ const LiturgiaPage: React.FC = () => {
                 </div>
               )}
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
-                <Icons.Zap className="w-spacing-xl h-spacing-xl text-secondary mx-auto" />
-                <p className="text-premium-xs font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
-                <p className="text-premium-xl md:text-premium-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
-              </motion.div>
+              {/* ── Centro de Meditação Litúrgica ─────────────── */}
+              {isMeditationLoading && !meditation && <LiturgyMeditationSkeleton />}
+              {meditation && (
+                <div className="space-y-spacing-xl">
+                  {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
+                  {meditation.reading_key && (
+                    <LiturgyReadingKeyCard text={meditation.reading_key} />
+                  )}
+                  <LiturgyTraditionCard
+                    fathers={meditation.fathers ?? []}
+                    catechism={meditation.catechism ?? []}
+                    magisterium={meditation.magisterium ?? []}
+                  />
+                  {meditation.logos && <LiturgyLogosCard logos={meditation.logos} />}
+                  {meditation.final_prayer && (
+                    <LiturgyFinalPrayerCard text={meditation.final_prayer} />
+                  )}
+                  {meditation.church_history && (
+                    <LiturgyChurchHistoryCard history={meditation.church_history} />
+                  )}
+                  {meditation.action_of_day && (
+                    <LiturgyActionCard text={meditation.action_of_day} />
+                  )}
+                </div>
+              )}
+
 
               {saint && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
@@ -283,6 +313,18 @@ const LiturgiaPage: React.FC = () => {
                     </Button>
                   </div>
                 </motion.div>
+              )}
+              {nexus && readings && (
+                <div className="mt-spacing-xl">
+                  <ReaderContinuation
+                    context={{
+                      kind: 'bible',
+                      id: readings.evangelho?.referencia,
+                      graphNodeId: nexus.selfId ?? undefined,
+                    }}
+                    suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+                  />
+                </div>
               )}
             </div>
           )}
