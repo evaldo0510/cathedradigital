@@ -1,7 +1,10 @@
 /**
- * Mapa estático de imagens contemplativas dos 20 mistérios do Rosário.
- * Chave = slug do mistério (`joyful-1`, `luminous-3`, etc.),
- * também é o valor esperado em `meta.hero_image_path`.
+ * Biblioteca de imagens contemplativas dos 20 mistérios do Rosário.
+ *
+ * O banco guarda apenas `image_slug` (identificador estável, ex.: `joyful-1`)
+ * e `image_collection` (ex.: `classical`). Trocar toda a coleção artística
+ * no futuro = adicionar um novo mapa e apontar `image_collection` para ele,
+ * sem tocar nos registros dos mistérios.
  */
 import joyful1 from '@/assets/rosary/misterios/joyful/joyful-1.jpg';
 import joyful2 from '@/assets/rosary/misterios/joyful/joyful-2.jpg';
@@ -24,30 +27,30 @@ import glorious3 from '@/assets/rosary/misterios/glorious/glorious-3.jpg';
 import glorious4 from '@/assets/rosary/misterios/glorious/glorious-4.jpg';
 import glorious5 from '@/assets/rosary/misterios/glorious/glorious-5.jpg';
 
-export const MYSTERY_IMAGES: Record<string, string> = {
-  'joyful-1': joyful1,
-  'joyful-2': joyful2,
-  'joyful-3': joyful3,
-  'joyful-4': joyful4,
-  'joyful-5': joyful5,
-  'luminous-1': luminous1,
-  'luminous-2': luminous2,
-  'luminous-3': luminous3,
-  'luminous-4': luminous4,
-  'luminous-5': luminous5,
-  'sorrowful-1': sorrowful1,
-  'sorrowful-2': sorrowful2,
-  'sorrowful-3': sorrowful3,
-  'sorrowful-4': sorrowful4,
-  'sorrowful-5': sorrowful5,
-  'glorious-1': glorious1,
-  'glorious-2': glorious2,
-  'glorious-3': glorious3,
-  'glorious-4': glorious4,
-  'glorious-5': glorious5,
+import type { MysteryArtworkCollection } from './mysteryMeta';
+
+const CLASSICAL: Record<string, string> = {
+  'joyful-1': joyful1, 'joyful-2': joyful2, 'joyful-3': joyful3, 'joyful-4': joyful4, 'joyful-5': joyful5,
+  'luminous-1': luminous1, 'luminous-2': luminous2, 'luminous-3': luminous3, 'luminous-4': luminous4, 'luminous-5': luminous5,
+  'sorrowful-1': sorrowful1, 'sorrowful-2': sorrowful2, 'sorrowful-3': sorrowful3, 'sorrowful-4': sorrowful4, 'sorrowful-5': sorrowful5,
+  'glorious-1': glorious1, 'glorious-2': glorious2, 'glorious-3': glorious3, 'glorious-4': glorious4, 'glorious-5': glorious5,
 };
 
-export function resolveMysteryImage(key?: string | null): string | undefined {
-  if (!key) return undefined;
-  return MYSTERY_IMAGES[key];
+const COLLECTIONS: Record<MysteryArtworkCollection, Record<string, string>> = {
+  classical: CLASSICAL,
+  // Coleções futuras — mantidas vazias até que os assets existam.
+  byzantine: {},
+  contemporary: {},
+};
+
+/** @deprecated Preferir `resolveMysteryImage(slug, collection)`. */
+export const MYSTERY_IMAGES = CLASSICAL;
+
+export function resolveMysteryImage(
+  slug?: string | null,
+  collection: MysteryArtworkCollection = 'classical',
+): string | undefined {
+  if (!slug) return undefined;
+  const map = COLLECTIONS[collection] ?? CLASSICAL;
+  return map[slug] ?? CLASSICAL[slug];
 }
