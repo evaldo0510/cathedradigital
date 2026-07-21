@@ -5,34 +5,9 @@ import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
 import { getNovenaBySlug } from '@/data/novenas';
+import { loadProgress, saveProgress, type NovenaProgress } from '@/lib/novenas/progress';
+import { toast } from 'sonner';
 
-interface NovenaProgress {
-  startedAt: string; // ISO date
-  completedDays: number[]; // dias marcados como rezados
-  currentDay: number;
-}
-
-function storageKey(slug: string) {
-  return `cathedra:novena:${slug}`;
-}
-
-function loadProgress(slug: string): NovenaProgress | null {
-  try {
-    const raw = localStorage.getItem(storageKey(slug));
-    if (!raw) return null;
-    return JSON.parse(raw) as NovenaProgress;
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress(slug: string, p: NovenaProgress) {
-  try {
-    localStorage.setItem(storageKey(slug), JSON.stringify(p));
-  } catch {
-    /* ignore */
-  }
-}
 
 const NovenaDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
