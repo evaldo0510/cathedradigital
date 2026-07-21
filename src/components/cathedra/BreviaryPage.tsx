@@ -42,6 +42,7 @@ import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyCo
 import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationCard';
 import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
+import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
