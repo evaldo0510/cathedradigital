@@ -546,7 +546,15 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   // ============ READER ============
   const content = (
-    <article style={contentStyle} className="cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
+    <article
+      key={current.id}
+      data-contemplative={contemplative || undefined}
+      style={contentStyle}
+      className={cn(
+        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in duration-500 motion-reduce:animate-none',
+        contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
+      )}
+    >
       {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
       {isSimple ? (
         <div className="mb-8">
