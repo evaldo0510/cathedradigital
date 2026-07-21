@@ -42,6 +42,7 @@ import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyCo
 import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationCard';
 import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
+import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
@@ -396,6 +397,39 @@ const BreviaryPage: React.FC = () => {
   const orderedSections = ALL_HOUR_SLUGS
     .map((slug) => sections.find((s) => s.slug === slug))
     .filter((s): s is NonNullable<typeof s> => !!s);
+
+  // B.2.5.b — Portal de Oração (limiar contemplativo antes do seletor).
+  const enterRequested = searchParams.get('enter') === '1';
+  if (!enterRequested && prayer) {
+    const suggestedSection = orderedSections.find((s) => s.slug === suggested);
+    const suggestedTime = (suggestedSection?.meta as { time?: string } | null)?.time;
+    return (
+      <PrayerPortalStandalone
+        slug="liturgia-das-horas"
+        title="Liturgia das Horas"
+        estimatedSeconds={20 * 60}
+        kicker="Cathedra · Officium Divinum"
+        backHref="/oracao"
+        showRhythm={false}
+        highlight={{
+          eyebrow: 'Hora recomendada',
+          title: suggestedSection?.title ?? 'Hora canônica',
+          subtitle: suggestedSection?.subtitle ?? undefined,
+          meta: [
+            ...(suggestedTime ? [{ label: 'Horário sugerido', value: suggestedTime, icon: 'clock' as const }] : []),
+            ...(liturgy?.season ? [{ label: 'Tempo litúrgico', value: liturgy.season, icon: 'sparkles' as const }] : []),
+            { label: 'Sete horas', value: 'Ofício · Laudes · Tércia · Sexta · Noa · Vésperas · Completas', icon: 'church' as const },
+          ],
+        }}
+        onEnter={() => {
+          const next = new URLSearchParams(searchParams);
+          next.set('enter', '1');
+          setSearchParams(next, { replace: true });
+        }}
+      />
+    );
+  }
+
 
   return (
     <>

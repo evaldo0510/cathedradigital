@@ -14,8 +14,10 @@
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 
 import { Icons } from '../../constants';
+import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
 import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 import { useDevotionalProgress } from '@/hooks/useDevotionalProgress';
@@ -93,6 +95,7 @@ function readInterval(): number {
 /* ---------------------------- componente ------------------------------ */
 
 const ViaCrucis: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentStation, setCurrentStation] = useState(0);
   const [isJourney, setIsJourney] = useState(false);
   const { progress, loaded, save } = useDevotionalProgress('viacrucis');
@@ -263,6 +266,34 @@ const ViaCrucis: React.FC = () => {
 
   /* --------------------------------- Landing -------------------------------- */
   if (!isJourney) {
+    // B.2.5.b — Portal de Oração (limiar contemplativo antes do reader).
+    const enterRequested = searchParams.get('enter') === '1';
+    if (!enterRequested) {
+      const first = STATIONS[0];
+      return (
+        <PrayerPortalStandalone
+          slug="viacrucis"
+          title="Via Sacra"
+          estimatedSeconds={25 * 60}
+          kicker="Cathedra · Via Dolorosa"
+          backHref="/oracao"
+          highlight={{
+            eyebrow: 'Estação inicial',
+            title: first.title,
+            meta: [
+              { label: 'Escritura', value: first.scripture, icon: 'book' },
+              { label: 'Estações', value: '14 estações · caminho da Cruz', icon: 'sparkles' },
+            ],
+          }}
+          onEnter={() => {
+            const next = new URLSearchParams(searchParams);
+            next.set('enter', '1');
+            setSearchParams(next, { replace: true });
+            setIsJourney(true);
+          }}
+        />
+      );
+    }
     return (
       <motion.div
         className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl"
