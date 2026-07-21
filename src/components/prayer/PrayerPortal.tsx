@@ -194,7 +194,7 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
                 </div>
               </div>
             )}
-            {meta?.saints && meta.saints.length > 0 && (
+            {meta?.related_saints && meta.related_saints.length > 0 && (
               <div className="flex items-start gap-2.5 md:col-span-2">
                 <Church className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
                 <div>
@@ -202,7 +202,7 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
                     Santos relacionados
                   </dt>
                   <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
-                    {meta.saints.slice(0, 3).join(' · ')}
+                    {meta.related_saints.slice(0, 3).map((s) => s.name).join(' · ')}
                   </dd>
                 </div>
               </div>
