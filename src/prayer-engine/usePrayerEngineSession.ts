@@ -179,7 +179,8 @@ export function usePrayerEngineSession(prayerId: string | undefined): UsePrayerE
     pendingPatchRef.current = null;
     const { error: e } = await supabase
       .from('prayer_sessions')
-      .update({ ...patch, updated_at: new Date().toISOString() })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update({ ...patch, updated_at: new Date().toISOString() } as any)
       .eq('id', current.id);
     if (e) setError(e.message);
   }, []);
