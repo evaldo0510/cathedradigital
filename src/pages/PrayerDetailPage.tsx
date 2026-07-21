@@ -146,6 +146,22 @@ const PrayerDetailPage: React.FC = () => {
       const engineKicker = hierarchy.activeSection
         ? `Cathedra · ${prayer.title} · ${hierarchy.activeSection.title}`
         : kicker;
+
+      // B.2.5 — Portal de Oração (piloto: Rosário). Entra no Reader só após
+      // o usuário passar pelo limiar contemplativo (`?enter=1`).
+      const portalEnabled = prayer.slug === 'rosario';
+      const enterRequested = searchParams.get('enter') === '1';
+      if (portalEnabled && !enterRequested) {
+        return (
+          <PrayerPortal
+            prayer={prayer}
+            activeSection={hierarchy.activeSection}
+            mysteries={hierarchy.hierarchy.mysteries}
+            kicker={engineKicker}
+          />
+        );
+      }
+
       return (
         <PrayerEngineReader
           prayer={prayer}
