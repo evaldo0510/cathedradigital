@@ -106,7 +106,9 @@ export default defineConfig(({ mode }) => ({
     // variáveis de ambiente estão presentes (SENTRY_AUTH_TOKEN é secret de
     // BUILD, configurado em Workspace Settings → Build Secrets).
     mode !== 'development' &&
-      process.env.SENTRY_AUTH_TOKEN &&
+      !!process.env.SENTRY_AUTH_TOKEN &&
+      !!process.env.SENTRY_ORG &&
+      !!process.env.SENTRY_PROJECT &&
       process.env.SENTRY_ORG &&
       process.env.SENTRY_PROJECT &&
       sentryVitePlugin({
