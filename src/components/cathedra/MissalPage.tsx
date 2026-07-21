@@ -272,7 +272,7 @@ const MissalPage: React.FC = () => {
   const enterRequested = searchParams.get('enter') === '1';
   if (view === 'celebracao' && !enterRequested && !celebrationMode) {
     const missalTheme = resolvePortalTheme('missa-ordinario');
-    const readingRef = proper?.first_reading?.reference ?? proper?.gospel?.reference;
+    const readingRef = liturgy?.evangelho?.referencia ?? liturgy?.primeiraLeitura?.referencia;
     return (
       <PrayerPortalStandalone
         slug="missa-ordinario"
@@ -286,11 +286,11 @@ const MissalPage: React.FC = () => {
         quote={missalTheme.quote}
         highlight={{
           eyebrow: isToday ? 'Missa de hoje' : 'Missa do dia',
-          title: liturgy?.celebration ?? liturgy?.season ?? 'Celebração eucarística',
-          subtitle: liturgy?.season ?? undefined,
+          title: proper?.celebration_title ?? liturgy?.liturgia ?? 'Celebração eucarística',
+          subtitle: liturgy?.season ?? liturgy?.dia ?? undefined,
           meta: [
             ...(readingRef ? [{ label: 'Escritura', value: readingRef, icon: 'book' as const }] : []),
-            ...(liturgy?.color ? [{ label: 'Cor litúrgica', value: liturgy.color, icon: 'sparkles' as const }] : []),
+            ...(liturgy?.cor ? [{ label: 'Cor litúrgica', value: liturgy.cor, icon: 'sparkles' as const }] : []),
             { label: 'Ordo Missæ', value: 'Ordinário · Próprio · Comunhão', icon: 'church' as const },
           ],
         }}
