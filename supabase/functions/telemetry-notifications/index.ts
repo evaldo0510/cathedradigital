@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { makeResponder } from "../_shared/http-response.ts";
+import { assertCronOrAdmin } from "../_shared/admin-guard.ts";
 
 Deno.serve(async (req) => {
   // Sprint A / CAT-001 — correlation_id (ADR-009) + Wave 3 strict envelope
@@ -8,6 +9,10 @@ Deno.serve(async (req) => {
   const R = makeResponder(cid);
 
   if (req.method === "OPTIONS") return R.cors();
+
+  const guard = await assertCronOrAdmin(req);
+  if (!guard.ok) return guard.response;
+
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
