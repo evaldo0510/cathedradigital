@@ -678,13 +678,15 @@ export const PrayerEngineReader: React.FC<Props> = ({
         )}
       </header>
 
-      {/* Slots contemplativos (Rosário) — Meditação Logos + Fruto no anúncio */}
+      {/* Slots contemplativos (Rosário) — Meditação Logos + Nexus automático + Convite à Contemplação */}
       {isRosary && currentMystery && current.sourceType === 'announce' && (
         <>
           <MysteryLogosMeditation mystery={currentMystery} />
           <div className="text-center">
             <SpiritualFruitBadge mystery={currentMystery} />
           </div>
+          {!contemplative && <MysteryNexusPanel mystery={currentMystery} accentClass={palette.accentClass} />}
+          <ContemplationInvitation mystery={currentMystery} accentClass={palette.accentClass} />
         </>
       )}
 
@@ -757,8 +759,18 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
-      {/* Continuação inteligente ao concluir mistério */}
-      {mysteryJustCompleted && !focus && !isLastOverall && currentMystery && (
+      {/* Encerramento ritual da dezena (Rosário) — Fruto + Pequena Oração + Ação Concreta + Próximo mistério */}
+      {mysteryJustCompleted && !focus && currentMystery && isRosary && (
+        <MysteryClosingCard
+          mystery={currentMystery}
+          isLast={isLastOverall}
+          onNext={goNext}
+          accentClass={palette.accentClass}
+        />
+      )}
+
+      {/* Continuação inteligente ao concluir mistério (não-Rosário) */}
+      {mysteryJustCompleted && !focus && !isLastOverall && currentMystery && !isRosary && (
         <section
           aria-labelledby="mystery-done"
           className="mb-10 rounded-2xl border border-stitch-secondary/40 bg-stitch-surface-container-lowest/50 p-6"
@@ -795,18 +807,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
             )}
           </div>
         </section>
-      )}
-
-      {/* Slots contemplativos (Rosário) — Pergunta + Silêncio ao concluir mistério */}
-      {isRosary && mysteryJustCompleted && !focus && currentMystery && (
-        <>
-          <ContemplationQuestion mystery={currentMystery} />
-          <SilenceTimer
-            suggestedSeconds={
-              (readMysteryMeta(currentMystery).suggested_silence ?? 20) as 0 | 10 | 20 | 30
-            }
-          />
-        </>
       )}
 
       {/* Referências */}
