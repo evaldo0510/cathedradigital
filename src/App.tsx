@@ -6,6 +6,7 @@ import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
+import RouteSeo from './components/RouteSeo';
 
 import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
@@ -488,6 +489,7 @@ const AppLayout: React.FC = () => {
         >
           
           <SwipeNavigation>
+            <RouteSeo />
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
