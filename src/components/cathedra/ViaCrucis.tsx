@@ -17,6 +17,7 @@ import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
 import { Icons } from '../../constants';
+import { Cross } from 'lucide-react';
 import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
 import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
