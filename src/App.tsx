@@ -574,6 +574,10 @@ const AppLayout: React.FC = () => {
               <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Ladainhas" kicker="Cathedra · Ladainhas"><LitaniesPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/ladainhas" element={<Navigate to="/litanies" replace />} />
 
+              <Route path="/novenas" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novenas" kicker="Cathedra · Novenas"><NovenasPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/novenas/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novena" kicker="Cathedra · Novena"><NovenaDetailPage /></DevocionalMobileShell></Suspense>} />
+
+
               <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Livro de Orações" kicker="Cathedra · Orações"><PrayerLibraryPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/oracao/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações"><PrayerDetailPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/oracao-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações (legado)"><PrayerPage /></DevocionalMobileShell></Suspense>} />
