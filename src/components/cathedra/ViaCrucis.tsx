@@ -277,6 +277,8 @@ const ViaCrucis: React.FC = () => {
           estimatedSeconds={25 * 60}
           kicker="Cathedra · Via Dolorosa"
           backHref="/oracao"
+          theme="passion"
+          accentIcon={require('lucide-react').Cross}
           highlight={{
             eyebrow: 'Estação inicial',
             title: first.title,
