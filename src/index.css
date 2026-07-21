@@ -105,6 +105,14 @@
     --reading-column-narrow: 58ch;
     --space-editorial: 6rem;
     --space-editorial-lg: 9rem;
+
+    /* SP4 Onda A — Escala unificada de espaçamento (usar em novos módulos e em migração dos existentes) */
+    --sp-xs: 0.25rem;   /* 4px  */
+    --sp-s:  0.5rem;    /* 8px  */
+    --sp-m:  1rem;      /* 16px — item */
+    --sp-l:  1.5rem;    /* 24px */
+    --sp-xl: 2.5rem;    /* 40px — bloco */
+    --sp-xxl: 4rem;     /* 64px — seção */
     --rule-gold: 43 45% 54%;
     --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
