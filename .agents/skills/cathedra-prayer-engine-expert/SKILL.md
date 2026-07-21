@@ -1,59 +1,73 @@
 ---
 name: cathedra-prayer-engine-expert
-description: Especialista no Prayer Engine v2 do Cathedra. Use para toda alteração em Rosário, Via Sacra, Liturgia das Horas, Missal e orações universais. Garante uso do engine v2, PrayerPortal, sessão persistente, favoritos, TTS, Nexus e modo contemplativo.
+description: Enforce single Prayer Engine v2 — no new readers, PrayerPortal only, sessions, ReaderContinuation, auto-Nexus. Use for any prayer, novena, litany, lectio, breviary, or missal work.
 ---
 
 # Prayer Engine Expert
 
-O motor único de todas as orações do Cathedra. Nenhum leitor custom, nenhuma tela paralela.
+Motor único de todas as orações do Cathedra. Nenhum leitor custom, nenhuma tela paralela.
+
+## Constituição — remissão
+
+Ver `docs/CATHEDRA-CONSTITUTION.md`. Executa os artigos:
+"Existe apenas um Prayer Engine", "Engine v2 é o padrão oficial",
+"Todo leitor termina em ReaderContinuation", "Todo conteúdo participa do Nexus".
+
+## Leis inegociáveis
+
+1. **Nunca criar Reader novo.** Sempre reutilizar `PrayerEngineReader`.
+2. **Toda oração nova nasce em `engine_version = 2`.**
+3. **Toda oração possui `PrayerPortal`** parametrizado via `portalTheme.ts`.
+4. **Toda oração registra sessão** via `usePrayerEngineSession`.
+5. **Toda oração expõe `ReaderContinuation`** apontando próximo passo real da peregrinação.
+6. **Toda oração entra automaticamente no Nexus** via `prayerAutoNexus.ts` + relações em `nexus_relations`.
+
+Notas operacionais:
+- Publicação de conteúdo com trigger de permissões (ex.: glossário) → migrations diretas entram como `draft`; publicar via UI com papel adequado.
 
 ## Arquitetura obrigatória
 
-- **Banco:** `prayer_sections`, `prayer_blocks`, `prayer_mysteries`, `prayer_references`, `prayer_assets`.
+- **Banco:** `prayers` (`engine_version=2`), `prayer_sections`, `prayer_blocks`, `prayer_mysteries`, `prayer_references`, `prayer_assets`.
 - **Loader:** `loadPrayerHierarchy.ts` + `usePrayerHierarchy.ts`.
-- **Reader:** `PrayerEngineReader.tsx` — nunca escrever leitor novo.
-- **Portal:** `PrayerPortal.tsx` parametrizado por `portalTheme.ts`.
-- **Sessão:** `usePrayerEngineSession` — persistência automática por oração.
+- **Reader:** `PrayerEngineReader.tsx` — **único**. Nunca escrever leitor novo, mesmo para casos "especiais".
+- **Portal:** `PrayerPortal.tsx` parametrizado por `portalTheme.ts`; falta tema → adicionar lá, não criar portal paralelo.
+- **Sessão:** `usePrayerEngineSession`.
 - **Nexus:** `prayerAutoNexus.ts` — conexões automáticas a Bíblia/CIC.
-
-## Regras
-
-1. Toda oração nova tem `engine_version = 2` em `prayers`.
-2. Conteúdo estruturado em `prayer_sections` + `prayer_blocks` — não string única.
-3. Portal escolhe tema via `portalTheme.ts`; se falta tema, adicionar lá.
-4. Sessão persistente resume progresso e favoritos.
-5. TTS opcional em todos os blocos textuais.
-6. Modo Contemplação disponível quando aplicável (Rosário, Via Sacra, meditações longas).
-7. `ReaderContinuation` no rodapé sugerindo próxima oração da peregrinação.
-8. Referências via Nexus com popover, nunca link externo bruto.
+- **Continuação:** `ReaderContinuation` no rodapé.
 
 ## Blocos suportados
 
 `text`, `psalm`, `antiphon`, `reading`, `response`, `intention`, `mystery`, `station`, `reflection`, `checklist`, `journal`, `meditation`.
 
-## Modo Contemplação (Rosário/Via Sacra)
+Precisa de bloco novo? Adicionar ao Engine, nunca renderizar fora dele.
 
-- Overlay fullscreen, UI desaparece.
-- Tipografia ampliada dinamicamente.
-- Arte contemplativa via `mysteryImages.ts` / `image_slug`.
+## Modo Contemplação
+
+- Overlay fullscreen; UI desaparece.
+- Tipografia ampliada.
+- Arte via `mysteryImages.ts` / `image_slug` (nunca URL direta).
 - `SpiritualProgressDots`, `ContemplationInvitation`, `MysteryClosingCard`.
-- Ritmo configurável via `useContemplativeRhythm` (pausa, silêncio, transições).
+- Ritmo via `useContemplativeRhythm`.
 
 ## Proibições
 
-- Leitor custom por oração.
-- Persistência ad-hoc em localStorage sem passar por `usePrayerEngineSession`.
+- Reader custom por oração.
+- "Mini engine" paralela para caso especial.
+- Persistência ad-hoc em `localStorage` sem `usePrayerEngineSession`.
 - Tema hardcoded fora de `portalTheme.ts`.
 - URL de imagem direta em vez de `image_slug`.
+- Oração sem `ReaderContinuation`.
+- Oração sem entrada no Nexus.
 - Gamificação (XP, streaks) dentro de oração.
 
 ## Checklist
 
 - [ ] `engine_version = 2`
 - [ ] Hierarquia em `prayer_sections`/`prayer_blocks`
-- [ ] Renderiza via `PrayerEngineReader` ou `PrayerPortal`
-- [ ] Sessão persistente ativa
-- [ ] Nexus automático conecta a Bíblia/CIC
+- [ ] Renderiza via `PrayerEngineReader` + `PrayerPortal`
+- [ ] Tema registrado em `portalTheme.ts`
+- [ ] `usePrayerEngineSession` ativa
+- [ ] `ReaderContinuation` aponta próximo item real
+- [ ] Auto-Nexus conecta a Bíblia/CIC (≥ 3 relações)
 - [ ] TTS disponível
 - [ ] Modo Contemplação onde aplicável
-- [ ] `ReaderContinuation` aponta próximo item real
