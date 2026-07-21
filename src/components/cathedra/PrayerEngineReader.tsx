@@ -598,6 +598,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
         )}
       </header>
 
+      {/* Slots contemplativos (Rosário) — Meditação Logos + Fruto no anúncio */}
+      {isRosary && currentMystery && current.sourceType === 'announce' && (
+        <>
+          <MysteryLogosMeditation mystery={currentMystery} />
+          <div className="text-center">
+            <SpiritualFruitBadge mystery={currentMystery} />
+          </div>
+        </>
+      )}
+
       {/* Corpo */}
       {current.body && (
         <section className="prose-editorial mb-8">
