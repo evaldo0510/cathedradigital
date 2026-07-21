@@ -495,13 +495,8 @@ export const MissaContinuousReader: React.FC<Props> = ({
       {/* Rito Final: ReaderContinuation com Nexus automático */}
       <div className="mt-spacing-2xl border-t border-border/40 pt-spacing-xl">
         <ReaderContinuation
-          context={{
-            kind: 'prayer',
-            id: prayer.id,
-            slug: prayer.slug,
-            title: prayer.title,
-          }}
-          suggestions={nexus}
+          context={{ kind: 'prayer', id: prayer.id }}
+          suggestions={nexus.suggestions}
         />
       </div>
 
