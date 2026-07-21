@@ -394,7 +394,8 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
   // Sempre que a meditação em cache/essencial for exibida, emitimos um
   // evento único (dedupe por date+code+source) para acompanharmos com
   // que frequência a IA falha e qual código dispara — visível no
-  // TelemetryDashboard / navigation-telemetry buffer.
+  // TelemetryDashboard / navigation-telemetry buffer + buffer local
+  // consumido pelo painel /admin/liturgia-meditation-fallback.
   const lastLoggedRef = useRef<string | null>(null);
   useEffect(() => {
     const row = query.data;
@@ -404,13 +405,15 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
     const key = `${row.iso_date}|${code}|${source}`;
     if (lastLoggedRef.current === key) return;
     lastLoggedRef.current = key;
-    telemetry.log('liturgy.meditation.fallback', 'warn', {
+    const payload = {
       iso_date: row.iso_date,
       code,
       source,
       retry_at: row.fallback_retry_at ?? null,
       message: row.fallback_message ?? null,
-    });
+    };
+    telemetry.log('liturgy.meditation.fallback', 'warn', payload);
+    persistFallbackEvent({ ...payload, at: new Date().toISOString() });
   }, [query.data]);
 
   return {
