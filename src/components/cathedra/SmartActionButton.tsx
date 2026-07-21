@@ -120,7 +120,7 @@ export const SmartActionSheet: React.FC<SmartActionSheetProps> = ({ open, onOpen
         </SheetHeader>
 
         <div className="grid grid-cols-2 gap-spacing-sm mt-spacing-lg">
-          {SHORTCUTS.map((s) => {
+          {shortcuts.map((s) => {
             const Icon = s.icon;
             const tileLoading = pendingKey === s.key;
             return (
