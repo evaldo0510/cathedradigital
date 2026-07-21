@@ -71,55 +71,65 @@ const corsHeaders = _corsBase;serve(async (req, connInfo) => {
       logId = logData?.id
     }
 
-    // 1. Signature Validation (HMAC-SHA256)
+    // 1. Signature Validation (HMAC-SHA256) — fail-closed if secret missing
     const webhookSecret = Deno.env.get('MERCADO_PAGO_WEBHOOK_SECRET')
-    if (webhookSecret) {
-      if (!signature) {
-        await logSecurityEvent(
-          Deno.env.get('SUPABASE_URL') ?? '',
-          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-          'invalid_webhook',
-          'Webhook received without signature',
-          'critical',
-          { body, requestId }
-        )
-        return new Response(JSON.stringify({ error: 'Missing signature' }), { status: 401, headers: corsHeaders })
-      }
-      // Mercado Pago signature format: "ts=...,v1=<hex hmac>"
-      const parts = Object.fromEntries(
-        signature.split(',').map((kv) => {
-          const [k, v] = kv.trim().split('=')
-          return [k, v]
-        })
-      ) as Record<string, string>
-      const ts = parts['ts']
-      const v1 = parts['v1']
-      const dataId = body?.data?.id ?? ''
-      const manifest = `id:${dataId};request-id:${requestId ?? ''};ts:${ts ?? ''};`
-      const enc = new TextEncoder()
-      const key = await crypto.subtle.importKey(
-        'raw',
-        enc.encode(webhookSecret),
-        { name: 'HMAC', hash: 'SHA-256' },
-        false,
-        ['sign']
+    if (!webhookSecret) {
+      await logSecurityEvent(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        'webhook_secret_missing',
+        'MERCADO_PAGO_WEBHOOK_SECRET not configured; refusing webhook',
+        'critical',
+        { requestId }
       )
-      const sigBuf = await crypto.subtle.sign('HMAC', key, enc.encode(manifest))
-      const computed = Array.from(new Uint8Array(sigBuf))
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('')
-      if (!v1 || computed !== v1) {
-        await logSecurityEvent(
-          Deno.env.get('SUPABASE_URL') ?? '',
-          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-          'invalid_signature',
-          'Webhook received with invalid signature',
-          'critical',
-          { body, requestId, signature }
-        )
-        return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401, headers: corsHeaders })
-      }
+      return new Response(JSON.stringify({ error: 'Webhook secret not configured' }), { status: 503, headers: corsHeaders })
     }
+    if (!signature) {
+      await logSecurityEvent(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        'invalid_webhook',
+        'Webhook received without signature',
+        'critical',
+        { body, requestId }
+      )
+      return new Response(JSON.stringify({ error: 'Missing signature' }), { status: 401, headers: corsHeaders })
+    }
+    // Mercado Pago signature format: "ts=...,v1=<hex hmac>"
+    const parts = Object.fromEntries(
+      signature.split(',').map((kv) => {
+        const [k, v] = kv.trim().split('=')
+        return [k, v]
+      })
+    ) as Record<string, string>
+    const ts = parts['ts']
+    const v1 = parts['v1']
+    const dataId = body?.data?.id ?? ''
+    const manifest = `id:${dataId};request-id:${requestId ?? ''};ts:${ts ?? ''};`
+    const enc = new TextEncoder()
+    const key = await crypto.subtle.importKey(
+      'raw',
+      enc.encode(webhookSecret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+    const sigBuf = await crypto.subtle.sign('HMAC', key, enc.encode(manifest))
+    const computed = Array.from(new Uint8Array(sigBuf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+    if (!v1 || computed !== v1) {
+      await logSecurityEvent(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+        'invalid_signature',
+        'Webhook received with invalid signature',
+        'critical',
+        { body, requestId, signature }
+      )
+      return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401, headers: corsHeaders })
+    }
+
 
     // 2. Idempotency Check
     if (requestId) {
