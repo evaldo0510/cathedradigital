@@ -1,84 +1,75 @@
-# Sprint 1.0 — Prayer Engine Unificado
+# Sprint 1.0 · Fase E — Persistência Hierárquica + Nexus Automático
 
-Objetivo: eliminar o Rosário legado, transformar o Reader em motor genérico hierárquico (`PrayerReader → PrayerEngine → Section → Mystery → Block`) e migrar 100% do conteúdo hardcoded para o banco. Após a sprint, `/rosary` e `/oracao/rosario` renderizam o **mesmo** componente com dados exclusivamente do backend.
+Consolidar o Prayer Engine v2 como motor único de todas as devoções, partindo do Rosário. Zero conteúdo hardcoded, retomada exata, Nexus automático por bloco, marcadores espirituais e resumo pós-sessão.
 
-## Fase A — Arquitetura do Motor (código)
+## Escopo desta entrega (ondas curtas, uma por vez)
 
-Criar em `src/prayer-engine/`:
+Cada onda entra em um único ciclo de aprovação → build → verificação, sem começar a próxima antes da anterior estar validada.
 
-- `types.ts` — `Prayer`, `PrayerSection`, `PrayerMystery`, `PrayerBlock`, `PrayerVariant`, `PrayerMode`.
-- `PrayerEngine.ts` — máquina hierárquica (navegação section → mystery → block, próximo/anterior, salto, cálculo de progresso, seleção por dia da semana).
-- `usePrayerEngine.ts` — hook que carrega estrutura + hidrata sessão + expõe API de navegação.
-- `PrayerReader.tsx` — componente único (substitui `RosaryReader`), com slots para arte, meditação, áudio, referências.
-- Sub-componentes reutilizáveis migrados do legado:
-  - `PrayerArt.tsx` (SVG dos mistérios, extensível a Via Sacra/LH).
-  - `PrayerProgress.tsx` (barra + timeline hierárquica).
-  - `PrayerMysteryHeader.tsx` (título, evangelho, meditação).
-  - `PrayerBlockRenderer.tsx` (renderiza cada tipo: texto, ave-maria contada, meditação, fátima, silêncio).
-- Plugins: `PrayerModeSelector`, `PrayerAudioPlayer`, `PrayerFavoriteButton`, `ReaderContinuation` (já existem, apenas conectam).
+### Onda 1 — Persistência hierárquica (backend + hook)
 
-## Fase B — Schema hierárquico (migration)
+- Aproveitar as colunas já existentes em `prayer_sessions` (`current_section_id`, `current_mystery_id`, `current_block_id`, `completed_block_ids`, `completed_mystery_ids`, `completed_section_ids`, `started_at`, `updated_at`, `finished_at`).
+- Migration mínima só para o que faltar: `bookmarks jsonb default '[]'` (marcadores espirituais unificados: favorito, reflexão, intenção, palavra tocada) e índice `(user_id, prayer_id) where finished_at is null` para retomada rápida.
+- Novo hook `usePrayerEngineSession(prayerId)`:
+  - `resume()` — devolve a sessão aberta mais recente ou cria uma nova.
+  - `advance(blockId)` — marca bloco concluído, avança cursor, dispara mystery/section conclusion quando todos os filhos concluem.
+  - `addBookmark(kind, data)` / `removeBookmark(id)`.
+  - `finish()` — grava `finished_at`, congela estatísticas.
+  - Autosave debounced (500ms) para não martelar o banco.
 
-Novas tabelas em `public` (com GRANT + RLS pública de leitura, escrita apenas admin):
+### Onda 2 — Reader consome sessão hierárquica
 
-- `prayers` (já existe — adicionar coluna `engine_version int default 2`).
-- `prayer_sections` — `id, prayer_id, slug, title, subtitle, order_index, weekday[]`.
-- `prayer_mysteries` — `id, section_id, slug, title, subtitle, order_index, image_key, gospel_ref, meditation, weekday`.
-- `prayer_blocks` — `id, mystery_id NULL, section_id NULL, type, content jsonb, count int, audio_key, order_index`. (Blocos podem pertencer direto à seção quando não há mistério — Via Sacra usará seção→estação→blocos; LH usará seção→hora→blocos.)
-- `prayer_assets` — `id, key unique, kind (svg|image|audio), url, alt`.
-- `prayer_references` — `id, block_id, kind (bible|catechism|glossary|saint), ref, label`.
+- `RosaryReader` (hoje state local) passa a hidratar do `usePrayerEngineSession`.
+- Ao entrar em `/oracao/rosario`: se houver sessão aberta, exibe **card de retomada** (“Você parou aqui · Mistério Doloroso III · Retomar / Recomeçar / Trocar mistérios”) — não recomeça sozinho.
+- Cada `PrayerBlock` renderizado dispara `advance(blockId)` quando o usuário conclui.
+- Barra de progresso passa a refletir `completed_block_ids.length / total`.
 
-RLS: `SELECT` público em todas; `INSERT/UPDATE/DELETE` apenas via `has_role(admin)`. GRANTs completos (`anon+authenticated` SELECT, `service_role` ALL).
+### Onda 3 — Marcadores espirituais no leitor
 
-Trigger `updated_at` em todas.
+- Componente `PrayerBookmarkBar` (⭐ favorito · 📝 reflexão · 🙏 intenção · 📖 palavra) ancorado por bloco.
+- Editor curto (bottom sheet) para reflexão/intenção/palavra; favorito é toggle.
+- Todos gravados em `prayer_sessions.bookmarks` com `{id, block_id, kind, text?, created_at}`.
 
-## Fase C — Seed do Rosário (insert)
+### Onda 4 — ReaderContinuation via Nexus automático
 
-Migrar de `src/features/rosary/data/mysteries.ts` + `PRAYER_TEXT` para linhas no banco:
+- Adapter `prayerBlockAutoNexus(block, mystery, section)` sobre `KnowledgeRegistry` + `KnowledgeResolver` (mesmo padrão de `glossaryAutoNexus` / `journeyAutoNexus`), com cache LRU + métricas para o `NexusMetricsOverlay`.
+- Fonte das relações: `prayer_blocks.content.refs`, `prayer_mysteries.gospel_ref`, tags automáticas do texto do bloco (glossário + catecismo por regex já disponível no resolver).
+- `ReaderContinuation` no fim de cada bloco: Bíblia · Catecismo · Glossário · Santo · Próxima oração — 100% resolvido pelo KnowledgeGraph, com `NexusSourceBadge` já existente.
+- Zero string de rota hardcoded no reader — auditoria via `scripts/audit-glossary-hardcoded.ts` estendida para o diretório do reader.
 
-- 1 `prayer` (rosario).
-- 4 `prayer_sections` (Gozosos, Luminosos, Dolorosos, Gloriosos) com `weekday[]`.
-- 20 `prayer_mysteries` com evangelho, meditação, imagem.
-- Blocos por mistério: Anúncio, Pai Nosso, 10× Ave-Maria (bloco `type=repeat count=10`), Glória, Oração de Fátima, Meditação.
-- Blocos globais de abertura/encerramento na seção.
-- `prayer_assets` com as SVGs atuais (arquivos permanecem em `src/assets` referenciados por `key`).
+### Onda 5 — Resumo pós-sessão + próxima sugestão
 
-## Fase D — Persistência 100% no banco
+- Ao chamar `finish()`, tela `PrayerSessionSummary`:
+  - blocos, mistérios, minutos, reflexões, favoritos, intenções.
+  - “Próxima sugestão” — vem do KnowledgeGraph (relação `next_devotion`), fallback: próxima oração da mesma categoria ainda não concluída hoje.
 
-- `prayer_sessions` ganha `current_section_id`, `current_mystery_id`, `current_block_id`, `completed_block_ids uuid[]`.
-- `usePrayerEngine` grava progresso a cada avanço (debounced) e restaura no retorno.
-- Remover TODA leitura/gravação em `localStorage` do Rosário (favoritos continuam via `prayer_favorites` existente).
+### Onda 6 — Analytics espiritual (leve, sem dashboard novo)
 
-## Fase E — Integrações
+- View SQL `prayer_stats_user`: orações concluídas, mistério mais rezado, tempo médio, sequência (streak) por dia, top 5 blocos revisitados.
+- Hook `usePrayerStats()` consumido no perfil espiritual existente (não cria página nova).
 
-- Cada `prayer_mystery.meditation` e cada `prayer_block.content` roda pelo Nexus automático (glossário/bíblia/santos) via componente existente.
-- `ReaderContinuation` conectado ao novo `current_*_id`.
-- IA (Logos) recebe contexto do mistério/bloco atual.
+## Fora do escopo desta fase
 
-## Fase F — Remoção do legado
+- Áudio sincronizado por bloco (Fase F).
+- Modo offline (Fase G).
+- Gamificação / metas (Fase H).
+- Refatoração dos demais módulos (Orações, Glossário, Jornadas, Trilhas, Portal Litúrgico, Santos).
 
-- Deletar: `src/features/rosary/data/mysteries.ts`, `RosarySession.tsx`, `RosaryTimeline.tsx` legado, `PRAYER_TEXT`, `RosaryReader.tsx` (substituído por `PrayerReader`).
-- Rota `/rosary` passa a redirecionar para `/oracao/rosario` **ou** renderizar `<PrayerReader slug="rosario" />` — decisão: **redirect 301** para consolidar SEO.
+O motor será testado no Rosário; as demais devoções passam a consumi-lo apenas após Fase E validada.
 
-## Ordem de execução
+## Detalhes técnicos
 
-1. Migration Fase B (aprovação do usuário necessária).
-2. Após aprovação: seed Fase C via insert tool.
-3. Código Fases A/D/E em paralelo.
-4. Remoção Fase F + smoke test Playwright (`/rosary` → redireciona; `/oracao/rosario` renderiza mistério do dia, avança blocos, persiste sessão).
+- Tabelas tocadas: só `prayer_sessions` (add `bookmarks jsonb`, índice parcial de retomada). Nenhuma nova tabela.
+- RLS: `prayer_sessions` já é `auth.uid() = user_id`; policies mantidas.
+- Autosave: `advance()` faz `upsert` em uma única linha por sessão; debounced 500ms + flush no `beforeunload`.
+- Nexus adapter reutiliza `KnowledgeRegistry` — não vamos duplicar o resolver.
+- Contract test: `tests/e2e/rosary-resume.spec.ts` — reza 5 blocos, recarrega, valida retomada exata + `ReaderContinuation` visível + badge `kind · id`.
+- Auditoria de hardcoded estendida: `scripts/audit-rosary-hardcoded.ts` falha CI se houver `href=/biblia|/catecismo|/santos` fora do adapter.
 
-## Riscos & mitigação
+## Como isso destrava as próximas fases
 
-- **Perda visual**: SVGs preservados via `prayer_assets`, `PrayerArt` mantém 100% do design atual.
-- **Sessões antigas**: adicionar migração de dados — sessões existentes recebem `current_*_id` NULL e reiniciam graciosamente.
-- **Outras orações** (Via Sacra hoje em `ViaCrucis.tsx`): NÃO tocar nesta sprint. Migração acontece na Sprint 1.1 usando o mesmo schema.
+Depois de Fase E validada, adicionar uma nova devoção (Via Sacra, LH, Novena, Ladainha) vira **puramente seed de conteúdo** em `prayer_sections/mysteries/blocks` + tags no `KnowledgeRegistry`. Sem código novo de leitor, sem novo state, sem novo Nexus.
 
-## Entregáveis
+## Começo
 
-- 1 migration (Fase B).
-- 1 insert grande (Fase C — seed Rosário).
-- ~10 arquivos novos em `src/prayer-engine/`.
-- ~6 arquivos deletados (legado).
-- 1 E2E `tests/e2e/rosario-prayer-engine.spec.ts`.
-
-Confirma para eu **iniciar pela migration da Fase B**?
+Se aprovar, abro **Onda 1** já em seguida: migration mínima (`bookmarks` + índice de retomada) + hook `usePrayerEngineSession`. Nada de reader ainda — só a fundação persistente.
