@@ -218,6 +218,10 @@ const BreviaryPage: React.FC = () => {
     void preloadBreviaryOfflineAssets();
   }, []);
 
+  // Sprint 3 · Onda C — recomendação por horário local (fonte: banco).
+  const recommendation = useRecommendedHour();
+
+
   // Deep link `?b=<blockId>` — restaura posição exata do trecho.
   const initialBlockId = searchParams.get('b');
 
@@ -411,6 +415,11 @@ const BreviaryPage: React.FC = () => {
         </div>
 
         <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
+
+        {/* Sprint 3 · Onda C — hora recomendada com deep link à oração v2 individual */}
+        <HourRecommendationCard recommendation={recommendation} />
+
+
 
         <div className="text-center space-y-spacing-sm">
           <p className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">
