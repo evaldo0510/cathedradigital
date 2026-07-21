@@ -155,7 +155,36 @@ if (existsSync(sitemapPath)) {
     if (p.startsWith('/')) sitemapEntries.push(p);
   }
 
+  const STALE_SITEMAP_PATHS = new Set([
+    // rotas que não existem mais em App.tsx / types.ts órfãos
+    '/quiz', '/study', '/trilhas',
+  ]);
+  for (const p of STALE_SITEMAP_PATHS) {
+    if (sitemapEntries.includes(p)) {
+      push(p, 'error', `URL no sitemap não existe em App.tsx (órfã em types.ts)`, 'sitemap');
+    }
+  }
+
   // 3a) URLs do sitemap devem ter meta indexável e canonical coerente
+  const seenSitemap = new Set<string>();
+  for (const p of sitemapEntries) {
+    if (STALE_SITEMAP_PATHS.has(p)) continue;
+    // Normaliza query strings — canonical é por pathname; a página é a mesma.
+    const pathname = p.split('?')[0].split('#')[0];
+    if (seenSitemap.has(p)) continue;
+    seenSitemap.add(p);
+    const meta = resolveRouteMeta(pathname);
+    if (!meta) {
+      push(p, 'error', `URL no sitemap sem meta correspondente`, 'sitemap');
+      continue;
+    }
+    if (meta.noindex) {
+      push(p, 'error', `URL no sitemap está marcada noindex em ROUTE_META`, 'sitemap');
+    }
+    if (meta.canonicalPath && meta.canonicalPath !== pathname) {
+      push(p, 'error', `URL no sitemap difere do canonicalPath ("${meta.canonicalPath}")`, 'sitemap');
+    }
+  }
   for (const p of sitemapEntries) {
     const meta = resolveRouteMeta(p);
     if (!meta) {
