@@ -1,67 +1,84 @@
-# Sprint Final de Refinamento
+# Sprint 1.0 — Prayer Engine Unificado
 
-O pedido tem dois blocos com naturezas muito diferentes. Proponho separar:
+Objetivo: eliminar o Rosário legado, transformar o Reader em motor genérico hierárquico (`PrayerReader → PrayerEngine → Section → Mystery → Block`) e migrar 100% do conteúdo hardcoded para o banco. Após a sprint, `/rosary` e `/oracao/rosario` renderizam o **mesmo** componente com dados exclusivamente do backend.
 
-## Bloco A — Auditoria de conformidade Logos 2030 + Stitch (somente leitura)
+## Fase A — Arquitetura do Motor (código)
 
-Uma varredura de 11 módulos (Biblioteca, Glossário, Santos, Orações, Rosário, Liturgia, Jornadas, Trilhas, Bíblia, Catecismo, Magistério) em 15 dimensões (duplicação, layout, espaçamento, tipografia, cartões, hero, botões, chrome, footer, animações, loading, empty, erro, Nexus, ReaderContinuation).
+Criar em `src/prayer-engine/`:
 
-**Entrega:** relatório em `docs/audits/sprint-final-refinamento.md` com:
-- Tabela módulo × dimensão com ✔ / ⚠ / ❌
-- Lista priorizada de arquivos com duplicação real (com paths e linhas)
-- % de aderência por módulo e global
-- Backlog sugerido de refactors, sem executá-los
+- `types.ts` — `Prayer`, `PrayerSection`, `PrayerMystery`, `PrayerBlock`, `PrayerVariant`, `PrayerMode`.
+- `PrayerEngine.ts` — máquina hierárquica (navegação section → mystery → block, próximo/anterior, salto, cálculo de progresso, seleção por dia da semana).
+- `usePrayerEngine.ts` — hook que carrega estrutura + hidrata sessão + expõe API de navegação.
+- `PrayerReader.tsx` — componente único (substitui `RosaryReader`), com slots para arte, meditação, áudio, referências.
+- Sub-componentes reutilizáveis migrados do legado:
+  - `PrayerArt.tsx` (SVG dos mistérios, extensível a Via Sacra/LH).
+  - `PrayerProgress.tsx` (barra + timeline hierárquica).
+  - `PrayerMysteryHeader.tsx` (título, evangelho, meditação).
+  - `PrayerBlockRenderer.tsx` (renderiza cada tipo: texto, ave-maria contada, meditação, fátima, silêncio).
+- Plugins: `PrayerModeSelector`, `PrayerAudioPlayer`, `PrayerFavoriteButton`, `ReaderContinuation` (já existem, apenas conectam).
 
-**Regras:** nenhuma linha de código de produção alterada nesta fase. Sem novos módulos, sem remoção de features.
+## Fase B — Schema hierárquico (migration)
 
-**Por que separar:** aplicar padronização em 11 módulos "de uma vez" é justamente o que produz regressão. Só depois que você aprovar o relatório, abrimos uma sprint dedicada por módulo (ou por dimensão) com escopo controlado.
+Novas tabelas em `public` (com GRANT + RLS pública de leitura, escrita apenas admin):
 
-## Bloco B — 3 entregas concretas do pedido
+- `prayers` (já existe — adicionar coluna `engine_version int default 2`).
+- `prayer_sections` — `id, prayer_id, slug, title, subtitle, order_index, weekday[]`.
+- `prayer_mysteries` — `id, section_id, slug, title, subtitle, order_index, image_key, gospel_ref, meditation, weekday`.
+- `prayer_blocks` — `id, mystery_id NULL, section_id NULL, type, content jsonb, count int, audio_key, order_index`. (Blocos podem pertencer direto à seção quando não há mistério — Via Sacra usará seção→estação→blocos; LH usará seção→hora→blocos.)
+- `prayer_assets` — `id, key unique, kind (svg|image|audio), url, alt`.
+- `prayer_references` — `id, block_id, kind (bible|catechism|glossary|saint), ref, label`.
 
-Estas são bem escopadas e vão junto:
+RLS: `SELECT` público em todas; `INSERT/UPDATE/DELETE` apenas via `has_role(admin)`. GRANTs completos (`anon+authenticated` SELECT, `service_role` ALL).
 
-### B1. Export JSON no `NexusMetricsOverlay`
-- Adicionar botão "Exportar" ao lado do toggle colapsar
-- Gera `nexus-metrics-<timestamp>.json` com snapshot atual: `{ generatedAt, adapters: { glossaryAutoNexus, journeyAutoNexus }, totals }`
-- Cada adapter: `hits`, `misses`, `hitRate`, `avgMs`, `lastMs`, `samples`
-- Download via `Blob` + `URL.createObjectURL` (sem dependências novas)
-- Continua visível apenas em `DEV`
+Trigger `updated_at` em todas.
 
-### B2. Guardrail de performance do Nexus no CI
-- Novo script `scripts/nexus-perf-guardrail.ts`
-- Carrega baseline de `.nexus-perf-baseline.json` (comitado)
-- Roda cenário headless (Vitest node) que resolve N verbetes e M jornadas, coleta métricas via `nexusMetrics.snapshot()`
-- Falha se, para cada adapter:
-  - `hitRate` cair mais que `HIT_RATE_TOLERANCE` (default 5 pp)
-  - `avgMs` piorar mais que `AVG_MS_TOLERANCE` (default 20%)
-- Limites configuráveis por env vars, com defaults no script
-- Novo job no workflow `.github/workflows/seo-and-tests.yml` chamado `nexus-perf` (roda em PR e main)
-- Comando local: `bun scripts/nexus-perf-guardrail.ts --update` regrava o baseline
+## Fase C — Seed do Rosário (insert)
 
-### B3. Teste unitário do `NexusSourceBadge`
-- `src/components/nexus/__tests__/NexusSourceBadge.test.tsx` (Vitest + Testing Library)
-- Cobre:
-  - Foco pelo teclado abre o tooltip (Radix expõe `data-state="open"` no trigger)
-  - `Enter` e `Espaço` disparam abertura quando aplicável
-  - `Esc` fecha o tooltip
-  - `aria-label` inclui `kind` e `id` corretos
-- Usa `@testing-library/user-event` já disponível no projeto
+Migrar de `src/features/rosary/data/mysteries.ts` + `PRAYER_TEXT` para linhas no banco:
 
-## Ordem de execução sugerida
+- 1 `prayer` (rosario).
+- 4 `prayer_sections` (Gozosos, Luminosos, Dolorosos, Gloriosos) com `weekday[]`.
+- 20 `prayer_mysteries` com evangelho, meditação, imagem.
+- Blocos por mistério: Anúncio, Pai Nosso, 10× Ave-Maria (bloco `type=repeat count=10`), Glória, Oração de Fátima, Meditação.
+- Blocos globais de abertura/encerramento na seção.
+- `prayer_assets` com as SVGs atuais (arquivos permanecem em `src/assets` referenciados por `key`).
 
-1. Bloco B (baixo risco, entregável hoje)
-2. Bloco A (auditoria — precisa de leitura extensa; entrega o relatório sem tocar código)
-3. Depois do relatório, você escolhe quais módulos consolidar primeiro em sprints dedicadas
+## Fase D — Persistência 100% no banco
 
-## Detalhes técnicos
+- `prayer_sessions` ganha `current_section_id`, `current_mystery_id`, `current_block_id`, `completed_block_ids uuid[]`.
+- `usePrayerEngine` grava progresso a cada avanço (debounced) e restaura no retorno.
+- Remover TODA leitura/gravação em `localStorage` do Rosário (favoritos continuam via `prayer_favorites` existente).
 
-- `nexusMetrics.snapshot()` já expõe o estado; nenhuma mudança no pub/sub
-- Guardrail roda em Node puro (jsdom não necessário — adapters não dependem de DOM)
-- Baseline versionado no repo para reprodutibilidade; regeneração explícita
-- Teste do badge usa `TooltipProvider` do shadcn como wrapper
+## Fase E — Integrações
 
-## Fora de escopo desta sprint
+- Cada `prayer_mystery.meditation` e cada `prayer_block.content` roda pelo Nexus automático (glossário/bíblia/santos) via componente existente.
+- `ReaderContinuation` conectado ao novo `current_*_id`.
+- IA (Logos) recebe contexto do mistério/bloco atual.
 
-- Alterações de UI/UX em produção nos 11 módulos
-- Remoção de código legado
-- Novos design tokens
+## Fase F — Remoção do legado
+
+- Deletar: `src/features/rosary/data/mysteries.ts`, `RosarySession.tsx`, `RosaryTimeline.tsx` legado, `PRAYER_TEXT`, `RosaryReader.tsx` (substituído por `PrayerReader`).
+- Rota `/rosary` passa a redirecionar para `/oracao/rosario` **ou** renderizar `<PrayerReader slug="rosario" />` — decisão: **redirect 301** para consolidar SEO.
+
+## Ordem de execução
+
+1. Migration Fase B (aprovação do usuário necessária).
+2. Após aprovação: seed Fase C via insert tool.
+3. Código Fases A/D/E em paralelo.
+4. Remoção Fase F + smoke test Playwright (`/rosary` → redireciona; `/oracao/rosario` renderiza mistério do dia, avança blocos, persiste sessão).
+
+## Riscos & mitigação
+
+- **Perda visual**: SVGs preservados via `prayer_assets`, `PrayerArt` mantém 100% do design atual.
+- **Sessões antigas**: adicionar migração de dados — sessões existentes recebem `current_*_id` NULL e reiniciam graciosamente.
+- **Outras orações** (Via Sacra hoje em `ViaCrucis.tsx`): NÃO tocar nesta sprint. Migração acontece na Sprint 1.1 usando o mesmo schema.
+
+## Entregáveis
+
+- 1 migration (Fase B).
+- 1 insert grande (Fase C — seed Rosário).
+- ~10 arquivos novos em `src/prayer-engine/`.
+- ~6 arquivos deletados (legado).
+- 1 E2E `tests/e2e/rosario-prayer-engine.spec.ts`.
+
+Confirma para eu **iniciar pela migration da Fase B**?

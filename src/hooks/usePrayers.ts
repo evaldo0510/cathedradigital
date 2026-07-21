@@ -36,6 +36,8 @@ export interface Prayer {
   bible_refs?: unknown;
   catechism_refs?: number[];
   content_status?: 'stub' | 'partial' | 'complete';
+  /** Sprint 1.0 — v2 = hierarquia em prayer_sections/mysteries/blocks. */
+  engine_version?: number;
 }
 
 export const PRAYER_CATEGORY_LABEL: Record<PrayerCategory, string> = {

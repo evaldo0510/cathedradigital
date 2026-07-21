@@ -3545,12 +3545,276 @@ export type Database = {
         }
         Relationships: []
       }
+      prayer_assets: {
+        Row: {
+          alt: string | null
+          created_at: string
+          id: string
+          key: string
+          kind: string
+          meta: Json
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          key: string
+          kind: string
+          meta?: Json
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          key?: string
+          kind?: string
+          meta?: Json
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      prayer_blocks: {
+        Row: {
+          audio_key: string | null
+          content: Json
+          created_at: string
+          id: string
+          meta: Json
+          mystery_id: string | null
+          order_index: number
+          prayer_id: string
+          repeat_count: number
+          section_id: string | null
+          slug: string | null
+          title: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          audio_key?: string | null
+          content?: Json
+          created_at?: string
+          id?: string
+          meta?: Json
+          mystery_id?: string | null
+          order_index?: number
+          prayer_id: string
+          repeat_count?: number
+          section_id?: string | null
+          slug?: string | null
+          title?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          audio_key?: string | null
+          content?: Json
+          created_at?: string
+          id?: string
+          meta?: Json
+          mystery_id?: string | null
+          order_index?: number
+          prayer_id?: string
+          repeat_count?: number
+          section_id?: string | null
+          slug?: string | null
+          title?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_blocks_mystery_id_fkey"
+            columns: ["mystery_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_mysteries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prayer_blocks_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prayer_blocks_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_mysteries: {
+        Row: {
+          created_at: string
+          fruit: string | null
+          gospel_ref: string | null
+          gospel_text: string | null
+          id: string
+          image_key: string | null
+          meditation: string | null
+          meta: Json
+          order_index: number
+          section_id: string
+          slug: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fruit?: string | null
+          gospel_ref?: string | null
+          gospel_text?: string | null
+          id?: string
+          image_key?: string | null
+          meditation?: string | null
+          meta?: Json
+          order_index?: number
+          section_id: string
+          slug: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fruit?: string | null
+          gospel_ref?: string | null
+          gospel_text?: string | null
+          id?: string
+          image_key?: string | null
+          meditation?: string | null
+          meta?: Json
+          order_index?: number
+          section_id?: string
+          slug?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_mysteries_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_references: {
+        Row: {
+          block_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          label: string | null
+          mystery_id: string | null
+          order_index: number
+          ref: string
+        }
+        Insert: {
+          block_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          label?: string | null
+          mystery_id?: string | null
+          order_index?: number
+          ref: string
+        }
+        Update: {
+          block_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string | null
+          mystery_id?: string | null
+          order_index?: number
+          ref?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_references_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prayer_references_mystery_id_fkey"
+            columns: ["mystery_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_mysteries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_sections: {
+        Row: {
+          created_at: string
+          id: string
+          meta: Json
+          order_index: number
+          prayer_id: string
+          slug: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+          weekdays: number[]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meta?: Json
+          order_index?: number
+          prayer_id: string
+          slug: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          weekdays?: number[]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meta?: Json
+          order_index?: number
+          prayer_id?: string
+          slug?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          weekdays?: number[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_sections_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prayer_sessions: {
         Row: {
           completed_at: string | null
+          completed_block_ids: string[]
           created_at: string
           current_block_id: string | null
           current_block_index: number
+          current_block_uuid: string | null
+          current_mystery_id: string | null
+          current_section_id: string | null
           elapsed_seconds: number
           id: string
           prayer_id: string
@@ -3559,9 +3823,13 @@ export type Database = {
         }
         Insert: {
           completed_at?: string | null
+          completed_block_ids?: string[]
           created_at?: string
           current_block_id?: string | null
           current_block_index?: number
+          current_block_uuid?: string | null
+          current_mystery_id?: string | null
+          current_section_id?: string | null
           elapsed_seconds?: number
           id?: string
           prayer_id: string
@@ -3570,9 +3838,13 @@ export type Database = {
         }
         Update: {
           completed_at?: string | null
+          completed_block_ids?: string[]
           created_at?: string
           current_block_id?: string | null
           current_block_index?: number
+          current_block_uuid?: string | null
+          current_mystery_id?: string | null
+          current_section_id?: string | null
           elapsed_seconds?: number
           id?: string
           prayer_id?: string
@@ -3603,6 +3875,7 @@ export type Database = {
           content_status: Database["public"]["Enums"]["content_curation_status"]
           created_at: string
           duration_min: number | null
+          engine_version: number
           estimated_seconds: number
           explanation: string | null
           id: string
@@ -3634,6 +3907,7 @@ export type Database = {
           content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
           duration_min?: number | null
+          engine_version?: number
           estimated_seconds?: number
           explanation?: string | null
           id?: string
@@ -3665,6 +3939,7 @@ export type Database = {
           content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
           duration_min?: number | null
+          engine_version?: number
           estimated_seconds?: number
           explanation?: string | null
           id?: string
