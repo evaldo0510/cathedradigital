@@ -26,10 +26,12 @@ export interface DBMystery {
   section_id: string;
   slug: string;
   title: string;
+  subtitle: string | null;
   order_index: number;
   gospel_ref: string | null;
   meditation: string | null;
   fruit: string | null;
+  meta: Record<string, unknown> | null;
 }
 export interface DBBlock {
   id: string;
@@ -108,10 +110,12 @@ export async function loadPrayerHierarchyBySlug(slug: string): Promise<PrayerHie
       section_id: m.section_id,
       slug: m.slug,
       title: m.title,
+      subtitle: m.subtitle ?? null,
       order_index: m.order_index,
       gospel_ref: m.gospel_ref,
       meditation: m.meditation,
       fruit: m.fruit,
+      meta: m.meta ?? null,
     })),
     blocks: (blocksRes.data ?? []) as DBBlock[],
   };

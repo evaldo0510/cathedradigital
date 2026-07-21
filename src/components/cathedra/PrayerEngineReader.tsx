@@ -38,6 +38,12 @@ import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
+import MysteryHero from '@/components/prayer/rosary/MysteryHero';
+import MysteryLogosMeditation from '@/components/prayer/rosary/MysteryLogosMeditation';
+import SpiritualFruitBadge from '@/components/prayer/rosary/SpiritualFruitBadge';
+import ContemplationQuestion from '@/components/prayer/rosary/ContemplationQuestion';
+import SilenceTimer from '@/components/prayer/rosary/SilenceTimer';
+import { readMysteryMeta } from '@/components/prayer/rosary/mysteryMeta';
 import type { PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
@@ -129,8 +135,10 @@ export const PrayerEngineReader: React.FC<Props> = ({
   const [autoIntervalMs, setAutoIntervalMs] = useState(30000);
   const [confirmReset, setConfirmReset] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [heroConfirmed, setHeroConfirmed] = useState<Set<string>>(() => new Set());
 
   const current = blocks[cursorIndex];
+  const isRosary = prayer.slug === 'rosario';
 
   const mysteriesInSection = useMemo(
     () =>
@@ -433,6 +441,28 @@ export const PrayerEngineReader: React.FC<Props> = ({
     );
   }
 
+  // ============ HERO CONTEMPLATIVO (Rosário — antes de cada dezena) ============
+  const showMysteryHero =
+    isRosary &&
+    !!currentMystery &&
+    current?.sourceType === 'announce' &&
+    !heroConfirmed.has(currentMystery.id);
+
+  const heroContent = showMysteryHero && currentMystery ? (
+    <div className="mx-auto w-full max-w-[860px] px-4 pb-16 pt-6 md:px-8 md:pt-10">
+      <MysteryHero
+        mystery={currentMystery}
+        onStart={() => {
+          setHeroConfirmed((prev) => {
+            const next = new Set(prev);
+            next.add(currentMystery.id);
+            return next;
+          });
+        }}
+      />
+    </div>
+  ) : null;
+
   // ============ READER ============
   const content = (
     <article style={contentStyle} className="cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
@@ -568,6 +598,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
         )}
       </header>
 
+      {/* Slots contemplativos (Rosário) — Meditação Logos + Fruto no anúncio */}
+      {isRosary && currentMystery && current.sourceType === 'announce' && (
+        <>
+          <MysteryLogosMeditation mystery={currentMystery} />
+          <div className="text-center">
+            <SpiritualFruitBadge mystery={currentMystery} />
+          </div>
+        </>
+      )}
+
       {/* Corpo */}
       {current.body && (
         <section className="prose-editorial mb-8">
@@ -675,6 +715,18 @@ export const PrayerEngineReader: React.FC<Props> = ({
             )}
           </div>
         </section>
+      )}
+
+      {/* Slots contemplativos (Rosário) — Pergunta + Silêncio ao concluir mistério */}
+      {isRosary && mysteryJustCompleted && !focus && currentMystery && (
+        <>
+          <ContemplationQuestion mystery={currentMystery} />
+          <SilenceTimer
+            suggestedSeconds={
+              (readMysteryMeta(currentMystery).suggested_silence ?? 20) as 0 | 10 | 20 | 30
+            }
+          />
+        </>
       )}
 
       {/* Referências */}
@@ -837,7 +889,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         subtitle={prayer.subtitle ?? undefined}
         backHref="/oracao"
       />
-      {content}
+      {heroContent ?? content}
       <MobileBottomNav />
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>
