@@ -21,7 +21,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Clock, Sparkles, PlayCircle, RotateCcw, BookOpen, Church, Circle } from 'lucide-react';
+import { Clock, Sparkles, PlayCircle, RotateCcw, BookOpen, Church, Circle, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
@@ -32,6 +32,9 @@ import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
 import { cn } from '@/lib/utils';
+
+export type PrayerPortalTheme = 'church' | 'passion' | 'dawn' | 'noon' | 'sunset' | 'night';
+
 
 /**
  * Bloco de destaque universal — usado por orações que não têm mistérios
