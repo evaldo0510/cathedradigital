@@ -53,7 +53,7 @@ const glossaryReaderAutoNexus: ReaderAutoNexus<GlossaryLike> = {
       .map((b) => r.byKind[b]?.[0])
       .filter((n): n is NonNullable<typeof n> => !!n?.url)
       .map((n, i) => ({
-        intent: (i === 0 ? 'study' : 'deepen') as const,
+        intent: i === 0 ? ('study' as const) : ('deepen' as const),
         eyebrow: BUCKET_LABEL[n.node.kind as ReaderNexusBucket] ?? 'Continuar',
         label: n.node.label,
         target: n,
@@ -78,7 +78,7 @@ const journeyReaderAutoNexus: ReaderAutoNexus<JourneyLike> = {
       .filter((n) => !!n.url)
       .slice(0, 6)
       .map((n, i) => ({
-        intent: (i === 0 ? 'apply' : 'study') as const,
+        intent: i === 0 ? ('apply' as const) : ('study' as const),
         eyebrow: r.labels[n.node.kind] ?? 'Continuar',
         label: n.node.label,
         target: n,
