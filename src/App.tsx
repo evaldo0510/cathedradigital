@@ -777,7 +777,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 <ReadingSettingsProvider>
                   <TooltipProvider>
                     {children}
-                    <NexusMetricsOverlay />
+                    
                   </TooltipProvider>
                 </ReadingSettingsProvider>
               </LangProvider>
