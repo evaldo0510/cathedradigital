@@ -410,18 +410,29 @@ const BreviaryPage: React.FC = () => {
 
         <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
-        <div className="text-center">
-          <p className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-sm">
+        <div className="text-center space-y-spacing-sm">
+          <p className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">
             Hora sugerida agora
           </p>
-          <Button
-            onClick={() => setSelectedHour(suggested)}
-            disabled={!prayer || loading}
-            className="px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-spacing-xs mx-auto"
-          >
-            {HOUR_ICON[suggested]}
-            Rezar {orderedSections.find((s) => s.slug === suggested)?.title ?? 'agora'}
-          </Button>
+          <div className="flex flex-wrap justify-center gap-spacing-sm">
+            <Button
+              onClick={() => setSelectedHour(suggested)}
+              disabled={!prayer || loading}
+              className="px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-spacing-xs"
+            >
+              {HOUR_ICON[suggested]}
+              Rezar {orderedSections.find((s) => s.slug === suggested)?.title ?? 'agora'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setDayMode(true)}
+              disabled={!prayer || loading}
+              className="px-spacing-lg py-spacing-sm rounded-premium-full font-black uppercase text-premium-xs tracking-widest flex items-center gap-spacing-xs"
+            >
+              <Icons.BookOpen className="w-spacing-md h-spacing-md" />
+              Dia inteiro
+            </Button>
+          </div>
         </div>
 
         {loading || !prayer ? (
