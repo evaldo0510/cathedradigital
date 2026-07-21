@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
 import { readMysteryMeta } from './mysteryMeta';
+import { resolveMysteryImage } from './mysteryImages';
 
 interface Props {
   mystery: DBMystery;
@@ -33,6 +34,8 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
   const contemplativeTitle = meta.contemplative_title ?? mystery.title;
   const subtitle = mystery.subtitle;
   const passageRef = meta.primary_passage?.ref ?? mystery.gospel_ref;
+  const heroImage = resolveMysteryImage(meta.hero_image_path);
+  const hasImage = Boolean(heroImage);
 
   return (
     <section
@@ -42,14 +45,36 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
         fading ? 'opacity-0' : 'opacity-100',
       )}
     >
+      {hasImage ? (
+        <>
+          <img
+            src={heroImage}
+            alt=""
+            aria-hidden
+            width={1024}
+            height={1024}
+            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/50 to-black/80"
+          />
+        </>
+      ) : (
+        <div
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b',
+            gradient,
+          )}
+        />
+      )}
       <div
-        aria-hidden
         className={cn(
-          'pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b',
-          gradient,
+          'mx-auto w-full max-w-2xl text-center',
+          hasImage && '[&_h1]:text-white [&_p]:text-white/80',
         )}
-      />
-      <div className="mx-auto w-full max-w-2xl text-center">
+      >
         <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
           Mistério · Contemplação
         </p>
