@@ -35,6 +35,7 @@ import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
 import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import type { PrayerBlock } from '@/types/prayer';
