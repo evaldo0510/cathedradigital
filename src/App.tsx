@@ -706,6 +706,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
                       <Route path="/admin/pray" element={<PrayerAdmin />} />
                       <Route path="/admin/oracoes" element={<PrayerAdmin />} />
+                      <Route path="/admin/liturgia-meditation-fallback" element={<LiturgyMeditationFallbackPanel />} />
+
 
 
 
