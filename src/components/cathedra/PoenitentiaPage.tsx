@@ -270,7 +270,13 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
       </div>
 
       {prayer && (
-        <ReaderContinuation kind="prayer" currentId={prayer.id} />
+        <ReaderContinuation
+          context={{
+            kind: 'prayer',
+            id: prayer.slug,
+            meta: { prayerCategory: prayer.category },
+          }}
+        />
       )}
       </div>
     </>
