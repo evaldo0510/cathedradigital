@@ -2,18 +2,31 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { ContentSkeleton } from './primitives/ContentSkeleton';
 
+/**
+ * SacredSkeleton — consolidado no Sprint P2.2 (Logos 2030).
+ * APIs preservadas; toda animação/pulse local substituída pela primitiva
+ * `ContentSkeleton` (shimmer único, tokens Stitch, respeita reduced-motion).
+ */
+
 export const PageHeaderSkeleton: React.FC = () => (
-  <div className="text-center space-y-spacing-md pt-spacing-xl mb-spacing-xl flex flex-col items-center">
-    <ContentSkeleton variant="block" className="w-spacing-2xl h-spacing-2xl" />
-    <ContentSkeleton variant="block" className="h-spacing-xl w-spacing-4xl" />
-    <ContentSkeleton variant="block" className="h-spacing-md w-spacing-4xl" />
+  <div
+    className="text-center space-y-spacing-md pt-spacing-xl mb-spacing-xl flex flex-col items-center"
+    aria-hidden="true"
+    aria-busy="true"
+  >
+    <ContentSkeleton variant="circle" className="w-spacing-2xl h-spacing-2xl" />
+    <ContentSkeleton variant="block" className="h-spacing-xl w-[280px]" />
+    <ContentSkeleton variant="block" className="h-spacing-md w-[220px]" />
   </div>
 );
 
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-spacing-4xl rounded-premium border border-border/40 shadow-premium-md overflow-hidden">
+      <Card
+        key={i}
+        className="h-spacing-4xl rounded-premium border border-border/40 shadow-premium-md overflow-hidden"
+      >
         <ContentSkeleton variant="block" className="h-full w-full rounded-none" />
       </Card>
     ))}
@@ -29,128 +42,126 @@ export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
 );
 
 /**
- * Skeleton específico para itens de busca (Santos, Glossário, etc.)
- * Mantém o mesmo layout do SearchResultCard para evitar jump de layout.
+ * Item de busca (Santos, Glossário, etc.). Preserva silhueta do SearchResultCard.
  */
 export const SearchResultSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
-  <div className="space-y-spacing-xs animate-pulse">
+  <div className="space-y-spacing-xs" aria-hidden="true" aria-busy="true">
     {Array.from({ length: count }).map((_, i) => (
-      <div 
-        key={i} 
+      <div
+        key={i}
         className="p-spacing-sm flex items-center gap-spacing-sm bg-card/50 border border-border/10 rounded-premium h-[76px]"
       >
-        <div className="flex-shrink-0 w-spacing-xl h-spacing-xl rounded-premium bg-muted/40" />
+        <ContentSkeleton variant="block" className="flex-shrink-0 w-spacing-xl h-spacing-xl" />
         <div className="flex-1 space-y-spacing-xs">
-          <div className="h-spacing-sm w-1/3 bg-muted/40 rounded" />
-          <div className="h-spacing-xs w-2/3 bg-muted/20 rounded" />
+          <ContentSkeleton variant="block" className="h-spacing-sm w-1/3" />
+          <ContentSkeleton variant="block" className="h-spacing-xs w-2/3" />
         </div>
-        <div className="w-spacing-xl h-spacing-md bg-muted/10 rounded-premium" />
+        <ContentSkeleton variant="block" className="w-spacing-xl h-spacing-md" />
       </div>
     ))}
   </div>
 );
 
-/**
- * Skeleton para chips de temas
- */
 export const TagSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
-  <div className="flex flex-wrap gap-spacing-xs animate-pulse">
+  <div className="flex flex-wrap gap-spacing-xs" aria-hidden="true" aria-busy="true">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="h-[32px] w-[80px] rounded-premium-full bg-muted/30" />
+      <ContentSkeleton key={i} variant="pill" className="h-[32px] w-[80px]" />
     ))}
   </div>
 );
 
 export const SaintCardSkeleton: React.FC = () => (
-  <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden animate-pulse h-spacing-4xl">
+  <div
+    className="bg-card border border-border rounded-[2.5rem] overflow-hidden h-spacing-4xl"
+    aria-hidden="true"
+    aria-busy="true"
+  >
     <div className="flex flex-col md:flex-row h-full">
-      <div className="w-full md:w-spacing-2xs/3 bg-muted h-spacing-4xl md:h-auto" />
+      <ContentSkeleton
+        variant="block"
+        className="w-full md:w-[240px] h-spacing-4xl md:h-auto rounded-none"
+      />
       <div className="flex-1 p-spacing-xl space-y-spacing-lg">
-        <div className="h-spacing-md w-spacing-4xl bg-muted rounded" />
-        <div className="h-spacing-xl w-spacing-4xl bg-muted rounded" />
-        <div className="space-y-spacing-sm">
-          <div className="h-spacing-sm w-full bg-muted rounded" />
-          <div className="h-spacing-sm w-full bg-muted rounded" />
-          <div className="h-spacing-sm w-spacing-sm/4 bg-muted rounded" />
-        </div>
+        <ContentSkeleton variant="block" className="h-spacing-md w-[220px]" />
+        <ContentSkeleton variant="block" className="h-spacing-xl w-[260px]" />
+        <ContentSkeleton variant="text" lines={3} />
       </div>
     </div>
   </div>
 );
 
 export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-spacing-md animate-pulse">
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-spacing-md">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="h-spacing-4xl rounded-premium bg-muted" />
+      <ContentSkeleton key={i} variant="block" className="h-spacing-4xl" />
     ))}
   </div>
 );
 
-
 export const BibleChapterSkeleton: React.FC = () => (
-  <div className="space-y-spacing-lg animate-pulse">
-    <div className="h-spacing-xl w-spacing-4xl bg-muted rounded mx-auto" />
+  <div className="space-y-spacing-lg" aria-hidden="true" aria-busy="true">
+    <ContentSkeleton variant="block" className="h-spacing-xl w-[280px] mx-auto" />
     <div className="space-y-spacing-md">
       {Array.from({ length: 15 }).map((_, i) => (
-        <div key={i} className="h-spacing-md w-full bg-muted rounded" />
+        <ContentSkeleton key={i} variant="block" className="h-spacing-md w-full" />
       ))}
     </div>
   </div>
 );
 
-export const CatechismParagraphSkeleton: React.FC<{ paragraph?: number }> = ({ paragraph }) => (
-  <div className="space-y-spacing-md animate-pulse py-spacing-md">
+export const CatechismParagraphSkeleton: React.FC<{ paragraph?: number }> = () => (
+  <div className="space-y-spacing-md py-spacing-md" aria-hidden="true" aria-busy="true">
     <div className="flex items-center gap-spacing-xs">
-      <div className="h-spacing-xl w-spacing-2xl bg-muted rounded" />
+      <ContentSkeleton variant="block" className="h-spacing-xl w-spacing-2xl" />
       <div className="h-px flex-1 bg-muted/30" />
     </div>
-    <div className="space-y-spacing-sm">
-      <div className="h-spacing-md w-full bg-muted rounded" />
-      <div className="h-spacing-md w-full bg-muted rounded" />
-      <div className="h-spacing-md w-spacing-md/6 bg-muted rounded" />
-    </div>
+    <ContentSkeleton variant="text" lines={3} />
   </div>
 );
 
 export const LogosChatSkeleton = () => (
-  <div className="flex flex-col h-full space-y-spacing-lg p-spacing-md animate-pulse">
+  <div className="flex flex-col h-full space-y-spacing-lg p-spacing-md" aria-hidden="true" aria-busy="true">
     <div className="flex justify-start gap-spacing-sm">
-      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted shrink-0" />
+      <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
       <div className="space-y-spacing-xs">
-        <div className="h-spacing-3xl w-[200px] rounded-premium rounded-tl-none bg-muted/60" />
-        <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded" />
+        <ContentSkeleton variant="block" className="h-spacing-3xl w-[200px] rounded-tl-none" />
+        <ContentSkeleton variant="block" className="h-spacing-sm w-spacing-2xl" />
       </div>
     </div>
     <div className="flex justify-end gap-spacing-sm">
       <div className="space-y-spacing-xs">
-        <div className="h-spacing-2xl w-[150px] rounded-premium rounded-tr-none bg-primary/10" />
-        <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded ml-auto" />
+        <ContentSkeleton variant="block" className="h-spacing-2xl w-[150px] rounded-tr-none" />
+        <ContentSkeleton variant="block" className="h-spacing-sm w-spacing-2xl ml-auto" />
       </div>
-      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 shrink-0" />
+      <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
     </div>
     <div className="flex justify-start gap-spacing-sm pt-spacing-md">
-      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted shrink-0" />
+      <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
       <div className="space-y-spacing-xs">
-        <div className="h-spacing-4xl w-[240px] rounded-premium rounded-tl-none bg-muted/60" />
-        <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded" />
+        <ContentSkeleton variant="block" className="h-spacing-4xl w-[240px] rounded-tl-none" />
+        <ContentSkeleton variant="block" className="h-spacing-sm w-spacing-2xl" />
       </div>
     </div>
   </div>
 );
 
 export const ReadingSkeleton = () => (
-  <div className="w-full max-w-spacing-3xl mx-auto space-y-spacing-xl py-spacing-2xl animate-in fade-in duration-700">
-    <div className="space-y-spacing-md">
-      <div className="h-spacing-md w-spacing-4xl mx-auto bg-muted rounded-premium-full" />
-      <div className="h-spacing-xl w-spacing-sm/4 mx-auto bg-muted rounded-premium-full" />
+  <div
+    className="w-full max-w-3xl mx-auto space-y-spacing-xl py-spacing-2xl animate-in fade-in duration-700"
+    aria-hidden="true"
+    aria-busy="true"
+  >
+    <div className="space-y-spacing-md flex flex-col items-center">
+      <ContentSkeleton variant="block" className="h-spacing-md w-[180px]" />
+      <ContentSkeleton variant="block" className="h-spacing-xl w-[320px]" />
     </div>
     <div className="space-y-spacing-lg pt-spacing-xl">
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <div key={i} className="flex gap-spacing-md">
-          <div className="h-spacing-md w-spacing-lg shrink-0 mt-spacing-2xs bg-muted/30 rounded-premium-full" />
+          <ContentSkeleton variant="block" className="h-spacing-md w-spacing-lg shrink-0 mt-spacing-2xs" />
           <div className="space-y-spacing-xs flex-1">
-            <div className={`h-spacing-md bg-muted/60 rounded-premium-full ${i % 2 === 0 ? 'w-full' : 'w-[95%]'}`} />
-            <div className={`h-spacing-md bg-muted/40 rounded-premium-full ${i % 3 === 0 ? 'w-spacing-md/5' : 'w-[90%]'}`} />
+            <ContentSkeleton variant="block" className={`h-spacing-md ${i % 2 === 0 ? 'w-full' : 'w-[95%]'}`} />
+            <ContentSkeleton variant="block" className={`h-spacing-md ${i % 3 === 0 ? 'w-[50%]' : 'w-[90%]'}`} />
           </div>
         </div>
       ))}
