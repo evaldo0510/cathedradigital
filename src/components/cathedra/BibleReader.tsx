@@ -236,3 +236,32 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
     </div>
   );
 };
+
+const BibleReaderContinuation: React.FC<{ book: BibleBook; chapter: number }> = ({ book, chapter }) => {
+  const nexus = useMemo(
+    () => resolveBibleAutoNexus({ bookAbbr: book.abbr, bookName: book.name, chapter }),
+    [book.abbr, book.name, chapter],
+  );
+  return (
+    <div className="px-spacing-lg pb-spacing-2xl">
+      <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
+      <div className="mb-spacing-lg">
+        <NexusBubbles />
+      </div>
+      <ReaderContinuation
+        context={{
+          kind: 'bible',
+          id: `${book.abbr}-${chapter}`,
+          graphNodeId: nexus.selfId ?? undefined,
+          meta: {
+            bookAbbr: book.abbr,
+            chapter,
+            totalChapters: book.chapters,
+          },
+        }}
+        suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+      />
+    </div>
+  );
+};
+
