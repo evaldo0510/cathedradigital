@@ -74,7 +74,7 @@ function parseBibleParts(raw: string): { book: string; chapter: number } | null 
   return { book, chapter };
 }
 
-const KIND_SPECS: Record<string, KindSpec> = {
+export const KIND_SPECS: Record<string, KindSpec> = {
   bible: {
     kind: 'bible',
     route: 'study.bible',
@@ -178,7 +178,7 @@ const KIND_ALIASES: Record<string, string> = {
 /* Registro ephemeral (idempotente) via KnowledgeRegistry              */
 /* ------------------------------------------------------------------ */
 
-function ensureNode(
+export function ensureNode(
   spec: KindSpec,
   raw: string,
   labelOverride?: string,

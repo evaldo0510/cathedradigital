@@ -282,6 +282,13 @@ export interface ReaderContinuationProps {
   className?: string;
   /** Callback opcional para telemetria quando um CTA é acionado. */
   onCtaClick?: (suggestion: { label: string; href: string; kind: string }) => void;
+  /**
+   * Sugestões pré-computadas por um adapter do Knowledge Engine
+   * (ex.: `prayerAutoNexus`). Quando presentes, substituem completamente
+   * o pipeline `resolveContinuation` + fallback editorial e são renderizadas
+   * na ordem recebida. Toda URL já vem resolvida via RouteRegistry.
+   */
+  suggestions?: ContinuationSuggestion[];
 }
 
 /**
@@ -306,9 +313,14 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
   context,
   className,
   onCtaClick,
+  suggestions: precomputed,
 }) => {
+  // 0) Sugestões pré-computadas por adapter (Prayer Engine etc.) têm precedência.
+  const hasPrecomputed = !!precomputed && precomputed.length > 0;
+
   // 1) Tenta resolver via KnowledgeGraph (Sprint 2).
   const graphSuggestions = React.useMemo<ContinuationSuggestion[]>(() => {
+    if (hasPrecomputed) return precomputed!;
     if (!context.graphNodeId && (!context.themeIds || context.themeIds.length === 0)) {
       return [];
     }
@@ -319,7 +331,7 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
       currentId: context.graphNodeId,
       themeIds: context.themeIds,
     });
-  }, [context.graphNodeId, context.themeIds, context.kind]);
+  }, [hasPrecomputed, precomputed, context.graphNodeId, context.themeIds, context.kind]);
 
   const usedGraph = graphSuggestions.length > 0;
 
