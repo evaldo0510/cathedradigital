@@ -25,22 +25,32 @@ function readStoredDuration(fallback: 0 | 10 | 20 | 30): 0 | 10 | 20 | 30 {
 
 interface Props {
   suggestedSeconds?: 0 | 10 | 20 | 30;
+  /**
+   * Sobrescreve completamente a duração (ignora presets e localStorage local).
+   * Usado quando o ritmo contemplativo global controla o valor.
+   */
+  forcedSeconds?: number;
 }
 
-const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20 }) => {
-  const [duration, setDuration] = useState<0 | 10 | 20 | 30>(() =>
+const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20, forcedSeconds }) => {
+  const isForced = typeof forcedSeconds === 'number';
+  const [stored, setStored] = useState<0 | 10 | 20 | 30>(() =>
     readStoredDuration(suggestedSeconds),
   );
+  const duration = isForced ? Math.max(0, Math.round(forcedSeconds!)) : stored;
+  const setDuration = (v: 0 | 10 | 20 | 30) => setStored(v);
   const [remaining, setRemaining] = useState<number>(duration);
   const [running, setRunning] = useState(false);
   const rafRef = useRef<number | null>(null);
   const endAtRef = useRef<number>(0);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, String(duration)); } catch { /* silent */ }
+    if (!isForced) {
+      try { localStorage.setItem(STORAGE_KEY, String(stored)); } catch { /* silent */ }
+    }
     setRemaining(duration);
     setRunning(false);
-  }, [duration]);
+  }, [duration, stored, isForced]);
 
   useEffect(() => {
     if (!running) {
