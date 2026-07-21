@@ -7,7 +7,8 @@
  */
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import PrayerPortal, { type PortalHighlight } from './PrayerPortal';
+import type { LucideIcon } from 'lucide-react';
+import PrayerPortal, { type PortalHighlight, type PrayerPortalTheme } from './PrayerPortal';
 import type { Prayer } from '@/hooks/usePrayers';
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
   backHref?: string;
   backLabel?: string;
   onEnter?: () => void;
+  theme?: PrayerPortalTheme;
+  accentIcon?: LucideIcon;
 }
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
@@ -36,10 +39,10 @@ const PrayerPortalStandalone: React.FC<Props> = ({
   backHref,
   backLabel,
   onEnter,
+  theme,
+  accentIcon,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // Prayer sintético — id nil garante que `usePrayerEngineSession` não
-  // encontre linha (hasOpenSession = false) sem quebrar o hook.
   const stubPrayer: Prayer = {
     id: NIL_UUID,
     slug,
@@ -65,8 +68,11 @@ const PrayerPortalStandalone: React.FC<Props> = ({
       backHref={backHref}
       backLabel={backLabel}
       onEnter={onEnter ?? defaultOnEnter}
+      theme={theme}
+      accentIcon={accentIcon}
     />
   );
 };
 
 export default PrayerPortalStandalone;
+
