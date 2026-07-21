@@ -35,6 +35,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
+import { useWakeLock } from '@/hooks/useWakeLock';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 type MissalView = 'celebracao' | 'ordinario' | 'proprio';
