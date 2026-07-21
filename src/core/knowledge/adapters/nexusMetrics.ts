@@ -12,7 +12,7 @@
  *   • `subscribeNexusMetrics` retorna uma função de unsubscribe.
  */
 
-export type NexusAdapter = 'glossary' | 'journey';
+export type NexusAdapter = 'glossary' | 'journey' | 'prayer';
 
 export interface NexusMetricEvent {
   adapter: NexusAdapter;
