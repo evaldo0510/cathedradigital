@@ -314,52 +314,58 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full space-y-spacing-2xl pb-spacing-2xl">
-      <div className="text-center space-y-spacing-md pt-spacing-md">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
-          <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
-        </div>
-        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
-        <p className="text-premium-lg text-muted-foreground font-serif italic">
+    <div className="w-full space-y-[var(--sp-xl)] pb-[var(--sp-xxl)]">
+      <EditorialHero align="center" density="balanced">
+        <EditorialHero.Eyebrow>Litaniae</EditorialHero.Eyebrow>
+        <EditorialHero.Title>Ladainhas</EditorialHero.Title>
+        <EditorialHero.Subtitle>
           Orações de invocação e súplica consagradas pela tradição secular da Igreja.
-        </p>
-      </div>
+        </EditorialHero.Subtitle>
+      </EditorialHero>
 
-      <div className="w-full relative group">
-        <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground transition-colors group-focus-within:text-primary" />
-        <input 
-          value={searchQuery} 
-          onChange={e => setSearchQuery(e.target.value)} 
+      <div className="w-full relative group max-w-2xl mx-auto">
+        <Icons.Search className="absolute left-[var(--sp-m)] top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <input
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
           placeholder="Buscar por título ou categoria..."
-          className="w-full pl-spacing-2xl pr-spacing-md py-spacing-md rounded-premium-full border border-border bg-card text-foreground text-premium-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-premium-md" 
+          aria-label="Buscar ladainha"
+          className="w-full pl-[var(--sp-xl)] pr-[var(--sp-m)] py-[var(--sp-s)] rounded-[var(--radius)] border border-border bg-card text-foreground type-body focus:outline-none focus:ring-2 focus:ring-[hsl(var(--rule-gold))]/40 transition-all"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--sp-m)]">
         {filtered.map(l => (
-          <Button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-spacing-xl rounded-premium-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
-            <div className="absolute top-spacing-0 right-0 p-spacing-xl opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-              <Icons.BookOpen className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
-            </div>
-            <div className="relative z-10 space-y-spacing-md">
-              <span className={`inline-block font-serif px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
-                {l.category}
+          <EditorialCard
+            key={l.id}
+            as="button"
+            interactive
+            onClick={() => setSelectedId(l.id)}
+            className="text-left"
+          >
+            <EditorialCard.Eyebrow>{l.category}</EditorialCard.Eyebrow>
+            <EditorialCard.Title>{l.title}</EditorialCard.Title>
+            {l.latin && (
+              <EditorialCard.Description>
+                <span className="font-serif italic opacity-70">{l.latin}</span>
+              </EditorialCard.Description>
+            )}
+            <EditorialCard.CTA>
+              <span className="inline-flex items-center gap-[var(--sp-xs)] type-rubrica text-primary">
+                Começar oração <Icons.ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
               </span>
-              <div className="space-y-spacing-2xs">
-                <h2 className="text-premium-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
-                {l.latin && <p className="text-premium-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
-              </div>
-              <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary pt-spacing-xs">
-                Começar Oração <Icons.ChevronRight className="w-spacing-sm h-spacing-sm transition-transform group-hover:translate-x-1" />
-              </div>
-            </div>
-          </Button>
+            </EditorialCard.CTA>
+          </EditorialCard>
         ))}
+        {filtered.length === 0 && (
+          <p className="type-caption text-muted-foreground text-center col-span-full py-[var(--sp-l)]">
+            Nenhuma ladainha encontrada.
+          </p>
+        )}
       </div>
     </div>
   );
 };
+
 
 export default LitaniesPage;
