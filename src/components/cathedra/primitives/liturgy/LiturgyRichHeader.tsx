@@ -43,7 +43,7 @@ export const LiturgyRichHeader: React.FC<Props> = ({ liturgy, proper, saintOfDay
   const chips: { label: string; value: string; dot?: string }[] = [];
   if (tempo) chips.push({ label: 'Tempo', value: tempo });
   if (cor) chips.push({ label: 'Cor', value: cor, dot: colorToken ? COLOR_DOT[colorToken] : undefined });
-  if (grau) chips.push({ label: 'Grau', value: grau });
+  if (grau) chips.push({ label: 'Celebração', value: grau });
   if (saintOfDay) chips.push({ label: 'Santo do dia', value: saintOfDay });
   chips.push({ label: 'Saltério', value: `Semana ${semana}` });
 
