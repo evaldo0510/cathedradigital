@@ -75,6 +75,19 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  nexus-perf:
+    name: Nexus perf guardrail
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Guardrail de performance dos adapters do Nexus
+        run: bun scripts/nexus-perf-guardrail.ts
+
   playwright:
     name: Playwright E2E (SEO Glossário)
     runs-on: ubuntu-latest

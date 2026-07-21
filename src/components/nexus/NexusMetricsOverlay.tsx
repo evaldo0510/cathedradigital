@@ -29,6 +29,39 @@ function formatPct(x: number): string {
   return `${Math.round(x * 100)}%`;
 }
 
+/** Baixa o snapshot atual como `nexus-metrics-<timestamp>.json`. */
+function exportSnapshotAsJson(snap: NexusMetricsSnapshot): void {
+  const now = new Date();
+  const iso = now.toISOString();
+  const stamp = iso.replace(/[:.]/g, '-');
+  const payload = {
+    generatedAt: iso,
+    adapters: {
+      glossaryAutoNexus: { ...snap.glossary, hitRate: hitRate(snap.glossary) },
+      journeyAutoNexus: { ...snap.journey, hitRate: hitRate(snap.journey) },
+    },
+    totals: {
+      hits: snap.glossary.hits + snap.journey.hits,
+      misses: snap.glossary.misses + snap.journey.misses,
+    },
+  };
+  try {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nexus-metrics-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch {
+    /* browsers antigos ou contexto sem DOM — no-op */
+  }
+}
+
 export const NexusMetricsOverlay: React.FC = () => {
   if (!import.meta.env.DEV) return null;
 
@@ -105,7 +138,15 @@ export const NexusMetricsOverlay: React.FC = () => {
               })}
             </tbody>
           </table>
-          <div className="mt-2 flex items-center justify-end">
+          <div className="mt-2 flex items-center justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={() => exportSnapshotAsJson(snap)}
+              aria-label="Exportar métricas do Nexus como JSON"
+              className="rounded border border-stitch-outline-variant/40 px-2 py-0.5 text-[10px] uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/60 hover:text-stitch-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+            >
+              Exportar JSON
+            </button>
             <button
               type="button"
               onClick={resetNexusMetrics}

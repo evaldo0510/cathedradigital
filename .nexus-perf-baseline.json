@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-07-21T00:06:24.343Z",
+  "config": {
+    "nGlossary": 20,
+    "nJourney": 20,
+    "repetitions": 5
+  },
+  "adapters": {
+    "glossary": {
+      "hits": 80,
+      "misses": 20,
+      "hitRate": 0.8,
+      "avgMs": 0.0856,
+      "lastMs": 0.0002
+    },
+    "journey": {
+      "hits": 80,
+      "misses": 20,
+      "hitRate": 0.8,
+      "avgMs": 0.0803,
+      "lastMs": 0.0003
+    }
+  }
+}

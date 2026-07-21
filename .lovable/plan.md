@@ -1,74 +1,67 @@
-# Sprint Editorial Geral (SEG) — Cathedra
+# Sprint Final de Refinamento
 
-Você tem razão: expandir o Nexus agora amplifica lacunas de conteúdo. A Onda 4 do Sanctorum (Nexus total) fica **pausada**. O foco passa a ser dignificar cada módulo até virar experiência editorial de livro. O Nexus volta ao fim, quando conectará conteúdo já denso.
+O pedido tem dois blocos com naturezas muito diferentes. Proponho separar:
 
-## Princípio único
+## Bloco A — Auditoria de conformidade Logos 2030 + Stitch (somente leitura)
 
-Nenhum módulo novo. Nenhum redesign visual (Logos 2030 já é a linguagem). Só **profundidade de conteúdo + estrutura editorial + continuidade + Nexus local por módulo**.
+Uma varredura de 11 módulos (Biblioteca, Glossário, Santos, Orações, Rosário, Liturgia, Jornadas, Trilhas, Bíblia, Catecismo, Magistério) em 15 dimensões (duplicação, layout, espaçamento, tipografia, cartões, hero, botões, chrome, footer, animações, loading, empty, erro, Nexus, ReaderContinuation).
 
-Cada sub-sprint entrega:
-1. Schema/tipos expandidos (migração aditiva, `content_status: stub|partial|complete`).
-2. Página como capítulo (blocos narrativos + skeletons + fallbacks graciosos).
-3. Nexus **local** (referências dentro do próprio domínio + link para os já existentes).
-4. Admin de curadoria mínima (`/admin/<modulo>`) + seed de 3 exemplares "complete" para validar.
-5. E2E + Axe + relatório antes×depois (campos preenchidos, LCP, contraste).
+**Entrega:** relatório em `docs/audits/sprint-final-refinamento.md` com:
+- Tabela módulo × dimensão com ✔ / ⚠ / ❌
+- Lista priorizada de arquivos com duplicação real (com paths e linhas)
+- % de aderência por módulo e global
+- Backlog sugerido de refactors, sem executá-los
 
-## Ordem de execução (fixa, uma por vez)
+**Regras:** nenhuma linha de código de produção alterada nesta fase. Sem novos módulos, sem remoção de features.
 
-```text
-P0
- 1. Orações        (Rosário, Via-Sacra, Liturgia das Horas, Missal — modo contemplativo, áudio, foco, progresso)
- 2. Léxico         (verbete = enciclopédia: definição, origem, teologia, Bíblia, CIC, Magistério, Padres, Santos, aplicação, FAQ, termos relacionados)
- 3. Jornadas       (livro: intro, objetivo, tempo, capítulos, meditação, oração final, continuidade)
- 4. Trilhas        (formação: cap → CIC → Bíblia → Santo → Magistério → reflexão → oração → próximo)
+**Por que separar:** aplicar padronização em 11 módulos "de uma vez" é justamente o que produz regressão. Só depois que você aprovar o relatório, abrimos uma sprint dedicada por módulo (ou por dimensão) com escopo controlado.
 
-P1
- 5. Santos         (retomar Sanctorum 2.0 com blocos narrativos, timeline, iconografia, virtudes, milagres, escritos, patronatos, oração, meditação Logos)
- 6. Papas          (biografia, timeline, brasão, lema, encíclicas, exortações, discursos, concílios, contexto, legado)
- 7. Escritores     (biblioteca: biografia, obras, influência, pensamento, leituras, conexões)
+## Bloco B — 3 entregas concretas do pedido
 
-P2
- 8. Liturgia       (Portal: Liturgia do Dia, Missal, Horas, Calendário, Santos do Dia)
- 9. Missal         (missal digital: índices, rubricas, gestos, respostas, comentários, referências, modo celebração)
-10. Calendário     (data → tempo litúrgico, cor, leituras, salmo, evangelho, comentário, santos, orações, docs, CIC)
+Estas são bem escopadas e vão junto:
 
-FINAL
-11. Refinamento visual + Nexus total (agora com conteúdo denso para conectar)
-```
+### B1. Export JSON no `NexusMetricsOverlay`
+- Adicionar botão "Exportar" ao lado do toggle colapsar
+- Gera `nexus-metrics-<timestamp>.json` com snapshot atual: `{ generatedAt, adapters: { glossaryAutoNexus, journeyAutoNexus }, totals }`
+- Cada adapter: `hits`, `misses`, `hitRate`, `avgMs`, `lastMs`, `samples`
+- Download via `Blob` + `URL.createObjectURL` (sem dependências novas)
+- Continua visível apenas em `DEV`
 
-## Sub-sprint 1 — Orações (próxima)
+### B2. Guardrail de performance do Nexus no CI
+- Novo script `scripts/nexus-perf-guardrail.ts`
+- Carrega baseline de `.nexus-perf-baseline.json` (comitado)
+- Roda cenário headless (Vitest node) que resolve N verbetes e M jornadas, coleta métricas via `nexusMetrics.snapshot()`
+- Falha se, para cada adapter:
+  - `hitRate` cair mais que `HIT_RATE_TOLERANCE` (default 5 pp)
+  - `avgMs` piorar mais que `AVG_MS_TOLERANCE` (default 20%)
+- Limites configuráveis por env vars, com defaults no script
+- Novo job no workflow `.github/workflows/seo-and-tests.yml` chamado `nexus-perf` (roda em PR e main)
+- Comando local: `bun scripts/nexus-perf-guardrail.ts --update` regrava o baseline
 
-**Escopo mínimo entregável**:
-- `prayers` schema recebe: `blocks jsonb` (introdução, mistério/estação/hora, meditação, fruto, oração final), `audio_url`, `duration_min`, `bible_refs jsonb`, `catechism_refs int[]`, `content_status`.
-- `PrayerDetailPage.tsx` vira leitor contemplativo: modo foco (atalho `f`, reaproveita padrão do Nexus), progresso persistido (`ritual_progress` já existe), continuidade automática (retomar exatamente onde parou), player de áudio nativo com legenda opcional.
-- **Rosário**: navegação por mistério (Gozosos/Dolorosos/Gloriosos/Luminosos), meditação por dezena, referência bíblica em cada mistério, oração final variável.
-- **Via-Sacra**: 14 estações + 15ª opcional, meditação + oração + reflexão por estação.
-- **Liturgia das Horas**: Laudes/Vésperas/Completas mínimo, salmos do dia via edge existente, hino, leitura breve, cântico.
-- **Missal**: entra na Sub-sprint 9 (aqui apenas link "Ver no Missal").
-- Nexus local: cada bloco cita Bíblia + CIC clicáveis via `openNexusRef`.
-- Admin: `/admin/pray` lista orações por `content_status`, edição inline dos blocos, seed de 3 completas (Rosário Gozoso, Via-Sacra tradicional, Completas).
-- Testes: E2E de continuidade (fechar/reabrir na estação 7), Axe em modo foco, snapshot dark.
+### B3. Teste unitário do `NexusSourceBadge`
+- `src/components/nexus/__tests__/NexusSourceBadge.test.tsx` (Vitest + Testing Library)
+- Cobre:
+  - Foco pelo teclado abre o tooltip (Radix expõe `data-state="open"` no trigger)
+  - `Enter` e `Espaço` disparam abertura quando aplicável
+  - `Esc` fecha o tooltip
+  - `aria-label` inclui `kind` e `id` corretos
+- Usa `@testing-library/user-event` já disponível no projeto
 
-**Relatório**: nº orações `complete`, tempo médio de sessão, tap-through Nexus local.
+## Ordem de execução sugerida
 
-## Detalhes técnicos transversais
+1. Bloco B (baixo risco, entregável hoje)
+2. Bloco A (auditoria — precisa de leitura extensa; entrega o relatório sem tocar código)
+3. Depois do relatório, você escolhe quais módulos consolidar primeiro em sprints dedicadas
 
-- **Schema**: sempre migração aditiva, `GRANT` completo + RLS, `content_status` com índice, defaults `'{}'::jsonb` e `ARRAY[]::text[]`.
-- **Tipos**: superset em `src/types/<modulo>.ts`; nunca editar `supabase/types.ts`.
-- **Adapters**: cada módulo ganha `ContentAdapter` em `src/core/content/adapters/` seguindo contratos já existentes (Bible/Catechism/Magisterium) — assim o `UniversalReader` renderiza tudo sem saber a origem.
-- **Nexus local**: extensão de `openNexusRef()` só se surgir `NexusRef` novo (ex.: `{kind:'prayer', slug}`) — nunca criar navegação paralela.
-- **Continuidade**: reaproveita `ReaderContinuation`, `useReadingMarks`, `ritual_progress`.
-- **Fallback conteúdo**: `content_status='stub'` → renderiza o que existe + badge "Ficha em curadoria" (nunca vazio mudo).
-- **Rollback**: `?legacy=1` mantém página anterior durante validação de cada sub-sprint.
-- **CI**: cada módulo entra nos workflows já existentes (a11y, contrast, editorial-hero, playwright).
+## Detalhes técnicos
 
-## Regras de execução
+- `nexusMetrics.snapshot()` já expõe o estado; nenhuma mudança no pub/sub
+- Guardrail roda em Node puro (jsdom não necessário — adapters não dependem de DOM)
+- Baseline versionado no repo para reprodutibilidade; regeneração explícita
+- Teste do badge usa `TooltipProvider` do shadcn como wrapper
 
-- **Uma sub-sprint por vez**. Não abrir a próxima sem seu OK explícito + relatório antes×depois.
-- **Sem features paralelas**, sem deps novas sem aprovação.
-- Sanctorum 2.0 **Onda 4 (Nexus total)** e **Onda 5 (pipeline)** entram fundidas no passo 11 final, quando todos os módulos tiverem conteúdo denso para o Nexus conectar.
+## Fora de escopo desta sprint
 
-## Confirmação necessária
-
-1. Aprovo iniciar por **Sub-sprint 1 — Orações** com o escopo acima?
-2. Dentro de Orações, começo pelo **Rosário** (maior uso) ou pela **Liturgia das Horas** (mais complexa, valida o padrão)?
+- Alterações de UI/UX em produção nos 11 módulos
+- Remoção de código legado
+- Novos design tokens
