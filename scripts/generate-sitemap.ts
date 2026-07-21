@@ -76,11 +76,45 @@ async function generateSitemap() {
     xml += '  </url>\n';
   });
 
+  // Liturgia das Horas — 7 horas canônicas (canônicas sem data) + snapshot do dia
+  const HOUR_SLUGS = ['oficio', 'laudes', 'tercia', 'sexta', 'noa', 'vesperas', 'completas'];
+  HOUR_SLUGS.forEach((h) => {
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}/breviary?h=${h}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += '  </url>\n';
+    // Snapshot da hora + data ISO (dia da geração) — permite indexar o Próprio do dia.
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}/breviary?h=${h}&amp;d=${lastmod}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.6</priority>\n`;
+    xml += '  </url>\n';
+  });
+
+  // Missal — Próprio e Ordinário do dia + snapshot com data ISO
+  ['proprio', 'ordinario'].forEach((v) => {
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}/missal?view=${v}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += '  </url>\n';
+  });
+  xml += '  <url>\n';
+  xml += `    <loc>${BASE_URL}/missal?view=proprio&amp;d=${lastmod}</loc>\n`;
+  xml += `    <lastmod>${lastmod}</lastmod>\n`;
+  xml += `    <changefreq>daily</changefreq>\n`;
+  xml += `    <priority>0.6</priority>\n`;
+  xml += '  </url>\n';
+
   xml += '</urlset>';
 
   const sitemapPath = path.join(process.cwd(), 'public', 'sitemap.xml');
   fs.writeFileSync(sitemapPath, xml);
-  console.log(`✅ Sitemap generated with ${publicRoutes.length} rotas + ${glossary.length} verbetes at ${sitemapPath}.`);
+  console.log(`✅ Sitemap generated with ${publicRoutes.length} rotas + ${glossary.length} verbetes + ${HOUR_SLUGS.length * 2} horas litúrgicas + 3 missal at ${sitemapPath}.`);
 
   // Generate robots.txt
   let robotsTxt = `User-agent: *\nAllow: /\n`;

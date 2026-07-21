@@ -1,42 +1,40 @@
 /**
  * BreviaryPage — Liturgia das Horas migrada ao Prayer Engine v2.
  *
- * - Ordinário (invitatório, hino, oração conclusiva, bênção) vem do banco
- *   via `usePrayerHierarchy('liturgia-das-horas')`. Cada uma das 7 horas
- *   canônicas é uma seção hierárquica com seus blocos.
- * - Próprio do dia (antífona, salmodia, leitura breve, responsório,
- *   cântico evangélico, preces, oração conclusiva) é gerado idempotentemente
- *   pela edge function `liturgy-hours-office` a partir das leituras do dia
- *   e cacheado em `liturgy_hours_offices` — mesmo padrão da Onda B.
+ * - Ordinário: `usePrayerHierarchy('liturgia-das-horas')` (banco).
+ * - Próprio: `useLiturgyHoursOffice` (edge function idempotente + IDB).
  * - Persistência, favoritos, marcadores, retomada, ReaderContinuation e
  *   Nexus automático são delegados ao `PrayerEngineReader`.
- * - SEO/JSON-LD via `SEOHead`.
+ * - Deep links: `?h=<slug>&d=YYYY-MM-DD` restauram exatamente hora + data.
+ * - JSON-LD (Schema.org): `LiturgicalService`/`Article` por hora.
+ * - Prefetch offline: quando as leituras do dia carregam, dispara as 7 horas
+ *   idempotentemente para IDB.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useQueryClient } from '@tanstack/react-query';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 import { usePrayers } from '@/hooks/usePrayers';
 import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import {
   useLiturgyHoursOffice,
+  prefetchAllHoursForDay,
+  ALL_HOUR_SLUGS,
   type HourSlug,
+  type LiturgyHoursOfficeRow,
 } from '@/hooks/useLiturgyHoursOffice';
+import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { PrayerEngineReader } from './PrayerEngineReader';
 import { LiturgyHoursOfficeCards } from './primitives/liturgy/LiturgyHoursOfficeCards';
+import { LiturgyDateNav } from './primitives/liturgy/LiturgyDateNav';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { flattenSectionToBlocks } from '@/prayer-engine/loadPrayerHierarchy';
 import SEOHead from '@/components/SEOHead';
 
-const HOUR_ORDER: HourSlug[] = [
-  'oficio',
-  'laudes',
-  'tercia',
-  'sexta',
-  'noa',
-  'vesperas',
-  'completas',
-];
+const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
 const HOUR_ICON: Record<HourSlug, React.ReactNode> = {
   oficio:    <Icons.BookOpen className="w-spacing-md h-spacing-md" />,
@@ -59,14 +57,112 @@ function suggestedHourFor(now: Date): HourSlug {
   return 'completas';
 }
 
+function isHour(s: string | null): s is HourSlug {
+  return !!s && (ALL_HOUR_SLUGS as string[]).includes(s);
+}
+
+function parseDateParam(raw: string | null): Date {
+  if (!raw || !/^\d{4}-\d{2}-\d{2}$/.test(raw)) return new Date();
+  const [y, m, d] = raw.split('-').map(Number);
+  const nd = new Date(y, m - 1, d);
+  return Number.isNaN(nd.getTime()) ? new Date() : nd;
+}
+
+/** JSON-LD por Hora — Schema.org LiturgicalService + Article para rich results. */
+function buildOfficeJsonLd(params: {
+  hourTitle: string;
+  hourLatin: string | null;
+  hourSlug: HourSlug;
+  isoDate: string;
+  office: LiturgyHoursOfficeRow | null;
+  seasonNote: string | null;
+}) {
+  const { hourTitle, hourLatin, hourSlug, isoDate, office, seasonNote } = params;
+  const canonical = `${CANONICAL_BASE}/breviary?h=${hourSlug}&d=${isoDate}`;
+  const description = office?.concluding_prayer
+    ? `${hourTitle} da Liturgia das Horas — ${office.concluding_prayer.slice(0, 220)}…`
+    : `${hourTitle} da Liturgia das Horas segundo o rito romano.`;
+
+  const event = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${hourTitle} — Liturgia das Horas`,
+    alternateName: hourLatin ?? undefined,
+    startDate: isoDate,
+    eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    description,
+    inLanguage: 'pt-BR',
+    isAccessibleForFree: true,
+    url: canonical,
+    location: {
+      '@type': 'VirtualLocation',
+      url: canonical,
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Cathedra Digital',
+      url: CANONICAL_BASE,
+    },
+    about: seasonNote ?? 'Officium Divinum',
+  };
+
+  const article = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${hourTitle} · Liturgia das Horas`,
+    articleSection: 'Liturgia das Horas',
+    inLanguage: 'pt-BR',
+    datePublished: office?.generated_at ?? new Date(isoDate + 'T06:00:00').toISOString(),
+    dateModified: office?.generated_at ?? new Date().toISOString(),
+    author: { '@type': 'Organization', name: 'Cathedra Digital' },
+    publisher: { '@type': 'Organization', name: 'Cathedra Digital', url: CANONICAL_BASE },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    description,
+  };
+
+  return [event, article];
+}
+
 const BreviaryPage: React.FC = () => {
-  const today = useMemo(() => new Date(), []);
-  const isoDate = today.toISOString().slice(0, 10);
-  const suggested = useMemo(() => suggestedHourFor(today), [today]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const qc = useQueryClient();
 
-  const [selectedHour, setSelectedHour] = useState<HourSlug | null>(null);
+  const selectedDate = useMemo(
+    () => parseDateParam(searchParams.get('d')),
+    [searchParams],
+  );
+  const isoDate = toIsoDateKey(selectedDate);
+  const todayIso = toIsoDateKey(new Date());
+  const isToday = isoDate === todayIso;
 
-  const { hierarchy, activeSection, blocks, loading } = usePrayerHierarchy(
+  const hourParam = searchParams.get('h');
+  const selectedHour: HourSlug | null = isHour(hourParam) ? hourParam : null;
+
+  const suggested = useMemo(() => suggestedHourFor(new Date()), []);
+
+  const setSelectedHour = useCallback(
+    (h: HourSlug | null) => {
+      const next = new URLSearchParams(searchParams);
+      if (h) next.set('h', h);
+      else next.delete('h');
+      setSearchParams(next, { replace: false });
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const setSelectedDate = useCallback(
+    (d: Date) => {
+      const next = new URLSearchParams(searchParams);
+      const iso = toIsoDateKey(d);
+      if (iso === todayIso) next.delete('d');
+      else next.set('d', iso);
+      setSearchParams(next, { replace: false });
+    },
+    [searchParams, setSearchParams, todayIso],
+  );
+
+  const { hierarchy, activeSection, loading } = usePrayerHierarchy(
     'liturgia-das-horas',
     selectedHour ?? undefined,
   );
@@ -76,28 +172,46 @@ const BreviaryPage: React.FC = () => {
     [prayers],
   );
 
-  const { liturgy } = useDailyLiturgy(today);
+  const { liturgy } = useDailyLiturgy(selectedDate);
   const { office, isLoading: officeLoading } = useLiturgyHoursOffice(
     isoDate,
     selectedHour,
     liturgy,
   );
 
-  // Reader ativo
+  // Prefetch das 7 horas (offline-first, idempotente) quando o dia carrega.
+  useEffect(() => {
+    if (!liturgy) return;
+    void prefetchAllHoursForDay(qc, isoDate, liturgy);
+  }, [qc, isoDate, liturgy]);
+
+  // ── Reader ativo ──
   if (selectedHour && prayer && hierarchy && activeSection) {
-    // Recalcula blocos garantindo pertencer à hora selecionada (defesa contra
-    // pickSectionForDay caindo em outra seção quando o slug bate).
     const section =
       hierarchy.sections.find((s) => s.slug === selectedHour) ?? activeSection;
     const hourBlocks = flattenSectionToBlocks(hierarchy, section);
+    const canonical = `${CANONICAL_BASE}/breviary?h=${selectedHour}&d=${isoDate}`;
+    const jsonLd = buildOfficeJsonLd({
+      hourTitle: section.title,
+      hourLatin: section.subtitle ?? null,
+      hourSlug: selectedHour,
+      isoDate,
+      office,
+      seasonNote: office?.season_note ?? null,
+    });
 
     return (
       <>
         <SEOHead
-          title={`${section.title} · Liturgia das Horas — Cathedra`}
-          description={`Reze ${section.title} (${section.subtitle ?? ''}) da Liturgia das Horas com o Próprio do dia gerado a partir da liturgia católica.`}
-          path="/breviary"
+          title={`${section.title} · Liturgia das Horas`}
+          description={`Reze ${section.title}${section.subtitle ? ` (${section.subtitle})` : ''} da Liturgia das Horas — ${isoDate} — com Ordinário e Próprio do dia.`}
+          path={`/breviary?h=${selectedHour}${isToday ? '' : `&d=${isoDate}`}`}
         />
+        <Helmet>
+          <link rel="canonical" href={canonical} />
+          <meta property="og:url" content={canonical} />
+          <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        </Helmet>
         <PrayerEngineReader
           prayer={prayer}
           blocks={hourBlocks}
@@ -117,16 +231,16 @@ const BreviaryPage: React.FC = () => {
     );
   }
 
-  // Seletor
+  // ── Seletor ──
   const sections = hierarchy?.sections ?? [];
-  const orderedSections = HOUR_ORDER
+  const orderedSections = ALL_HOUR_SLUGS
     .map((slug) => sections.find((s) => s.slug === slug))
     .filter((s): s is NonNullable<typeof s> => !!s);
 
   return (
     <>
       <SEOHead
-        title="Breviário · Liturgia das Horas — Cathedra"
+        title="Breviário · Liturgia das Horas"
         description="Reze o Ofício Divino: sete horas canônicas com Ordinário do rito romano e Próprio do dia atualizado pelas leituras da liturgia."
         path="/breviary"
       />
@@ -145,6 +259,8 @@ const BreviaryPage: React.FC = () => {
             A Liturgia das Horas santifica cada momento do dia pela oração da Igreja.
           </p>
         </div>
+
+        <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
         <div className="text-center">
           <p className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-sm">
