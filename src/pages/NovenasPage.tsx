@@ -405,6 +405,31 @@ const NovenasPage: React.FC = () => {
         <br />
         Voltar para <Link to="/oracao" className="text-primary hover:underline">Livro de Orações</Link>.
       </p>
+
+      <AlertDialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Como importar este progresso?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você pode <strong>mesclar</strong> com o progresso atual (mantém os dias já concluídos e une com o arquivo) ou <strong>substituir</strong> tudo pelo conteúdo do arquivo.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-[var(--sp-xs)]">
+            <AlertDialogCancel onClick={() => (pendingImportRef.current = null)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => runImport('replace')}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Substituir
+            </AlertDialogAction>
+            <AlertDialogAction onClick={() => runImport('merge')}>
+              Mesclar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
