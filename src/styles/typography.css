@@ -1,0 +1,80 @@
+/**
+ * CAT-SP4 · Onda A — Tipografia Universal
+ * Escala única aplicada por classe utilitária. Substitui text-* arbitrários.
+ * Regra: display/h1/h2/h3 usam --font-display (serifa editorial),
+ *        demais usam --font-body (sans humanista).
+ * NÃO usar valores fora desta escala em novos componentes.
+ */
+
+.type-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw + 1rem, 4.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.type-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.4vw + 1rem, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.4vw + 0.9rem, 2.125rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+.type-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 0.6vw + 1rem, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  font-weight: 500;
+}
+
+.type-lead {
+  font-family: var(--font-body);
+  font-size: 1.125rem;   /* 18px */
+  line-height: 1.6;
+  font-weight: 400;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.type-body {
+  font-family: var(--font-body);
+  font-size: 1rem;       /* 16px */
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.type-caption {
+  font-family: var(--font-body);
+  font-size: 0.875rem;   /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--foreground) / 0.7);
+}
+
+.type-meta {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;  /* 13px */
+  line-height: 1.4;
+  color: hsl(var(--foreground) / 0.6);
+  letter-spacing: 0.005em;
+}
+
+/* Rubrica: kicker/eyebrow litúrgico — versalete espaçado, dourado no ambiente atual */
+.type-rubrica {
+  font-family: var(--font-body);
+  font-size: 0.75rem;    /* 12px */
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--rule-gold));
+}
