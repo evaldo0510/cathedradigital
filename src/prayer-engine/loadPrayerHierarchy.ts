@@ -26,10 +26,12 @@ export interface DBMystery {
   section_id: string;
   slug: string;
   title: string;
+  subtitle: string | null;
   order_index: number;
   gospel_ref: string | null;
   meditation: string | null;
   fruit: string | null;
+  meta: Record<string, unknown> | null;
 }
 export interface DBBlock {
   id: string;
