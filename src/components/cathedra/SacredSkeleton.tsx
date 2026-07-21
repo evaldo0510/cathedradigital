@@ -1,26 +1,29 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
+import { ContentSkeleton } from './primitives/ContentSkeleton';
 
 export const PageHeaderSkeleton: React.FC = () => (
-  <div className="text-center space-y-spacing-md pt-spacing-xl mb-spacing-xl animate-pulse">
-    <div className="w-spacing-2xl h-spacing-2xl mx-auto rounded-premium bg-muted" />
-    <div className="h-spacing-xl w-spacing-4xl mx-auto bg-muted rounded-premium" />
-    <div className="h-spacing-md w-spacing-4xl mx-auto bg-muted/60 rounded-premium" />
+  <div className="text-center space-y-spacing-md pt-spacing-xl mb-spacing-xl flex flex-col items-center">
+    <ContentSkeleton variant="block" className="w-spacing-2xl h-spacing-2xl" />
+    <ContentSkeleton variant="block" className="h-spacing-xl w-spacing-4xl" />
+    <ContentSkeleton variant="block" className="h-spacing-md w-spacing-4xl" />
   </div>
 );
 
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-lg animate-pulse">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-spacing-4xl rounded-premium bg-muted/30 border border-border/40 shadow-premium-md" />
+      <Card key={i} className="h-spacing-4xl rounded-premium border border-border/40 shadow-premium-md overflow-hidden">
+        <ContentSkeleton variant="block" className="h-full w-full rounded-none" />
+      </Card>
     ))}
   </div>
 );
 
 export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
-  <div className="space-y-spacing-md animate-pulse">
+  <div className="space-y-spacing-md">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="h-spacing-3xl rounded-premium bg-muted/20 border border-border/30" />
+      <ContentSkeleton key={i} variant="block" className="h-spacing-3xl border border-border/30" />
     ))}
   </div>
 );
