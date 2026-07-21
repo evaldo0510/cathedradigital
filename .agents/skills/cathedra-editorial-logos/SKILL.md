@@ -1,94 +1,101 @@
 ---
 name: cathedra-editorial-logos
-description: Voz editorial do Cathedra. Use ao escrever/revisar títulos, subtítulos, meditações, introduções, citações, perguntas contemplativas, CTAs e microcopy. Garante tom espiritual profundo, sem jargão tech nem clichê devocional raso.
+description: Estrutura editorial obrigatória de toda página de conteúdo do Cathedra (verbetes, orações, santos, jornadas, mistérios, estações, capítulos). Garante o fluxo Hero → Introdução → Conteúdo → Meditação Logos → Aplicação → Referências → Próximo passo → ReaderContinuation.
 ---
 
 # Editorial Logos
 
-A voz do Cathedra. Cada palavra escolhida conduz ao interior — nunca à ansiedade, urgência ou dopamina.
+Toda página editorial do Cathedra segue a mesma arquitetura de leitura. Não existe página "fria" — cada conteúdo tem introdução, corpo, meditação, aplicação, referências e continuidade.
 
-## Princípios da voz
+## Estrutura canônica
 
-1. **Interior antes de exterior.** Falamos ao coração, não ao consumidor.
-2. **Concreto antes de abstrato.** "A cruz que carregas hoje" > "sua jornada espiritual".
-3. **Silêncio antes de ruído.** Frase curta, respiração, pausa. Não empilhar adjetivos.
-4. **Tradição antes de novidade.** Vocabulário da Igreja (oração, silêncio, contrição, ação de graças, ofício, meditação) — não "conteúdo", "experiência", "jornada gamificada".
-5. **Convite antes de instrução.** "Detém-te um instante" > "Clique para começar".
+```
+1. Hero               → EditorialHero (título, eyebrow, meta)
+2. Introdução         → parágrafo curto que situa o leitor
+3. Conteúdo principal → corpo do verbete/oração/santo/etc.
+4. Meditação Logos    → contemplação orientada (3–6 frases)
+5. Aplicação          → convite concreto ao coração
+6. Referências        → Bíblia, CIC, Magistério, Doutores (com fonte precisa)
+7. Próximo passo      → CTA único e sereno
+8. ReaderContinuation → continuidade na peregrinação (próximo item, jornada relacionada)
+```
 
-## Vocabulário
+Nenhuma seção pode ser omitida. Se algum conteúdo não tem uma delas, a página não está pronta.
+
+## Regras por seção
+
+### 1. Hero
+- `EditorialHero` sempre. Um único H1.
+- Eyebrow contextualiza (tempo litúrgico, ambiente, categoria).
+- Sem CTA no Hero — o CTA vive no "Próximo passo".
+
+### 2. Introdução
+- 2 a 4 frases. Situa o leitor: o que é, por que importa, onde se encaixa.
+- Nunca "Bem-vindo(a)". Começa direto.
+
+### 3. Conteúdo principal
+- Corpo específico do módulo (definição do verbete, texto da oração, biografia do santo, etc.).
+- Sem listas rasas onde cabe prosa.
+- Densidade adequada ao ambiente (`biblioteca` = mais denso; `igreja/claustro` = mais respirado).
+
+### 4. Meditação Logos
+- 3 a 6 frases.
+- Estrutura interna: verdade contemplada → imagem concreta → convite ao coração.
+- Não é comentário acadêmico. Não é sermão. É contemplação.
+
+### 5. Aplicação
+- 1 pergunta contemplativa **ou** 1 propósito concreto.
+- "Onde o Senhor me pede a mesma fidelidade hoje?" ✓
+- "Reserve 5 minutos hoje para rezar por..." ✓
+- Nunca lista de tarefas.
+
+### 6. Referências
+- Mínimo 3, curadas: 1 canônica (Bíblia ou CIC) + 1 magisterial + 1 devocional/santo.
+- Formato: obra + seção. `CIC 2559`, `Confissões X, 27`, `Mt 6,9-13`.
+- Conectadas via Nexus (`resolveNexusHref`), popover em hover.
+
+### 7. Próximo passo
+- Um CTA. Verbo suave.
+- "Iniciar a oração", "Ler o capítulo seguinte", "Conhecer Santa Teresa".
+
+### 8. ReaderContinuation
+- Componente `ReaderContinuation` no rodapé.
+- Sugere o próximo item da peregrinação (não "conteúdo relacionado" genérico).
+- Sempre presente, mesmo em página final de série (nesse caso, aponta para o topo do módulo ou jornada correlata).
+
+## Voz editorial (aplicada a todas as seções)
+
+- Interior antes de exterior. Concreto antes de abstrato. Silêncio antes de ruído.
+- Vocabulário da Igreja (oração, recolhimento, contrição, ofício, mistério). Sem jargão tech.
+- Sem exclamações. Sem emojis. Sem urgência artificial.
+- Frase curta. Depois uma mais longa que respira. Depois curta.
+- Citações sempre com fonte precisa (autor + obra + seção).
+- Teste do silêncio: se ler em voz alta cria calma, aprovar. Se agita, reescrever.
 
 ### Preferir
-- Recolher-se, deter-se, permanecer, contemplar, escutar
-- Oração, súplica, louvor, ação de graças
-- Silêncio, presença, memória, propósito
-- Peregrino, alma, coração, interior
-- Ofício, mistério, meditação, exame
+Recolher-se, deter-se, permanecer, contemplar, escutar, mistério, ofício, exame.
 
 ### Evitar
-- "Usuários", "plataforma", "engajamento", "jornada" (no sentido tech)
-- "Conteúdo espiritual", "experiência premium"
-- "Descubra", "explore agora", "não perca"
-- "Bem-vindo(a)!", "Vamos começar?", exclamações em geral
-- "Fé + tecnologia", "acesso ilimitado"
-- Emojis, exclamações duplas, reticências dramáticas
+"Usuários", "plataforma", "engajamento", "conteúdo espiritual", "experiência premium", "descubra", "não perca", "bem-vindo(a)!".
 
-## Formatos canônicos
+## Checklist antes de aprovar página editorial
 
-### Título de página âncora
-- 2 a 6 palavras. Sem exclamação. Latim discreto permitido (`Contemplatio`, `Poenitentia`, `Sanctorum`).
-- Exemplos: "Rosário", "Via Sacra", "Ofício das Horas", "Exame de Consciência".
+- [ ] Hero com um único H1
+- [ ] Introdução presente (não pula direto ao conteúdo)
+- [ ] Conteúdo principal denso e específico
+- [ ] Meditação Logos escrita (não gerada aleatoriamente)
+- [ ] Aplicação — 1 pergunta ou propósito concreto
+- [ ] Mínimo 3 referências, com fonte precisa, via Nexus
+- [ ] Próximo passo — 1 CTA sereno
+- [ ] `ReaderContinuation` renderiza item real
+- [ ] Nenhuma exclamação, nenhum emoji, nenhum termo tech
+- [ ] Título ≤ 6 palavras; meta description ≤ 160 chars
 
-### Eyebrow (rótulo acima do H1)
-- 1 a 3 palavras. Contextualiza ambiente ou tempo litúrgico.
-- Exemplos: "Núcleo espiritual", "Tempo da Quaresma", "Doutores da Igreja".
+## O que rejeitar
 
-### Subtítulo / meta description
-- 1 frase. Máximo 160 caracteres. Descreve, não vende.
-- Bom: "Meditação dos mistérios da vida de Cristo, na cadência tradicional do Rosário."
-- Ruim: "A melhor experiência de Rosário digital, com IA e gamificação!"
-
-### Meditação (dentro de mistério, estação, hora)
-- Estrutura: cena bíblica concreta → verdade contemplada → convite ao coração.
-- 3 a 6 frases. Sem listas, sem negrito interno.
-- Evita segunda pessoa exortativa ("você precisa"). Prefere primeira pessoa comum ou terceira.
-
-### Pergunta contemplativa
-- Uma pergunta, aberta, sem sim/não.
-- "Onde o Senhor me pede a mesma fidelidade hoje?" ✓
-- "Você está sendo fiel?" ✗
-
-### CTA
-- Verbo no imperativo suave ou infinitivo. Sem urgência.
-- "Iniciar a oração", "Continuar de onde parei", "Ler o Ofício".
-- Nunca: "Comece agora!", "Não perca!", "Descubra!"
-
-### Citação
-- Sempre com autor + obra + seção.
-- "Não te inquietes por saber muito, mas por amar muito." — *Santa Teresa d'Ávila, Castelo Interior* IV, 1.
-- Nunca citação órfã.
-
-## Ritmo
-
-- Frase curta. Depois uma longa que respira e desenha o pensamento com calma. Depois curta.
-- Um parágrafo = uma ideia.
-- Espaço em branco é parte do texto.
-
-## Checklist ao revisar copy
-
-- [ ] Nenhuma exclamação (exceto em citação litúrgica)
-- [ ] Nenhum emoji
-- [ ] Nenhum termo tech genérico
-- [ ] Citações com fonte precisa
-- [ ] Título ≤ 6 palavras nas páginas âncora
-- [ ] Meta description ≤ 160 chars, informativa
-- [ ] CTA sem urgência artificial
-- [ ] Passa no "teste do silêncio": se ler em voz alta cria calma, aprovar. Se agita, reescrever.
-
-## O que reescrever imediatamente
-
-- "Bem-vindo(a) ao Cathedra!" → "Cathedra."
-- "Descubra o poder da oração" → "Oração."
-- "Sua jornada espiritual começa aqui" → "Detém-te um instante."
-- "Experiência premium de Rosário" → "Rosário."
-
-Menos é mais. Sempre.
+- Página que salta direto do Hero para lista de itens.
+- Meditação genérica reutilizada em várias páginas.
+- Referência sem fonte precisa ("Santo Agostinho disse..." solto).
+- Múltiplos CTAs concorrentes no rodapé.
+- Ausência de `ReaderContinuation`.
+- Copy com jargão tech ou tom de landing page comercial.
