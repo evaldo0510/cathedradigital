@@ -825,7 +825,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
             {currentMystery.title}
           </h3>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button type="button" variant="pill-active" size="pill" onClick={goNext}>
+            <Button type="button" variant="pill-active" size="pill" onClick={goNextRhythmed}>
               <ArrowRight aria-hidden />
               Continuar para o próximo mistério
             </Button>
