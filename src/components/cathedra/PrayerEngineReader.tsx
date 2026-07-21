@@ -126,6 +126,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   contentStyle,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
+  const { rhythm } = useContemplativeRhythm();
 
   // Índice atual derivado do cursor persistido.
   const cursorIndex = useMemo(() => {
