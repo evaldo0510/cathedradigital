@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
 interface Verse {
   number: number;
@@ -203,23 +204,8 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       </div>
 
       {/* Bloco de continuidade — fim do capítulo */}
-      <div className="px-spacing-lg pb-spacing-2xl">
-        <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
-        <div className="mb-spacing-lg">
-          <NexusBubbles />
-        </div>
-        <ReaderContinuation
-          context={{
-            kind: 'bible',
-            id: `${book.abbr}-${chapter}`,
-            meta: {
-              bookAbbr: book.abbr,
-              chapter,
-              totalChapters: book.chapters,
-            },
-          }}
-        />
-      </div>
+      <BibleReaderContinuation book={book} chapter={chapter} />
+
 
       {/* Navigation Footer */}
       <div className="fixed bottom-24 left-0 right-0 px-6 pointer-events-none">
