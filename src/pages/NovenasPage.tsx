@@ -54,14 +54,50 @@ function durationBucket(n: Novena): DurationBucket {
   return 'longa';
 }
 
+type StoredFilters = {
+  q?: string;
+  category?: string;
+  patron?: string;
+  duration?: 'all' | DurationBucket;
+};
+
+function readStoredFilters(): StoredFilters {
+  try {
+    const raw = localStorage.getItem(FILTERS_STORAGE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as StoredFilters;
+  } catch {
+    return {};
+  }
+}
+
 const NovenasPage: React.FC = () => {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<string>('all');
-  const [patron, setPatron] = useState<string>('all');
-  const [duration, setDuration] = useState<'all' | DurationBucket>('all');
-  const [showFilters, setShowFilters] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Prioridade: URL → localStorage → default.
+  const initial = useMemo(() => {
+    const stored = readStoredFilters();
+    const get = (k: string, fallback = 'all') => searchParams.get(k) ?? stored[k as keyof StoredFilters] ?? fallback;
+    return {
+      query: (searchParams.get('q') ?? stored.q ?? '') as string,
+      category: get('category'),
+      patron: get('patron'),
+      duration: get('duration') as 'all' | DurationBucket,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [query, setQuery] = useState(initial.query);
+  const [category, setCategory] = useState<string>(initial.category);
+  const [patron, setPatron] = useState<string>(initial.patron);
+  const [duration, setDuration] = useState<'all' | DurationBucket>(initial.duration);
+  const [showFilters, setShowFilters] = useState(
+    initial.category !== 'all' || initial.patron !== 'all' || initial.duration !== 'all',
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingImportRef = useRef<unknown>(null);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(NOVENAS.map((n) => n.category))).sort(),
@@ -71,6 +107,30 @@ const NovenasPage: React.FC = () => {
     () => Array.from(new Set(NOVENAS.map((n) => n.patron))).sort(),
     [],
   );
+
+  // Sincroniza URL + localStorage sempre que filtros mudam.
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    const setOrDel = (k: string, v: string, empty: string) => {
+      if (v === empty || v === '') next.delete(k);
+      else next.set(k, v);
+    };
+    setOrDel('q', query, '');
+    setOrDel('category', category, 'all');
+    setOrDel('patron', patron, 'all');
+    setOrDel('duration', duration, 'all');
+    setSearchParams(next, { replace: true });
+
+    try {
+      localStorage.setItem(
+        FILTERS_STORAGE_KEY,
+        JSON.stringify({ q: query, category, patron, duration } satisfies StoredFilters),
+      );
+    } catch {
+      /* ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, category, patron, duration]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -92,6 +152,7 @@ const NovenasPage: React.FC = () => {
     (category !== 'all' ? 1 : 0) + (patron !== 'all' ? 1 : 0) + (duration !== 'all' ? 1 : 0);
 
   const clearFilters = () => {
+    setQuery('');
     setCategory('all');
     setPatron('all');
     setDuration('all');
@@ -124,24 +185,37 @@ const NovenasPage: React.FC = () => {
     try {
       const text = await file.text();
       const parsed = JSON.parse(text);
-      const result = importProgressPayload(parsed);
-      if (result.errors.length) {
-        toast.error(result.errors.join(' '));
-        return;
-      }
-      if (result.imported === 0) {
-        toast.info('Nenhum progresso compatível encontrado.');
-        return;
-      }
-      toast.success(
-        `${result.imported} novena(s) importada(s)${result.skipped ? `, ${result.skipped} ignorada(s)` : ''}.`,
-      );
-      // recarrega para refletir novos estados
-      setTimeout(() => window.location.reload(), 600);
+      pendingImportRef.current = parsed;
+      setImportDialogOpen(true);
     } catch {
       toast.error('Arquivo JSON inválido.');
     }
   };
+
+  const runImport = (mode: ImportMode) => {
+    const parsed = pendingImportRef.current;
+    pendingImportRef.current = null;
+    setImportDialogOpen(false);
+    if (!parsed) return;
+    const result = importProgressPayload(parsed, { mode });
+    if (result.errors.length) {
+      toast.error(result.errors.join(' '));
+      return;
+    }
+    const total = result.imported + result.merged;
+    if (total === 0) {
+      toast.info('Nenhum progresso compatível encontrado.');
+      return;
+    }
+    const parts: string[] = [];
+    if (result.imported) parts.push(`${result.imported} importada(s)`);
+    if (result.merged) parts.push(`${result.merged} mesclada(s)`);
+    if (result.skipped) parts.push(`${result.skipped} ignorada(s)`);
+    toast.success(parts.join(' · '));
+    setTimeout(() => window.location.reload(), 600);
+  };
+
+
 
   return (
     <div className="w-full space-y-[var(--sp-xl)] pb-[var(--sp-xxl)]">
