@@ -2,7 +2,7 @@
  * Prayer Engine — carregador da hierarquia do banco.
  *
  * Sprint 1.0 — Fase A/D. Lê `prayer_sections → prayer_mysteries → prayer_blocks`
- * do Supabase e produz um `PrayerBlock[]` linear compatível com o `RosaryReader`
+ * do Supabase e produz um `PrayerBlock[]` linear compatível com o `PrayerEngineReader`
  * (que fará papel de `PrayerReader` unificado nesta primeira onda).
  *
  * A hierarquia continua no banco; o achatamento é apenas uma visão de leitura

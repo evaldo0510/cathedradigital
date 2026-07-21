@@ -21,10 +21,9 @@ import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import RosaryReader from '@/components/cathedra/RosaryReader';
 import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
-import { isPrayerBlockArray } from '@/types/prayer';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
+
 
 const FONT_STEPS = [
   { key: 'sm', label: 'A', textClass: 'text-xl md:text-[22px]', latinClass: 'text-lg' },
@@ -150,10 +149,9 @@ const PrayerDetailPage: React.FC = () => {
     }
   }
 
-  const hasBlocks = isPrayerBlockArray(prayer.blocks) && prayer.blocks.length > 0;
-  if (hasBlocks && !isLegacy) {
-    return <RosaryReader prayer={prayer} kicker={kicker} />;
-  }
+  // Fallback estático (texto/latim/explicação) para orações ainda não migradas
+  // ao Prayer Engine v2. Sem persistência local: apenas leitura contínua.
+
 
 
 
