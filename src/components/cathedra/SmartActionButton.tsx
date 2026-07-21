@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
+import { findContinueTarget } from '@/lib/novenas/progress';
+import { NOVENAS } from '@/data/novenas';
 
 interface ShortcutTile {
   key: string;
@@ -13,7 +15,7 @@ interface ShortcutTile {
   onSelect: (navigate: ReturnType<typeof useNavigate>) => void;
 }
 
-const SHORTCUTS: ShortcutTile[] = [
+const BASE_SHORTCUTS: ShortcutTile[] = [
   {
     key: 'buscar',
     label: 'Buscar',
@@ -45,6 +47,7 @@ const SHORTCUTS: ShortcutTile[] = [
     onSelect: (navigate) => navigate(AppRoute.FAVORITES),
   },
 ];
+
 
 interface SmartActionSheetProps {
   open: boolean;
