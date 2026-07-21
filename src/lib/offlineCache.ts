@@ -3,7 +3,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 const DB_NAME = 'cathedra_cache';
-const DB_VERSION = 3; // v3: adds liturgical-calendar store
+const DB_VERSION = 4; // v4: adds liturgy-hours-office store
 
 export interface CacheEntry {
   key: string;
@@ -28,6 +28,9 @@ function openDB(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains('liturgical-calendar')) {
         db.createObjectStore('liturgical-calendar', { keyPath: 'key' });
+      }
+      if (!db.objectStoreNames.contains('liturgy-hours-office')) {
+        db.createObjectStore('liturgy-hours-office', { keyPath: 'key' });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -97,6 +100,28 @@ export async function getCachedLiturgy(dateKey: string): Promise<any | null> {
 export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
   return putInStore('liturgy', dateKey, data);
 }
+
+// ─── Liturgy of the Hours (Office) Cache ───
+// Chave: `${isoDate}:${hourSlug}` (ex.: `2026-07-21:laudes`).
+
+export const liturgyHoursOfficeKey = (isoDate: string, hourSlug: string) =>
+  `${isoDate}:${hourSlug}`;
+
+export async function getCachedHoursOffice(
+  isoDate: string,
+  hourSlug: string,
+): Promise<any | null> {
+  return getFromStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug));
+}
+
+export async function cacheHoursOffice(
+  isoDate: string,
+  hourSlug: string,
+  data: any,
+): Promise<void> {
+  return putInStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug), data);
+}
+
 
 // ─── Liturgical Calendar (month grid) Cache ───
 // Persists the response of the `liturgical-calendar` edge function with a TTL
@@ -311,7 +336,7 @@ export async function getAllFromStore(storeName: string): Promise<CacheEntry[]> 
 export async function clearAllCaches(): Promise<void> {
   try {
     const db = await openDB();
-    const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+    const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
     stores.forEach(s => {
       const tx = db.transaction(s, 'readwrite');
       tx.objectStore(s).clear();
@@ -327,7 +352,7 @@ export async function clearAllCaches(): Promise<void> {
 
 export async function exportCache(): Promise<string> {
   const data: Record<string, CacheEntry[]> = {};
-  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
   
   for (const store of stores) {
     data[store] = await getAllFromStore(store);
@@ -359,7 +384,7 @@ export async function importCache(jsonString: string): Promise<void> {
 // ─── Stats ───
 
 export async function getCacheStats() {
-  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
   const stats: Record<string, number> = {};
   let total = 0;
   
