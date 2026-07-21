@@ -10,9 +10,10 @@
  *      sobreviver a refresh e alimentar fallback quando IA falhar.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { telemetry } from '@/utils/navigation-telemetry';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 
 export interface FatherCitation {
