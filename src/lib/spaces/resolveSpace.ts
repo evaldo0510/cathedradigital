@@ -40,9 +40,18 @@ const CHURCH_PREFIXES = [
   '/liturgia',
   '/calendar',
   '/lectio',
+];
+
+const CLOISTER_PREFIXES = [
+  '/logos',
+  '/chat',
+  '/diario',
   '/contemplatio',
   '/contemplacao',
   '/confession',
+  '/meditacoes',
+  '/reflexoes',
+  '/exame',
 ];
 
 export function resolveSpaceForPath(pathname: string): CathedraSpace | null {
@@ -50,9 +59,13 @@ export function resolveSpaceForPath(pathname: string): CathedraSpace | null {
   if (LIBRARY_PREFIXES.some((prefix) => p === prefix || p.startsWith(prefix + '/'))) {
     return 'library';
   }
+  if (CLOISTER_PREFIXES.some((prefix) => p === prefix || p.startsWith(prefix + '/'))) {
+    return 'cloister';
+  }
   if (CHURCH_PREFIXES.some((prefix) => p === prefix || p.startsWith(prefix + '/'))) {
     return 'church';
   }
   return null;
 }
+
 
