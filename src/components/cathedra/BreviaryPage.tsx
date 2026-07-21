@@ -417,7 +417,7 @@ const BreviaryPage: React.FC = () => {
           subtitle: suggestedSection?.subtitle ?? undefined,
           meta: [
             ...(suggestedTime ? [{ label: 'Horário sugerido', value: suggestedTime, icon: 'clock' as const }] : []),
-            ...(liturgy?.liturgical_season ? [{ label: 'Tempo litúrgico', value: liturgy.liturgical_season, icon: 'sparkles' as const }] : []),
+            ...(liturgy?.season ? [{ label: 'Tempo litúrgico', value: liturgy.season, icon: 'sparkles' as const }] : []),
             { label: 'Sete horas', value: 'Ofício · Laudes · Tércia · Sexta · Noa · Vésperas · Completas', icon: 'church' as const },
           ],
         }}
