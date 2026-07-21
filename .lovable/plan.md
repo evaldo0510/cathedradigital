@@ -1,71 +1,93 @@
-# Sprint 4 · Onda C — Rosário Contemplativo Definitivo
+# CAT-SP4 — Harmonia Arquitetônica (Logos 2030)
 
-Escopo grande. Proponho **quebrar em 3 entregas sequenciais** para permitir validação incremental. Antes delas, entrego os **2 ajustes imediatos** que você pediu no início da mensagem.
+Sprint de unificação. Zero telas novas, zero funcionalidades. Objetivo: fazer com que Bíblia, Rosário, Diário e Home pareçam partes do mesmo edifício.
 
----
-
-## Entrega 0 — Ajustes imediatos (esta sprint, agora)
-
-**0.1 · Painel de Ritmo Contemplativo**
-- Novo `ContemplativeSettingsDialog.tsx` acessível por ícone no header do Reader.
-- Controles (sliders):
-  - Duração da pausa entre blocos (0–5s, default 0.5s)
-  - Timer de silêncio no bloco Contemple (0–60s, default 15s)
-  - Velocidade de transição fade (150–1000ms, default 500ms)
-- Persistência em `localStorage` (`cathedra.prayer.rhythm`).
-- Hook `useContemplativeRhythm.ts` consumido por `PrayerEngineReader`, `ContemplationInvitation` e `MysteryClosingCard`.
-
-**0.2 · Retomada de sessão do Rosário**
-- Estender `prayer_sessions` com `last_section_id`, `last_block_index`, `last_mystery_slug` (colunas nullable; migration + GRANT).
-- Salvar posição a cada mudança de bloco (debounce 2s).
-- Ao reabrir `/oracao/rosario`: banner `ResumePrayerCard` com "Retomar do 3º Mistério Gozoso" ou "Reiniciar do começo".
-- Hook `useResumePrayerSession.ts`.
+Executada em 4 ondas curtas + Sprint 4.5 (Eixo da Catedral). Cada onda tem gate visual antes da próxima.
 
 ---
 
-## Entrega 1 — Banco editorial + Ilustrações (próxima sprint)
+## Onda A — Fundações (tokens + escalas)
 
-- Migration expandindo `prayer_mysteries` com 13 campos editoriais (`contemplation_invitation`, `spiritual_fruit`, `closing_prayer`, `concrete_action`, `related_saints[]`, `church_fathers[]`, `magisterium_refs[]`, `catechism_refs[]`, `primary_scripture`, `parallel_scriptures[]`, `iconography`, `bibliography[]`, `logos_meditation`).
-- Seed editorial completo dos 20 mistérios (conteúdo escrito, sem placeholder).
-- Remoção total dos fallbacks em `mysteryMeta.ts` → passa a ser apenas tipos.
-- Auditoria `scripts/audit-mysteries-editorial.ts` no CI: falha se algum campo obrigatório vazio.
-- **Ilustrações**: 20 imagens definitivas (reprocessamento com prompt unificado — estilo sacro clássico, paleta litúrgica por série). Loading progressivo (blur-up + AVIF/WebP).
+Base do resto. Nada visível para o usuário ainda.
 
-## Entrega 2 — Áudio + Intenções + Estatísticas
+- **Tipografia única** (`src/styles/typography.css`): escala `display / h1 / h2 / h3 / lead / body / caption / meta / rubrica`. Classes `.type-display`, `.type-h1`, etc. Substitui `text-*` arbitrários dos módulos.
+- **Espaçamentos** (`--space-xs` … `--space-xxl`) em `index.css`. Padrões: seção = `xxl`, bloco = `xl`, item = `m`.
+- **Ícones**: normalizar Lucide para `strokeWidth={1.75}`, tamanhos `16 / 20 / 24`, gap `gap-2` obrigatório com texto. Helper `<Icon>` fino.
+- **Cores por ambiente** já em `data-space="*"` — apenas formalizar a regra: dourado discreto (library), dourado vivo (church), verde suave (cloister), creme claro (atrium). Nunca misturar entre ambientes.
 
-- **TTS**: 3 modos (integral / só meditações / só orações) no header do Reader. Arquitetura `PrayerAudioSource` (interface) preparada para narração humana futura via bucket `prayer-audio`.
-- **Intenções**: `PrayerIntentionPicker` antes de iniciar (6 predefinidas + livre). Persiste em `prayer_sessions.intention`. Reaparece no encerramento.
-- **Estatísticas espirituais**: painel `SpiritualCompanionPanel` (dias consecutivos, mistérios concluídos, último Rosário, tempo total, intenção ativa). Linguagem contemplativa, sem streaks/badges.
-
-## Entrega 3 — Encerramento + Homologação
-
-- `RosaryClosingExperience.tsx`: resumo, fruto do dia, oração final, sugestão bíblica + Catecismo + santo + próxima oração via Nexus.
-- Auditoria de homologação: WCAG AA (axe), Lighthouse mobile ≥90, E2E de retomada, TTS, contemplação, favoritos, histórico, Nexus.
-- Relatório `docs/audits/rosario-homologacao.md` com selo "Módulo de Referência Cathedra".
+Gate: rodar visual em 3 telas âncora (Bíblia, Rosário, Diário) — nada deve ter regressado.
 
 ---
 
-## Detalhes técnicos (Entrega 0)
+## Onda B — Hero Universal + Gramática de Cards
 
-```text
-src/
-  components/cathedra/prayer/
-    ContemplativeSettingsDialog.tsx   (novo)
-    ResumePrayerCard.tsx              (novo)
-  hooks/
-    useContemplativeRhythm.ts         (novo)
-    useResumePrayerSession.ts         (novo)
-  pages/PrayerDetailPage.tsx          (integra ResumePrayerCard)
-  components/cathedra/prayer/PrayerEngineReader.tsx  (consome rhythm + salva posição)
+O componente que aparece em toda entrada de módulo.
 
-supabase/migrations/
-  <ts>_prayer_sessions_resume.sql     (add colunas + GRANT já existente)
-```
+- **`<CathedraHero>`** (`src/components/system/CathedraHero.tsx`):
+  ```
+  eyebrow → título → subtítulo editorial → metadados → ações
+  ```
+  Props tipadas. Aceita `space` para tomar tokens corretos. Substitui heros customizados em: Bíblia, Catecismo, Glossário, Liturgia, Missal, Rosário, Santos, Jornadas, Trilhas, Biblioteca.
+- **`<CathedraCard>`** (mesmo diretório): `kicker → título → descrição → metadados → CTA`. Variantes por ambiente (não por módulo). Substitui as ~7 variações atuais de card editorial.
 
-Sem novas dependências. Zero mudança em Business Logic fora do módulo Oração.
+Gate: cada módulo migrado passa por comparação lado a lado (antes × depois). Sem drift.
 
 ---
 
-## Confirmação
+## Onda C — Botões, Animações, Ornamentos
 
-Posso começar já pela **Entrega 0** (rápida, ~1 turno) e depois seguirmos Entrega 1 → 2 → 3, ou você prefere reordenar / cortar algo?
+Reduzir a superfície.
+
+- **Botões**: consolidar em 5 variantes finais — `primary / secondary / ghost / pill / editorial`. Auditar `variant=` fora dessa lista e migrar. Remover variantes órfãs.
+- **Animações**: reduzir para 4 — `fade / lift / reveal / page-transition`. Definir em `tailwind.config.ts` e remover `animate-*` customizados espalhados.
+- **Ornamentos** por ambiente:
+  - Library: filete dourado, capitular, textura pergaminho nas bordas.
+  - Church: halo de luz, dourado vivo, hint de vitral no hero.
+  - Cloister: praticamente nenhum ornamento.
+  - Atrium: limpo.
+  Regra: ornamento é decidido pelo `data-space`, nunca pelo componente.
+
+Gate: buscar `animate-`, `variant=`, `border-` em componentes e confirmar zero exceções fora do design system.
+
+---
+
+## Onda D — Auditoria de Sensação
+
+Verificação humana, não técnica.
+
+- Abrir 12 rotas âncora em sequência (2 por ambiente + trocas).
+- Critério: reconhecer o ambiente em menos de 1 segundo, sem ler o título.
+- Registrar em `docs/audits/sp4-harmonia.md` com screenshots antes × depois.
+- Corrigir apenas o que falhar no teste de reconhecimento.
+
+---
+
+## Sprint 4.5 — Eixo da Catedral
+
+Executada só depois da SP4 fechada.
+
+- Indicador permanente do ambiente atual no header (ou sidebar em desktop).
+- Discreto: ícone + label pequeno (`Átrio · Biblioteca · Igreja · Claustro`).
+- Muda com `data-space` já resolvido em `resolveSpaceForPath`.
+- Não interfere em nenhuma funcionalidade; reforça a sensação de percurso.
+
+---
+
+## Fora de escopo (explicitamente)
+
+- Novas telas, novos módulos, novos conteúdos editoriais.
+- Refatoração de dados, RLS, edge functions.
+- Otimização de performance (fica para sprint dedicada depois da SP4.5).
+- Transições cinematográficas entre ambientes (isso é a Sprint 5 — "Catedral Viva" que você já esboçou).
+
+---
+
+## Ordem sugerida de execução
+
+1. Onda A (tokens) — 1 passo curto, aprovar visual.
+2. Onda B (Hero + Cards) — maior esforço, migração módulo a módulo.
+3. Onda C (botões, animações, ornamentos) — limpeza.
+4. Onda D (auditoria) — validação humana.
+5. Sprint 4.5 (Eixo).
+
+Cada onda termina com um gate visual seu antes de eu iniciar a próxima. Se aprovar, começo pela Onda A.
