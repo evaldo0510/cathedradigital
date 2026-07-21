@@ -79,6 +79,22 @@ export const SmartActionSheet: React.FC<SmartActionSheetProps> = ({ open, onOpen
 
   const isLoading = pendingKey !== null;
 
+  const shortcuts = useMemo<ShortcutTile[]>(() => {
+    if (!open) return BASE_SHORTCUTS;
+    const target = findContinueTarget();
+    if (!target) return BASE_SHORTCUTS;
+    const novena = NOVENAS.find((n) => n.slug === target.slug);
+    if (!novena) return BASE_SHORTCUTS;
+    const tile: ShortcutTile = {
+      key: 'continuar-novena',
+      label: 'Continuar',
+      description: `${novena.title} · dia ${target.day}`,
+      icon: Icons.RefreshCw,
+      onSelect: (nav) => nav(`/oracao/novenas/${target.slug}?dia=${target.day}`),
+    };
+    return [tile, ...BASE_SHORTCUTS];
+  }, [open]);
+
   const handleSelect = useCallback(
     (shortcut: ShortcutTile) => {
       setPendingKey(shortcut.key);
