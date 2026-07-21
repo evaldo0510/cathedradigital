@@ -152,20 +152,16 @@ const PrayerDetailPage: React.FC = () => {
               <Clock className="h-3.5 w-3.5" aria-hidden />
               {Math.max(1, Math.round(prayer.estimated_seconds / 60))} min
             </span>
-            <button
+            <Button
               type="button"
+              variant={isFavorite ? 'pill-toned' : 'pill'}
+              size="pill"
               onClick={toggleFavorite}
               aria-pressed={isFavorite}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest transition-colors',
-                isFavorite
-                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
-                  : 'border-stitch-outline-variant/40 text-stitch-on-surface-variant hover:border-stitch-secondary/50 hover:text-stitch-on-surface',
-              )}
             >
               <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} aria-hidden />
               {isFavorite ? 'Favorita' : 'Favoritar'}
-            </button>
+            </Button>
           </div>
 
           {/* Controles do modo de leitura */}
