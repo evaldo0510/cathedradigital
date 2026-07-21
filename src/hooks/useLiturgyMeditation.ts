@@ -390,6 +390,29 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
     await query.refetch();
   }, [qc, isoDate, readings, query]);
 
+  // ── Telemetria de fallback ──
+  // Sempre que a meditação em cache/essencial for exibida, emitimos um
+  // evento único (dedupe por date+code+source) para acompanharmos com
+  // que frequência a IA falha e qual código dispara — visível no
+  // TelemetryDashboard / navigation-telemetry buffer.
+  const lastLoggedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const row = query.data;
+    if (!row || !row.fallback) return;
+    const code = (row.fallback_code as MeditationFailureCode | undefined) ?? 'ai_unavailable';
+    const source = row.fallback_source ?? 'local-builder';
+    const key = `${row.iso_date}|${code}|${source}`;
+    if (lastLoggedRef.current === key) return;
+    lastLoggedRef.current = key;
+    telemetry.log('liturgy.meditation.fallback', 'warn', {
+      iso_date: row.iso_date,
+      code,
+      source,
+      retry_at: row.fallback_retry_at ?? null,
+      message: row.fallback_message ?? null,
+    });
+  }, [query.data]);
+
   return {
     meditation: query.data ?? null,
     isLoading: query.isLoading,
