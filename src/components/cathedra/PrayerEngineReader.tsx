@@ -241,6 +241,40 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   const goPrev = useCallback(() => goTo(cursorIndex - 1), [goTo, cursorIndex]);
 
+  // ── Persistência de cursor por sub-recurso (contextKey) ──
+  // Ex.: Breviário grava/lê "prayer-cursor:breviary:laudes:2026-07-21" no
+  // localStorage, garantindo retomada exata por Hora+data offline.
+  const cursorStorageKey = contextKey ? `prayer-cursor:${contextKey}` : null;
+
+  // Restaura cursor de contexto uma vez por contextKey (ou aplica deep link `b`).
+  const restoredContextRef = React.useRef<string | null>(null);
+  useEffect(() => {
+    if (!contextKey || !cursorStorageKey) return;
+    if (restoredContextRef.current === contextKey) return;
+    if (!session.session || blocks.length === 0) return;
+    let target: string | null = initialBlockId ?? null;
+    if (!target) {
+      try { target = localStorage.getItem(cursorStorageKey); } catch { /* silent */ }
+    }
+    restoredContextRef.current = contextKey;
+    if (!target || target === session.session.current_block_uuid) return;
+    const b = blocks.find((bl) => bl.id === target);
+    if (!b) return;
+    session.setCursor({
+      blockId: b.id,
+      mysteryId: b.mysteryId ?? null,
+      sectionId: b.sectionId ?? null,
+    });
+  }, [contextKey, cursorStorageKey, initialBlockId, blocks, session]);
+
+  // Grava o cursor atual sempre que ele mudar dentro do mesmo contexto.
+  useEffect(() => {
+    if (!cursorStorageKey) return;
+    const uuid = session.session?.current_block_uuid;
+    if (!uuid) return;
+    try { localStorage.setItem(cursorStorageKey, uuid); } catch { /* silent */ }
+  }, [cursorStorageKey, session.session?.current_block_uuid]);
+
   // Modo contemplativo = foco.
   useEffect(() => {
     if (mode === 'contemplative') setFocus(true);
@@ -401,7 +435,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   // ============ READER ============
   const content = (
-    <article className="mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
+    <article style={contentStyle} className="cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
       {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
       {isSimple ? (
         <div className="mb-8">
