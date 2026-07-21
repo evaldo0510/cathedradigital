@@ -53,7 +53,11 @@ export interface LiturgyMeditationRow {
   final_prayer: string | null;
   church_history: ChurchHistoryBlock | null;
   action_of_day: string | null;
+  /** Auditoria e reprodutibilidade */
+  version: number | null;
   model: string | null;
+  provider: string | null;
+  prompt_hash: string | null;
   generated_at: string;
 }
 
