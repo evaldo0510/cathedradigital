@@ -37,6 +37,25 @@ export const LiturgyMeditationSkeleton: React.FC = () => (
   </div>
 );
 
+export const LiturgyMeditationFallbackNotice: React.FC<{ message?: string | null }> = ({ message }) => (
+  <motion.div
+    {...fade(0.02)}
+    className="border border-secondary/30 bg-secondary/5 rounded-[2rem] p-spacing-md flex items-start gap-spacing-sm"
+    role="status"
+    aria-live="polite"
+  >
+    <Icons.Info className="w-spacing-md h-spacing-md text-secondary shrink-0 mt-spacing-3xs" />
+    <div className="space-y-spacing-3xs">
+      <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">
+        Meditação em modo essencial
+      </p>
+      <p className="text-premium-sm leading-relaxed text-muted-foreground">
+        {message || 'O conteúdo editorial automático está temporariamente indisponível; mantivemos uma leitura orante local para não interromper a liturgia.'}
+      </p>
+    </div>
+  </motion.div>
+);
+
 // ── 1. Tema do dia ───────────────────────────────────────────────
 export const LiturgyThemeCard: React.FC<{ theme: string }> = ({ theme }) => (
   <motion.div
