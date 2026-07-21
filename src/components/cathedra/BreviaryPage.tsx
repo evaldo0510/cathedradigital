@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { flattenSectionToBlocks } from '@/prayer-engine/loadPrayerHierarchy';
 import SEOHead from '@/components/SEOHead';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
@@ -173,11 +174,13 @@ const BreviaryPage: React.FC = () => {
   );
 
   const { liturgy } = useDailyLiturgy(selectedDate);
-  const { office, isLoading: officeLoading } = useLiturgyHoursOffice(
+  const { office, isLoading: officeLoading, fromCache } = useLiturgyHoursOffice(
     isoDate,
     selectedHour,
     liturgy,
   );
+  const online = useOnlineStatus();
+  const showOfflineBanner = !online && !!office && fromCache;
 
   // Prefetch das 7 horas (offline-first, idempotente) quando o dia carrega.
   useEffect(() => {
@@ -200,18 +203,40 @@ const BreviaryPage: React.FC = () => {
       seasonNote: office?.season_note ?? null,
     });
 
+    const pageTitle = `${section.title} · Liturgia das Horas`;
+    const pageDescription = `Reze ${section.title}${section.subtitle ? ` (${section.subtitle})` : ''} da Liturgia das Horas — ${isoDate} — com Ordinário e Próprio do dia.`;
+
     return (
       <>
         <SEOHead
-          title={`${section.title} · Liturgia das Horas`}
-          description={`Reze ${section.title}${section.subtitle ? ` (${section.subtitle})` : ''} da Liturgia das Horas — ${isoDate} — com Ordinário e Próprio do dia.`}
+          title={pageTitle}
+          description={pageDescription}
           path={`/breviary?h=${selectedHour}${isToday ? '' : `&d=${isoDate}`}`}
         />
         <Helmet>
           <link rel="canonical" href={canonical} />
+          <meta property="og:title" content={pageTitle} />
+          <meta property="og:description" content={pageDescription} />
+          <meta property="og:type" content="article" />
           <meta property="og:url" content={canonical} />
+          <meta property="og:locale" content="pt_BR" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={pageTitle} />
+          <meta name="twitter:description" content={pageDescription} />
           <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         </Helmet>
+        {showOfflineBanner && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="mb-spacing-sm mx-auto max-w-3xl flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium border border-border bg-muted/40 text-premium-xs text-muted-foreground"
+          >
+            <Icons.WifiOff className="w-spacing-sm h-spacing-sm text-primary" />
+            <span className="font-serif italic">
+              Exibindo a Liturgia a partir do cache offline. Reconectando…
+            </span>
+          </div>
+        )}
         <PrayerEngineReader
           prayer={prayer}
           blocks={hourBlocks}

@@ -103,6 +103,11 @@ export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
 
 // ─── Liturgy of the Hours (Office) Cache ───
 // Chave: `${isoDate}:${hourSlug}` (ex.: `2026-07-21:laudes`).
+//
+// Versionamento: a entrada armazena o `version` do próprio conteúdo
+// (campo `data.version` vindo do banco). A leitura descarta entradas
+// cujo `version` difira do esperado, forçando refetch. Isso evita
+// exibir conteúdo antigo quando a versão editorial da hora muda.
 
 export const liturgyHoursOfficeKey = (isoDate: string, hourSlug: string) =>
   `${isoDate}:${hourSlug}`;
@@ -110,8 +115,14 @@ export const liturgyHoursOfficeKey = (isoDate: string, hourSlug: string) =>
 export async function getCachedHoursOffice(
   isoDate: string,
   hourSlug: string,
+  expectedVersion?: number | null,
 ): Promise<any | null> {
-  return getFromStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug));
+  const data = await getFromStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug));
+  if (!data) return null;
+  if (expectedVersion != null && data.version != null && data.version !== expectedVersion) {
+    return null;
+  }
+  return data;
 }
 
 export async function cacheHoursOffice(
@@ -120,6 +131,28 @@ export async function cacheHoursOffice(
   data: any,
 ): Promise<void> {
   return putInStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug), data);
+}
+
+/**
+ * Remove entradas do cache de Liturgia das Horas cujo `version` seja
+ * inferior ao `minVersion` fornecido. Idempotente. Silencia falhas.
+ */
+export async function pruneStaleHoursOffice(minVersion: number): Promise<number> {
+  let removed = 0;
+  try {
+    const entries = await getAllFromStore('liturgy-hours-office');
+    const db = await openDB();
+    const tx = db.transaction('liturgy-hours-office', 'readwrite');
+    const store = tx.objectStore('liturgy-hours-office');
+    for (const e of entries) {
+      const v = (e.data as { version?: number } | undefined)?.version;
+      if (typeof v === 'number' && v < minVersion) {
+        store.delete(e.key);
+        removed += 1;
+      }
+    }
+  } catch { /* silent */ }
+  return removed;
 }
 
 
