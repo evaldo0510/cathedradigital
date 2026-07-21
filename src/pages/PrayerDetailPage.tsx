@@ -16,6 +16,7 @@ import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome'
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { Button } from '@/components/ui/button';
 import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
