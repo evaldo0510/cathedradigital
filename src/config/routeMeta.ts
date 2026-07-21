@@ -296,6 +296,60 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/jornadas$/,
+    meta: {
+      title: 'Jornadas Espirituais — Cathedra',
+      description: 'Jornadas guiadas de 7 a 14 dias com leitura, oração e contemplação para aprofundar a fé passo a passo.',
+    },
+  },
+  {
+    test: /^\/jornadas\/[^/]+$/,
+    meta: {
+      title: 'Jornada Espiritual — Cathedra',
+      description: 'Jornada guiada com leitura, oração e contemplação para aprofundar a fé passo a passo.',
+    },
+  },
+  {
+    test: /^\/jornadas\/[^/]+\/(step|complete|conclusao)$/,
+    meta: {
+      title: 'Jornada — Etapa',
+      description: 'Etapa da jornada espiritual em andamento.',
+      noindex: true,
+    },
+  },
+  {
+    test: /^\/community\/post\/[^/]+$/,
+    meta: {
+      title: 'Publicação — Comunidade Cathedra',
+      description: 'Publicação da comunidade Cathedra com discussão sobre fé, doutrina e vida espiritual.',
+    },
+  },
+  {
+    test: /^\/community\/user\/[^/]+$/,
+    meta: {
+      title: 'Perfil de membro — Comunidade Cathedra',
+      description: 'Perfil público de membro da comunidade Cathedra.',
+      noindex: true,
+    },
+  },
+  {
+    test: /^\/glossary\/[^/]+$/,
+    meta: {
+      title: 'Verbete — Glossário Cathedra',
+      description: 'Alias em inglês para verbete do glossário teológico católico.',
+      noindex: true,
+      canonicalPath: '/glossario',
+    },
+  },
+  {
+    test: /^\/biblioteca\/padres\/[^/]+$/,
+    meta: {
+      title: 'Padre da Igreja — Biblioteca Cathedra',
+      description: 'Redirecionamento para o verbete/biografia do Padre da Igreja na Biblioteca Cathedra.',
+      noindex: true,
+    },
+  },
+  {
     test: /^\/(admin|dev)(\/|$)/,
     meta: {
       title: 'Admin — Cathedra',
