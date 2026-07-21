@@ -562,6 +562,20 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
+      {current.rubric && (
+        <section
+          className="mb-8 rounded-xl border-l-2 border-stitch-secondary/40 bg-stitch-surface-container-lowest/40 px-4 py-3"
+          aria-label="Rubrica litúrgica"
+        >
+          <p className="mb-1 font-stitch-body text-[10px] font-bold uppercase tracking-widest text-stitch-secondary">
+            Rubrica
+          </p>
+          <p className="font-stitch-body text-sm italic leading-relaxed text-stitch-on-surface-variant">
+            {current.rubric}
+          </p>
+        </section>
+      )}
+
       {/* Continuação inteligente ao concluir mistério */}
       {mysteryJustCompleted && !focus && !isLastOverall && currentMystery && (
         <section

@@ -3067,6 +3067,72 @@ export type Database = {
         }
         Relationships: []
       }
+      missal_propers: {
+        Row: {
+          celebration_title: string
+          collect: string
+          communion_antiphon: string | null
+          created_at: string
+          entrance_antiphon: string | null
+          generated_at: string
+          id: string
+          iso_date: string
+          liturgical_color: string | null
+          model: string | null
+          offertory_prayer: string
+          prayer_after_communion: string
+          preface_suggestion: string | null
+          prompt_hash: string
+          provider: string | null
+          readings_hash: string
+          season_note: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          celebration_title: string
+          collect: string
+          communion_antiphon?: string | null
+          created_at?: string
+          entrance_antiphon?: string | null
+          generated_at?: string
+          id?: string
+          iso_date: string
+          liturgical_color?: string | null
+          model?: string | null
+          offertory_prayer: string
+          prayer_after_communion: string
+          preface_suggestion?: string | null
+          prompt_hash: string
+          provider?: string | null
+          readings_hash: string
+          season_note?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          celebration_title?: string
+          collect?: string
+          communion_antiphon?: string | null
+          created_at?: string
+          entrance_antiphon?: string | null
+          generated_at?: string
+          id?: string
+          iso_date?: string
+          liturgical_color?: string | null
+          model?: string | null
+          offertory_prayer?: string
+          prayer_after_communion?: string
+          preface_suggestion?: string | null
+          prompt_hash?: string
+          provider?: string | null
+          readings_hash?: string
+          season_note?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       nexus_contributions: {
         Row: {
           book_abbr: string
