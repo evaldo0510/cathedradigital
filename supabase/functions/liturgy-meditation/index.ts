@@ -229,13 +229,21 @@ Deno.serve(async (req) => {
       console.error("liturgy-meditation: generation failed", err);
     }
     const msg = (err as { message?: string })?.message ?? "unknown";
-    const status = /rate limit|429/i.test(msg)
-      ? 429
-      : /402|credit/i.test(msg)
-      ? 402
-      : 503;
+    const isRateLimit = /rate limit|429|too many requests/i.test(msg);
+    const isPayment = /402|payment required|credit|insufficient|quota/i.test(msg);
+    const status = isRateLimit ? 429 : isPayment ? 402 : 503;
+    const friendly = isPayment
+      ? "Os créditos de IA da plataforma se esgotaram. A meditação editorial voltará assim que forem recarregados."
+      : isRateLimit
+      ? "Muitas requisições simultâneas ao gerador de meditação. Tente novamente em instantes."
+      : "Não foi possível gerar a meditação editorial neste momento.";
     return new Response(
-      JSON.stringify({ error: "AI generation failed", detail: msg }),
+      JSON.stringify({
+        error: "AI generation failed",
+        code: isPayment ? "ai_credits_exhausted" : isRateLimit ? "ai_rate_limited" : "ai_unavailable",
+        message: friendly,
+        detail: msg,
+      }),
       { status, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
