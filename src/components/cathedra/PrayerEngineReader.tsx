@@ -116,6 +116,9 @@ export const PrayerEngineReader: React.FC<Props> = ({
     [mysteries, activeSection],
   );
 
+  // Oração simples = sem mistérios/décadas/estações. Apenas texto linear.
+  const isSimple = mysteriesInSection.length === 0;
+
   // Contagens por mistério — para cálculos e barra hierárquica.
   const blocksByMystery = useMemo(() => {
     const map = new Map<string, PrayerBlock[]>();
