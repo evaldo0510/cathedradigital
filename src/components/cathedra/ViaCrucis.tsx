@@ -552,6 +552,16 @@ const ViaCrucis: React.FC = () => {
         </div>
 
         <div className="relative space-y-spacing-2xl max-w-spacing-2xl mx-auto">
+          {/* Passagem bíblica expandida — só fora do contemplativo */}
+          {!contemplative && (
+            <div className="text-center space-y-spacing-xs">
+              <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40">Escritura</h3>
+              <p className="font-serif text-premium-base leading-relaxed text-foreground/85 italic max-w-[54ch] mx-auto">
+                {station.biblicalPassage}
+              </p>
+            </div>
+          )}
+
           <div className="space-y-spacing-md">
             {!contemplative && (
               <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
@@ -575,6 +585,12 @@ const ViaCrucis: React.FC = () => {
             </p>
           </div>
 
+          {/* Camada contemplativa: silêncio, Logos, Padres, Catecismo */}
+          <StationContemplation station={station} contemplative={contemplative} />
+
+          {/* Encerramento ritual da estação (fruto · oração · ação) */}
+          {!contemplative && <StationClosingCard station={station} />}
+
           {!contemplative && (
             <>
               <div className="text-center space-y-spacing-xs pt-spacing-md opacity-60">
@@ -594,6 +610,20 @@ const ViaCrucis: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Encerramento editorial final da Via Sacra */}
+      {showFinalClosing && (
+        <FinalClosingCard
+          onRestart={() => {
+            setShowFinalClosing(false);
+            setCurrentStation(0);
+          }}
+          onExit={() => {
+            setShowFinalClosing(false);
+            setIsJourney(false);
+          }}
+        />
+      )}
 
       {/* Navegação */}
       <div className="flex gap-spacing-md justify-center px-spacing-md" data-testid="via-sacra-nav">
