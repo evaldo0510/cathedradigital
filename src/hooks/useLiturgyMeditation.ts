@@ -99,6 +99,61 @@ const RETRY_WINDOW_MINUTES: Record<MeditationFailureCode, number> = {
 
 const CACHE_KEY_PREFIX = 'cathedra:liturgy-meditation:v1:';
 const CACHE_MAX_ENTRIES = 14;
+const FALLBACK_EVENTS_KEY = 'cathedra:liturgy-meditation:fallback-events:v1';
+const FALLBACK_EVENTS_MAX = 500;
+
+export interface FallbackEventLog {
+  at: string;
+  iso_date: string;
+  code: MeditationFailureCode | string;
+  source: 'local-cache' | 'local-builder' | 'previous-day';
+  retry_at: string | null;
+  message: string | null;
+}
+
+function persistFallbackEvent(evt: FallbackEventLog): void {
+  const s = safeStorage();
+  if (!s) return;
+  try {
+    const raw = s.getItem(FALLBACK_EVENTS_KEY);
+    const list: FallbackEventLog[] = raw ? JSON.parse(raw) : [];
+    // Dedupe por (iso_date|code|source) numa janela de 6h.
+    const dedupeKey = `${evt.iso_date}|${evt.code}|${evt.source}`;
+    const sixHoursAgo = Date.now() - 6 * 60 * 60_000;
+    const isDup = list.some(
+      (e) =>
+        `${e.iso_date}|${e.code}|${e.source}` === dedupeKey &&
+        new Date(e.at).getTime() > sixHoursAgo,
+    );
+    if (isDup) return;
+    list.unshift(evt);
+    if (list.length > FALLBACK_EVENTS_MAX) list.length = FALLBACK_EVENTS_MAX;
+    s.setItem(FALLBACK_EVENTS_KEY, JSON.stringify(list));
+  } catch {
+    /* quota — ignora */
+  }
+}
+
+export function readFallbackEvents(): FallbackEventLog[] {
+  const s = safeStorage();
+  if (!s) return [];
+  try {
+    const raw = s.getItem(FALLBACK_EVENTS_KEY);
+    return raw ? (JSON.parse(raw) as FallbackEventLog[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function clearFallbackEvents(): void {
+  const s = safeStorage();
+  if (!s) return;
+  try {
+    s.removeItem(FALLBACK_EVENTS_KEY);
+  } catch {
+    /* ignora */
+  }
+}
 
 // ── Persistência local ─────────────────────────────────────────────
 function safeStorage(): Storage | null {
