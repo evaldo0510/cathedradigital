@@ -376,48 +376,14 @@ export const PrayerEngineReader: React.FC<Props> = ({
   // ============ READER ============
   const content = (
     <article className="mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
-      {/* Barra de progresso hierárquica */}
-      <div className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/30 p-4">
-        <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
-          <span className="font-bold text-stitch-secondary">{prayer.title}</span>
-          <span>{overallPercent}%</span>
-        </div>
-        {activeSection && (
-          <p className="mt-2 font-stitch-body text-sm text-stitch-on-surface">
-            <span className="text-stitch-secondary">●</span> {activeSection.title}
-          </p>
-        )}
-        {currentMystery && (
-          <>
-            <div className="mt-2 flex items-center justify-between font-stitch-body text-xs text-stitch-on-surface-variant">
-              <span>{currentMystery.title}</span>
-              <span>
-                Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
-              </span>
-            </div>
-            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
-              <div
-                className="h-full bg-stitch-secondary/80 transition-all duration-500"
-                style={{
-                  width: `${((currentMysteryIndex + 1) / mysteriesInSection.length) * 100}%`,
-                }}
-                aria-hidden
-              />
-            </div>
-          </>
-        )}
-        {aveCount > 0 && aveCurrentIdx >= 0 && (
-          <p className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
-            <span className="text-stitch-secondary">●</span> Ave-Maria {aveCurrentIdx + 1} de{' '}
-            {aveCount}
-          </p>
-        )}
-        <div className="mt-3 border-t border-stitch-outline-variant/30 pt-2">
+      {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
+      {isSimple ? (
+        <div className="mb-8">
           <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
-            <span>Progresso geral</span>
+            <span className="font-bold text-stitch-secondary">{prayer.title}</span>
             <span>{overallPercent}%</span>
           </div>
-          <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
+          <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
             <div
               className="h-full bg-stitch-secondary transition-all duration-500"
               style={{ width: `${overallPercent}%` }}
@@ -425,6 +391,57 @@ export const PrayerEngineReader: React.FC<Props> = ({
             />
           </div>
         </div>
+      ) : (
+        <div className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/30 p-4">
+          <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
+            <span className="font-bold text-stitch-secondary">{prayer.title}</span>
+            <span>{overallPercent}%</span>
+          </div>
+          {activeSection && (
+            <p className="mt-2 font-stitch-body text-sm text-stitch-on-surface">
+              <span className="text-stitch-secondary">●</span> {activeSection.title}
+            </p>
+          )}
+          {currentMystery && (
+            <>
+              <div className="mt-2 flex items-center justify-between font-stitch-body text-xs text-stitch-on-surface-variant">
+                <span>{currentMystery.title}</span>
+                <span>
+                  Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
+                </span>
+              </div>
+              <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
+                <div
+                  className="h-full bg-stitch-secondary/80 transition-all duration-500"
+                  style={{
+                    width: `${((currentMysteryIndex + 1) / mysteriesInSection.length) * 100}%`,
+                  }}
+                  aria-hidden
+                />
+              </div>
+            </>
+          )}
+          {aveCount > 0 && aveCurrentIdx >= 0 && (
+            <p className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
+              <span className="text-stitch-secondary">●</span> Ave-Maria {aveCurrentIdx + 1} de{' '}
+              {aveCount}
+            </p>
+          )}
+          <div className="mt-3 border-t border-stitch-outline-variant/30 pt-2">
+            <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
+              <span>Progresso geral</span>
+              <span>{overallPercent}%</span>
+            </div>
+            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
+              <div
+                className="h-full bg-stitch-secondary transition-all duration-500"
+                style={{ width: `${overallPercent}%` }}
+                aria-hidden
+              />
+            </div>
+          </div>
+        </div>
+      )}
       </div>
 
       {/* Cabeçalho do bloco */}
