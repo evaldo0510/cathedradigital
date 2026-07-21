@@ -37,6 +37,8 @@ import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 import { useWakeLock } from '@/hooks/useWakeLock';
 import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
+import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
+import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 type MissalView = 'celebracao' | 'ordinario' | 'proprio';
