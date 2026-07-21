@@ -1,5 +1,11 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { ContentSkeleton } from './primitives';
+
+/**
+ * RouteSkeletons — consolidados no Sprint P2 (Logos 2030).
+ * APIs públicas preservadas (BibleSkeleton, CatechismSkeleton, LogosSkeleton).
+ * Todos consomem a primitiva unificada `ContentSkeleton`.
+ */
 
 export const BibleSkeleton = () => (
   <div
@@ -19,21 +25,21 @@ export const BibleSkeleton = () => (
 );
 
 export const CatechismSkeleton = () => (
-  <div className="w-full max-w-5xl mx-auto space-y-spacing-2xl py-spacing-xl animate-in fade-in duration-700">
-    <div className="space-y-spacing-lg text-center">
-      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 border border-primary/10 mx-auto animate-pulse" />
-      <div className="h-spacing-xl w-spacing-4xl bg-muted/40 rounded-premium-full mx-auto animate-pulse" />
+  <div
+    className="w-full max-w-5xl mx-auto space-y-spacing-2xl py-spacing-xl animate-in fade-in duration-700"
+    aria-hidden="true"
+    aria-busy="true"
+  >
+    <div className="space-y-spacing-lg text-center flex flex-col items-center">
+      <ContentSkeleton variant="circle" className="w-spacing-2xl h-spacing-2xl" />
+      <ContentSkeleton variant="block" className="h-spacing-xl w-[280px]" />
     </div>
 
-    <div className="space-y-spacing-xl max-w-spacing-3xl mx-auto">
+    <div className="space-y-spacing-xl max-w-3xl mx-auto">
       {[1, 2, 3].map((i) => (
         <div key={i} className="space-y-spacing-md">
-          <div className="h-spacing-xl w-spacing-4xl bg-muted/40 rounded-premium-full animate-pulse duration-700" />
-          <div className="space-y-spacing-xs">
-            <div className="h-spacing-md w-full bg-muted/20 rounded-premium-full animate-pulse duration-700" />
-            <div className="h-spacing-md w-full bg-muted/20 rounded-premium-full animate-pulse duration-700" />
-            <div className="h-spacing-md w-spacing-xs/3 bg-muted/20 rounded-premium-full animate-pulse duration-700" />
-          </div>
+          <ContentSkeleton variant="block" className="h-spacing-xl w-[220px]" />
+          <ContentSkeleton variant="text" lines={3} />
         </div>
       ))}
     </div>
@@ -41,32 +47,36 @@ export const CatechismSkeleton = () => (
 );
 
 export const LogosSkeleton = () => (
-  <div className="w-full max-w-spacing-4xl mx-auto h-[70vh] flex flex-col space-y-spacing-lg md:space-y-spacing-xl py-spacing-lg md:py-spacing-xl animate-in fade-in duration-700">
+  <div
+    className="w-full max-w-4xl mx-auto h-[70vh] flex flex-col space-y-spacing-lg md:space-y-spacing-xl py-spacing-lg md:py-spacing-xl animate-in fade-in duration-700"
+    aria-hidden="true"
+    aria-busy="true"
+  >
     <div className="flex items-center gap-spacing-md border-b border-border/5 pb-spacing-lg md:pb-spacing-xl">
-      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 border border-primary/10 animate-pulse" />
-      <div className="space-y-spacing-xs">
-        <div className="h-spacing-md w-spacing-4xl bg-muted/40 rounded-premium-full animate-pulse" />
-        <div className="h-spacing-sm w-spacing-4xl bg-muted/20 rounded-premium-full animate-pulse" />
+      <ContentSkeleton variant="circle" className="w-spacing-2xl h-spacing-2xl" />
+      <div className="space-y-spacing-xs flex-1 max-w-[280px]">
+        <ContentSkeleton variant="block" className="h-spacing-md w-[70%]" />
+        <ContentSkeleton variant="block" className="h-spacing-sm w-[45%]" />
       </div>
     </div>
-    
+
     <div className="flex-1 space-y-spacing-xl overflow-hidden">
       <div className="flex justify-start gap-spacing-md">
-        <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted/30 animate-pulse" />
-        <div className="h-spacing-3xl w-spacing-xs/3 bg-muted/10 rounded-premium animate-pulse" />
+        <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
+        <ContentSkeleton variant="block" className="h-spacing-3xl w-[60%]" />
       </div>
       <div className="flex justify-end gap-spacing-md">
-        <div className="h-spacing-2xl w-spacing-2xs/2 bg-primary/5 rounded-premium animate-pulse" />
-        <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/5 animate-pulse" />
+        <ContentSkeleton variant="block" className="h-spacing-2xl w-[45%]" />
+        <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
       </div>
       <div className="flex justify-start gap-spacing-md">
-        <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted/30 animate-pulse" />
-        <div className="h-spacing-4xl w-spacing-sm/4 bg-muted/10 rounded-premium animate-pulse" />
+        <ContentSkeleton variant="circle" className="w-spacing-xl h-spacing-xl shrink-0" />
+        <ContentSkeleton variant="block" className="h-spacing-4xl w-[70%]" />
       </div>
     </div>
-    
+
     <div className="pt-spacing-xl border-t border-border/5">
-      <div className="h-spacing-2xl w-full bg-muted/5 rounded-premium-full border border-border/10 animate-pulse" />
+      <ContentSkeleton variant="pill" className="h-spacing-2xl w-full" />
     </div>
   </div>
 );
