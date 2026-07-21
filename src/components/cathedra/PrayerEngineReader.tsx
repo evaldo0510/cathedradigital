@@ -899,7 +899,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
           type="button"
           variant="pill-active"
           size="pill"
-          onClick={goNext}
+          onClick={goNextRhythmed}
           className="px-4 py-2"
         >
           {isLastOverall ? 'Concluir' : 'Próximo'}
