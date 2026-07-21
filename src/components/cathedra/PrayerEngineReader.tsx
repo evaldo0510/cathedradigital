@@ -233,7 +233,8 @@ export const PrayerEngineReader: React.FC<Props> = ({
     if (conn?.saveData) return;
     if (conn?.effectiveType && /^(slow-)?2g$/.test(conn.effectiveType)) return;
 
-    const href = resolveMysteryImage(readMysteryMeta(nextMystery).hero_image_path);
+    const nextMeta = readMysteryMeta(nextMystery);
+    const href = resolveMysteryImage(nextMeta.image_slug ?? nextMeta.hero_image_path, nextMeta.image_collection);
     if (!href) return;
     const selector = `link[rel="preload"][data-mystery-preload="${nextMystery.id}"]`;
     if (document.head.querySelector(selector)) return;

@@ -7,7 +7,7 @@ import { PlayCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
-import { readMysteryMeta } from './mysteryMeta';
+import { readMysteryMeta, readMysteryImageSlug } from './mysteryMeta';
 import { resolveMysteryImage } from './mysteryImages';
 
 interface Props {
@@ -59,7 +59,7 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
   const contemplativeTitle = meta.contemplative_title ?? mystery.title;
   const subtitle = mystery.subtitle;
   const passageRef = meta.primary_passage?.ref ?? mystery.gospel_ref;
-  const heroImage = resolveMysteryImage(meta.hero_image_path);
+  const heroImage = resolveMysteryImage(readMysteryImageSlug(meta), meta.image_collection);
   const hasImage = Boolean(heroImage);
 
   return (

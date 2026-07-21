@@ -142,7 +142,7 @@ const MysteryNexusPanel: React.FC<Props> = ({ mystery, accentClass = 'text-stitc
                 <blockquote key={i} className="font-stitch-serif text-sm italic leading-relaxed text-stitch-on-surface">
                   “{m.quote}”
                   <footer className="mt-1 font-stitch-body text-xs not-italic text-stitch-on-surface-variant">
-                    — {m.author}, {m.work}{m.paragraph ? ` §${m.paragraph}` : ''}
+                    — {[m.author, m.document, m.locus].filter(Boolean).join(', ')}
                   </footer>
                 </blockquote>
               ))}
