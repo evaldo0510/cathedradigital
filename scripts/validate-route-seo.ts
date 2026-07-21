@@ -185,19 +185,6 @@ if (existsSync(sitemapPath)) {
       push(p, 'error', `URL no sitemap difere do canonicalPath ("${meta.canonicalPath}")`, 'sitemap');
     }
   }
-  for (const p of sitemapEntries) {
-    const meta = resolveRouteMeta(p);
-    if (!meta) {
-      push(p, 'error', `URL no sitemap sem meta correspondente`, 'sitemap');
-      continue;
-    }
-    if (meta.noindex) {
-      push(p, 'error', `URL no sitemap está marcada noindex em ROUTE_META`, 'sitemap');
-    }
-    if (meta.canonicalPath && meta.canonicalPath !== p) {
-      push(p, 'error', `URL no sitemap difere do canonicalPath ("${meta.canonicalPath}")`, 'sitemap');
-    }
-  }
 
   // 3b) Rotas estáticas indexáveis devem aparecer no sitemap (ignorando rotas :param)
   const sitemapSet = new Set(sitemapEntries);
