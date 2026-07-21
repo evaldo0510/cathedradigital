@@ -16,6 +16,7 @@ import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome'
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { Button } from '@/components/ui/button';
 import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
@@ -151,59 +152,58 @@ const PrayerDetailPage: React.FC = () => {
               <Clock className="h-3.5 w-3.5" aria-hidden />
               {Math.max(1, Math.round(prayer.estimated_seconds / 60))} min
             </span>
-            <button
+            <Button
               type="button"
+              variant={isFavorite ? 'pill-toned' : 'pill'}
+              size="pill"
               onClick={toggleFavorite}
               aria-pressed={isFavorite}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest transition-colors',
-                isFavorite
-                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
-                  : 'border-stitch-outline-variant/40 text-stitch-on-surface-variant hover:border-stitch-secondary/50 hover:text-stitch-on-surface',
-              )}
             >
               <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} aria-hidden />
               {isFavorite ? 'Favorita' : 'Favoritar'}
-            </button>
+            </Button>
           </div>
 
           {/* Controles do modo de leitura */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {fromLiturgia && (
-              <Link
-                to="/liturgia"
-                className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-                Voltar para Liturgia
-              </Link>
+              <Button asChild variant="pill" size="pill">
+                <Link to="/liturgia">
+                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+                  Voltar para Liturgia
+                </Link>
+              </Button>
             )}
             <div
               role="group"
               aria-label="Tamanho da fonte"
               className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/40 p-1"
             >
-              <button
+              <Button
                 type="button"
+                variant="pill"
+                size="pill-sm"
                 onClick={() => changeFont(-1)}
                 disabled={fontIndex === 0}
                 aria-label="Diminuir fonte"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
               >
                 <Minus className="h-3.5 w-3.5" aria-hidden />
-              </button>
+              </Button>
               <span className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant" aria-live="polite">
                 {fontKey.toUpperCase()}
               </span>
-              <button
+              <Button
                 type="button"
+                variant="pill"
+                size="pill-sm"
                 onClick={() => changeFont(1)}
                 disabled={fontIndex === FONT_STEPS.length - 1}
                 aria-label="Aumentar fonte"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-              </button>
+              </Button>
             </div>
           </div>
         </header>

@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Focus, X, ChevronRight, BookOpen, Church } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
@@ -209,16 +210,17 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
             title={prayer.title}
             url={`/oracao/${prayer.slug}`}
           />
-          <button
+          <Button
             type="button"
+            variant="pill"
+            size="pill"
             onClick={() => setFocus((f) => !f)}
             aria-pressed={focus}
             aria-label="Alternar modo foco (F)"
-            className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface"
           >
-            {focus ? <X className="h-3.5 w-3.5" aria-hidden /> : <Focus className="h-3.5 w-3.5" aria-hidden />}
+            {focus ? <X aria-hidden /> : <Focus aria-hidden />}
             {focus ? 'Sair do foco' : 'Modo foco'}
-          </button>
+          </Button>
         </div>
         {!focus && (
           <div className="mt-4 flex flex-col items-center gap-3">
@@ -327,23 +329,27 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
 
       {/* Navegação */}
       <nav className="mt-10 flex items-center justify-between gap-4" aria-label="Navegação da oração">
-        <button
+        <Button
           type="button"
+          variant="pill"
+          size="pill"
           onClick={goPrev}
           disabled={idx === 0}
-          className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface disabled:opacity-40"
+          className="px-4 py-2"
         >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+          <ArrowLeft aria-hidden />
           Anterior
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="pill-active"
+          size="pill"
           onClick={goNext}
-          className="inline-flex items-center gap-1.5 rounded-full bg-stitch-secondary px-4 py-2 font-stitch-body text-xs uppercase tracking-widest text-white transition-colors hover:bg-stitch-secondary/90"
+          className="px-4 py-2"
         >
           {idx === blocks.length - 1 ? 'Concluir' : 'Próximo'}
-          {idx === blocks.length - 1 ? null : <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
-        </button>
+          {idx === blocks.length - 1 ? null : <ArrowRight aria-hidden />}
+        </Button>
       </nav>
 
       {/* Continuidade — visível ao chegar no último bloco, fora do foco. */}
