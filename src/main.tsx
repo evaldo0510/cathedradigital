@@ -9,6 +9,7 @@ import { initLiturgicalPrefetchGuard } from "./lib/litcalPrefetchGuard";
 import { registerSW } from 'virtual:pwa-register';
 import { initSentry } from "./lib/sentry";
 import { initRuntimeErrorLogger } from "./lib/runtimeErrorLogger";
+import { initActionLogger } from "./lib/observability/logAction";
 // Auto-registra todos os ReaderAutoNexus (Bíblia, CIC, Magistério, Santo,
 // Liturgia, Oração, Glossário, Jornada) no ReaderAutoNexusRegistry.
 import "./core/knowledge/adapters/registry";
