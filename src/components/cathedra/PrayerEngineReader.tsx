@@ -717,6 +717,18 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
+      {/* Slots contemplativos (Rosário) — Pergunta + Silêncio ao concluir mistério */}
+      {isRosary && mysteryJustCompleted && !focus && currentMystery && (
+        <>
+          <ContemplationQuestion mystery={currentMystery} />
+          <SilenceTimer
+            suggestedSeconds={
+              (readMysteryMeta(currentMystery).suggested_silence ?? 20) as 0 | 10 | 20 | 30
+            }
+          />
+        </>
+      )}
+
       {/* Referências */}
       {(current.refs?.bible?.length || current.refs?.catechism?.length) && !focus && (
         <section className="mb-10 border-t border-stitch-outline-variant/30 pt-6">
