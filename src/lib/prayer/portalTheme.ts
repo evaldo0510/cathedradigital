@@ -49,6 +49,8 @@ const BY_SLUG: Record<string, ResolvedPortalTheme> = {
   'regina-caeli': { theme: 'dawn', accentIcon: Sunrise, quote: { text: 'Rainha do céu, alegrai-vos, aleluia!', ref: 'Antífona pascal' } },
   magnificat: { theme: 'sunset', accentIcon: Sunset, quote: { text: 'A minha alma engrandece o Senhor.', ref: 'Lc 1,46' } },
   'te-deum': { theme: 'church', accentIcon: Flame, quote: { text: 'A vós, ó Deus, louvamos.', ref: 'Te Deum' } },
+  'veni-creator': { theme: 'church', accentIcon: Flame, quote: { text: 'Vinde, Espírito Criador.', ref: 'Hymnarium Romanum' } },
+  'exame-de-consciencia': { theme: 'passion', accentIcon: Cross, quote: { text: 'Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar.', ref: '1Jo 1,9' } },
 
   // — Missal Romano —
   'missa-ordinario': { theme: 'church', accentIcon: Church, quote: { text: 'Fazei isto em memória de mim.', ref: 'Lc 22,19' } },
