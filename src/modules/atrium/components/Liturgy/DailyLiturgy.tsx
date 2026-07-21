@@ -1,9 +1,15 @@
 import React from 'react';
 import { useLiturgyToday } from '../../hooks';
+import { useSaintOfDay } from '@/hooks/useSaintOfDay';
 
 const DailyLiturgy: React.FC = () => {
   const l = useLiturgyToday();
+  const { data: saint } = useSaintOfDay();
   if (!l) return null;
+
+  // Prefere o santo real (edge oficial + santoral); mantém adapter como fallback.
+  const displayName = saint?.name ?? l.saintOfDay?.name ?? null;
+  const displayTitle = saint?.title ?? l.saintOfDay?.title ?? null;
 
   return (
     <section data-atrium-block="P3" aria-labelledby="atrium-liturgy">
@@ -24,11 +30,11 @@ const DailyLiturgy: React.FC = () => {
             {l.season} · {l.weekday}
           </span>
         </div>
-        {l.saintOfDay ? (
+        {displayName ? (
           <div className="text-sm">
-            <span className="font-medium">{l.saintOfDay.name}</span>
-            {l.saintOfDay.title && (
-              <span className="text-muted-foreground"> — {l.saintOfDay.title}</span>
+            <span className="font-medium">{displayName}</span>
+            {displayTitle && (
+              <span className="text-muted-foreground"> — {displayTitle}</span>
             )}
           </div>
         ) : (
