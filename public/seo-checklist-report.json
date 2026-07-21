@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20T20:56:46.021Z",
+  "generated_at": "2026-07-21T19:49:52.037Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
     "pass": 11,
@@ -11,7 +11,7 @@
       "id": "sitemap_exists",
       "label": "sitemap.xml presente",
       "status": "pass",
-      "detail": "81 URLs declaradas."
+      "detail": "95 URLs declaradas."
     },
     {
       "id": "sitemap_host",
@@ -81,7 +81,7 @@
     },
     {
       "id": "glossary_in_sitemap",
-      "label": "Verbetes do Glossário no sitemap (38 publicados)",
+      "label": "Verbetes do Glossário no sitemap (42 publicados)",
       "status": "pass",
       "detail": "Todos presentes."
     },
