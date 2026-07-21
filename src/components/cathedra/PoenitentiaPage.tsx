@@ -118,7 +118,7 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => favs.toggle('prayer', prayer.id, { title: prayer.title, subtitle: prayer.subtitle ?? undefined })}
+              onClick={() => favs.toggle({ contentType: 'prayer', contentId: prayer.id, title: prayer.title })}
               className="gap-spacing-xs"
             >
               <Icons.Bookmark className={`w-4 h-4 ${isFavorite ? 'fill-primary text-primary' : ''}`} />
