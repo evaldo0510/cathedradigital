@@ -285,7 +285,7 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
           onClick={handleEnter}
           className={cn(
             'h-14 min-w-[260px] rounded-full px-10',
-            'bg-stitch-secondary text-stitch-on-secondary hover:bg-stitch-secondary/90',
+            'bg-stitch-secondary text-stitch-secondary-foreground hover:bg-stitch-secondary/90',
             'font-stitch-body text-[13px] font-bold uppercase tracking-[0.32em]',
             'shadow-[0_10px_30px_-12px_hsl(var(--stitch-secondary)/0.55)]',
             'transition-transform duration-200 hover:scale-[1.02]',
