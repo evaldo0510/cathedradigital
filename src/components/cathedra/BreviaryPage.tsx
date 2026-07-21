@@ -198,11 +198,6 @@ const BreviaryPage: React.FC = () => {
   );
 
   const { liturgy, isLoading: liturgyLoading, isError: liturgyError, isOfflineData, refresh: refreshLiturgy } = useDailyLiturgy(selectedDate);
-  const liturgyStatus = liturgyLoading
-    ? 'loading'
-    : liturgyError
-      ? (online ? 'unavailable' : 'offline')
-      : (!liturgy ? (online ? 'unavailable' : 'offline') : (isOfflineData && !online ? 'offline' : 'ready'));
   const { office, isLoading: officeLoading, fromCache } = useLiturgyHoursOffice(
     isoDate,
     selectedHour,
@@ -210,6 +205,12 @@ const BreviaryPage: React.FC = () => {
   );
   const online = useOnlineStatus();
   const showOfflineBanner = !online && !!office && fromCache;
+
+  const liturgyStatus: 'loading' | 'ready' | 'unavailable' | 'offline' = liturgyLoading
+    ? 'loading'
+    : liturgyError || !liturgy
+      ? (online ? 'unavailable' : 'offline')
+      : (isOfflineData && !online ? 'offline' : 'ready');
 
   // Prefetch das 7 horas (offline-first, idempotente) quando o dia carrega.
   useEffect(() => {
@@ -422,7 +423,12 @@ const BreviaryPage: React.FC = () => {
         <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
         {/* Sprint 3 · Onda C — hora recomendada + Próprio do Dia via ?d= */}
-        <HourRecommendationCard recommendation={recommendation} liturgy={liturgy ?? null} />
+        <HourRecommendationCard
+          recommendation={recommendation}
+          liturgy={liturgy ?? null}
+          liturgyStatus={liturgyStatus}
+          onRetryLiturgy={() => { void refreshLiturgy(); }}
+        />
 
 
 
