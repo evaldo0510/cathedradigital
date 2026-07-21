@@ -105,7 +105,15 @@ export const NexusMetricsOverlay: React.FC = () => {
               })}
             </tbody>
           </table>
-          <div className="mt-2 flex items-center justify-end">
+          <div className="mt-2 flex items-center justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={() => exportSnapshotAsJson(snap)}
+              aria-label="Exportar métricas do Nexus como JSON"
+              className="rounded border border-stitch-outline-variant/40 px-2 py-0.5 text-[10px] uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/60 hover:text-stitch-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+            >
+              Exportar JSON
+            </button>
             <button
               type="button"
               onClick={resetNexusMetrics}
