@@ -59,7 +59,7 @@ const MysteryHero: React.FC<Props> = ({ mystery, onStart, estimatedMinutes = 4 }
   const contemplativeTitle = meta.contemplative_title ?? mystery.title;
   const subtitle = mystery.subtitle;
   const passageRef = meta.primary_passage?.ref ?? mystery.gospel_ref;
-  const heroImage = resolveMysteryImage(meta.hero_image_path);
+  const heroImage = resolveMysteryImage(readMysteryImageSlug(meta), meta.image_collection);
   const hasImage = Boolean(heroImage);
 
   return (
