@@ -25,22 +25,32 @@ function readStoredDuration(fallback: 0 | 10 | 20 | 30): 0 | 10 | 20 | 30 {
 
 interface Props {
   suggestedSeconds?: 0 | 10 | 20 | 30;
+  /**
+   * Sobrescreve completamente a duração (ignora presets e localStorage local).
+   * Usado quando o ritmo contemplativo global controla o valor.
+   */
+  forcedSeconds?: number;
 }
 
-const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20 }) => {
-  const [duration, setDuration] = useState<0 | 10 | 20 | 30>(() =>
+const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20, forcedSeconds }) => {
+  const isForced = typeof forcedSeconds === 'number';
+  const [stored, setStored] = useState<0 | 10 | 20 | 30>(() =>
     readStoredDuration(suggestedSeconds),
   );
+  const duration = isForced ? Math.max(0, Math.round(forcedSeconds!)) : stored;
+  const setDuration = (v: 0 | 10 | 20 | 30) => setStored(v);
   const [remaining, setRemaining] = useState<number>(duration);
   const [running, setRunning] = useState(false);
   const rafRef = useRef<number | null>(null);
   const endAtRef = useRef<number>(0);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, String(duration)); } catch { /* silent */ }
+    if (!isForced) {
+      try { localStorage.setItem(STORAGE_KEY, String(stored)); } catch { /* silent */ }
+    }
     setRemaining(duration);
     setRunning(false);
-  }, [duration]);
+  }, [duration, stored, isForced]);
 
   useEffect(() => {
     if (!running) {
@@ -63,6 +73,13 @@ const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20 }) => {
   }, [running]);
 
   if (duration === 0) {
+    if (isForced) {
+      return (
+        <p className="my-6 text-center font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant/70">
+          Silêncio guiado desativado no ritmo contemplativo
+        </p>
+      );
+    }
     return (
       <div className="my-6 flex flex-wrap items-center justify-center gap-2">
         <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
@@ -106,23 +123,25 @@ const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20 }) => {
       aria-label={`Silêncio guiado de ${duration} segundos`}
       className="my-6 flex flex-col items-center gap-4 rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/30 px-6 py-6"
     >
-      <div className="flex flex-wrap justify-center gap-1.5">
-        {OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => setDuration(opt.value)}
-            className={cn(
-              'rounded-full border px-2.5 py-1 font-stitch-body text-[11px] transition',
-              opt.value === duration
-                ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-on-surface'
-                : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary/60',
-            )}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
+      {!isForced && (
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setDuration(opt.value)}
+              className={cn(
+                'rounded-full border px-2.5 py-1 font-stitch-body text-[11px] transition',
+                opt.value === duration
+                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-on-surface'
+                  : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary/60',
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div
         className={cn(

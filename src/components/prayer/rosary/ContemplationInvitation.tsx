@@ -9,6 +9,7 @@ import { Sparkles } from 'lucide-react';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
 import { readMysteryMeta } from './mysteryMeta';
 import SilenceTimer from './SilenceTimer';
+import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 
 const ContemplationInvitation: React.FC<Props> = ({ mystery, accentClass = 'text-stitch-secondary' }) => {
   const meta = readMysteryMeta(mystery);
+  const { rhythm } = useContemplativeRhythm();
   const phrases = (meta.contemplation_invitation && meta.contemplation_invitation.length > 0)
     ? meta.contemplation_invitation
     : meta.logos_meditation
@@ -48,7 +50,7 @@ const ContemplationInvitation: React.FC<Props> = ({ mystery, accentClass = 'text
         ))}
       </ol>
       <div className="mt-6">
-        <SilenceTimer suggestedSeconds={(meta.suggested_silence ?? 20) as 0 | 10 | 20 | 30} />
+        <SilenceTimer forcedSeconds={rhythm.silenceSec} />
       </div>
       <p className="mt-2 font-stitch-body text-[10px] uppercase tracking-[0.28em] text-stitch-on-surface-variant/70">
         Só então inicie o Pai-Nosso

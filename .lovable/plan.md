@@ -1,76 +1,71 @@
-## Sprint 4 · Onda A — Mistérios Contemplativos
+# Sprint 4 · Onda C — Rosário Contemplativo Definitivo
 
-Elevar cada dezena do Rosário a uma experiência de contemplação editorial, sem tocar na arquitetura do Prayer Engine v2, persistência, Nexus, TTS ou ReaderContinuation.
+Escopo grande. Proponho **quebrar em 3 entregas sequenciais** para permitir validação incremental. Antes delas, entrego os **2 ajustes imediatos** que você pediu no início da mensagem.
 
-### 1. Banco — expansão editorial dos mistérios
+---
 
-Migration adicionando à tabela `prayer_mysteries` (via coluna `meta jsonb` — sem quebrar schema):
+## Entrega 0 — Ajustes imediatos (esta sprint, agora)
 
-- `contemplative_title` (título contemplativo)
-- `subtitle`
-- `primary_passage` `{ ref, texto }`
-- `complementary_passages` (2–4 refs)
-- `spiritual_fruit`
-- `virtue`
-- `logos_meditation` (3–6 linhas)
-- `contemplation_question`
-- `suggested_silence` (`10|20|30|0`)
-- `recommended_intention`
-- `catechism_ref` (nullable)
-- `patristic_ref` `{ author, work, quote }` (nullable)
-- `hero_image_path` (rota do asset)
+**0.1 · Painel de Ritmo Contemplativo**
+- Novo `ContemplativeSettingsDialog.tsx` acessível por ícone no header do Reader.
+- Controles (sliders):
+  - Duração da pausa entre blocos (0–5s, default 0.5s)
+  - Timer de silêncio no bloco Contemple (0–60s, default 15s)
+  - Velocidade de transição fade (150–1000ms, default 500ms)
+- Persistência em `localStorage` (`cathedra.prayer.rhythm`).
+- Hook `useContemplativeRhythm.ts` consumido por `PrayerEngineReader`, `ContemplationInvitation` e `MysteryClosingCard`.
 
-Seed dos 20 mistérios (Gozosos, Luminosos, Dolorosos, Gloriosos) com conteúdo editorial completo em PT-BR.
+**0.2 · Retomada de sessão do Rosário**
+- Estender `prayer_sessions` com `last_section_id`, `last_block_index`, `last_mystery_slug` (colunas nullable; migration + GRANT).
+- Salvar posição a cada mudança de bloco (debounce 2s).
+- Ao reabrir `/oracao/rosario`: banner `ResumePrayerCard` com "Retomar do 3º Mistério Gozoso" ou "Reiniciar do começo".
+- Hook `useResumePrayerSession.ts`.
 
-### 2. Imagens artísticas (20 mistérios)
+---
 
-Geradas com `imagegen` em qualidade `standard`, atmosfera sacra unificada (paleta Cathedra, luz suave, sem excesso decorativo). Salvas em `src/assets/rosary/misterios/{grupo}/{slug}.jpg`. Referenciadas via `meta.hero_image_path`.
+## Entrega 1 — Banco editorial + Ilustrações (próxima sprint)
 
-### 3. Componentes novos
+- Migration expandindo `prayer_mysteries` com 13 campos editoriais (`contemplation_invitation`, `spiritual_fruit`, `closing_prayer`, `concrete_action`, `related_saints[]`, `church_fathers[]`, `magisterium_refs[]`, `catechism_refs[]`, `primary_scripture`, `parallel_scriptures[]`, `iconography`, `bibliography[]`, `logos_meditation`).
+- Seed editorial completo dos 20 mistérios (conteúdo escrito, sem placeholder).
+- Remoção total dos fallbacks em `mysteryMeta.ts` → passa a ser apenas tipos.
+- Auditoria `scripts/audit-mysteries-editorial.ts` no CI: falha se algum campo obrigatório vazio.
+- **Ilustrações**: 20 imagens definitivas (reprocessamento com prompt unificado — estilo sacro clássico, paleta litúrgica por série). Loading progressivo (blur-up + AVIF/WebP).
+
+## Entrega 2 — Áudio + Intenções + Estatísticas
+
+- **TTS**: 3 modos (integral / só meditações / só orações) no header do Reader. Arquitetura `PrayerAudioSource` (interface) preparada para narração humana futura via bucket `prayer-audio`.
+- **Intenções**: `PrayerIntentionPicker` antes de iniciar (6 predefinidas + livre). Persiste em `prayer_sessions.intention`. Reaparece no encerramento.
+- **Estatísticas espirituais**: painel `SpiritualCompanionPanel` (dias consecutivos, mistérios concluídos, último Rosário, tempo total, intenção ativa). Linguagem contemplativa, sem streaks/badges.
+
+## Entrega 3 — Encerramento + Homologação
+
+- `RosaryClosingExperience.tsx`: resumo, fruto do dia, oração final, sugestão bíblica + Catecismo + santo + próxima oração via Nexus.
+- Auditoria de homologação: WCAG AA (axe), Lighthouse mobile ≥90, E2E de retomada, TTS, contemplação, favoritos, histórico, Nexus.
+- Relatório `docs/audits/rosario-homologacao.md` com selo "Módulo de Referência Cathedra".
+
+---
+
+## Detalhes técnicos (Entrega 0)
 
 ```text
-src/components/prayer/rosary/
-  MysteryHero.tsx           # Hero Logos 2030 fullscreen
-  MysteryLogosMeditation.tsx # Bloco reflexão antes da 1ª Ave
-  SpiritualFruitBadge.tsx   # Bloco discreto do fruto
-  ContemplationQuestion.tsx # Pergunta final
-  SilenceTimer.tsx          # Timer opcional (10/20/30s)
+src/
+  components/cathedra/prayer/
+    ContemplativeSettingsDialog.tsx   (novo)
+    ResumePrayerCard.tsx              (novo)
+  hooks/
+    useContemplativeRhythm.ts         (novo)
+    useResumePrayerSession.ts         (novo)
+  pages/PrayerDetailPage.tsx          (integra ResumePrayerCard)
+  components/cathedra/prayer/PrayerEngineReader.tsx  (consome rhythm + salva posição)
+
+supabase/migrations/
+  <ts>_prayer_sessions_resume.sql     (add colunas + GRANT já existente)
 ```
 
-- `MysteryHero`: imagem fullscreen, título contemplativo, passagem, tempo estimado, botão "Iniciar contemplação". Fade suave ao entrar no Reader.
-- `SilenceTimer`: seletor de duração persistido em `localStorage` por usuário, animação minimalista.
+Sem novas dependências. Zero mudança em Business Logic fora do módulo Oração.
 
-### 4. Integração no Reader
+---
 
-`PrayerEngineReader` (ou wrapper específico do Rosário) recebe `MysteryContext` quando a oração é o Rosário:
+## Confirmação
 
-- Antes de cada dezena → `MysteryHero` (bloqueia até "Iniciar contemplação").
-- Bloco 1 da dezena → `MysteryLogosMeditation` + `SpiritualFruitBadge` inline.
-- Após última Ave-Maria da dezena → `ContemplationQuestion` + `SilenceTimer`.
-
-Injeção via novos tipos de `prayer_blocks` (`kind = 'mystery_hero' | 'logos_meditation' | 'contemplation_question' | 'silence'`) para não hardcodar — o Reader apenas renderiza o componente correspondente ao `kind`.
-
-### 5. Critérios de aceite (validação)
-
-- Prayer Engine v2 continua funcional (typecheck + testes existentes verdes).
-- Persistência de `prayer_sessions` inalterada.
-- Nexus (`prayerAutoNexus`) segue gerando conexões.
-- `PrayerTTSButton` funciona por bloco novo.
-- Hero não conta como progresso.
-- Todo conteúdo vem do banco.
-
-### 6. Fora do escopo (próximas ondas)
-
-Música ambiente, Modo Família, estatísticas, áudio sincronizado avançado, animações entre dezenas.
-
-### Ordem de execução
-
-1. Migration (schema + seed dos 20 mistérios com conteúdo editorial).
-2. Geração das 20 imagens contemplativas.
-3. Componentes novos (Hero, LogosMeditation, Fruit, Question, SilenceTimer).
-4. Integração no Reader via novos `kind` de bloco.
-5. Validação: typecheck, teste E2E do fluxo de um mistério.
-
-### Nota técnica
-
-Como são ~20 imagens standard-quality, o custo em créditos é significativo. Recomendo confirmar antes que os créditos estão restaurados (o erro 402 anterior indica esgotamento). Alternativa: gerar em qualidade `fast` primeiro e reprocessar seletivamente as que precisarem de mais fidelidade.
+Posso começar já pela **Entrega 0** (rápida, ~1 turno) e depois seguirmos Entrega 1 → 2 → 3, ou você prefere reordenar / cortar algo?

@@ -26,6 +26,8 @@ import {
   X,
   PlayCircle,
 } from 'lucide-react';
+import ContemplativeSettingsDialog from '@/components/prayer/rosary/ContemplativeSettingsDialog';
+import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
@@ -124,6 +126,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   contentStyle,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
+  const { rhythm } = useContemplativeRhythm();
 
   // Índice atual derivado do cursor persistido.
   const cursorIndex = useMemo(() => {
@@ -330,6 +333,27 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   const goPrev = useCallback(() => goTo(cursorIndex - 1), [goTo, cursorIndex]);
 
+  // Aplica a "pausa entre blocos" configurada em ritmo contemplativo às
+  // transições disparadas manualmente (Próximo, Continuar mistério, Encerramento).
+  // Não afeta o auto-avanço, que já é temporizado por `usePrayerAutoAdvance`.
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimerRef = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+  }, []);
+  const goNextRhythmed = useCallback(() => {
+    if (rhythm.pauseMs <= 0) {
+      goNext();
+      return;
+    }
+    setIsTransitioning(true);
+    if (transitionTimerRef.current) window.clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = window.setTimeout(() => {
+      goNext();
+      setIsTransitioning(false);
+    }, rhythm.pauseMs);
+  }, [goNext, rhythm.pauseMs]);
+
   // ── Persistência de cursor por sub-recurso (contextKey) ──
   // Ex.: Breviário grava/lê "prayer-cursor:breviary:laudes:2026-07-21" no
   // localStorage, garantindo retomada exata por Hora+data offline.
@@ -388,7 +412,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         setFocus((f) => !f);
       } else if (e.key === 'ArrowRight' || e.key === 'j') {
         e.preventDefault();
-        goNext();
+        goNextRhythmed();
       } else if (e.key === 'ArrowLeft' || e.key === 'k') {
         e.preventDefault();
         goPrev();
@@ -398,7 +422,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goNext, goPrev, focus]);
+  }, [goNextRhythmed, goPrev, focus]);
 
   const bookmarks = session.session?.bookmarks ?? [];
   const isFavoriteCurrent =
@@ -549,9 +573,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
     <article
       key={current.id}
       data-contemplative={contemplative || undefined}
-      style={contentStyle}
+      style={{
+        ...contentStyle,
+        // Velocidade do fade controlada por ritmo contemplativo.
+        animationDuration: `${rhythm.fadeMs}ms`,
+        // Enquanto aguardamos a "pausa entre blocos", suavizamos o artigo.
+        opacity: isTransitioning ? 0 : undefined,
+        transition: isTransitioning ? `opacity ${rhythm.fadeMs}ms ease-out` : undefined,
+      }}
       className={cn(
-        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in duration-500 motion-reduce:animate-none',
+        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in motion-reduce:animate-none',
         contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
       )}
     >
@@ -660,6 +691,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
             {focus ? <X aria-hidden /> : <Focus aria-hidden />}
             {focus ? 'Sair do foco' : 'Modo foco'}
           </Button>
+          <ContemplativeSettingsDialog />
           {!isSimple && (
             <Button
               type="button"
@@ -772,7 +804,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         <MysteryClosingCard
           mystery={currentMystery}
           isLast={isLastOverall}
-          onNext={goNext}
+          onNext={goNextRhythmed}
           accentClass={palette.accentClass}
         />
       )}
@@ -793,7 +825,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
             {currentMystery.title}
           </h3>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button type="button" variant="pill-active" size="pill" onClick={goNext}>
+            <Button type="button" variant="pill-active" size="pill" onClick={goNextRhythmed}>
               <ArrowRight aria-hidden />
               Continuar para o próximo mistério
             </Button>
@@ -867,7 +899,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
           type="button"
           variant="pill-active"
           size="pill"
-          onClick={goNext}
+          onClick={goNextRhythmed}
           className="px-4 py-2"
         >
           {isLastOverall ? 'Concluir' : 'Próximo'}
