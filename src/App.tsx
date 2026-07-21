@@ -178,6 +178,7 @@ const BibleImportJobs = lazy(() => import('./pages/admin/BibleImportJobs'));
 const BibleImportJobDetail = lazy(() => import('./pages/admin/BibleImportJobDetail'));
 const ClientErrors = lazy(() => import('./pages/admin/ClientErrors'));
 const RuntimeErrors = lazy(() => import('./pages/admin/RuntimeErrors'));
+const NexusAuditPage = lazy(() => import('./pages/admin/NexusAudit'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
@@ -724,6 +725,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/pg-stat-statements" element={<PgStatStatements />} />
                       <Route path="/axe-contrast" element={<AxeContrastReport />} />
                       <Route path="/admin/nexus" element={<NexusAdmin />} />
+                      <Route path="/admin/nexus-audit" element={<NexusAuditPage />} />
                       <Route path="/admin/glossary" element={<GlossaryAdmin />} />
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
                       <Route path="/admin/pray" element={<PrayerAdmin />} />
