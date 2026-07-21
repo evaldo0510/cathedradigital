@@ -159,6 +159,9 @@ export function flattenSectionToBlocks(
               : undefined,
         fruit: b.type === 'meditation' ? fruit ?? mystery.fruit ?? undefined : undefined,
         refs: gospelRef && b.type === 'announce' ? { bible: [gospelRef] } : undefined,
+        mysteryId: mystery.id,
+        sectionId: section.id,
+        sourceType: b.type,
       };
 
       if (b.repeat_count > 1) {
