@@ -6,6 +6,7 @@ import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
+import RouteSeo from './components/RouteSeo';
 
 import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
