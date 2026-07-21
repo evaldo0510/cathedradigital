@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
+import { resolveRouteMeta } from '../src/config/routeMeta';
+
 
 /**
  * Script to generate sitemap.xml and robots.txt dynamically from AppRoute enum in src/types.ts using AST.
