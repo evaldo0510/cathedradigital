@@ -43,6 +43,7 @@ import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationC
 import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
 import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
+import { Sunrise, Sun, Sunset, MoonStar, type LucideIcon } from 'lucide-react';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
