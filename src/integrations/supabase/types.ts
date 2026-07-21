@@ -1896,6 +1896,155 @@ export type Database = {
         }
         Relationships: []
       }
+      collection_items: {
+        Row: {
+          collection_id: string
+          created_at: string
+          description_override: string | null
+          id: string
+          item_slug: string
+          item_type: string
+          metadata: Json
+          order_index: number
+          title_override: string | null
+          updated_at: string
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string
+          description_override?: string | null
+          id?: string
+          item_slug: string
+          item_type: string
+          metadata?: Json
+          order_index?: number
+          title_override?: string | null
+          updated_at?: string
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string
+          description_override?: string | null
+          id?: string
+          item_slug?: string
+          item_type?: string
+          metadata?: Json
+          order_index?: number
+          title_override?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_items_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_progress: {
+        Row: {
+          collection_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          item_id: string
+          last_position: Json
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          collection_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          item_id: string
+          last_position?: Json
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          collection_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          item_id?: string
+          last_position?: Json
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_progress_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_progress_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "collection_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          category: string
+          cover: string | null
+          created_at: string
+          description: string | null
+          featured: boolean
+          id: string
+          metadata: Json
+          nexus_refs: Json
+          slug: string
+          status: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          cover?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          metadata?: Json
+          nexus_refs?: Json
+          slug: string
+          status?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cover?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          metadata?: Json
+          nexus_refs?: Json
+          slug?: string
+          status?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       colloquium_conversations: {
         Row: {
           created_at: string

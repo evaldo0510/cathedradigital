@@ -203,6 +203,7 @@ const PrototypePesquisa = lazy(() => import('./pages/prototype-2.0/screens/Pesqu
 const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Formacao'));
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
+const CollectionPage = lazy(() => import('./pages/CollectionPage'));
 
 // Cathedra 2.0 — Ambiente Átrio (Sprint 2.0.1, preview isolado)
 const AtriumPageV2 = lazy(() => import('./modules/atrium').then(m => ({ default: m.AtriumPage })));
@@ -594,6 +595,9 @@ const AppLayout: React.FC = () => {
               <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />
               <Route path="/confession" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
               <Route path="/confissao" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
+
+              {/* Coleções — caminhos espirituais */}
+              <Route path="/colecoes/:slug" element={<Suspense fallback={<LoadingFallback />}><CollectionPage /></Suspense>} />
 
               {/* Jornadas */}
               <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AtriumJornadasPage /></Suspense>} />
