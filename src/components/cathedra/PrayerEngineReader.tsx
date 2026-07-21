@@ -203,6 +203,38 @@ export const PrayerEngineReader: React.FC<Props> = ({
     session.session?.completed_mystery_ids.includes(currentMystery.id) === true &&
     isLastOfMystery;
 
+  // ── Prefetch da imagem do próximo mistério ──
+  // Quando o usuário está nas últimas Ave-Marias ou no último bloco do
+  // mistério atual, adicionamos um <link rel="preload"> discreto para a
+  // imagem do próximo mistério — evita "flash" na transição sem inflar
+  // o payload inicial (só carrega perto do fim da dezena).
+  const nextMystery = useMemo(() => {
+    if (currentMysteryIndex < 0) return null;
+    return mysteriesInSection[currentMysteryIndex + 1] ?? null;
+  }, [mysteriesInSection, currentMysteryIndex]);
+
+  useEffect(() => {
+    if (!nextMystery) return;
+    const nearEnd =
+      isLastOfMystery ||
+      (aveCount > 0 && aveCurrentIdx >= 0 && aveCurrentIdx >= aveCount - 2);
+    if (!nearEnd) return;
+    const href = resolveMysteryImage(readMysteryMeta(nextMystery).hero_image_path);
+    if (!href) return;
+    const selector = `link[rel="preload"][data-mystery-preload="${nextMystery.id}"]`;
+    if (document.head.querySelector(selector)) return;
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = href;
+    link.setAttribute('fetchpriority', 'low');
+    link.setAttribute('data-mystery-preload', nextMystery.id);
+    document.head.appendChild(link);
+    return () => {
+      link.remove();
+    };
+  }, [nextMystery, isLastOfMystery, aveCount, aveCurrentIdx]);
+
   const goTo = useCallback(
     (nextIdx: number) => {
       const clamped = Math.max(0, Math.min(blocks.length - 1, nextIdx));
