@@ -148,20 +148,50 @@ const PrayerDetailPage: React.FC = () => {
         ? `Cathedra · ${prayer.title} · ${hierarchy.activeSection.title}`
         : kicker;
 
-      // B.2.5 — Portal de Oração (piloto: Rosário). Entra no Reader só após
-      // o usuário passar pelo limiar contemplativo (`?enter=1`).
-      const portalEnabled = prayer.slug === 'rosario';
+      // B.2.5.d — Portal de Oração universal. Todas orações v2 passam pelo
+      // limiar contemplativo (`?enter=1`) com tema/ícone/quote resolvidos.
       const enterRequested = searchParams.get('enter') === '1';
-      if (portalEnabled && !enterRequested) {
+      const themeInfo = resolvePortalTheme(prayer.slug);
+      // Rosário mantém propriedade especial (mistérios + activeSection);
+      // demais orações usam o portal genérico com highlight de duração.
+      if (!enterRequested) {
+        if (prayer.slug === 'rosario') {
+          return (
+            <PrayerPortal
+              prayer={prayer}
+              activeSection={hierarchy.activeSection}
+              mysteries={hierarchy.hierarchy.mysteries}
+              kicker={engineKicker}
+              theme={themeInfo.theme}
+              accentIcon={themeInfo.accentIcon}
+              quote={themeInfo.quote}
+            />
+          );
+        }
         return (
           <PrayerPortal
             prayer={prayer}
-            activeSection={hierarchy.activeSection}
-            mysteries={hierarchy.hierarchy.mysteries}
             kicker={engineKicker}
+            theme={themeInfo.theme}
+            accentIcon={themeInfo.accentIcon}
+            quote={themeInfo.quote}
+            showRhythm={false}
+            highlight={{
+              eyebrow: PRAYER_CATEGORY_LABEL[prayer.category],
+              title: hierarchy.activeSection?.title ?? prayer.title,
+              subtitle: prayer.subtitle ?? undefined,
+              meta: [
+                {
+                  label: 'Duração',
+                  value: `${Math.max(1, Math.round(prayer.estimated_seconds / 60))} min`,
+                  icon: 'clock',
+                },
+              ],
+            }}
           />
         );
       }
+
 
       return (
         <PrayerEngineReader
