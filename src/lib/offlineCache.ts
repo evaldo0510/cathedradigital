@@ -336,7 +336,7 @@ export async function getAllFromStore(storeName: string): Promise<CacheEntry[]> 
 export async function clearAllCaches(): Promise<void> {
   try {
     const db = await openDB();
-    const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+    const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
     stores.forEach(s => {
       const tx = db.transaction(s, 'readwrite');
       tx.objectStore(s).clear();
@@ -352,7 +352,7 @@ export async function clearAllCaches(): Promise<void> {
 
 export async function exportCache(): Promise<string> {
   const data: Record<string, CacheEntry[]> = {};
-  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
   
   for (const store of stores) {
     data[store] = await getAllFromStore(store);
@@ -384,7 +384,7 @@ export async function importCache(jsonString: string): Promise<void> {
 // ─── Stats ───
 
 export async function getCacheStats() {
-  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar'];
+  const stores = ['bible', 'catechism', 'liturgy', 'liturgical-calendar', 'liturgy-hours-office'];
   const stats: Record<string, number> = {};
   let total = 0;
   
