@@ -134,8 +134,15 @@ while ((m = routeRegex.exec(appSource)) !== null) {
 
 const IGNORED_COVERAGE: RegExp[] = [
   /^\*$/,
-  /^\/(admin|dev)(\/|$)/,        // cobertos pelo pattern dinâmico admin
+  /^\/(admin|dev)(\/|$)/,             // cobertos pelo pattern dinâmico admin
   /^\/not-found$/,
+  /^\/prototype-/,                    // rotas de prototipagem interna
+  /^\/__test\//,                      // rotas de teste
+  /-legacy(\/|$)/,                    // legados noindex
+  // Ferramentas internas / dashboards de dev não expostos ao público
+  /^\/(cache-manager|bible-recovery|telemetry|security|security-alerts|cid-compliance|seo-verify|seo-status|a11y-audit|visual-audit|axe-contrast|ui-errors|audit|integrity|bible-coverage|bible-cache|bible-abbr-validate|bible-perf|bible-perf-breakdown|bible-sources|bible-import|catechism-explorer|design-system|language|offline|nexus)(\/|$)/,
+  // Aliases de rota (têm <Navigate replace>): não precisam de meta própria
+  /^\/(library|prayer|prayers|rezar|orar|oracoes|rosario|via-crucis|via-sacra|saints|liturgy|today|journeys|notes|pesquisar|formacao|formar-se|minha-jornada|transparencia|about|terms|privacy)$/,
 ];
 
 const coverageMisses: string[] = [];
