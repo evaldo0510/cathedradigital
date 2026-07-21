@@ -9,6 +9,7 @@ import { Sparkles } from 'lucide-react';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
 import { readMysteryMeta } from './mysteryMeta';
 import SilenceTimer from './SilenceTimer';
+import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 
 interface Props {
