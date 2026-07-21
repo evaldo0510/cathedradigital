@@ -115,12 +115,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Peregrinação litúrgica completa: leituras, próprio da missa, liturgia das horas e santo do dia em um só lugar.',
   },
-  '/liturgia/dia/:d': {
-    title: 'Dia Litúrgico — Missa, Horas e Santo',
-    description:
-      'Consulte qualquer data do calendário: missal, ofício divino, santo do dia e escrituras integrados.',
-    noindex: true,
-  },
+  // Rotas dinâmicas de /liturgia/dia/:d são resolvidas via DYNAMIC_PATTERNS abaixo.
   '/calendar': {
     title: 'Calendário Litúrgico Católico — Cathedra',
     description:
