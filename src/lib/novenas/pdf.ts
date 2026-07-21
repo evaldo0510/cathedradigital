@@ -62,8 +62,8 @@ export function generateNovenaProgressPdf(novena: Novena, progress: NovenaProgre
   ensureSpace(20);
   const barW = contentWidth;
   const barH = 8;
-  doc.setDrawColor(180);
-  doc.setFillColor(230);
+  doc.setDrawColor(180, 180, 180);
+  doc.setFillColor(230, 230, 230);
   doc.rect(margin, y, barW, barH, 'F');
   doc.setFillColor(201, 168, 76);
   doc.rect(margin, y, (barW * percent) / 100, barH, 'F');
