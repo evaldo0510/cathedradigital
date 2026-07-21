@@ -355,7 +355,7 @@ export const BreviaryContinuousReader: React.FC<Props> = ({
       {!celebrationMode && nexus.suggestions.length > 0 && (
         <div className="mt-spacing-xl">
           <ReaderContinuation
-            context={{ kind: 'prayer', id: prayer.slug, title: prayer.title }}
+            context={{ kind: 'prayer', id: prayer.slug }}
             suggestions={nexus.suggestions}
           />
         </div>
