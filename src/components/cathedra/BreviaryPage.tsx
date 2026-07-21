@@ -39,6 +39,8 @@ import { useReaderTypography } from '@/hooks/useReaderTypography';
 import { preloadBreviaryOfflineAssets } from '@/lib/breviaryOfflinePreload';
 import { BreviaryShareButtons } from './primitives/liturgy/BreviaryShareButtons';
 import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyControl';
+import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationCard';
+import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
