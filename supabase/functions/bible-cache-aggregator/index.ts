@@ -7,6 +7,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { makeResponder } from "../_shared/http-response.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { assertCronOrAdmin } from "../_shared/admin-guard.ts";
 
 const _corsBase = {
   'Access-Control-Allow-Origin': '*',
@@ -119,6 +120,9 @@ serve(async (req) => {
 
   if (req.method === 'OPTIONS') return R.cors();
   const t0 = Date.now();
+
+  const guard = await assertCronOrAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
 
   try {
     // 1) Agrega eventos das últimas 2 horas (cobre janela do bucket atual + anterior)

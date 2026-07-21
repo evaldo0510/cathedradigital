@@ -11,6 +11,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { getOrCreateCorrelationId } from '../_shared/correlation.ts';
 import { makeResponder } from '../_shared/http-response.ts';
+import { assertCronOrAdmin } from '../_shared/admin-guard.ts';
 
 
 interface Body {
@@ -25,6 +26,10 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const R = makeResponder(cid);
   if (req.method === 'OPTIONS') return R.cors();
+
+  const guard = await assertCronOrAdmin(req);
+  if (!guard.ok) return guard.response;
+
 
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }
