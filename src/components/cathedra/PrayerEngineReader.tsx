@@ -441,6 +441,28 @@ export const PrayerEngineReader: React.FC<Props> = ({
     );
   }
 
+  // ============ HERO CONTEMPLATIVO (Rosário — antes de cada dezena) ============
+  const showMysteryHero =
+    isRosary &&
+    !!currentMystery &&
+    current?.sourceType === 'announce' &&
+    !heroConfirmed.has(currentMystery.id);
+
+  const heroContent = showMysteryHero && currentMystery ? (
+    <div className="mx-auto w-full max-w-[860px] px-4 pb-16 pt-6 md:px-8 md:pt-10">
+      <MysteryHero
+        mystery={currentMystery}
+        onStart={() => {
+          setHeroConfirmed((prev) => {
+            const next = new Set(prev);
+            next.add(currentMystery.id);
+            return next;
+          });
+        }}
+      />
+    </div>
+  ) : null;
+
   // ============ READER ============
   const content = (
     <article style={contentStyle} className="cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
