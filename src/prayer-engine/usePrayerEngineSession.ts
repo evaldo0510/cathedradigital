@@ -99,7 +99,7 @@ async function fetchOpenSession(userId: string, prayerId: string) {
     .limit(1)
     .maybeSingle();
   if (error) throw error;
-  return (data ?? null) as PrayerSessionRow | null;
+  return (data ?? null) as unknown as PrayerSessionRow | null;
 }
 
 async function createSession(userId: string, prayerId: string) {
@@ -109,7 +109,7 @@ async function createSession(userId: string, prayerId: string) {
     .select('*')
     .single();
   if (error) throw error;
-  return data as PrayerSessionRow;
+  return data as unknown as PrayerSessionRow;
 }
 
 export function usePrayerEngineSession(prayerId: string | undefined): UsePrayerEngineSessionResult {
