@@ -3022,9 +3022,12 @@ export type Database = {
           logos: Json | null
           magisterium: Json
           model: string | null
+          prompt_hash: string | null
+          provider: string | null
           reading_key: string | null
           readings_hash: string
           theme: string | null
+          version: number
         }
         Insert: {
           action_of_day?: string | null
@@ -3037,9 +3040,12 @@ export type Database = {
           logos?: Json | null
           magisterium?: Json
           model?: string | null
+          prompt_hash?: string | null
+          provider?: string | null
           reading_key?: string | null
           readings_hash: string
           theme?: string | null
+          version?: number
         }
         Update: {
           action_of_day?: string | null
@@ -3052,9 +3058,12 @@ export type Database = {
           logos?: Json | null
           magisterium?: Json
           model?: string | null
+          prompt_hash?: string | null
+          provider?: string | null
           reading_key?: string | null
           readings_hash?: string
           theme?: string | null
+          version?: number
         }
         Relationships: []
       }
