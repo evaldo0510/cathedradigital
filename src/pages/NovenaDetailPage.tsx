@@ -101,6 +101,16 @@ const NovenaDetailPage: React.FC = () => {
       toast.error('Não foi possível compartilhar.');
     }
   };
+  const handleDownloadPdf = () => {
+    if (!progress) return;
+    try {
+      generateNovenaProgressPdf(novena, progress);
+      toast.success('PDF gerado com seu progresso.');
+    } catch {
+      toast.error('Não foi possível gerar o PDF.');
+    }
+  };
+
 
 
   return (
