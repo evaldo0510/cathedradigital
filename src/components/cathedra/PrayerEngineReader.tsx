@@ -135,8 +135,10 @@ export const PrayerEngineReader: React.FC<Props> = ({
   const [autoIntervalMs, setAutoIntervalMs] = useState(30000);
   const [confirmReset, setConfirmReset] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [heroConfirmed, setHeroConfirmed] = useState<Set<string>>(() => new Set());
 
   const current = blocks[cursorIndex];
+  const isRosary = prayer.slug === 'rosario';
 
   const mysteriesInSection = useMemo(
     () =>
