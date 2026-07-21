@@ -397,6 +397,39 @@ const BreviaryPage: React.FC = () => {
     .map((slug) => sections.find((s) => s.slug === slug))
     .filter((s): s is NonNullable<typeof s> => !!s);
 
+  // B.2.5.b — Portal de Oração (limiar contemplativo antes do seletor).
+  const enterRequested = searchParams.get('enter') === '1';
+  if (!enterRequested && prayer) {
+    const suggestedSection = orderedSections.find((s) => s.slug === suggested);
+    const suggestedTime = (suggestedSection?.meta as { time?: string } | null)?.time;
+    return (
+      <PrayerPortalStandalone
+        slug="liturgia-das-horas"
+        title="Liturgia das Horas"
+        estimatedSeconds={20 * 60}
+        kicker="Cathedra · Officium Divinum"
+        backHref="/oracao"
+        showRhythm={false}
+        highlight={{
+          eyebrow: 'Hora recomendada',
+          title: suggestedSection?.title ?? 'Hora canônica',
+          subtitle: suggestedSection?.subtitle ?? undefined,
+          meta: [
+            ...(suggestedTime ? [{ label: 'Horário sugerido', value: suggestedTime, icon: 'clock' as const }] : []),
+            ...(liturgy?.liturgical_season ? [{ label: 'Tempo litúrgico', value: liturgy.liturgical_season, icon: 'sparkles' as const }] : []),
+            { label: 'Sete horas', value: 'Ofício · Laudes · Tércia · Sexta · Noa · Vésperas · Completas', icon: 'church' as const },
+          ],
+        }}
+        onEnter={() => {
+          const next = new URLSearchParams(searchParams);
+          next.set('enter', '1');
+          setSearchParams(next, { replace: true });
+        }}
+      />
+    );
+  }
+
+
   return (
     <>
       <SEOHead
