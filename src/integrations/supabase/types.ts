@@ -3807,8 +3807,11 @@ export type Database = {
       }
       prayer_sessions: {
         Row: {
+          bookmarks: Json
           completed_at: string | null
           completed_block_ids: string[]
+          completed_mystery_ids: string[]
+          completed_section_ids: string[]
           created_at: string
           current_block_id: string | null
           current_block_index: number
@@ -3822,8 +3825,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bookmarks?: Json
           completed_at?: string | null
           completed_block_ids?: string[]
+          completed_mystery_ids?: string[]
+          completed_section_ids?: string[]
           created_at?: string
           current_block_id?: string | null
           current_block_index?: number
@@ -3837,8 +3843,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bookmarks?: Json
           completed_at?: string | null
           completed_block_ids?: string[]
+          completed_mystery_ids?: string[]
+          completed_section_ids?: string[]
           created_at?: string
           current_block_id?: string | null
           current_block_index?: number
