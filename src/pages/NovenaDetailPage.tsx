@@ -62,6 +62,27 @@ const NovenaDetailPage: React.FC = () => {
     saveProgress(novena.slug, next);
   };
 
+  const handleShare = async () => {
+    const url = `${window.location.origin}/novenas/${novena.slug}?dia=${currentDay}`;
+    const text = `Estou rezando a ${novena.title} — dia ${currentDay} de ${totalDays} (${percent}% concluído).`;
+    const shareData = { title: novena.title, text, url };
+    try {
+      if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch {
+      /* fallback */
+    }
+    try {
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      toast.success('Link copiado para a área de transferência.');
+    } catch {
+      toast.error('Não foi possível compartilhar.');
+    }
+  };
+
+
   return (
     <div className="w-full space-y-[var(--sp-xl)] pb-[var(--sp-xxl)]">
       <div className="flex items-center gap-[var(--sp-s)]">
