@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -475,7 +476,13 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
+        <main
+          id="main-content"
+          ref={mainContentRef}
+          tabIndex={-1}
+          className="outline-none"
+          data-space={resolveSpaceForPath(location.pathname) ?? undefined}
+        >
           
           <SwipeNavigation>
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
