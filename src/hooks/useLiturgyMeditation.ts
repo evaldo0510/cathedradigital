@@ -479,3 +479,18 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
     retry,
   };
 }
+
+// ── Exportações para testes unitários ─────────────────────────────
+export const __testables__ = {
+  buildClientFallbackMeditation,
+  retryAtFor,
+  messageForCode,
+  inferCode,
+  readLocalMeditation,
+  writeLocalMeditation,
+  readMostRecentLocal,
+  persistFallbackEvent,
+  RETRY_WINDOW_MINUTES,
+  CACHE_KEY_PREFIX,
+  FALLBACK_EVENTS_KEY,
+};
