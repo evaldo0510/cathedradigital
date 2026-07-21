@@ -65,6 +65,16 @@ const MissalPage: React.FC = () => {
 
   const stageSlug = searchParams.get('stage');
   const initialBlockId = searchParams.get('b');
+  const celebrationMode = searchParams.get('celebration') === '1';
+
+  const toggleCelebration = useCallback(() => {
+    const next = new URLSearchParams(searchParams);
+    if (celebrationMode) next.delete('celebration');
+    else next.set('celebration', '1');
+    setSearchParams(next, { replace: false });
+  }, [celebrationMode, searchParams, setSearchParams]);
+
+  useWakeLock(celebrationMode);
 
   const setView = useCallback(
     (v: MissalView) => {
