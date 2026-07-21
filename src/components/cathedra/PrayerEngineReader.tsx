@@ -412,7 +412,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         setFocus((f) => !f);
       } else if (e.key === 'ArrowRight' || e.key === 'j') {
         e.preventDefault();
-        goNext();
+        goNextRhythmed();
       } else if (e.key === 'ArrowLeft' || e.key === 'k') {
         e.preventDefault();
         goPrev();
