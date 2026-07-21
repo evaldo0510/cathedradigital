@@ -20,6 +20,11 @@ export interface MysteryPatristicRef {
   quote: string;
 }
 
+export interface MysterySaintRef {
+  name: string;
+  slug?: string;
+}
+
 export interface MysteryContemplativeMeta {
   contemplative_title?: string;
   primary_passage?: MysteryPassage;
@@ -27,10 +32,17 @@ export interface MysteryContemplativeMeta {
   virtue?: string;
   logos_meditation?: string;
   contemplation_question?: string;
+  /** Frases curtas exibidas ANTES do Pai-Nosso, para o convite "Contemple". */
+  contemplation_invitation?: string[];
+  /** Pequena oração exibida no encerramento da dezena. */
+  closing_prayer?: string;
+  /** Ação concreta para o dia, exibida no encerramento da dezena. */
+  concrete_action?: string;
   suggested_silence?: 0 | 10 | 20 | 30;
   recommended_intention?: string;
   catechism_ref?: MysteryCatechismRef | null;
   patristic_ref?: MysteryPatristicRef | null;
+  related_saints?: MysterySaintRef[];
   hero_gradient?: string;
   hero_image_path?: string;
 }

@@ -41,8 +41,11 @@ import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import MysteryHero from '@/components/prayer/rosary/MysteryHero';
 import MysteryLogosMeditation from '@/components/prayer/rosary/MysteryLogosMeditation';
 import SpiritualFruitBadge from '@/components/prayer/rosary/SpiritualFruitBadge';
-import ContemplationQuestion from '@/components/prayer/rosary/ContemplationQuestion';
-import SilenceTimer from '@/components/prayer/rosary/SilenceTimer';
+import ContemplationInvitation from '@/components/prayer/rosary/ContemplationInvitation';
+import MysteryNexusPanel from '@/components/prayer/rosary/MysteryNexusPanel';
+import MysteryClosingCard from '@/components/prayer/rosary/MysteryClosingCard';
+import SpiritualProgressDots from '@/components/prayer/rosary/SpiritualProgressDots';
+import { resolveMysteryPalette } from '@/components/prayer/rosary/sectionPalette';
 import { readMysteryMeta } from '@/components/prayer/rosary/mysteryMeta';
 import { resolveMysteryImage } from '@/components/prayer/rosary/mysteryImages';
 import type { PrayerBlock } from '@/types/prayer';
@@ -140,6 +143,9 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   const current = blocks[cursorIndex];
   const isRosary = prayer.slug === 'rosario';
+  const palette = resolveMysteryPalette(activeSection?.slug);
+  const contemplative = mode === 'contemplative';
+
 
   const mysteriesInSection = useMemo(
     () =>
@@ -540,7 +546,15 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   // ============ READER ============
   const content = (
-    <article style={contentStyle} className="cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10">
+    <article
+      key={current.id}
+      data-contemplative={contemplative || undefined}
+      style={contentStyle}
+      className={cn(
+        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in duration-500 motion-reduce:animate-none',
+        contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
+      )}
+    >
       {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
       {isSimple ? (
         <div className="mb-8">
@@ -556,6 +570,31 @@ export const PrayerEngineReader: React.FC<Props> = ({
             />
           </div>
         </div>
+      ) : isRosary ? (
+        <div className="mb-10 flex flex-col items-center gap-4">
+          {activeSection && (
+            <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.32em] text-stitch-on-surface-variant">
+              {activeSection.title}
+            </p>
+          )}
+          <SpiritualProgressDots
+            total={mysteriesInSection.length}
+            currentIndex={Math.max(currentMysteryIndex, 0)}
+            ids={mysteriesInSection.map((m) => m.id)}
+            completedIds={session.session?.completed_mystery_ids ?? []}
+            accentClass={palette.accentClass}
+            label={
+              currentMystery
+                ? `Mistério ${currentMysteryIndex + 1} de ${mysteriesInSection.length} · ${currentMystery.title}`
+                : undefined
+            }
+          />
+          {aveCount > 0 && aveCurrentIdx >= 0 && (
+            <p className="font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
+              Ave-Maria {aveCurrentIdx + 1} <span className="opacity-60">de {aveCount}</span>
+            </p>
+          )}
+        </div>
       ) : (
         <div className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/30 p-4">
           <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
@@ -568,42 +607,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
             </p>
           )}
           {currentMystery && (
-            <>
-              <div className="mt-2 flex items-center justify-between font-stitch-body text-xs text-stitch-on-surface-variant">
-                <span>{currentMystery.title}</span>
-                <span>
-                  Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
-                </span>
-              </div>
-              <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
-                <div
-                  className="h-full bg-stitch-secondary/80 transition-all duration-500"
-                  style={{
-                    width: `${((currentMysteryIndex + 1) / mysteriesInSection.length) * 100}%`,
-                  }}
-                  aria-hidden
-                />
-              </div>
-            </>
-          )}
-          {aveCount > 0 && aveCurrentIdx >= 0 && (
-            <p className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
-              <span className="text-stitch-secondary">●</span> Ave-Maria {aveCurrentIdx + 1} de{' '}
-              {aveCount}
-            </p>
-          )}
-          <div className="mt-3 border-t border-stitch-outline-variant/30 pt-2">
-            <div className="flex items-center justify-between font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant">
-              <span>Progresso geral</span>
-              <span>{overallPercent}%</span>
+            <div className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
+              {currentMystery.title} · Mistério {currentMysteryIndex + 1} de {mysteriesInSection.length}
             </div>
-            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
-              <div
-                className="h-full bg-stitch-secondary transition-all duration-500"
-                style={{ width: `${overallPercent}%` }}
-                aria-hidden
-              />
-            </div>
+          )}
+          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-stitch-outline-variant/30">
+            <div
+              className="h-full bg-stitch-secondary transition-all duration-500"
+              style={{ width: `${overallPercent}%` }}
+              aria-hidden
+            />
           </div>
         </div>
       )}
@@ -673,13 +686,15 @@ export const PrayerEngineReader: React.FC<Props> = ({
         )}
       </header>
 
-      {/* Slots contemplativos (Rosário) — Meditação Logos + Fruto no anúncio */}
+      {/* Slots contemplativos (Rosário) — Meditação Logos + Nexus automático + Convite à Contemplação */}
       {isRosary && currentMystery && current.sourceType === 'announce' && (
         <>
           <MysteryLogosMeditation mystery={currentMystery} />
           <div className="text-center">
             <SpiritualFruitBadge mystery={currentMystery} />
           </div>
+          {!contemplative && <MysteryNexusPanel mystery={currentMystery} accentClass={palette.accentClass} />}
+          <ContemplationInvitation mystery={currentMystery} accentClass={palette.accentClass} />
         </>
       )}
 
@@ -752,8 +767,18 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
-      {/* Continuação inteligente ao concluir mistério */}
-      {mysteryJustCompleted && !focus && !isLastOverall && currentMystery && (
+      {/* Encerramento ritual da dezena (Rosário) — Fruto + Pequena Oração + Ação Concreta + Próximo mistério */}
+      {mysteryJustCompleted && !focus && currentMystery && isRosary && (
+        <MysteryClosingCard
+          mystery={currentMystery}
+          isLast={isLastOverall}
+          onNext={goNext}
+          accentClass={palette.accentClass}
+        />
+      )}
+
+      {/* Continuação inteligente ao concluir mistério (não-Rosário) */}
+      {mysteryJustCompleted && !focus && !isLastOverall && currentMystery && !isRosary && (
         <section
           aria-labelledby="mystery-done"
           className="mb-10 rounded-2xl border border-stitch-secondary/40 bg-stitch-surface-container-lowest/50 p-6"
@@ -790,18 +815,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
             )}
           </div>
         </section>
-      )}
-
-      {/* Slots contemplativos (Rosário) — Pergunta + Silêncio ao concluir mistério */}
-      {isRosary && mysteryJustCompleted && !focus && currentMystery && (
-        <>
-          <ContemplationQuestion mystery={currentMystery} />
-          <SilenceTimer
-            suggestedSeconds={
-              (readMysteryMeta(currentMystery).suggested_silence ?? 20) as 0 | 10 | 20 | 30
-            }
-          />
-        </>
       )}
 
       {/* Referências */}
@@ -944,11 +957,38 @@ export const PrayerEngineReader: React.FC<Props> = ({
     return (
       <>
         <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-stitch-surface text-stitch-on-surface"
+          className={cn(
+            'fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden text-stitch-on-surface transition-colors duration-500',
+            contemplative
+              ? 'bg-black text-white'
+              : 'bg-stitch-surface',
+          )}
           role="dialog"
-          aria-label="Modo foco de oração"
+          aria-label={contemplative ? 'Modo contemplação' : 'Modo foco de oração'}
         >
-          <div className="w-full max-w-[720px] max-h-screen overflow-y-auto">{content}</div>
+          {contemplative && (
+            <>
+              <div
+                aria-hidden
+                className={cn(
+                  'pointer-events-none absolute inset-0 bg-gradient-to-b',
+                  palette.overlayGradient,
+                )}
+              />
+              <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/55" />
+            </>
+          )}
+          <div className="relative z-10 w-full max-w-[820px] max-h-screen overflow-y-auto px-2">
+            {content}
+          </div>
+          <button
+            type="button"
+            onClick={() => { setMode('guided'); setFocus(false); }}
+            className="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-black/30 px-3 py-1 font-stitch-body text-[11px] uppercase tracking-widest text-white/80 backdrop-blur transition hover:border-white/40 hover:text-white"
+            aria-label="Sair do modo contemplação"
+          >
+            Sair
+          </button>
         </div>
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
