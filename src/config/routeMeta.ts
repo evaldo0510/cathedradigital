@@ -184,6 +184,23 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Parceiros institucionais da Cathedra: dioceses, paróquias, comunidades e apostolados que caminham conosco.',
   },
 
+  // ─── Institucional / Legal ────────────────────────────────────
+  '/transparencia': {
+    title: 'Transparência — Cathedra Digital',
+    description:
+      'Relatório de transparência da Cathedra: uso de recursos, apostolado apoiado e destinação dos aportes dos assinantes PRO.',
+  },
+  '/terms': {
+    title: 'Termos de Uso — Cathedra Digital',
+    description:
+      'Termos de uso da Cathedra Digital: direitos, deveres, propriedade intelectual e regras de utilização da plataforma.',
+  },
+  '/privacy': {
+    title: 'Política de Privacidade — Cathedra Digital',
+    description:
+      'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
+  },
+
   // ─── Monetização / Planos ─────────────────────────────────────
   '/pricing': {
     title: 'Planos Cathedra PRO — Assinatura e Preços',
