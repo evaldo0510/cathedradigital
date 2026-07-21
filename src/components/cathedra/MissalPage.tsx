@@ -47,7 +47,7 @@ function parseDateParam(raw: string | null): Date {
 }
 
 function isMissalView(s: string | null): s is MissalView {
-  return s === 'ordinario' || s === 'proprio';
+  return s === 'ordinario' || s === 'proprio' || s === 'celebracao';
 }
 
 const MissalPage: React.FC = () => {
@@ -60,7 +60,7 @@ const MissalPage: React.FC = () => {
 
   const view: MissalView = isMissalView(searchParams.get('view'))
     ? (searchParams.get('view') as MissalView)
-    : 'proprio';
+    : 'celebracao';
 
   const stageSlug = searchParams.get('stage');
   const initialBlockId = searchParams.get('b');
@@ -68,7 +68,7 @@ const MissalPage: React.FC = () => {
   const setView = useCallback(
     (v: MissalView) => {
       const next = new URLSearchParams(searchParams);
-      if (v === 'proprio') next.delete('view');
+      if (v === 'celebracao') next.delete('view');
       else next.set('view', v);
       if (v !== 'ordinario') next.delete('stage');
       setSearchParams(next, { replace: false });
