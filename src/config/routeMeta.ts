@@ -110,6 +110,12 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Missal, Liturgia das Horas e calendário litúrgico do dia com leituras, salmos e antífonas próprias.',
   },
+  '/liturgia/dia': {
+    title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',
+    description:
+      'Peregrinação litúrgica completa: leituras, próprio da missa, liturgia das horas e santo do dia em um só lugar.',
+  },
+  // Rotas dinâmicas de /liturgia/dia/:d são resolvidas via DYNAMIC_PATTERNS abaixo.
   '/calendar': {
     title: 'Calendário Litúrgico Católico — Cathedra',
     description:
@@ -265,6 +271,26 @@ export const ROUTE_META: Record<string, RouteMeta> = {
  * que sobrescreve estes defaults via dedupe do react-helmet-async.
  */
 const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
+  {
+    test: /^\/liturgia\/dia\/\d{4}-\d{2}-\d{2}$/,
+    meta: {
+      title: 'Dia Litúrgico — Missa, Horas e Santo',
+      description:
+        'Consulte qualquer data do calendário: missal, ofício divino, santo do dia e escrituras integrados.',
+      canonicalPath: '/liturgia/dia',
+      noindex: true,
+    },
+  },
+  {
+    test: /^\/liturgia\/dia\/[^/]+$/,
+    meta: {
+      title: 'Dia Litúrgico — Missa, Horas e Santo',
+      description:
+        'Peregrinação litúrgica completa: leituras, próprio da missa, liturgia das horas e santo do dia em um só lugar.',
+      canonicalPath: '/liturgia/dia',
+      noindex: true,
+    },
+  },
   {
     test: /^\/glossario\/[^/]+$/,
     meta: {
