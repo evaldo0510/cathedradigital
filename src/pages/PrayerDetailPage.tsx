@@ -22,6 +22,7 @@ import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import RosaryReader from '@/components/cathedra/RosaryReader';
+import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
 import { isPrayerBlockArray } from '@/types/prayer';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 
@@ -133,12 +134,19 @@ const PrayerDetailPage: React.FC = () => {
         </div>
       );
     }
-    if (hierarchy.blocks.length > 0) {
+    if (hierarchy.blocks.length > 0 && hierarchy.hierarchy) {
       const engineKicker = hierarchy.activeSection
         ? `Cathedra · ${prayer.title} · ${hierarchy.activeSection.title}`
         : kicker;
-      const injected = { ...prayer, blocks: hierarchy.blocks } as typeof prayer;
-      return <RosaryReader prayer={injected} kicker={engineKicker} />;
+      return (
+        <PrayerEngineReader
+          prayer={prayer}
+          blocks={hierarchy.blocks}
+          mysteries={hierarchy.hierarchy.mysteries}
+          activeSection={hierarchy.activeSection}
+          kicker={engineKicker}
+        />
+      );
     }
   }
 

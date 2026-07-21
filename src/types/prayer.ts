@@ -37,6 +37,12 @@ export interface PrayerBlock {
   refs?: PrayerBlockRef;
   /** URL de áudio pré-gerado; se ausente, o cliente chama `prayer-tts`. */
   audioUrl?: string;
+  /** Prayer Engine v2 — id do mistério pai (quando aplicável). */
+  mysteryId?: string;
+  /** Prayer Engine v2 — id da seção pai (quando aplicável). */
+  sectionId?: string;
+  /** Prayer Engine v2 — tipo original do bloco no banco (ave_maria, gloria, etc.). */
+  sourceType?: string;
 }
 
 export type PrayerCurationStatus = 'stub' | 'partial' | 'complete';
