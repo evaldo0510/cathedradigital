@@ -77,7 +77,7 @@ export const HourRecommendationCard: React.FC<Props> = ({
     >
       {liturgyStatus === 'loading' && (
         <>
-          <Icons.Loader className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <Icons.Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
           <span>Carregando liturgia do dia…</span>
         </>
       )}
