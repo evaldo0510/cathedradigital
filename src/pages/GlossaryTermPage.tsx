@@ -669,6 +669,7 @@ const GlossaryTermPage: React.FC = () => {
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
+  const nexus = autoNexus!;
 
   const handleFavorite = () => {
     toggleFavorite({
