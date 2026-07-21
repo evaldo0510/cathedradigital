@@ -489,6 +489,7 @@ const AppLayout: React.FC = () => {
         >
           
           <SwipeNavigation>
+            <RouteSeo />
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
