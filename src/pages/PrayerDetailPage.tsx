@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import RosaryReader from '@/components/cathedra/RosaryReader';
 import { isPrayerBlockArray } from '@/types/prayer';
+import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 
 const FONT_STEPS = [
   { key: 'sm', label: 'A', textClass: 'text-xl md:text-[22px]', latinClass: 'text-lg' },
