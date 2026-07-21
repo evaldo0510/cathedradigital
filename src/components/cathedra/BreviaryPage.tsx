@@ -222,7 +222,82 @@ const BreviaryPage: React.FC = () => {
   // Preferências de tipografia (persistidas cross-session, funciona offline).
   const { wrapperStyle: typographyStyle } = useReaderTypography();
 
-  // ── Reader ativo ──
+  // ── Dia inteiro contínuo (7 horas em fluxo único) ──
+  // Coleta as 7 horas via useQueries (reativo, offline-first via IDB).
+  const allHourQueries = useQueries({
+    queries: (dayMode && hierarchy && prayer)
+      ? ALL_HOUR_SLUGS.map((h) => ({
+          queryKey: ['liturgy-hours-office', isoDate, h] as const,
+          queryFn: async () => null, // resolvido pelo prefetch/useLiturgyHoursOffice
+          enabled: false, // apenas lê o cache do QueryClient (populado pelo prefetch)
+          staleTime: Infinity,
+        }))
+      : [],
+  });
+
+  if (dayMode && prayer && hierarchy) {
+    const orderedSections = ALL_HOUR_SLUGS
+      .map((slug) => hierarchy.sections.find((s) => s.slug === slug))
+      .filter((s): s is NonNullable<typeof s> => !!s);
+
+    const bundles: BreviaryHourBundle[] = orderedSections.map((section, idx) => {
+      const slug = section.slug as HourSlug;
+      const cached = qc.getQueryData<{ office: LiturgyHoursOfficeRow | null }>([
+        'liturgy-hours-office', isoDate, slug,
+      ]);
+      return {
+        hourSlug: slug,
+        title: section.title,
+        subtitle: section.subtitle ?? null,
+        ordinaryBlocks: flattenSectionToBlocks(hierarchy, section),
+        office: cached?.office ?? null,
+        officeLoading: !cached && !!allHourQueries[idx],
+      };
+    });
+
+    const canonical = `${CANONICAL_BASE}/breviary?mode=day&d=${isoDate}`;
+    const pageTitle = `Liturgia das Horas · ${isoDate}`;
+    const pageDescription = `As sete horas canônicas do Ofício Divino em fluxo contínuo — ${isoDate}.`;
+
+    return (
+      <>
+        <SEOHead title={pageTitle} description={pageDescription} path={`/breviary?mode=day${isToday ? '' : `&d=${isoDate}`}`} />
+        <Helmet>
+          <link rel="canonical" href={canonical} />
+          <meta property="og:title" content={pageTitle} />
+          <meta property="og:description" content={pageDescription} />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content={canonical} />
+          <meta property="og:locale" content="pt_BR" />
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
+        {showOfflineBanner && (
+          <div role="status" aria-live="polite" className="mb-spacing-sm mx-auto max-w-3xl flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium border border-border bg-muted/40 text-premium-xs text-muted-foreground">
+            <Icons.WifiOff className="w-spacing-sm h-spacing-sm text-primary" />
+            <span className="font-serif italic">Exibindo a Liturgia a partir do cache offline.</span>
+          </div>
+        )}
+        <div className="mx-auto max-w-3xl mb-spacing-sm flex flex-wrap items-center justify-between gap-spacing-2xs px-spacing-sm">
+          <Button variant="outline" size="sm" onClick={() => setDayMode(false)} className="rounded-full text-premium-xs font-black uppercase tracking-widest">
+            <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Voltar às horas
+          </Button>
+          <ReaderTypographyControl />
+        </div>
+        <BreviaryContinuousReader
+          prayer={prayer}
+          hierarchy={hierarchy}
+          hours={bundles}
+          isoDate={isoDate}
+          contextKey={`breviary:day:${isoDate}`}
+          initialBlockId={initialBlockId}
+          liturgy={liturgy ?? null}
+          contentStyle={typographyStyle}
+        />
+      </>
+    );
+  }
+
+  // ── Hora única contínua (Próprio injetado inline) ──
   if (selectedHour && prayer && hierarchy && activeSection) {
     const section =
       hierarchy.sections.find((s) => s.slug === selectedHour) ?? activeSection;
@@ -238,15 +313,20 @@ const BreviaryPage: React.FC = () => {
     });
 
     const pageTitle = `${section.title} · Liturgia das Horas`;
-    const pageDescription = `Reze ${section.title}${section.subtitle ? ` (${section.subtitle})` : ''} da Liturgia das Horas — ${isoDate} — com Ordinário e Próprio do dia.`;
+    const pageDescription = `Reze ${section.title}${section.subtitle ? ` (${section.subtitle})` : ''} da Liturgia das Horas — ${isoDate} — com Ordinário e Próprio do dia em fluxo contínuo.`;
+
+    const bundles: BreviaryHourBundle[] = [{
+      hourSlug: selectedHour,
+      title: section.title,
+      subtitle: section.subtitle ?? null,
+      ordinaryBlocks: hourBlocks,
+      office,
+      officeLoading,
+    }];
 
     return (
       <>
-        <SEOHead
-          title={pageTitle}
-          description={pageDescription}
-          path={`/breviary?h=${selectedHour}${isToday ? '' : `&d=${isoDate}`}`}
-        />
+        <SEOHead title={pageTitle} description={pageDescription} path={`/breviary?h=${selectedHour}${isToday ? '' : `&d=${isoDate}`}`} />
         <Helmet>
           <link rel="canonical" href={canonical} />
           <meta property="og:title" content={pageTitle} />
@@ -260,44 +340,40 @@ const BreviaryPage: React.FC = () => {
           <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         </Helmet>
         {showOfflineBanner && (
-          <div
-            role="status"
-            aria-live="polite"
-            className="mb-spacing-sm mx-auto max-w-3xl flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium border border-border bg-muted/40 text-premium-xs text-muted-foreground"
-          >
+          <div role="status" aria-live="polite" className="mb-spacing-sm mx-auto max-w-3xl flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium border border-border bg-muted/40 text-premium-xs text-muted-foreground">
             <Icons.WifiOff className="w-spacing-sm h-spacing-sm text-primary" />
-            <span className="font-serif italic">
-              Exibindo a Liturgia a partir do cache offline. Reconectando…
-            </span>
+            <span className="font-serif italic">Exibindo a Liturgia a partir do cache offline. Reconectando…</span>
           </div>
         )}
         <div className="mx-auto max-w-3xl mb-spacing-sm flex flex-wrap items-center justify-between gap-spacing-2xs px-spacing-sm">
-          <ReaderTypographyControl />
-          <BreviaryShareButtons
-            hourSlug={selectedHour}
-            isoDate={isoDate}
-            isToday={isToday}
-            shareTitle={pageTitle}
-            bookmarkKey={`prayer-cursor:breviary:${selectedHour}:${isoDate}`}
-          />
-        </div>
-        <PrayerEngineReader
-          prayer={prayer}
-          blocks={hourBlocks}
-          mysteries={[]}
-          activeSection={section}
-          kicker={section.subtitle ?? undefined}
-          contextKey={`breviary:${selectedHour}:${isoDate}`}
-          initialBlockId={initialBlockId}
-          contentStyle={typographyStyle}
-          prefaceSlot={
-            <LiturgyHoursOfficeCards
-              office={office}
-              isLoading={officeLoading}
-              hourTitle={section.title}
-              hourLatin={section.subtitle ?? ''}
+          <div className="flex items-center gap-spacing-2xs">
+            <Button variant="outline" size="sm" onClick={() => setSelectedHour(null)} className="rounded-full text-premium-xs font-black uppercase tracking-widest">
+              <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Horas
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setDayMode(true)} className="rounded-full text-premium-xs font-black uppercase tracking-widest">
+              <Icons.BookOpen className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Dia inteiro
+            </Button>
+          </div>
+          <div className="flex items-center gap-spacing-2xs">
+            <ReaderTypographyControl />
+            <BreviaryShareButtons
+              hourSlug={selectedHour}
+              isoDate={isoDate}
+              isToday={isToday}
+              shareTitle={pageTitle}
+              bookmarkKey={`prayer-cursor:breviary:hour:${selectedHour}:${isoDate}`}
             />
-          }
+          </div>
+        </div>
+        <BreviaryContinuousReader
+          prayer={prayer}
+          hierarchy={hierarchy}
+          hours={bundles}
+          isoDate={isoDate}
+          contextKey={`breviary:hour:${selectedHour}:${isoDate}`}
+          initialBlockId={initialBlockId}
+          liturgy={liturgy ?? null}
+          contentStyle={typographyStyle}
         />
       </>
     );
