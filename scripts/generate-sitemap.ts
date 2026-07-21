@@ -79,6 +79,26 @@ async function generateSitemap() {
     xml += '  </url>\n';
   });
 
+  // União: emite rotas indexáveis estáticas do ROUTE_META que ainda não foram cobertas
+  const emitted = new Set<string>(indexableRoutes);
+  let extraCount = 0;
+  for (const [p, meta] of Object.entries(ROUTE_META)) {
+    if (meta.noindex) continue;
+    if (p.includes(':')) continue;
+    if (meta.canonicalPath && meta.canonicalPath !== p) continue;
+    if (emitted.has(p)) continue;
+    emitted.add(p);
+    extraCount++;
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}${p === '/' ? '' : p}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += '  </url>\n';
+  }
+  if (extraCount > 0) console.log(`ℹ️  ${extraCount} rota(s) adicionadas do ROUTE_META (ausentes em types.ts).`);
+
+
 
   // Glossário — verbetes publicados dinamicamente
   const glossary = await fetchGlossarySlugs();
