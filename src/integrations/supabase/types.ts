@@ -3010,6 +3010,54 @@ export type Database = {
         }
         Relationships: []
       }
+      liturgy_meditations: {
+        Row: {
+          action_of_day: string | null
+          catechism: Json
+          church_history: Json | null
+          fathers: Json
+          final_prayer: string | null
+          generated_at: string
+          iso_date: string
+          logos: Json | null
+          magisterium: Json
+          model: string | null
+          reading_key: string | null
+          readings_hash: string
+          theme: string | null
+        }
+        Insert: {
+          action_of_day?: string | null
+          catechism?: Json
+          church_history?: Json | null
+          fathers?: Json
+          final_prayer?: string | null
+          generated_at?: string
+          iso_date: string
+          logos?: Json | null
+          magisterium?: Json
+          model?: string | null
+          reading_key?: string | null
+          readings_hash: string
+          theme?: string | null
+        }
+        Update: {
+          action_of_day?: string | null
+          catechism?: Json
+          church_history?: Json | null
+          fathers?: Json
+          final_prayer?: string | null
+          generated_at?: string
+          iso_date?: string
+          logos?: Json | null
+          magisterium?: Json
+          model?: string | null
+          reading_key?: string | null
+          readings_hash?: string
+          theme?: string | null
+        }
+        Relationships: []
+      }
       nexus_contributions: {
         Row: {
           book_abbr: string
