@@ -111,6 +111,9 @@ const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
+const NovenasPage = lazy(() => import('./pages/NovenasPage'));
+const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
+
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
@@ -570,6 +573,10 @@ const AppLayout: React.FC = () => {
               <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Via Crucis" kicker="Cathedra · Via Crucis"><ViaCrucis /></DevocionalMobileShell></Suspense>} />
               <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Ladainhas" kicker="Cathedra · Ladainhas"><LitaniesPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/ladainhas" element={<Navigate to="/litanies" replace />} />
+
+              <Route path="/novenas" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novenas" kicker="Cathedra · Novenas"><NovenasPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/novenas/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novena" kicker="Cathedra · Novena"><NovenaDetailPage /></DevocionalMobileShell></Suspense>} />
+
 
               <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Livro de Orações" kicker="Cathedra · Orações"><PrayerLibraryPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/oracao/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações"><PrayerDetailPage /></DevocionalMobileShell></Suspense>} />
