@@ -91,34 +91,62 @@ const MysteryNexusPanel: React.FC<Props> = ({ mystery, accentClass = 'text-stitc
           </div>
         )}
 
-        {catechism && (
+        {catechismList.length > 0 && (
           <div>
             <p className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-on-surface-variant">
               <Church aria-hidden className="h-3 w-3" />
               Catecismo
             </p>
-            <Link
-              to={`/catechism?p=${catechism.paragraph}`}
-              className="mt-1 block font-stitch-serif text-sm italic text-stitch-on-surface hover:text-stitch-secondary hover:underline"
-            >
-              §{catechism.paragraph} — “{catechism.quote}”
-            </Link>
+            <ul className="mt-1 space-y-1">
+              {catechismList.map((c) => (
+                <li key={c.paragraph}>
+                  <Link
+                    to={`/catechism?p=${c.paragraph}`}
+                    className="block font-stitch-serif text-sm italic text-stitch-on-surface hover:text-stitch-secondary hover:underline"
+                  >
+                    §{c.paragraph} — “{c.quote}”
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
-        {patristic && (
+        {fathers.length > 0 && (
           <div>
             <p className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-on-surface-variant">
               <Quote aria-hidden className="h-3 w-3" />
               Padres da Igreja
             </p>
-            <blockquote className="mt-1 font-stitch-serif text-sm italic leading-relaxed text-stitch-on-surface">
-              “{patristic.quote}”
-              <footer className="mt-1 font-stitch-body text-xs not-italic text-stitch-on-surface-variant">
-                — {patristic.author}
-                {patristic.work ? `, ${patristic.work}` : ''}
-              </footer>
-            </blockquote>
+            <div className="mt-1 space-y-3">
+              {fathers.map((p, i) => (
+                <blockquote key={i} className="font-stitch-serif text-sm italic leading-relaxed text-stitch-on-surface">
+                  “{p.quote}”
+                  <footer className="mt-1 font-stitch-body text-xs not-italic text-stitch-on-surface-variant">
+                    — {p.author}{p.work ? `, ${p.work}` : ''}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {magisterium.length > 0 && (
+          <div>
+            <p className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-on-surface-variant">
+              <Landmark aria-hidden className="h-3 w-3" />
+              Magistério
+            </p>
+            <div className="mt-1 space-y-3">
+              {magisterium.map((m, i) => (
+                <blockquote key={i} className="font-stitch-serif text-sm italic leading-relaxed text-stitch-on-surface">
+                  “{m.quote}”
+                  <footer className="mt-1 font-stitch-body text-xs not-italic text-stitch-on-surface-variant">
+                    — {m.author}, {m.work}{m.paragraph ? ` §${m.paragraph}` : ''}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
           </div>
         )}
 
@@ -133,11 +161,51 @@ const MysteryNexusPanel: React.FC<Props> = ({ mystery, accentClass = 'text-stitc
                 <li key={s.slug ?? s.name}>
                   <Link
                     to={s.slug ? `/santos/${s.slug}` : `/santos?q=${encodeURIComponent(s.name)}`}
+                    title={s.reason}
                     className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/50 bg-stitch-surface/40 px-3 py-1 font-stitch-body text-xs text-stitch-on-surface hover:border-stitch-secondary/60 hover:text-stitch-secondary"
                   >
                     <ScrollText aria-hidden className="h-3 w-3" />
                     {s.name}
                   </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {iconography && (
+          <div className="md:col-span-2">
+            <p className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-on-surface-variant">
+              <Palette aria-hidden className="h-3 w-3" />
+              Iconografia
+            </p>
+            <p className="mt-1 font-stitch-serif text-sm leading-relaxed text-stitch-on-surface">
+              {iconography.description}
+            </p>
+            {iconography.symbols && iconography.symbols.length > 0 && (
+              <p className="mt-2 font-stitch-body text-xs text-stitch-on-surface-variant">
+                <span className="font-bold uppercase tracking-widest">Símbolos: </span>
+                {iconography.symbols.join(' · ')}
+              </p>
+            )}
+            {iconography.masterworks && iconography.masterworks.length > 0 && (
+              <p className="mt-1 font-stitch-body text-xs italic text-stitch-on-surface-variant">
+                {iconography.masterworks.join(' · ')}
+              </p>
+            )}
+          </div>
+        )}
+
+        {bibliography.length > 0 && (
+          <div className="md:col-span-2">
+            <p className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-on-surface-variant">
+              <Library aria-hidden className="h-3 w-3" />
+              Para aprofundar
+            </p>
+            <ul className="mt-1 space-y-1 font-stitch-body text-xs text-stitch-on-surface-variant">
+              {bibliography.map((b, i) => (
+                <li key={i}>
+                  <span className="font-bold text-stitch-on-surface">{b.author}</span> — <em>{b.title}</em>{b.locus ? `, ${b.locus}` : ''}
                 </li>
               ))}
             </ul>
