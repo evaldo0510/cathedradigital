@@ -8,9 +8,12 @@
  *     `audio_url` já existe no schema `prayers`).
  *
  * Reutilizável entre todos os leitores do módulo Orações Premium.
+ *
+ * P1 — Botão consolidado no Design System via `<Button variant="pill">`.
  */
 import React from 'react';
 import { Headphones } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   audioUrl?: string | null;
@@ -20,16 +23,18 @@ interface Props {
 export const PrayerAudioPlayer: React.FC<Props> = ({ audioUrl, label = 'Áudio da oração' }) => {
   if (!audioUrl) {
     return (
-      <button
+      <Button
         type="button"
+        variant="pill"
+        size="pill"
         disabled
         aria-label="Áudio ainda não disponível"
         title="Áudio preparado para futura integração"
-        className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-[11px] uppercase tracking-widest text-stitch-on-surface-variant opacity-60"
+        className="cursor-not-allowed opacity-60"
       >
-        <Headphones className="h-3.5 w-3.5" aria-hidden />
+        <Headphones aria-hidden />
         Áudio em breve
-      </button>
+      </Button>
     );
   }
 

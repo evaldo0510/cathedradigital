@@ -3,11 +3,14 @@
  * `useDevotionalFavorites`. Reutilizável em todos os leitores de oração.
  * Exige autenticação; quando o usuário não estiver logado, o botão fica
  * inerte e comunica o motivo via `title`/`aria-label`.
+ *
+ * P1 — Botão consolidado no Design System via `<Button variant="pill*">`.
  */
 import React from 'react';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -24,8 +27,10 @@ export const PrayerFavoriteButton: React.FC<Props> = ({ contentType, contentId, 
   const disabled = !user;
 
   return (
-    <button
+    <Button
       type="button"
+      variant={active ? 'pill-toned' : 'pill'}
+      size="pill"
       disabled={disabled}
       aria-pressed={active}
       aria-label={
@@ -42,17 +47,11 @@ export const PrayerFavoriteButton: React.FC<Props> = ({ contentType, contentId, 
           /* silenciado — feedback via aria-pressed */
         })
       }
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-stitch-body text-[11px] uppercase tracking-widest transition-colors',
-        active
-          ? 'border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary'
-          : 'border-stitch-outline-variant/40 text-stitch-on-surface-variant hover:border-stitch-secondary/50 hover:text-stitch-on-surface',
-        disabled && 'cursor-not-allowed opacity-50',
-      )}
+      className={cn(disabled && 'cursor-not-allowed opacity-50')}
     >
-      {active ? <BookmarkCheck className="h-3.5 w-3.5" aria-hidden /> : <Bookmark className="h-3.5 w-3.5" aria-hidden />}
+      {active ? <BookmarkCheck aria-hidden /> : <Bookmark aria-hidden />}
       {active ? 'Salva' : 'Salvar'}
-    </button>
+    </Button>
   );
 };
 
