@@ -26,6 +26,7 @@ import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { useReaderTypography } from '@/hooks/useReaderTypography';
 
 import { PrayerEngineReader } from './PrayerEngineReader';
+import { MissaContinuousReader } from './MissaContinuousReader';
 import { MissalProperCards } from './primitives/liturgy/MissalProperCards';
 import { LiturgyDateNav } from './primitives/liturgy/LiturgyDateNav';
 import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyControl';
@@ -36,7 +37,7 @@ import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
-type MissalView = 'ordinario' | 'proprio';
+type MissalView = 'celebracao' | 'ordinario' | 'proprio';
 
 function parseDateParam(raw: string | null): Date {
   if (!raw || !/^\d{4}-\d{2}-\d{2}$/.test(raw)) return new Date();
