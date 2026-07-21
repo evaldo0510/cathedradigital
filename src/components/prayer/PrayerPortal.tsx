@@ -187,8 +187,8 @@ const PrayerPortal: React.FC<Props> = ({
         </EditorialHero.Title>
         {quote && (
           <EditorialHero.Subtitle>
-            <span className="italic text-stitch-on-surface">"{quote.text}"</span>
-            <span className="ml-2 not-italic font-stitch-body text-[13px] font-semibold text-stitch-secondary">— {quote.ref}</span>
+            <span className="italic text-foreground">"{quote.text}"</span>
+            <span className="ml-2 not-italic font-stitch-body text-[13px] font-bold text-stitch-secondary">— {quote.ref}</span>
           </EditorialHero.Subtitle>
         )}
         <EditorialHero.Meta>
