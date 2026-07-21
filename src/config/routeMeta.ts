@@ -272,6 +272,26 @@ export const ROUTE_META: Record<string, RouteMeta> = {
  */
 const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
+    test: /^\/liturgia\/dia\/\d{4}-\d{2}-\d{2}$/,
+    meta: {
+      title: 'Dia Litúrgico — Missa, Horas e Santo',
+      description:
+        'Consulte qualquer data do calendário: missal, ofício divino, santo do dia e escrituras integrados.',
+      canonicalPath: '/liturgia/dia',
+      noindex: true,
+    },
+  },
+  {
+    test: /^\/liturgia\/dia\/[^/]+$/,
+    meta: {
+      title: 'Dia Litúrgico — Missa, Horas e Santo',
+      description:
+        'Peregrinação litúrgica completa: leituras, próprio da missa, liturgia das horas e santo do dia em um só lugar.',
+      canonicalPath: '/liturgia/dia',
+      noindex: true,
+    },
+  },
+  {
     test: /^\/glossario\/[^/]+$/,
     meta: {
       title: 'Verbete Teológico — Léxico Cathedra',
