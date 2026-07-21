@@ -29,6 +29,39 @@ function formatPct(x: number): string {
   return `${Math.round(x * 100)}%`;
 }
 
+/** Baixa o snapshot atual como `nexus-metrics-<timestamp>.json`. */
+function exportSnapshotAsJson(snap: NexusMetricsSnapshot): void {
+  const now = new Date();
+  const iso = now.toISOString();
+  const stamp = iso.replace(/[:.]/g, '-');
+  const payload = {
+    generatedAt: iso,
+    adapters: {
+      glossaryAutoNexus: { ...snap.glossary, hitRate: hitRate(snap.glossary) },
+      journeyAutoNexus: { ...snap.journey, hitRate: hitRate(snap.journey) },
+    },
+    totals: {
+      hits: snap.glossary.hits + snap.journey.hits,
+      misses: snap.glossary.misses + snap.journey.misses,
+    },
+  };
+  try {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nexus-metrics-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch {
+    /* browsers antigos ou contexto sem DOM — no-op */
+  }
+}
+
 export const NexusMetricsOverlay: React.FC = () => {
   if (!import.meta.env.DEV) return null;
 
