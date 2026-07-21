@@ -26,6 +26,8 @@ import {
   X,
   PlayCircle,
 } from 'lucide-react';
+import ContemplativeSettingsDialog from '@/components/prayer/rosary/ContemplativeSettingsDialog';
+import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
