@@ -99,6 +99,61 @@ const RETRY_WINDOW_MINUTES: Record<MeditationFailureCode, number> = {
 
 const CACHE_KEY_PREFIX = 'cathedra:liturgy-meditation:v1:';
 const CACHE_MAX_ENTRIES = 14;
+const FALLBACK_EVENTS_KEY = 'cathedra:liturgy-meditation:fallback-events:v1';
+const FALLBACK_EVENTS_MAX = 500;
+
+export interface FallbackEventLog {
+  at: string;
+  iso_date: string;
+  code: MeditationFailureCode | string;
+  source: 'local-cache' | 'local-builder' | 'previous-day';
+  retry_at: string | null;
+  message: string | null;
+}
+
+function persistFallbackEvent(evt: FallbackEventLog): void {
+  const s = safeStorage();
+  if (!s) return;
+  try {
+    const raw = s.getItem(FALLBACK_EVENTS_KEY);
+    const list: FallbackEventLog[] = raw ? JSON.parse(raw) : [];
+    // Dedupe por (iso_date|code|source) numa janela de 6h.
+    const dedupeKey = `${evt.iso_date}|${evt.code}|${evt.source}`;
+    const sixHoursAgo = Date.now() - 6 * 60 * 60_000;
+    const isDup = list.some(
+      (e) =>
+        `${e.iso_date}|${e.code}|${e.source}` === dedupeKey &&
+        new Date(e.at).getTime() > sixHoursAgo,
+    );
+    if (isDup) return;
+    list.unshift(evt);
+    if (list.length > FALLBACK_EVENTS_MAX) list.length = FALLBACK_EVENTS_MAX;
+    s.setItem(FALLBACK_EVENTS_KEY, JSON.stringify(list));
+  } catch {
+    /* quota — ignora */
+  }
+}
+
+export function readFallbackEvents(): FallbackEventLog[] {
+  const s = safeStorage();
+  if (!s) return [];
+  try {
+    const raw = s.getItem(FALLBACK_EVENTS_KEY);
+    return raw ? (JSON.parse(raw) as FallbackEventLog[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function clearFallbackEvents(): void {
+  const s = safeStorage();
+  if (!s) return;
+  try {
+    s.removeItem(FALLBACK_EVENTS_KEY);
+  } catch {
+    /* ignora */
+  }
+}
 
 // ── Persistência local ─────────────────────────────────────────────
 function safeStorage(): Storage | null {
@@ -394,7 +449,8 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
   // Sempre que a meditação em cache/essencial for exibida, emitimos um
   // evento único (dedupe por date+code+source) para acompanharmos com
   // que frequência a IA falha e qual código dispara — visível no
-  // TelemetryDashboard / navigation-telemetry buffer.
+  // TelemetryDashboard / navigation-telemetry buffer + buffer local
+  // consumido pelo painel /admin/liturgia-meditation-fallback.
   const lastLoggedRef = useRef<string | null>(null);
   useEffect(() => {
     const row = query.data;
@@ -404,13 +460,15 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
     const key = `${row.iso_date}|${code}|${source}`;
     if (lastLoggedRef.current === key) return;
     lastLoggedRef.current = key;
-    telemetry.log('liturgy.meditation.fallback', 'warn', {
+    const payload = {
       iso_date: row.iso_date,
       code,
       source,
       retry_at: row.fallback_retry_at ?? null,
       message: row.fallback_message ?? null,
-    });
+    };
+    telemetry.log('liturgy.meditation.fallback', 'warn', payload);
+    persistFallbackEvent({ ...payload, at: new Date().toISOString() });
   }, [query.data]);
 
   return {
@@ -421,3 +479,18 @@ export function useLiturgyMeditation(isoDate: string, readings: DailyLiturgy | n
     retry,
   };
 }
+
+// ── Exportações para testes unitários ─────────────────────────────
+export const __testables__ = {
+  buildClientFallbackMeditation,
+  retryAtFor,
+  messageForCode,
+  inferCode,
+  readLocalMeditation,
+  writeLocalMeditation,
+  readMostRecentLocal,
+  persistFallbackEvent,
+  RETRY_WINDOW_MINUTES,
+  CACHE_KEY_PREFIX,
+  FALLBACK_EVENTS_KEY,
+};

@@ -175,6 +175,7 @@ const RuntimeErrors = lazy(() => import('./pages/admin/RuntimeErrors'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
+const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
@@ -705,6 +706,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
                       <Route path="/admin/pray" element={<PrayerAdmin />} />
                       <Route path="/admin/oracoes" element={<PrayerAdmin />} />
+                      <Route path="/admin/liturgia-meditation-fallback" element={<LiturgyMeditationFallbackPanel />} />
+
 
 
 
