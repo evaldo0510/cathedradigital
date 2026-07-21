@@ -1,93 +1,62 @@
-# CAT-SP4 — Harmonia Arquitetônica (Logos 2030)
+# B.2.5.d — Universalização do Portal para novos módulos
 
-Sprint de unificação. Zero telas novas, zero funcionalidades. Objetivo: fazer com que Bíblia, Rosário, Diário e Home pareçam partes do mesmo edifício.
+## Diagnóstico
 
-Executada em 4 ondas curtas + Sprint 4.5 (Eixo da Catedral). Cada onda tem gate visual antes da próxima.
+Cinco módulos foram pedidos de uma vez. Cada um tem particularidades editoriais e de fluxo:
 
----
+- **Orações comuns**: já existem 9 orações em Engine v2 (Pai Nosso, Ave Maria, etc). Falta apenas o Portal padronizado.
+- **Novenas**: fluxo de 9 dias com progresso persistido — precisa de schema no banco (dias, intenções, meditações).
+- **Ladainhas**: fluxo de invocação/resposta iterativa — precisa de mecânica de repetição no Reader.
+- **Lectio Divina**: 5 etapas (Lectio, Meditatio, Oratio, Contemplatio, Actio) — precisa de tema próprio e temporizadores.
+- **Missal**: já existe (`MissaContinuousReader`) e está em uso. Só precisa do Portal como antessala.
 
-## Onda A — Fundações (tokens + escalas)
+Fazer tudo em uma sprint gera 5 esqueletos sem conteúdo real e polui o banco. Melhor entregar em ondas com gates.
 
-Base do resto. Nada visível para o usuário ainda.
+## Proposta: 3 ondas sequenciais
 
-- **Tipografia única** (`src/styles/typography.css`): escala `display / h1 / h2 / h3 / lead / body / caption / meta / rubrica`. Classes `.type-display`, `.type-h1`, etc. Substitui `text-*` arbitrários dos módulos.
-- **Espaçamentos** (`--space-xs` … `--space-xxl`) em `index.css`. Padrões: seção = `xxl`, bloco = `xl`, item = `m`.
-- **Ícones**: normalizar Lucide para `strokeWidth={1.75}`, tamanhos `16 / 20 / 24`, gap `gap-2` obrigatório com texto. Helper `<Icon>` fino.
-- **Cores por ambiente** já em `data-space="*"` — apenas formalizar a regra: dourado discreto (library), dourado vivo (church), verde suave (cloister), creme claro (atrium). Nunca misturar entre ambientes.
+### Onda 1 — Fundação universal (esta sprint)
 
-Gate: rodar visual em 3 telas âncora (Bíblia, Rosário, Diário) — nada deve ter regressado.
+Objetivo: ativar o Portal em tudo que já está pronto na base, sem novas tabelas.
 
----
+1. **Orações comuns via Portal** — `PrayerPortalStandalone` plugado nas 9 orações v2 existentes, com tema derivado do tipo:
+   - Pai Nosso, Ave Maria, Glória, Salve Rainha → `church` (dourado)
+   - Angelus → `noon`, Regina Caeli → `dawn`, Magnificat → `sunset`
+   - Credo, Te Deum → `church` com quote própria
+2. **Missal via Portal** — antessala contemplativa antes do `MissaContinuousReader`, tema `church`, com Escritura do dia como quote e "Entrar na Missa" como CTA.
+3. **Contrato universal**: expor `resolvePortalTheme(prayer)` em `src/lib/prayer/portalTheme.ts` centralizando o mapeamento (Rosário/Via Sacra/Breviário passam a consumir também).
 
-## Onda B — Hero Universal + Gramática de Cards
+Gate: screenshots dos 5 pontos de entrada, typecheck limpo, E2E do Portal universal.
 
-O componente que aparece em toda entrada de módulo.
+### Onda 2 — Lectio Divina como Portal contemplativo
 
-- **`<CathedraHero>`** (`src/components/system/CathedraHero.tsx`):
-  ```
-  eyebrow → título → subtítulo editorial → metadados → ações
-  ```
-  Props tipadas. Aceita `space` para tomar tokens corretos. Substitui heros customizados em: Bíblia, Catecismo, Glossário, Liturgia, Missal, Rosário, Santos, Jornadas, Trilhas, Biblioteca.
-- **`<CathedraCard>`** (mesmo diretório): `kicker → título → descrição → metadados → CTA`. Variantes por ambiente (não por módulo). Substitui as ~7 variações atuais de card editorial.
+Objetivo: novo módulo, mas sem depender de conteúdo de terceiros — usa Evangelho do dia via `LiturgyProvider` (já existente).
 
-Gate: cada módulo migrado passa por comparação lado a lado (antes × depois). Sem drift.
+- Rota `/lectio` com Portal (tema `dawn`, ícone `BookOpen`, quote fixa "Fala, Senhor, teu servo escuta").
+- Reader com as 5 etapas em stepper, cada uma com temporizador contemplativo configurável (reaproveita `useContemplativeRhythm`).
+- Persistência local por dia (`localStorage` indexado por data litúrgica).
+- Sem novas tabelas — conteúdo bíblico já vem do Provider.
 
----
+Gate: fluxo E2E completo (portal → 5 etapas → conclusão), acessibilidade axe.
 
-## Onda C — Botões, Animações, Ornamentos
+### Onda 3 — Novenas e Ladainhas (requer conteúdo)
 
-Reduzir a superfície.
+Objetivo: módulos com conteúdo editorial próprio. Requerem decisões antes de codar.
 
-- **Botões**: consolidar em 5 variantes finais — `primary / secondary / ghost / pill / editorial`. Auditar `variant=` fora dessa lista e migrar. Remover variantes órfãs.
-- **Animações**: reduzir para 4 — `fade / lift / reveal / page-transition`. Definir em `tailwind.config.ts` e remover `animate-*` customizados espalhados.
-- **Ornamentos** por ambiente:
-  - Library: filete dourado, capitular, textura pergaminho nas bordas.
-  - Church: halo de luz, dourado vivo, hint de vitral no hero.
-  - Cloister: praticamente nenhum ornamento.
-  - Atrium: limpo.
-  Regra: ornamento é decidido pelo `data-space`, nunca pelo componente.
+- **Novenas**: schema `prayer_novena_days` (id, prayer_id, day_number, intention, meditation, prayer_block_ids). Portal mostra "Dia X de 9" com progresso, sessão salva no banco.
+- **Ladainhas**: reaproveita `prayer_blocks` com `kind='invocation'` + `response`. Reader com modo iteração (avanço automático opcional a cada invocação).
 
-Gate: buscar `animate-`, `variant=`, `border-` em componentes e confirmar zero exceções fora do design system.
+Bloqueio para começar: preciso de decisão editorial sobre **quais** novenas e ladainhas entrar primeiro (Novena do Sagrado Coração? Nossa Senhora? São José? Ladainha de Todos os Santos? de Nossa Senhora?).
 
----
+## Detalhes técnicos (para referência)
 
-## Onda D — Auditoria de Sensação
+- `resolvePortalTheme(prayer)`: função pura em `src/lib/prayer/portalTheme.ts` retornando `{ theme, accentIcon, quote }` a partir de `prayer.slug`/`prayer.kind`.
+- Reutiliza `PrayerPortal` já parametrizado (props `theme`, `accentIcon`, `quote`).
+- Missal: gate `?enter=1` em `/missa/hoje` antes de renderizar `MissaContinuousReader`.
+- Lectio: novo componente `LectioDivinaReader` seguindo padrão de `PrayerEngineReader`, sem tocar em `prayer_blocks`.
+- Ondas 2 e 3 abrem depois do gate da Onda 1.
 
-Verificação humana, não técnica.
+## Pergunta antes de começar
 
-- Abrir 12 rotas âncora em sequência (2 por ambiente + trocas).
-- Critério: reconhecer o ambiente em menos de 1 segundo, sem ler o título.
-- Registrar em `docs/audits/sp4-harmonia.md` com screenshots antes × depois.
-- Corrigir apenas o que falhar no teste de reconhecimento.
+Aprovo executar **apenas a Onda 1** agora (Orações comuns + Missal via Portal + helper universal)?
 
----
-
-## Sprint 4.5 — Eixo da Catedral
-
-Executada só depois da SP4 fechada.
-
-- Indicador permanente do ambiente atual no header (ou sidebar em desktop).
-- Discreto: ícone + label pequeno (`Átrio · Biblioteca · Igreja · Claustro`).
-- Muda com `data-space` já resolvido em `resolveSpaceForPath`.
-- Não interfere em nenhuma funcionalidade; reforça a sensação de percurso.
-
----
-
-## Fora de escopo (explicitamente)
-
-- Novas telas, novos módulos, novos conteúdos editoriais.
-- Refatoração de dados, RLS, edge functions.
-- Otimização de performance (fica para sprint dedicada depois da SP4.5).
-- Transições cinematográficas entre ambientes (isso é a Sprint 5 — "Catedral Viva" que você já esboçou).
-
----
-
-## Ordem sugerida de execução
-
-1. Onda A (tokens) — 1 passo curto, aprovar visual.
-2. Onda B (Hero + Cards) — maior esforço, migração módulo a módulo.
-3. Onda C (botões, animações, ornamentos) — limpeza.
-4. Onda D (auditoria) — validação humana.
-5. Sprint 4.5 (Eixo).
-
-Cada onda termina com um gate visual seu antes de eu iniciar a próxima. Se aprovar, começo pela Onda A.
+Se sim, sigo. Se quiser inverter prioridade (ex.: Lectio primeiro, ou já definir quais novenas), me diga antes.
