@@ -96,7 +96,7 @@ const BreviaryPage: React.FC = () => {
         <SEOHead
           title={`${section.title} · Liturgia das Horas — Cathedra`}
           description={`Reze ${section.title} (${section.subtitle ?? ''}) da Liturgia das Horas com o Próprio do dia gerado a partir da liturgia católica.`}
-          canonical="https://www.cathedradigital.com.br/breviary"
+          path="/breviary"
         />
         <PrayerEngineReader
           prayer={prayer}
@@ -128,7 +128,7 @@ const BreviaryPage: React.FC = () => {
       <SEOHead
         title="Breviário · Liturgia das Horas — Cathedra"
         description="Reze o Ofício Divino: sete horas canônicas com Ordinário do rito romano e Próprio do dia atualizado pelas leituras da liturgia."
-        canonical="https://www.cathedradigital.com.br/breviary"
+        path="/breviary"
       />
       <div className="w-full space-y-spacing-xl">
         <div className="text-center space-y-spacing-sm">
