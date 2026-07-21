@@ -475,7 +475,13 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
+        <main
+          id="main-content"
+          ref={mainContentRef}
+          tabIndex={-1}
+          className="outline-none"
+          data-space={resolveSpaceForPath(location.pathname) ?? undefined}
+        >
           
           <SwipeNavigation>
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
