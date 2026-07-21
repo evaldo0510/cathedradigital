@@ -623,6 +623,8 @@ const GlossaryTermPage: React.FC = () => {
     return raw.filter((k): k is SectionKey => k in SECTION_META);
   }, [term]);
 
+  const autoNexus = useMemo(() => (term ? resolveAutoNexus(term) : null), [term]);
+
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -665,9 +667,9 @@ const GlossaryTermPage: React.FC = () => {
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
-  const autoNexus = useMemo(() => resolveAutoNexus(term), [term]);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
+  const nexus = autoNexus!;
 
   const handleFavorite = () => {
     toggleFavorite({
@@ -883,56 +885,56 @@ const GlossaryTermPage: React.FC = () => {
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
                   {k === 'bible' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.bible}
+                      nodes={nexus.byKind.bible}
                       emptyLabel="Passagens bíblicas ainda não indicadas."
                     />
                   )}
                   {k === 'catechism' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.catechism}
+                      nodes={nexus.byKind.catechism}
                       emptyLabel="Referências do Catecismo ainda não indicadas."
                     />
                   )}
                   {k === 'magisterium' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.magisterium}
+                      nodes={nexus.byKind.magisterium}
                       emptyLabel="Documentos do Magistério ainda não indicados."
                     />
                   )}
                   {k === 'saints' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.saint}
+                      nodes={nexus.byKind.saint}
                       emptyLabel="Santos relacionados ainda não indicados."
                     />
                   )}
                   {k === 'fathers' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.father}
+                      nodes={nexus.byKind.father}
                       emptyLabel="Padres relacionados ainda não indicados."
                     />
                   )}
                   {k === 'liturgy' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.liturgy}
+                      nodes={nexus.byKind.liturgy}
                       emptyLabel="Referências litúrgicas ainda não indicadas."
                     />
                   )}
                   {k === 'prayer' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.prayer}
+                      nodes={nexus.byKind.prayer}
                       emptyLabel="Oração relacionada ainda não indicada."
                     />
                   )}
                   {k === 'journey' && (
                     <AutoNexusList
-                      nodes={autoNexus.byKind.journey}
+                      nodes={nexus.byKind.journey}
                       emptyLabel="Jornada sugerida ainda não indicada."
                     />
                   )}
                   {k === 'faq' && <FaqBlock items={term.faq} />}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
                   {k === 'nexus' && (
-                    <NexusFullList byKind={autoNexus.byKind} labels={autoNexus.labels} />
+                    <NexusFullList byKind={nexus.byKind} labels={nexus.labels} />
                   )}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
