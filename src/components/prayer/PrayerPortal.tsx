@@ -147,10 +147,9 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
           className="mt-14 rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/60 px-6 py-7 md:px-8 md:py-8"
         >
           <div className="flex items-center gap-2">
-            <span
+            <Circle
               aria-hidden
-              className="inline-block h-2.5 w-2.5 rounded-full"
-              style={{ background: palette?.accent ?? 'hsl(var(--stitch-secondary))' }}
+              className={cn('h-2.5 w-2.5 fill-current', palette.accentClass)}
             />
             <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
               Mistério do dia
