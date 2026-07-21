@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Church, ScrollText, Users, Quote } from 'lucide-react';
+import { BookOpen, Church, ScrollText, Users, Quote, Landmark, Palette, Library } from 'lucide-react';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
 import { readMysteryMeta } from './mysteryMeta';
 import { cn } from '@/lib/utils';
@@ -22,16 +22,22 @@ const MysteryNexusPanel: React.FC<Props> = ({ mystery, accentClass = 'text-stitc
   const meta = readMysteryMeta(mystery);
   const gospel = meta.primary_passage?.ref ?? mystery.gospel_ref;
   const parallels = meta.complementary_passages ?? [];
-  const catechism = meta.catechism_ref;
-  const patristic = meta.patristic_ref;
+  const catechismList = meta.catechism_refs ?? (meta.catechism_ref ? [meta.catechism_ref] : []);
+  const fathers = meta.church_fathers ?? (meta.patristic_ref ? [meta.patristic_ref] : []);
   const saints = meta.related_saints ?? [];
+  const magisterium = meta.magisterium_refs ?? [];
+  const iconography = meta.iconography;
+  const bibliography = meta.bibliography ?? [];
 
   const hasAny =
     gospel ||
     parallels.length > 0 ||
-    catechism ||
-    patristic ||
-    saints.length > 0;
+    catechismList.length > 0 ||
+    fathers.length > 0 ||
+    saints.length > 0 ||
+    magisterium.length > 0 ||
+    !!iconography ||
+    bibliography.length > 0;
   if (!hasAny) return null;
 
   return (
