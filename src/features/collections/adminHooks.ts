@@ -122,7 +122,8 @@ export function useUpdateCollection(id: string) {
           ...(patch.eyebrow !== undefined ? { eyebrow: patch.eyebrow || undefined } : {}),
         };
       }
-      const { error } = await supabase.from('collections').update(dbPatch).eq('id', id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await supabase.from('collections').update(dbPatch as any).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -177,7 +178,8 @@ export function useAddCollectionItem() {
           order_index: nextOrder,
           title_override: input.titleOverride ?? null,
           description_override: input.descriptionOverride ?? null,
-          metadata: input.metadata ?? {},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          metadata: (input.metadata ?? {}) as any,
         })
         .select('*')
         .single();
