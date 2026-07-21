@@ -40,6 +40,7 @@ export interface DBBlock {
   content: Record<string, unknown> | null;
   repeat_count: number;
   order_index: number;
+  meta?: Record<string, unknown> | null;
 }
 
 export interface PrayerHierarchy {
@@ -141,6 +142,11 @@ export function flattenSectionToBlocks(
     const fruit = typeof content.fruit === 'string' ? content.fruit : undefined;
     const rubric = typeof content.rubric === 'string' ? content.rubric : undefined;
 
+    const meta = (b.meta ?? {}) as Record<string, unknown>;
+    const optionGroup = typeof meta.option_group === 'string' ? meta.option_group : undefined;
+    const optionKey = typeof meta.option_key === 'string' ? meta.option_key : undefined;
+    const optionLabel = typeof meta.option_label === 'string' ? meta.option_label : undefined;
+
     const block: PrayerBlock = {
       id: b.id,
       kind,
@@ -161,6 +167,9 @@ export function flattenSectionToBlocks(
       mysteryId: mystery?.id,
       sectionId: section.id,
       sourceType: b.type,
+      optionGroup,
+      optionKey,
+      optionLabel,
     };
 
     if (b.repeat_count > 1) {

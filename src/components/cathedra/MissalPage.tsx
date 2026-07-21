@@ -35,6 +35,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
+import { useWakeLock } from '@/hooks/useWakeLock';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 type MissalView = 'celebracao' | 'ordinario' | 'proprio';
@@ -64,6 +65,16 @@ const MissalPage: React.FC = () => {
 
   const stageSlug = searchParams.get('stage');
   const initialBlockId = searchParams.get('b');
+  const celebrationMode = searchParams.get('celebration') === '1';
+
+  const toggleCelebration = useCallback(() => {
+    const next = new URLSearchParams(searchParams);
+    if (celebrationMode) next.delete('celebration');
+    else next.set('celebration', '1');
+    setSearchParams(next, { replace: false });
+  }, [celebrationMode, searchParams, setSearchParams]);
+
+  useWakeLock(celebrationMode);
 
   const setView = useCallback(
     (v: MissalView) => {
@@ -266,60 +277,73 @@ const MissalPage: React.FC = () => {
       </Helmet>
 
       <div className="w-full space-y-spacing-xl">
-        {/* Hero editorial Logos 2030 */}
-        <header className="text-center space-y-spacing-sm">
-          <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-            <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
-            <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">
-              Ordo Missæ
-            </span>
-          </div>
-          <h1 className="text-premium-3xl md:text-premium-5xl font-display font-bold text-foreground">
-            Missal Romano
-          </h1>
-          <p className="text-muted-foreground font-serif italic leading-relaxed max-w-xl mx-auto">
-            O Ordinário e o Próprio da Santa Missa — 3ª edição típica do Missal Romano,
-            estruturados como uma única experiência de oração.
-          </p>
-        </header>
+        {/* Hero + Nav ocultos no Modo Celebração para tela limpa (C3) */}
+        {!celebrationMode && (
+          <>
+            <header className="text-center space-y-spacing-sm">
+              <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
+                <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
+                <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">
+                  Ordo Missæ
+                </span>
+              </div>
+              <h1 className="text-premium-3xl md:text-premium-5xl font-display font-bold text-foreground">
+                Missal Romano
+              </h1>
+              <p className="text-muted-foreground font-serif italic leading-relaxed max-w-xl mx-auto">
+                O Ordinário e o Próprio da Santa Missa — 3ª edição típica do Missal Romano,
+                estruturados como uma única experiência de oração.
+              </p>
+            </header>
 
-        <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
+            <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
-        {/* Toggle Celebração ↔ Próprio ↔ Ordinário */}
-        <div
-          role="tablist"
-          aria-label="Alternar visualização do Missal"
-          className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs mx-auto w-fit shadow-premium-md"
-        >
-          {([
-            { id: 'celebracao', label: 'Celebração', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
-            { id: 'proprio', label: 'Próprio', icon: <Icons.Calendar className="w-spacing-md h-spacing-md" /> },
-            { id: 'ordinario', label: 'Ordinário', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
-          ] as const).map((tab) => {
-            const active = view === tab.id;
-            return (
-              <Button
-                key={tab.id}
-                role="tab"
-                aria-selected={active}
-                variant="ghost"
-                onClick={() => setView(tab.id)}
-                className={`flex items-center justify-center gap-spacing-xs px-spacing-md py-spacing-sm rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
-                  active
-                    ? 'bg-background shadow-premium-hover text-primary'
-                    : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                }`}
-              >
-                {tab.icon} <span>{tab.label}</span>
-              </Button>
-            );
-          })}
-        </div>
+            <div
+              role="tablist"
+              aria-label="Alternar visualização do Missal"
+              className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs mx-auto w-fit shadow-premium-md"
+            >
+              {([
+                { id: 'celebracao', label: 'Celebração', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+                { id: 'proprio', label: 'Próprio', icon: <Icons.Calendar className="w-spacing-md h-spacing-md" /> },
+                { id: 'ordinario', label: 'Ordinário', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
+              ] as const).map((tab) => {
+                const active = view === tab.id;
+                return (
+                  <Button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={active}
+                    variant="ghost"
+                    onClick={() => setView(tab.id)}
+                    className={`flex items-center justify-center gap-spacing-xs px-spacing-md py-spacing-sm rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
+                      active
+                        ? 'bg-background shadow-premium-hover text-primary'
+                        : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                    }`}
+                  >
+                    {tab.icon} <span>{tab.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </>
+        )}
 
-        {/* Vista: Celebração Contínua (Onda B) */}
+        {/* Vista: Celebração Contínua */}
         {view === 'celebracao' && hierarchy && prayer && (
           <section aria-label="Celebração da Santa Missa">
-            <div className="mb-spacing-sm flex justify-end">
+            <div className="mb-spacing-sm flex justify-between items-center gap-spacing-sm">
+              <Button
+                type="button"
+                variant={celebrationMode ? 'default' : 'outline'}
+                onClick={toggleCelebration}
+                aria-pressed={celebrationMode}
+                className="rounded-full text-premium-xs font-black uppercase tracking-widest"
+              >
+                <Icons.Flame className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                {celebrationMode ? 'Sair do modo celebração' : 'Modo celebração'}
+              </Button>
               <ReaderTypographyControl />
             </div>
             <MissaContinuousReader
@@ -329,6 +353,7 @@ const MissalPage: React.FC = () => {
               properLoading={properLoading}
               liturgy={liturgy ?? null}
               isoDate={isoDate}
+              celebrationMode={celebrationMode}
             />
           </section>
         )}
