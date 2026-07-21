@@ -6,6 +6,7 @@ import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
 import { getNovenaBySlug } from '@/data/novenas';
 import { loadProgress, saveProgress, type NovenaProgress } from '@/lib/novenas/progress';
+import { generateNovenaProgressPdf } from '@/lib/novenas/pdf';
 import { toast } from 'sonner';
 
 
