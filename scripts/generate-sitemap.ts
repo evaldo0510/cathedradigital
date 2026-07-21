@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
-import { resolveRouteMeta } from '../src/config/routeMeta';
+import { resolveRouteMeta, ROUTE_META } from '../src/config/routeMeta';
 
 
 /**
