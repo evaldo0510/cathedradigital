@@ -73,27 +73,65 @@ export function getLastActions(): ActionRecord[] {
   return readBuf();
 }
 
+const INTERACTIVE_SELECTOR = 'button, a[href], [role="button"], [role="link"], [role="menuitem"], [role="tab"], input[type="submit"], input[type="button"]';
+
+function describeElement(el: HTMLElement): string {
+  // Prioridade: data-action explícito > data-testid > aria-label > texto > tag
+  const explicit = el.getAttribute('data-action');
+  if (explicit) return explicit;
+  const testid = el.getAttribute('data-testid');
+  if (testid) return `${el.tagName.toLowerCase()}:${testid}`;
+  const label = el.getAttribute('aria-label');
+  if (label) return `${el.tagName.toLowerCase()}:${label.slice(0, 60)}`;
+  const text = (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' ');
+  if (text) return `${el.tagName.toLowerCase()}:"${text.slice(0, 60)}"`;
+  const href = el.getAttribute('href');
+  if (href) return `a:${href}`;
+  return el.tagName.toLowerCase();
+}
+
+function collectDataAttrs(el: HTMLElement): Record<string, string> | undefined {
+  const out: Record<string, string> = {};
+  for (const attr of Array.from(el.attributes)) {
+    if (attr.name.startsWith('data-action-')) {
+      out[attr.name.replace('data-action-', '')] = attr.value;
+    }
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 let installed = false;
 export function initActionLogger() {
   if (installed || typeof window === 'undefined') return;
   installed = true;
 
-  // Captura declarativa: qualquer clique em elemento com data-action
+  // Cliques: prioriza [data-action]; se ausente, cai para o interativo mais próximo
   document.addEventListener(
     'click',
     (ev) => {
       const target = ev.target as HTMLElement | null;
-      const el = target?.closest?.('[data-action]') as HTMLElement | null;
+      if (!target?.closest) return;
+      const withAction = target.closest('[data-action]') as HTMLElement | null;
+      const el = withAction ?? (target.closest(INTERACTIVE_SELECTOR) as HTMLElement | null);
       if (!el) return;
-      const name = el.getAttribute('data-action');
-      if (!name) return;
-      const dataAttrs: Record<string, string> = {};
-      for (const attr of Array.from(el.attributes)) {
-        if (attr.name.startsWith('data-action-')) {
-          dataAttrs[attr.name.replace('data-action-', '')] = attr.value;
-        }
-      }
-      logAction(name, Object.keys(dataAttrs).length ? dataAttrs : undefined);
+      const name = withAction
+        ? withAction.getAttribute('data-action')!
+        : `click:${describeElement(el)}`;
+      logAction(name, collectDataAttrs(el));
+    },
+    { capture: true, passive: true },
+  );
+
+  // Submits de formulário — captura o form inteiro, não apenas o botão
+  document.addEventListener(
+    'submit',
+    (ev) => {
+      const form = ev.target as HTMLFormElement | null;
+      if (!form || form.tagName !== 'FORM') return;
+      const name = form.getAttribute('data-action') ?? `submit:${describeElement(form)}`;
+      const method = (form.getAttribute('method') || 'get').toLowerCase();
+      const action = form.getAttribute('action') || window.location.pathname;
+      logAction(name, { method, action, ...(collectDataAttrs(form) ?? {}) });
     },
     { capture: true, passive: true },
   );
@@ -104,3 +142,4 @@ export function initActionLogger() {
     log: logAction,
   };
 }
+

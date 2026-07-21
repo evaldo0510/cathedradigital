@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -101,6 +102,28 @@ export default defineConfig(({ mode }) => ({
         ]
       },
     }),
+    // Upload de sourcemaps para o Sentry — só ativa em build quando as três
+    // variáveis de ambiente estão presentes (SENTRY_AUTH_TOKEN é secret de
+    // BUILD, configurado em Workspace Settings → Build Secrets).
+    ...(mode !== 'development' &&
+    process.env.SENTRY_AUTH_TOKEN &&
+    process.env.SENTRY_ORG &&
+    process.env.SENTRY_PROJECT
+      ? [
+          sentryVitePlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            release: {
+              name: process.env.SENTRY_RELEASE || process.env.VITE_GIT_SHA || undefined,
+            },
+            sourcemaps: {
+              filesToDeleteAfterUpload: ['./dist/**/*.map'],
+            },
+            telemetry: false,
+          }),
+        ]
+      : []),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -108,6 +131,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    sourcemap: true, // exigido pelo Sentry para stack traces resolvidos
     rollupOptions: {
       output: {
         manualChunks(id) {
