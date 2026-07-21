@@ -264,8 +264,46 @@ const MissalPage: React.FC = () => {
     );
   }
 
+  // ── B.2.5.d — Portal do Missal (antessala contemplativa) ──
+  // Antes do seletor de vistas, exibe limiar contemplativo. Só aparece na
+  // vista `celebracao` (default) e enquanto `?enter=1` não estiver ativo.
+  const enterRequested = searchParams.get('enter') === '1';
+  if (view === 'celebracao' && !enterRequested && !celebrationMode) {
+    const missalTheme = resolvePortalTheme('missa-ordinario');
+    const readingRef = proper?.first_reading?.reference ?? proper?.gospel?.reference;
+    return (
+      <PrayerPortalStandalone
+        slug="missa-ordinario"
+        title="Santa Missa"
+        estimatedSeconds={45 * 60}
+        kicker="Cathedra · Ordo Missæ"
+        backHref="/oracao"
+        showRhythm={false}
+        theme={missalTheme.theme}
+        accentIcon={missalTheme.accentIcon}
+        quote={missalTheme.quote}
+        highlight={{
+          eyebrow: isToday ? 'Missa de hoje' : 'Missa do dia',
+          title: liturgy?.celebration ?? liturgy?.season ?? 'Celebração eucarística',
+          subtitle: liturgy?.season ?? undefined,
+          meta: [
+            ...(readingRef ? [{ label: 'Escritura', value: readingRef, icon: 'book' as const }] : []),
+            ...(liturgy?.color ? [{ label: 'Cor litúrgica', value: liturgy.color, icon: 'sparkles' as const }] : []),
+            { label: 'Ordo Missæ', value: 'Ordinário · Próprio · Comunhão', icon: 'church' as const },
+          ],
+        }}
+        onEnter={() => {
+          const next = new URLSearchParams(searchParams);
+          next.set('enter', '1');
+          setSearchParams(next, { replace: true });
+        }}
+      />
+    );
+  }
+
   // ─────────────────────────────── Seletor / Hero ───────────────────────────────
   return (
+
     <>
       <SEOHead
         title="Missal Romano · Ordo Missæ"
