@@ -126,18 +126,27 @@ const JornadaStepPage: React.FC = () => {
     });
   }, [step?.subtitle]);
 
+  // Carrega os dados da etapa sempre que o par (journeyId, stepId) muda.
   useEffect(() => {
-    if (stepId && journeyId && step?.title) {
+    if (stepId && journeyId) {
       loadData();
-      saveLastRead({
-        content_type: 'journey',
-        content_id: stepId,
-        label: `${step.title} (${journeyTitle || 'Jornada'})`,
-        url: `/jornadas/${journeyId}/step?step=${stepId}`,
-        is_last_read: true,
-      });
+    }
+     
+  }, [stepId, journeyId, user?.id]);
+
+  // Registra histórico e "última leitura" apenas após o step estar carregado.
+  useEffect(() => {
+    if (!stepId || !journeyId || !step?.title) return;
+    saveLastRead({
+      content_type: 'journey',
+      content_id: stepId,
+      label: `${step.title} (${journeyTitle || 'Jornada'})`,
+      url: `/jornadas/${journeyId}/step?step=${stepId}`,
+      is_last_read: true,
+    });
+    if (user?.id) {
       supabase.from('user_history').insert({
-        user_id: user?.id,
+        user_id: user.id,
         title: step.title,
         route: `/jornadas/${journeyId}/step?step=${stepId}`,
         type: 'journey',
