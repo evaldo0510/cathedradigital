@@ -804,7 +804,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         <MysteryClosingCard
           mystery={currentMystery}
           isLast={isLastOverall}
-          onNext={goNext}
+          onNext={goNextRhythmed}
           accentClass={palette.accentClass}
         />
       )}
