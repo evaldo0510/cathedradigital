@@ -37,7 +37,7 @@ export const LiturgyRichHeader: React.FC<Props> = ({ liturgy, proper, saintOfDay
   const cor = proper?.liturgical_color ?? liturgy?.cor;
   const colorToken = liturgy?.colorToken;
   const tempo = liturgy?.season ?? proper?.season_note ?? null;
-  const grau = proper?.celebration_rank ?? null;
+  const grau = proper?.celebration_title ?? null;
   const semana = psalterWeek(isoDate);
 
   const chips: { label: string; value: string; dot?: string }[] = [];
