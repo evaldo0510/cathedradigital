@@ -1,51 +1,45 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
 import { getNovenaBySlug } from '@/data/novenas';
+import { loadProgress, saveProgress, type NovenaProgress } from '@/lib/novenas/progress';
+import { toast } from 'sonner';
 
-interface NovenaProgress {
-  startedAt: string; // ISO date
-  completedDays: number[]; // dias marcados como rezados
-  currentDay: number;
-}
-
-function storageKey(slug: string) {
-  return `cathedra:novena:${slug}`;
-}
-
-function loadProgress(slug: string): NovenaProgress | null {
-  try {
-    const raw = localStorage.getItem(storageKey(slug));
-    if (!raw) return null;
-    return JSON.parse(raw) as NovenaProgress;
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress(slug: string, p: NovenaProgress) {
-  try {
-    localStorage.setItem(storageKey(slug), JSON.stringify(p));
-  } catch {
-    /* ignore */
-  }
-}
 
 const NovenaDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const novena = slug ? getNovenaBySlug(slug) : undefined;
 
   const [progress, setProgress] = useState<NovenaProgress | null>(null);
 
   useEffect(() => {
     if (!slug) return;
+    const requestedDay = Number(searchParams.get('dia'));
+    const total = novena?.days.length ?? 9;
+    const clampDay = (d: number) => Math.min(Math.max(1, d), total);
     const existing = loadProgress(slug);
-    if (existing) setProgress(existing);
-    else setProgress({ startedAt: new Date().toISOString(), completedDays: [], currentDay: 1 });
+    if (existing) {
+      if (requestedDay && requestedDay !== existing.currentDay) {
+        const next = { ...existing, currentDay: clampDay(requestedDay) };
+        setProgress(next);
+        saveProgress(slug, next);
+      } else {
+        setProgress(existing);
+      }
+    } else {
+      setProgress({
+        startedAt: new Date().toISOString(),
+        completedDays: [],
+        currentDay: requestedDay ? clampDay(requestedDay) : 1,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
+
 
   const currentDay = progress?.currentDay ?? 1;
   const completedSet = useMemo(() => new Set(progress?.completedDays ?? []), [progress]);
@@ -86,6 +80,27 @@ const NovenaDetailPage: React.FC = () => {
     setProgress(next);
     saveProgress(novena.slug, next);
   };
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/novenas/${novena.slug}?dia=${currentDay}`;
+    const text = `Estou rezando a ${novena.title} — dia ${currentDay} de ${totalDays} (${percent}% concluído).`;
+    const shareData = { title: novena.title, text, url };
+    try {
+      if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch {
+      /* fallback */
+    }
+    try {
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      toast.success('Link copiado para a área de transferência.');
+    } catch {
+      toast.error('Não foi possível compartilhar.');
+    }
+  };
+
 
   return (
     <div className="w-full space-y-[var(--sp-xl)] pb-[var(--sp-xxl)]">
@@ -189,18 +204,17 @@ const NovenaDetailPage: React.FC = () => {
 
       {/* Ações */}
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-[var(--sp-m)] pt-[var(--sp-l)]">
-        <Button
-          variant="outline"
-          onClick={resetProgress}
-          className="type-caption"
-        >
-          <Icons.RefreshCw className="w-4 h-4 mr-2" />
-          Reiniciar novena
-        </Button>
-        <Button
-          onClick={markCurrentDone}
-          className="min-w-[220px]"
-        >
+        <div className="flex gap-[var(--sp-s)]">
+          <Button variant="outline" onClick={resetProgress} className="type-caption">
+            <Icons.RefreshCw className="w-4 h-4 mr-2" />
+            Reiniciar
+          </Button>
+          <Button variant="outline" onClick={handleShare} className="type-caption">
+            <Icons.Share2 className="w-4 h-4 mr-2" />
+            Compartilhar
+          </Button>
+        </div>
+        <Button onClick={markCurrentDone} className="min-w-[220px]">
           {completedSet.has(currentDay) ? (
             <>
               <Icons.X className="w-4 h-4 mr-2" />
@@ -219,6 +233,7 @@ const NovenaDetailPage: React.FC = () => {
           )}
         </Button>
       </div>
+
     </div>
   );
 };
