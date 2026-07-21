@@ -53,6 +53,8 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/missal', label: 'Missal', icon: Icons.Book, showInMenu: false, category: 'content' },
   { path: '/calendar', label: 'Calendário Litúrgico', icon: Icons.Calendar, showInMenu: false, category: 'content' },
   { path: '/litanies', label: 'Ladainhas', icon: Icons.Flame, showInMenu: false, category: 'content' },
+  { path: '/novenas', label: 'Novenas', icon: Icons.Calendar, showInMenu: false, category: 'content' },
+
   { path: '/guia-modulos', label: 'Guia de Módulos', icon: Icons.BookOpen, showInMenu: false, category: 'content' },
   { path: '/community', label: 'Comunidade', icon: Icons.Users, showInMenu: false, category: 'user' },
   { path: '/diario', label: 'Diário Espiritual', icon: Icons.FileText, showInMenu: true, category: 'user' },
