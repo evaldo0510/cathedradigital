@@ -323,7 +323,7 @@ const ViaCrucis: React.FC = () => {
           >
             Via Crucis
           </h1>
-          <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">
+          <p className="text-premium-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
             "Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."
           </p>
         </motion.div>
@@ -440,7 +440,7 @@ const ViaCrucis: React.FC = () => {
 
   const containerCls = contemplative
     ? 'max-w-2xl mx-auto py-spacing-3xl px-spacing-md text-center animate-in fade-in duration-500'
-    : 'max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700';
+    : 'max-w-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700';
 
   return (
     <div className={containerCls} data-testid="via-sacra-journey" data-mode={mode}>
@@ -551,7 +551,7 @@ const ViaCrucis: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative space-y-spacing-2xl max-w-spacing-2xl mx-auto">
+        <div className="relative space-y-spacing-2xl max-w-2xl mx-auto">
           {/* Passagem bíblica expandida — só fora do contemplativo */}
           {!contemplative && (
             <div className="text-center space-y-spacing-xs">
