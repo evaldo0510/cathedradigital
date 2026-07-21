@@ -197,7 +197,12 @@ const BreviaryPage: React.FC = () => {
     [prayers],
   );
 
-  const { liturgy } = useDailyLiturgy(selectedDate);
+  const { liturgy, isLoading: liturgyLoading, isError: liturgyError, isOfflineData, refresh: refreshLiturgy } = useDailyLiturgy(selectedDate);
+  const liturgyStatus = liturgyLoading
+    ? 'loading'
+    : liturgyError
+      ? (online ? 'unavailable' : 'offline')
+      : (!liturgy ? (online ? 'unavailable' : 'offline') : (isOfflineData && !online ? 'offline' : 'ready'));
   const { office, isLoading: officeLoading, fromCache } = useLiturgyHoursOffice(
     isoDate,
     selectedHour,
