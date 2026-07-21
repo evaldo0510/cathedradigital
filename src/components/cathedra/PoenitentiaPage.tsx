@@ -1,7 +1,12 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Icons } from '../../constants';
 import { CathedraCard } from './CathedraCard';
+import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
+import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
+import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import type { Prayer } from '@/hooks/usePrayers';
 
 interface ConfessionStep {
   title: string;
@@ -55,11 +60,51 @@ const CONFESSION_STEPS: ConfessionStep[] = [
   }
 ];
 
-const PoenitentiaPage: React.FC = () => {
+const CHECKS_KEY = 'cathedra.exame.checks.v1';
+
+interface Props {
+  prayer?: Prayer;
+  kicker?: string;
+}
+
+const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
   const [activeStep, setActiveStep] = useState(0);
 
+  // Persistência dos checks por (passo, item) — mantida mesmo sem prayer ligada.
+  const [checks, setChecks] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {};
+    try { return JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}'); } catch { return {}; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(CHECKS_KEY, JSON.stringify(checks)); } catch { /* noop */ }
+  }, [checks]);
+
+  const toggle = useCallback((step: number, i: number) => {
+    setChecks((prev) => ({ ...prev, [`${step}:${i}`]: !prev[`${step}:${i}`] }));
+  }, []);
+  const resetChecks = useCallback(() => setChecks({}), []);
+
+  // Integração Prayer Engine v2 (opcional) — favoritos e sessão.
+  const favs = useDevotionalFavorites();
+  const isFavorite = prayer ? favs.isFavorited('prayer', prayer.id) : false;
+  usePrayerEngineSession(prayer?.id ?? '');
+
+  const doneCount = useMemo(() => Object.values(checks).filter(Boolean).length, [checks]);
+  const totalItems = useMemo(
+    () => CONFESSION_STEPS.reduce((acc, s) => acc + (s.items?.length ?? 0), 0),
+    [],
+  );
+
   return (
-    <div className="w-full space-y-spacing-2xl pb-spacing-2xl">
+    <>
+      {prayer && (
+        <MobileTopBar
+          kicker={kicker ?? 'Cathedra · Sacramentum Poenitentiae'}
+          title={prayer.title}
+          showBack
+        />
+      )}
+      <div className="w-full space-y-spacing-2xl pb-spacing-2xl max-w-4xl mx-auto">
       <div className="text-center space-y-spacing-md pt-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
@@ -67,6 +112,28 @@ const PoenitentiaPage: React.FC = () => {
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
+
+        {prayer && (
+          <div className="flex flex-wrap justify-center items-center gap-spacing-sm pt-spacing-xs">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => favs.toggle({ contentType: 'prayer', contentId: prayer.id, title: prayer.title })}
+              className="gap-spacing-xs"
+            >
+              <Icons.Bookmark className={`w-4 h-4 ${isFavorite ? 'fill-primary text-primary' : ''}`} />
+              {isFavorite ? 'Salvo' : 'Salvar'}
+            </Button>
+            <span className="text-premium-xs uppercase tracking-widest text-muted-foreground">
+              {doneCount}/{totalItems} examinados
+            </span>
+            {doneCount > 0 && (
+              <Button variant="ghost" size="sm" onClick={resetChecks} className="text-premium-xs">
+                Recomeçar exame
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md px-spacing-xs">
@@ -104,14 +171,35 @@ const PoenitentiaPage: React.FC = () => {
 
           {CONFESSION_STEPS[activeStep].items && (
             <div className="space-y-spacing-lg pt-spacing-md">
-              <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Exame de Consciência</h3>
+              <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">
+                {activeStep === 0 ? 'Marque conforme reconhece' : 'Reflita'}
+              </h3>
               <div className="grid gap-spacing-sm">
-                {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
-                  <div key={i} className="flex gap-spacing-md p-spacing-md rounded-premium bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-premium transition-all">
-                    <div className="w-spacing-lg h-spacing-lg rounded-premium bg-primary/10 text-primary flex items-center justify-center font-black text-premium-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
-                    <span className="text-premium-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
-                  </div>
-                ))}
+                {CONFESSION_STEPS[activeStep].items?.map((item, i) => {
+                  const key = `${activeStep}:${i}`;
+                  const checked = !!checks[key];
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => toggle(activeStep, i)}
+                      className={`flex gap-spacing-md p-spacing-md rounded-premium border text-left transition-all ${
+                        checked
+                          ? 'bg-primary/10 border-primary/40 shadow-premium'
+                          : 'bg-muted/50 border-border/50 hover:bg-white hover:shadow-premium'
+                      }`}
+                    >
+                      <div className={`w-spacing-lg h-spacing-lg rounded-premium flex items-center justify-center font-black text-premium-xs shrink-0 border transition-colors ${
+                        checked
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-primary/10 text-primary border-primary/10'
+                      }`}>
+                        {checked ? <Icons.CheckCircle2 className="w-4 h-4" /> : i + 1}
+                      </div>
+                      <span className="text-premium-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -180,7 +268,18 @@ const PoenitentiaPage: React.FC = () => {
           </p>
         </CathedraCard>
       </div>
-    </div>
+
+      {prayer && (
+        <ReaderContinuation
+          context={{
+            kind: 'prayer',
+            id: prayer.slug,
+            meta: { prayerCategory: prayer.category },
+          }}
+        />
+      )}
+      </div>
+    </>
   );
 };
 

@@ -27,6 +27,7 @@ import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerPortal from '@/components/prayer/PrayerPortal';
 import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
+import PoenitentiaPage from '@/components/cathedra/PoenitentiaPage';
 
 
 const FONT_STEPS = [
@@ -192,6 +193,12 @@ const PrayerDetailPage: React.FC = () => {
         );
       }
 
+
+      // Reader especializado: Exame de Consciência preserva a tela guiada
+      // interativa (checkboxes por passo) mesmo entrando pelo Portal v2.
+      if (prayer.slug === 'exame-de-consciencia') {
+        return <PoenitentiaPage prayer={prayer} kicker={engineKicker} />;
+      }
 
       return (
         <PrayerEngineReader
