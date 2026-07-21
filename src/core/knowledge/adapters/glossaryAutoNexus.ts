@@ -74,7 +74,7 @@ function parseBibleParts(raw: string): { book: string; chapter: number } | null 
   return { book, chapter };
 }
 
-const KIND_SPECS: Record<string, KindSpec> = {
+export const KIND_SPECS: Record<string, KindSpec> = {
   bible: {
     kind: 'bible',
     route: 'study.bible',
