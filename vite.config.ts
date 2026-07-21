@@ -105,24 +105,25 @@ export default defineConfig(({ mode }) => ({
     // Upload de sourcemaps para o Sentry — só ativa em build quando as três
     // variáveis de ambiente estão presentes (SENTRY_AUTH_TOKEN é secret de
     // BUILD, configurado em Workspace Settings → Build Secrets).
-    mode !== 'development' &&
-      !!process.env.SENTRY_AUTH_TOKEN &&
-      !!process.env.SENTRY_ORG &&
-      !!process.env.SENTRY_PROJECT &&
-      process.env.SENTRY_ORG &&
-      process.env.SENTRY_PROJECT &&
-      sentryVitePlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT,
-        release: {
-          name: process.env.SENTRY_RELEASE || process.env.VITE_GIT_SHA,
-        },
-        sourcemaps: {
-          filesToDeleteAfterUpload: ['./dist/**/*.map'],
-        },
-        telemetry: false,
-      }),
+    ...(mode !== 'development' &&
+    process.env.SENTRY_AUTH_TOKEN &&
+    process.env.SENTRY_ORG &&
+    process.env.SENTRY_PROJECT
+      ? [
+          sentryVitePlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            release: {
+              name: process.env.SENTRY_RELEASE || process.env.VITE_GIT_SHA || undefined,
+            },
+            sourcemaps: {
+              filesToDeleteAfterUpload: ['./dist/**/*.map'],
+            },
+            telemetry: false,
+          }),
+        ]
+      : []),
   ].filter(Boolean),
   resolve: {
     alias: {
