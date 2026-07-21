@@ -86,13 +86,8 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
 
   // Integração Prayer Engine v2 (opcional) — favoritos e sessão.
   const favs = useDevotionalFavorites();
-  const isFavorite = prayer ? favs.isFavorite('prayer', prayer.id) : false;
-  const session = usePrayerEngineSession(prayer?.id ?? '');
-  useEffect(() => {
-    if (!prayer) return;
-    session.markProgress(activeStep, CONFESSION_STEPS.length);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prayer?.id, activeStep]);
+  const isFavorite = prayer ? favs.isFavorited('prayer', prayer.id) : false;
+  usePrayerEngineSession(prayer?.id ?? '');
 
   const doneCount = useMemo(() => Object.values(checks).filter(Boolean).length, [checks]);
   const totalItems = useMemo(
