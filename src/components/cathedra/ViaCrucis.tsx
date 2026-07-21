@@ -95,6 +95,7 @@ function readInterval(): number {
 /* ---------------------------- componente ------------------------------ */
 
 const ViaCrucis: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentStation, setCurrentStation] = useState(0);
   const [isJourney, setIsJourney] = useState(false);
   const { progress, loaded, save } = useDevotionalProgress('viacrucis');
