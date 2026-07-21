@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 
 const FONT_STEPS = [
