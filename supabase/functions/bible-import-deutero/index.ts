@@ -13,6 +13,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { resolveExternalChapter, checkVerseCount } from '../_shared/bibleChapterNormalize.ts';
 import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+import { assertAdmin } from '../_shared/admin-guard.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -57,6 +58,10 @@ Deno.serve(async (req) => {
   const cid = getOrCreateCorrelationId(req);
   const cidH = correlationResponseHeader(cid);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
+
+  const guard = await assertAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
+
 
   const url = Deno.env.get('SUPABASE_URL')!;
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
