@@ -57,6 +57,9 @@ Deno.serve(async (req) => {
   const cidH = correlationResponseHeader(cid);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: { ...corsHeaders, ...cidH } });
 
+  const guard = await assertCronOrAdmin(req, corsHeaders);
+  if (!guard.ok) return guard.response;
+
   let body: Body = {};
   try { body = (await req.json()) as Body; } catch { /* default */ }
   const threshold = Math.max(100, body.threshold_ms ?? 800);
