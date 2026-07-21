@@ -573,9 +573,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
     <article
       key={current.id}
       data-contemplative={contemplative || undefined}
-      style={contentStyle}
+      style={{
+        ...contentStyle,
+        // Velocidade do fade controlada por ritmo contemplativo.
+        animationDuration: `${rhythm.fadeMs}ms`,
+        // Enquanto aguardamos a "pausa entre blocos", suavizamos o artigo.
+        opacity: isTransitioning ? 0 : undefined,
+        transition: isTransitioning ? `opacity ${rhythm.fadeMs}ms ease-out` : undefined,
+      }}
       className={cn(
-        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in duration-500 motion-reduce:animate-none',
+        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in motion-reduce:animate-none',
         contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
       )}
     >
