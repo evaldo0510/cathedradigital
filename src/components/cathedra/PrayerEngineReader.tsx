@@ -889,7 +889,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
         subtitle={prayer.subtitle ?? undefined}
         backHref="/oracao"
       />
-      {content}
+      {heroContent ?? content}
       <MobileBottomNav />
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>
