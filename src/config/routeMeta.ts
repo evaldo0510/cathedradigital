@@ -110,6 +110,17 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Missal, Liturgia das Horas e calendário litúrgico do dia com leituras, salmos e antífonas próprias.',
   },
+  '/liturgia/dia': {
+    title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',
+    description:
+      'Peregrinação litúrgica completa: leituras, próprio da missa, liturgia das horas e santo do dia em um só lugar.',
+  },
+  '/liturgia/dia/:d': {
+    title: 'Dia Litúrgico — Missa, Horas e Santo',
+    description:
+      'Consulte qualquer data do calendário: missal, ofício divino, santo do dia e escrituras integrados.',
+    noindex: true,
+  },
   '/calendar': {
     title: 'Calendário Litúrgico Católico — Cathedra',
     description:
