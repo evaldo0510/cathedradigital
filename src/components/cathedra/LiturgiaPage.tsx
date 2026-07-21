@@ -244,11 +244,32 @@ const LiturgiaPage: React.FC = () => {
                 </div>
               )}
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
-                <Icons.Zap className="w-spacing-xl h-spacing-xl text-secondary mx-auto" />
-                <p className="text-premium-xs font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
-                <p className="text-premium-xl md:text-premium-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
-              </motion.div>
+              {/* ── Centro de Meditação Litúrgica ─────────────── */}
+              {isMeditationLoading && !meditation && <LiturgyMeditationSkeleton />}
+              {meditation && (
+                <div className="space-y-spacing-xl">
+                  {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
+                  {meditation.reading_key && (
+                    <LiturgyReadingKeyCard text={meditation.reading_key} />
+                  )}
+                  <LiturgyTraditionCard
+                    fathers={meditation.fathers ?? []}
+                    catechism={meditation.catechism ?? []}
+                    magisterium={meditation.magisterium ?? []}
+                  />
+                  {meditation.logos && <LiturgyLogosCard logos={meditation.logos} />}
+                  {meditation.final_prayer && (
+                    <LiturgyFinalPrayerCard text={meditation.final_prayer} />
+                  )}
+                  {meditation.church_history && (
+                    <LiturgyChurchHistoryCard history={meditation.church_history} />
+                  )}
+                  {meditation.action_of_day && (
+                    <LiturgyActionCard text={meditation.action_of_day} />
+                  )}
+                </div>
+              )}
+
 
               {saint && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
