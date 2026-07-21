@@ -957,11 +957,38 @@ export const PrayerEngineReader: React.FC<Props> = ({
     return (
       <>
         <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-stitch-surface text-stitch-on-surface"
+          className={cn(
+            'fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden text-stitch-on-surface transition-colors duration-500',
+            contemplative
+              ? 'bg-black text-white'
+              : 'bg-stitch-surface',
+          )}
           role="dialog"
-          aria-label="Modo foco de oração"
+          aria-label={contemplative ? 'Modo contemplação' : 'Modo foco de oração'}
         >
-          <div className="w-full max-w-[720px] max-h-screen overflow-y-auto">{content}</div>
+          {contemplative && (
+            <>
+              <div
+                aria-hidden
+                className={cn(
+                  'pointer-events-none absolute inset-0 bg-gradient-to-b',
+                  palette.overlayGradient,
+                )}
+              />
+              <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/55" />
+            </>
+          )}
+          <div className="relative z-10 w-full max-w-[820px] max-h-screen overflow-y-auto px-2">
+            {content}
+          </div>
+          <button
+            type="button"
+            onClick={() => { setMode('guided'); setFocus(false); }}
+            className="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-black/30 px-3 py-1 font-stitch-body text-[11px] uppercase tracking-widest text-white/80 backdrop-blur transition hover:border-white/40 hover:text-white"
+            aria-label="Sair do modo contemplação"
+          >
+            Sair
+          </button>
         </div>
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
