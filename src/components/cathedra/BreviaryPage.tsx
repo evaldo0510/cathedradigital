@@ -43,6 +43,7 @@ import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationC
 import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
 import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
+import { Sunrise, Sun, Sunset, MoonStar, type LucideIcon } from 'lucide-react';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
@@ -403,6 +404,21 @@ const BreviaryPage: React.FC = () => {
   if (!enterRequested && prayer) {
     const suggestedSection = orderedSections.find((s) => s.slug === suggested);
     const suggestedTime = (suggestedSection?.meta as { time?: string } | null)?.time;
+
+    // Tema derivado da hora canônica sugerida.
+    const HOUR_THEME: Record<string, { theme: 'dawn' | 'noon' | 'sunset' | 'night'; Icon: LucideIcon; quote: { text: string; ref: string } }> = {
+      'oficio-das-leituras': { theme: 'night', Icon: MoonStar, quote: { text: 'À meia-noite eu me levantava para vos louvar.', ref: 'Sl 118,62' } },
+      'invitatorio': { theme: 'night', Icon: MoonStar, quote: { text: 'Vinde, exultemos ao Senhor.', ref: 'Sl 94,1' } },
+      'laudes': { theme: 'dawn', Icon: Sunrise, quote: { text: 'De madrugada eu vos busco, ó Deus.', ref: 'Sl 62,2' } },
+      'tercia': { theme: 'noon', Icon: Sun, quote: { text: 'Sete vezes por dia eu vos louvo.', ref: 'Sl 118,164' } },
+      'sexta': { theme: 'noon', Icon: Sun, quote: { text: 'Sete vezes por dia eu vos louvo.', ref: 'Sl 118,164' } },
+      'noa': { theme: 'noon', Icon: Sun, quote: { text: 'Sete vezes por dia eu vos louvo.', ref: 'Sl 118,164' } },
+      'hora-media': { theme: 'noon', Icon: Sun, quote: { text: 'Sete vezes por dia eu vos louvo.', ref: 'Sl 118,164' } },
+      'vesperas': { theme: 'sunset', Icon: Sunset, quote: { text: 'Suba como incenso a minha oração diante de vós.', ref: 'Sl 140,2' } },
+      'completas': { theme: 'night', Icon: MoonStar, quote: { text: 'Em paz me deito e adormeço, ó Senhor.', ref: 'Sl 4,9' } },
+    };
+    const hourTheme = HOUR_THEME[suggested ?? ''] ?? HOUR_THEME['laudes'];
+
     return (
       <PrayerPortalStandalone
         slug="liturgia-das-horas"
@@ -411,6 +427,9 @@ const BreviaryPage: React.FC = () => {
         kicker="Cathedra · Officium Divinum"
         backHref="/oracao"
         showRhythm={false}
+        theme={hourTheme.theme}
+        accentIcon={hourTheme.Icon}
+        quote={hourTheme.quote}
         highlight={{
           eyebrow: 'Hora recomendada',
           title: suggestedSection?.title ?? 'Hora canônica',
@@ -429,6 +448,7 @@ const BreviaryPage: React.FC = () => {
       />
     );
   }
+
 
 
   return (

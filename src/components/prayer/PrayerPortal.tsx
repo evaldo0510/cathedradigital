@@ -21,7 +21,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Clock, Sparkles, PlayCircle, RotateCcw, BookOpen, Church, Circle } from 'lucide-react';
+import { Clock, Sparkles, PlayCircle, RotateCcw, BookOpen, Church, Circle, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
@@ -32,6 +32,9 @@ import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
 import { cn } from '@/lib/utils';
+
+export type PrayerPortalTheme = 'church' | 'passion' | 'dawn' | 'noon' | 'sunset' | 'night';
+
 
 /**
  * Bloco de destaque universal — usado por orações que não têm mistérios
@@ -69,7 +72,12 @@ interface Props {
   backHref?: string;
   /** Rótulo do link de retorno. */
   backLabel?: string;
+  /** Tema visual (halo, filete, tint). Default: `church`. */
+  theme?: PrayerPortalTheme;
+  /** Ícone de destaque exibido no Hero.Meta e circulo do highlight. */
+  accentIcon?: LucideIcon;
 }
+
 
 const OPENING_QUOTE: Record<string, { text: string; ref: string }> = {
   rosario: { text: 'Permanecei em mim, e eu em vós.', ref: 'Jo 15,4' },
@@ -102,7 +110,11 @@ const PrayerPortal: React.FC<Props> = ({
   onEnter,
   backHref = '/oracao',
   backLabel = '← Voltar ao Livro de Orações',
+  theme = 'church',
+  accentIcon,
 }) => {
+  const AccentIcon = accentIcon ?? Sparkles;
+
   const [searchParams, setSearchParams] = useSearchParams();
   const session = usePrayerEngineSession(prayer.id);
   const [mode, setMode] = React.useState<PrayerMode>(() => {
@@ -202,6 +214,7 @@ const PrayerPortal: React.FC<Props> = ({
       aria-labelledby="portal-title"
       data-testid="prayer-portal"
       data-portal-oracao
+      data-portal-theme={theme}
     >
       {/* 1 — Hero limpo */}
       <EditorialHero align="center" as="header">
@@ -218,10 +231,11 @@ const PrayerPortal: React.FC<Props> = ({
         <EditorialHero.Meta>
           {resolvedHighlight && (
             <span className="inline-flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-stitch-secondary" aria-hidden />
+              <AccentIcon className="h-3.5 w-3.5 text-stitch-secondary" aria-hidden />
               {resolvedHighlight.title}
             </span>
           )}
+
           {prayer.estimated_seconds && (
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" aria-hidden />
