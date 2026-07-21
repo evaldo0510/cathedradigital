@@ -1,58 +1,76 @@
+## Sprint 4 · Onda A — Mistérios Contemplativos
 
-# Sprint 3 · Liturgia das Horas (Prayer Engine v2)
+Elevar cada dezena do Rosário a uma experiência de contemplação editorial, sem tocar na arquitetura do Prayer Engine v2, persistência, Nexus, TTS ou ReaderContinuation.
 
-## Estado atual
-- Existe **1 oração agregada** `liturgia-das-horas` (engine v2) com 7 seções (`oficio`, `laudes`, `tercia`, `sexta`, `noa`, `vesperas`, `completas`) e 31 blocos do Ordinário.
-- O Próprio (antífonas/salmodia/leituras/preces) vem em runtime da Edge Function `useLiturgyHoursOffice`.
-- `BreviaryContinuousReader` já injeta Ordinário + Próprio, com persistência de cursor, TTS por bloco e Nexus.
-- **Falta**: cada Hora como entidade autônoma no engine, hero editorial dedicado, favoritos por hora, notificações e integração com calendário litúrgico.
+### 1. Banco — expansão editorial dos mistérios
 
-## Onda A — Migração para orações independentes
+Migration adicionando à tabela `prayer_mysteries` (via coluna `meta jsonb` — sem quebrar schema):
 
-Criar 5 orações v2 autônomas mantendo a agregada como índice:
+- `contemplative_title` (título contemplativo)
+- `subtitle`
+- `primary_passage` `{ ref, texto }`
+- `complementary_passages` (2–4 refs)
+- `spiritual_fruit`
+- `virtue`
+- `logos_meditation` (3–6 linhas)
+- `contemplation_question`
+- `suggested_silence` (`10|20|30|0`)
+- `recommended_intention`
+- `catechism_ref` (nullable)
+- `patristic_ref` `{ author, work, quote }` (nullable)
+- `hero_image_path` (rota do asset)
 
-| Slug | Título | Categoria | Momento |
-|---|---|---|---|
-| `breviario-oficio-leituras` | Ofício das Leituras | `momentos_do_dia` | qualquer |
-| `breviario-laudes` | Laudes (Manhã) | `momentos_do_dia` | 06h–09h |
-| `breviario-hora-media` | Hora Média | `momentos_do_dia` | 12h–15h |
-| `breviario-vesperas` | Vésperas (Tarde) | `momentos_do_dia` | 17h–19h |
-| `breviario-completas` | Completas (Noite) | `momentos_do_dia` | 20h–23h |
+Seed dos 20 mistérios (Gozosos, Luminosos, Dolorosos, Gloriosos) com conteúdo editorial completo em PT-BR.
 
-Cada oração recebe seções: `abertura`, `hino`, `salmodia`, `leitura`, `responsorio`, `cantico`, `preces`, `conclusao` — blocos do Ordinário migrados da agregada. `meta.hour_slug` e `meta.recommended_time` em cada oração para o motor de recomendação.
+### 2. Imagens artísticas (20 mistérios)
 
-Migration idempotente que:
-1. Insere as 5 novas orações + suas seções/blocos copiando o Ordinário existente.
-2. Mantém `liturgia-das-horas` como agregada (índice do módulo).
-3. Preserva favoritos existentes.
+Geradas com `imagegen` em qualidade `standard`, atmosfera sacra unificada (paleta Cathedra, luz suave, sem excesso decorativo). Salvas em `src/assets/rosary/misterios/{grupo}/{slug}.jpg`. Referenciadas via `meta.hero_image_path`.
 
-## Onda B — Leitor unificado por Hora
+### 3. Componentes novos
 
-- `BreviaryHourPage.tsx`: usa `PrayerEngineReader` com Hero Logos 2030 (kicker "Liturgia das Horas · <Hora>", tempo litúrgico, cor, saltério, santo do dia via `LiturgyRichHeader`).
-- Injeta o Próprio do dia inline (mantendo `BreviaryContinuousReader` como estratégia interna).
-- **Favoritos por Hora** via `PrayerFavoriteButton` existente (usa `prayers.slug`).
-- **ReaderContinuation** já plugado via Nexus automático.
-- **Persistência** por Hora+data via `prayer_sessions` (contexto `breviary:<hour>:<isoDate>`).
-- Rotas: `/oracao/breviario-<hour>` (Hora única) + `/liturgia-das-horas?d=&mode=day` continua para dia inteiro.
+```text
+src/components/prayer/rosary/
+  MysteryHero.tsx           # Hero Logos 2030 fullscreen
+  MysteryLogosMeditation.tsx # Bloco reflexão antes da 1ª Ave
+  SpiritualFruitBadge.tsx   # Bloco discreto do fruto
+  ContemplationQuestion.tsx # Pergunta final
+  SilenceTimer.tsx          # Timer opcional (10/20/30s)
+```
 
-## Onda C — Motor de recomendação e calendário
+- `MysteryHero`: imagem fullscreen, título contemplativo, passagem, tempo estimado, botão "Iniciar contemplação". Fade suave ao entrar no Reader.
+- `SilenceTimer`: seletor de duração persistido em `localStorage` por usuário, animação minimalista.
 
-- `useRecommendedHour.ts`: retorna a Hora sugerida conforme horário local + janela canônica (respeita fuso do dispositivo).
-- `HourRecommendationCard.tsx`: destaque na `BreviaryPage` — "Agora é hora de Vésperas".
-- **Notificações** (opt-in, base): `useHourNotifications.ts` com `Notification.requestPermission()` + agendamento via `setTimeout` na sessão (persistência de preferência em `localStorage`). Push real fica para sprint futura.
-- **Calendário Litúrgico** enriquecido: `LiturgyRichHeader` já exibe tempo/cor/santo — na Onda C adiciono seletor de data com badge de solenidade/festa vindo de `useDailyLiturgy`.
+### 4. Integração no Reader
 
-## Detalhes técnicos
+`PrayerEngineReader` (ou wrapper específico do Rosário) recebe `MysteryContext` quando a oração é o Rosário:
 
-- Migration SQL: `supabase/migrations/<ts>_sprint3_lh_hours.sql` com blocks/GRANTs padrão (leitura pública já herdada de `prayers`).
-- Sem novas dependências.
-- Sem alterações no `PrayerEngineReader` além de um adapter que injeta blocos do Próprio quando `prayer.slug` começa com `breviario-`.
-- Testes E2E: `tests/e2e/liturgia-horas.spec.ts` verifica metatags, presença de blocos do Próprio e favoritos por hora.
+- Antes de cada dezena → `MysteryHero` (bloqueia até "Iniciar contemplação").
+- Bloco 1 da dezena → `MysteryLogosMeditation` + `SpiritualFruitBadge` inline.
+- Após última Ave-Maria da dezena → `ContemplationQuestion` + `SilenceTimer`.
 
-## Entregas por Onda
+Injeção via novos tipos de `prayer_blocks` (`kind = 'mystery_hero' | 'logos_meditation' | 'contemplation_question' | 'silence'`) para não hardcodar — o Reader apenas renderiza o componente correspondente ao `kind`.
 
-- **Onda A** — migration + seed dos 5 breviários independentes + verificação no banco.
-- **Onda B** — `BreviaryHourPage`, adapter de injeção do Próprio, favoritos, rotas.
-- **Onda C** — `useRecommendedHour`, `HourRecommendationCard`, notificações opt-in, calendário enriquecido.
+### 5. Critérios de aceite (validação)
 
-Começarei pela **Onda A** (migration + seed) e reporto antes×depois com número de orações/seções/blocos migrados.
+- Prayer Engine v2 continua funcional (typecheck + testes existentes verdes).
+- Persistência de `prayer_sessions` inalterada.
+- Nexus (`prayerAutoNexus`) segue gerando conexões.
+- `PrayerTTSButton` funciona por bloco novo.
+- Hero não conta como progresso.
+- Todo conteúdo vem do banco.
+
+### 6. Fora do escopo (próximas ondas)
+
+Música ambiente, Modo Família, estatísticas, áudio sincronizado avançado, animações entre dezenas.
+
+### Ordem de execução
+
+1. Migration (schema + seed dos 20 mistérios com conteúdo editorial).
+2. Geração das 20 imagens contemplativas.
+3. Componentes novos (Hero, LogosMeditation, Fruit, Question, SilenceTimer).
+4. Integração no Reader via novos `kind` de bloco.
+5. Validação: typecheck, teste E2E do fluxo de um mistério.
+
+### Nota técnica
+
+Como são ~20 imagens standard-quality, o custo em créditos é significativo. Recomendo confirmar antes que os créditos estão restaurados (o erro 402 anterior indica esgotamento). Alternativa: gerar em qualidade `fast` primeiro e reprocessar seletivamente as que precisarem de mais fidelidade.
