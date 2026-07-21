@@ -647,7 +647,10 @@ const ViaCrucis: React.FC = () => {
           </Button>
         ) : (
           <Button
-            onClick={() => { markStationCompleted(station.num); setIsJourney(false); }}
+            onClick={() => {
+              markStationCompleted(station.num);
+              setShowFinalClosing(true);
+            }}
             data-testid="via-sacra-finish"
             className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
           >
