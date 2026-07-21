@@ -27,6 +27,7 @@ import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerPortal from '@/components/prayer/PrayerPortal';
 import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
+import PoenitentiaPage from '@/components/cathedra/PoenitentiaPage';
 
 
 const FONT_STEPS = [
