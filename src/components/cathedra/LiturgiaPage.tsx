@@ -1,75 +1,39 @@
-import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
+import React, { useMemo, useCallback, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
-import { useSaintsToday } from '@/hooks/useSaints';
-import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
-import { isLiturgicalPrefetchDisabled } from '@/lib/litcalPrefetchGuard';
+import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
+import { useSaintOfDay } from '@/hooks/useSaintOfDay';
+import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import ContemplativeLayout from './ContemplativeLayout';
+import {
+  LiturgyDateNav,
+  LiturgyDayHeader,
+  LiturgyPsalmCard,
+  LiturgyReadingCard,
+} from './primitives/liturgy';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
-function usePrefetchLiturgyCache() {
-  useEffect(() => {
-    if (isLiturgicalPrefetchDisabled()) return;
-    const prefetch = async () => {
-      const now = new Date();
-      for (let i = 1; i <= 6; i++) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-        const key = d.toDateString();
-        const cached = await getCachedLiturgy(key);
-        if (cached) continue;
-        try {
-          const { data } = await supabase.functions.invoke('liturgical-calendar', {
-            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
-          });
-          if (data) await cacheLiturgy(key, data as LiturgyReadings);
-        } catch { /* silent */ }
-      }
-    };
-    prefetch();
-  }, []);
-}
-
-interface Reading {
-  referencia: string;
-  titulo: string;
-  texto: string;
-}
-
-interface LiturgyReadings {
-  data: string;
-  liturgia: string;
-  cor: string;
-  dia: string;
-  primeiraLeitura: Reading;
-  salmo: { referencia: string; refrao: string; texto: string };
-  segundaLeitura?: Reading | string;
-  evangelho: Reading;
-}
-
 const PADH_REFLECTIONS = [
-  "A pressa revela onde a confiança ainda não chegou.",
-  "Toda oração é um ato de coragem: você está admitindo que não está no controle.",
-  "Deus não fala alto — Ele fala fundo.",
-  "O silêncio não é vazio… é onde Deus começa a frase.",
-  "A fé não elimina a dúvida — ela caminha ao lado dela.",
-  "Você não precisa entender tudo. Precisa confiar em Quem entende.",
-  "A verdadeira força não é resistir sozinho — é aceitar ser carregado.",
-  "Nem toda escuta é ouvir… às vezes Deus fala no silêncio entre as palavras.",
+  'A pressa revela onde a confiança ainda não chegou.',
+  'Toda oração é um ato de coragem: você está admitindo que não está no controle.',
+  'Deus não fala alto — Ele fala fundo.',
+  'O silêncio não é vazio… é onde Deus começa a frase.',
+  'A fé não elimina a dúvida — ela caminha ao lado dela.',
+  'Você não precisa entender tudo. Precisa confiar em Quem entende.',
+  'A verdadeira força não é resistir sozinho — é aceitar ser carregado.',
+  'Nem toda escuta é ouvir… às vezes Deus fala no silêncio entre as palavras.',
 ];
 
 function parseRefToRoute(ref: string): string {
@@ -80,40 +44,14 @@ function parseRefToRoute(ref: string): string {
   return `${AppRoute.BIBLE}?book=${encodeURIComponent(book)}&chapter=${chapter}`;
 }
 
-const ReadingCard: React.FC<{
-  label: string;
-  icon: React.ReactNode;
-  reference: string;
-  text: string;
-  refrain?: string;
-  onContext: () => void;
-  onReflect: () => void;
-  delay: number;
-}> = ({ label, icon, reference, text, refrain, onContext, onReflect, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay }}
-    className="space-y-spacing-lg premium-card p-spacing-xl group relative overflow-hidden"
-  >
-    <div className="absolute top-spacing-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
-    <div className="flex items-center justify-between relative z-10">
-      <div className="flex items-center gap-spacing-sm">
-        <div className="p-spacing-xs rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-premium-md">{icon}</div>
-        <div>
-          <h2 className="text-premium-xs font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
-          <p className="text-premium-xs font-bold text-secondary/60 uppercase tracking-[0.2em] mt-spacing-3xs">{reference}</p>
-        </div>
-      </div>
-    </div>
-    {refrain && <div className="bg-secondary/5 rounded-premium p-spacing-lg border border-secondary/20 border-l-4 shadow-premium-md"><p className="text-premium-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
-    <p className="text-premium-lg md:text-premium-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
-    <div className="flex flex-wrap gap-spacing-sm pt-spacing-lg border-t border-border/40">
-      <Button variant="ghost" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-lg hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-spacing-md h-spacing-md mr-spacing-xs" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-premium-full ml-auto h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={onReflect}><Icons.Lectio className="w-spacing-md h-spacing-md mr-spacing-xs text-secondary" /> Lectio Divina</Button>
-    </div>
-  </motion.div>
-);
+function parseDateParam(raw: string | null): Date {
+  if (!raw) return new Date();
+  const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return new Date();
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  if (Number.isNaN(d.getTime())) return new Date();
+  return d;
+}
 
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
@@ -123,71 +61,41 @@ const LiturgiaPage: React.FC = () => {
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
-  const today = selectedDate;
-  const [isOfflineData, setIsOfflineData] = useState(false);
 
-  usePrefetchLiturgyCache();
+  // Data controlada por `?d=YYYY-MM-DD` (deep link + navegação nativa).
+  const selectedDate = useMemo(
+    () => parseDateParam(searchParams.get('d')),
+    [searchParams],
+  );
+  const todayIso = toIsoDateKey(new Date());
+  const selectedIso = toIsoDateKey(selectedDate);
+  const isToday = selectedIso === todayIso;
 
-  const dateKey = today.toDateString();
-
-  const goToPrevDay = () => {
-    const d = new Date(selectedDate);
-    d.setDate(d.getDate() - 1);
-    setSelectedDate(d);
-    setIsOfflineData(false);
-  };
-
-  const goToNextDay = () => {
-    const d = new Date(selectedDate);
-    d.setDate(d.getDate() + 1);
-    if (d <= new Date()) {
-      setSelectedDate(d);
-      setIsOfflineData(false);
-    }
-  };
-
-  const isToday = selectedDate.toDateString() === new Date().toDateString();
-
-  const { data: readings, isLoading } = useQuery({
-    queryKey: ['liturgy-readings', dateKey],
-    queryFn: async () => {
-      const cached = await getCachedLiturgy(dateKey);
-      const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
-
-      if (isOfflineMode) {
-        if (cached) {
-          setIsOfflineData(true);
-          return cached as LiturgyReadings;
-        }
-        throw new Error('Modo Somente-Cache ativo: Liturgia não disponível offline.');
-      }
-
-      try {
-        const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
-          body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
-        });
-        if (error) throw error;
-        const result = data as LiturgyReadings;
-        await cacheLiturgy(dateKey, result);
-        setIsOfflineData(false);
-        return result;
-      } catch (e) {
-        if (cached) {
-          setIsOfflineData(true);
-          return cached as LiturgyReadings;
-        }
-        throw e;
-      }
+  const setSelectedDate = useCallback(
+    (d: Date) => {
+      const next = new URLSearchParams(searchParams);
+      const iso = toIsoDateKey(d);
+      if (iso === todayIso) next.delete('d');
+      else next.set('d', iso);
+      setSearchParams(next, { replace: false });
     },
-    staleTime: 1000 * 60 * 60,
-  });
+    [searchParams, setSearchParams, todayIso],
+  );
 
-  const padhReflection = useMemo(() => PADH_REFLECTIONS[today.getDate() % PADH_REFLECTIONS.length], [today]);
-  const { data: saintsToday = [] } = useSaintsToday();
+  const {
+    liturgy: readings,
+    isLoading,
+    isOfflineData,
+  } = useDailyLiturgy(selectedDate);
+
+  const padhReflection = useMemo(
+    () => PADH_REFLECTIONS[selectedDate.getDate() % PADH_REFLECTIONS.length],
+    [selectedDate],
+  );
+  const { data: saint } = useSaintOfDay(selectedDate);
 
   const { data: prayerOfDay } = useQuery({
-    queryKey: ['prayer-of-day', dateKey],
+    queryKey: ['prayer-of-day', selectedIso],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('prayers')
@@ -196,7 +104,8 @@ const LiturgiaPage: React.FC = () => {
         .order('order_index', { ascending: true });
       if (error) throw error;
       if (!data || data.length === 0) return null;
-      const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
+      const startOfYear = new Date(selectedDate.getFullYear(), 0, 0).getTime();
+      const dayOfYear = Math.floor((selectedDate.getTime() - startOfYear) / 86400000);
       return data[dayOfYear % data.length];
     },
     staleTime: 1000 * 60 * 60,
@@ -207,7 +116,12 @@ const LiturgiaPage: React.FC = () => {
     navigate(`${AppRoute.LECTIO_DIVINA}${q}`);
   };
 
-  const formatDate = () => today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const formattedDate = selectedDate.toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <ContemplativeLayout
