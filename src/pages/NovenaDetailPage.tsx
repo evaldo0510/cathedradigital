@@ -164,18 +164,17 @@ const NovenaDetailPage: React.FC = () => {
 
       {/* Ações */}
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-[var(--sp-m)] pt-[var(--sp-l)]">
-        <Button
-          variant="outline"
-          onClick={resetProgress}
-          className="type-caption"
-        >
-          <Icons.RefreshCw className="w-4 h-4 mr-2" />
-          Reiniciar novena
-        </Button>
-        <Button
-          onClick={markCurrentDone}
-          className="min-w-[220px]"
-        >
+        <div className="flex gap-[var(--sp-s)]">
+          <Button variant="outline" onClick={resetProgress} className="type-caption">
+            <Icons.RefreshCw className="w-4 h-4 mr-2" />
+            Reiniciar
+          </Button>
+          <Button variant="outline" onClick={handleShare} className="type-caption">
+            <Icons.Share2 className="w-4 h-4 mr-2" />
+            Compartilhar
+          </Button>
+        </div>
+        <Button onClick={markCurrentDone} className="min-w-[220px]">
           {completedSet.has(currentDay) ? (
             <>
               <Icons.X className="w-4 h-4 mr-2" />
@@ -194,6 +193,7 @@ const NovenaDetailPage: React.FC = () => {
           )}
         </Button>
       </div>
+
     </div>
   );
 };
