@@ -44,7 +44,20 @@ async function generateSitemap() {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-  publicRoutes.forEach(route => {
+  const indexableRoutes = publicRoutes.filter((r) => {
+    const meta = resolveRouteMeta(r);
+    // exclui rotas sem meta correspondente ou marcadas noindex/aliased
+    if (!meta) return false;
+    if (meta.noindex) return false;
+    if (meta.canonicalPath && meta.canonicalPath !== r) return false;
+    return true;
+  });
+  const excluded = publicRoutes.length - indexableRoutes.length;
+  if (excluded > 0) {
+    console.log(`ℹ️  ${excluded} rota(s) filtradas do sitemap (alias/noindex via ROUTE_META).`);
+  }
+
+  indexableRoutes.forEach(route => {
     let priority = '0.8';
     let changefreq = 'daily';
 
@@ -53,7 +66,7 @@ async function generateSitemap() {
     } else if (['/about', '/terms', '/privacy', '/transparencia', '/partners', '/diagnostico'].includes(route)) {
       priority = '0.5';
       changefreq = 'monthly';
-    } else if (['/glossary', '/papas', '/guia-modulos'].includes(route)) {
+    } else if (['/glossario', '/papas', '/guia-modulos'].includes(route)) {
       priority = '0.6';
       changefreq = 'weekly';
     }
@@ -65,6 +78,7 @@ async function generateSitemap() {
     xml += `    <priority>${priority}</priority>\n`;
     xml += '  </url>\n';
   });
+
 
   // Glossário — verbetes publicados dinamicamente
   const glossary = await fetchGlossarySlugs();
