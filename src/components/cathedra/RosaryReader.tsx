@@ -329,23 +329,27 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
 
       {/* Navegação */}
       <nav className="mt-10 flex items-center justify-between gap-4" aria-label="Navegação da oração">
-        <button
+        <Button
           type="button"
+          variant="pill"
+          size="pill"
           onClick={goPrev}
           disabled={idx === 0}
-          className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface disabled:opacity-40"
+          className="px-4 py-2"
         >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+          <ArrowLeft aria-hidden />
           Anterior
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="pill-active"
+          size="pill"
           onClick={goNext}
-          className="inline-flex items-center gap-1.5 rounded-full bg-stitch-secondary px-4 py-2 font-stitch-body text-xs uppercase tracking-widest text-white transition-colors hover:bg-stitch-secondary/90"
+          className="px-4 py-2"
         >
           {idx === blocks.length - 1 ? 'Concluir' : 'Próximo'}
-          {idx === blocks.length - 1 ? null : <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
-        </button>
+          {idx === blocks.length - 1 ? null : <ArrowRight aria-hidden />}
+        </Button>
       </nav>
 
       {/* Continuidade — visível ao chegar no último bloco, fora do foco. */}
