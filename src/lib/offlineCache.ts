@@ -3,7 +3,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 const DB_NAME = 'cathedra_cache';
-const DB_VERSION = 3; // v3: adds liturgical-calendar store
+const DB_VERSION = 4; // v4: adds liturgy-hours-office store
 
 export interface CacheEntry {
   key: string;
@@ -28,6 +28,9 @@ function openDB(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains('liturgical-calendar')) {
         db.createObjectStore('liturgical-calendar', { keyPath: 'key' });
+      }
+      if (!db.objectStoreNames.contains('liturgy-hours-office')) {
+        db.createObjectStore('liturgy-hours-office', { keyPath: 'key' });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -97,6 +100,28 @@ export async function getCachedLiturgy(dateKey: string): Promise<any | null> {
 export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
   return putInStore('liturgy', dateKey, data);
 }
+
+// ─── Liturgy of the Hours (Office) Cache ───
+// Chave: `${isoDate}:${hourSlug}` (ex.: `2026-07-21:laudes`).
+
+export const liturgyHoursOfficeKey = (isoDate: string, hourSlug: string) =>
+  `${isoDate}:${hourSlug}`;
+
+export async function getCachedHoursOffice(
+  isoDate: string,
+  hourSlug: string,
+): Promise<any | null> {
+  return getFromStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug));
+}
+
+export async function cacheHoursOffice(
+  isoDate: string,
+  hourSlug: string,
+  data: any,
+): Promise<void> {
+  return putInStore('liturgy-hours-office', liturgyHoursOfficeKey(isoDate, hourSlug), data);
+}
+
 
 // ─── Liturgical Calendar (month grid) Cache ───
 // Persists the response of the `liturgical-calendar` edge function with a TTL
