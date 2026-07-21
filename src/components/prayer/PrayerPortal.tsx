@@ -270,7 +270,7 @@ const PrayerPortal: React.FC<Props> = ({
         >
           Preparar o coração
         </h2>
-        <ul className="mt-3 space-y-2 font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface">
+        <ul className="mt-3 space-y-2 font-stitch-body text-[15px] font-medium leading-relaxed text-foreground">
           <li>Faça alguns instantes de silêncio.</li>
           <li>Entregue suas intenções ao Senhor.</li>
           <li>Quando estiver pronto, inicie a oração.</li>
