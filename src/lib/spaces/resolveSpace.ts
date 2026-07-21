@@ -35,6 +35,8 @@ const CHURCH_PREFIXES = [
   '/rosary-legacy',
   '/viacrucis',
   '/litanies',
+  '/novenas',
+
   '/missal',
   '/breviary',
   '/liturgia',
