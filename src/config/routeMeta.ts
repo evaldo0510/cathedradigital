@@ -241,6 +241,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/encyclopedia': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
   '/rosary': { title: 'Rosário — Cathedra', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
   '/prayers': { title: 'Orações — Cathedra', description: 'Alias para /oracao.', noindex: true, canonicalPath: '/oracao' },
+  '/rosario': { title: 'Rosário — Cathedra', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
   '/ladainhas': { title: 'Ladainhas — Cathedra', description: 'Alias para /litanies.', noindex: true, canonicalPath: '/litanies' },
   '/contemplacao': { title: 'Contemplação — Cathedra', description: 'Alias para /contemplatio.', noindex: true, canonicalPath: '/contemplatio' },
   '/confession': { title: 'Exame de consciência — Cathedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
