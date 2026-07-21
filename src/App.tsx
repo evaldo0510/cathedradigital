@@ -577,7 +577,8 @@ const AppLayout: React.FC = () => {
               <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
               <Route path="/contemplatio" element={<Suspense fallback={<LoadingFallback />}><ContemplatioPage /></Suspense>} />
               <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />
-              <Route path="/confession" element={<Suspense fallback={<LoadingFallback />}><PoenitentiaPage /></Suspense>} />
+              <Route path="/confession" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
+              <Route path="/confissao" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
 
               {/* Jornadas */}
               <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AtriumJornadasPage /></Suspense>} />
