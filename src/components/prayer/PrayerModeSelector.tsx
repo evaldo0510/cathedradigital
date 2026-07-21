@@ -6,10 +6,12 @@
  *
  * Reutilizável em Rosário, Via Sacra, Liturgia das Horas, Ladainhas,
  * Missal e Orações. Somente experiência — nenhum conteúdo é alterado.
+ *
+ * P1 — Botões consolidados no Design System via `<Button variant="pill*">`.
  */
 import React from 'react';
 import { BookOpen, Circle, Timer, type LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export type PrayerMode = 'guided' | 'contemplative' | 'auto';
 
@@ -52,23 +54,20 @@ export const PrayerModeSelector: React.FC<Props> = ({
           const Icon = opt.icon;
           const active = mode === opt.id;
           return (
-            <button
+            <Button
               key={opt.id}
               role="tab"
               type="button"
+              variant={active ? 'pill-active' : 'pill'}
+              size="pill"
               aria-selected={active}
               aria-label={`${opt.label} — ${opt.hint}`}
               onClick={() => onChange(opt.id)}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-stitch-body text-[11px] uppercase tracking-widest transition-colors',
-                active
-                  ? 'bg-stitch-secondary text-white shadow-sm'
-                  : 'text-stitch-on-surface-variant hover:text-stitch-on-surface',
-              )}
+              className="border-transparent"
             >
-              <Icon className="h-3.5 w-3.5" aria-hidden />
+              <Icon aria-hidden />
               {opt.label}
-            </button>
+            </Button>
           );
         })}
       </div>
