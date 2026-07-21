@@ -90,7 +90,7 @@ const LiturgiaPage: React.FC = () => {
   } = useDailyLiturgy(selectedDate);
 
   const { data: saint } = useSaintOfDay(selectedDate);
-  const { meditation, isLoading: isMeditationLoading } = useLiturgyMeditation(
+  const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(
     selectedIso,
     readings ?? null,
   );
