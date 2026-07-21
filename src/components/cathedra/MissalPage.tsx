@@ -401,29 +401,24 @@ const MissalPage: React.FC = () => {
               <ol className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm list-none">
                 {orderedSections.map((s, idx) => (
                   <li key={s.id}>
-                    <Button
-                      type="button"
+                    <EditorialCard
+                      as="button"
+                      interactive
                       onClick={() => setStage(s.slug)}
-                      className="w-full text-left p-spacing-md rounded-premium border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-all group space-y-spacing-2xs"
+                      className="w-full text-left cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-premium-xs font-black uppercase tracking-widest text-primary">
-                          Etapa {String(idx + 1).padStart(2, '0')}
-                        </span>
-                        <Icons.ArrowRight className="w-spacing-sm h-spacing-sm text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <h3 className="font-display font-bold text-premium-lg text-foreground group-hover:text-primary transition-colors">
-                        {s.title}
-                      </h3>
+                      <EditorialCard.Eyebrow>
+                        Etapa {String(idx + 1).padStart(2, '0')}
+                      </EditorialCard.Eyebrow>
+                      <EditorialCard.Title>{s.title}</EditorialCard.Title>
                       {s.subtitle && (
-                        <p className="font-serif italic text-premium-xs text-muted-foreground">
-                          {s.subtitle}
-                        </p>
+                        <EditorialCard.Description>{s.subtitle}</EditorialCard.Description>
                       )}
-                    </Button>
+                    </EditorialCard>
                   </li>
                 ))}
               </ol>
+
             )}
           </section>
         )}
