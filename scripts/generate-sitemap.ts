@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
+import { resolveRouteMeta, ROUTE_META } from '../src/config/routeMeta';
+
 
 /**
  * Script to generate sitemap.xml and robots.txt dynamically from AppRoute enum in src/types.ts using AST.
@@ -42,7 +44,20 @@ async function generateSitemap() {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-  publicRoutes.forEach(route => {
+  const indexableRoutes = publicRoutes.filter((r) => {
+    const meta = resolveRouteMeta(r);
+    // exclui rotas sem meta correspondente ou marcadas noindex/aliased
+    if (!meta) return false;
+    if (meta.noindex) return false;
+    if (meta.canonicalPath && meta.canonicalPath !== r) return false;
+    return true;
+  });
+  const excluded = publicRoutes.length - indexableRoutes.length;
+  if (excluded > 0) {
+    console.log(`ℹ️  ${excluded} rota(s) filtradas do sitemap (alias/noindex via ROUTE_META).`);
+  }
+
+  indexableRoutes.forEach(route => {
     let priority = '0.8';
     let changefreq = 'daily';
 
@@ -51,7 +66,7 @@ async function generateSitemap() {
     } else if (['/about', '/terms', '/privacy', '/transparencia', '/partners', '/diagnostico'].includes(route)) {
       priority = '0.5';
       changefreq = 'monthly';
-    } else if (['/glossary', '/papas', '/guia-modulos'].includes(route)) {
+    } else if (['/glossario', '/papas', '/guia-modulos'].includes(route)) {
       priority = '0.6';
       changefreq = 'weekly';
     }
@@ -63,6 +78,27 @@ async function generateSitemap() {
     xml += `    <priority>${priority}</priority>\n`;
     xml += '  </url>\n';
   });
+
+  // União: emite rotas indexáveis estáticas do ROUTE_META que ainda não foram cobertas
+  const emitted = new Set<string>(indexableRoutes);
+  let extraCount = 0;
+  for (const [p, meta] of Object.entries(ROUTE_META)) {
+    if (meta.noindex) continue;
+    if (p.includes(':')) continue;
+    if (meta.canonicalPath && meta.canonicalPath !== p) continue;
+    if (emitted.has(p)) continue;
+    emitted.add(p);
+    extraCount++;
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}${p === '/' ? '' : p}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.7</priority>\n`;
+    xml += '  </url>\n';
+  }
+  if (extraCount > 0) console.log(`ℹ️  ${extraCount} rota(s) adicionadas do ROUTE_META (ausentes em types.ts).`);
+
+
 
   // Glossário — verbetes publicados dinamicamente
   const glossary = await fetchGlossarySlugs();
