@@ -327,10 +327,20 @@ const MissalPage: React.FC = () => {
           })}
         </div>
 
-        {/* Vista: Celebração Contínua (Onda B) */}
+        {/* Vista: Celebração Contínua */}
         {view === 'celebracao' && hierarchy && prayer && (
           <section aria-label="Celebração da Santa Missa">
-            <div className="mb-spacing-sm flex justify-end">
+            <div className="mb-spacing-sm flex justify-between items-center gap-spacing-sm">
+              <Button
+                type="button"
+                variant={celebrationMode ? 'default' : 'outline'}
+                onClick={toggleCelebration}
+                aria-pressed={celebrationMode}
+                className="rounded-full text-premium-xs font-black uppercase tracking-widest"
+              >
+                <Icons.Flame className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
+                {celebrationMode ? 'Sair do modo celebração' : 'Modo celebração'}
+              </Button>
               <ReaderTypographyControl />
             </div>
             <MissaContinuousReader
@@ -340,6 +350,7 @@ const MissalPage: React.FC = () => {
               properLoading={properLoading}
               liturgy={liturgy ?? null}
               isoDate={isoDate}
+              celebrationMode={celebrationMode}
             />
           </section>
         )}
