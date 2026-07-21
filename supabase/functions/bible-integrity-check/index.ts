@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getOrCreateCorrelationId } from "../_shared/correlation.ts";
 import { makeResponder } from "../_shared/http-response.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { assertCronOrAdmin } from "../_shared/admin-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -28,6 +29,9 @@ serve(async (req) => {
   const R = makeResponder(cid);
 
   if (req.method === 'OPTIONS') return R.cors();
+
+  const guard = await assertCronOrAdmin(req);
+  if (!guard.ok) return guard.response;
 
   try {
     const { book_id, chapter_number, expected_hash, correlation_id, source_text } = await req.json();

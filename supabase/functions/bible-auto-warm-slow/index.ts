@@ -12,6 +12,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { runPostRunVerify } from '../_shared/postRunVerify.ts';
 import { getOrCreateCorrelationId, correlationResponseHeader } from '../_shared/correlation.ts';
+import { assertCronOrAdmin } from '../_shared/admin-guard.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
