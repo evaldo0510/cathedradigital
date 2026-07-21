@@ -334,6 +334,13 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/colecoes\/[^/]+$/,
+    meta: {
+      title: 'Coleção Editorial — Cathedra',
+      description: 'Coleção editorial da Cathedra: percurso curado por sacramentos, santos e temas da fé católica.',
+    },
+  },
+  {
     test: /^\/temas\/[^/]+$/,
     meta: {
       title: 'Tema da Fé Católica — Cathedra',
