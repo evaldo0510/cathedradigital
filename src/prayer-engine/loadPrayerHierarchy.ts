@@ -128,54 +128,74 @@ export function flattenSectionToBlocks(
   const out: PrayerBlock[] = [];
   let orderCounter = 0;
 
+  const emitBlock = (b: DBBlock, mystery: DBMystery | null) => {
+    const kind = BLOCK_KIND_MAP[b.type] ?? 'prayer';
+    const content = b.content ?? {};
+    const text = typeof content.text === 'string' ? content.text : undefined;
+    const latin = typeof content.latin === 'string' ? content.latin : undefined;
+    const medText = typeof content.meditation === 'string' ? content.meditation : undefined;
+    const gospelRef =
+      typeof content.gospel_ref === 'string'
+        ? content.gospel_ref
+        : mystery?.gospel_ref ?? undefined;
+    const fruit = typeof content.fruit === 'string' ? content.fruit : undefined;
+    const rubric = typeof content.rubric === 'string' ? content.rubric : undefined;
+
+    const block: PrayerBlock = {
+      id: b.id,
+      kind,
+      order: orderCounter++,
+      title: b.type === 'announce' && mystery ? mystery.title : b.title ?? mystery?.title ?? '',
+      subtitle: b.type === 'announce' ? section.title : undefined,
+      body: text,
+      latin,
+      meditation:
+        b.type === 'announce'
+          ? medText ?? mystery?.meditation ?? undefined
+          : b.type === 'meditation'
+            ? text ?? mystery?.meditation ?? undefined
+            : undefined,
+      fruit: b.type === 'meditation' ? fruit ?? mystery?.fruit ?? undefined : undefined,
+      rubric,
+      refs: gospelRef && b.type === 'announce' ? { bible: [gospelRef] } : undefined,
+      mysteryId: mystery?.id,
+      sectionId: section.id,
+      sourceType: b.type,
+    };
+
+    if (b.repeat_count > 1) {
+      block.repeat = {
+        label: REPEAT_LABEL[b.type] ?? b.title ?? b.type,
+        count: b.repeat_count,
+        text: text ?? undefined,
+      };
+    }
+
+    out.push(block);
+  };
+
+  if (mysteries.length === 0) {
+    // Seção sem mistérios (ex.: Ordinário da Missa, orações simples).
+    const sectionBlocks = hierarchy.blocks
+      .filter((b) => b.section_id === section.id && !b.mystery_id)
+      .sort((a, b) => a.order_index - b.order_index);
+    for (const b of sectionBlocks) emitBlock(b, null);
+    return out;
+  }
+
   for (const mystery of mysteries) {
     const mysteryBlocks = hierarchy.blocks
       .filter((b) => b.mystery_id === mystery.id)
       .sort((a, b) => a.order_index - b.order_index);
-
-    for (const b of mysteryBlocks) {
-      const kind = BLOCK_KIND_MAP[b.type] ?? 'prayer';
-      const content = b.content ?? {};
-      const text = typeof content.text === 'string' ? content.text : undefined;
-      const latin = typeof content.latin === 'string' ? content.latin : undefined;
-      const medText = typeof content.meditation === 'string' ? content.meditation : undefined;
-      const gospelRef =
-        typeof content.gospel_ref === 'string' ? content.gospel_ref : mystery.gospel_ref ?? undefined;
-      const fruit = typeof content.fruit === 'string' ? content.fruit : undefined;
-      const rubric = typeof content.rubric === 'string' ? content.rubric : undefined;
-
-      const block: PrayerBlock = {
-        id: b.id,
-        kind,
-        order: orderCounter++,
-        title: b.type === 'announce' ? mystery.title : b.title ?? mystery.title,
-        subtitle: b.type === 'announce' ? section.title : undefined,
-        body: text,
-        latin,
-        meditation:
-          b.type === 'announce'
-            ? medText ?? mystery.meditation ?? undefined
-            : b.type === 'meditation'
-              ? text ?? mystery.meditation ?? undefined
-              : undefined,
-        fruit: b.type === 'meditation' ? fruit ?? mystery.fruit ?? undefined : undefined,
-        rubric,
-        refs: gospelRef && b.type === 'announce' ? { bible: [gospelRef] } : undefined,
-        mysteryId: mystery.id,
-        sectionId: section.id,
-        sourceType: b.type,
-      };
-
-      if (b.repeat_count > 1) {
-        block.repeat = {
-          label: REPEAT_LABEL[b.type] ?? b.title ?? b.type,
-          count: b.repeat_count,
-          text: text ?? undefined,
-        };
-      }
-
-      out.push(block);
-    }
+    for (const b of mysteryBlocks) emitBlock(b, mystery);
   }
+  return out;
+}
+
+/** Achata todas as seções (ordem canônica) em `PrayerBlock[]`. */
+export function flattenAllSectionsToBlocks(hierarchy: PrayerHierarchy): PrayerBlock[] {
+  const sorted = [...hierarchy.sections].sort((a, b) => a.order_index - b.order_index);
+  const out: PrayerBlock[] = [];
+  for (const s of sorted) out.push(...flattenSectionToBlocks(hierarchy, s));
   return out;
 }
