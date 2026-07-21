@@ -20,21 +20,21 @@ import {
   LiturgyDayHeader,
   LiturgyPsalmCard,
   LiturgyReadingCard,
+  LiturgyThemeCard,
+  LiturgyReadingKeyCard,
+  LiturgyTraditionCard,
+  LiturgyLogosCard,
+  LiturgyFinalPrayerCard,
+  LiturgyChurchHistoryCard,
+  LiturgyActionCard,
+  LiturgyMeditationSkeleton,
 } from './primitives/liturgy';
+import { useLiturgyMeditation } from '@/hooks/useLiturgyMeditation';
+import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { resolveLiturgyAutoNexus } from '@/core/knowledge/adapters/liturgyAutoNexus';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
-
-const PADH_REFLECTIONS = [
-  'A pressa revela onde a confiança ainda não chegou.',
-  'Toda oração é um ato de coragem: você está admitindo que não está no controle.',
-  'Deus não fala alto — Ele fala fundo.',
-  'O silêncio não é vazio… é onde Deus começa a frase.',
-  'A fé não elimina a dúvida — ela caminha ao lado dela.',
-  'Você não precisa entender tudo. Precisa confiar em Quem entende.',
-  'A verdadeira força não é resistir sozinho — é aceitar ser carregado.',
-  'Nem toda escuta é ouvir… às vezes Deus fala no silêncio entre as palavras.',
-];
 
 function parseRefToRoute(ref: string): string {
   const match = ref.match(/^(\d?\s?[A-Za-zÀ-ú]+)\s+(\d+)/);
