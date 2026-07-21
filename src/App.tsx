@@ -567,6 +567,8 @@ const AppLayout: React.FC = () => {
 
               {/* Liturgia & Oração */}
               <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Liturgia"><LiturgiaPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/liturgia/dia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/liturgia/dia/:d" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/calendar" element={<Suspense fallback={<LoadingFallback />}><LiturgicalCalendarPage /></Suspense>} />
               <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Missal" kicker="Cathedra · Missal"><MissalPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Breviário" kicker="Cathedra · Liturgia das Horas"><BreviaryPage /></DevocionalMobileShell></Suspense>} />
