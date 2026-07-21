@@ -26,10 +26,33 @@ const LIBRARY_PREFIXES = [
   '/aquinas',
 ];
 
+const CHURCH_PREFIXES = [
+  '/oracao',
+  '/oracao-legacy',
+  '/prayers',
+  '/rezar',
+  '/rosary',
+  '/rosary-legacy',
+  '/viacrucis',
+  '/litanies',
+  '/missal',
+  '/breviary',
+  '/liturgia',
+  '/calendar',
+  '/lectio',
+  '/contemplatio',
+  '/contemplacao',
+  '/confession',
+];
+
 export function resolveSpaceForPath(pathname: string): CathedraSpace | null {
   const p = pathname.toLowerCase();
   if (LIBRARY_PREFIXES.some((prefix) => p === prefix || p.startsWith(prefix + '/'))) {
     return 'library';
   }
+  if (CHURCH_PREFIXES.some((prefix) => p === prefix || p.startsWith(prefix + '/'))) {
+    return 'church';
+  }
   return null;
 }
+
