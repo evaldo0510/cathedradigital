@@ -178,7 +178,7 @@ const KIND_ALIASES: Record<string, string> = {
 /* Registro ephemeral (idempotente) via KnowledgeRegistry              */
 /* ------------------------------------------------------------------ */
 
-function ensureNode(
+export function ensureNode(
   spec: KindSpec,
   raw: string,
   labelOverride?: string,
