@@ -7,7 +7,7 @@ import { PlayCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { DBMystery } from '@/prayer-engine/loadPrayerHierarchy';
-import { readMysteryMeta } from './mysteryMeta';
+import { readMysteryMeta, readMysteryImageSlug } from './mysteryMeta';
 import { resolveMysteryImage } from './mysteryImages';
 
 interface Props {
