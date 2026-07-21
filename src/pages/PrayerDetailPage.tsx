@@ -26,6 +26,7 @@ import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerPortal from '@/components/prayer/PrayerPortal';
+import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
 
 
 const FONT_STEPS = [
