@@ -44,6 +44,7 @@ import SpiritualFruitBadge from '@/components/prayer/rosary/SpiritualFruitBadge'
 import ContemplationQuestion from '@/components/prayer/rosary/ContemplationQuestion';
 import SilenceTimer from '@/components/prayer/rosary/SilenceTimer';
 import { readMysteryMeta } from '@/components/prayer/rosary/mysteryMeta';
+import { resolveMysteryImage } from '@/components/prayer/rosary/mysteryImages';
 import type { PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
