@@ -480,17 +480,19 @@ export const PrayerEngineReader: React.FC<Props> = ({
             {focus ? <X aria-hidden /> : <Focus aria-hidden />}
             {focus ? 'Sair do foco' : 'Modo foco'}
           </Button>
-          <Button
-            type="button"
-            variant="pill"
-            size="pill"
-            onClick={() => setConfirmReset(true)}
-          >
-            <RotateCcw aria-hidden />
-            Recomeçar
-          </Button>
+          {!isSimple && (
+            <Button
+              type="button"
+              variant="pill"
+              size="pill"
+              onClick={() => setConfirmReset(true)}
+            >
+              <RotateCcw aria-hidden />
+              Recomeçar
+            </Button>
+          )}
         </div>
-        {!focus && (
+        {!focus && !isSimple && (
           <div className="mt-4 flex flex-col items-center gap-3">
             <PrayerModeSelector
               mode={mode}
@@ -499,6 +501,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
               onIntervalChange={setAutoIntervalMs}
             />
             <PrayerAudioPlayer audioUrl={prayer.audio_url} label={`Áudio: ${prayer.title}`} />
+
           </div>
         )}
       </header>
