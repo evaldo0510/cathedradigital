@@ -314,6 +314,18 @@ const LiturgiaPage: React.FC = () => {
                   </div>
                 </motion.div>
               )}
+              {nexus && readings && (
+                <div className="mt-spacing-xl">
+                  <ReaderContinuation
+                    context={{
+                      kind: 'bible',
+                      id: readings.evangelho?.referencia,
+                      graphNodeId: nexus.selfId ?? undefined,
+                    }}
+                    suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+                  />
+                </div>
+              )}
             </div>
           )}
           {activeTab === 'missal' && <div id="panel-missal" role="tabpanel" aria-labelledby="tab-missal" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><MissalPage /></div>}
