@@ -214,6 +214,7 @@ const PrayerPortal: React.FC<Props> = ({
       aria-labelledby="portal-title"
       data-testid="prayer-portal"
       data-portal-oracao
+      data-portal-theme={theme}
     >
       {/* 1 — Hero limpo */}
       <EditorialHero align="center" as="header">
@@ -230,10 +231,11 @@ const PrayerPortal: React.FC<Props> = ({
         <EditorialHero.Meta>
           {resolvedHighlight && (
             <span className="inline-flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-stitch-secondary" aria-hidden />
+              <AccentIcon className="h-3.5 w-3.5 text-stitch-secondary" aria-hidden />
               {resolvedHighlight.title}
             </span>
           )}
+
           {prayer.estimated_seconds && (
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" aria-hidden />
