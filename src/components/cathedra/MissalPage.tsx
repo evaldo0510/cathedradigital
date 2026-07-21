@@ -36,6 +36,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 import { useWakeLock } from '@/hooks/useWakeLock';
+import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 type MissalView = 'celebracao' | 'ordinario' | 'proprio';
@@ -280,21 +281,20 @@ const MissalPage: React.FC = () => {
         {/* Hero + Nav ocultos no Modo Celebração para tela limpa (C3) */}
         {!celebrationMode && (
           <>
-            <header className="text-center space-y-spacing-sm">
-              <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-                <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
-                <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">
-                  Ordo Missæ
-                </span>
-              </div>
-              <h1 className="text-premium-3xl md:text-premium-5xl font-display font-bold text-foreground">
-                Missal Romano
-              </h1>
-              <p className="text-muted-foreground font-serif italic leading-relaxed max-w-xl mx-auto">
+            <EditorialHero align="center">
+              <EditorialHero.Eyebrow>Ordo Missæ</EditorialHero.Eyebrow>
+              <EditorialHero.Title>Missal Romano</EditorialHero.Title>
+              <EditorialHero.Subtitle>
                 O Ordinário e o Próprio da Santa Missa — 3ª edição típica do Missal Romano,
                 estruturados como uma única experiência de oração.
-              </p>
-            </header>
+              </EditorialHero.Subtitle>
+              {liturgy?.season && (
+                <EditorialHero.Meta>
+                  Tempo litúrgico · {liturgy.season}
+                </EditorialHero.Meta>
+              )}
+            </EditorialHero>
+
 
             <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
@@ -401,29 +401,24 @@ const MissalPage: React.FC = () => {
               <ol className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm list-none">
                 {orderedSections.map((s, idx) => (
                   <li key={s.id}>
-                    <Button
-                      type="button"
+                    <EditorialCard
+                      as="button"
+                      interactive
                       onClick={() => setStage(s.slug)}
-                      className="w-full text-left p-spacing-md rounded-premium border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-all group space-y-spacing-2xs"
+                      className="w-full text-left cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-premium-xs font-black uppercase tracking-widest text-primary">
-                          Etapa {String(idx + 1).padStart(2, '0')}
-                        </span>
-                        <Icons.ArrowRight className="w-spacing-sm h-spacing-sm text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <h3 className="font-display font-bold text-premium-lg text-foreground group-hover:text-primary transition-colors">
-                        {s.title}
-                      </h3>
+                      <EditorialCard.Eyebrow>
+                        Etapa {String(idx + 1).padStart(2, '0')}
+                      </EditorialCard.Eyebrow>
+                      <EditorialCard.Title>{s.title}</EditorialCard.Title>
                       {s.subtitle && (
-                        <p className="font-serif italic text-premium-xs text-muted-foreground">
-                          {s.subtitle}
-                        </p>
+                        <EditorialCard.Description>{s.subtitle}</EditorialCard.Description>
                       )}
-                    </Button>
+                    </EditorialCard>
                   </li>
                 ))}
               </ol>
+
             )}
           </section>
         )}

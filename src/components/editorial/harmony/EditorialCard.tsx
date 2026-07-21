@@ -59,8 +59,8 @@ export type EditorialCardDensity = 'dense' | 'balanced' | 'minimal';
 
 export interface EditorialCardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   density?: EditorialCardDensity;
-  /** Elemento raiz. Default: 'article'. Use 'a' para cards clicáveis com href. */
-  as?: 'article' | 'a' | 'div';
+  /** Elemento raiz. Default: 'article'. Use 'a' para links, 'button' para ações. */
+  as?: 'article' | 'a' | 'div' | 'button';
   href?: string;
   interactive?: boolean;
 }

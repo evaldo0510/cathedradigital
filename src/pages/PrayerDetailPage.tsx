@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import PrayerEngineReader from '@/components/cathedra/PrayerEngineReader';
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 import BreviaryHourInline from '@/components/cathedra/BreviaryHourInline';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 
 const FONT_STEPS = [
@@ -173,23 +174,19 @@ const PrayerDetailPage: React.FC = () => {
       />
 
       <main className="mx-auto w-full max-w-[720px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
-        <header className="mb-10 text-center">
-          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-            {kicker}
-          </p>
-          <h1 className="mt-3 font-stitch-display text-4xl md:text-5xl leading-tight text-stitch-on-surface">
-            {prayer.title}
-          </h1>
+        <EditorialHero align="center" as="header">
+          <EditorialHero.Eyebrow>{kicker}</EditorialHero.Eyebrow>
+          <EditorialHero.Title>{prayer.title}</EditorialHero.Title>
           {prayer.subtitle && (
-            <p className="mx-auto mt-3 max-w-[52ch] font-stitch-body text-base text-stitch-on-surface-variant italic">
-              {prayer.subtitle}
-            </p>
+            <EditorialHero.Subtitle>{prayer.subtitle}</EditorialHero.Subtitle>
           )}
-          <div className="mt-6 flex items-center justify-center gap-4 text-stitch-on-surface-variant">
-            <span className="inline-flex items-center gap-1.5 font-stitch-body text-xs uppercase tracking-widest">
+          <EditorialHero.Meta>
+            <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" aria-hidden />
               {Math.max(1, Math.round(prayer.estimated_seconds / 60))} min
             </span>
+          </EditorialHero.Meta>
+          <EditorialHero.Actions>
             <Button
               type="button"
               variant={isFavorite ? 'pill-toned' : 'pill'}
@@ -200,10 +197,6 @@ const PrayerDetailPage: React.FC = () => {
               <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} aria-hidden />
               {isFavorite ? 'Favorita' : 'Favoritar'}
             </Button>
-          </div>
-
-          {/* Controles do modo de leitura */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {fromLiturgia && (
               <Button asChild variant="pill" size="pill">
                 <Link to="/liturgia">
@@ -228,7 +221,10 @@ const PrayerDetailPage: React.FC = () => {
               >
                 <Minus className="h-3.5 w-3.5" aria-hidden />
               </Button>
-              <span className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant" aria-live="polite">
+              <span
+                className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant"
+                aria-live="polite"
+              >
                 {fontKey.toUpperCase()}
               </span>
               <Button
@@ -243,8 +239,10 @@ const PrayerDetailPage: React.FC = () => {
                 <Plus className="h-3.5 w-3.5" aria-hidden />
               </Button>
             </div>
-          </div>
-        </header>
+          </EditorialHero.Actions>
+        </EditorialHero>
+
+
 
         {/* Texto principal */}
         <section aria-labelledby="prayer-text">
