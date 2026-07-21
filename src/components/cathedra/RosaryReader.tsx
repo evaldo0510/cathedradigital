@@ -210,16 +210,17 @@ export const RosaryReader: React.FC<Props> = ({ prayer, kicker }) => {
             title={prayer.title}
             url={`/oracao/${prayer.slug}`}
           />
-          <button
+          <Button
             type="button"
+            variant="pill"
+            size="pill"
             onClick={() => setFocus((f) => !f)}
             aria-pressed={focus}
             aria-label="Alternar modo foco (F)"
-            className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface"
           >
-            {focus ? <X className="h-3.5 w-3.5" aria-hidden /> : <Focus className="h-3.5 w-3.5" aria-hidden />}
+            {focus ? <X aria-hidden /> : <Focus aria-hidden />}
             {focus ? 'Sair do foco' : 'Modo foco'}
-          </button>
+          </Button>
         </div>
         {!focus && (
           <div className="mt-4 flex flex-col items-center gap-3">
