@@ -26,6 +26,7 @@ import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { useReaderTypography } from '@/hooks/useReaderTypography';
 
 import { PrayerEngineReader } from './PrayerEngineReader';
+import { MissaContinuousReader } from './MissaContinuousReader';
 import { MissalProperCards } from './primitives/liturgy/MissalProperCards';
 import { LiturgyDateNav } from './primitives/liturgy/LiturgyDateNav';
 import { ReaderTypographyControl } from './primitives/liturgy/ReaderTypographyControl';
@@ -36,7 +37,7 @@ import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
-type MissalView = 'ordinario' | 'proprio';
+type MissalView = 'celebracao' | 'ordinario' | 'proprio';
 
 function parseDateParam(raw: string | null): Date {
   if (!raw || !/^\d{4}-\d{2}-\d{2}$/.test(raw)) return new Date();
@@ -46,7 +47,7 @@ function parseDateParam(raw: string | null): Date {
 }
 
 function isMissalView(s: string | null): s is MissalView {
-  return s === 'ordinario' || s === 'proprio';
+  return s === 'ordinario' || s === 'proprio' || s === 'celebracao';
 }
 
 const MissalPage: React.FC = () => {
@@ -59,7 +60,7 @@ const MissalPage: React.FC = () => {
 
   const view: MissalView = isMissalView(searchParams.get('view'))
     ? (searchParams.get('view') as MissalView)
-    : 'proprio';
+    : 'celebracao';
 
   const stageSlug = searchParams.get('stage');
   const initialBlockId = searchParams.get('b');
@@ -67,7 +68,7 @@ const MissalPage: React.FC = () => {
   const setView = useCallback(
     (v: MissalView) => {
       const next = new URLSearchParams(searchParams);
-      if (v === 'proprio') next.delete('view');
+      if (v === 'celebracao') next.delete('view');
       else next.set('view', v);
       if (v !== 'ordinario') next.delete('stage');
       setSearchParams(next, { replace: false });
@@ -284,14 +285,15 @@ const MissalPage: React.FC = () => {
 
         <LiturgyDateNav date={selectedDate} onChange={setSelectedDate} isToday={isToday} />
 
-        {/* Toggle Próprio ↔ Ordinário */}
+        {/* Toggle Celebração ↔ Próprio ↔ Ordinário */}
         <div
           role="tablist"
-          aria-label="Alternar entre Próprio da Missa e Ordinário"
+          aria-label="Alternar visualização do Missal"
           className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs mx-auto w-fit shadow-premium-md"
         >
           {([
-            { id: 'proprio', label: 'Próprio do Dia', icon: <Icons.Calendar className="w-spacing-md h-spacing-md" /> },
+            { id: 'celebracao', label: 'Celebração', icon: <Icons.Church className="w-spacing-md h-spacing-md" /> },
+            { id: 'proprio', label: 'Próprio', icon: <Icons.Calendar className="w-spacing-md h-spacing-md" /> },
             { id: 'ordinario', label: 'Ordinário', icon: <Icons.BookOpen className="w-spacing-md h-spacing-md" /> },
           ] as const).map((tab) => {
             const active = view === tab.id;
@@ -302,7 +304,7 @@ const MissalPage: React.FC = () => {
                 aria-selected={active}
                 variant="ghost"
                 onClick={() => setView(tab.id)}
-                className={`flex items-center justify-center gap-spacing-xs px-spacing-lg py-spacing-sm rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
+                className={`flex items-center justify-center gap-spacing-xs px-spacing-md py-spacing-sm rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
                   active
                     ? 'bg-background shadow-premium-hover text-primary'
                     : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
@@ -313,6 +315,30 @@ const MissalPage: React.FC = () => {
             );
           })}
         </div>
+
+        {/* Vista: Celebração Contínua (Onda B) */}
+        {view === 'celebracao' && hierarchy && prayer && (
+          <section aria-label="Celebração da Santa Missa">
+            <div className="mb-spacing-sm flex justify-end">
+              <ReaderTypographyControl />
+            </div>
+            <MissaContinuousReader
+              prayer={prayer}
+              hierarchy={hierarchy}
+              proper={proper}
+              properLoading={properLoading}
+              liturgy={liturgy ?? null}
+              isoDate={isoDate}
+            />
+          </section>
+        )}
+        {view === 'celebracao' && (!hierarchy || !prayer) && (
+          <div className="mx-auto max-w-3xl space-y-spacing-sm">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-premium" />
+            ))}
+          </div>
+        )}
 
         {/* Vista: Próprio do Dia */}
         {view === 'proprio' && (
@@ -326,6 +352,7 @@ const MissalPage: React.FC = () => {
             )}
           </section>
         )}
+
 
         {/* Vista: Ordinário — grid editorial de etapas */}
         {view === 'ordinario' && (
