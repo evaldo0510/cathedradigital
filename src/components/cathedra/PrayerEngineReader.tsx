@@ -59,6 +59,12 @@ interface Props {
   mysteries: DBMystery[];
   activeSection: DBSection | null;
   kicker?: string;
+  /**
+   * Slot editorial renderizado imediatamente após a barra de progresso e
+   * antes do bloco atual. Usado, por exemplo, para exibir o Próprio da
+   * Liturgia das Horas junto ao Ordinário no BreviaryPage.
+   */
+  prefaceSlot?: React.ReactNode;
 }
 
 const KIND_LABEL: Record<string, string> = {
@@ -87,6 +93,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   mysteries,
   activeSection,
   kicker,
+  prefaceSlot,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
 
@@ -444,10 +451,12 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </div>
       )}
 
+      {prefaceSlot && <div className="mb-8">{prefaceSlot}</div>}
 
       {/* Cabeçalho do bloco */}
       <header className="mb-8 text-center">
         <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
+
           {KIND_LABEL[current.kind] ?? current.kind}
         </p>
         <h2 className="mt-3 font-stitch-display text-3xl md:text-4xl leading-tight text-stitch-on-surface">

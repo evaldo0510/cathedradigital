@@ -3010,6 +3010,66 @@ export type Database = {
         }
         Relationships: []
       }
+      liturgy_hours_offices: {
+        Row: {
+          antiphon_opening: string | null
+          brief_reading_ref: string | null
+          brief_reading_text: string | null
+          concluding_prayer: string
+          generated_at: string
+          gospel_canticle: Json | null
+          hour_slug: string
+          intercessions: Json
+          iso_date: string
+          model: string | null
+          prompt_hash: string
+          provider: string | null
+          psalmody: Json
+          readings_hash: string
+          responsory: string | null
+          season_note: string | null
+          version: number
+        }
+        Insert: {
+          antiphon_opening?: string | null
+          brief_reading_ref?: string | null
+          brief_reading_text?: string | null
+          concluding_prayer: string
+          generated_at?: string
+          gospel_canticle?: Json | null
+          hour_slug: string
+          intercessions?: Json
+          iso_date: string
+          model?: string | null
+          prompt_hash: string
+          provider?: string | null
+          psalmody?: Json
+          readings_hash: string
+          responsory?: string | null
+          season_note?: string | null
+          version?: number
+        }
+        Update: {
+          antiphon_opening?: string | null
+          brief_reading_ref?: string | null
+          brief_reading_text?: string | null
+          concluding_prayer?: string
+          generated_at?: string
+          gospel_canticle?: Json | null
+          hour_slug?: string
+          intercessions?: Json
+          iso_date?: string
+          model?: string | null
+          prompt_hash?: string
+          provider?: string | null
+          psalmody?: Json
+          readings_hash?: string
+          responsory?: string | null
+          season_note?: string | null
+          version?: number
+        }
+        Relationships: []
+      }
       liturgy_meditations: {
         Row: {
           action_of_day: string | null
