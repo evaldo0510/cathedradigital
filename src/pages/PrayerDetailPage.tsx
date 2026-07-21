@@ -120,12 +120,34 @@ const PrayerDetailPage: React.FC = () => {
 
   const kicker = prayer.kicker ?? `Cathedra · ${PRAYER_CATEGORY_LABEL[prayer.category]}`;
 
-  // Sub-sprint 1 SEG — leitor contemplativo por blocos (Rosário/Via-Sacra/Horas)
-  const hasBlocks = isPrayerBlockArray(prayer.blocks) && prayer.blocks.length > 0;
+  // Sprint 1.0 — Prayer Engine v2: conteúdo servido 100% pelo banco hierárquico.
+  const engineV2 = (prayer as { engine_version?: number }).engine_version === 2;
   const isLegacy = searchParams.get('legacy') === '1';
+
+  if (engineV2 && !isLegacy) {
+    if (hierarchy.loading) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center gap-2 text-stitch-on-surface-variant">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span className="font-stitch-body text-sm">Preparando o motor de oração…</span>
+        </div>
+      );
+    }
+    if (hierarchy.blocks.length > 0) {
+      const engineKicker = hierarchy.activeSection
+        ? `Cathedra · ${prayer.title} · ${hierarchy.activeSection.title}`
+        : kicker;
+      const injected = { ...prayer, blocks: hierarchy.blocks } as typeof prayer;
+      return <RosaryReader prayer={injected} kicker={engineKicker} />;
+    }
+  }
+
+  const hasBlocks = isPrayerBlockArray(prayer.blocks) && prayer.blocks.length > 0;
   if (hasBlocks && !isLegacy) {
     return <RosaryReader prayer={prayer} kicker={kicker} />;
   }
+
+
 
   return (
     <>
