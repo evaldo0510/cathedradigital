@@ -230,7 +230,7 @@ const PrayerPortal: React.FC<Props> = ({
             {resolvedHighlight.title}
           </h2>
           {resolvedHighlight.subtitle && (
-            <p className="mt-2 font-stitch-body text-sm text-stitch-on-surface">
+            <p className="mt-2 font-stitch-body text-sm font-medium text-foreground/90">
               {resolvedHighlight.subtitle}
             </p>
           )}
