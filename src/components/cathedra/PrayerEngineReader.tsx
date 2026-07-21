@@ -442,7 +442,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
           </div>
         </div>
       )}
-      </div>
+
 
       {/* Cabeçalho do bloco */}
       <header className="mb-8 text-center">
