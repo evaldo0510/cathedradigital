@@ -1,85 +1,118 @@
-# Sprint 1 · Onda A — Liturgia do Dia
+# Sprint 1 · Onda B — Centro de Meditação Litúrgica
 
-**Objetivo único desta onda:** entregar a base sólida da Liturgia do Dia — leituras, salmo, evangelho e navegação de data plena (ontem, hoje, amanhã, calendário). Sem comentários editoriais, sem Missal, sem Liturgia das Horas — isso vem nas ondas B e C.
+Transforma a página `/liturgia` de leitor de textos em um roteiro editorial completo: cada dia passa a ter tema, chave de leitura, Tradição (Padres/Catecismo/Magistério), Meditação Logos (Observe/Reflita/Reze/Viva), oração final, "Na História da Igreja", ação do dia e continuação Nexus — tudo gerado uma vez por dia e reutilizado por todos os usuários.
 
-**Marco de aceite:** o usuário consegue acompanhar a liturgia de qualquer dia (passado, presente ou futuro do ano litúrgico) com leituras, salmo, evangelho, tempo/cor litúrgica e santo do dia unificado, tudo com performance e cache consistentes.
+---
 
-## O que muda
+## 1. Backend — geração idempotente e cacheada
 
-### 1. Camada de provider (`LiturgyProvider`)
-Introduzir uma interface fina que isola quem entrega os dados da liturgia. Hoje há acoplamento direto à edge function `liturgical-calendar` dentro da página. Vai virar um contrato:
+### Nova tabela `liturgy_meditations`
+Chave por `iso_date`. Um único registro atende todos os leitores daquele dia.
 
 ```
-LiturgyProvider {
-  getDayLiturgy(date): Promise<DailyLiturgy>
-  getMonth(year, month): Promise<LiturgicalDay[]>
-}
+iso_date            date primary key
+readings_hash       text        -- SHA-1 das leituras normalizadas
+theme               text
+reading_key         text
+fathers             jsonb       -- [{ author, work, reference, quote }]
+catechism           jsonb       -- [{ paragraph, quote }]
+magisterium         jsonb       -- [{ document, pope, section, quote }]
+logos               jsonb       -- { observe, reflect, pray, live }
+final_prayer        text
+church_history      jsonb       -- { saint?, council?, pope?, document? }
+action_of_day       text
+model               text        -- ex.: 'google/gemini-2.5-flash'
+generated_at        timestamptz
 ```
 
-Implementação atual (`liturgia.up.railway.app` + `calapi.inadiutorium.cz`) fica encapsulada em `RailwayInAdiutoriumProvider`. Nenhuma troca de fonte agora — só o contorno para que a Sprint futura de "nova fonte oficial" seja plug-and-play.
+- RLS: `SELECT` público (`anon` + `authenticated`); `INSERT/UPDATE` apenas `service_role`.
+- GRANTs completos para `anon`, `authenticated`, `service_role`.
 
-### 2. Hook único `useDailyLiturgy(date)`
-Substitui o `useQuery` inline de `LiturgiaPage.tsx:152-184`. Centraliza:
-- React Query + IndexedDB (mesmo padrão de `useLiturgicalMonth`).
-- Prefetch dos ±3 dias adjacentes.
-- Métricas de hit/miss em `localStorage` (padrão já usado no calendário).
-- Modo offline com fallback ao cache local.
+### Edge Function `liturgy-meditation`
+Contrato mínimo: recebe as leituras já resolvidas + a data ISO; devolve o registro.
 
-### 3. Navegação de data completa
-Hoje `goToNextDay` bloqueia futuro (`LiturgiaPage.tsx:144`). A liturgia é planejada; navegar para amanhã, próximo domingo ou qualquer data do ano litúrgico é essencial.
-- Remover o bloqueio de data futura.
-- Adicionar botão de calendário (popover com shadcn Calendar) para saltar para qualquer dia.
-- Atalhos: "Hoje", "Próximo domingo", "Próxima solenidade".
-- URL passa a refletir a data: `/liturgia?d=YYYY-MM-DD` (deep link + histórico do browser).
+Fluxo:
+1. `SELECT` em `liturgy_meditations` por `iso_date`; se existir e o `readings_hash` bater, devolve direto.
+2. Chama Lovable AI (`google/gemini-2.5-flash`) via `@ai-sdk/openai-compatible` com `generateText` + `Output.object` (schema Zod) — provider helper `_shared/ai-gateway.ts`.
+3. `UPSERT` do resultado com `service_role`; devolve payload.
 
-### 4. Unificação do "Santo do dia"
-Hoje há duas fontes desconectadas: `useSaintsToday` (LiturgiaPage) e `LiturgyAdapterMock` (Átrio). Consolidar num único hook `useSaintOfDay(date)` que:
-- Consome `saint-of-the-day` edge function (fonte oficial).
-- Fallback para `getSaintsByDate` (santoral local).
-- Alimenta tanto `LiturgiaPage` quanto `DailyLiturgy` (Átrio) e `Header`.
-- Remove o mock estático (`LiturgyAdapterMock.ts:4-9`).
+Regras editoriais no `system prompt`:
+- Sempre citar Padres com autor + obra + referência real (nada inventado quando não conhecer — devolve lista vazia).
+- Catecismo: apenas parágrafos numerados existentes.
+- Magistério: apenas documentos oficiais reais.
+- Português (pt-BR), tom contemplativo, sem "IA falando".
+- Meditação Logos: exatamente 4 campos (Observe/Reflita/Reze/Viva), 2–3 frases cada.
 
-### 5. Primitivas editoriais da Liturgia
-Extrair o `ReadingCard` inline (`LiturgiaPage.tsx:83-116`) para `src/components/cathedra/primitives/liturgy/`:
-- `LiturgyReadingCard` (primeira leitura, segunda leitura, evangelho — variantes)
-- `LiturgyPsalmCard` (com refrão destacado)
-- `LiturgyDayHeader` (tempo, cor, rank, data)
-- `LiturgyDateNav` (nav ontem/hoje/amanhã + calendário)
+### Custo/limites
+- Uma geração/dia global (não por usuário).
+- Retries: 1 tentativa; se `402/429` → devolve `503` e a UI degrada silenciosa (esconde o bloco).
 
-Prepara o terreno para as Ondas B (comentários) e C (Nexus) reaproveitarem os mesmos componentes sem reescrever.
+---
 
-### 6. Nexus mínimo
-Manter o `liturgyAutoNexus` como está (busca semântica). Passar `title` e `season` reais da leitura do dia. Sem novos buckets — enriquecimento vem na Onda C.
+## 2. Frontend — hook + primitivas + integração
+
+### `useLiturgyMeditation(date, readings)`
+- React Query, `queryKey: ['liturgy-meditation', isoDate]`.
+- Dispara apenas depois que `useDailyLiturgy` retornou (dependência: `enabled: !!readings?.evangelho`).
+- `staleTime`: 24h. Cache offline no mesmo IndexedDB (`cacheLiturgy(`meditation:${iso}`)`).
+
+### Novas primitivas em `src/components/cathedra/primitives/liturgy/`
+Todas seguindo o padrão `premium-card` já usado nos Reading Cards:
+
+- `LiturgyThemeCard` — Tema do Dia (headline + kicker).
+- `LiturgyReadingKeyCard` — Chave de leitura (fio condutor das 3 leituras).
+- `LiturgyTraditionBlock` — Padres · Catecismo · Magistério em 3 subseções com links (`/catecismo?p=NNN`, `/magisterium/{slug}`).
+- `LogosMeditationCard` — Observe / Reflita / Reze / Viva em 4 sub-blocos com ícones.
+- `FinalPrayerCard` — Oração final destacada, com botão "Rezar agora" (abre `/oracoes` ou lê em `PrayerEngineReader` futuramente).
+- `ChurchHistoryCard` — Santo/Concílio/Papa/Documento (bloco extra pedido pelo usuário).
+- `ActionOfDayCard` — Prática concreta, tom direto.
+
+### Integração em `LiturgiaPage.tsx`
+Ordem final da aba Liturgia:
+
+1. `LiturgyDateNav` + `LiturgyDayHeader` *(Onda A)*
+2. Leituras + Salmo + Evangelho *(Onda A)*
+3. **`LiturgyThemeCard`**
+4. **`LiturgyReadingKeyCard`**
+5. **`LiturgyTraditionBlock`**
+6. **`LogosMeditationCard`**
+7. **`FinalPrayerCard`**
+8. **`ChurchHistoryCard`**
+9. **`ActionOfDayCard`**
+10. **`ReaderContinuation`** — plugado no `liturgyAutoNexus` já existente (Bíblia, Catecismo, Glossário, Santo, Jornada, Magistério).
+11. Reflexão PADH atual → removida (substituída pela Meditação Logos).
+12. "Santo do Dia" + "Oração do dia" atuais → mantidos como cards secundários abaixo da continuação.
+
+`ReaderAutoNexus`: registrar um `input` de `liturgy` com `{ date, gospelRef, firstRef, secondRef, psalmRef }` — o `liturgyAutoNexus` já usa `KnowledgeResolver`, então zero URL hardcoded.
+
+---
+
+## 3. Skeletons, erros e acessibilidade
+
+- `MeditationSkeleton` — 6 blocos shimmer (usa `EditorialSkeleton` existente).
+- Se o edge devolver `503`/erro: esconder toda a seção editorial silenciosamente, manter leituras. Log em `analytics_events` (`event: liturgy_meditation_failed`).
+- Todos os blocos são `<section aria-labelledby>` semânticos, headings hierárquicos abaixo do H1 da página.
+
+---
+
+## 4. Critérios de aceite (validáveis manualmente)
+
+Para qualquer data (`?d=2026-07-21`):
+
+- Aparece Tema do Dia.
+- Aparece Chave de Leitura.
+- Aparece bloco Padres / Catecismo / Magistério (cada referência clicável ou marcada como "referência oral" se não houver rota).
+- Aparece Meditação Logos com Observe / Reflita / Reze / Viva.
+- Aparece Oração Final.
+- Aparece "Na História da Igreja" quando houver dado (opcional por dia).
+- Aparece Ação do Dia.
+- Aparece `ReaderContinuation` com pelo menos Bíblia + Catecismo + Glossário.
+- Recarregar a página não gera nova chamada à IA (cache do banco).
+- Modo offline: se o dia foi visitado antes, o bloco editorial é exibido do cache.
+
+---
 
 ## Fora do escopo desta onda
 
-- Comentários editoriais, Padres, Catecismo, Magistério, Meditação Logos → **Onda B**.
-- Integração Nexus profunda, glossário embutido, jornadas relacionadas, favoritos, histórico, compartilhamento → **Onda C**.
-- Missal completo → **Sprint 2**.
-- Liturgia das Horas → **Sprint 3**.
-- Nenhuma nova tabela no banco.
-- Nenhuma nova dependência externa.
-
-## Detalhes técnicos
-
-**Arquivos novos**
-- `src/core/liturgy/LiturgyProvider.ts` (interface + tipos)
-- `src/core/liturgy/providers/RailwayInAdiutoriumProvider.ts` (implementação atual)
-- `src/hooks/useDailyLiturgy.ts`
-- `src/hooks/useSaintOfDay.ts`
-- `src/components/cathedra/primitives/liturgy/` (4 componentes)
-
-**Arquivos alterados**
-- `src/components/cathedra/LiturgiaPage.tsx` — consome novo hook + navegação plena + deep link
-- `src/modules/atrium/components/Liturgy/DailyLiturgy.tsx` — passa a usar `useSaintOfDay`
-- `src/modules/atrium/adapters/mocks/LiturgyAdapterMock.ts` — removido
-- `src/core/knowledge/adapters/liturgyAutoNexus.ts` — só ajuste de input (título/season reais)
-
-**Sem migração de banco. Sem nova edge function.**
-
-## Validação
-- Playwright E2E: abrir `/liturgia?d=2026-12-25` (Natal) e `/liturgia?d=2026-04-05` (Páscoa) — verificar leituras corretas, cor litúrgica, salmo com refrão, evangelho.
-- Testes unitários: `LiturgyProvider` contract, `useDailyLiturgy` cache/offline.
-- Métricas de hit/miss expostas no NexusMetricsOverlay (adicionar linha "Liturgy Provider").
-
-Confirma a Onda A? Assim que aprovar, executo end-to-end e entrego relatório antes×depois com métricas.
+- Missal completo, Liturgia das Horas, editor humano das meditações, seleção manual de citações → Sprints seguintes.
+- Curadoria humana em cima da geração da IA: fica como Onda C (revisão editorial).
