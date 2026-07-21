@@ -73,6 +73,13 @@ const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20, forcedSeconds })
   }, [running]);
 
   if (duration === 0) {
+    if (isForced) {
+      return (
+        <p className="my-6 text-center font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant/70">
+          Silêncio guiado desativado no ritmo contemplativo
+        </p>
+      );
+    }
     return (
       <div className="my-6 flex flex-wrap items-center justify-center gap-2">
         <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-on-surface-variant">
