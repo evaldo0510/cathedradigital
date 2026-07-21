@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
+import { findContinueTarget } from '@/lib/novenas/progress';
+import { NOVENAS } from '@/data/novenas';
 
 interface ShortcutTile {
   key: string;
@@ -13,7 +15,7 @@ interface ShortcutTile {
   onSelect: (navigate: ReturnType<typeof useNavigate>) => void;
 }
 
-const SHORTCUTS: ShortcutTile[] = [
+const BASE_SHORTCUTS: ShortcutTile[] = [
   {
     key: 'buscar',
     label: 'Buscar',
@@ -46,6 +48,7 @@ const SHORTCUTS: ShortcutTile[] = [
   },
 ];
 
+
 interface SmartActionSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -76,6 +79,22 @@ export const SmartActionSheet: React.FC<SmartActionSheetProps> = ({ open, onOpen
 
   const isLoading = pendingKey !== null;
 
+  const shortcuts = useMemo<ShortcutTile[]>(() => {
+    if (!open) return BASE_SHORTCUTS;
+    const target = findContinueTarget();
+    if (!target) return BASE_SHORTCUTS;
+    const novena = NOVENAS.find((n) => n.slug === target.slug);
+    if (!novena) return BASE_SHORTCUTS;
+    const tile: ShortcutTile = {
+      key: 'continuar-novena',
+      label: 'Continuar',
+      description: `${novena.title} · dia ${target.day}`,
+      icon: Icons.RefreshCw,
+      onSelect: (nav) => nav(`/oracao/novenas/${target.slug}?dia=${target.day}`),
+    };
+    return [tile, ...BASE_SHORTCUTS];
+  }, [open]);
+
   const handleSelect = useCallback(
     (shortcut: ShortcutTile) => {
       setPendingKey(shortcut.key);
@@ -101,7 +120,7 @@ export const SmartActionSheet: React.FC<SmartActionSheetProps> = ({ open, onOpen
         </SheetHeader>
 
         <div className="grid grid-cols-2 gap-spacing-sm mt-spacing-lg">
-          {SHORTCUTS.map((s) => {
+          {shortcuts.map((s) => {
             const Icon = s.icon;
             const tileLoading = pendingKey === s.key;
             return (
