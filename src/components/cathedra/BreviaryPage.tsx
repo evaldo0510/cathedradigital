@@ -43,6 +43,7 @@ import { HourRecommendationCard } from './primitives/liturgy/HourRecommendationC
 import { useRecommendedHour } from '@/hooks/useRecommendedHour';
 import { useQueries } from '@tanstack/react-query';
 import PrayerPortalStandalone from '@/components/prayer/PrayerPortalStandalone';
+import { HourSpiritCard } from './primitives/liturgy/HourSpiritCard';
 import { Sunrise, Sun, Sunset, MoonStar, type LucideIcon } from 'lucide-react';
 
 const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
@@ -379,6 +380,11 @@ const BreviaryPage: React.FC = () => {
             />
           </div>
         </div>
+        <HourSpiritCard
+          hourSlug={selectedHour}
+          hourTitle={section.title}
+          className="mb-spacing-md"
+        />
         <BreviaryContinuousReader
           prayer={prayer}
           hierarchy={hierarchy}
@@ -510,6 +516,13 @@ const BreviaryPage: React.FC = () => {
             </Button>
           </div>
         </div>
+
+        <HourSpiritCard
+          hourSlug={suggested}
+          hourTitle={orderedSections.find((s) => s.slug === suggested)?.title ?? 'Hora canônica'}
+        />
+
+
 
         {loading || !prayer ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm">
