@@ -98,12 +98,32 @@ export function downloadJson(payload: unknown, filename: string) {
 
 export interface ImportResult {
   imported: number;
+  merged: number;
   skipped: number;
   errors: string[];
 }
 
-export function importProgressPayload(raw: unknown): ImportResult {
-  const result: ImportResult = { imported: 0, skipped: 0, errors: [] };
+export type ImportMode = 'replace' | 'merge';
+
+function mergeEntries(a: NovenaProgress, b: NovenaProgress): NovenaProgress {
+  const completed = Array.from(new Set([...a.completedDays, ...b.completedDays])).sort(
+    (x, y) => x - y,
+  );
+  const currentDay = Math.max(a.currentDay, b.currentDay);
+  const startedAt =
+    new Date(a.startedAt).getTime() <= new Date(b.startedAt).getTime() ? a.startedAt : b.startedAt;
+  const aTs = new Date(a.updatedAt ?? a.startedAt).getTime();
+  const bTs = new Date(b.updatedAt ?? b.startedAt).getTime();
+  const updatedAt = aTs >= bTs ? a.updatedAt ?? a.startedAt : b.updatedAt ?? b.startedAt;
+  return { startedAt, completedDays: completed, currentDay, updatedAt };
+}
+
+export function importProgressPayload(
+  raw: unknown,
+  options: { mode?: ImportMode } = {},
+): ImportResult {
+  const mode: ImportMode = options.mode ?? 'replace';
+  const result: ImportResult = { imported: 0, merged: 0, skipped: 0, errors: [] };
   if (!raw || typeof raw !== 'object') {
     result.errors.push('Arquivo inválido.');
     return result;
@@ -133,8 +153,17 @@ export function importProgressPayload(raw: unknown): ImportResult {
       result.skipped += 1;
       continue;
     }
+    if (mode === 'merge') {
+      const existing = loadProgress(slug);
+      if (existing) {
+        saveProgress(slug, mergeEntries(existing, e));
+        result.merged += 1;
+        continue;
+      }
+    }
     saveProgress(slug, e);
     result.imported += 1;
   }
   return result;
 }
+
