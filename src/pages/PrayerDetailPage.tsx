@@ -149,10 +149,9 @@ const PrayerDetailPage: React.FC = () => {
     }
   }
 
-  const hasBlocks = isPrayerBlockArray(prayer.blocks) && prayer.blocks.length > 0;
-  if (hasBlocks && !isLegacy) {
-    return <RosaryReader prayer={prayer} kicker={kicker} />;
-  }
+  // Fallback estático (texto/latim/explicação) para orações ainda não migradas
+  // ao Prayer Engine v2. Sem persistência local: apenas leitura contínua.
+
 
 
 
