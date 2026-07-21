@@ -193,6 +193,12 @@ const PrayerDetailPage: React.FC = () => {
       }
 
 
+      // Reader especializado: Exame de Consciência preserva a tela guiada
+      // interativa (checkboxes por passo) mesmo entrando pelo Portal v2.
+      if (prayer.slug === 'exame-de-consciencia') {
+        return <PoenitentiaPage prayer={prayer} kicker={engineKicker} />;
+      }
+
       return (
         <PrayerEngineReader
           prayer={prayer}
