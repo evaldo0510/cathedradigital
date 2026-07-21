@@ -188,16 +188,23 @@ Deno.serve(async (req) => {
     auth: { persistSession: false },
   });
 
-  const hash = await hashReadings(body.readings);
+  const readingsHash = await hashReadings(body.readings);
+  const promptHash = await sha1(SYSTEM_PROMPT);
 
-  // 1. Cache hit por iso_date + hash
+  // 1. Cache hit — só é reaproveitado quando readings_hash,
+  //    prompt_hash E version batem. Qualquer divergência força regeneração.
   const existing = await admin
     .from("liturgy_meditations")
     .select("*")
     .eq("iso_date", body.iso_date)
     .maybeSingle();
 
-  if (existing.data && existing.data.readings_hash === hash) {
+  if (
+    existing.data &&
+    existing.data.readings_hash === readingsHash &&
+    existing.data.prompt_hash === promptHash &&
+    existing.data.version === EDITORIAL_VERSION
+  ) {
     return new Response(JSON.stringify({ cached: true, meditation: existing.data }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -205,7 +212,7 @@ Deno.serve(async (req) => {
 
   // 2. Gerar com Lovable AI
   const gateway = createLovableAiGatewayProvider(lovableKey);
-  const model = gateway("google/gemini-2.5-flash");
+  const model = gateway(AI_MODEL);
   let output: Meditation;
   try {
     const result = await generateText({
@@ -233,10 +240,12 @@ Deno.serve(async (req) => {
     );
   }
 
-  // 3. UPSERT
+  // 3. UPSERT (grava também auditoria: version, prompt_hash, provider, model)
   const payload = {
     iso_date: body.iso_date,
-    readings_hash: hash,
+    readings_hash: readingsHash,
+    prompt_hash: promptHash,
+    version: EDITORIAL_VERSION,
     theme: output.theme,
     reading_key: output.reading_key,
     fathers: output.fathers,
@@ -246,7 +255,8 @@ Deno.serve(async (req) => {
     final_prayer: output.final_prayer,
     church_history: output.church_history,
     action_of_day: output.action_of_day,
-    model: "google/gemini-2.5-flash",
+    model: AI_MODEL,
+    provider: AI_PROVIDER,
     generated_at: new Date().toISOString(),
   };
   const upsert = await admin
