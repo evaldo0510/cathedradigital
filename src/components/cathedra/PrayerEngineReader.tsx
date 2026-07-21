@@ -691,6 +691,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
             {focus ? <X aria-hidden /> : <Focus aria-hidden />}
             {focus ? 'Sair do foco' : 'Modo foco'}
           </Button>
+          <ContemplativeSettingsDialog />
           {!isSimple && (
             <Button
               type="button"
