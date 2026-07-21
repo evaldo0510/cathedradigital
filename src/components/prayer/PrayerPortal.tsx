@@ -201,6 +201,7 @@ const PrayerPortal: React.FC<Props> = ({
       className="mx-auto w-full max-w-[720px] px-5 pb-24 pt-10 md:px-8 md:pt-16"
       aria-labelledby="portal-title"
       data-testid="prayer-portal"
+      data-portal-oracao
     >
       {/* 1 — Hero limpo */}
       <EditorialHero align="center" as="header">
