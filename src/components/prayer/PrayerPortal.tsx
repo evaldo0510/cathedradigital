@@ -1,25 +1,23 @@
 /**
- * PrayerPortal — Portal Universal de Oração (B.2.5).
+ * PrayerPortal — Portal Universal de Oração (B.2.5 → B.2.5.b).
  *
- * Espaço de preparação exibido ANTES do PrayerEngineReader. Não é uma
- * landing de marketing: é um limiar contemplativo. O usuário chega,
- * respira, ajusta configurações e só então entra em oração.
+ * Espaço de preparação exibido ANTES do PrayerEngineReader / leitores
+ * legados. Não é landing de marketing: é um limiar contemplativo.
  *
  * Estrutura:
- *   1. Hero limpo (kicker · título · versículo · mistério do dia · duração)
- *   2. Mistério do dia (cor litúrgica, fruto, Evangelho)
- *   3. Preparar o coração (convite curto)
- *   4. Configurações (modo + ritmo)
+ *   1. Hero limpo (kicker · título · versículo · destaque do dia · duração)
+ *   2. Destaque do dia (Mistério · Estação · Hora — via prop `highlight`)
+ *   3. Preparar o coração
+ *   4. Configurações (modo + ritmo — se `showRhythm` habilitado)
  *   5. Continuar / Recomeçar (quando há sessão aberta)
- *   6. ENTRAR EM ORAÇÃO (botão único, grande)
+ *   6. ENTRAR EM ORAÇÃO
  *
- * Pilot: Rosário. O componente é agnóstico ao tipo de oração e será
- * reusado por Via Sacra, Liturgia das Horas, Missal, Lectio, Ladainhas,
- * Novenas, Terços e orações tradicionais.
+ * Uso:
+ *   • Rosário — passa `activeSection` + `mysteries` (backwards compat).
+ *   • Via Sacra / Liturgia das Horas — passa `highlight` custom.
  *
- * Contraste: todo texto de leitura usa `text-stitch-on-surface` (nunca
- * `-variant` para corpo). Rótulos micro (eyebrows/meta) ficam em
- * `stitch-secondary` para hierarquia sem apagar a leitura.
+ * Contraste: rótulos micro em `text-stitch-secondary font-black`; corpo
+ * sempre em `text-stitch-on-surface`. `-variant` reservado a citações.
  */
 import React, { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -35,31 +33,76 @@ import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
 import { cn } from '@/lib/utils';
 
+/**
+ * Bloco de destaque universal — usado por orações que não têm mistérios
+ * (Via Sacra usa Estação inicial; Liturgia das Horas usa Hora recomendada).
+ */
+export interface PortalHighlight {
+  /** Rótulo micro exibido acima do título (ex.: "Estação inicial"). */
+  eyebrow: string;
+  /** Título do destaque (ex.: "Jesus é condenado à morte"). */
+  title: string;
+  /** Subtítulo opcional (ex.: latim, cor litúrgica). */
+  subtitle?: string;
+  /** Meta list (Evangelho / cor / fruto / etc). */
+  meta?: Array<{ label: string; value: string; icon?: 'book' | 'sparkles' | 'church' | 'clock' }>;
+  /** Cor de acento HSL (bolinha). Default: `stitch-secondary`. */
+  accentClassName?: string;
+}
+
 interface Props {
   prayer: Prayer;
-  activeSection: DBSection | null;
-  mysteries: DBMystery[];
   kicker: string;
+  /** Rosário: seção ativa vinda do Prayer Engine. */
+  activeSection?: DBSection | null;
+  /** Rosário: lista completa de mistérios para calcular o "do dia". */
+  mysteries?: DBMystery[];
+  /** Fallback / uso genérico: bloco de destaque manual. */
+  highlight?: PortalHighlight;
+  /** Versículo de abertura (opcional). Se omitido usa `OPENING_QUOTE[slug]`. */
+  quote?: { text: string; ref: string };
+  /** Habilita o `ContemplativeSettingsDialog` (Rosário/Via Sacra). Default: true. */
+  showRhythm?: boolean;
   /** Rota destino ao "Entrar em oração" (default: rota atual + ?enter=1). */
   onEnter?: () => void;
+  /** Rota do link "Voltar" (default: /oracao). */
+  backHref?: string;
+  /** Rótulo do link de retorno. */
+  backLabel?: string;
 }
 
 const OPENING_QUOTE: Record<string, { text: string; ref: string }> = {
   rosario: { text: 'Permanecei em mim, e eu em vós.', ref: 'Jo 15,4' },
   'via-sacra': { text: 'Se alguém quer vir após mim, tome a sua cruz.', ref: 'Mt 16,24' },
+  viacrucis: { text: 'Se alguém quer vir após mim, tome a sua cruz.', ref: 'Mt 16,24' },
+  'liturgia-das-horas': { text: 'Sete vezes por dia eu vos louvo.', ref: 'Sl 118,164' },
 };
 
-/**
- * Palavras curtas para a linha "≈ 25 minutos". Prayer.estimated_seconds já
- * é o total; convertemos com arredondamento amigável.
- */
+const ICON_MAP = {
+  book: BookOpen,
+  sparkles: Sparkles,
+  church: Church,
+  clock: Clock,
+} as const;
+
 function formatDuration(seconds?: number | null): string {
   if (!seconds || seconds <= 0) return '';
   const min = Math.max(1, Math.round(seconds / 60));
   return `≈ ${min} min`;
 }
 
-const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicker, onEnter }) => {
+const PrayerPortal: React.FC<Props> = ({
+  prayer,
+  kicker,
+  activeSection = null,
+  mysteries = [],
+  highlight,
+  quote: quoteProp,
+  showRhythm = true,
+  onEnter,
+  backHref = '/oracao',
+  backLabel = '← Voltar ao Livro de Orações',
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const session = usePrayerEngineSession(prayer.id);
   const [mode, setMode] = React.useState<PrayerMode>(() => {
@@ -70,7 +113,7 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
   });
 
   const palette = resolveMysteryPalette(activeSection?.slug);
-  const quote = OPENING_QUOTE[prayer.slug];
+  const quote = quoteProp ?? OPENING_QUOTE[prayer.slug];
 
   const mysteriesInSection = useMemo(
     () =>
@@ -84,6 +127,29 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
 
   const dayMystery = mysteriesInSection[0] ?? null;
   const meta = dayMystery ? readMysteryMeta(dayMystery) : null;
+
+  // Highlight derivado: prioridade → prop explícita > mistério do dia.
+  const resolvedHighlight: PortalHighlight | null = useMemo(() => {
+    if (highlight) return highlight;
+    if (!dayMystery) return null;
+    const items: PortalHighlight['meta'] = [];
+    if (dayMystery.gospel_ref) items.push({ label: 'Evangelho', value: dayMystery.gospel_ref, icon: 'book' });
+    if (dayMystery.fruit) items.push({ label: 'Fruto espiritual', value: dayMystery.fruit, icon: 'sparkles' });
+    if (meta?.related_saints && meta.related_saints.length > 0) {
+      items.push({
+        label: 'Santos relacionados',
+        value: meta.related_saints.slice(0, 3).map((s) => s.name).join(' · '),
+        icon: 'church',
+      });
+    }
+    return {
+      eyebrow: 'Mistério do dia',
+      title: dayMystery.title,
+      subtitle: dayMystery.subtitle ?? undefined,
+      meta: items,
+      accentClassName: palette.accentClass,
+    };
+  }, [highlight, dayMystery, meta, palette.accentClass]);
 
   const hasOpenSession = Boolean(
     session.session && session.session.current_block_uuid && !session.session.completed_at,
@@ -111,6 +177,7 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
     <main
       className="mx-auto w-full max-w-[720px] px-5 pb-24 pt-10 md:px-8 md:pt-16"
       aria-labelledby="portal-title"
+      data-testid="prayer-portal"
     >
       {/* 1 — Hero limpo */}
       <EditorialHero align="center" as="header">
@@ -120,15 +187,15 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
         </EditorialHero.Title>
         {quote && (
           <EditorialHero.Subtitle>
-            <span className="italic">"{quote.text}"</span>
-            <span className="ml-2 not-italic text-stitch-on-surface-variant">— {quote.ref}</span>
+            <span className="italic text-stitch-on-surface">"{quote.text}"</span>
+            <span className="ml-2 not-italic font-stitch-body text-[13px] font-semibold text-stitch-secondary">— {quote.ref}</span>
           </EditorialHero.Subtitle>
         )}
         <EditorialHero.Meta>
-          {activeSection && (
+          {resolvedHighlight && (
             <span className="inline-flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-stitch-secondary" aria-hidden />
-              {activeSection.title}
+              {resolvedHighlight.title}
             </span>
           )}
           {prayer.estimated_seconds && (
@@ -140,85 +207,66 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
         </EditorialHero.Meta>
       </EditorialHero>
 
-      {/* 2 — Mistério do dia */}
-      {dayMystery && (
+      {/* 2 — Destaque do dia */}
+      {resolvedHighlight && (
         <section
-          aria-labelledby="portal-mystery"
+          aria-labelledby="portal-highlight"
           className="mt-14 rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/60 px-6 py-7 md:px-8 md:py-8"
+          data-testid="portal-highlight"
         >
           <div className="flex items-center gap-2">
             <Circle
               aria-hidden
-              className={cn('h-2.5 w-2.5 fill-current', palette.accentClass)}
+              className={cn('h-2.5 w-2.5 fill-current', resolvedHighlight.accentClassName ?? 'text-stitch-secondary')}
             />
-            <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-              Mistério do dia
+            <span className="font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary">
+              {resolvedHighlight.eyebrow}
             </span>
           </div>
           <h2
-            id="portal-mystery"
+            id="portal-highlight"
             className="mt-3 font-stitch-display text-2xl leading-tight text-stitch-on-surface md:text-3xl"
           >
-            {dayMystery.title}
+            {resolvedHighlight.title}
           </h2>
-          {dayMystery.subtitle && (
-            <p className="mt-2 font-stitch-body text-sm text-stitch-on-surface-variant">
-              {dayMystery.subtitle}
+          {resolvedHighlight.subtitle && (
+            <p className="mt-2 font-stitch-body text-sm text-stitch-on-surface">
+              {resolvedHighlight.subtitle}
             </p>
           )}
 
-          <dl className="mt-6 grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
-            {dayMystery.gospel_ref && (
-              <div className="flex items-start gap-2.5">
-                <BookOpen className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
-                <div>
-                  <dt className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
-                    Evangelho
-                  </dt>
-                  <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
-                    {dayMystery.gospel_ref}
-                  </dd>
-                </div>
-              </div>
-            )}
-            {dayMystery.fruit && (
-              <div className="flex items-start gap-2.5">
-                <Circle className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
-                <div>
-                  <dt className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
-                    Fruto espiritual
-                  </dt>
-                  <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
-                    {dayMystery.fruit}
-                  </dd>
-                </div>
-              </div>
-            )}
-            {meta?.related_saints && meta.related_saints.length > 0 && (
-              <div className="flex items-start gap-2.5 md:col-span-2">
-                <Church className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
-                <div>
-                  <dt className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
-                    Santos relacionados
-                  </dt>
-                  <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
-                    {meta.related_saints.slice(0, 3).map((s) => s.name).join(' · ')}
-                  </dd>
-                </div>
-              </div>
-            )}
-          </dl>
+          {resolvedHighlight.meta && resolvedHighlight.meta.length > 0 && (
+            <dl className="mt-6 grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+              {resolvedHighlight.meta.map((item, idx) => {
+                const Icon = ICON_MAP[item.icon ?? 'sparkles'];
+                const spanAll = resolvedHighlight.meta && resolvedHighlight.meta.length % 2 === 1 && idx === resolvedHighlight.meta.length - 1;
+                return (
+                  <div key={item.label} className={cn('flex items-start gap-2.5', spanAll && 'md:col-span-2')}>
+                    <Icon className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
+                    <div>
+                      <dt className="font-stitch-body text-[10px] font-black uppercase tracking-[0.22em] text-stitch-secondary">
+                        {item.label}
+                      </dt>
+                      <dd className="mt-0.5 font-stitch-body text-stitch-on-surface">
+                        {item.value}
+                      </dd>
+                    </div>
+                  </div>
+                );
+              })}
+            </dl>
+          )}
         </section>
       )}
 
       {/* 3 — Preparar o coração */}
       <section
         aria-labelledby="portal-prepare"
-        className="mt-10 border-l-2 border-stitch-secondary/40 pl-5"
+        className="mt-10 border-l-2 border-stitch-secondary/60 pl-5"
       >
         <h2
           id="portal-prepare"
-          className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
+          className="font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary"
         >
           Preparar o coração
         </h2>
@@ -233,15 +281,17 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
       <section aria-labelledby="portal-settings" className="mt-12">
         <h2
           id="portal-settings"
-          className="mb-4 text-center font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
+          className="mb-4 text-center font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary"
         >
           Como deseja rezar
         </h2>
         <div className="flex flex-col items-center gap-4">
           <PrayerModeSelector mode={mode} onChange={setMode} />
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <ContemplativeSettingsDialog />
-          </div>
+          {showRhythm && (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <ContemplativeSettingsDialog />
+            </div>
+          )}
         </div>
       </section>
 
@@ -249,13 +299,14 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
       {hasOpenSession && (
         <section
           aria-labelledby="portal-resume"
-          className="mt-12 rounded-2xl border-2 border-stitch-secondary/50 bg-stitch-secondary/[0.06] px-6 py-6 md:px-8"
+          className="mt-12 rounded-2xl border-2 border-stitch-secondary/60 bg-stitch-secondary/[0.08] px-6 py-6 md:px-8"
+          data-testid="portal-resume"
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <span
                 id="portal-resume"
-                className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
+                className="font-stitch-body text-[11px] font-black uppercase tracking-[0.28em] text-stitch-secondary"
               >
                 Você tem uma oração em andamento
               </span>
@@ -264,11 +315,23 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="pill-active" size="pill" onClick={handleEnter}>
+              <Button
+                type="button"
+                variant="pill-active"
+                size="pill"
+                onClick={handleEnter}
+                data-testid="portal-continue"
+              >
                 <PlayCircle aria-hidden />
                 Continuar
               </Button>
-              <Button type="button" variant="pill" size="pill" onClick={handleRestart}>
+              <Button
+                type="button"
+                variant="pill"
+                size="pill"
+                onClick={handleRestart}
+                data-testid="portal-restart"
+              >
                 <RotateCcw aria-hidden />
                 Recomeçar
               </Button>
@@ -283,24 +346,26 @@ const PrayerPortal: React.FC<Props> = ({ prayer, activeSection, mysteries, kicke
           type="button"
           size="lg"
           onClick={handleEnter}
+          data-testid="portal-enter"
           className={cn(
             'h-14 min-w-[260px] rounded-full px-10',
             'bg-stitch-secondary text-stitch-secondary-foreground hover:bg-stitch-secondary/90',
-            'font-stitch-body text-[13px] font-bold uppercase tracking-[0.32em]',
+            'font-stitch-body text-[13px] font-black uppercase tracking-[0.32em]',
             'shadow-[0_10px_30px_-12px_hsl(var(--stitch-secondary)/0.55)]',
             'transition-transform duration-200 hover:scale-[1.02]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2',
           )}
         >
           Entrar em oração
         </Button>
-        <p className="text-center font-stitch-body text-[11px] uppercase tracking-[0.24em] text-stitch-on-surface-variant">
+        <p className="text-center font-stitch-body text-[12px] font-bold uppercase tracking-[0.24em] text-stitch-secondary">
           Silêncio · Presença · Contemplação
         </p>
         <Link
-          to="/oracao"
-          className="mt-4 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant hover:text-stitch-secondary"
+          to={backHref}
+          className="mt-4 font-stitch-body text-xs font-semibold uppercase tracking-widest text-stitch-on-surface hover:text-stitch-secondary"
         >
-          ← Voltar ao Livro de Orações
+          {backLabel}
         </Link>
       </div>
     </main>
