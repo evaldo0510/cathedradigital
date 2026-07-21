@@ -42,6 +42,7 @@ const CHURCH_PREFIXES = [
   '/liturgia',
   '/calendar',
   '/lectio',
+  '/colecoes',
 ];
 
 const CLOISTER_PREFIXES = [
