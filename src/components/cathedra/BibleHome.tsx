@@ -1,12 +1,12 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { BibleBook, BIBLE_DATA } from '@/data/bible-books';
-import { EditorialHero } from '@/components/editorial';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 
 
@@ -24,27 +24,15 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
 
   return (
     <div className="space-y-8 pb-12 max-w-lg mx-auto px-4">
-      {/* Hero Section */}
-      <EditorialHero
-        variant="legacy"
-        align="center"
-        size="sm"
-        rule={false}
-        icon={
-          <div className="relative inline-block">
-            <Icons.BookOpen className="w-12 h-12 mx-auto text-secondary/20" />
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full"
-            />
-          </div>
-        }
-        title="Sacra Biblia"
-        titleClassName="text-3xl font-display font-light uppercase tracking-[0.2em] text-primary max-w-none"
-        subtitle={'"Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."'}
-        subtitleClassName="text-sm italic text-primary/60 font-serif leading-relaxed px-4 mt-4 max-w-none"
-      />
+      {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) */}
+      <EditorialHero align="center" density="balanced" rule={false}>
+        <EditorialHero.Eyebrow>Sacra Scriptura</EditorialHero.Eyebrow>
+        <EditorialHero.Title>Bíblia</EditorialHero.Title>
+        <EditorialHero.Subtitle>
+          "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."
+        </EditorialHero.Subtitle>
+      </EditorialHero>
+
 
 
       {/* Continue Reading Widget */}

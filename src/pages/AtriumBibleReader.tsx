@@ -24,6 +24,7 @@ import {
   getBibleLastRead,
   setBibleLastRead,
 } from '@/components/mobile/BiblePickerSheet';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -151,21 +152,15 @@ const BibleLanding: React.FC = () => {
       />
 
       <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
-        {/* Hero */}
-        <section className="border-b border-stitch-secondary/10 pb-8">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-                Sacred Scripture
-              </span>
-              <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-                Sagrada Escritura
-              </h1>
-              <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-                Setenta e três livros, uma só Palavra. Percorra a narrativa da
-                Aliança, do Gênesis ao Apocalipse, iluminada pela Tradição.
-              </p>
-            </div>
+        {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) — irmão do Catecismo */}
+        <EditorialHero density="balanced" rule={false}>
+          <EditorialHero.Eyebrow>Sacra Scriptura</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Sagrada Escritura</EditorialHero.Title>
+          <EditorialHero.Subtitle>
+            Setenta e três livros, uma só Palavra. Percorra a narrativa da Aliança,
+            do Gênesis ao Apocalipse, iluminada pela Tradição.
+          </EditorialHero.Subtitle>
+          <EditorialHero.Context>
             <Link
               to={AppRoute.BUSCAR}
               className="group relative flex w-full items-center gap-3 rounded-lg border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-4 py-2.5 text-[14px] font-medium text-stitch-on-surface-variant transition-all hover:border-stitch-secondary md:w-64"
@@ -173,10 +168,8 @@ const BibleLanding: React.FC = () => {
               <SearchIcon className="h-5 w-5 shrink-0" />
               <span className="font-stitch-body">Buscar passagem…</span>
             </Link>
-          </div>
-
-          {/* Ações rápidas: picker + continuar */}
-          <div className="mt-6 flex flex-wrap items-center gap-2">
+          </EditorialHero.Context>
+          <EditorialHero.Actions>
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
@@ -194,8 +187,8 @@ const BibleLanding: React.FC = () => {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             )}
-          </div>
-        </section>
+          </EditorialHero.Actions>
+        </EditorialHero>
 
 
         {/* Testament switcher */}

@@ -15,6 +15,7 @@ import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
 
 const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
 
@@ -96,22 +97,15 @@ const CatechismLanding: React.FC = () => {
       />
 
       <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-10 md:px-16 md:pb-16 md:pt-14 animate-fade-in">
-        {/* Hero */}
-        <section className="border-b border-stitch-secondary/10 pb-8">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-                Depositum Fidei
-              </span>
-              <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-                Catecismo
-              </h1>
-              <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-                Dois mil e oitocentos e sessenta e cinco parágrafos que
-                articulam a fé, os sacramentos, a vida moral e a oração da
-                Igreja em um único fio de ouro.
-              </p>
-            </div>
+        {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) */}
+        <EditorialHero density="balanced" rule={false}>
+          <EditorialHero.Eyebrow>Depositum Fidei</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Catecismo</EditorialHero.Title>
+          <EditorialHero.Subtitle>
+            Dois mil e oitocentos e sessenta e cinco parágrafos que articulam a fé,
+            os sacramentos, a vida moral e a oração da Igreja em um único fio de ouro.
+          </EditorialHero.Subtitle>
+          <EditorialHero.Context>
             <Link
               to={AppRoute.BUSCAR}
               className="group relative flex w-full items-center gap-3 rounded-lg border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-4 py-2.5 text-[14px] font-medium text-stitch-on-surface-variant transition-all hover:border-stitch-secondary md:w-64"
@@ -119,63 +113,58 @@ const CatechismLanding: React.FC = () => {
               <SearchIcon className="h-5 w-5 shrink-0" />
               <span className="font-stitch-body">Buscar §parágrafo…</span>
             </Link>
-          </div>
-        </section>
+          </EditorialHero.Context>
+        </EditorialHero>
 
-        {/* Partes do CIC */}
-        <section className="pt-12 space-y-10">
+        {/* Partes do CIC — sumário editorial */}
+        <section className="pt-[var(--sp-xl)] space-y-[var(--sp-xl)]">
           {CIC_SECTIONS.map((part, idx) => {
             const first = part.sections[0]?.paragraphs?.[0] ?? 1;
             return (
               <article
                 key={part.part}
-                className="grid grid-cols-1 gap-8 border-b border-stitch-outline-variant/20 pb-10 last:border-b-0 md:grid-cols-12"
+                className="grid grid-cols-1 gap-[var(--sp-l)] border-b border-stitch-outline-variant/20 pb-[var(--sp-xl)] last:border-b-0 md:grid-cols-12"
               >
                 <header className="md:col-span-4">
-                  <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+                  <span className="type-rubrica">
                     {PART_KICKERS[part.part] ?? part.part}
                   </span>
-                  <div className="mt-2 flex items-baseline gap-4">
+                  <div className="mt-[var(--sp-s)] flex items-baseline gap-4">
                     <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/30">
                       {String(idx).padStart(2, '0')}
                     </span>
                     <div>
-                      <h2 className="font-stitch-display text-[24px] leading-tight text-stitch-primary">
-                        {part.part}
-                      </h2>
-                      <p className="mt-1 font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
-                        {part.title}
-                      </p>
+                      <h2 className="type-h3 text-foreground">{part.part}</h2>
+                      <p className="mt-1 type-caption italic">{part.title}</p>
                     </div>
                   </div>
                   <Link
                     to={`${AppRoute.CATECHISM}?p=${first}`}
-                    className="mt-6 inline-flex items-center gap-2 border-b border-stitch-secondary/40 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary transition-colors hover:border-stitch-secondary"
+                    className="mt-[var(--sp-l)] inline-flex items-center gap-2 border-b border-stitch-secondary/40 pb-0.5 type-rubrica text-stitch-secondary transition-colors hover:border-stitch-secondary"
                   >
                     Abrir §{first}
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </header>
 
-                <div className="grid grid-cols-1 gap-4 md:col-span-8 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-[var(--sp-m)] md:col-span-8 md:grid-cols-2">
                   {part.sections.map((sec) => (
-                    <Link
+                    <EditorialCard
                       key={sec.id}
-                      to={`${AppRoute.CATECHISM}?p=${sec.paragraphs[0]}`}
-                      className="group flex flex-col justify-between border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-5 transition-all hover:border-stitch-secondary/50 hover:shadow-md"
+                      as="a"
+                      href={`${AppRoute.CATECHISM}?p=${sec.paragraphs[0]}`}
+                      density="dense"
                     >
-                      <div>
-                        <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
-                          §{sec.paragraphs[0]} – §{sec.paragraphs[1]}
+                      <EditorialCard.Eyebrow>
+                        §{sec.paragraphs[0]} – §{sec.paragraphs[1]}
+                      </EditorialCard.Eyebrow>
+                      <EditorialCard.Title>{sec.title}</EditorialCard.Title>
+                      <EditorialCard.CTA>
+                        <span className="inline-flex items-center gap-2 type-rubrica text-stitch-secondary">
+                          Abrir <ArrowRight className="h-3.5 w-3.5" />
                         </span>
-                        <h3 className="mt-1 font-stitch-display text-[18px] leading-snug text-stitch-primary transition-colors group-hover:text-stitch-secondary">
-                          {sec.title}
-                        </h3>
-                      </div>
-                      <div className="mt-4 flex items-center justify-end text-stitch-secondary">
-                        <ArrowRight className="h-4 w-4 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-                      </div>
-                    </Link>
+                      </EditorialCard.CTA>
+                    </EditorialCard>
                   ))}
                 </div>
               </article>
