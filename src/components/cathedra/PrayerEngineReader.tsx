@@ -203,35 +203,77 @@ export const PrayerEngineReader: React.FC<Props> = ({
     session.session?.completed_mystery_ids.includes(currentMystery.id) === true &&
     isLastOfMystery;
 
-  // ── Prefetch da imagem do próximo mistério ──
-  // Quando o usuário está nas últimas Ave-Marias ou no último bloco do
-  // mistério atual, adicionamos um <link rel="preload"> discreto para a
-  // imagem do próximo mistério — evita "flash" na transição sem inflar
-  // o payload inicial (só carrega perto do fim da dezena).
+  // ── Prefetch adaptativo da imagem do próximo mistério ──
+  // Usa IntersectionObserver num sentinel no final do mistério corrente;
+  // rootMargin adapta-se ao tipo de conexão (mais antecipado em redes
+  // rápidas, mais próximo em lentas). Respeita `Save-Data`: se ativo,
+  // não pré-carrega — o hero só baixa quando entrar em viewport.
   const nextMystery = useMemo(() => {
     if (currentMysteryIndex < 0) return null;
     return mysteriesInSection[currentMysteryIndex + 1] ?? null;
   }, [mysteriesInSection, currentMysteryIndex]);
 
+  const prefetchSentinelRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!nextMystery) return;
-    const nearEnd =
-      isLastOfMystery ||
-      (aveCount > 0 && aveCurrentIdx >= 0 && aveCurrentIdx >= aveCount - 2);
-    if (!nearEnd) return;
+    // Save-Data ou 2G/slow-2g → não pré-carregar imagem (respeita economia).
+    const conn = (navigator as any).connection as
+      | { saveData?: boolean; effectiveType?: string }
+      | undefined;
+    if (conn?.saveData) return;
+    if (conn?.effectiveType && /^(slow-)?2g$/.test(conn.effectiveType)) return;
+
     const href = resolveMysteryImage(readMysteryMeta(nextMystery).hero_image_path);
     if (!href) return;
     const selector = `link[rel="preload"][data-mystery-preload="${nextMystery.id}"]`;
     if (document.head.querySelector(selector)) return;
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = href;
-    link.setAttribute('fetchpriority', 'low');
-    link.setAttribute('data-mystery-preload', nextMystery.id);
-    document.head.appendChild(link);
+
+    // Margem adaptativa: redes rápidas antecipam mais o preload.
+    const rootMargin =
+      conn?.effectiveType === '4g' ? '600px'
+      : conn?.effectiveType === '3g' ? '250px'
+      : '400px';
+
+    const injectPreload = () => {
+      if (document.head.querySelector(selector)) return;
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = href;
+      link.setAttribute('fetchpriority', 'low');
+      link.setAttribute('data-mystery-preload', nextMystery.id);
+      document.head.appendChild(link);
+    };
+
+    const nearEnd =
+      isLastOfMystery ||
+      (aveCount > 0 && aveCurrentIdx >= 0 && aveCurrentIdx >= aveCount - 2);
+
+    let io: IntersectionObserver | null = null;
+    const el = prefetchSentinelRef.current;
+    if (el && typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              injectPreload();
+              io?.disconnect();
+              break;
+            }
+          }
+        },
+        { rootMargin },
+      );
+      io.observe(el);
+    } else if (nearEnd) {
+      // Fallback sem IO: usa a heurística anterior.
+      injectPreload();
+    }
+
     return () => {
-      link.remove();
+      io?.disconnect();
+      document.head.querySelector(selector)?.remove();
     };
   }, [nextMystery, isLastOfMystery, aveCount, aveCurrentIdx]);
 
