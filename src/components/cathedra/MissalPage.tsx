@@ -18,6 +18,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
+import { usePrayers } from '@/hooks/usePrayers';
 import { flattenSectionToBlocks } from '@/prayer-engine/loadPrayerHierarchy';
 import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import { useMissalProper } from '@/hooks/useMissalProper';
@@ -102,6 +103,11 @@ const MissalPage: React.FC = () => {
   );
 
   const { hierarchy, loading: ordinarioLoading } = usePrayerHierarchy('missa-ordinario');
+  const { prayers } = usePrayers();
+  const prayer = useMemo(
+    () => prayers.find((p) => p.slug === 'missa-ordinario') ?? null,
+    [prayers],
+  );
   const { liturgy } = useDailyLiturgy(selectedDate);
   const { proper, isLoading: properLoading } = useMissalProper(isoDate, liturgy);
   const { wrapperStyle: typographyStyle } = useReaderTypography();
@@ -147,15 +153,11 @@ const MissalPage: React.FC = () => {
     (isToday ? '' : `&d=${isoDate}`);
 
   // ─────────────────────────────── Reader ativo ───────────────────────────────
-  if (view === 'ordinario' && activeSection && hierarchy) {
+  if (view === 'ordinario' && activeSection && hierarchy && prayer) {
     const pageTitle = `${activeSection.title} · Missal Romano`;
     const pageDescription = activeSection.subtitle
       ? `${activeSection.title} (${activeSection.subtitle}) — parte do Ordo Missæ.`
       : `${activeSection.title} — parte do Ordo Missæ.`;
-
-    // Sintetiza um objeto Prayer mínimo a partir da hierarquia carregada
-    // (usePrayerHierarchy retorna o prayer no root, mas mantemos guarda).
-    const prayer = hierarchy.prayer;
 
     return (
       <>
