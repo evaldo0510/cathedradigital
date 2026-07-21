@@ -45,6 +45,12 @@ export interface PrayerBlock {
   sectionId?: string;
   /** Prayer Engine v2 — tipo original do bloco no banco (ave_maria, gloria, etc.). */
   sourceType?: string;
+  /** Grupo ritual (ex.: 'eucharistic-prayer', 'penitential-act'). */
+  optionGroup?: string;
+  /** Chave estável da variante dentro do grupo (ex.: 'ep2', 'A'). */
+  optionKey?: string;
+  /** Rótulo curto para o seletor (ex.: 'II · Comum'). */
+  optionLabel?: string;
 }
 
 export type PrayerCurationStatus = 'stub' | 'partial' | 'complete';
