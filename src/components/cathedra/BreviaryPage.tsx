@@ -145,6 +145,7 @@ const BreviaryPage: React.FC = () => {
 
   const hourParam = searchParams.get('h');
   const selectedHour: HourSlug | null = isHour(hourParam) ? hourParam : null;
+  const dayMode = searchParams.get('mode') === 'day';
 
   const suggested = useMemo(() => suggestedHourFor(new Date()), []);
 
@@ -153,6 +154,21 @@ const BreviaryPage: React.FC = () => {
       const next = new URLSearchParams(searchParams);
       if (h) next.set('h', h);
       else next.delete('h');
+      next.delete('mode');
+      setSearchParams(next, { replace: false });
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const setDayMode = useCallback(
+    (on: boolean) => {
+      const next = new URLSearchParams(searchParams);
+      if (on) {
+        next.set('mode', 'day');
+        next.delete('h');
+      } else {
+        next.delete('mode');
+      }
       setSearchParams(next, { replace: false });
     },
     [searchParams, setSearchParams],
