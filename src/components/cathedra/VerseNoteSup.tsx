@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+import { useMemo } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface VerseNoteSupProps {
