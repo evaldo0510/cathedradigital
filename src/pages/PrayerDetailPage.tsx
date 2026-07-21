@@ -167,40 +167,43 @@ const PrayerDetailPage: React.FC = () => {
           {/* Controles do modo de leitura */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {fromLiturgia && (
-              <Link
-                to="/liturgia"
-                className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 px-3 py-1.5 font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-                Voltar para Liturgia
-              </Link>
+              <Button asChild variant="pill" size="pill">
+                <Link to="/liturgia">
+                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+                  Voltar para Liturgia
+                </Link>
+              </Button>
             )}
             <div
               role="group"
               aria-label="Tamanho da fonte"
               className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/40 p-1"
             >
-              <button
+              <Button
                 type="button"
+                variant="pill"
+                size="pill-sm"
                 onClick={() => changeFont(-1)}
                 disabled={fontIndex === 0}
                 aria-label="Diminuir fonte"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
               >
                 <Minus className="h-3.5 w-3.5" aria-hidden />
-              </button>
+              </Button>
               <span className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant" aria-live="polite">
                 {fontKey.toUpperCase()}
               </span>
-              <button
+              <Button
                 type="button"
+                variant="pill"
+                size="pill-sm"
                 onClick={() => changeFont(1)}
                 disabled={fontIndex === FONT_STEPS.length - 1}
                 aria-label="Aumentar fonte"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-stitch-on-surface-variant transition-colors hover:bg-stitch-secondary/10 hover:text-stitch-on-surface disabled:opacity-40"
+                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-              </button>
+              </Button>
             </div>
           </div>
         </header>
