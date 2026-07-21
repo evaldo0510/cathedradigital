@@ -52,6 +52,8 @@ const meditationSchema = z.object({
 
 type Meditation = z.infer<typeof meditationSchema>;
 
+type MeditationFailureCode = "ai_credits_exhausted" | "ai_rate_limited" | "ai_unavailable";
+
 interface RequestBody {
   iso_date: string;
   readings: {
@@ -148,6 +150,45 @@ function hashReadings(r: RequestBody["readings"]): Promise<string> {
   return sha1(norm);
 }
 
+function buildFallbackMeditation(body: RequestBody, code: MeditationFailureCode, message: string) {
+  const gospelRef = body.readings.evangelho?.referencia ?? "Evangelho do dia";
+  const celebration = body.readings.liturgia || body.readings.dia || "Liturgia do dia";
+  const psalmRefrain = body.readings.salmo?.refrao;
+
+  const output: Meditation = {
+    theme: celebration,
+    reading_key: psalmRefrain
+      ? `Permaneça com o refrão do salmo: “${psalmRefrain}”. Ele oferece uma chave segura de oração enquanto a meditação editorial não está disponível.`
+      : `Permaneça com ${gospelRef}. Leia o texto lentamente e identifique uma palavra para levar à oração do dia.`,
+    fathers: [],
+    catechism: [],
+    magisterium: [],
+    logos: {
+      observe: `Leia novamente ${gospelRef} e acolha o gesto central de Cristo sem pressa.`,
+      reflect: "Pergunte onde essa Palavra toca sua vida concreta hoje, especialmente nas decisões pequenas.",
+      pray: "Fale com o Senhor a partir da frase que mais permaneceu no coração.",
+      live: "Escolha um ato simples de fidelidade antes do fim do dia.",
+    },
+    final_prayer: "Senhor, guardai em mim a vossa Palavra. Dai-me um coração atento, humilde e perseverante, para que a liturgia deste dia se torne vida concreta. Amém.",
+    church_history: null,
+    action_of_day: "Releia o Evangelho em silêncio por três minutos e pratique uma obra concreta de caridade.",
+  };
+
+  return {
+    iso_date: body.iso_date,
+    readings_hash: null,
+    prompt_hash: null,
+    version: EDITORIAL_VERSION,
+    ...output,
+    model: null,
+    provider: "local-fallback",
+    generated_at: new Date().toISOString(),
+    fallback: true,
+    fallback_code: code,
+    fallback_message: message,
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -231,20 +272,28 @@ Deno.serve(async (req) => {
     const msg = (err as { message?: string })?.message ?? "unknown";
     const isRateLimit = /rate limit|429|too many requests/i.test(msg);
     const isPayment = /402|payment required|credit|insufficient|quota/i.test(msg);
-    const status = isRateLimit ? 429 : isPayment ? 402 : 503;
+    const code: MeditationFailureCode = isPayment
+      ? "ai_credits_exhausted"
+      : isRateLimit
+      ? "ai_rate_limited"
+      : "ai_unavailable";
     const friendly = isPayment
       ? "Os créditos de IA da plataforma se esgotaram. A meditação editorial voltará assim que forem recarregados."
       : isRateLimit
       ? "Muitas requisições simultâneas ao gerador de meditação. Tente novamente em instantes."
       : "Não foi possível gerar a meditação editorial neste momento.";
+    const fallback = buildFallbackMeditation(body, code, friendly);
+
     return new Response(
       JSON.stringify({
-        error: "AI generation failed",
-        code: isPayment ? "ai_credits_exhausted" : isRateLimit ? "ai_rate_limited" : "ai_unavailable",
+        cached: false,
+        fallback: true,
+        code,
         message: friendly,
         detail: msg,
+        meditation: fallback,
       }),
-      { status, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 
