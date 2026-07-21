@@ -77,7 +77,7 @@ const SlotCard: React.FC<SlotCardProps> = ({
       variant === 'antiphon' &&
         'border-primary/30 bg-primary/[0.03] italic',
       variant === 'preface' &&
-        'border-liturgical-gold/40 bg-liturgical-gold/[0.04]',
+        'border-[color:hsl(var(--rule-gold))]/40 bg-[color:hsl(var(--rule-gold))]/[0.04]',
       variant === 'default' && 'border-border/60 bg-card/60',
     )}
   >
@@ -291,9 +291,9 @@ const PrayerBlockView: React.FC<{ block: PrayerBlock; index: number }> = ({ bloc
         <aside
           role="note"
           aria-label="Rubrica litúrgica"
-          className="mt-spacing-sm border-l-2 border-liturgical-red pl-spacing-sm"
+          className="mt-spacing-sm border-l-2 border-destructive pl-spacing-sm"
         >
-          <p className="font-serif italic text-premium-sm leading-relaxed text-liturgical-red">
+          <p className="font-serif italic text-premium-sm leading-relaxed text-destructive">
             {block.rubric}
           </p>
         </aside>
@@ -435,7 +435,7 @@ export const MissaContinuousReader: React.FC<Props> = ({
         className="sticky top-0 z-30 -mx-spacing-sm h-1 bg-transparent"
       >
         <div
-          className="h-full bg-gradient-to-r from-primary via-liturgical-gold to-primary transition-[width] duration-300"
+          className="h-full bg-gradient-to-r from-primary via-[color:hsl(var(--rule-gold))] to-primary transition-[width] duration-300"
           style={{ width: `${progress * 100}%` }}
         />
       </div>
@@ -468,8 +468,8 @@ export const MissaContinuousReader: React.FC<Props> = ({
             className="mt-spacing-xl scroll-mt-16"
           >
             <header className="mb-spacing-md text-center">
-              <div className="mx-auto w-24 h-px bg-gradient-to-r from-transparent via-liturgical-gold to-transparent mb-spacing-sm" />
-              <p className="font-stitch-body text-[11px] font-black uppercase tracking-[0.35em] text-liturgical-gold">
+              <div className="mx-auto w-24 h-px bg-gradient-to-r from-transparent via-[color:hsl(var(--rule-gold))] to-transparent mb-spacing-sm" />
+              <p className="font-stitch-body text-[11px] font-black uppercase tracking-[0.35em] text-[color:hsl(var(--rule-gold))]">
                 {section.subtitle || section.title}
               </p>
               <h3
