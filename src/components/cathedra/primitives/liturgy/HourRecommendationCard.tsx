@@ -25,10 +25,16 @@ const COLOR_DOT: Record<string, string> = {
   'liturgical-black': 'bg-neutral-900',
 };
 
+export type LiturgyStatus = 'ready' | 'loading' | 'unavailable' | 'offline';
+
 interface Props {
   recommendation: RecommendedHour | null;
   /** Liturgia do dia selecionado — usada para mostrar celebração e cor. */
   liturgy?: DailyLiturgy | null;
+  /** Estado da liturgia para renderizar fallback quando não estiver `ready`. */
+  liturgyStatus?: LiturgyStatus;
+  /** Callback opcional (retry) exibido no fallback de `unavailable`. */
+  onRetryLiturgy?: () => void;
 }
 
 function formatUntil(minutes: number): string {
@@ -40,20 +46,70 @@ function formatUntil(minutes: number): string {
   return `em ${h}h${String(m).padStart(2, '0')}`;
 }
 
-export const HourRecommendationCard: React.FC<Props> = ({ recommendation, liturgy }) => {
+export const HourRecommendationCard: React.FC<Props> = ({
+  recommendation,
+  liturgy,
+  liturgyStatus = 'ready',
+  onRetryLiturgy,
+}) => {
   if (!recommendation) return null;
-  const { prayer, reason, minutesUntilOpen, windowLabel, isoDate, isToday } = recommendation;
+  const { prayer, reason, minutesUntilOpen, windowLabel, isoDate, isToday, timeZone } = recommendation;
   const href = isToday ? `/oracao/${prayer.slug}` : `/oracao/${prayer.slug}?d=${isoDate}`;
   const isNow = reason === 'in-window' && isToday;
 
   const colorClass = liturgy?.colorToken ? COLOR_DOT[liturgy.colorToken] : undefined;
   const celebration = liturgy?.liturgia?.trim() || liturgy?.dia?.trim() || null;
+  const hasLiturgy = liturgyStatus === 'ready' && !!celebration;
 
   const eyebrow = isNow
     ? 'Hora recomendada · agora'
     : isToday
       ? `Próxima hora · ${formatUntil(minutesUntilOpen)}`
       : `Hora sugerida para ${isoDate}`;
+
+  // Fallback quando o Próprio do Dia não está disponível para (data, TZ).
+  // Renderizado inline em vez de esconder o card, para não bloquear a Hora
+  // canônica — o Ordinário do Breviário funciona mesmo sem o Próprio.
+  const fallbackNode = !hasLiturgy ? (
+    <p
+      className="mt-spacing-2xs flex flex-wrap items-center gap-spacing-2xs font-stitch-body text-premium-xs italic text-muted-foreground"
+      role={liturgyStatus === 'unavailable' ? 'alert' : undefined}
+    >
+      {liturgyStatus === 'loading' && (
+        <>
+          <Icons.Loader className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <span>Carregando liturgia do dia…</span>
+        </>
+      )}
+      {liturgyStatus === 'offline' && (
+        <>
+          <Icons.WifiOff className="h-3 w-3" aria-hidden="true" />
+          <span>Sem conexão · Próprio do Dia indisponível para {isoDate}.</span>
+        </>
+      )}
+      {liturgyStatus === 'unavailable' && (
+        <>
+          <Icons.AlertCircle className="h-3 w-3" aria-hidden="true" />
+          <span>Sem Próprio do Dia para {isoDate} ({timeZone}). O Ordinário permanece disponível.</span>
+          {onRetryLiturgy && (
+            <button
+              type="button"
+              onClick={onRetryLiturgy}
+              className="underline decoration-dotted underline-offset-2 hover:text-foreground"
+            >
+              tentar novamente
+            </button>
+          )}
+        </>
+      )}
+      {liturgyStatus === 'ready' && !celebration && (
+        <>
+          <Icons.AlertCircle className="h-3 w-3" aria-hidden="true" />
+          <span>Liturgia sem celebração informada para {isoDate}.</span>
+        </>
+      )}
+    </p>
+  ) : null;
 
   return (
     <section
@@ -76,7 +132,7 @@ export const HourRecommendationCard: React.FC<Props> = ({ recommendation, liturg
               {prayer.subtitle}
             </p>
           )}
-          {celebration && (
+          {hasLiturgy && (
             <p className="mt-spacing-2xs flex items-center gap-spacing-2xs font-stitch-body text-premium-xs text-muted-foreground">
               {colorClass && (
                 <span
@@ -87,6 +143,7 @@ export const HourRecommendationCard: React.FC<Props> = ({ recommendation, liturg
               <span className="truncate">{celebration}</span>
             </p>
           )}
+          {fallbackNode}
           <p className="mt-spacing-2xs font-stitch-body text-premium-xs uppercase tracking-widest text-muted-foreground">
             Janela · {windowLabel}
           </p>
