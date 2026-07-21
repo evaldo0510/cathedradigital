@@ -32,6 +32,8 @@ export interface PrayerBlock {
   meditation?: string;
   /** Fruto espiritual proposto (Rosário). */
   fruit?: string;
+  /** Rubrica litúrgica (instrução de execução, ex.: Missal). */
+  rubric?: string;
   /** Repetições sugeridas (ex.: 10 Ave-Marias). */
   repeat?: { label: string; count: number; text?: string };
   refs?: PrayerBlockRef;

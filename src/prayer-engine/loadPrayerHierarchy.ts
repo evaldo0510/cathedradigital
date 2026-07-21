@@ -142,6 +142,7 @@ export function flattenSectionToBlocks(
       const gospelRef =
         typeof content.gospel_ref === 'string' ? content.gospel_ref : mystery.gospel_ref ?? undefined;
       const fruit = typeof content.fruit === 'string' ? content.fruit : undefined;
+      const rubric = typeof content.rubric === 'string' ? content.rubric : undefined;
 
       const block: PrayerBlock = {
         id: b.id,
@@ -158,6 +159,7 @@ export function flattenSectionToBlocks(
               ? text ?? mystery.meditation ?? undefined
               : undefined,
         fruit: b.type === 'meditation' ? fruit ?? mystery.fruit ?? undefined : undefined,
+        rubric,
         refs: gospelRef && b.type === 'announce' ? { bible: [gospelRef] } : undefined,
         mysteryId: mystery.id,
         sectionId: section.id,
