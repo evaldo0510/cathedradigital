@@ -965,6 +965,8 @@ export const PrayerEngineReader: React.FC<Props> = ({
         backHref="/oracao"
       />
       {heroContent ?? content}
+      {/* Sentinela invisível para IntersectionObserver do prefetch adaptativo. */}
+      <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
       <MobileBottomNav />
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>
