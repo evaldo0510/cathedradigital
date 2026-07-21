@@ -2,6 +2,9 @@ import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
+import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
+import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
+
 
 
 interface Litany {
