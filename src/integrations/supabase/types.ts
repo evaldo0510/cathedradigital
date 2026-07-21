@@ -4074,6 +4074,7 @@ export type Database = {
           is_published: boolean
           kicker: string | null
           meditation: string | null
+          meta: Json
           order_index: number
           related_bible: string[]
           related_catechism: number[]
@@ -4106,6 +4107,7 @@ export type Database = {
           is_published?: boolean
           kicker?: string | null
           meditation?: string | null
+          meta?: Json
           order_index?: number
           related_bible?: string[]
           related_catechism?: number[]
@@ -4138,6 +4140,7 @@ export type Database = {
           is_published?: boolean
           kicker?: string | null
           meditation?: string | null
+          meta?: Json
           order_index?: number
           related_bible?: string[]
           related_catechism?: number[]

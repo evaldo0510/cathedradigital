@@ -38,6 +38,8 @@ export interface Prayer {
   content_status?: 'stub' | 'partial' | 'complete';
   /** Sprint 1.0 — v2 = hierarquia em prayer_sections/mysteries/blocks. */
   engine_version?: number;
+  /** Sprint 3 — metadados extensíveis (hour_slug, window_start/end, etc.). */
+  meta?: Record<string, unknown>;
 }
 
 export const PRAYER_CATEGORY_LABEL: Record<PrayerCategory, string> = {
