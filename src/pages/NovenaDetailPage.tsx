@@ -11,16 +11,35 @@ import { toast } from 'sonner';
 
 const NovenaDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const novena = slug ? getNovenaBySlug(slug) : undefined;
 
   const [progress, setProgress] = useState<NovenaProgress | null>(null);
 
   useEffect(() => {
     if (!slug) return;
+    const requestedDay = Number(searchParams.get('dia'));
+    const total = novena?.days.length ?? 9;
+    const clampDay = (d: number) => Math.min(Math.max(1, d), total);
     const existing = loadProgress(slug);
-    if (existing) setProgress(existing);
-    else setProgress({ startedAt: new Date().toISOString(), completedDays: [], currentDay: 1 });
+    if (existing) {
+      if (requestedDay && requestedDay !== existing.currentDay) {
+        const next = { ...existing, currentDay: clampDay(requestedDay) };
+        setProgress(next);
+        saveProgress(slug, next);
+      } else {
+        setProgress(existing);
+      }
+    } else {
+      setProgress({
+        startedAt: new Date().toISOString(),
+        completedDays: [],
+        currentDay: requestedDay ? clampDay(requestedDay) : 1,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
+
 
   const currentDay = progress?.currentDay ?? 1;
   const completedSet = useMemo(() => new Set(progress?.completedDays ?? []), [progress]);
