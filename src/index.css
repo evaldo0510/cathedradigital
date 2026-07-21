@@ -1083,6 +1083,12 @@ header:hover {
 [data-portal-oracao] {
   position: relative;
   isolation: isolate;
+  /* Defaults (tema church) — sobrescritos por [data-portal-theme] */
+  --portal-halo: var(--rule-gold);
+  --portal-halo-opacity: 0.10;
+  --portal-tint-top: transparent;
+  --portal-tint-bottom: transparent;
+  --portal-fil-opacity: 0.9;
 }
 [data-portal-oracao]::before {
   content: '';
@@ -1091,12 +1097,23 @@ header:hover {
   height: 420px;
   background: radial-gradient(
     ellipse at 50% 0%,
-    hsl(var(--rule-gold) / 0.10),
-    hsl(var(--rule-gold) / 0.04) 35%,
+    hsl(var(--portal-halo) / var(--portal-halo-opacity)),
+    hsl(var(--portal-halo) / calc(var(--portal-halo-opacity) * 0.4)) 35%,
     transparent 70%
   );
   pointer-events: none;
   z-index: -1;
+}
+[data-portal-oracao]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--portal-tint-top), var(--portal-tint-bottom));
+  pointer-events: none;
+  z-index: -1;
+}
+[data-portal-oracao] [data-editorial-hero-universal] [role='separator'] {
+  opacity: var(--portal-fil-opacity);
 }
 [data-portal-oracao] > * {
   animation: portal-rise 620ms cubic-bezier(0.19, 1, 0.22, 1) both;
@@ -1108,18 +1125,56 @@ header:hover {
 [data-portal-oracao] > *:nth-child(5) { animation-delay: 500ms; }
 [data-portal-oracao] > *:nth-child(6) { animation-delay: 580ms; }
 
+/* ── Temas do Portal ── */
+[data-portal-theme='church'] {
+  --portal-halo: var(--rule-gold);
+  --portal-halo-opacity: 0.10;
+  --portal-fil-opacity: 0.9;
+}
+[data-portal-theme='passion'] {
+  --portal-halo: 340 40% 45%;
+  --portal-halo-opacity: 0.14;
+  --portal-tint-top: hsl(340 30% 30% / 0.06);
+  --portal-tint-bottom: hsl(280 25% 20% / 0.04);
+  --portal-fil-opacity: 0.55;
+}
+[data-portal-theme='dawn'] {
+  --portal-halo: 32 80% 65%;
+  --portal-halo-opacity: 0.16;
+  --portal-tint-top: hsl(32 60% 70% / 0.05);
+  --portal-fil-opacity: 0.8;
+}
+[data-portal-theme='noon'] {
+  --portal-halo: 48 90% 72%;
+  --portal-halo-opacity: 0.18;
+  --portal-tint-top: hsl(48 70% 80% / 0.04);
+  --portal-fil-opacity: 0.85;
+}
+[data-portal-theme='sunset'] {
+  --portal-halo: 18 75% 55%;
+  --portal-halo-opacity: 0.16;
+  --portal-tint-top: hsl(18 60% 45% / 0.06);
+  --portal-tint-bottom: hsl(340 40% 30% / 0.04);
+  --portal-fil-opacity: 0.75;
+}
+[data-portal-theme='night'] {
+  --portal-halo: 220 60% 75%;
+  --portal-halo-opacity: 0.10;
+  --portal-tint-top: hsl(220 40% 20% / 0.05);
+  --portal-fil-opacity: 0.5;
+}
+
 @keyframes portal-rise {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Limiar: overlay entre Portal e Reader */
 [data-portal-threshold] {
   position: fixed;
   inset: 0;
   z-index: 100;
   background:
-    radial-gradient(ellipse at 50% 30%, hsl(var(--rule-gold) / 0.12), transparent 60%),
+    radial-gradient(ellipse at 50% 30%, hsl(var(--portal-halo, var(--rule-gold)) / 0.14), transparent 60%),
     hsl(var(--background));
   animation: portal-threshold 780ms cubic-bezier(0.4, 0, 0.2, 1) both;
   pointer-events: all;
@@ -1134,7 +1189,9 @@ header:hover {
 @media (prefers-reduced-motion: reduce) {
   [data-space] { transition: none !important; animation: none !important; }
   [data-portal-oracao] > * { animation: none !important; }
-  [data-portal-oracao]::before { display: none; }
+  [data-portal-oracao]::before,
+  [data-portal-oracao]::after { display: none; }
   [data-portal-threshold] { animation: none !important; opacity: 0; display: none; }
 }
+
 
