@@ -110,7 +110,11 @@ const PrayerPortal: React.FC<Props> = ({
   onEnter,
   backHref = '/oracao',
   backLabel = '← Voltar ao Livro de Orações',
+  theme = 'church',
+  accentIcon,
 }) => {
+  const AccentIcon = accentIcon ?? Sparkles;
+
   const [searchParams, setSearchParams] = useSearchParams();
   const session = usePrayerEngineSession(prayer.id);
   const [mode, setMode] = React.useState<PrayerMode>(() => {
