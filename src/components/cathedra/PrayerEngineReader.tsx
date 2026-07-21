@@ -65,6 +65,21 @@ interface Props {
    * Liturgia das Horas junto ao Ordinário no BreviaryPage.
    */
   prefaceSlot?: React.ReactNode;
+  /**
+   * Chave estável de contexto para persistir cursor granular por sub-recurso
+   * (ex.: `breviary:laudes:2026-07-21`). Quando presente:
+   *   - lê `localStorage[prayer-cursor:<key>]` e restaura a posição na entrada;
+   *   - grava o `current_block_uuid` a cada mudança de cursor.
+   * Funciona 100% offline (localStorage) e sobrevive a refresh.
+   */
+  contextKey?: string;
+  /**
+   * Deep link `?b=<blockId>` — quando informado, sobrescreve o cursor
+   * persistido para esta única navegação.
+   */
+  initialBlockId?: string | null;
+  /** Estilo aplicado ao wrapper editorial — usado para tipografia/densidade. */
+  contentStyle?: React.CSSProperties;
 }
 
 const KIND_LABEL: Record<string, string> = {
@@ -94,6 +109,9 @@ export const PrayerEngineReader: React.FC<Props> = ({
   activeSection,
   kicker,
   prefaceSlot,
+  contextKey,
+  initialBlockId,
+  contentStyle,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
 
