@@ -749,13 +749,24 @@ const MagisteriumViewer: React.FC = () => {
       <div className="mb-spacing-lg">
         <NexusBubbles />
       </div>
-      <ReaderContinuation
-        context={{
-          kind: 'magisterium',
-          id: id ?? undefined,
-          meta: { theme: content.title },
-        }}
-      />
+      {(() => {
+        const nexus = resolveMagisteriumAutoNexus({
+          docId: id ?? 'documento',
+          title: content.title,
+          themes: [content.title],
+        });
+        return (
+          <ReaderContinuation
+            context={{
+              kind: 'magisterium',
+              id: id ?? undefined,
+              graphNodeId: nexus.selfId ?? undefined,
+              meta: { theme: content.title },
+            }}
+            suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+          />
+        );
+      })()}
 
       <div className="mt-spacing-4xl pt-spacing-3xl border-t border-primary/5 flex flex-col items-center gap-spacing-2xl">
         <div className="text-center space-y-spacing-md">
