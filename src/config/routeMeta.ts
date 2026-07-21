@@ -172,6 +172,30 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Conheça cada módulo da Cathedra: Bíblia, Catecismo, Liturgia, Oração, Comunidade e Formação.',
   },
 
+  // ─── Comunidade ───────────────────────────────────────────────
+  '/community': {
+    title: 'Comunidade Cathedra — Discussão Católica',
+    description:
+      'Comunidade de fiéis para discussão de fé, doutrina, oração e caminhada espiritual à luz da Tradição católica.',
+  },
+  '/partners': {
+    title: 'Parceiros Cathedra — Comunidades e Apostolados',
+    description:
+      'Parceiros institucionais da Cathedra: dioceses, paróquias, comunidades e apostolados que caminham conosco.',
+  },
+
+  // ─── Monetização / Planos ─────────────────────────────────────
+  '/pricing': {
+    title: 'Planos Cathedra PRO — Assinatura e Preços',
+    description:
+      'Compare os planos Cathedra PRO: recursos premium, IA teológica ampliada, orações contemplativas e apoio ao apostolado.',
+  },
+  '/upgrade': {
+    title: 'Upgrade para Cathedra PRO — Torne-se Assinante',
+    description:
+      'Ative o Cathedra PRO e desbloqueie leitura sem limites, IA teológica ampliada, orações premium e apoio ao apostolado.',
+  },
+
   // ─── Rotas privadas / não indexáveis ──────────────────────────
   '/auth': { title: 'Entrar — Cathedra', description: 'Acesse sua conta na Cathedra Digital.', noindex: true },
   '/reset-password': { title: 'Redefinir senha — Cathedra', description: 'Redefina sua senha.', noindex: true },
@@ -180,6 +204,29 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/profile/favorites': { title: 'Favoritos — Cathedra', description: 'Seus conteúdos favoritos.', noindex: true },
   '/spiritual-profile': { title: 'Perfil espiritual — Cathedra', description: 'Sua caminhada espiritual.', noindex: true },
   '/diario': { title: 'Diário espiritual — Cathedra', description: 'Registre sua vida interior.', noindex: true },
+  '/favorites': { title: 'Favoritos — Cathedra', description: 'Seus conteúdos favoritos.', noindex: true },
+  '/achievements': { title: 'Conquistas — Cathedra', description: 'Suas conquistas na caminhada.', noindex: true },
+  '/checkout': { title: 'Checkout — Cathedra', description: 'Finalize sua assinatura.', noindex: true },
+  '/checkout/result': { title: 'Checkout — Resultado', description: 'Resultado do pagamento.', noindex: true },
+  '/transactions': { title: 'Minhas transações — Cathedra', description: 'Histórico de pagamentos.', noindex: true },
+
+  // ─── Aliases (Navigate replace) — noindex + canonical ao destino
+  '/home': { title: 'Cathedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
+  '/biblia': { title: 'Bíblia — Cathedra', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
+  '/catecismo': { title: 'Catecismo — Cathedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
+  '/magisterio': { title: 'Magistério — Cathedra', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
+  '/search': { title: 'Buscar — Cathedra', description: 'Alias para /buscar.', noindex: true, canonicalPath: '/buscar' },
+  '/chat': { title: 'Logos — Cathedra', description: 'Alias para /logos.', noindex: true, canonicalPath: '/logos' },
+  '/login': { title: 'Entrar — Cathedra', description: 'Alias para /auth.', noindex: true, canonicalPath: '/auth' },
+  '/dashboard': { title: 'Hoje — Cathedra', description: 'Alias para /hoje.', noindex: true, canonicalPath: '/hoje' },
+  '/glossary': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/az-faith': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/encyclopedia': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/rosary': { title: 'Rosário — Cathedra', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
+  '/ladainhas': { title: 'Ladainhas — Cathedra', description: 'Alias para /litanies.', noindex: true, canonicalPath: '/litanies' },
+  '/contemplacao': { title: 'Contemplação — Cathedra', description: 'Alias para /contemplatio.', noindex: true, canonicalPath: '/contemplatio' },
+  '/confession': { title: 'Exame de consciência — Cathedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
+  '/confissao': { title: 'Exame de consciência — Cathedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
 
   // Legacy / dev — noindex
   '/legacy-home': { title: 'Cathedra', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
@@ -191,6 +238,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/biblioteca-legacy': { title: 'Biblioteca (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/biblioteca' },
   '/rosary-legacy': { title: 'Rosário (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/oracao/rosario' },
 };
+
 
 /**
  * Padrões dinâmicos: aplicados quando o path não bate com uma chave estática.
