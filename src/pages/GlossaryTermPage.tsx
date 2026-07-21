@@ -623,6 +623,8 @@ const GlossaryTermPage: React.FC = () => {
     return raw.filter((k): k is SectionKey => k in SECTION_META);
   }, [term]);
 
+  const autoNexus = useMemo(() => (term ? resolveAutoNexus(term) : null), [term]);
+
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -665,7 +667,6 @@ const GlossaryTermPage: React.FC = () => {
   const canonical =
     typeof window !== 'undefined' ? `${window.location.origin}/glossario/${term.slug}` : undefined;
   const heroSubtitle = term.short_definition?.trim() || term.definition.slice(0, 220);
-  const autoNexus = useMemo(() => resolveAutoNexus(term), [term]);
   const description = (term.short_definition ?? term.definition ?? '').slice(0, 155);
   const favorited = isFavorite('glossary', term.term);
 

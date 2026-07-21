@@ -51,6 +51,7 @@ const BY_SLUG: Record<string, ResolvedPortalTheme> = {
   'te-deum': { theme: 'church', accentIcon: Flame, quote: { text: 'A vós, ó Deus, louvamos.', ref: 'Te Deum' } },
   'veni-creator': { theme: 'church', accentIcon: Flame, quote: { text: 'Vinde, Espírito Criador.', ref: 'Hymnarium Romanum' } },
   'exame-de-consciencia': { theme: 'passion', accentIcon: Cross, quote: { text: 'Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar.', ref: '1Jo 1,9' } },
+  'oracao-pela-sabedoria': { theme: 'church', accentIcon: Sparkles, quote: { text: 'Enviai-a dos vossos santos céus, para que trabalhe comigo.', ref: 'Sb 9,10' } },
 
   // — Missal Romano —
   'missa-ordinario': { theme: 'church', accentIcon: Church, quote: { text: 'Fazei isto em memória de mim.', ref: 'Lc 22,19' } },
