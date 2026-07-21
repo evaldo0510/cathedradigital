@@ -1,9 +1,19 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { NOVENAS, type Novena } from '@/data/novenas';
 import {
   downloadJson,
@@ -11,8 +21,12 @@ import {
   findContinueTarget,
   importProgressPayload,
   loadAllProgress,
+  type ImportMode,
 } from '@/lib/novenas/progress';
 import { toast } from 'sonner';
+
+const FILTERS_STORAGE_KEY = 'cathedra:novenas:filters';
+
 
 const CATEGORY_LABEL: Record<string, string> = {
   'Jesus Cristo': 'Cristo',
