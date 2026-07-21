@@ -24,6 +24,7 @@ import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerM
 import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
 import PrayerFavoriteButton from '@/components/prayer/PrayerFavoriteButton';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 
 const VIA_METHOD_LABEL: Record<'landing' | 'journey', string> = {
@@ -602,17 +603,26 @@ const ViaCrucis: React.FC = () => {
       </div>
 
       {/* Continuidade — só na última estação, fora do modo contemplativo. */}
-      {isLast && !contemplative && (
-        <div className="mt-spacing-2xl" data-testid="via-sacra-continuation">
-          <ReaderContinuation
-            context={{
-              kind: 'prayer',
-              id: 'via-sacra',
-              meta: { prayerCategory: 'via-sacra' },
-            }}
-          />
-        </div>
-      )}
+      {isLast && !contemplative && (() => {
+        const nexus = resolvePrayerAutoNexus({
+          slug: 'via-sacra',
+          title: 'Via Sacra',
+          category: 'via-sacra',
+        });
+        return (
+          <div className="mt-spacing-2xl" data-testid="via-sacra-continuation">
+            <ReaderContinuation
+              context={{
+                kind: 'prayer',
+                id: 'via-sacra',
+                graphNodeId: nexus.selfId ?? undefined,
+                meta: { prayerCategory: 'via-sacra' },
+              }}
+              suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+            />
+          </div>
+        );
+      })()}
     </div>
   );
 };

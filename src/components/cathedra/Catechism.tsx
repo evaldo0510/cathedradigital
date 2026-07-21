@@ -49,6 +49,7 @@ import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 
@@ -252,13 +253,8 @@ const CatechismContent: React.FC<{
           <div className="mt-spacing-md">
             <NexusBubbles />
           </div>
-          <ReaderContinuation
-            context={{
-              kind: 'catechism',
-              id: String(paragraph),
-              meta: { paragraph, nextParagraph: paragraph + 1 },
-            }}
-          />
+          <CatechismReaderContinuation paragraph={paragraph} excerpt={data?.content ?? null} />
+
         </div>
       )}
     </div>
@@ -713,3 +709,21 @@ const Catechism: React.FC = memo(() => {
 });
 
 export default Catechism;
+
+const CatechismReaderContinuation: React.FC<{ paragraph: number; excerpt: string | null }> = ({ paragraph, excerpt }) => {
+  const nexus = React.useMemo(
+    () => resolveCatechismAutoNexus({ paragraph, excerpt }),
+    [paragraph, excerpt],
+  );
+  return (
+    <ReaderContinuation
+      context={{
+        kind: 'catechism',
+        id: String(paragraph),
+        graphNodeId: nexus.selfId ?? undefined,
+        meta: { paragraph, nextParagraph: paragraph + 1 },
+      }}
+      suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+    />
+  );
+};
