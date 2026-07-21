@@ -11,6 +11,11 @@ import { initRuntimeErrorLogger } from "./lib/runtimeErrorLogger";
 // Auto-registra todos os ReaderAutoNexus (Bíblia, CIC, Magistério, Santo,
 // Liturgia, Oração, Glossário, Jornada) no ReaderAutoNexusRegistry.
 import "./core/knowledge/adapters/registry";
+// Registra o LiturgyProvider oficial (fonte única de leituras do dia).
+import { registerLiturgyProvider } from "./core/liturgy/LiturgyProvider";
+import { RailwayInAdiutoriumProvider } from "./core/liturgy/providers/RailwayInAdiutoriumProvider";
+
+registerLiturgyProvider(new RailwayInAdiutoriumProvider());
 
 initLiturgicalPrefetchGuard();
 initSentry();
