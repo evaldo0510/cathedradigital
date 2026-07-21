@@ -123,23 +123,25 @@ const SilenceTimer: React.FC<Props> = ({ suggestedSeconds = 20, forcedSeconds })
       aria-label={`Silêncio guiado de ${duration} segundos`}
       className="my-6 flex flex-col items-center gap-4 rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/30 px-6 py-6"
     >
-      <div className="flex flex-wrap justify-center gap-1.5">
-        {OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => setDuration(opt.value)}
-            className={cn(
-              'rounded-full border px-2.5 py-1 font-stitch-body text-[11px] transition',
-              opt.value === duration
-                ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-on-surface'
-                : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary/60',
-            )}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
+      {!isForced && (
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setDuration(opt.value)}
+              className={cn(
+                'rounded-full border px-2.5 py-1 font-stitch-body text-[11px] transition',
+                opt.value === duration
+                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-on-surface'
+                  : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary/60',
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div
         className={cn(
