@@ -22,6 +22,7 @@ import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';

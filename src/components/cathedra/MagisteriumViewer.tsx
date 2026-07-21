@@ -30,6 +30,7 @@ import { NoteEditModal } from './NoteEditModal';
 import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
 import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveMagisteriumAutoNexus } from '@/core/knowledge/adapters/magisteriumAutoNexus';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 

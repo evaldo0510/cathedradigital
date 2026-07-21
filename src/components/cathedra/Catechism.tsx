@@ -49,6 +49,7 @@ import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 
@@ -252,13 +253,8 @@ const CatechismContent: React.FC<{
           <div className="mt-spacing-md">
             <NexusBubbles />
           </div>
-          <ReaderContinuation
-            context={{
-              kind: 'catechism',
-              id: String(paragraph),
-              meta: { paragraph, nextParagraph: paragraph + 1 },
-            }}
-          />
+          <CatechismReaderContinuation paragraph={paragraph} excerpt={data?.content ?? null} />
+
         </div>
       )}
     </div>
