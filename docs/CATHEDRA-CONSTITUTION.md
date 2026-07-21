@@ -18,6 +18,15 @@ Regras imutáveis do Cathedra. Toda skill, todo agente, todo PR cita este docume
 12. **Hooks sempre antes de qualquer `return`.** Ordem estável é lei de React; violação = bug de render.
 13. **Segurança inegociável.** RLS ativa, `GRANT` explícito para toda tabela pública, segredos via `secrets--add_secret`, nunca `VITE_*` sensível.
 
+## Governança dos Skills
+
+1. Nenhum skill é ativado sem validação prática em tarefa real.
+2. No máximo **um novo skill ativo por sprint**.
+3. Todo skill deve ser compatível com esta Constituição.
+4. Em conflito entre skills, **prevalece a Constituição**.
+5. Skills nunca contrariam o Design System, o Knowledge Engine ou o Prayer Engine.
+6. Ciclo obrigatório por skill: Draft → Ativação → 1 tarefa real → Ajustes → Homologação → próximo skill.
+
 ## Como citar
 
 Nas skills e em decisões arquiteturais: "Ver `docs/CATHEDRA-CONSTITUTION.md`, artigo N."
@@ -25,3 +34,5 @@ Nas skills e em decisões arquiteturais: "Ver `docs/CATHEDRA-CONSTITUTION.md`, a
 ## Versionamento
 
 - v1 — 2026-07-21. Fase 1 (Fundação) validada com Oração pela Sabedoria + Esperança Cristã.
+- v1.1 — 2026-07-21. Adicionada seção Governança dos Skills. Liturgy Expert ativado como primeiro skill da Fase 2.
+
