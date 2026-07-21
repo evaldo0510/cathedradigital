@@ -45,10 +45,10 @@ export function useCollectionProgress(collectionId: string | undefined) {
         collection_id: collectionId,
         item_id: params.itemId,
         status: params.status,
-        last_position: params.lastPosition ?? {},
+        last_position: (params.lastPosition ?? {}) as never,
         started_at: params.status !== 'not_started' ? now : null,
         completed_at: params.status === 'completed' ? now : null,
-      };
+      } as never;
       const { data, error } = await supabase
         .from('collection_progress')
         .upsert(payload, { onConflict: 'user_id,item_id' })
