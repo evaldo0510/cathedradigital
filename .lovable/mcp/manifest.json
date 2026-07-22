@@ -12,10 +12,36 @@
   "mcp": {
     "server": {
       "name": "cathedra-mcp",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "title": "Cathedra Digital MCP"
     },
     "tools": [
+      {
+        "name": "semantic_search",
+        "title": "Busca Unificada Cathedra",
+        "description": "Busca simultânea em Glossário, Santos, Orações, Coleções e Jornadas por um termo. Retorna top N por categoria.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit_per_bucket": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
       {
         "name": "search_glossary",
         "title": "Buscar no Glossário",
@@ -115,6 +141,61 @@
         "outputSchema": null
       },
       {
+        "name": "search_patristics",
+        "title": "Buscar Patrística (Padres da Igreja)",
+        "description": "Busca conteúdo patrístico: santos categorizados como Padres da Igreja e verbetes com referências patrísticas (fathers_refs).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_prayers",
+        "title": "Buscar Orações",
+        "description": "Busca orações católicas publicadas por termo (título, subtítulo, categoria, tags). Retorna metadados leves; use `get_prayer` para o conteúdo completo.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
         "name": "get_prayer",
         "title": "Obter Oração",
         "description": "Retorna uma oração católica publicada pelo slug (ex.: 'pai-nosso', 'ave-maria', 'rosario'), incluindo conteúdo, meditação, blocos e referências. Dados públicos.",
@@ -138,9 +219,61 @@
         "outputSchema": null
       },
       {
+        "name": "search_collections",
+        "title": "Buscar Coleções Editoriais",
+        "description": "Busca Coleções editoriais publicadas por termo (título, subtítulo, categoria). Use `get_collection` para itens completos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
         "name": "get_collection",
         "title": "Obter Coleção",
         "description": "Retorna uma Coleção editorial publicada da Cathedra pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_journey",
+        "title": "Obter Jornada",
+        "description": "Retorna uma Jornada publicada da Cathedra pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conteúdo, reflection, exercise, closing).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -215,6 +348,167 @@
               "type": "number"
             }
           }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_magisterium",
+        "title": "Buscar Magistério",
+        "description": "Busca conteúdo do Magistério: parágrafos do Catecismo (CIC) e verbetes com referências magisteriais (encíclicas, concílios).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "daily_liturgy",
+        "title": "Missal do Dia",
+        "description": "Retorna os prórios do Missal para uma data (ISO YYYY-MM-DD, default = hoje): celebração, cor litúrgica, antífonas, coleta e oração pós-comunhão.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "daily_office",
+        "title": "Ofício Divino (Liturgia das Horas)",
+        "description": "Retorna uma hora canônica da Liturgia das Horas para uma data: antífonas, salmodia, leitura breve, responsório, cântico evangélico e intercessões.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "hour": {
+              "type": "string",
+              "enum": [
+                "invitatorio",
+                "laudes",
+                "hora-media",
+                "terca",
+                "sexta",
+                "noa",
+                "vesperas",
+                "completas",
+                "oficio-leituras"
+              ]
+            },
+            "date": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_nexus",
+        "title": "Buscar no Nexus Theologicus",
+        "description": "Busca relações do Knowledge Graph Nexus por nó (kind+ref). Retorna arestas de entrada e saída (verbetes, santos, orações, versículos, CIC).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "glossary",
+                "saint",
+                "prayer",
+                "bible",
+                "catechism",
+                "collection",
+                "journey"
+              ]
+            },
+            "ref": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "kind",
+            "ref"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "related_content",
+        "title": "Conteúdo Relacionado",
+        "description": "Dado um nó (kind+ref), retorna conteúdos relacionados hidratados: verbetes, santos, orações e coleções alcançados via Nexus.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "glossary",
+                "saint",
+                "prayer",
+                "bible",
+                "catechism",
+                "collection",
+                "journey"
+              ]
+            },
+            "ref": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "kind",
+            "ref"
+          ]
         },
         "outputSchema": null
       },
