@@ -1428,9 +1428,9 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                       </body>
                                     `);
                                   }}>
-                                    <img src={res.screenshot} className="w-full h-24 object-cover rounded-lg border border-primary/10" alt="Screenshot" />
+                                    <img src={res.screenshot} className="w-full h-24 object-cover rounded-lg border border-primary/10" alt={`Captura da página original: ${res.title ?? 'documento litúrgico'}`} />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                                      <span className="text-[8px] text-white font-bold uppercase">Ver Screenshot Original</span>
+                                      <span className="text-[8px] text-white font-bold uppercase">Ver captura original</span>
                                     </div>
                                   </div>
                                 )}

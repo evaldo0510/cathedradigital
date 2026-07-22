@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense, useContext, useMemo } from "react";
+import { useEffect, lazy, Suspense, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,20 +20,8 @@ const Index = () => {
   const { user, profile, loading, authenticated } = useAuth();
   const { t } = useContext(LangContext);
 
-  const websiteSchema = useMemo(() => ({
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Cathedra Digital",
-    "url": "https://www.cathedradigital.com.br",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://www.cathedradigital.com.br/buscar?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  }), []);
+  // WebSite schema is emitted centrally by <SEOHead />; avoid duplicating here.
+
 
 
   // Removed automatic admin redirect to ensure everyone starts at the contemplative home experience
@@ -60,7 +48,7 @@ const Index = () => {
       {/* Unified header managed by App.tsx */}
       
       <SEOHead
-        title="Portal Premium de Espiritualidade & Teologia"
+        title="Espiritualidade & Teologia"
         description="Bíblia Sagrada, Catecismo, Magistério e IA teológica em uma plataforma contemplativa para a vida espiritual moderna."
         path="/"
         keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, cathedra digital"
@@ -69,9 +57,6 @@ const Index = () => {
           { name: "Home", path: "/" }
         ]}
       />
-      <script type="application/ld+json">
-        {JSON.stringify(websiteSchema)}
-      </script>
 
       {!authenticated && <HeroSection onStart={handleStart} />}
       
