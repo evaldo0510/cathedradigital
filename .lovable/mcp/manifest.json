@@ -12,7 +12,7 @@
   "mcp": {
     "server": {
       "name": "cathedra-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Cathedra Digital MCP"
     },
     "tools": [
@@ -62,6 +62,159 @@
           "required": [
             "slug"
           ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_saints",
+        "title": "Buscar Santos",
+        "description": "Busca santos católicos por nome, título ou patronato no acervo público da Cathedra. Retorna id, nome, título, data festiva e categoria.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_saint",
+        "title": "Obter Santo",
+        "description": "Retorna o registro completo de um santo pelo id (slug) — biografia, virtudes, oração, referências bíblicas, catecismo e citações. Dados públicos da Cathedra.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_prayer",
+        "title": "Obter Oração",
+        "description": "Retorna uma oração católica publicada pelo slug (ex.: 'pai-nosso', 'ave-maria', 'rosario'), incluindo conteúdo, meditação, blocos e referências. Dados públicos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_collection",
+        "title": "Obter Coleção",
+        "description": "Retorna uma Coleção editorial publicada da Cathedra pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "catechism_paragraph",
+        "title": "Parágrafo do Catecismo",
+        "description": "Retorna um ou mais parágrafos do Catecismo da Igreja Católica (CIC) pelo número. Aceita um único parágrafo ou intervalo (ex.: 232 a 267).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "paragraph": {
+              "type": "number"
+            },
+            "to": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "paragraph"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "bible_reference",
+        "title": "Referência Bíblica",
+        "description": "Retorna o texto dos versículos de uma referência bíblica (ex.: 'Jo 3,16', 'Mt 5,3-12'). Alternativamente aceita abreviação do livro + capítulo + versículo(s). Dados públicos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "reference": {
+              "type": "string"
+            },
+            "book": {
+              "type": "string"
+            },
+            "chapter": {
+              "type": "number"
+            },
+            "verse": {
+              "type": "number"
+            },
+            "verse_end": {
+              "type": "number"
+            }
+          }
         },
         "outputSchema": null
       },

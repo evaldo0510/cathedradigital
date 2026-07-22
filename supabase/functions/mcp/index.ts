@@ -123,18 +123,235 @@ var create_journal_entry_default = defineTool4({
   }
 });
 
+// src/lib/mcp/tools/search-saints.ts
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient5 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z5 } from "npm:zod@^3.25.76";
+var search_saints_default = defineTool5({
+  name: "search_saints",
+  title: "Buscar Santos",
+  description: "Busca santos cat\xF3licos por nome, t\xEDtulo ou patronato no acervo p\xFAblico da Cathedra. Retorna id, nome, t\xEDtulo, data festiva e categoria.",
+  inputSchema: {
+    query: z5.string().trim().min(1).max(120).describe("Nome, t\xEDtulo ou fragmento (ex.: 'Agostinho', 'padroeiro dos advogados')."),
+    limit: z5.number().int().min(1).max(30).optional().describe("M\xE1ximo de resultados (default 10).")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, limit }) => {
+    const sb = createClient5(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const q = query.replace(/[%_]/g, "\\$&");
+    const { data, error } = await sb.from("saints").select("id,name,title,feast_day,category,century,patronages").or(`name.ilike.%${q}%,title.ilike.%${q}%,patronages.cs.{${q}}`).limit(limit ?? 10);
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { results: data ?? [] }
+    };
+  }
+});
+
+// src/lib/mcp/tools/get-saint.ts
+import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient6 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z6 } from "npm:zod@^3.25.76";
+var get_saint_default = defineTool6({
+  name: "get_saint",
+  title: "Obter Santo",
+  description: "Retorna o registro completo de um santo pelo id (slug) \u2014 biografia, virtudes, ora\xE7\xE3o, refer\xEAncias b\xEDblicas, catecismo e cita\xE7\xF5es. Dados p\xFAblicos da Cathedra.",
+  inputSchema: {
+    id: z6.string().trim().min(1).max(120).describe("Identificador do santo (ex.: 'agostinho-de-hipona').")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ id }) => {
+    const sb = createClient6(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await sb.from("saints").select(
+      "id,name,title,feast_day,feast_month,feast_day_num,born,died,century,category,bio,full_bio,historical_context,virtues,patronages,quotes,quotes_rich,works,prayer,bible_refs,catechism_refs,timeline,miracles,iconography,curiosities,spiritual_practice"
+    ).eq("id", id).maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data) return { content: [{ type: "text", text: `Santo '${id}' n\xE3o encontrado.` }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { saint: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/get-prayer.ts
+import { defineTool as defineTool7 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient7 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z7 } from "npm:zod@^3.25.76";
+var get_prayer_default = defineTool7({
+  name: "get_prayer",
+  title: "Obter Ora\xE7\xE3o",
+  description: "Retorna uma ora\xE7\xE3o cat\xF3lica publicada pelo slug (ex.: 'pai-nosso', 'ave-maria', 'rosario'), incluindo conte\xFAdo, medita\xE7\xE3o, blocos e refer\xEAncias. Dados p\xFAblicos.",
+  inputSchema: {
+    slug: z7.string().trim().min(1).max(120).describe("Slug da ora\xE7\xE3o (ex.: 'pai-nosso').")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ slug }) => {
+    const sb = createClient7(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await sb.from("prayers").select(
+      "slug,title,subtitle,kicker,category,content,content_latin,explanation,meditation,estimated_seconds,duration_min,tags,source_ref,related_bible,related_catechism,related_saints,related_glossary,bible_refs,catechism_refs,blocks,engine_version"
+    ).eq("slug", slug).eq("is_published", true).maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data) return { content: [{ type: "text", text: `Ora\xE7\xE3o '${slug}' n\xE3o encontrada ou n\xE3o publicada.` }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { prayer: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/get-collection.ts
+import { defineTool as defineTool8 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient8 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z8 } from "npm:zod@^3.25.76";
+var get_collection_default = defineTool8({
+  name: "get_collection",
+  title: "Obter Cole\xE7\xE3o",
+  description: "Retorna uma Cole\xE7\xE3o editorial publicada da Cathedra pelo slug, com seus itens ordenados (verbetes, santos, ora\xE7\xF5es, jornadas). Dados p\xFAblicos.",
+  inputSchema: {
+    slug: z8.string().trim().min(1).max(120).describe("Slug da cole\xE7\xE3o (ex.: 'sete-sacramentos').")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ slug }) => {
+    const sb = createClient8(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data: collection, error } = await sb.from("collections").select("id,slug,title,subtitle,description,cover,category,featured,nexus_refs,metadata").eq("slug", slug).eq("status", "published").maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!collection) return { content: [{ type: "text", text: `Cole\xE7\xE3o '${slug}' n\xE3o encontrada ou n\xE3o publicada.` }], isError: true };
+    const { data: items } = await sb.from("collection_items").select("*").eq("collection_id", collection.id).order("order_index", { ascending: true });
+    const payload = { ...collection, items: items ?? [] };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: { collection: payload }
+    };
+  }
+});
+
+// src/lib/mcp/tools/catechism-paragraph.ts
+import { defineTool as defineTool9 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient9 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z9 } from "npm:zod@^3.25.76";
+var catechism_paragraph_default = defineTool9({
+  name: "catechism_paragraph",
+  title: "Par\xE1grafo do Catecismo",
+  description: "Retorna um ou mais par\xE1grafos do Catecismo da Igreja Cat\xF3lica (CIC) pelo n\xFAmero. Aceita um \xFAnico par\xE1grafo ou intervalo (ex.: 232 a 267).",
+  inputSchema: {
+    paragraph: z9.number().int().min(1).max(2865).describe("N\xFAmero do par\xE1grafo do CIC (1\u20132865)."),
+    to: z9.number().int().min(1).max(2865).optional().describe("Fim opcional de intervalo (inclusivo). M\xE1x. 30 par\xE1grafos por chamada.")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ paragraph, to }) => {
+    const from = paragraph;
+    const end = to ?? paragraph;
+    if (end < from) return { content: [{ type: "text", text: "'to' deve ser >= 'paragraph'." }], isError: true };
+    if (end - from + 1 > 30) return { content: [{ type: "text", text: "Intervalo m\xE1ximo: 30 par\xE1grafos." }], isError: true };
+    const sb = createClient9(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await sb.from("catechism_official").select("paragraph,content,texto_base,explicacao,interpretacao_profunda,aplicacao_pratica,reflexao_final").gte("paragraph", from).lte("paragraph", end).order("paragraph", { ascending: true });
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data || data.length === 0) return { content: [{ type: "text", text: `Nenhum par\xE1grafo encontrado no intervalo ${from}\u2013${end}.` }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { paragraphs: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/bible-reference.ts
+import { defineTool as defineTool10 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient10 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z10 } from "npm:zod@^3.25.76";
+var bible_reference_default = defineTool10({
+  name: "bible_reference",
+  title: "Refer\xEAncia B\xEDblica",
+  description: "Retorna o texto dos vers\xEDculos de uma refer\xEAncia b\xEDblica (ex.: 'Jo 3,16', 'Mt 5,3-12'). Alternativamente aceita abrevia\xE7\xE3o do livro + cap\xEDtulo + vers\xEDculo(s). Dados p\xFAblicos.",
+  inputSchema: {
+    reference: z10.string().trim().min(1).max(60).optional().describe("Refer\xEAncia no formato PT-BR: 'Jo 3,16' ou 'Mt 5,3-12'."),
+    book: z10.string().trim().min(1).max(10).optional().describe("Abrevia\xE7\xE3o do livro (ex.: 'Jo', 'Mt', 'Gn')."),
+    chapter: z10.number().int().min(1).max(200).optional(),
+    verse: z10.number().int().min(1).max(200).optional(),
+    verse_end: z10.number().int().min(1).max(200).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async (input) => {
+    let book = input.book;
+    let chapter = input.chapter;
+    let verse = input.verse;
+    let verseEnd = input.verse_end;
+    if (input.reference) {
+      const m = input.reference.match(/^\s*([1-3]?\s?[A-Za-zÀ-ÿ]+)\s*(\d+)\s*[,:]\s*(\d+)(?:\s*[-–]\s*(\d+))?\s*$/);
+      if (!m) return { content: [{ type: "text", text: `Formato n\xE3o reconhecido: '${input.reference}'. Use 'Jo 3,16' ou 'Mt 5,3-12'.` }], isError: true };
+      book = m[1].replace(/\s+/g, "");
+      chapter = Number(m[2]);
+      verse = Number(m[3]);
+      verseEnd = m[4] ? Number(m[4]) : void 0;
+    }
+    if (!book || !chapter || !verse) {
+      return { content: [{ type: "text", text: "Forne\xE7a `reference` ou `book`+`chapter`+`verse`." }], isError: true };
+    }
+    const vEnd = verseEnd ?? verse;
+    if (vEnd < verse) return { content: [{ type: "text", text: "verse_end deve ser >= verse." }], isError: true };
+    if (vEnd - verse + 1 > 50) return { content: [{ type: "text", text: "M\xE1ximo de 50 vers\xEDculos por chamada." }], isError: true };
+    const sb = createClient10(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data: bookRow, error: bookErr } = await sb.from("bible_books").select("id,name,abbrev,testament").ilike("abbrev", book).maybeSingle();
+    if (bookErr) return { content: [{ type: "text", text: bookErr.message }], isError: true };
+    if (!bookRow) return { content: [{ type: "text", text: `Livro '${book}' n\xE3o encontrado. Use abrevia\xE7\xF5es can\xF4nicas (Gn, Ex, Sl, Mt, Mc, Lc, Jo, Rm, Ap\u2026).` }], isError: true };
+    const { data: chapterRow, error: chErr } = await sb.from("bible_chapters").select("id,number").eq("book_id", bookRow.id).eq("number", chapter).limit(1).maybeSingle();
+    if (chErr) return { content: [{ type: "text", text: chErr.message }], isError: true };
+    if (!chapterRow) return { content: [{ type: "text", text: `${bookRow.name} n\xE3o tem cap\xEDtulo ${chapter}.` }], isError: true };
+    const { data: verses, error: vErr } = await sb.from("bible_verses").select("number,text,translation_id").eq("chapter_id", chapterRow.id).gte("number", verse).lte("number", vEnd).order("number", { ascending: true });
+    if (vErr) return { content: [{ type: "text", text: vErr.message }], isError: true };
+    if (!verses || verses.length === 0) return { content: [{ type: "text", text: `Sem vers\xEDculos em ${bookRow.abbrev} ${chapter},${verse}${verseEnd ? `-${verseEnd}` : ""}.` }], isError: true };
+    const primaryTranslation = verses[0].translation_id;
+    const filtered = verses.filter((v) => v.translation_id === primaryTranslation);
+    const label = `${bookRow.abbrev} ${chapter},${verse}${verseEnd && verseEnd !== verse ? `-${verseEnd}` : ""}`;
+    const textJoined = filtered.map((v) => `${v.number} ${v.text}`).join("\n");
+    return {
+      content: [{ type: "text", text: `${label}
+${textJoined}` }],
+      structuredContent: {
+        reference: label,
+        book: bookRow,
+        chapter,
+        verses: filtered.map((v) => ({ number: v.number, text: v.text }))
+      }
+    };
+  }
+});
+
 // src/lib/mcp/index.ts
 var projectRef = "gpwrpmoniglarqwfyryp";
 var mcp_default = defineMcp({
   name: "cathedra-mcp",
   title: "Cathedra Digital MCP",
-  version: "0.1.0",
-  instructions: "Ferramentas MCP da Cathedra Digital \u2014 plataforma cat\xF3lica de estudo e vida interior. Use `search_glossary` e `get_glossary_term` para consultar o Gloss\xE1rio Teol\xF3gico publicado. Use `list_journal_entries` e `create_journal_entry` para ler/gravar o Di\xE1rio Espiritual do usu\xE1rio autenticado.",
+  version: "0.2.0",
+  instructions: "Ferramentas MCP da Cathedra Digital \u2014 plataforma cat\xF3lica de estudo e vida interior. Gloss\xE1rio Teol\xF3gico: `search_glossary`, `get_glossary_term`. Santos: `search_saints`, `get_saint`. Ora\xE7\xF5es: `get_prayer`. Cole\xE7\xF5es editoriais: `get_collection`. C\xE2nones: `catechism_paragraph` (CIC), `bible_reference` (B\xEDblia em PT-BR). Di\xE1rio Espiritual do usu\xE1rio autenticado: `list_journal_entries`, `create_journal_entry`.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
   }),
-  tools: [search_glossary_default, get_glossary_term_default, list_journal_entries_default, create_journal_entry_default]
+  tools: [
+    search_glossary_default,
+    get_glossary_term_default,
+    search_saints_default,
+    get_saint_default,
+    get_prayer_default,
+    get_collection_default,
+    catechism_paragraph_default,
+    bible_reference_default,
+    list_journal_entries_default,
+    create_journal_entry_default
+  ]
 });
 
 // lovable-mcp-supabase-entry.ts
