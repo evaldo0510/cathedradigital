@@ -60,7 +60,7 @@ const Index = () => {
       {/* Unified header managed by App.tsx */}
       
       <SEOHead
-        title="Portal Premium de Espiritualidade & Teologia"
+        title="Espiritualidade & Teologia"
         description="Bíblia Sagrada, Catecismo, Magistério e IA teológica em uma plataforma contemplativa para a vida espiritual moderna."
         path="/"
         keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, cathedra digital"
