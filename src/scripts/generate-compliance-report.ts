@@ -168,20 +168,20 @@ const { reports, lastBuild, history } = runAudit();
 
 // Schema Validation for compliance-config.yml
 const ThresholdSchema = z.number({
-  invalid_type_error: "Deve ser um número",
-  required_error: "Threshold é obrigatório"
+  error: (issue) =>
+    issue.input === undefined ? "Threshold é obrigatório" : "Deve ser um número",
 }).min(0, "O valor mínimo é 0").max(100, "O valor máximo é 100");
 
-const PageThresholdsSchema = z.object({
+const PageThresholdsSchema = z.strictObject({
   layout: ThresholdSchema.optional(),
   cards: ThresholdSchema.optional(),
   theme: ThresholdSchema.optional(),
   tokens: ThresholdSchema.optional(),
   overall: ThresholdSchema.optional(),
-}).strict("Propriedade não permitida na configuração de página");
+});
 
-const ComplianceConfigSchema = z.object({
-  compliance_thresholds: z.object({
+const ComplianceConfigSchema = z.strictObject({
+  compliance_thresholds: z.strictObject({
     overall: ThresholdSchema,
     pages: z.record(z.string(), PageThresholdsSchema).optional(),
     metrics: z.object({
@@ -204,8 +204,8 @@ const ComplianceConfigSchema = z.object({
         });
       }
     }),
-  }).strict("Propriedade não permitida em compliance_thresholds"),
-}).strict("O arquivo de configuração deve conter apenas a chave 'compliance_thresholds'");
+  }),
+});
 
 // Load and Validate Config
 let config: z.infer<typeof ComplianceConfigSchema> = { compliance_thresholds: { overall: 80 } };
