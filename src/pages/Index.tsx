@@ -20,20 +20,8 @@ const Index = () => {
   const { user, profile, loading, authenticated } = useAuth();
   const { t } = useContext(LangContext);
 
-  const websiteSchema = useMemo(() => ({
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Cathedra Digital",
-    "url": "https://www.cathedradigital.com.br",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://www.cathedradigital.com.br/buscar?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  }), []);
+  // WebSite schema is emitted centrally by <SEOHead />; avoid duplicating here.
+
 
 
   // Removed automatic admin redirect to ensure everyone starts at the contemplative home experience
