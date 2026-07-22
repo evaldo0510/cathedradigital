@@ -71,7 +71,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         password,
         options: {
           data: { name },
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
         },
       });
       if (signUpError) {
@@ -83,8 +83,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           setSuccess('Conta criada com sucesso! Você já pode fazer login.');
           setMode('login');
         } else {
-          if (onSignupSuccess) onSignupSuccess();
-          else onSuccess();
+          handleSignupSuccess();
         }
       }
     } else {
@@ -92,7 +91,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       if (signInError) {
         setError(signInError.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : signInError.message);
       } else {
-        onSuccess();
+        handleSuccess();
       }
     }
     setLoading(false);
@@ -329,14 +328,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                 setLoading(true);
                 setError('');
                 const result = await lovable.auth.signInWithOAuth('google', {
-                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
+                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
                   extraParams: { prompt: 'select_account' },
                 });
                 if (result.error) {
                   console.error('Google Auth Error:', result.error);
                   setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
                 } else if (!result.redirected) {
-                  onSuccess();
+                  handleSuccess();
                 }
                 setLoading(false);
               }}
@@ -369,13 +368,13 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                 setLoading(true);
                 setError('');
                 const result = await lovable.auth.signInWithOAuth('apple', {
-                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
+                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
                 });
                 if (result.error) {
                   console.error('Apple Auth Error:', result.error);
                   setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
                 } else if (!result.redirected) {
-                  onSuccess();
+                  handleSuccess();
                 }
                 setLoading(false);
               }}
