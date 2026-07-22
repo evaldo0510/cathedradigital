@@ -72,6 +72,7 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
+const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
