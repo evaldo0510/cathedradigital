@@ -12,8 +12,7 @@ type OAuthApi = {
 };
 
 function oauth(): OAuthApi {
-  // @ts-expect-error — namespace beta ainda não tipado no SDK
-  return supabase.auth.oauth as OAuthApi;
+  return (supabase.auth as unknown as { oauth: OAuthApi }).oauth;
 }
 
 export default function OAuthConsent() {
