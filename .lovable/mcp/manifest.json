@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://gpwrpmoniglarqwfyryp.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "cathedra-mcp",
+      "version": "0.1.0",
+      "title": "Cathedra Digital MCP"
+    },
+    "tools": [
+      {
+        "name": "search_glossary",
+        "title": "Buscar no Glossário",
+        "description": "Busca verbetes publicados do Glossário Teológico da Cathedra por termo. Retorna slug, título e definição curta. Público (dados publicados).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_glossary_term",
+        "title": "Obter verbete do Glossário",
+        "description": "Retorna o verbete completo do Glossário Teológico pelo slug: definição, interpretação profunda, etimologia, contexto e referências. Público (apenas verbetes publicados).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_journal_entries",
+        "title": "Listar entradas do Diário Espiritual",
+        "description": "Lista as entradas do Diário Espiritual do usuário autenticado, mais recentes primeiro. Requer login (OAuth).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "number"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_journal_entry",
+        "title": "Criar entrada no Diário Espiritual",
+        "description": "Cria uma nova entrada no Diário Espiritual do usuário autenticado. Requer login (OAuth).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "mood": {
+              "type": "string"
+            },
+            "entry_date": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "content"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
