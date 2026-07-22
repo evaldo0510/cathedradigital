@@ -524,6 +524,7 @@ const AppLayout: React.FC = () => {
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
