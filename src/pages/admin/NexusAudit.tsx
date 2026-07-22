@@ -150,6 +150,16 @@ export default function NexusAuditPage() {
         </p>
       </header>
 
+      <div className="mb-6 rounded-lg border border-border bg-muted/30 p-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Cathedra Index · Integridade Editorial</p>
+          <p className="mt-1 text-sm">Verbetes marcados como <code>complete</code> mas com campos vitais vazios (interpretação profunda, bibliografia, FAQ) ou densidade Nexus abaixo do Ouro.</p>
+        </div>
+        <a href="/admin/editorial-integrity" className="shrink-0 text-sm font-medium underline underline-offset-4">
+          Abrir painel →
+        </a>
+      </div>
+
       {loading && <p className="text-sm text-muted-foreground">Carregando…</p>}
       {error && <p className="text-sm text-destructive">Erro: {error}</p>}
 
