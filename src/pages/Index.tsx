@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense, useContext, useMemo } from "react";
+import { useEffect, lazy, Suspense, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
