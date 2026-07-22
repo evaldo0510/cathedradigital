@@ -120,7 +120,7 @@ const declaredPaths = new Set<string>();
 let m: RegExpExecArray | null;
 while ((m = routeRegex.exec(appSource)) !== null) {
   const raw = m[1];
-  if (raw === '*' || raw.includes('/lovable')) continue;
+  if (raw === '*' || raw.includes('/lovable') || raw.includes('/.lovable')) continue;
   declaredPaths.add(raw);
 }
 
