@@ -329,26 +329,413 @@ ${textJoined}` }],
   }
 });
 
+// src/lib/mcp/tools/search-nexus.ts
+import { defineTool as defineTool11 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient11 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z11 } from "npm:zod@^3.25.76";
+var search_nexus_default = defineTool11({
+  name: "search_nexus",
+  title: "Buscar no Nexus Theologicus",
+  description: "Busca rela\xE7\xF5es do Knowledge Graph Nexus por n\xF3 (kind+ref). Retorna arestas de entrada e sa\xEDda (verbetes, santos, ora\xE7\xF5es, vers\xEDculos, CIC).",
+  inputSchema: {
+    kind: z11.enum(["glossary", "saint", "prayer", "bible", "catechism", "collection", "journey"]).describe("Tipo do n\xF3 (kind)."),
+    ref: z11.string().trim().min(1).max(200).describe("Identificador do n\xF3 (slug, id, refer\xEAncia)."),
+    limit: z11.number().int().min(1).max(100).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ kind, ref, limit }) => {
+    const sb = createClient11(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const max = limit ?? 50;
+    const [outgoing, incoming] = await Promise.all([
+      sb.from("nexus_relations").select("relation_type,source_kind,source_ref,target_kind,target_ref,note,confidence,attributed_to").eq("source_kind", kind).eq("source_ref", ref).limit(max),
+      sb.from("nexus_relations").select("relation_type,source_kind,source_ref,target_kind,target_ref,note,confidence,attributed_to").eq("target_kind", kind).eq("target_ref", ref).limit(max)
+    ]);
+    if (outgoing.error) return { content: [{ type: "text", text: outgoing.error.message }], isError: true };
+    if (incoming.error) return { content: [{ type: "text", text: incoming.error.message }], isError: true };
+    const payload = {
+      node: { kind, ref },
+      outgoing: outgoing.data ?? [],
+      incoming: incoming.data ?? [],
+      total: (outgoing.data?.length ?? 0) + (incoming.data?.length ?? 0)
+    };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
+// src/lib/mcp/tools/related-content.ts
+import { defineTool as defineTool12 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient12 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z12 } from "npm:zod@^3.25.76";
+var related_content_default = defineTool12({
+  name: "related_content",
+  title: "Conte\xFAdo Relacionado",
+  description: "Dado um n\xF3 (kind+ref), retorna conte\xFAdos relacionados hidratados: verbetes, santos, ora\xE7\xF5es e cole\xE7\xF5es alcan\xE7ados via Nexus.",
+  inputSchema: {
+    kind: z12.enum(["glossary", "saint", "prayer", "bible", "catechism", "collection", "journey"]),
+    ref: z12.string().trim().min(1).max(200),
+    limit: z12.number().int().min(1).max(50).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ kind, ref, limit }) => {
+    const sb = createClient12(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const max = limit ?? 20;
+    const [outgoing, incoming] = await Promise.all([
+      sb.from("nexus_relations").select("relation_type,target_kind,target_ref,note").eq("source_kind", kind).eq("source_ref", ref).limit(max),
+      sb.from("nexus_relations").select("relation_type,source_kind,source_ref,note").eq("target_kind", kind).eq("target_ref", ref).limit(max)
+    ]);
+    const nodes = /* @__PURE__ */ new Map();
+    for (const r of outgoing.data ?? []) {
+      const k = `${r.target_kind}:${r.target_ref}`;
+      if (!nodes.has(k)) nodes.set(k, { kind: r.target_kind, ref: r.target_ref, via: [] });
+      nodes.get(k).via.push(`\u2192 ${r.relation_type}`);
+    }
+    for (const r of incoming.data ?? []) {
+      const k = `${r.source_kind}:${r.source_ref}`;
+      if (!nodes.has(k)) nodes.set(k, { kind: r.source_kind, ref: r.source_ref, via: [] });
+      nodes.get(k).via.push(`\u2190 ${r.relation_type}`);
+    }
+    const bucket = (kk) => [...nodes.values()].filter((n) => n.kind === kk);
+    const glossarySlugs = bucket("glossary").map((n) => n.ref);
+    const saintIds = bucket("saint").map((n) => n.ref);
+    const prayerSlugs = bucket("prayer").map((n) => n.ref);
+    const collectionSlugs = bucket("collection").map((n) => n.ref);
+    const [g, s, p, c] = await Promise.all([
+      glossarySlugs.length ? sb.from("glossary").select("slug,term,short_definition,category").in("slug", glossarySlugs).eq("status", "published") : Promise.resolve({ data: [] }),
+      saintIds.length ? sb.from("saints").select("id,name,title,feast_day,bio,category").in("id", saintIds) : Promise.resolve({ data: [] }),
+      prayerSlugs.length ? sb.from("prayers").select("slug,title,category,kicker").in("slug", prayerSlugs).eq("is_published", true) : Promise.resolve({ data: [] }),
+      collectionSlugs.length ? sb.from("collections").select("slug,title,subtitle,category").in("slug", collectionSlugs).eq("status", "published") : Promise.resolve({ data: [] })
+    ]);
+    const payload = {
+      node: { kind, ref },
+      glossary: g.data ?? [],
+      saints: s.data ?? [],
+      prayers: p.data ?? [],
+      collections: c.data ?? [],
+      bible: bucket("bible"),
+      catechism: bucket("catechism"),
+      relations_meta: [...nodes.values()]
+    };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
+// src/lib/mcp/tools/daily-liturgy.ts
+import { defineTool as defineTool13 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient13 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z13 } from "npm:zod@^3.25.76";
+var daily_liturgy_default = defineTool13({
+  name: "daily_liturgy",
+  title: "Missal do Dia",
+  description: "Retorna os pr\xF3rios do Missal para uma data (ISO YYYY-MM-DD, default = hoje): celebra\xE7\xE3o, cor lit\xFArgica, ant\xEDfonas, coleta e ora\xE7\xE3o p\xF3s-comunh\xE3o.",
+  inputSchema: {
+    date: z13.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Data ISO (YYYY-MM-DD). Default: hoje (UTC).")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ date }) => {
+    const iso = date ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+    const sb = createClient13(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await sb.from("missal_propers").select(
+      "iso_date,celebration_title,liturgical_color,entrance_antiphon,collect,offertory_prayer,preface_suggestion,communion_antiphon,prayer_after_communion,season_note"
+    ).eq("iso_date", iso).maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data)
+      return {
+        content: [{ type: "text", text: `Missal n\xE3o dispon\xEDvel para ${iso}. Acesse /liturgia/missa para gerar.` }],
+        isError: true
+      };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { missal: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/daily-office.ts
+import { defineTool as defineTool14 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient14 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z14 } from "npm:zod@^3.25.76";
+var HOURS = [
+  "invitatorio",
+  "laudes",
+  "hora-media",
+  "terca",
+  "sexta",
+  "noa",
+  "vesperas",
+  "completas",
+  "oficio-leituras"
+];
+var daily_office_default = defineTool14({
+  name: "daily_office",
+  title: "Of\xEDcio Divino (Liturgia das Horas)",
+  description: "Retorna uma hora can\xF4nica da Liturgia das Horas para uma data: ant\xEDfonas, salmodia, leitura breve, respons\xF3rio, c\xE2ntico evang\xE9lico e intercess\xF5es.",
+  inputSchema: {
+    hour: z14.enum(HOURS).describe("Hora can\xF4nica (ex.: 'laudes', 'vesperas', 'completas')."),
+    date: z14.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Data ISO (YYYY-MM-DD). Default: hoje (UTC).")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ hour, date }) => {
+    const iso = date ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+    const sb = createClient14(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await sb.from("liturgy_hours_offices").select(
+      "iso_date,hour_slug,antiphon_opening,psalmody,brief_reading_ref,brief_reading_text,responsory,gospel_canticle,intercessions,concluding_prayer,season_note"
+    ).eq("iso_date", iso).eq("hour_slug", hour).maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data)
+      return {
+        content: [{ type: "text", text: `Of\xEDcio '${hour}' n\xE3o dispon\xEDvel para ${iso}. Gere em /liturgia/horas.` }],
+        isError: true
+      };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { office: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/search-prayers.ts
+import { defineTool as defineTool15 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient15 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z15 } from "npm:zod@^3.25.76";
+var search_prayers_default = defineTool15({
+  name: "search_prayers",
+  title: "Buscar Ora\xE7\xF5es",
+  description: "Busca ora\xE7\xF5es cat\xF3licas publicadas por termo (t\xEDtulo, subt\xEDtulo, categoria, tags). Retorna metadados leves; use `get_prayer` para o conte\xFAdo completo.",
+  inputSchema: {
+    query: z15.string().trim().min(1).max(120),
+    category: z15.string().trim().max(60).optional().describe("Filtrar por categoria (ex.: 'rosario', 'novena')."),
+    limit: z15.number().int().min(1).max(30).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, category, limit }) => {
+    const sb = createClient15(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    let q = sb.from("prayers").select("slug,title,subtitle,kicker,category,duration_min,estimated_seconds,tags").eq("is_published", true).or(`title.ilike.%${query}%,subtitle.ilike.%${query}%,kicker.ilike.%${query}%,category.ilike.%${query}%`).limit(limit ?? 15);
+    if (category) q = q.eq("category", category);
+    const { data, error } = await q;
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { results: data ?? [] }
+    };
+  }
+});
+
+// src/lib/mcp/tools/search-collections.ts
+import { defineTool as defineTool16 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient16 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z16 } from "npm:zod@^3.25.76";
+var search_collections_default = defineTool16({
+  name: "search_collections",
+  title: "Buscar Cole\xE7\xF5es Editoriais",
+  description: "Busca Cole\xE7\xF5es editoriais publicadas por termo (t\xEDtulo, subt\xEDtulo, categoria). Use `get_collection` para itens completos.",
+  inputSchema: {
+    query: z16.string().trim().min(1).max(120),
+    category: z16.string().trim().max(60).optional(),
+    limit: z16.number().int().min(1).max(30).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, category, limit }) => {
+    const sb = createClient16(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    let q = sb.from("collections").select("slug,title,subtitle,description,category,featured,cover").eq("status", "published").or(`title.ilike.%${query}%,subtitle.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`).limit(limit ?? 15);
+    if (category) q = q.eq("category", category);
+    const { data, error } = await q;
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      structuredContent: { results: data ?? [] }
+    };
+  }
+});
+
+// src/lib/mcp/tools/get-journey.ts
+import { defineTool as defineTool17 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient17 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z17 } from "npm:zod@^3.25.76";
+var get_journey_default = defineTool17({
+  name: "get_journey",
+  title: "Obter Jornada",
+  description: "Retorna uma Jornada publicada da Cathedra pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conte\xFAdo, reflection, exercise, closing).",
+  inputSchema: {
+    slug: z17.string().trim().min(1).max(120).describe("Slug da jornada.")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ slug }) => {
+    const sb = createClient17(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data: j, error } = await sb.from("journeys").select(
+      "id,slug,title,subtitle,description,category,difficulty,estimated_days,tags,hero_kicker,hero_quote,hero_image_url,narrative_intro,closing_message,is_premium,status"
+    ).eq("slug", slug).eq("status", "published").maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!j)
+      return {
+        content: [{ type: "text", text: `Jornada '${slug}' n\xE3o encontrada ou n\xE3o publicada.` }],
+        isError: true
+      };
+    const { data: steps } = await sb.from("journey_steps").select("step_order,title,subtitle,step_type,content,duration_minutes,is_free,reflection,exercise,closing").eq("journey_id", j.id).order("step_order", { ascending: true });
+    const payload = { ...j, steps: steps ?? [] };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: { journey: payload }
+    };
+  }
+});
+
+// src/lib/mcp/tools/search-patristics.ts
+import { defineTool as defineTool18 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient18 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z18 } from "npm:zod@^3.25.76";
+var search_patristics_default = defineTool18({
+  name: "search_patristics",
+  title: "Buscar Patr\xEDstica (Padres da Igreja)",
+  description: "Busca conte\xFAdo patr\xEDstico: santos categorizados como Padres da Igreja e verbetes com refer\xEAncias patr\xEDsticas (fathers_refs).",
+  inputSchema: {
+    query: z18.string().trim().min(1).max(120),
+    limit: z18.number().int().min(1).max(30).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, limit }) => {
+    const sb = createClient18(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const max = limit ?? 15;
+    const like = `%${query}%`;
+    const [saints, glossary] = await Promise.all([
+      sb.from("saints").select("id,name,title,feast_day,bio,category").or(`name.ilike.${like},bio.ilike.${like},title.ilike.${like},category.ilike.%padre%,category.ilike.%patrist%`).limit(max),
+      sb.from("glossary").select("slug,term,short_definition,fathers_refs").eq("status", "published").not("fathers_refs", "is", null).or(`term.ilike.${like},short_definition.ilike.${like},definition.ilike.${like}`).limit(max)
+    ]);
+    const payload = { saints: saints.data ?? [], glossary_with_fathers: glossary.data ?? [] };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
+// src/lib/mcp/tools/search-magisterium.ts
+import { defineTool as defineTool19 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient19 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z19 } from "npm:zod@^3.25.76";
+var search_magisterium_default = defineTool19({
+  name: "search_magisterium",
+  title: "Buscar Magist\xE9rio",
+  description: "Busca conte\xFAdo do Magist\xE9rio: par\xE1grafos do Catecismo (CIC) e verbetes com refer\xEAncias magisteriais (enc\xEDclicas, conc\xEDlios).",
+  inputSchema: {
+    query: z19.string().trim().min(1).max(120),
+    limit: z19.number().int().min(1).max(30).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, limit }) => {
+    const sb = createClient19(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const max = limit ?? 15;
+    const like = `%${query}%`;
+    const [cic, glossary] = await Promise.all([
+      sb.from("catechism_official").select("paragraph,content,texto_base,explicacao").or(`content.ilike.${like},texto_base.ilike.${like},explicacao.ilike.${like}`).limit(max),
+      sb.from("glossary").select("slug,term,short_definition,catechism_references,magisterium_references").eq("status", "published").not("magisterium_references", "is", null).or(`term.ilike.${like},short_definition.ilike.${like},definition.ilike.${like}`).limit(max)
+    ]);
+    const payload = {
+      catechism: cic.data ?? [],
+      glossary_with_magisterium: glossary.data ?? []
+    };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
+// src/lib/mcp/tools/semantic-search.ts
+import { defineTool as defineTool20 } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { createClient as createClient20 } from "npm:@supabase/supabase-js@^2.49.1";
+import { z as z20 } from "npm:zod@^3.25.76";
+var semantic_search_default = defineTool20({
+  name: "semantic_search",
+  title: "Busca Unificada Cathedra",
+  description: "Busca simult\xE2nea em Gloss\xE1rio, Santos, Ora\xE7\xF5es, Cole\xE7\xF5es e Jornadas por um termo. Retorna top N por categoria.",
+  inputSchema: {
+    query: z20.string().trim().min(1).max(120),
+    limit_per_bucket: z20.number().int().min(1).max(15).optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ query, limit_per_bucket }) => {
+    const sb = createClient20(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const n = limit_per_bucket ?? 5;
+    const like = `%${query}%`;
+    const [g, s, p, c, j] = await Promise.all([
+      sb.from("glossary").select("slug,term,short_definition,category").eq("status", "published").or(`term.ilike.${like},short_definition.ilike.${like},definition.ilike.${like}`).limit(n),
+      sb.from("saints").select("id,name,title,feast_day,bio").or(`name.ilike.${like},bio.ilike.${like},title.ilike.${like}`).limit(n),
+      sb.from("prayers").select("slug,title,subtitle,category").eq("is_published", true).or(`title.ilike.${like},subtitle.ilike.${like},kicker.ilike.${like}`).limit(n),
+      sb.from("collections").select("slug,title,subtitle,category").eq("status", "published").or(`title.ilike.${like},subtitle.ilike.${like},description.ilike.${like}`).limit(n),
+      sb.from("journeys").select("slug,title,subtitle,category").eq("status", "published").or(`title.ilike.${like},subtitle.ilike.${like},description.ilike.${like}`).limit(n)
+    ]);
+    const payload = {
+      query,
+      glossary: g.data ?? [],
+      saints: s.data ?? [],
+      prayers: p.data ?? [],
+      collections: c.data ?? [],
+      journeys: j.data ?? [],
+      total: (g.data?.length ?? 0) + (s.data?.length ?? 0) + (p.data?.length ?? 0) + (c.data?.length ?? 0) + (j.data?.length ?? 0)
+    };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
 // src/lib/mcp/index.ts
 var projectRef = "gpwrpmoniglarqwfyryp";
 var mcp_default = defineMcp({
   name: "cathedra-mcp",
   title: "Cathedra Digital MCP",
-  version: "0.2.0",
-  instructions: "Ferramentas MCP da Cathedra Digital \u2014 plataforma cat\xF3lica de estudo e vida interior. Gloss\xE1rio Teol\xF3gico: `search_glossary`, `get_glossary_term`. Santos: `search_saints`, `get_saint`. Ora\xE7\xF5es: `get_prayer`. Cole\xE7\xF5es editoriais: `get_collection`. C\xE2nones: `catechism_paragraph` (CIC), `bible_reference` (B\xEDblia em PT-BR). Di\xE1rio Espiritual do usu\xE1rio autenticado: `list_journal_entries`, `create_journal_entry`.",
+  version: "0.3.0",
+  instructions: "Ferramentas MCP da Cathedra Digital \u2014 motor de conhecimento cat\xF3lico. Busca unificada: `semantic_search`. Gloss\xE1rio: `search_glossary`, `get_glossary_term`. Santos: `search_saints`, `get_saint`. Patr\xEDstica: `search_patristics`. Ora\xE7\xF5es: `search_prayers`, `get_prayer`. Cole\xE7\xF5es: `search_collections`, `get_collection`. Jornadas: `get_journey`. C\xE2nones: `catechism_paragraph`, `bible_reference`, `search_magisterium`. Liturgia di\xE1ria: `daily_liturgy` (Missal), `daily_office` (Horas). Knowledge Graph: `search_nexus`, `related_content`. Di\xE1rio do usu\xE1rio autenticado: `list_journal_entries`, `create_journal_entry`.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
   }),
   tools: [
+    semantic_search_default,
     search_glossary_default,
     get_glossary_term_default,
     search_saints_default,
     get_saint_default,
+    search_patristics_default,
+    search_prayers_default,
     get_prayer_default,
+    search_collections_default,
     get_collection_default,
+    get_journey_default,
     catechism_paragraph_default,
     bible_reference_default,
+    search_magisterium_default,
+    daily_liturgy_default,
+    daily_office_default,
+    search_nexus_default,
+    related_content_default,
     list_journal_entries_default,
     create_journal_entry_default
   ]

@@ -6,12 +6,10 @@ export default defineTool({
   name: "related_content",
   title: "Conteúdo Relacionado",
   description:
-    "Dado um nó (kind+ref), retorna conteúdos relacionados hidratados: verbetes, santos, orações e coleções alcançados via Nexus. Combina arestas de entrada e saída.",
+    "Dado um nó (kind+ref), retorna conteúdos relacionados hidratados: verbetes, santos, orações e coleções alcançados via Nexus.",
   inputSchema: {
-    kind: z
-      .enum(["glossary", "saint", "prayer", "bible", "catechism", "collection", "journey"])
-      .describe("Tipo do nó."),
-    ref: z.string().trim().min(1).max(200).describe("Slug/id/referência do nó."),
+    kind: z.enum(["glossary", "saint", "prayer", "bible", "catechism", "collection", "journey"]),
+    ref: z.string().trim().min(1).max(200),
     limit: z.number().int().min(1).max(50).optional(),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
@@ -20,22 +18,10 @@ export default defineTool({
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const max = limit ?? 20;
-
     const [outgoing, incoming] = await Promise.all([
-      sb
-        .from("nexus_relations")
-        .select("relation_type,target_kind,target_ref,note")
-        .eq("source_kind", kind)
-        .eq("source_ref", ref)
-        .limit(max),
-      sb
-        .from("nexus_relations")
-        .select("relation_type,source_kind,source_ref,note")
-        .eq("target_kind", kind)
-        .eq("target_ref", ref)
-        .limit(max),
+      sb.from("nexus_relations").select("relation_type,target_kind,target_ref,note").eq("source_kind", kind).eq("source_ref", ref).limit(max),
+      sb.from("nexus_relations").select("relation_type,source_kind,source_ref,note").eq("target_kind", kind).eq("target_ref", ref).limit(max),
     ]);
-
     const nodes = new Map<string, { kind: string; ref: string; via: string[] }>();
     for (const r of outgoing.data ?? []) {
       const k = `${r.target_kind}:${r.target_ref}`;
@@ -47,10 +33,9 @@ export default defineTool({
       if (!nodes.has(k)) nodes.set(k, { kind: r.source_kind, ref: r.source_ref, via: [] });
       nodes.get(k)!.via.push(`← ${r.relation_type}`);
     }
-
     const bucket = (kk: string) => [...nodes.values()].filter((n) => n.kind === kk);
     const glossarySlugs = bucket("glossary").map((n) => n.ref);
-    const saintSlugs = bucket("saint").map((n) => n.ref);
+    const saintIds = bucket("saint").map((n) => n.ref);
     const prayerSlugs = bucket("prayer").map((n) => n.ref);
     const collectionSlugs = bucket("collection").map((n) => n.ref);
 
@@ -58,8 +43,8 @@ export default defineTool({
       glossarySlugs.length
         ? sb.from("glossary").select("slug,term,short_definition,category").in("slug", glossarySlugs).eq("status", "published")
         : Promise.resolve({ data: [] as any[] }),
-      saintSlugs.length
-        ? sb.from("saints").select("slug,name,feast_day,summary").in("slug", saintSlugs)
+      saintIds.length
+        ? sb.from("saints").select("id,name,title,feast_day,bio,category").in("id", saintIds)
         : Promise.resolve({ data: [] as any[] }),
       prayerSlugs.length
         ? sb.from("prayers").select("slug,title,category,kicker").in("slug", prayerSlugs).eq("is_published", true)
