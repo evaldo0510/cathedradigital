@@ -3,9 +3,17 @@ import { Helmet } from 'react-helmet-async';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+
+// Preserva ?next= (rota interna) através de login, signup e OAuth.
+// Usado sobretudo pela rota /.lovable/oauth/consent para retornar à autorização MCP.
+function safeNextPath(raw: string | null): string | null {
+  if (!raw) return null;
+  if (!raw.startsWith('/') || raw.startsWith('//')) return null;
+  return raw;
+}
 
 interface AuthProps {
   onSuccess: () => void;
@@ -18,6 +26,18 @@ interface AuthProps {
  */
 const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nextPath = safeNextPath(searchParams.get('next'));
+  const nextQuery = nextPath ? `?next=${encodeURIComponent(nextPath)}` : '';
+  const handleSuccess = () => {
+    if (nextPath) navigate(nextPath, { replace: true });
+    else onSuccess();
+  };
+  const handleSignupSuccess = () => {
+    if (nextPath) navigate(nextPath, { replace: true });
+    else if (onSignupSuccess) onSignupSuccess();
+    else onSuccess();
+  };
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
