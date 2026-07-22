@@ -57,9 +57,6 @@ const Index = () => {
           { name: "Home", path: "/" }
         ]}
       />
-      <script type="application/ld+json">
-        {JSON.stringify(websiteSchema)}
-      </script>
 
       {!authenticated && <HeroSection onStart={handleStart} />}
       
