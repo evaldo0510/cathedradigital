@@ -72,6 +72,7 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
+const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
@@ -524,6 +525,7 @@ const AppLayout: React.FC = () => {
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
