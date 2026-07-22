@@ -45,7 +45,7 @@ import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
-const HERO_TITLE = 'Entrai no Silêncio';
+const HERO_TITLE = 'Cathedra Digital — Entrai no Silêncio';
 const HERO_SUBTITLE =
   'A biblioteca viva da Tradição. Um espaço sagrado para contemplar a Verdade através dos séculos.';
 
