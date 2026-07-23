@@ -741,7 +741,16 @@ export const PrayerEngineReader: React.FC<Props> = ({
           <div className="text-center">
             <SpiritualFruitBadge mystery={currentMystery} />
           </div>
-          {!contemplative && <MysteryNexusPanel mystery={currentMystery} accentClass={palette.accentClass} />}
+          {!contemplative && (
+            <div className="my-8">
+              <NexusPanel
+                output={resolveMysteryAutoNexus(currentMystery)}
+                title="Nexus do mistério"
+                kicker={activeSection?.title ?? undefined}
+                className="border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/30"
+              />
+            </div>
+          )}
           <ContemplationInvitation mystery={currentMystery} accentClass={palette.accentClass} />
         </>
       )}
