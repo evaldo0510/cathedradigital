@@ -641,7 +641,7 @@ export default function EditorialAuditPage() {
     toast[fail === 0 && !cancelled ? "success" : "warning"](
       `Bucket "${label}" · ${ok} ok · ${fail} falha(s)${cancelled ? " · cancelado" : ""} · ΔICE ${(iceAfter.weighted - iceBefore.weighted).toFixed(1)}`
     );
-  }, [prioritizeTasks, totals.avg, totals.avg_weighted, load, loadStrategy, persistCheckpoint, clearCheckpoint]);
+  }, [prioritizeTasks, totals.avg, totals.avg_weighted, load, loadStrategy, persistCheckpoint, clearCheckpoint, loadJobs]);
 
   const buildTasksFromBucket = useCallback((bucketRows: typeof priorityRows): BatchTask[] => {
     const tasks: BatchTask[] = [];
