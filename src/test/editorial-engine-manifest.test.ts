@@ -83,5 +83,4 @@ describe("Editorial Engine · Manifest Validation", () => {
     const ready = editorialRegistry.filter(m => m.ready);
     expect(ready.map(m => m.id).sort()).toEqual(["collections", "glossary", "journeys", "prayers", "saints"]);
   });
-  });
 });
