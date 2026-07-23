@@ -133,6 +133,10 @@ const IGNORED_COVERAGE: RegExp[] = [
   /-legacy(\/|$)/,
   /^\/(cache-manager|bible-recovery|telemetry|security|security-alerts|cid-compliance|seo-verify|seo-status|a11y-audit|visual-audit|axe-contrast|ui-errors|audit|integrity|bible-coverage|bible-cache|bible-abbr-validate|bible-perf|bible-perf-breakdown|bible-sources|bible-import|catechism-explorer|design-system|language|offline|nexus)(\/|$)/,
   /^\/(library|prayer|prayers|rezar|orar|oracoes|via-crucis|via-sacra|saints|liturgy|today|journeys|notes|pesquisar|formacao|formar-se|minha-jornada|transparencia|about|terms|privacy)$/,
+  // Aliases 301 (Navigate) — sem página própria, canonical vive na rota destino
+  /^\/legal\/termos$/,
+  /^\/contact$/,
+
   // Sub-rotas privadas do /conta (nested routes sem leading slash)
   /^\/conta(\/|$)/,
   /^(perfil|jornada|favoritos|diario|configuracoes|admin)$/,
