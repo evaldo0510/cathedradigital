@@ -26,11 +26,15 @@ import {
   EditorialQuote,
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import {
+  ReaderShell,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
 import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
 import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
-import type { ResolvedNode } from '@/core/knowledge';
+import { BUCKET_LABEL, type ReaderNexusBucket } from '@/core/knowledge/adapters/ReaderAutoNexus';
 
 /* ------------------------------------------------------------------ */
 /* Tipos                                                               */
