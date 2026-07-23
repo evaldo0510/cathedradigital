@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { STEPS } from './constants';
 import ShareButton from '../ShareButton';
 import FlowConnector from '../FlowConnector';
-import ProConversionBanner from '../ProConversionBanner';
+// ProConversionBanner intencionalmente removido da Lectio Divina.
 import { routeUser } from '@/lib/smartRouter';
 import { useAuth } from '@/hooks/useAuth';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
@@ -124,8 +124,8 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         </div>
       </motion.div>
 
-      {/* PRO Conversion Banner */}
-      <ProConversionBanner context="lectio" />
+      {/* Banner de conversão PRO removido da UI de uso:
+          conversão fica restrita à landing pública e a /pricing. */}
 
       {/* Smart Flow Connector */}
       <FlowConnector

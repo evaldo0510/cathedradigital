@@ -12,7 +12,8 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import ProConversionBanner from './ProConversionBanner';
+// ProConversionBanner intencionalmente removido da UI de uso.
+// Conversão para PRO fica restrita à landing pública e a /pricing.
 import { toast } from 'sonner';
 import { callColloquium } from '@/services/aiService';
 import SEOHead from '@/components/SEOHead';
