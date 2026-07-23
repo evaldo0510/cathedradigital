@@ -2404,6 +2404,72 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_jobs: {
+        Row: {
+          bucket: string
+          created_at: string
+          duration_ms: number | null
+          finished_at: string | null
+          ice_after: number | null
+          ice_before: number | null
+          ice_delta: number | null
+          ice_weighted_after: number | null
+          ice_weighted_before: number | null
+          id: string
+          metadata: Json
+          module: string
+          operator: string | null
+          results: Json
+          started_at: string
+          status: string
+          tasks_fail: number
+          tasks_ok: number
+          tasks_total: number
+        }
+        Insert: {
+          bucket: string
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          ice_after?: number | null
+          ice_before?: number | null
+          ice_delta?: number | null
+          ice_weighted_after?: number | null
+          ice_weighted_before?: number | null
+          id?: string
+          metadata?: Json
+          module?: string
+          operator?: string | null
+          results?: Json
+          started_at?: string
+          status?: string
+          tasks_fail?: number
+          tasks_ok?: number
+          tasks_total?: number
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          ice_after?: number | null
+          ice_before?: number | null
+          ice_delta?: number | null
+          ice_weighted_after?: number | null
+          ice_weighted_before?: number | null
+          id?: string
+          metadata?: Json
+          module?: string
+          operator?: string | null
+          results?: Json
+          started_at?: string
+          status?: string
+          tasks_fail?: number
+          tasks_ok?: number
+          tasks_total?: number
+        }
+        Relationships: []
+      }
       editorial_snapshots: {
         Row: {
           avg_editorial: number
