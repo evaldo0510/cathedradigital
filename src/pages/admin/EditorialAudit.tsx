@@ -224,8 +224,9 @@ export default function EditorialAuditPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [totals, setTotals] = useState<Totals>({
     total: 0, published: 0, drafts: 0, gold: 0, silver: 0, bronze: 0,
-    needs_review: 0, avg: 0, avg_editorial: 0, avg_nexus: 0,
+    needs_review: 0, avg: 0, avg_editorial: 0, avg_nexus: 0, avg_weighted: 0,
   });
+
   const [modules, setModules] = useState<ModuleStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
