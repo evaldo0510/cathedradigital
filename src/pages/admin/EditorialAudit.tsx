@@ -200,6 +200,22 @@ function fmtDate(iso: string | null): string {
   try { return new Date(iso).toLocaleDateString("pt-BR"); } catch { return iso; }
 }
 
+interface Snapshot {
+  id: string;
+  captured_at: string;
+  avg_ice: number;
+  avg_editorial: number;
+  avg_nexus: number;
+  gold: number;
+  silver: number;
+  bronze: number;
+  review: number;
+  gate_passing: number;
+  gate_failing: number;
+  regressions: Array<{ slug: string; ice_prev: number; ice_now: number; editorial_delta: number; nexus_delta: number }>;
+  trigger: string;
+}
+
 export default function EditorialAuditPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [totals, setTotals] = useState<Totals>({
@@ -214,6 +230,9 @@ export default function EditorialAuditPage() {
   const [batchRunning, setBatchRunning] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("all");
   const [query, setQuery] = useState("");
+  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [prevSnapshot, setPrevSnapshot] = useState<Snapshot | null>(null);
+  const [auditing, setAuditing] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
