@@ -330,7 +330,7 @@ const PublicLanding = () => {
       <footer className="mt-24 border-t border-border/40 bg-primary text-primary-foreground">
         <div className="app-container py-16 grid gap-12 md:grid-cols-4">
           <div className="md:col-span-2 space-y-4">
-            <h2 className="font-display uppercase tracking-[0.4em] text-secondary text-lg">
+            <h2 className="font-display uppercase tracking-[0.4em] text-lg" style={{ color: 'var(--gold-on-dark)' }}>
               Cathedra Digital
             </h2>
             <p className="text-sm text-primary-foreground/70 max-w-md leading-relaxed">
