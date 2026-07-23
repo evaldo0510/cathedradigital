@@ -445,6 +445,35 @@ export default function EditorialAuditPage() {
   }, [totals]);
   const frozen = freezeCriteria.every(c => c.ok);
 
+  // Sprint 6.1 · Operação Ouro — verbetes que passam no gate (proxy client-side).
+  const passesGateSet = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of rows) {
+      const need = ["deep_interpretation","faq","logos_meditation","bible_verses","catechism_references","fathers_refs"] as const;
+      const ok = need.every(f => r.checks.find(c => c.field === f)?.ok);
+      if (r.score >= 85 && r.editorial_score >= 90 && r.nexus_score >= 90 && ok) set.add(r.slug);
+    }
+    return set;
+  }, [rows]);
+
+  // Sprint 6.1 · buckets a partir da RPC de prioridade (fonte da verdade).
+  const buckets = useMemo(() => ({
+    quick_win: priorityRows.filter(r => r.priority === "quick_win").length,
+    red:       priorityRows.filter(r => r.priority === "red").length,
+    orange:    priorityRows.filter(r => r.priority === "orange").length,
+    yellow:    priorityRows.filter(r => r.priority === "yellow").length,
+  }), [priorityRows]);
+
+  // Sprint 6.1 · Certificação v1.0 — todos os 47 verbetes passam no gate oficial.
+  const v1Certified = !!snapshot && snapshot.gate_failing === 0 && snapshot.gate_passing > 0;
+
+  // Cobertura média por área (para o header consolidado)
+  const avgCoverage = useMemo(() => {
+    if (coverage.length === 0) return null;
+    return Math.round(coverage.reduce((s, c) => s + Number(c.avg_ice || 0), 0) / coverage.length);
+  }, [coverage]);
+
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <Helmet>
