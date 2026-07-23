@@ -139,7 +139,18 @@ export const READER_MODULES: readonly ReaderModule[] = [
     status: 'certified',
     blocking: true,
   },
+  // ── Sub-onda C0.3 · Prayer Engine (fase 1: ReaderShell + Continuation) ─
+  {
+    id: 'prayer-engine',
+    label: 'Prayer Engine (Rosário, Via Sacra, Novenas, Ladainhas)',
+    entry: 'src/components/cathedra/PrayerEngineReader.tsx',
+    sampleRoutes: ['/oracao'],
+    targetScore: 85,
+    status: 'partial', // fase 2: substituir MysteryNexusPanel legado
+    blocking: true,
+  },
 ] as const;
+
 
 
 /** Componentes/adaptadores proibidos pelo Reader Architecture Rule. */
