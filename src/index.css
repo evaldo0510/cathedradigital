@@ -31,6 +31,20 @@
     --border: 220 30% 90%;
     --input: 220 30% 90%;
     --ring: 220 20% 12%;
+
+    /* ---------------------------------------------------------------
+     * Brand gold — dois tons para respeitar WCAG AA:
+     *  --gold          = tom pleno (#c9a84c). Uso em BACKGROUNDS,
+     *                    borders, ícones e texto sobre fundo escuro
+     *                    (Cathedra Noir). NÃO usar como texto sobre
+     *                    fundo claro — falha AA (ratio 4.5:1 < 4.5+ eps).
+     *  --gold-text     = tom escurecido para TEXTO SOBRE FUNDO CLARO
+     *                    (~ratio 6.8:1 sobre #ffffff). Usar sempre que
+     *                    o dourado carregar texto em superfície clara.
+     * --------------------------------------------------------------- */
+    --gold: #c9a84c;
+    --gold-text: #8a7020;
+    --gold-text-strong: #6d5a1a;
     
     /* 2. Spacing Scale (8pt-based) */
     --spacing-3xs: 0.125rem; /* 2px */
