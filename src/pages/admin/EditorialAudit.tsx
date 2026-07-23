@@ -252,6 +252,18 @@ export default function EditorialAuditPage() {
   }>>([]);
   const [priorityFilter, setPriorityFilter] = useState<"quick_win" | "red" | "orange" | "yellow" | "all">("quick_win");
 
+  // Sprint 6.1.1 · Corrigir Bucket em Lote — fila com progresso e retry
+  type BatchTask = { slug: string; term: string; field: Field };
+  type BatchResult = BatchTask & { ok: boolean; error?: string };
+  const [bucketBatch, setBucketBatch] = useState<{
+    running: boolean;
+    total: number;
+    done: number;
+    current: BatchTask | null;
+    results: BatchResult[];
+    label: string;
+  } | null>(null);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
