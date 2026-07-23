@@ -7071,6 +7071,55 @@ export type Database = {
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
+      collections_correction_priority: {
+        Args: never
+        Returns: {
+          area: string
+          editorial: number
+          effort_tier: string
+          ice: number
+          impact_tier: string
+          inbound_refs: number
+          missing_bible: boolean
+          missing_cic: boolean
+          missing_count: number
+          missing_deep: boolean
+          missing_faq: boolean
+          missing_fathers: boolean
+          missing_logos: boolean
+          nexus: number
+          priority: string
+          slug: string
+          status: string
+          term: string
+        }[]
+      }
+      collections_doctrinal_area: {
+        Args: { _category: string }
+        Returns: string
+      }
+      collections_doctrinal_coverage: {
+        Args: never
+        Returns: {
+          area: string
+          avg_ice: number
+          bronze: number
+          gate_passing: number
+          gold: number
+          review: number
+          silver: number
+          total: number
+        }[]
+      }
+      collections_ice: {
+        Args: { _slug: string }
+        Returns: {
+          editorial: number
+          ice: number
+          nexus: number
+        }[]
+      }
+      collections_quality_gate: { Args: { _slug: string }; Returns: boolean }
       compute_glossary_editorial_snapshot: {
         Args: { _trigger?: string }
         Returns: string

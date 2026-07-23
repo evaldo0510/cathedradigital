@@ -28,7 +28,7 @@ export interface ManifestValidationResult {
 }
 
 /** Geradores registrados no Editorial Engine. Sincronizar com `supabase/functions/editorial-generate/index.ts`. */
-export const REGISTERED_GENERATORS = new Set<string>(["glossary", "saints", "journeys"]);
+export const REGISTERED_GENERATORS = new Set<string>(["glossary", "saints", "journeys", "collections"]);
 
 const ID_PATTERN = /^[a-z][a-z0-9_-]{1,40}$/;
 

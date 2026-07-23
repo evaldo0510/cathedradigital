@@ -70,7 +70,7 @@ describe("Editorial Engine · Manifest Validation", () => {
 
   it("critério 6 — ready sem generator registrado é erro", () => {
     // Entidade ready cujo id não está em REGISTERED_GENERATORS.
-    const r = validateManifest({ ...baseValid, id: "collections" });
+    const r = validateManifest({ ...baseValid, id: "prayers" });
     expect(r.errors.some(e => e.code === "generator_not_registered")).toBe(true);
   });
 
@@ -79,9 +79,9 @@ describe("Editorial Engine · Manifest Validation", () => {
   });
 
   it("registry lista as entidades ready registradas hoje", () => {
-    // Estado atual: Glossário (consolidando) + Santos + Jornadas (developing) plugados.
-    // Orações e Coleções ainda são placeholders.
+    // Estado atual: Glossário + Santos + Jornadas + Coleções plugados.
+    // Apenas Orações permanece placeholder.
     const ready = editorialRegistry.filter(m => m.ready);
-    expect(ready.map(m => m.id).sort()).toEqual(["glossary", "journeys", "saints"]);
+    expect(ready.map(m => m.id).sort()).toEqual(["collections", "glossary", "journeys", "saints"]);
   });
 });
