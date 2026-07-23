@@ -175,11 +175,10 @@ const PublicLanding = () => {
 
           {/* ---------------- Cinco Ambientes ---------------- */}
           <EditorialSection id="ambientes">
-            <EditorialHeader
-              kicker="Quinque Loca"
-              title="Cinco ambientes, um só caminho"
-              subtitle="Uma arquitetura contemplativa inspirada na tradição monástica."
-            />
+            <div className="space-y-3 mb-8">
+              <EditorialHeader kicker="Quinque Loca" title="Cinco ambientes, um só caminho" />
+              <p className="max-w-2xl text-base text-muted-foreground">Uma arquitetura contemplativa inspirada na tradição monástica.</p>
+            </div>
             <EditorialGrid cols={3}>
               {AMBIENTES.map((a) => {
                 const Icon = a.icon;
@@ -213,11 +212,10 @@ const PublicLanding = () => {
 
           {/* ---------------- Liturgia do dia ---------------- */}
           <EditorialSection id="liturgia">
-            <EditorialHeader
-              kicker="Hodie · Hoje"
-              title="Liturgia viva, todos os dias"
-              subtitle="Missal do dia, Liturgia das Horas e Santo — atualizados automaticamente."
-            />
+            <div className="space-y-3 mb-8">
+              <EditorialHeader kicker="Hodie · Hoje" title="Liturgia viva, todos os dias" />
+              <p className="max-w-2xl text-base text-muted-foreground">Missal do dia, Liturgia das Horas e Santo — atualizados automaticamente.</p>
+            </div>
             <EditorialGrid cols={2}>
               <Link to="/liturgia" className="group">
                 <EditorialCard
@@ -252,11 +250,10 @@ const PublicLanding = () => {
 
           {/* ---------------- Diferenciais ---------------- */}
           <EditorialSection id="nexus">
-            <EditorialHeader
-              kicker="Symmetry of Truth"
-              title="Uma inteligência a serviço da Tradição"
-              subtitle="O que torna Cathedra diferente de qualquer app católico."
-            />
+            <div className="space-y-3 mb-8">
+              <EditorialHeader kicker="Symmetry of Truth" title="Uma inteligência a serviço da Tradição" />
+              <p className="max-w-2xl text-base text-muted-foreground">O que torna Cathedra diferente de qualquer app católico.</p>
+            </div>
             <EditorialGrid cols={3}>
               {DIFERENCIAIS.map((d) => {
                 const Icon = d.icon;
@@ -284,11 +281,10 @@ const PublicLanding = () => {
 
           {/* ---------------- Planos ---------------- */}
           <EditorialSection id="planos">
-            <EditorialHeader
-              kicker="Sustente o Sanctuarium"
-              title="Um caminho gratuito. Uma vocação a apoiar."
-              subtitle="50% de cada assinatura PRO é convertida em doação a obras católicas."
-            />
+            <div className="space-y-3 mb-8">
+              <EditorialHeader kicker="Sustente o Sanctuarium" title="Um caminho gratuito. Uma vocação a apoiar." />
+              <p className="max-w-2xl text-base text-muted-foreground">50% de cada assinatura PRO é convertida em doação a obras católicas.</p>
+            </div>
             <EditorialGrid cols={2}>
               {PLANOS.map((p) => {
                 const Icon = p.icon;
