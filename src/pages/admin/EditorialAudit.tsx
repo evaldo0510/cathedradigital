@@ -1112,3 +1112,26 @@ function Summary({
     </div>
   );
 }
+
+type KpiTone = "ok" | "warn" | "bad" | "neutral";
+function toneFor(v: number): KpiTone {
+  if (v >= 95) return "ok";
+  if (v >= 85) return "neutral";
+  if (v >= 70) return "warn";
+  return "bad";
+}
+function Kpi({ label, value, tone = "neutral", hint }: { label: string; value: string | number; tone?: KpiTone; hint?: string }) {
+  const cls =
+    tone === "ok" ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700"
+    : tone === "warn" ? "border-amber-500/40 bg-amber-500/10 text-amber-700"
+    : tone === "bad" ? "border-red-500/40 bg-red-500/10 text-red-700"
+    : "border-border bg-background";
+  return (
+    <div className={`rounded-md border px-2.5 py-2 ${cls}`}>
+      <p className="text-[9px] font-bold uppercase tracking-widest opacity-70">{label}</p>
+      <p className="mt-0.5 text-base font-bold tabular-nums leading-tight">{value}</p>
+      {hint && <p className="text-[9px] opacity-60">{hint}</p>}
+    </div>
+  );
+}
+
