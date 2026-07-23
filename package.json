@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-jsonld.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html && bun run scripts/seo-checklist.ts",
+    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-jsonld.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html && bun run scripts/validate-planos-alias.ts && bun run scripts/seo-checklist.ts",
     "seo:validate-routes": "bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html",
     "seo:validate-routes:report": "mkdir -p /mnt/documents && bun run scripts/validate-route-seo.ts --warn --html=/mnt/documents/seo-routes-report.html",
     "build": "vite build",
