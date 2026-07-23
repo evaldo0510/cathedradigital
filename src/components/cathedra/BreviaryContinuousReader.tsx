@@ -54,9 +54,12 @@ interface Props {
 /* ─────────────────────── SlotCard editorial ─────────────────────── */
 /* ─────────────────────── SlotCard editorial ───────────────────────
  * Unificado via `LiturgyBlockCard` (Etapa 1 · Sprint C.4).
+ * O breviário sempre oferece TTS por bloco, então defaultamos `withTTS`.
  * ------------------------------------------------------------------ */
 
-const SlotCard = LiturgyBlockCard;
+const SlotCard: React.FC<
+  Omit<React.ComponentProps<typeof LiturgyBlockCard>, 'withTTS'> & { withTTS?: boolean }
+> = ({ withTTS = true, ...rest }) => <LiturgyBlockCard withTTS={withTTS} {...rest} />;
 
 /* ─────────────────────── Ordinário block ─────────────────────── */
 
