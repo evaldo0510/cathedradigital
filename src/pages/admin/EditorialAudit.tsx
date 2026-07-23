@@ -253,16 +253,27 @@ export default function EditorialAuditPage() {
   const [priorityFilter, setPriorityFilter] = useState<"quick_win" | "red" | "orange" | "yellow" | "all">("quick_win");
 
   // Sprint 6.1.1 · Corrigir Bucket em Lote — fila com progresso e retry
-  type BatchTask = { slug: string; term: string; field: Field };
-  type BatchResult = BatchTask & { ok: boolean; error?: string };
+  // Sprint 6.1.1a · Inteligência da Fila — priorização, pause/resume/cancel, checkpoint, métricas, histórico
+  type BatchTask = { slug: string; term: string; field: Field; priority?: number };
+  type BatchResult = BatchTask & { ok: boolean; error?: string; ms?: number };
   const [bucketBatch, setBucketBatch] = useState<{
     running: boolean;
+    paused: boolean;
     total: number;
     done: number;
     current: BatchTask | null;
     results: BatchResult[];
     label: string;
+    jobId?: string;
+    startedAt?: number;
+    finishedAt?: number;
+    iceBefore?: { avg: number; weighted: number };
+    iceAfter?: { avg: number; weighted: number };
+    checkpointAt?: number;
+    tasks?: BatchTask[];
   } | null>(null);
+  const controlRef = useRef<{ paused: boolean; cancelled: boolean }>({ paused: false, cancelled: false });
+  const [resumable, setResumable] = useState<{ tasks: BatchTask[]; label: string; done: number } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
