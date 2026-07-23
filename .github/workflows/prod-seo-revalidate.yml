@@ -1,0 +1,103 @@
+name: Prod SEO Revalidate (Scheduled)
+
+# Revalida periodicamente, em produção, sitemap.xml, robots.txt e as tags
+# canonical/og/twitter de /pricing — mesmo sem mudanças no código.
+# Serve para detectar regressões causadas por infra (Vercel headers,
+# cache CDN, edge functions) ou por mudanças em fontes externas.
+
+on:
+  schedule:
+    # Todos os dias 06:00 UTC (03:00 BRT)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: prod-seo-revalidate
+  cancel-in-progress: true
+
+env:
+  PROD_URL: https://www.cathedradigital.com.br
+
+jobs:
+  revalidate:
+    name: Revalidar sitemap · robots · /pricing meta
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar sitemap.xml em produção
+        run: |
+          set -e
+          echo "→ GET $PROD_URL/sitemap.xml"
+          http_code=$(curl -sS -o sitemap-prod.xml -w "%{http_code}" "$PROD_URL/sitemap.xml")
+          echo "HTTP $http_code"
+          test "$http_code" = "200"
+          grep -q '<urlset' sitemap-prod.xml || (echo "::error::sitemap.xml sem <urlset>" && exit 1)
+          # Não pode listar /planos (deve ser redirect, jamais indexável)
+          if grep -q '<loc>[^<]*/planos' sitemap-prod.xml; then
+            echo "::error::sitemap contém /planos — deveria estar excluído"
+            exit 1
+          fi
+          # Deve conter /pricing como URL canônica
+          grep -q '<loc>[^<]*/pricing' sitemap-prod.xml || (echo "::error::sitemap não contém /pricing" && exit 1)
+
+      - name: Verificar robots.txt em produção
+        run: |
+          set -e
+          echo "→ GET $PROD_URL/robots.txt"
+          http_code=$(curl -sS -o robots-prod.txt -w "%{http_code}" "$PROD_URL/robots.txt")
+          echo "HTTP $http_code"
+          test "$http_code" = "200"
+          grep -qi 'sitemap:' robots-prod.txt || (echo "::error::robots.txt sem diretiva Sitemap:" && exit 1)
+          # /planos deve estar bloqueado
+          grep -qi 'Disallow: /planos' robots-prod.txt || echo "::warning::robots.txt não bloqueia /planos explicitamente"
+
+      - name: Validar canonical e og/twitter em /pricing
+        run: |
+          set -e
+          echo "→ GET $PROD_URL/pricing"
+          curl -sSL -A "Mozilla/5.0 (compatible; CathedraSEOBot/1.0)" "$PROD_URL/pricing" -o pricing.html
+          test -s pricing.html
+
+          canon=$(grep -oE '<link[^>]*rel="canonical"[^>]*>' pricing.html | head -1 || true)
+          echo "canonical tag: $canon"
+          echo "$canon" | grep -q "$PROD_URL/pricing" || (echo "::error::canonical de /pricing não aponta para $PROD_URL/pricing" && exit 1)
+
+          og_url=$(grep -oE '<meta[^>]*property="og:url"[^>]*>' pricing.html | head -1 || true)
+          echo "og:url: $og_url"
+          echo "$og_url" | grep -q "$PROD_URL/pricing" || (echo "::error::og:url de /pricing incorreto" && exit 1)
+
+          og_title=$(grep -oE '<meta[^>]*property="og:title"[^>]*>' pricing.html | head -1 || true)
+          echo "og:title: $og_title"
+          echo "$og_title" | grep -qE 'content="[^"]+"' || (echo "::error::og:title ausente em /pricing" && exit 1)
+
+          tw_url=$(grep -oE '<meta[^>]*name="twitter:url"[^>]*>' pricing.html | head -1 || true)
+          echo "twitter:url: $tw_url"
+          echo "$tw_url" | grep -q "$PROD_URL/pricing" || echo "::warning::twitter:url ausente ou divergente em /pricing"
+
+          tw_card=$(grep -oE '<meta[^>]*name="twitter:card"[^>]*>' pricing.html | head -1 || true)
+          echo "twitter:card: $tw_card"
+          echo "$tw_card" | grep -q 'content=' || (echo "::error::twitter:card ausente em /pricing" && exit 1)
+
+      - name: Validar que /planos redireciona 301 → /pricing
+        run: |
+          set -e
+          echo "→ HEAD $PROD_URL/planos"
+          status=$(curl -sS -o /dev/null -w "%{http_code}" -I "$PROD_URL/planos")
+          location=$(curl -sS -o /dev/null -w "%{redirect_url}" -I "$PROD_URL/planos")
+          echo "status: $status → $location"
+          test "$status" = "301" || (echo "::error::/planos não retorna 301 (retornou $status)" && exit 1)
+          echo "$location" | grep -q "/pricing" || (echo "::error::/planos redireciona para local errado: $location" && exit 1)
+
+      - name: Upload de artefatos de diagnóstico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-seo-snapshot-${{ github.run_id }}
+          path: |
+            sitemap-prod.xml
+            robots-prod.txt
+            pricing.html
+          if-no-files-found: warn
+          retention-days: 30
