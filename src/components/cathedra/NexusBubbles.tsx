@@ -1,3 +1,17 @@
+/**
+ * @deprecated Reader Architecture Rule (COS §10 / v1.1):
+ *   `NexusBubbles` está proibido. Substituir por:
+ *     - `NexusPanel`         (painel passivo de conexões)
+ *     - `ReferencePopover`   (popover inline de referência)
+ *   Ver docs/reader-architecture-master.md e src/components/reader/.
+ *   Este componente será removido na Fase G da Sprint Nexus 2.0.
+ */
+if (import.meta.env.DEV) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[Cathedra] NexusBubbles é deprecated. Use NexusPanel + ReferencePopover de @/components/reader. Ver docs/reader-architecture-master.md',
+  );
+}
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
