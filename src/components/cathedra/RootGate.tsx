@@ -15,6 +15,16 @@ const PublicLanding = lazy(() => import('@/pages/PublicLanding'));
  */
 const RootGate: React.FC = () => {
   const { authenticated, loading } = useAuth();
+  const target = authenticated ? resolveAuthHome() : null;
+
+  useEffect(() => {
+    if (loading) return;
+    if (authenticated && target) {
+      trackEvent('atrium_redirect', { target });
+    } else if (!authenticated) {
+      trackEvent('landing_view', { path: '/' });
+    }
+  }, [authenticated, loading, target]);
 
   if (loading) {
     return (
@@ -28,8 +38,8 @@ const RootGate: React.FC = () => {
     );
   }
 
-  if (authenticated) {
-    return <Navigate to={resolveAuthHome()} replace />;
+  if (authenticated && target) {
+    return <Navigate to={target} replace />;
   }
 
   return (
