@@ -21,7 +21,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const MIN_CONTENT_LEN = 500;
 const FETCH_TIMEOUT_MS = 8_000;
-const LANG_FALLBACK_SUFFIXES = ['_pt.html', '_po.html', '_sp.html', '_it.html', '_la.html'];
+const LANG_FALLBACK_SUFFIXES = ['_pt.html', '_po.html', '_sp.html', '_it.html', '_en.html', '_fr.html', '_ge.html', '_la.html'];
+/** Códigos usados em URLs `/{content|archive|...}/xxx/{lang}/...` do vatican.va. */
+const LANG_PATH_CODES = ['pt', 'po', 'it', 'en', 'es', 'sp', 'fr', 'de', 'la'];
 
 /** Strip HTML/JS/CSS keeping a stable text-only body. */
 const extractText = (html: string): { title: string; content: string } => {
@@ -51,15 +53,41 @@ const extractText = (html: string): { title: string; content: string } => {
   return { title, content: body };
 };
 
-/** Build the lang-fallback chain for a given URL. */
+/**
+ * Build the lang-fallback chain for a given URL.
+ * Supports two vatican.va patterns:
+ *   1) Suffixed:  `..._pt.html`  → swap `_pt.html`, `_po.html`, `_it.html`, ...
+ *   2) Path-based: `.../{lang}/...` (`/content/pius-ix/la/...`) → swap segment.
+ */
 const buildLangChain = (url: string): string[] => {
-  const matched = LANG_FALLBACK_SUFFIXES.find((s) => url.endsWith(s));
-  if (!matched) return [url];
-  const stem = url.slice(0, -matched.length);
-  // Try the user-requested language first, then the rest in order.
-  return [matched, ...LANG_FALLBACK_SUFFIXES.filter((s) => s !== matched)].map(
-    (s) => stem + s,
-  );
+  const out: string[] = [url];
+
+  // Pattern 1 — suffix `_xx.html`
+  const suffix = LANG_FALLBACK_SUFFIXES.find((s) => url.endsWith(s));
+  if (suffix) {
+    const stem = url.slice(0, -suffix.length);
+    for (const s of LANG_FALLBACK_SUFFIXES) {
+      const cand = stem + s;
+      if (!out.includes(cand)) out.push(cand);
+    }
+  }
+
+  // Pattern 2 — path segment `/xx/` (only within vatican.va URLs)
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split('/');
+    const langIdx = parts.findIndex((p) => LANG_PATH_CODES.includes(p));
+    if (langIdx > 0) {
+      for (const code of LANG_PATH_CODES) {
+        const clone = [...parts];
+        clone[langIdx] = code;
+        const cand = `${parsed.origin}${clone.join('/')}${parsed.search}`;
+        if (!out.includes(cand)) out.push(cand);
+      }
+    }
+  } catch { /* noop */ }
+
+  return out;
 };
 
 const fetchOnce = async (
@@ -192,6 +220,7 @@ Deno.serve(async (req) => {
 
     // 2) Fetch chain with language fallback
     const chain = buildLangChain(url);
+    const attempts: Array<{ url: string; status: number; reason: string }> = [];
     let lastStatus = 0;
     let extracted: { title: string; content: string } | null = null;
     let winningUrl = url;
@@ -199,30 +228,48 @@ Deno.serve(async (req) => {
     for (const candidate of chain) {
       const { status, html } = await fetchOnce(candidate);
       lastStatus = status;
-      if (status === 200 && html) {
+      let reason = '';
+      if (status === 0) reason = 'network_error_or_timeout';
+      else if (status === 404) reason = 'not_found';
+      else if (status >= 400) reason = `http_${status}`;
+      else if (status === 200 && html) {
         const { title, content } = extractText(html);
         if (content.length >= MIN_CONTENT_LEN) {
           extracted = { title, content };
           winningUrl = candidate;
+          reason = `ok (${content.length} chars)`;
+          attempts.push({ url: candidate, status, reason });
+          log.info('fetch_ok', { url: candidate, len: content.length });
           break;
         }
+        reason = `thin (${content.length} chars, min ${MIN_CONTENT_LEN})`;
         // Thin content — remember it but keep trying other languages
         if (!extracted) {
           extracted = { title, content };
           winningUrl = candidate;
         }
+      } else {
+        reason = `http_${status}`;
       }
+      attempts.push({ url: candidate, status, reason });
+      log.warn('fetch_attempt', { url: candidate, status, reason });
     }
 
     if (!extracted) {
       const step = lastStatus === 404 ? 'fetch_404' : lastStatus === 0 ? 'fetch_error' : `fetch_${lastStatus}`;
       await recordAttempt(url, step);
+      log.error('all_attempts_failed', { url, attempts });
       return R.error(
         lastStatus === 404 ? 404 : 502,
         lastStatus === 404 ? 'not_found' : 'internal_error',
         {
-          message: lastStatus === 404 ? 'Documento não encontrado em nenhum idioma.' : 'Falha ao buscar documento.',
-          step, status: lastStatus, tried: chain,
+          message: lastStatus === 404
+            ? 'Documento não encontrado em nenhum idioma. Verifique se a URL configurada em magisterium-urls.ts ainda existe no vatican.va.'
+            : 'Falha ao buscar documento.',
+          step,
+          status: lastStatus,
+          tried: chain,
+          attempts,
         },
       );
     }
@@ -240,6 +287,7 @@ Deno.serve(async (req) => {
         content_length: extracted.content.length,
         winning_url: winningUrl,
         tried: chain,
+        attempts,
       },
     }, isThin ? 206 : 200);
   } catch (error) {
