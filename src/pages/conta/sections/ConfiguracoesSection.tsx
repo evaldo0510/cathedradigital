@@ -1,28 +1,29 @@
 /**
  * Sprint UX · Área do Usuário — seção Configurações.
  *
- * Agrupa os painéis existentes em abas: Conta / Aparência / Tipografia /
+ * Agrupa os controles existentes em abas: Conta / Aparência / Tipografia /
  * Áudio / Contemplativo / Notificações / Privacidade.
  *
- * Não recria nada — orquestra `A11ySettingsPanel` e `ReadingPreferencesPanel`
- * já presentes no projeto e delega o restante para a página de perfil
- * (que hospeda os controles legados de notificações / privacidade).
+ * Os painéis A11y e Leitura são modais controlados — aqui abrimos via botão.
+ * Nenhuma lógica nova é introduzida; apenas orquestração.
  */
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { EditorialHero } from "@/components/editorial/harmony/EditorialHero";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { UserCircle, Palette, Type, Volume2, Sparkles, BellRing, ShieldCheck, ArrowRight } from "lucide-react";
 import A11ySettingsPanel from "@/components/cathedra/A11ySettingsPanel";
 import { ReadingPreferencesPanel } from "@/components/cathedra/ReadingPreferencesPanel";
 
-function PlaceholderCard({ icon: Icon, title, description, action }: {
+interface SettingsCardProps {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   action: React.ReactNode;
-}) {
+}
+
+function SettingsCard({ icon: Icon, title, description, action }: SettingsCardProps) {
   return (
     <div className="rounded-lg border bg-card p-6">
       <div className="flex items-center gap-2">
@@ -34,21 +35,19 @@ function PlaceholderCard({ icon: Icon, title, description, action }: {
     </div>
   );
 }
+
+function LinkAction({ href, label }: { href: string; label: string }) {
   return (
-    <div className="rounded-lg border bg-card p-6">
-      <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-primary" />
-        <h3 className="font-serif text-base">{title}</h3>
-      </div>
-      <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-      <Button asChild variant="secondary" size="sm" className="mt-4">
-        <Link to={actionHref}>{actionLabel} <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
-      </Button>
-    </div>
+    <Button asChild variant="secondary" size="sm">
+      <Link to={href}>{label} <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+    </Button>
   );
 }
 
 export default function ConfiguracoesSection() {
+  const [a11yOpen, setA11yOpen] = useState(false);
+  const [readingOpen, setReadingOpen] = useState(false);
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <EditorialHero>
@@ -71,55 +70,75 @@ export default function ConfiguracoesSection() {
         </TabsList>
 
         <TabsContent value="conta" className="mt-6">
-          <PlaceholderCard
+          <SettingsCard
             icon={UserCircle}
             title="Dados da conta"
             description="Nome, e-mail, foto e vínculos pastorais são editados na tela de Perfil."
-            actionHref="/conta/perfil" actionLabel="Editar perfil"
+            action={<LinkAction href="/conta/perfil" label="Editar perfil" />}
           />
         </TabsContent>
 
         <TabsContent value="aparencia" className="mt-6">
-          <A11ySettingsPanel />
+          <SettingsCard
+            icon={Palette}
+            title="Aparência e acessibilidade"
+            description="Contraste, tamanho de UI, redução de movimento e opções de leitura acessível."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => setA11yOpen(true)}>
+                Abrir preferências <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            }
+          />
+          <A11ySettingsPanel isOpen={a11yOpen} onClose={() => setA11yOpen(false)} />
         </TabsContent>
 
         <TabsContent value="tipografia" className="mt-6">
-          <ReadingPreferencesPanel />
+          <SettingsCard
+            icon={Type}
+            title="Tipografia do Reader"
+            description="Fonte, tamanho, altura de linha e largura de coluna do leitor bíblico e litúrgico."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => setReadingOpen(true)}>
+                Ajustar leitura <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            }
+          />
+          <ReadingPreferencesPanel isOpen={readingOpen} onClose={() => setReadingOpen(false)} />
         </TabsContent>
 
         <TabsContent value="audio" className="mt-6">
-          <PlaceholderCard
+          <SettingsCard
             icon={Volume2}
             title="Áudio e narração"
             description="Voz do TTS, velocidade e comportamento contínuo são ajustados durante a leitura, no popover do Reader."
-            actionHref="/biblia" actionLabel="Abrir a Bíblia"
+            action={<LinkAction href="/biblia" label="Abrir a Bíblia" />}
           />
         </TabsContent>
 
         <TabsContent value="contemplativo" className="mt-6">
-          <PlaceholderCard
+          <SettingsCard
             icon={Sparkles}
             title="Modo contemplativo"
             description="Tipografia ampliada, arte dinâmica e ritmos do Rosário são ajustados dentro do próprio módulo de oração."
-            actionHref="/oracao/rosario" actionLabel="Abrir o Rosário"
+            action={<LinkAction href="/oracao/rosario" label="Abrir o Rosário" />}
           />
         </TabsContent>
 
         <TabsContent value="notificacoes" className="mt-6">
-          <PlaceholderCard
+          <SettingsCard
             icon={BellRing}
             title="Notificações"
             description="Lembretes rituais, push e WhatsApp são configurados na tela de Perfil."
-            actionHref="/conta/perfil" actionLabel="Configurar lembretes"
+            action={<LinkAction href="/conta/perfil" label="Configurar lembretes" />}
           />
         </TabsContent>
 
         <TabsContent value="privacidade" className="mt-6">
-          <PlaceholderCard
+          <SettingsCard
             icon={ShieldCheck}
             title="Privacidade e dados"
             description="Suas notas, diário e favoritos são privados (RLS por usuário). Para exportar ou excluir dados, contate o suporte."
-            actionHref="/contato" actionLabel="Falar com o suporte"
+            action={<LinkAction href="/contato" label="Falar com o suporte" />}
           />
         </TabsContent>
       </Tabs>
