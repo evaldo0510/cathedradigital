@@ -84,7 +84,10 @@ export interface PrayerAutoNexusResult {
   suggestions: ContinuationSuggestion[];
   /** Nós resolvidos por bucket (para diagnósticos/UI opcional). */
   byBucket: Record<Bucket, ResolvedNode[]>;
+  /** Rótulos por nodeId — exigido pelo contrato ReaderAutoNexusOutput. */
+  labels: Record<string, string>;
 }
+
 
 function nowMs(): number {
   return typeof performance !== 'undefined' ? performance.now() : Date.now();
