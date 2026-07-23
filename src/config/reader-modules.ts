@@ -163,11 +163,25 @@ export const FORBIDDEN_IMPORTS = [
  * a entrada correspondente daqui.
  */
 export const GUARDRAIL_ALLOWLIST: readonly string[] = [
-  // Os próprios arquivos deprecados
+  // Os próprios arquivos deprecados (serão removidos na Fase D)
   'src/components/cathedra/NexusBubbles.tsx',
   'src/components/prayer/rosary/MysteryNexusPanel.tsx',
   // Primitivo shadcn (Popover base)
   'src/components/ui/popover.tsx',
   // ReferencePopover é o único wrapper autorizado
   'src/components/reader/ReferencePopover.tsx',
+  // ── Baseline Fase C: consumidores legados aguardando migração.
+  //    Remover ao concluir a sub-onda de cada módulo (ver docs/reader-template-master-fase-c.md).
+  'src/components/cathedra/BibleReader.tsx',           // sub-onda C.4
+  'src/components/cathedra/Catechism.tsx',             // sub-onda C.3
+  'src/components/cathedra/JornadaStepPage.tsx',       // Fase D
+  'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
+  'src/components/cathedra/SaintDetail.tsx',           // Fase D
+  'src/components/cathedra/PrayerEngineReader.tsx',    // sub-onda C.5
+  // Popovers editoriais legados (ainda usam radix diretamente até migrarem para ReferencePopover)
+  'src/components/cathedra/BibleVersePopover.tsx',
+  'src/components/cathedra/BibleDictionaryPopover.tsx',
+  'src/components/cathedra/CatechismPopover.tsx',
+  'src/lib/nexusContent.ts',
 ];
+
