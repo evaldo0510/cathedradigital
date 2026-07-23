@@ -91,6 +91,29 @@ jobs:
       - name: Guardrail de performance dos adapters do Nexus
         run: bun scripts/nexus-perf-guardrail.ts
 
+  reader-template:
+    name: Reader Template Master · audit + guardrail
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Guardrail — bloqueia imports proibidos
+        run: bun scripts/reader-guardrail.ts
+      - name: Auditoria — score por módulo (falha se blocking < alvo)
+        run: bun scripts/reader-template-audit.ts --report
+      - name: Publicar relatório de aderência
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reader-template-report
+          path: reports/reader-template.json
+          if-no-files-found: warn
+          retention-days: 30
+
   playwright:
     name: Playwright E2E (SEO Glossário)
     runs-on: ubuntu-latest
