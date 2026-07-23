@@ -215,34 +215,114 @@ const DOMAINS = [
   scoreCatechesis,
 ];
 
-function bar(score: number) {
-  const total = 20;
+/* ================================================================== */
+/* Roadmap Executivo — Fases da plataforma                             */
+/* ================================================================== */
+
+interface Phase {
+  id: string;
+  label: string;
+  /** Domínios que compõem a fase. Score da fase = média dos domínios. */
+  domains: string[];
+}
+
+/**
+ * Ordem canônica das fases da Cathedra (comunicação executiva).
+ * Alterar aqui ao introduzir uma nova fase — nunca no output.
+ */
+const PHASES: readonly Phase[] = [
+  { id: 'fundacao',   label: 'Fundação',            domains: ['authentication', 'design-system', 'nexus'] },
+  { id: 'reader',     label: 'Reader Platform',     domains: ['reader-template'] },
+  { id: 'prayer',     label: 'Prayer Platform',     domains: ['prayer-engine'] },
+  { id: 'editorial',  label: 'Editorial Platform',  domains: ['editorial-engine'] },
+  { id: 'collections',label: 'Collections',         domains: ['collections'] },
+  { id: 'catequese',  label: 'Catequese',           domains: ['catechesis'] },
+];
+
+function bar(score: number, total = 20) {
   const filled = Math.round((score / 100) * total);
   return '[' + '█'.repeat(filled) + '·'.repeat(total - filled) + ']';
+}
+
+function delta(current: number, previous: number | null): string {
+  if (previous == null) return '   ·  ';
+  const d = current - previous;
+  if (d === 0) return '  ±0  ';
+  const sign = d > 0 ? '▲+' : '▼';
+  return `  ${sign}${Math.abs(d)}  `;
+}
+
+function loadPrevious(reportPath: string): { overall: number | null; byDomain: Record<string, number> } {
+  if (!existsSync(reportPath)) return { overall: null, byDomain: {} };
+  try {
+    const prev = JSON.parse(readFileSync(reportPath, 'utf8'));
+    const byDomain: Record<string, number> = {};
+    for (const r of prev.reports ?? []) byDomain[r.id] = r.score;
+    return { overall: prev.overall ?? null, byDomain };
+  } catch {
+    return { overall: null, byDomain: {} };
+  }
 }
 
 function main() {
   const args = new Set(process.argv.slice(2));
   const reports = DOMAINS.map((fn) => fn());
   const overall = Math.round(reports.reduce((a, r) => a + r.score, 0) / reports.length);
+  const byId = new Map(reports.map((r) => [r.id, r]));
+
+  const reportPath = resolve(ROOT, 'reports/architecture-score.json');
+  const prev = loadPrevious(reportPath);
+
+  const phases = PHASES.map((p) => {
+    const scores = p.domains.map((d) => byId.get(d)?.score ?? 0);
+    const score = Math.round(scores.reduce((a, s) => a + s, 0) / scores.length);
+    const previousScore =
+      p.domains.every((d) => d in prev.byDomain)
+        ? Math.round(p.domains.reduce((a, d) => a + prev.byDomain[d], 0) / p.domains.length)
+        : null;
+    return { ...p, score, previousScore };
+  });
 
   if (args.has('--json')) {
-    process.stdout.write(JSON.stringify({ overall, reports }, null, 2) + '\n');
+    process.stdout.write(JSON.stringify({ overall, previousOverall: prev.overall, phases, reports }, null, 2) + '\n');
   } else {
-    console.log('━━━ Cathedra Architecture Score ━━━');
+    console.log('');
+    console.log('  CATHEDRA DIGITAL');
+    console.log('  ────────────────────────────────────────────');
+    console.log(`  Arquitetura Geral         ${bar(overall)} ${String(overall).padStart(3)}%${delta(overall, prev.overall)}`);
+    console.log('');
+    phases.forEach((p, i) => {
+      const badge = p.score >= 95 ? '✅' : p.score >= 70 ? '🟡' : p.score >= 30 ? '🟠' : '⚪';
+      console.log(`  FASE ${i + 1} · ${p.label}`);
+      console.log(`  ${badge} ${bar(p.score)} ${String(p.score).padStart(3)}%${delta(p.score, p.previousScore)}`);
+      console.log('');
+    });
+    console.log('  ── Detalhamento por domínio ────────────────');
     for (const r of reports) {
-      const badge = r.score >= r.target ? '✅' : r.score >= 80 ? '⚠' : '❌';
-      console.log(`${badge}  ${r.label.padEnd(22)} ${bar(r.score)} ${String(r.score).padStart(3)}%   alvo ${r.target}%`);
+      const previousScore = prev.byDomain[r.id] ?? null;
+      const badge = r.score >= r.target ? '✅' : r.score >= 80 ? '⚠ ' : '❌';
+      console.log(`  ${badge} ${r.label.padEnd(22)} ${bar(r.score)} ${String(r.score).padStart(3)}%${delta(r.score, previousScore)} alvo ${r.target}%`);
     }
-    console.log('━'.repeat(72));
-    console.log(`Overall: ${overall}%`);
+    console.log('');
   }
 
   if (args.has('--report')) {
-    const out = resolve(ROOT, 'reports/architecture-score.json');
-    mkdirSync(dirname(out), { recursive: true });
-    writeFileSync(out, JSON.stringify({ generatedAt: new Date().toISOString(), overall, reports }, null, 2));
-    console.log(`\n→ Relatório: ${out}`);
+    mkdirSync(dirname(reportPath), { recursive: true });
+    writeFileSync(
+      reportPath,
+      JSON.stringify(
+        {
+          generatedAt: new Date().toISOString(),
+          overall,
+          previousOverall: prev.overall,
+          phases,
+          reports,
+        },
+        null,
+        2,
+      ),
+    );
+    console.log(`\n→ Relatório: ${reportPath}`);
   }
 }
 
