@@ -874,36 +874,52 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
-      {/* Referências */}
+      {/* Referências inline — via ReferencePopover canônico */}
       {(current.refs?.bible?.length || current.refs?.catechism?.length) && !focus && (
         <section className="mb-10 border-t border-stitch-outline-variant/30 pt-6">
           <p className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
-            Nexus
+            Referências
           </p>
-          <ul className="space-y-2 font-stitch-body text-sm">
+          <div className="flex flex-wrap gap-2 font-stitch-body text-sm">
             {current.refs?.bible?.map((ref) => (
-              <li key={`b-${ref}`}>
-                <Link
-                  to={`/bible?q=${encodeURIComponent(ref)}`}
-                  className="inline-flex items-center gap-2 text-stitch-on-surface hover:text-stitch-secondary hover:underline"
-                >
-                  <BookOpen className="h-4 w-4 text-stitch-on-surface-variant" aria-hidden />
-                  {ref}
-                </Link>
-              </li>
+              <ReferencePopover
+                key={`b-${ref}`}
+                kind="bible"
+                label={ref}
+                ariaLabel={`Abrir passagem ${ref}`}
+                title={ref}
+                content={
+                  <Link
+                    to={`/bible?q=${encodeURIComponent(ref)}`}
+                    className="inline-flex items-center gap-2 text-stitch-secondary hover:underline"
+                  >
+                    <BookOpen className="h-4 w-4" aria-hidden />
+                    Abrir na Bíblia
+                  </Link>
+                }
+                className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/50 bg-stitch-surface/40 px-3 py-1 text-stitch-on-surface hover:border-stitch-secondary/60"
+              />
             ))}
             {current.refs?.catechism?.map((n) => (
-              <li key={`c-${n}`}>
-                <Link
-                  to={`/catechism?p=${n}`}
-                  className="inline-flex items-center gap-2 text-stitch-on-surface hover:text-stitch-secondary hover:underline"
-                >
-                  <Church className="h-4 w-4 text-stitch-on-surface-variant" aria-hidden />
-                  Catecismo §{n}
-                </Link>
-              </li>
+              <ReferencePopover
+                key={`c-${n}`}
+                kind="catechism"
+                label={`CIC §${n}`}
+                ariaLabel={`Abrir Catecismo §${n}`}
+                title={`Catecismo §${n}`}
+                content={
+                  <Link
+                    to={`/catechism?p=${n}`}
+                    className="inline-flex items-center gap-2 text-stitch-secondary hover:underline"
+                  >
+                    <Church className="h-4 w-4" aria-hidden />
+                    Abrir no Catecismo
+                  </Link>
+                }
+                className="inline-flex items-center gap-1.5 rounded-full border border-stitch-outline-variant/50 bg-stitch-surface/40 px-3 py-1 text-stitch-on-surface hover:border-stitch-secondary/60"
+              />
             ))}
-          </ul>
+          </div>
         </section>
       )}
 
