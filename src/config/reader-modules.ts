@@ -196,6 +196,10 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
   'src/components/cathedra/SaintDetail.tsx',           // Fase D
   'src/components/cathedra/PrayerEngineReader.tsx',    // sub-onda C.5
+  'src/components/cathedra/MissalPage.tsx',            // sub-onda C.4
+  'src/components/cathedra/MissaContinuousReader.tsx', // sub-onda C.4
+  'src/components/cathedra/BreviaryPage.tsx',          // sub-onda C.4
+  'src/components/cathedra/BreviaryContinuousReader.tsx', // sub-onda C.4
   // Popovers editoriais legados (ainda usam radix diretamente até migrarem para ReferencePopover)
   'src/components/cathedra/BibleVersePopover.tsx',
   'src/components/cathedra/BibleDictionaryPopover.tsx',
