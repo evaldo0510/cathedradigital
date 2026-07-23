@@ -233,6 +233,19 @@ export default function EditorialAuditPage() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [prevSnapshot, setPrevSnapshot] = useState<Snapshot | null>(null);
   const [auditing, setAuditing] = useState(false);
+  const [coverage, setCoverage] = useState<Array<{
+    area: string; total: number; gold: number; silver: number; bronze: number;
+    review: number; avg_ice: number; gate_passing: number;
+  }>>([]);
+  const [priorityRows, setPriorityRows] = useState<Array<{
+    slug: string; term: string; area: string; status: string;
+    ice: number; editorial: number; nexus: number;
+    missing_deep: boolean; missing_faq: boolean; missing_logos: boolean;
+    missing_bible: boolean; missing_cic: boolean; missing_fathers: boolean;
+    missing_count: number; effort_tier: string;
+    inbound_refs: number; impact_tier: string; priority: string;
+  }>>([]);
+  const [priorityFilter, setPriorityFilter] = useState<"quick_win" | "red" | "orange" | "yellow" | "all">("quick_win");
 
   const load = useCallback(async () => {
     setLoading(true);
