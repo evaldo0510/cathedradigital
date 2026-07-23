@@ -348,7 +348,7 @@ const ProfilePage: React.FC = () => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((v || 0) / 100);
 
   return (
-    <ContemplativeLayout subtitle="Santuário Pessoal" title="Meu Perfil" maxW="max-w-spacing-2xl">
+    <ContemplativeLayout subtitle="Santuário Pessoal" title="Meu Perfil" maxW="max-w-5xl w-full">
       <div className="space-y-spacing-xl relative">
         <AnimatePresence>
           {showLevelUp && (
