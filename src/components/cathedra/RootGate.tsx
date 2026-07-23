@@ -1,7 +1,8 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { resolveAuthHome } from '@/lib/lastRoute';
+import { trackEvent } from '@/lib/analytics';
 
 const PublicLanding = lazy(() => import('@/pages/PublicLanding'));
 
@@ -14,6 +15,16 @@ const PublicLanding = lazy(() => import('@/pages/PublicLanding'));
  */
 const RootGate: React.FC = () => {
   const { authenticated, loading } = useAuth();
+  const target = authenticated ? resolveAuthHome() : null;
+
+  useEffect(() => {
+    if (loading) return;
+    if (authenticated && target) {
+      trackEvent('atrium_redirect', { target });
+    } else if (!authenticated) {
+      trackEvent('landing_view', { path: '/' });
+    }
+  }, [authenticated, loading, target]);
 
   if (loading) {
     return (
@@ -27,8 +38,8 @@ const RootGate: React.FC = () => {
     );
   }
 
-  if (authenticated) {
-    return <Navigate to={resolveAuthHome()} replace />;
+  if (authenticated && target) {
+    return <Navigate to={target} replace />;
   }
 
   return (

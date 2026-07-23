@@ -50,6 +50,8 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
+import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';
+import { installSessionRenewal } from './lib/sessionRenewal';
 
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
@@ -292,6 +294,11 @@ const AppLayout: React.FC = () => {
 
   // Enable automatic accessibility check
   useA11yGuard(true);
+
+  // Renovação silenciosa de sessão + "lembrar dispositivo"
+  useEffect(() => { installSessionRenewal(); }, []);
+
+
   
   useEffect(() => {
     const handleGlobalLang = (e: any) => {
@@ -503,6 +510,8 @@ const AppLayout: React.FC = () => {
         )}
         
         <GlobalLogosAI />
+        <WelcomeFirstAccess />
+
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main
