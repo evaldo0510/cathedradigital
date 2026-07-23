@@ -51,6 +51,7 @@ import CatechismPendingPanel from './CatechismPendingPanel';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { NexusPanel } from '@/components/nexus/NexusPanel';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 
 
@@ -716,14 +717,21 @@ const CatechismReaderContinuation: React.FC<{ paragraph: number; excerpt: string
     [paragraph, excerpt],
   );
   return (
-    <ReaderContinuation
-      context={{
-        kind: 'catechism',
-        id: String(paragraph),
-        graphNodeId: nexus.selfId ?? undefined,
-        meta: { paragraph, nextParagraph: paragraph + 1 },
-      }}
-      suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-    />
+    <div className="space-y-spacing-xl">
+      <NexusPanel
+        output={nexus}
+        title="Nexus Theologicus"
+        kicker={`Conexões de §${paragraph}`}
+      />
+      <ReaderContinuation
+        context={{
+          kind: 'catechism',
+          id: String(paragraph),
+          graphNodeId: nexus.selfId ?? undefined,
+          meta: { paragraph, nextParagraph: paragraph + 1 },
+        }}
+        suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+      />
+    </div>
   );
 };

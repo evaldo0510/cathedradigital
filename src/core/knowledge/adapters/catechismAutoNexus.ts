@@ -18,8 +18,10 @@ export interface CatechismNexusInput {
   excerpt?: string | null;
 }
 
+// Ordem canônica do Catecismo (Sprint Nexus 2.0):
+// bíblia → glossário → santos → padres → magistério → orações → jornadas
 const BUCKETS: readonly ReaderNexusBucket[] = [
-  'bible', 'glossary', 'magisterium', 'prayer', 'saint', 'journey',
+  'bible', 'glossary', 'saint', 'father', 'magisterium', 'prayer', 'journey',
 ];
 
 const CACHE_MAX = 64;
