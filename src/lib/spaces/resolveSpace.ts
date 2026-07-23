@@ -49,6 +49,7 @@ const CLOISTER_PREFIXES = [
   '/logos',
   '/chat',
   '/diario',
+  '/conta',
   '/contemplatio',
   '/contemplacao',
   '/confession',
