@@ -119,7 +119,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
                 className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                   selectedPassage === p.ref
                     ? 'bg-primary border-primary text-primary-foreground shadow-premium'
-                    : 'bg-card border-border text-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/[0.04]'
+                    : 'bg-card border-border text-primary hover:border-primary hover:text-primary hover:bg-primary/[0.04]'
                 }`}
               >
                 {p.ref}
