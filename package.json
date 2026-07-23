@@ -111,7 +111,7 @@
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
-    "@capacitor/cli": "^8.3.4",
+    "@capacitor/cli": "^8.4.2",
     "@capacitor/core": "^8.3.4",
     "@hookform/resolvers": "^3.10.0",
     "@lovable.dev/cloud-auth-js": "^1.1.2",
