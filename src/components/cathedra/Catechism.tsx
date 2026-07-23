@@ -48,11 +48,15 @@ import { CathedraCard } from './CathedraCard';
 import CatechismDiagnosticPanel from './CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from './CatechismPendingPanel';
-import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+// Reader Template Master (COS §10) — única cadeia de leitura permitida.
+import {
+  ReaderShell,
+  EditorialHero,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
-import NexusBubbles from '@/components/cathedra/NexusBubbles';
-import { NexusPanel } from '@/components/nexus/NexusPanel';
-import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import { EditorialDivider } from '@/components/editorial';
 
 
 const CatechismContent: React.FC<{ 
