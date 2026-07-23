@@ -294,6 +294,17 @@ export default function EditorialAuditPage() {
   }, []);
   useEffect(() => { void loadJobs(); }, [loadJobs]);
 
+  // Sprint 6.1.2 — total de relações Nexus canônicas (para certificado)
+  const [nexusRelationCount, setNexusRelationCount] = useState<number>(0);
+  useEffect(() => {
+    (async () => {
+      const { count } = await (supabase as any)
+        .from("nexus_relations")
+        .select("*", { count: "exact", head: true });
+      if (typeof count === "number") setNexusRelationCount(count);
+    })();
+  }, []);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
