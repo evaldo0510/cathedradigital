@@ -1,12 +1,21 @@
-import { Button } from '@/components/ui/button';
-import React, { useState, memo } from 'react';
+/**
+ * BibleVersePopover — adapter fino sobre `ReferencePopover` canônico.
+ *
+ * Reader Architecture Rule (COS §10): este arquivo NÃO pode importar
+ * `@radix-ui/react-popover` nem `@/components/ui/popover` diretamente.
+ * Toda referência bíblica inline usa `ReferencePopover`, exatamente como
+ * `CatechismPopover` faz para o CIC. Assim, Bíblia e Catecismo compartilham
+ * animação, tipografia, espaçamentos, estados de carregamento e comportamento
+ * de abertura/fechamento — sem UX divergente.
+ *
+ * A API pública (props) e o `data-testid` do gatilho são preservados para
+ * manter compatibilidade com os 20+ call sites e com os testes existentes.
+ */
+
+import React, { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ReferencePopover } from '@/components/reader';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { BOOK_NAME_BY_ABBR } from '@/lib/bibleCanon';
@@ -28,36 +37,23 @@ const sanitizeBookName = (raw: unknown, abbr: string): string => {
   return BOOK_NAME_BY_ABBR[abbr] || abbr;
 };
 
+const renderVerseText = (text: unknown): string => {
+  if (typeof text !== 'string' || !text.trim()) return '…';
+  if (text.toLowerCase() === 'undefined') return '…';
+  return text;
+};
 
-const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
-  abbr,
-  chapter,
-  verse,
-  label,
-  onNavigate,
-}) => {
+interface BodyProps extends BibleVersePopoverProps {}
+
+const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNavigate }) => {
   const navigate = useNavigate();
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [fetched, setFetched] = useState(false);
   const [bookName, setBookName] = useState<string>(() => sanitizeBookName(undefined, abbr));
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const safeLabel = (label && label !== 'undefined') ? label : `${sanitizeBookName(undefined, abbr)} ${chapter}${verse ? `,${verse}` : ''}`;
-  const headerTitle = `${bookName} ${chapter}${verse ? `,${verse}` : ''} (NAA)`;
-
-  const handleNavigate = () => {
-    if (onNavigate) {
-      onNavigate(abbr, chapter, verse);
-      return;
-    }
-    navigate(buildBibleUrl({ abbr, chapter, verse }));
-  };
-
-  const fetchVerses = async () => {
-    if (fetched) return;
-    setLoading(true);
-    setErrorMsg(null);
+  const fetchVerses = useCallback(async () => {
     const correlationId = `bvp-${abbr}-${chapter}-${Date.now()}`;
     try {
       console.info('[BibleVersePopover] invoke bible-text', { abbrev: abbr, chapter, verse, correlationId });
@@ -78,7 +74,6 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
       } else if (verse) {
         const idx = incoming.findIndex((v: any) => Number(v.number) === Number(verse));
         if (idx === -1) {
-          // Versículo não encontrado: mostra os primeiros como contexto sem deixar "undefined"
           setVerses(incoming.slice(0, 3));
         } else {
           const start = Math.max(0, idx - 1);
@@ -96,75 +91,95 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
       setLoading(false);
       setFetched(true);
     }
+  }, [abbr, chapter, verse]);
+
+  React.useEffect(() => {
+    void fetchVerses();
+  }, [fetchVerses]);
+
+  const handleNavigate = () => {
+    if (onNavigate) {
+      onNavigate(abbr, chapter, verse);
+      return;
+    }
+    navigate(buildBibleUrl({ abbr, chapter, verse }));
   };
 
-  const renderVerseText = (text: unknown): string => {
-    if (typeof text !== 'string' || !text.trim()) return '…';
-    if (text.toLowerCase() === 'undefined') return '…';
-    return text;
-  };
+  const goLabel = verse ? `Ir ao versículo ${verse}` : 'Abrir completo';
 
   return (
-    <Popover onOpenChange={(open) => open && fetchVerses()}>
-      <PopoverTrigger asChild>
-        <Button
-          data-testid="bible-verse-popover-trigger"
-          className="px-spacing-xs py-spacing-2xs rounded-premium-full bg-card border border-border text-premium-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
-        >
-          {safeLabel}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        side="top"
-        align="start"
-        className="w-spacing-4xl max-h-spacing-4xl overflow-y-auto p-spacing-0 rounded-premium border-primary/20 bg-card shadow-premium"
+    <div className="space-y-spacing-sm">
+      <button
+        type="button"
+        onClick={handleNavigate}
+        className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
       >
-        <div className="p-spacing-sm border-b border-border bg-primary/5 flex items-center justify-between">
-          <div className="flex items-center gap-spacing-xs">
-            <Icons.Book className="w-spacing-sm h-spacing-sm text-primary" />
-            <span className="text-premium-xs font-black uppercase tracking-wider text-primary">
-              {headerTitle}
-            </span>
-          </div>
-          <Button
-            onClick={handleNavigate}
-            className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
-          >
-            {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
-            <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
-          </Button>
+        {goLabel}
+        <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
+      </button>
+
+      {loading && (
+        <div className="space-y-spacing-xs py-spacing-xs">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-spacing-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
+          ))}
         </div>
-        <div className="p-spacing-sm space-y-spacing-xs">
-          {loading && (
-            <div className="space-y-spacing-xs py-spacing-xs">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-spacing-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
-              ))}
-            </div>
-          )}
-          {!loading && verses.length > 0 && (
-            <>
-              {verses.map(v => (
-                <p key={v.number} className="text-premium-xs leading-relaxed text-foreground/90">
-                  <sup className="text-primary font-bold mr-spacing-2xs">{v.number}</sup>
-                  {renderVerseText(v.text)}
-                </p>
-              ))}
-              {!verse && (
-                <p className="text-premium-xs text-muted-foreground italic pt-spacing-2xs border-t border-border">
-                  Mostrando primeiros versículos...
-                </p>
-              )}
-            </>
-          )}
-          {!loading && fetched && verses.length === 0 && (
-            <p className="text-premium-xs text-muted-foreground italic">
-              {errorMsg || 'Texto não disponível.'}
+      )}
+
+      {!loading && verses.length > 0 && (
+        <div className="space-y-spacing-xs">
+          {verses.map(v => (
+            <p key={v.number} className="text-premium-xs leading-relaxed text-foreground/90 font-serif">
+              <sup className="text-primary font-bold mr-spacing-2xs">{v.number}</sup>
+              {renderVerseText(v.text)}
+            </p>
+          ))}
+          {!verse && (
+            <p className="text-premium-xs text-muted-foreground italic pt-spacing-2xs border-t border-border">
+              Mostrando primeiros versículos…
             </p>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      )}
+
+      {!loading && fetched && verses.length === 0 && (
+        <p className="text-premium-xs text-muted-foreground italic">
+          {errorMsg || 'Texto não disponível.'}
+        </p>
+      )}
+
+      {/* Mantém o nome do livro no rodapé, para paridade com o header antigo */}
+      {!loading && verses.length > 0 && (
+        <p className="text-premium-xs text-muted-foreground pt-spacing-2xs border-t border-border">
+          {bookName} {chapter}{verse ? `,${verse}` : ''} · NAA
+        </p>
+      )}
+    </div>
+  );
+};
+
+const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({ abbr, chapter, verse, label, onNavigate }) => {
+  const safeLabel = (label && label !== 'undefined')
+    ? label
+    : `${sanitizeBookName(undefined, abbr)} ${chapter}${verse ? `,${verse}` : ''}`;
+
+  return (
+    <ReferencePopover
+      kind="bible"
+      label={safeLabel}
+      ariaLabel={safeLabel}
+      title={`${safeLabel} · NAA`}
+      className="font-bold"
+      renderContent={() => (
+        <BibleVersePopoverBody
+          abbr={abbr}
+          chapter={chapter}
+          verse={verse}
+          label={safeLabel}
+          onNavigate={onNavigate}
+        />
+      )}
+    />
   );
 });
 
