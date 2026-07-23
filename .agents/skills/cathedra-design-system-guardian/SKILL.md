@@ -28,6 +28,9 @@ Ver `docs/CATHEDRA-CONSTITUTION.md`. Este skill executa os artigos:
 
 | Primitivo | Uso |
 |---|---|
+| `ReaderShell` | Esqueleto de TODA leitura (Bíblia, CIC, Glossário, Santos, Missal, LH, Orações, Jornadas, Coleções, Magistério) |
+| `ReferencePopover` | ÚNICO popover de referência inline permitido |
+| `NexusPanel` | ÚNICO painel de Nexus permitido |
 | `EditorialHero` | Header de página âncora |
 | `EditorialCard` (`dense`/`balanced`/`minimal`) | Todos os cards |
 | `Button` (shadcn) | Todos os botões |
@@ -35,6 +38,25 @@ Ver `docs/CATHEDRA-CONSTITUTION.md`. Este skill executa os artigos:
 | `PrayerPortal` | Toda oração |
 | `ReaderContinuation` | Todo rodapé editorial |
 | Lucide (`lucide-react`) | Todos os ícones |
+
+## Reader Architecture Rule (inegociável)
+
+Estrutura única de leitura:
+
+```
+ReaderShell
+  ├─ EditorialHero
+  ├─ ReaderContent (children)
+  │    └─ ReferencePopover (inline)
+  ├─ NexusPanel
+  └─ ReaderContinuation
+```
+
+- Se existir `ReaderShell` → proibido criar outro Reader/Shell.
+- Se existir `NexusPanel` → proibido criar outro Nexus (`NexusBubbles`, `MysteryNexusPanel`, `AutoNexusList`, `NexusFullList` local, etc.).
+- Se existir `ReferencePopover` → proibido criar outro Popover de referência (`BibleVersePopover`, `BibleDictionaryPopover`, `TagBubble` popover, etc.).
+- Toda leitura importa exclusivamente de `@/components/reader`.
+- Extensão via props / render props. Nunca via novo componente paralelo.
 
 ## Antes de criar componente novo, perguntar
 
@@ -52,9 +74,12 @@ Só criar de fato após passar pelas 4 perguntas.
 - Skeleton custom quando cabe `ContentSkeleton`.
 - Hero paralelo em vez de estender `EditorialHero`.
 - Portal de oração paralelo (usar `PrayerPortal` + tema em `portalTheme.ts`).
+- **Reader paralelo** — usar `ReaderShell`.
+- **Nexus paralelo** (`NexusBubbles`, `MysteryNexusPanel`, `AutoNexusList`, `NexusFullList` local) — usar `NexusPanel`.
+- **Popover de referência paralelo** — usar `ReferencePopover`.
 - Ícone de outra lib que não Lucide.
 - Cor hardcoded (`text-white`, `bg-[#...]`).
 - `font-*` inline.
 - Hook após early-return.
 
-Rejeitar qualquer PR que introduza duplicata ou quebre ordem de hooks.
+Rejeitar qualquer PR que introduza duplicata, quebre ordem de hooks ou viole a Reader Architecture Rule.
