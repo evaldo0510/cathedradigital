@@ -18,6 +18,7 @@ import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
 import ContemplativeLayout from './ContemplativeLayout';
 import PremiumAuditTrail from './PremiumAuditTrail';
+import { exportProfilePdf, type DonationRow, type AuditRow } from '@/lib/profile-pdf-export';
 
 const STREAK_MILESTONES = [
   { days: 7, label: 'Chama Constante', badge: '🔥' },
@@ -58,16 +59,11 @@ const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, m
         </div>
       </div>
 
-      {/* Barra até próximo marco */}
       <div className="space-y-spacing-2xs">
         <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-foreground/75">
-          <span>
-            {nextMilestone ? `Rumo a ${nextMilestone.label}` : 'Todos os marcos alcançados'}
-          </span>
+          <span>{nextMilestone ? `Rumo a ${nextMilestone.label}` : 'Todos os marcos alcançados'}</span>
           {nextMilestone && (
-            <span className="text-primary tabular-nums">
-              {remaining} {remaining === 1 ? 'dia' : 'dias'}
-            </span>
+            <span className="text-primary tabular-nums">{remaining} {remaining === 1 ? 'dia' : 'dias'}</span>
           )}
         </div>
         <div className="relative h-spacing-xs bg-muted rounded-premium-full overflow-hidden">
@@ -78,7 +74,6 @@ const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, m
         </div>
       </div>
 
-      {/* Marcos 7 / 30 / 100 */}
       <div className="grid grid-cols-3 gap-spacing-sm pt-spacing-2xs">
         {STREAK_MILESTONES.map(m => {
           const unlocked = streak >= m.days;
@@ -86,9 +81,7 @@ const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, m
             <div
               key={m.days}
               className={`rounded-premium p-spacing-sm text-center transition-all border ${
-                unlocked
-                  ? 'bg-primary/10 border-primary/30'
-                  : 'bg-muted/40 border-border opacity-70'
+                unlocked ? 'bg-primary/10 border-primary/30' : 'bg-muted/40 border-border opacity-70'
               }`}
             >
               <p className={`text-premium-lg mb-spacing-2xs ${unlocked ? '' : 'grayscale'}`} aria-hidden="true">
@@ -99,9 +92,7 @@ const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, m
                 {m.label}
               </p>
               {unlocked && (
-                <p className="text-[9px] font-bold text-primary uppercase tracking-wider mt-spacing-2xs">
-                  Conquistado
-                </p>
+                <p className="text-[9px] font-bold text-primary uppercase tracking-wider mt-spacing-2xs">Conquistado</p>
               )}
             </div>
           );
@@ -110,6 +101,19 @@ const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, m
     </CathedraCard>
   );
 };
+
+type ActivityKind = 'donation' | 'audit';
+interface ActivityItem {
+  id: string;
+  kind: ActivityKind;
+  date: string;
+  title: string;
+  subtitle: string;
+  amount?: number;
+  status?: string;
+}
+
+const PAGE_SIZE = 10;
 
 const ProfilePage: React.FC = () => {
   const { user, profile, loading } = useAuth();
@@ -132,8 +136,15 @@ const ProfilePage: React.FC = () => {
   const [weeklyGoal, setWeeklyGoal] = useState(7);
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
   const [showLevelUp, setShowLevelUp] = useState(false);
-  const [showAllBadges, setShowAllBadges] = useState(false);
   const prevLevelRef = useRef<number | null>(null);
+
+  // Activity + achievements data
+  const [donations, setDonations] = useState<DonationRow[]>([]);
+  const [auditRows, setAuditRows] = useState<AuditRow[]>([]);
+  const [earnedMap, setEarnedMap] = useState<Record<string, string>>({});
+  const [activityFilter, setActivityFilter] = useState<'all' | ActivityKind>('all');
+  const [activityPage, setActivityPage] = useState(1);
+  const [exportingPdf, setExportingPdf] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate(AppRoute.LOGIN);
@@ -161,43 +172,49 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetchStats = async () => {
-      const [postsRes, likesRes, notesRes, historyRes] = await Promise.all([
+    const fetchAll = async () => {
+      const [postsRes, likesRes, notesRes, historyRes, donRes, auditRes, achRes] = await Promise.all([
         supabase.from('community_posts').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
         supabase.from('community_likes').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
         supabase.from('user_notes').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
         supabase.from('user_history').select('visited_at').eq('user_id', user.id),
+        supabase.from('transactions')
+          .select('id, created_at, amount, status, description, payment_id, is_donation')
+          .eq('user_id', user.id).order('created_at', { ascending: false }),
+        supabase.from('audit_logs')
+          .select('id, created_at, event_type, path, metadata')
+          .eq('user_id', user.id).order('created_at', { ascending: false }).limit(200),
+        supabase.from('user_achievements').select('achievement_id, earned_at').eq('user_id', user.id),
       ]);
-      const uniqueDays = new Set((historyRes.data || []).map(h => h.visited_at.slice(0, 10))).size;
+      const uniqueDays = new Set((historyRes.data || []).map((h: any) => h.visited_at.slice(0, 10))).size;
       setStats({
         posts: postsRes.count || 0,
         likes: likesRes.count || 0,
         notes: notesRes.count || 0,
         daysActive: uniqueDays,
       });
+      setDonations(((donRes.data as any[]) || []) as DonationRow[]);
+      setAuditRows(((auditRes.data as any[]) || []) as AuditRow[]);
+      const map: Record<string, string> = {};
+      ((achRes.data as any[]) || []).forEach(a => { map[a.achievement_id] = a.earned_at; });
+      setEarnedMap(map);
     };
-    fetchStats();
+    fetchAll();
   }, [user]);
 
   const badges = useMemo(() => {
-    const currentBadges = new Set(profile?.badges || []);
+    const unlockedIds = new Set([...(profile?.badges || []), ...Object.keys(earnedMap)]);
     return BADGE_DEFINITIONS.map(b => ({
       id: b.id,
       label: b.name,
       description: b.description,
-      icon: <span className="text-premium-xl">{b.icon}</span>,
-      unlocked: currentBadges.has(b.id),
+      icon: b.icon,
+      unlocked: unlockedIds.has(b.id),
+      earnedAt: earnedMap[b.id] || null,
     }));
-  }, [profile?.badges]);
+  }, [profile?.badges, earnedMap]);
 
-  const unlockedCount = useMemo(() => (profile?.badges || []).length, [profile?.badges]);
-  const visibleBadges = useMemo(() => {
-    if (showAllBadges) return badges;
-    // Prioriza desbloqueadas, completa com bloqueadas até 8
-    const unlocked = badges.filter(b => b.unlocked);
-    const locked = badges.filter(b => !b.unlocked);
-    return [...unlocked, ...locked].slice(0, 8);
-  }, [badges, showAllBadges]);
+  const unlockedCount = useMemo(() => badges.filter(b => b.unlocked).length, [badges]);
 
   const totalXp = profile?.xp || 0;
   const { levelIdx: currentLevelIdx, levelName, nextLevel, progress: xpProgress } = getLevelInfo(totalXp);
@@ -210,30 +227,48 @@ const ProfilePage: React.FC = () => {
     prevLevelRef.current = currentLevelIdx;
   }, [currentLevelIdx]);
 
+  // Activity feed unificado
+  const activityItems = useMemo<ActivityItem[]>(() => {
+    const items: ActivityItem[] = [];
+    donations.forEach(d => items.push({
+      id: `d-${d.payment_id || d.created_at}`,
+      kind: 'donation',
+      date: d.created_at || '',
+      title: d.is_donation ? 'Doação' : 'Assinatura',
+      subtitle: d.description || '—',
+      amount: d.amount,
+      status: d.status || undefined,
+    }));
+    auditRows.forEach(a => items.push({
+      id: `a-${(a as any).id || a.created_at}`,
+      kind: 'audit',
+      date: a.created_at || '',
+      title: a.event_type,
+      subtitle: a.path || '—',
+    }));
+    return items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  }, [donations, auditRows]);
+
+  const filteredActivity = useMemo(
+    () => activityFilter === 'all' ? activityItems : activityItems.filter(i => i.kind === activityFilter),
+    [activityItems, activityFilter],
+  );
+  const totalPages = Math.max(1, Math.ceil(filteredActivity.length / PAGE_SIZE));
+  const pagedActivity = filteredActivity.slice((activityPage - 1) * PAGE_SIZE, activityPage * PAGE_SIZE);
+
+  useEffect(() => { setActivityPage(1); }, [activityFilter]);
+
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('A imagem deve ter no máximo 2MB');
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) { toast.error('A imagem deve ter no máximo 2MB'); return; }
     setUploading(true);
     const ext = file.name.split('.').pop();
     const path = `${user.id}/avatar.${ext}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(path, file, { upsert: true });
-
-    if (uploadError) {
-      toast.error('Erro ao enviar avatar');
-      setUploading(false);
-      return;
-    }
-
+    const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
+    if (uploadError) { toast.error('Erro ao enviar avatar'); setUploading(false); return; }
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
     const freshUrl = `${publicUrl}?t=${Date.now()}`;
-
     await supabase.from('profiles').update({ avatar_url: freshUrl } as any).eq('id', user.id);
     setAvatarUrl(freshUrl);
     setUploading(false);
@@ -241,17 +276,14 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user || saving) return;
     setSaving(true);
-    const handlePush = async () => {
-      try {
-        if (pushEnabled) await subscribe();
-        else await unsubscribe();
-      } catch (err) { console.error('BG Push update failed:', err); }
-    };
-    handlePush();
-
+    const toastId = toast.loading('Salvando alterações...');
     try {
+      try {
+        if (pushEnabled) await subscribe(); else await unsubscribe();
+      } catch (err) { console.error('BG Push update failed:', err); }
+
       const { error } = await supabase.from('profiles').update({
         name, bio,
         whatsapp_number: whatsappNumber,
@@ -264,14 +296,32 @@ const ProfilePage: React.FC = () => {
         paroquia: paroquia || null,
         movimento_pastoral: movimentoPastoral || null,
       } as any).eq('id', user.id);
-
       if (error) throw error;
-      toast.success('Perfil atualizado!');
-    } catch (err) {
+      toast.success('Perfil atualizado com sucesso!', { id: toastId });
+    } catch (err: any) {
       console.error('Failed to save profile:', err);
-      toast.error('Erro ao salvar perfil');
+      toast.error(`Erro ao salvar: ${err?.message || 'tente novamente'}`, { id: toastId });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    if (!user || exportingPdf) return;
+    setExportingPdf(true);
+    try {
+      exportProfilePdf({
+        userName: profile?.name || '',
+        userEmail: user.email || '',
+        donations,
+        audit: auditRows,
+      });
+      toast.success('Relatório PDF gerado!');
+    } catch (err: any) {
+      console.error('PDF export failed:', err);
+      toast.error('Falha ao gerar PDF');
+    } finally {
+      setExportingPdf(false);
     }
   };
 
@@ -280,7 +330,6 @@ const ProfilePage: React.FC = () => {
       <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
     </div>
   );
-
   if (!user || !profile) return null;
 
   const initials = (profile.name || user.email || '?').slice(0, 2).toUpperCase();
@@ -293,14 +342,14 @@ const ProfilePage: React.FC = () => {
     { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-spacing-md h-spacing-md" /> },
   ];
 
+  const fmtDateShort = (iso: string) =>
+    iso ? new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+  const fmtBRL = (v: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((v || 0) / 100);
+
   return (
-    <ContemplativeLayout
-      subtitle="Santuário Pessoal"
-      title="Meu Perfil"
-      maxW="max-w-spacing-2xl"
-    >
+    <ContemplativeLayout subtitle="Santuário Pessoal" title="Meu Perfil" maxW="max-w-spacing-2xl">
       <div className="space-y-spacing-xl relative">
-        {/* Level Up Overlay */}
         <AnimatePresence>
           {showLevelUp && (
             <motion.div
@@ -329,10 +378,9 @@ const ProfilePage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Hero unificado: avatar + identidade + nível + CTA contemplativo */}
+        {/* Hero */}
         <CathedraCard className="p-spacing-xl">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-spacing-lg">
-            {/* Avatar */}
             <div className="relative w-spacing-4xl h-spacing-4xl group shrink-0">
               <Avatar className="w-spacing-4xl h-spacing-4xl border-4 border-primary/20">
                 {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
@@ -354,7 +402,6 @@ const ProfilePage: React.FC = () => {
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
             </div>
 
-            {/* Identidade + Nível */}
             <div className="flex-1 min-w-0 text-center sm:text-left space-y-spacing-sm w-full">
               <div>
                 <h1 className="text-premium-2xl font-black text-foreground truncate">{profile.name || 'Peregrino'}</h1>
@@ -362,8 +409,6 @@ const ProfilePage: React.FC = () => {
                   Peregrino · Desde {memberSince}
                 </p>
               </div>
-
-              {/* Barra XP compacta */}
               <div className="space-y-spacing-2xs">
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-foreground/75">
                   <span>Nível {currentLevelIdx + 1} · {levelName}</span>
@@ -379,7 +424,6 @@ const ProfilePage: React.FC = () => {
                   {nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo alcançado'}
                 </p>
               </div>
-
               <CathedraButton
                 variant="outline"
                 onClick={() => navigate('/spiritual-profile')}
@@ -392,7 +436,6 @@ const ProfilePage: React.FC = () => {
           </div>
         </CathedraCard>
 
-        {/* Stats compactos */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm">
           {statCards.map(s => (
             <CathedraCard key={s.label} className="p-spacing-md text-center space-y-spacing-2xs">
@@ -403,27 +446,27 @@ const ProfilePage: React.FC = () => {
           ))}
         </div>
 
-        {/* Streak / Ofensiva Espiritual */}
         <StreakCard streak={profile.streak || 0} maxStreak={profile.max_streak || 0} />
 
-
-        {/* Tabs organizam o resto */}
         <Tabs defaultValue="overview" className="space-y-spacing-lg">
-          <TabsList className="w-full grid grid-cols-3 h-auto p-spacing-2xs rounded-premium-full bg-muted">
-            <TabsTrigger value="overview" className="rounded-premium-full text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              Visão Geral
-            </TabsTrigger>
-            <TabsTrigger value="preferences" className="rounded-premium-full text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              Preferências
-            </TabsTrigger>
-            <TabsTrigger value="security" className="rounded-premium-full text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:shadow-sm">
-              Segurança
-            </TabsTrigger>
+          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto p-spacing-2xs rounded-premium-full bg-muted gap-spacing-2xs">
+            {[
+              { v: 'overview', l: 'Visão Geral' },
+              { v: 'achievements', l: `Conquistas (${unlockedCount}/${badges.length})` },
+              { v: 'activity', l: 'Atividade' },
+              { v: 'settings', l: 'Ajustes' },
+            ].map(t => (
+              <TabsTrigger
+                key={t.v} value={t.v}
+                className="rounded-premium-full text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              >
+                {t.l}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           {/* === VISÃO GERAL === */}
           <TabsContent value="overview" className="space-y-spacing-lg mt-0">
-            {/* Favoritos */}
             <button
               type="button"
               onClick={() => navigate('/profile/favorites')}
@@ -439,58 +482,30 @@ const ProfilePage: React.FC = () => {
               <Icons.ChevronRight className="w-spacing-md h-spacing-md text-foreground/70" />
             </button>
 
-            {/* Conquistas colapsáveis */}
-            <CathedraCard className="p-spacing-xl space-y-spacing-lg">
-              <div className="flex items-center justify-between">
-                <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Conquistas</h2>
-                <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length}</span>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-spacing-sm">
-                {visibleBadges.map(b => (
-                  <div
-                    key={b.id}
-                    className={`relative rounded-premium p-spacing-sm text-center transition-all ${
-                      b.unlocked
-                        ? 'bg-primary/10 border border-primary/30'
-                        : 'bg-muted/50 border border-border opacity-60 grayscale'
-                    }`}
-                    title={b.description}
-                  >
-                    <div className="flex justify-center mb-spacing-2xs text-primary">{b.icon}</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-                    {b.unlocked && (
-                      <div className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-md h-spacing-md bg-primary rounded-premium-full flex items-center justify-center">
-                        <Icons.Star className="w-spacing-xs h-spacing-xs text-primary-foreground fill-current" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {badges.length > 8 && (
-                <button
-                  type="button"
-                  onClick={() => setShowAllBadges(v => !v)}
-                  className="w-full text-center text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-spacing-xs"
-                >
-                  {showAllBadges ? 'Mostrar menos' : `Ver todas (${badges.length})`}
-                </button>
-              )}
-            </CathedraCard>
-
-            {/* Doações */}
             <CathedraCard className="p-spacing-xl space-y-spacing-md">
               <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Minhas Doações & Apoio</h2>
               <p className="text-premium-xs text-foreground/75 leading-relaxed italic">
                 "Sua contribuição é o que nos permite continuar levando a Luz da Verdade a milhares de corações."
               </p>
-              <CathedraButton
-                variant="outline"
-                className="w-full h-spacing-2xl rounded-premium-full border-primary/20 hover:bg-primary/5 text-primary gap-spacing-xs font-bold uppercase tracking-widest text-[10px]"
-                onClick={() => navigate('/transactions/my')}
-              >
-                <Icons.History className="w-spacing-md h-spacing-md" />
-                Ver Histórico de Doações
-              </CathedraButton>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-sm">
+                <CathedraButton
+                  variant="outline"
+                  className="w-full h-spacing-2xl rounded-premium-full border-primary/20 hover:bg-primary/5 text-primary gap-spacing-xs font-bold uppercase tracking-widest text-[10px]"
+                  onClick={() => navigate('/transactions/my')}
+                >
+                  <Icons.History className="w-spacing-md h-spacing-md" />
+                  Ver Histórico
+                </CathedraButton>
+                <CathedraButton
+                  variant="outline"
+                  isLoading={exportingPdf}
+                  onClick={handleExportPdf}
+                  className="w-full h-spacing-2xl rounded-premium-full border-primary/20 hover:bg-primary/5 text-primary gap-spacing-xs font-bold uppercase tracking-widest text-[10px]"
+                >
+                  <Icons.Download className="w-spacing-md h-spacing-md" />
+                  {exportingPdf ? 'Gerando...' : 'Exportar PDF'}
+                </CathedraButton>
+              </div>
             </CathedraCard>
 
             {profile.is_premium && (
@@ -507,220 +522,391 @@ const ProfilePage: React.FC = () => {
             )}
           </TabsContent>
 
-          {/* === PREFERÊNCIAS === */}
-          <TabsContent value="preferences" className="space-y-spacing-lg mt-0">
-            {/* Notificações */}
+          {/* === CONQUISTAS === */}
+          <TabsContent value="achievements" className="space-y-spacing-lg mt-0">
             <CathedraCard className="p-spacing-xl space-y-spacing-lg">
-              <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Notificações</h2>
-
-              <div className="space-y-spacing-md">
-                <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
-                  <div className="space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs">
-                      <Icons.Bell className="w-spacing-md h-spacing-md text-primary" />
-                      <p className="text-premium-sm font-bold text-foreground">Push Notifications</p>
-                    </div>
-                    <p className="text-[10px] text-foreground/70">Lembretes diários de oração.</p>
-                  </div>
-                  <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Todas as Conquistas</h2>
+                  <p className="text-[10px] text-foreground/70 mt-spacing-2xs">
+                    {unlockedCount} de {badges.length} desbloqueadas
+                  </p>
                 </div>
-
-                <div className="flex items-center justify-between p-spacing-sm bg-primary/5 rounded-premium border border-primary/20">
-                  <div className="space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs flex-wrap">
-                      <Icons.Whatsapp className="w-spacing-md h-spacing-md text-primary" />
-                      <p className="text-premium-sm font-bold text-foreground">WhatsApp Oficial</p>
-                      <span className="px-spacing-2xs py-spacing-3xs rounded-premium-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</span>
-                    </div>
-                    <p className="text-[10px] text-foreground/75 font-medium">Meditações e avisos direto no seu WhatsApp.</p>
-                  </div>
-                  <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
-                </div>
-
-                {whatsappEnabled && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="space-y-spacing-xs pt-spacing-xs"
-                  >
-                    <label className="text-[10px] font-black uppercase tracking-widest text-foreground/75 pl-spacing-2xs">Número (com DDD)</label>
-                    <div className="relative">
-                      <span className="absolute left-spacing-md top-1/2 -translate-y-1/2 text-foreground/70 text-premium-sm font-bold">+55</span>
-                      <input
-                        type="tel"
-                        value={whatsappNumber}
-                        onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
-                        className="w-full pl-spacing-2xl pr-spacing-md py-spacing-sm bg-muted border border-border rounded-premium-full text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
-                        placeholder="11999999999"
-                        maxLength={11}
-                      />
-                    </div>
-                  </motion.div>
-                )}
-
-                <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
-                  <div className="space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs">
-                      <Icons.Clock className="w-spacing-md h-spacing-md text-primary" />
-                      <p className="text-premium-sm font-bold text-foreground">Horário do Ritual</p>
-                    </div>
-                    <p className="text-[10px] text-foreground/70">Sua jornada diária começa aqui.</p>
-                  </div>
-                  <input
-                    type="time"
-                    value={reminderTime}
-                    onChange={e => setReminderTime(e.target.value)}
-                    className="bg-transparent text-premium-sm font-bold text-primary border-none focus:ring-0"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
-                  <div className="space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs">
-                      <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
-                      <p className="text-premium-sm font-bold text-foreground">Meta Semanal</p>
-                    </div>
-                    <p className="text-[10px] text-foreground/70">Dias de leitura por semana.</p>
-                  </div>
-                  <div className="flex items-center gap-spacing-xs">
-                    <span className="text-premium-sm font-bold text-primary tabular-nums">{weeklyGoal}d</span>
-                    <input
-                      type="range" min="1" max="7"
-                      value={weeklyGoal}
-                      onChange={e => setWeeklyGoal(parseInt(e.target.value))}
-                      className="w-spacing-4xl h-spacing-xs bg-muted rounded-premium-full accent-primary"
-                    />
-                  </div>
+                <div className="text-right">
+                  <p className="text-premium-xl font-black text-primary tabular-nums">
+                    {Math.round((unlockedCount / badges.length) * 100)}%
+                  </p>
                 </div>
               </div>
-            </CathedraCard>
 
-            {/* Editar Perfil */}
-            <CathedraCard className="p-spacing-xl space-y-spacing-md">
-              <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Editar Perfil</h2>
-
-              <div className="space-y-spacing-xs">
-                <label className="text-premium-xs font-bold text-foreground">Nome</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              <div className="relative h-spacing-xs bg-muted rounded-premium-full overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-premium-full transition-all duration-700"
+                  style={{ width: `${(unlockedCount / badges.length) * 100}%` }}
                 />
               </div>
 
-              <div className="space-y-spacing-xs">
-                <label className="text-premium-xs font-bold text-foreground">Bio</label>
-                <textarea
-                  value={bio}
-                  onChange={e => setBio(e.target.value)}
-                  rows={3}
-                  className="w-full bg-background border border-border rounded-premium p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
-                />
-              </div>
-
-              <div className="border-t border-border pt-spacing-md space-y-spacing-md">
-                <div className="flex items-center gap-spacing-xs">
-                  <Icons.Church className="w-spacing-md h-spacing-md text-primary" />
-                  <h3 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Localização Eclesial</h3>
-                </div>
-                <p className="text-[10px] text-foreground/70 -mt-spacing-xs">Opcional — ajuda a personalizar sua experiência.</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
-                  <div className="space-y-spacing-2xs">
-                    <label className="text-premium-xs font-bold text-foreground">Estado</label>
-                    <select
-                      value={estado}
-                      onChange={e => { setEstado(e.target.value); setDiocese(''); }}
-                      className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+              <ul className="divide-y divide-border">
+                {badges.map(b => (
+                  <li key={b.id} className="flex items-start gap-spacing-md py-spacing-md">
+                    <div
+                      className={`w-spacing-2xl h-spacing-2xl rounded-premium-full flex items-center justify-center shrink-0 border ${
+                        b.unlocked
+                          ? 'bg-primary/10 border-primary/30 text-primary'
+                          : 'bg-muted/40 border-border text-foreground/40 grayscale'
+                      }`}
+                      aria-hidden="true"
                     >
-                      <option value="">Selecione...</option>
-                      {ESTADOS_BRASIL.map(uf => (
-                        <option key={uf} value={uf}>{ESTADO_NOME[uf]} ({uf})</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-spacing-2xs">
-                    <label className="text-premium-xs font-bold text-foreground">Diocese</label>
-                    <select
-                      value={diocese}
-                      onChange={e => setDiocese(e.target.value)}
-                      disabled={!estado}
-                      className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
-                    >
-                      <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
-                      {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-spacing-2xs">
-                    <label className="text-premium-xs font-bold text-foreground">Paróquia</label>
-                    <input
-                      type="text"
-                      value={paroquia}
-                      onChange={e => setParoquia(e.target.value)}
-                      placeholder="Ex: Paróquia São José"
-                      className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    />
-                  </div>
-
-                  <div className="space-y-spacing-2xs">
-                    <label className="text-premium-xs font-bold text-foreground">Movimento / Pastoral</label>
-                    <select
-                      value={movimentoPastoral}
-                      onChange={e => setMovimentoPastoral(e.target.value)}
-                      className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
-                    >
-                      <option value="">Nenhum</option>
-                      {MOVIMENTOS_PASTORAIS.map(m => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <CathedraButton
-                onClick={handleSave}
-                isLoading={saving}
-                className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full font-black uppercase text-[10px] tracking-[0.4em] hover:opacity-90 transition-all"
-              >
-                {saving ? 'Salvando...' : 'Salvar Alterações'}
-              </CathedraButton>
+                      <Icons.Star className="w-spacing-md h-spacing-md" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-spacing-sm flex-wrap">
+                        <p className={`text-premium-sm font-bold ${b.unlocked ? 'text-foreground' : 'text-foreground/60'}`}>
+                          {b.label}
+                        </p>
+                        <span
+                          className={`text-[9px] font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-premium-full ${
+                            b.unlocked
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-muted text-foreground/60 border border-border'
+                          }`}
+                        >
+                          {b.unlocked ? 'Conquistada' : 'Bloqueada'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-foreground/70 mt-spacing-2xs">{b.description}</p>
+                      {b.unlocked && b.earnedAt && (
+                        <p className="text-[10px] text-primary/80 font-bold mt-spacing-2xs">
+                          Desbloqueada em {fmtDateShort(b.earnedAt)}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </CathedraCard>
           </TabsContent>
 
-          {/* === SEGURANÇA === */}
-          <TabsContent value="security" className="space-y-spacing-lg mt-0">
+          {/* === ATIVIDADE === */}
+          <TabsContent value="activity" className="space-y-spacing-lg mt-0">
             <CathedraCard className="p-spacing-xl space-y-spacing-lg">
-              <div className="flex items-center gap-spacing-xs">
-                <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
-                <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Segurança da Conta</h2>
+              <div className="flex items-center justify-between flex-wrap gap-spacing-sm">
+                <div>
+                  <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Histórico Cronológico</h2>
+                  <p className="text-[10px] text-foreground/70 mt-spacing-2xs">
+                    {filteredActivity.length} {filteredActivity.length === 1 ? 'evento' : 'eventos'}
+                  </p>
+                </div>
+                <CathedraButton
+                  variant="outline"
+                  isLoading={exportingPdf}
+                  onClick={handleExportPdf}
+                  className="h-spacing-2xl rounded-premium-full border-primary/20 hover:bg-primary/5 text-primary gap-spacing-xs font-bold uppercase tracking-widest text-[10px] px-spacing-md"
+                >
+                  <Icons.Download className="w-spacing-md h-spacing-md" />
+                  PDF
+                </CathedraButton>
               </div>
 
-              <div className="space-y-spacing-md">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-spacing-sm p-spacing-md bg-muted/30 rounded-premium border border-border/50">
-                  <div className="space-y-spacing-2xs">
-                    <p className="text-premium-sm font-bold text-foreground">Vincular Conta Google</p>
-                    <p className="text-[10px] text-foreground/70">
-                      Adicione o Google como método de acesso sem perder seus dados atuais.
-                    </p>
+              <div className="flex gap-spacing-2xs flex-wrap" role="tablist" aria-label="Filtro de atividade">
+                {([
+                  { k: 'all', l: 'Tudo' },
+                  { k: 'donation', l: 'Doações' },
+                  { k: 'audit', l: 'Auditoria' },
+                ] as const).map(f => (
+                  <button
+                    key={f.k}
+                    type="button"
+                    onClick={() => setActivityFilter(f.k)}
+                    aria-pressed={activityFilter === f.k}
+                    className={`px-spacing-md py-spacing-2xs rounded-premium-full text-[10px] font-black uppercase tracking-widest border transition-colors ${
+                      activityFilter === f.k
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-transparent text-foreground/70 border-border hover:border-primary/40'
+                    }`}
+                  >
+                    {f.l}
+                  </button>
+                ))}
+              </div>
+
+              {pagedActivity.length === 0 ? (
+                <div className="text-center py-spacing-xl text-premium-xs text-foreground/60">
+                  Nenhum evento encontrado.
+                </div>
+              ) : (
+                <ul className="divide-y divide-border">
+                  {pagedActivity.map(item => (
+                    <li key={item.id} className="flex items-start gap-spacing-md py-spacing-md">
+                      <div
+                        className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center shrink-0 ${
+                          item.kind === 'donation'
+                            ? 'bg-primary/10 text-primary border border-primary/30'
+                            : 'bg-muted text-foreground/70 border border-border'
+                        }`}
+                        aria-hidden="true"
+                      >
+                        {item.kind === 'donation'
+                          ? <Icons.Heart className="w-spacing-sm h-spacing-sm" />
+                          : <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline justify-between gap-spacing-sm">
+                          <p className="text-premium-sm font-bold text-foreground truncate">{item.title}</p>
+                          {typeof item.amount === 'number' && (
+                            <p className="text-premium-sm font-black text-primary tabular-nums">{fmtBRL(item.amount)}</p>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-foreground/70 truncate">{item.subtitle}</p>
+                        <div className="flex items-center gap-spacing-xs mt-spacing-2xs">
+                          <p className="text-[10px] font-bold text-foreground/60 uppercase tracking-wider">
+                            {fmtDateShort(item.date)}
+                          </p>
+                          {item.status && (
+                            <span className="text-[9px] font-bold uppercase tracking-widest px-spacing-2xs py-spacing-3xs rounded-premium-full bg-muted text-foreground/70 border border-border">
+                              {item.status}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between pt-spacing-sm border-t border-border">
+                  <button
+                    type="button"
+                    onClick={() => setActivityPage(p => Math.max(1, p - 1))}
+                    disabled={activityPage === 1}
+                    className="px-spacing-md py-spacing-xs rounded-premium-full text-[10px] font-black uppercase tracking-widest border border-border text-foreground/70 hover:border-primary/40 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    ← Anterior
+                  </button>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/70 tabular-nums">
+                    Página {activityPage} / {totalPages}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActivityPage(p => Math.min(totalPages, p + 1))}
+                    disabled={activityPage === totalPages}
+                    className="px-spacing-md py-spacing-xs rounded-premium-full text-[10px] font-black uppercase tracking-widest border border-border text-foreground/70 hover:border-primary/40 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Próxima →
+                  </button>
+                </div>
+              )}
+            </CathedraCard>
+          </TabsContent>
+
+          {/* === AJUSTES (Preferências + Segurança) === */}
+          <TabsContent value="settings" className="space-y-spacing-lg mt-0">
+            <fieldset disabled={saving} className="space-y-spacing-lg contents">
+              <CathedraCard className="p-spacing-xl space-y-spacing-lg">
+                <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Notificações</h2>
+
+                <div className="space-y-spacing-md">
+                  <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+                    <div className="space-y-spacing-2xs">
+                      <div className="flex items-center gap-spacing-xs">
+                        <Icons.Bell className="w-spacing-md h-spacing-md text-primary" />
+                        <p className="text-premium-sm font-bold text-foreground">Push Notifications</p>
+                      </div>
+                      <p className="text-[10px] text-foreground/70">Lembretes diários de oração.</p>
+                    </div>
+                    <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} disabled={saving} />
                   </div>
-                  <GoogleSignInButton
-                    text="Vincular Google"
-                    className="bg-background hover:bg-muted text-foreground border-border"
-                    onSuccess={() => toast.success('Conta Google vinculada com sucesso!')}
+
+                  <div className="flex items-center justify-between p-spacing-sm bg-primary/5 rounded-premium border border-primary/20">
+                    <div className="space-y-spacing-2xs">
+                      <div className="flex items-center gap-spacing-xs flex-wrap">
+                        <Icons.Whatsapp className="w-spacing-md h-spacing-md text-primary" />
+                        <p className="text-premium-sm font-bold text-foreground">WhatsApp Oficial</p>
+                        <span className="px-spacing-2xs py-spacing-3xs rounded-premium-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</span>
+                      </div>
+                      <p className="text-[10px] text-foreground/75 font-medium">Meditações e avisos direto no seu WhatsApp.</p>
+                    </div>
+                    <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} disabled={saving} />
+                  </div>
+
+                  {whatsappEnabled && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-spacing-xs pt-spacing-xs">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-foreground/75 pl-spacing-2xs">Número (com DDD)</label>
+                      <div className="relative">
+                        <span className="absolute left-spacing-md top-1/2 -translate-y-1/2 text-foreground/70 text-premium-sm font-bold">+55</span>
+                        <input
+                          type="tel"
+                          value={whatsappNumber}
+                          onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
+                          disabled={saving}
+                          className="w-full pl-spacing-2xl pr-spacing-md py-spacing-sm bg-muted border border-border rounded-premium-full text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono disabled:opacity-60"
+                          placeholder="11999999999"
+                          maxLength={11}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+                    <div className="space-y-spacing-2xs">
+                      <div className="flex items-center gap-spacing-xs">
+                        <Icons.Clock className="w-spacing-md h-spacing-md text-primary" />
+                        <p className="text-premium-sm font-bold text-foreground">Horário do Ritual</p>
+                      </div>
+                      <p className="text-[10px] text-foreground/70">Sua jornada diária começa aqui.</p>
+                    </div>
+                    <input
+                      type="time"
+                      value={reminderTime}
+                      onChange={e => setReminderTime(e.target.value)}
+                      disabled={saving}
+                      className="bg-transparent text-premium-sm font-bold text-primary border-none focus:ring-0 disabled:opacity-60"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+                    <div className="space-y-spacing-2xs">
+                      <div className="flex items-center gap-spacing-xs">
+                        <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
+                        <p className="text-premium-sm font-bold text-foreground">Meta Semanal</p>
+                      </div>
+                      <p className="text-[10px] text-foreground/70">Dias de leitura por semana.</p>
+                    </div>
+                    <div className="flex items-center gap-spacing-xs">
+                      <span className="text-premium-sm font-bold text-primary tabular-nums">{weeklyGoal}d</span>
+                      <input
+                        type="range" min="1" max="7"
+                        value={weeklyGoal}
+                        onChange={e => setWeeklyGoal(parseInt(e.target.value))}
+                        disabled={saving}
+                        className="w-spacing-4xl h-spacing-xs bg-muted rounded-premium-full accent-primary disabled:opacity-60"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CathedraCard>
+
+              <CathedraCard className="p-spacing-xl space-y-spacing-md">
+                <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Editar Perfil</h2>
+
+                <div className="space-y-spacing-xs">
+                  <label className="text-premium-xs font-bold text-foreground">Nome</label>
+                  <input
+                    type="text" value={name} onChange={e => setName(e.target.value)} disabled={saving}
+                    className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
                   />
                 </div>
 
-                <p className="text-[10px] text-foreground/70 text-center italic">
-                  * Ao vincular, você poderá entrar usando e-mail/senha ou sua conta Google.
-                </p>
-              </div>
-            </CathedraCard>
+                <div className="space-y-spacing-xs">
+                  <label className="text-premium-xs font-bold text-foreground">Bio</label>
+                  <textarea
+                    value={bio} onChange={e => setBio(e.target.value)} rows={3} disabled={saving}
+                    className="w-full bg-background border border-border rounded-premium p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none disabled:opacity-60"
+                  />
+                </div>
+
+                <div className="border-t border-border pt-spacing-md space-y-spacing-md">
+                  <div className="flex items-center gap-spacing-xs">
+                    <Icons.Church className="w-spacing-md h-spacing-md text-primary" />
+                    <h3 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Localização Eclesial</h3>
+                  </div>
+                  <p className="text-[10px] text-foreground/70 -mt-spacing-xs">Opcional — ajuda a personalizar sua experiência.</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                    <div className="space-y-spacing-2xs">
+                      <label className="text-premium-xs font-bold text-foreground">Estado</label>
+                      <select
+                        value={estado} disabled={saving}
+                        onChange={e => { setEstado(e.target.value); setDiocese(''); }}
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-60"
+                      >
+                        <option value="">Selecione...</option>
+                        {ESTADOS_BRASIL.map(uf => (
+                          <option key={uf} value={uf}>{ESTADO_NOME[uf]} ({uf})</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-spacing-2xs">
+                      <label className="text-premium-xs font-bold text-foreground">Diocese</label>
+                      <select
+                        value={diocese} onChange={e => setDiocese(e.target.value)} disabled={!estado || saving}
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
+                      >
+                        <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
+                        {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-spacing-2xs">
+                      <label className="text-premium-xs font-bold text-foreground">Paróquia</label>
+                      <input
+                        type="text" value={paroquia} onChange={e => setParoquia(e.target.value)} disabled={saving}
+                        placeholder="Ex: Paróquia São José"
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
+                      />
+                    </div>
+
+                    <div className="space-y-spacing-2xs">
+                      <label className="text-premium-xs font-bold text-foreground">Movimento / Pastoral</label>
+                      <select
+                        value={movimentoPastoral} onChange={e => setMovimentoPastoral(e.target.value)} disabled={saving}
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-60"
+                      >
+                        <option value="">Nenhum</option>
+                        {MOVIMENTOS_PASTORAIS.map(m => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <CathedraButton
+                  onClick={handleSave}
+                  isLoading={saving}
+                  disabled={saving}
+                  className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full font-black uppercase text-[10px] tracking-[0.4em] hover:opacity-90 transition-all disabled:opacity-70"
+                >
+                  {saving ? (
+                    <span className="inline-flex items-center gap-spacing-xs">
+                      <span className="w-spacing-sm h-spacing-sm border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      Salvando...
+                    </span>
+                  ) : 'Salvar Alterações'}
+                </CathedraButton>
+              </CathedraCard>
+
+              <CathedraCard className="p-spacing-xl space-y-spacing-lg">
+                <div className="flex items-center gap-spacing-xs">
+                  <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
+                  <h2 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Segurança da Conta</h2>
+                </div>
+
+                <div className="space-y-spacing-md">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-spacing-sm p-spacing-md bg-muted/30 rounded-premium border border-border/50">
+                    <div className="space-y-spacing-2xs">
+                      <p className="text-premium-sm font-bold text-foreground">Vincular Conta Google</p>
+                      <p className="text-[10px] text-foreground/70">
+                        Adicione o Google como método de acesso sem perder seus dados atuais.
+                      </p>
+                    </div>
+                    <GoogleSignInButton
+                      text="Vincular Google"
+                      className="bg-background hover:bg-muted text-foreground border-border"
+                      onSuccess={() => toast.success('Conta Google vinculada com sucesso!')}
+                    />
+                  </div>
+
+                  <p className="text-[10px] text-foreground/70 text-center italic">
+                    * Ao vincular, você poderá entrar usando e-mail/senha ou sua conta Google.
+                  </p>
+                </div>
+              </CathedraCard>
+            </fieldset>
           </TabsContent>
         </Tabs>
       </div>
