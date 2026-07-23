@@ -512,7 +512,7 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
-              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><PublicLanding /></Suspense>} />
+              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><RootGate /></Suspense>} />
               <Route path="/atrium" element={<Suspense fallback={<LoadingFallback />}><AtriumHome /></Suspense>} />
               <Route path="/planos" element={<Navigate to="/pricing" replace />} />
               <Route path="/home-v3" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
