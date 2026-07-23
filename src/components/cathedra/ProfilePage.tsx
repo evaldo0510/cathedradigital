@@ -348,7 +348,7 @@ const ProfilePage: React.FC = () => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((v || 0) / 100);
 
   return (
-    <ContemplativeLayout subtitle="Santuário Pessoal" title="Meu Perfil" maxW="max-w-spacing-2xl">
+    <ContemplativeLayout subtitle="Santuário Pessoal" title="Meu Perfil" maxW="max-w-5xl w-full">
       <div className="space-y-spacing-xl relative">
         <AnimatePresence>
           {showLevelUp && (
@@ -449,7 +449,7 @@ const ProfilePage: React.FC = () => {
         <StreakCard streak={profile.streak || 0} maxStreak={profile.max_streak || 0} />
 
         <Tabs defaultValue="overview" className="space-y-spacing-lg">
-          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto p-spacing-2xs rounded-premium-full bg-muted gap-spacing-2xs">
+          <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4 h-auto p-spacing-2xs rounded-premium-lg bg-muted gap-spacing-2xs">
             {[
               { v: 'overview', l: 'Visão Geral' },
               { v: 'achievements', l: `Conquistas (${unlockedCount}/${badges.length})` },
