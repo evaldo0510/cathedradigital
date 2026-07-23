@@ -3,9 +3,23 @@ name: cathedra-operating-system
 description: Roteador mestre do Cathedra. Ativar SEMPRE que a tarefa envolver qualquer módulo do Cathedra (Glossário, Missal, Liturgia das Horas, Orações, Santos, Bíblia, Jornadas, Nexus, Reader, admin editorial, ou qualquer alteração de UI/dados do projeto). Mapeia arquivos e rotas afetados para os skills especializados que devem ser co-ativados, e impõe protocolos de Preflight, Classificação, Matriz de Impacto, Pós-validação e Engineering Log.
 ---
 
-# Cathedra Operating System (COS)
+# Cathedra Operating System (COS) — v1.0 (CONGELADO)
 
-Sistema operacional editorial do Cathedra. **Não substitui** os skills especializados — coordena quais devem ser co-ativados por tarefa e impõe o ciclo completo: **Preflight → Classificação → Matriz de Impacto → Execução → Pós-validação → Engineering Log**.
+Sistema operacional editorial do Cathedra. **Núcleo estável**. Coordena skills especializados e impõe o ciclo: **Preflight → Classificação → Matriz de Impacto → Execução → Pós-validação → Engineering Log**.
+
+> **Status:** v1.0 · CERTIFIED · congelado em 2026-07-23.
+> Novas capacidades entram como **plugins** (`cathedra-plugin-*`), nunca no núcleo. Ver §8 (Freeze Protocol) e §9 (Manifest Registry).
+
+## Escopo do núcleo (o que o COS faz — e nada além)
+
+1. Preflight
+2. Classificação da tarefa
+3. Matriz de Impacto
+4. Ativação de Skills e Plugins (via Manifest Registry)
+5. Pós-validação
+6. Engineering Log
+
+**Tudo o mais é responsabilidade de um plugin.** Se surgir a tentação de embutir uma nova regra editorial, litúrgica, de conhecimento, de UX ou de IA no COS — parar e criar/estender o plugin correspondente.
 
 ---
 
