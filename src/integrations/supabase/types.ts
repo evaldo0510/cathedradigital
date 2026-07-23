@@ -7075,6 +7075,46 @@ export type Database = {
         Args: { _trigger?: string }
         Returns: string
       }
+      editorial_correction_priority: {
+        Args: { _entity: string }
+        Returns: {
+          area: string
+          editorial: number
+          effort_tier: string
+          ice: number
+          impact_tier: string
+          inbound_refs: number
+          missing_bible: boolean
+          missing_cic: boolean
+          missing_count: number
+          missing_deep: boolean
+          missing_faq: boolean
+          missing_fathers: boolean
+          missing_logos: boolean
+          nexus: number
+          priority: string
+          slug: string
+          status: string
+          term: string
+        }[]
+      }
+      editorial_coverage: {
+        Args: { _entity: string }
+        Returns: {
+          area: string
+          avg_ice: number
+          bronze: number
+          gate_passing: number
+          gold: number
+          review: number
+          silver: number
+          total: number
+        }[]
+      }
+      editorial_quality_gate: {
+        Args: { _entity: string; _slug: string }
+        Returns: boolean
+      }
       fn_archive_governance_audit: {
         Args: { p_override_days?: number; p_triggered_by?: string }
         Returns: {
