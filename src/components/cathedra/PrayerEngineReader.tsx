@@ -961,37 +961,11 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </section>
       )}
 
-      {/* Continuidade final — sugestões automáticas via Knowledge Engine */}
-      {isLastOverall && !focus && (() => {
-        const nexus = resolvePrayerAutoNexus({
-          slug: prayer.slug,
-          title: prayer.title,
-          category: prayer.category,
-          related_bible: prayer.related_bible,
-          related_catechism: prayer.related_catechism,
-          related_saints: prayer.related_saints,
-          related_glossary: prayer.related_glossary,
-          block_refs: blocks.map((b) => ({
-            bible: b.refs?.bible,
-            catechism: b.refs?.catechism,
-          })),
-        });
-        return (
-          <div className="mt-16">
-            <ReaderContinuation
-              context={{
-                kind: 'prayer',
-                id: prayer.slug,
-                graphNodeId: nexus.selfId ?? undefined,
-                meta: { prayerCategory: prayer.category },
-              }}
-              suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-            />
-          </div>
-        );
-      })()}
+      {/* Continuidade final: agora servida pelo slot `continuation` do
+          ReaderShell (canônico). Ver retorno principal abaixo. */}
     </article>
   );
+
 
   if (focus) {
     return (
