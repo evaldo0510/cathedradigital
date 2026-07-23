@@ -8,7 +8,12 @@ import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
-import { APP_ROUTES } from '@/config/routes';
+import {
+  PUBLIC_FOOTER_LINKS,
+  CONDITIONAL_FOOTER_LINKS,
+  EXTERNAL_FOOTER_LINKS,
+  type FooterLink,
+} from '@/config/footer-links';
 
 const DIOCESES_BR = [
   'Arquidiocese de São Paulo',
@@ -190,6 +195,7 @@ const Footer: React.FC = React.memo(() => {
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
 
   const toggleSection = (id: string) => setOpenId(prev => (prev === id ? null : id));
 
