@@ -19,6 +19,7 @@ import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS 
 import ContemplativeLayout from './ContemplativeLayout';
 import PremiumAuditTrail from './PremiumAuditTrail';
 import { exportProfilePdf, type DonationRow, type AuditRow } from '@/lib/profile-pdf-export';
+import { getAvatarSources } from '@/lib/avatar-sources';
 
 const STREAK_MILESTONES = [
   { days: 7, label: 'Chama Constante', badge: '🔥' },
@@ -383,7 +384,22 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-spacing-lg">
             <div className="relative w-spacing-4xl h-spacing-4xl group shrink-0">
               <Avatar className="w-spacing-4xl h-spacing-4xl border-4 border-primary/20">
-                {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
+                {(() => {
+                  const sources = getAvatarSources(avatarUrl);
+                  if (!sources) return null;
+                  return (
+                    <AvatarImage
+                      src={sources.src}
+                      srcSet={sources.srcSet}
+                      sizes={sources.sizes}
+                      alt={profile.name}
+                      loading="lazy"
+                      decoding="async"
+                      // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
+                      fetchpriority="low"
+                    />
+                  );
+                })()}
                 <AvatarFallback className="text-premium-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
               </Avatar>
               <button
