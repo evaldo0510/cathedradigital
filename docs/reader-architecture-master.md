@@ -84,3 +84,22 @@ Guardrail no CI (`scripts/reader-architecture-guardrail.ts`) que falha se:
 - qualquer arquivo em `src/` importa componentes deprecados listados em §3;
 - qualquer módulo de leitura cria `*Nexus*`, `*Popover*`, `*Reader*` fora de `@/components/reader`;
 - o score de qualquer módulo cai abaixo do baseline registrado neste doc.
+
+---
+
+## HeaderContext (adicionado na C.4 · Etapa 2)
+
+Slot opcional entre `EditorialHero` e o corpo. Variantes canônicas registradas em `src/components/reader/HeaderContext.tsx`:
+
+| Variante | Uso |
+|---|---|
+| `LiturgicalContext` | Missal, Liturgia das Horas — data, celebração, cor, grau, tempo |
+| `JourneyContext` | Jornadas — título, dia atual, progresso |
+| `CatechesisContext` | Catequese — módulo, seção, nível |
+| `StudyContext` | Coleções e estudos guiados — coleção, posição, curadoria |
+
+Regras:
+
+- Zero lógica dentro da variante — recebe strings já resolvidas.
+- Módulos NÃO podem criar cabeçalhos contextuais paralelos. Nova variante entra neste arquivo.
+- Injeção via prop `headerContext` do `ReaderShell`. Nunca via `children`.
