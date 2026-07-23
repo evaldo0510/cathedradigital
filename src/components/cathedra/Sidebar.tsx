@@ -286,8 +286,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
                                 className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-[9px] font-medium transition-all duration-300 outline-none h-auto min-h-[40px] border
                                   ${isActive
-                                    ? 'bg-[#c9a84c]/[0.08] text-[#c9a84c] border-[#c9a84c]/40'
-                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[#c9a84c] border-transparent hover:border-[#c9a84c]/20'}`}
+                                    ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
+                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
                               >
                                   <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
