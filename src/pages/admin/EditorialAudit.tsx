@@ -259,7 +259,7 @@ export default function EditorialAuditPage() {
       const [{ data: gData, error: e1 }, mods] = await Promise.all([
         supabase
           .from("glossary")
-          .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,created_at,updated_at,published_at,reviewed_at,reviewed_by,version")
+          .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,doctrinal_weight,created_at,updated_at,published_at,reviewed_at,reviewed_by,version")
           .order("term"),
         loadModuleStats(),
       ]);
@@ -281,6 +281,8 @@ export default function EditorialAuditPage() {
           pending: checks.filter(c => !c.ok && c.generable).length,
           created_at: r.created_at, updated_at: r.updated_at, published_at: r.published_at,
           reviewed_at: r.reviewed_at, reviewed_by: r.reviewed_by, version: r.version,
+          doctrinal_weight: typeof r.doctrinal_weight === "number" ? r.doctrinal_weight : 5,
+          nexus_refs: Array.isArray(r.nexus_refs) ? r.nexus_refs : [],
         };
       });
 
@@ -297,10 +299,13 @@ export default function EditorialAuditPage() {
       const avg = list.length ? Math.round(list.reduce((s, r) => s + r.score, 0) / list.length) : 0;
       const avg_editorial = list.length ? Math.round(list.reduce((s, r) => s + r.editorial_score, 0) / list.length) : 0;
       const avg_nexus = list.length ? Math.round(list.reduce((s, r) => s + r.nexus_score, 0) / list.length) : 0;
+      const weightSum = list.reduce((s, r) => s + (r.doctrinal_weight || 1), 0) || 1;
+      const avg_weighted = Math.round(list.reduce((s, r) => s + r.score * (r.doctrinal_weight || 1), 0) / weightSum);
 
       setRows(list);
-      setTotals({ total: list.length, published, drafts, gold, silver, bronze, needs_review, avg, avg_editorial, avg_nexus });
+      setTotals({ total: list.length, published, drafts, gold, silver, bronze, needs_review, avg, avg_editorial, avg_nexus, avg_weighted });
       setModules(mods);
+
     } catch (e: any) {
       setError(e?.message ?? String(e));
     } finally {
