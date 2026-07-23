@@ -357,7 +357,7 @@ const PublicLanding = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xs uppercase tracking-[0.3em] text-secondary">
+            <h3 className="text-xs uppercase tracking-[0.3em]" style={{ color: 'var(--gold-on-dark)' }}>
               Cathedra
             </h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
