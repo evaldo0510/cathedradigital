@@ -85,9 +85,16 @@ function EntityRow({ manifest }: { manifest: EntityManifest }) {
           </div>
 
           {manifest.ready ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link to={manifest.auditRoute}>Abrir <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
-            </Button>
+            <div className="flex gap-1">
+              <Button asChild variant="ghost" size="sm">
+                <Link to={manifest.auditRoute}>Abrir <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+              </Button>
+              {(["glossary", "prayers", "catechism"] as const).includes(manifest.id as any) && (
+                <Button asChild variant="outline" size="sm">
+                  <Link to={`/admin/editorial-bulk?entity=${manifest.id}`}>Bulk IA</Link>
+                </Button>
+              )}
+            </div>
           ) : (
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <Lock className="h-3 w-3" /> Aguardando manifesto
