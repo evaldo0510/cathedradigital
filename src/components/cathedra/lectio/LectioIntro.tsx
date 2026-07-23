@@ -111,17 +111,19 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
           <div className="flex flex-wrap gap-spacing-xs justify-center">
             {SUGGESTED_PASSAGES.map(p => (
-              <Button
+              <button
+                type="button"
                 key={p.ref}
                 onClick={() => onPassageChange(p.ref)}
-                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border ${
+                aria-pressed={selectedPassage === p.ref}
+                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                   selectedPassage === p.ref
-                    ? 'bg-primary border-primary text-white shadow-premium'
-                    : 'bg-card border-border text-foreground/75 hover:border-primary/30 hover:text-primary'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-premium'
+                    : 'bg-card border-border text-foreground/85 hover:border-primary/40 hover:text-primary hover:bg-primary/[0.04]'
                 }`}
               >
                 {p.ref}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
