@@ -617,14 +617,22 @@ const Footer: React.FC = React.memo(() => {
                   onClick={() => setMobileNavExpanded((v) => !v)}
                   aria-expanded={mobileNavExpanded}
                   aria-controls="footer-public-nav"
+                  aria-label={
+                    mobileNavExpanded
+                      ? (lang === 'pt' ? 'Ocultar links adicionais do rodapé' : 'Hide additional footer links')
+                      : (lang === 'pt' ? 'Mostrar links adicionais do rodapé' : 'Show additional footer links')
+                  }
                   data-testid="footer-mobile-expand"
                   className="ml-1 inline-flex items-center gap-1 min-h-[44px] px-3 py-2 text-muted-foreground hover:text-[#c9a84c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
                   style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
                 >
-                  {mobileNavExpanded
-                    ? (lang === 'pt' ? 'Menos' : 'Less')
-                    : (lang === 'pt' ? 'Mais' : 'More')}
+                  <span aria-hidden="true">
+                    {mobileNavExpanded
+                      ? (lang === 'pt' ? 'Menos' : 'Less')
+                      : (lang === 'pt' ? 'Mais' : 'More')}
+                  </span>
                   <Icons.ArrowDown
+                    aria-hidden="true"
                     className={`w-3 h-3 transition-transform ${mobileNavExpanded ? 'rotate-180' : ''}`}
                     style={{ color: GOLD }}
                   />
