@@ -154,7 +154,11 @@ async function generateSitemap() {
 
   // Generate robots.txt
   let robotsTxt = `User-agent: *\nAllow: /\n`;
-  const disallowList = Array.from(new Set(privateRoutes)).sort();
+  // Aliases noindex (canonicalPath aponta para outra rota) — evita indexação duplicada.
+  const aliasDisallow = Object.entries(ROUTE_META)
+    .filter(([p, m]) => m.noindex && m.canonicalPath && m.canonicalPath !== p && !p.includes(':'))
+    .map(([p]) => p);
+  const disallowList = Array.from(new Set([...privateRoutes, ...aliasDisallow])).sort();
   disallowList.forEach(route => {
     robotsTxt += `Disallow: ${route}\n`;
   });
