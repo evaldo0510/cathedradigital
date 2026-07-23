@@ -26,11 +26,15 @@ import {
   EditorialQuote,
 } from '@/components/editorial/primitives';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import {
+  ReaderShell,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
 import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
 import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
-import type { ResolvedNode } from '@/core/knowledge';
+import { BUCKET_LABEL, type ReaderNexusBucket } from '@/core/knowledge/adapters/ReaderAutoNexus';
 
 /* ------------------------------------------------------------------ */
 /* Tipos                                                               */
@@ -172,19 +176,19 @@ const DEFAULT_ORDER: SectionKey[] = [
   'interpretation',
   'application',
   'meditation',
-  'bible',
-  'catechism',
-  'magisterium',
-  'saints',
-  'fathers',
-  'liturgy',
-  'prayer',
-  'journey',
   'faq',
   'next_steps',
-  'nexus',
   'bibliography',
 ];
+
+/**
+ * Após a Reader Architecture Rule (COS §10 / v1.1), as antigas seções
+ * per-kind (bible/catechism/magisterium/saints/fathers/liturgy/prayer/
+ * journey/nexus) foram consolidadas em um ÚNICO `NexusPanel` renderizado
+ * pelo slot `nexus` do `ReaderShell`. Elas continuam válidas em
+ * `sections_order` do banco por compatibilidade, mas são filtradas aqui.
+ */
+const EDITORIAL_ONLY = new Set<SectionKey>(DEFAULT_ORDER);
 
 const SECTION_META: Record<SectionKey, { kicker: string; title: string; anchor: string }> = {
   definition: { kicker: 'I · Fundamento', title: 'Definição', anchor: 'definicao' },
@@ -192,19 +196,33 @@ const SECTION_META: Record<SectionKey, { kicker: string; title: string; anchor: 
   interpretation: { kicker: 'III · Contemplação', title: 'Interpretação teológica', anchor: 'interpretacao' },
   application: { kicker: 'IV · Vida', title: 'Aplicação prática', anchor: 'aplicacao' },
   meditation: { kicker: 'V · Logos', title: 'Meditação Logos', anchor: 'meditacao' },
-  bible: { kicker: 'VI · Escritura', title: 'Fundamentação bíblica', anchor: 'biblia' },
-  catechism: { kicker: 'VII · Catequese', title: 'Fundamentação catequética', anchor: 'catecismo' },
-  magisterium: { kicker: 'VIII · Doutrina', title: 'Magistério relacionado', anchor: 'magisterio' },
-  saints: { kicker: 'IX · Comunhão', title: 'Santos relacionados', anchor: 'santos' },
-  fathers: { kicker: 'X · Tradição', title: 'Padres relacionados', anchor: 'padres' },
-  liturgy: { kicker: 'XI · Liturgia', title: 'Liturgia relacionada', anchor: 'liturgia' },
-  prayer: { kicker: 'XII · Oração', title: 'Orações relacionadas', anchor: 'oracao' },
-  journey: { kicker: 'XIII · Caminho', title: 'Jornadas sugeridas', anchor: 'jornada' },
-  faq: { kicker: 'XIV · Perguntas', title: 'Perguntas frequentes', anchor: 'faq' },
-  next_steps: { kicker: 'XV · Continuar', title: 'Próximos passos', anchor: 'proximos-passos' },
-  nexus: { kicker: 'XVI · Nexus', title: 'Nexus completo', anchor: 'nexus' },
-  bibliography: { kicker: 'XVII · Fontes', title: 'Bibliografia', anchor: 'bibliografia' },
+  faq: { kicker: 'VI · Perguntas', title: 'Perguntas frequentes', anchor: 'faq' },
+  next_steps: { kicker: 'VII · Continuar', title: 'Próximos passos', anchor: 'proximos-passos' },
+  bibliography: { kicker: 'VIII · Fontes', title: 'Bibliografia', anchor: 'bibliografia' },
+  // Chaves legadas — não renderizadas (filtradas por EDITORIAL_ONLY).
+  bible: { kicker: '', title: '', anchor: '' },
+  catechism: { kicker: '', title: '', anchor: '' },
+  magisterium: { kicker: '', title: '', anchor: '' },
+  saints: { kicker: '', title: '', anchor: '' },
+  fathers: { kicker: '', title: '', anchor: '' },
+  liturgy: { kicker: '', title: '', anchor: '' },
+  prayer: { kicker: '', title: '', anchor: '' },
+  journey: { kicker: '', title: '', anchor: '' },
+  nexus: { kicker: '', title: '', anchor: '' },
 };
+
+/** Ordem canônica dos buckets no NexusPanel (Escritura → Doutrina → Vida). */
+const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
+  'bible',
+  'catechism',
+  'magisterium',
+  'father',
+  'saint',
+  'liturgy',
+  'prayer',
+  'journey',
+  'glossary',
+];
 
 /* ------------------------------------------------------------------ */
 /* Data hook                                                           */
@@ -322,165 +340,16 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
   );
 }
 
-function RefList({
-  items,
-  emptyLabel,
-  renderItem,
-}: {
-  items: string[] | null | undefined;
-  emptyLabel: string;
-  renderItem: (ref: string, i: number) => React.ReactNode;
-}) {
-  if (!items || items.length === 0) {
-    return (
-      <EditorialEmptyState
-        kicker="Em preparação"
-        title={emptyLabel}
-        description="Referências serão adicionadas em breve."
-      />
-    );
-  }
-  return (
-    <ul className="max-w-[68ch] mx-auto space-y-3 font-stitch-serif text-stitch-body text-stitch-ink">
-      {items.map((ref, i) => (
-        <li key={`${ref}-${i}`} className="flex gap-3 items-baseline">
-          <EditorialGoldMarker />
-          <div className="flex-1">{renderItem(ref, i)}</div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 /* ------------------------------------------------------------------ */
-/* Nexus 100% automático via KnowledgeGraph                            */
+/* Nexus consolidado — Reader Architecture Rule (COS §10)              */
 /* ------------------------------------------------------------------ */
+/*                                                                     */
+/* As antigas funções `RefList`, `AutoNexusList`, `NexusFullList`      */
+/* foram REMOVIDAS. Toda projeção de Nexus do verbete usa agora o      */
+/* primitivo canônico `NexusPanel` (via slot `nexus` do ReaderShell).  */
+/* Ver: docs/reader-architecture-master.md                             */
 
-// NexusSourceBadge foi extraído para src/components/nexus/NexusSourceBadge.tsx
-// (reutilizado por Jornadas e futuros módulos, mantendo tudo automático).
-import { NexusSourceBadge } from '@/components/nexus/NexusSourceBadge';
 
-
-function AutoNexusList({
-  nodes,
-  emptyLabel,
-  fallbackKindLabel,
-}: {
-  nodes: ResolvedNode[] | undefined;
-  emptyLabel: string;
-  fallbackKindLabel?: string;
-}) {
-  if (!nodes || nodes.length === 0) {
-    return (
-      <EditorialEmptyState
-        kicker="Em preparação"
-        title={emptyLabel}
-        description="As conexões serão publicadas em breve."
-      />
-    );
-  }
-  return (
-    <ul className="max-w-[68ch] mx-auto space-y-4 font-stitch-serif text-stitch-body text-stitch-ink">
-      {nodes.map((r) => {
-        const href = r.url;
-        return (
-          <li key={r.node.id} className="flex gap-3 items-baseline">
-            <EditorialGoldMarker />
-            <div className="flex-1">
-              {href ? (
-                <Link
-                  to={href}
-                  className="text-stitch-ink hover:text-stitch-secondary transition-colors"
-                  aria-label={`Abrir ${r.node.label}`}
-                >
-                  {fallbackKindLabel && (
-                    <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-                      {fallbackKindLabel}
-                    </span>
-                  )}
-                  <span className="font-medium underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors">
-                    {r.node.label}
-                  </span>
-                </Link>
-              ) : (
-                <>
-                  {fallbackKindLabel && (
-                    <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-                      {fallbackKindLabel}
-                    </span>
-                  )}
-                  <span className="font-medium">{r.node.label}</span>
-                </>
-              )}
-              {r.node.summary && (
-                <p className="mt-1 text-stitch-body-sm text-stitch-muted">{r.node.summary}</p>
-              )}
-              <NexusSourceBadge node={r.node} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function NexusFullList({
-  byKind,
-  labels,
-}: {
-  byKind: Record<string, ResolvedNode[]>;
-  labels: Record<string, string>;
-}) {
-  const all: Array<{ kindKey: string; node: ResolvedNode }> = [];
-  for (const [kindKey, list] of Object.entries(byKind)) {
-    for (const node of list) all.push({ kindKey, node });
-  }
-  if (all.length === 0) {
-    return (
-      <EditorialEmptyState
-        kicker="Em preparação"
-        title="O Nexus deste verbete ainda não foi curado."
-        description="As conexões teológicas serão publicadas em breve."
-      />
-    );
-  }
-  return (
-    <ul className="max-w-[68ch] mx-auto space-y-4 font-stitch-serif text-stitch-body text-stitch-ink">
-      {all.map(({ kindKey, node: r }) => {
-        const kindLabel = labels[kindKey] ?? kindKey;
-        return (
-          <li key={`${kindKey}:${r.node.id}`} className="flex gap-3 items-baseline">
-            <EditorialGoldMarker />
-            <div className="flex-1">
-              {r.url ? (
-                <Link
-                  to={r.url}
-                  className="text-stitch-ink hover:text-stitch-secondary transition-colors"
-                  aria-label={`Abrir ${kindLabel}: ${r.node.label}`}
-                >
-                  <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-                    {kindLabel}
-                  </span>
-                  <span className="font-medium underline decoration-stitch-secondary/40 underline-offset-4 hover:decoration-stitch-secondary transition-colors">
-                    {r.node.label}
-                  </span>
-                </Link>
-              ) : (
-                <>
-                  <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-secondary mr-3">
-                    {kindLabel}
-                  </span>
-                  <span className="font-medium">{r.node.label}</span>
-                </>
-              )}
-              <NexusSourceBadge node={r.node} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   if (!items || items.length === 0) {
@@ -620,10 +489,33 @@ const GlossaryTermPage: React.FC = () => {
 
   const order = useMemo<SectionKey[]>(() => {
     const raw = term?.sections_order?.length ? term.sections_order : DEFAULT_ORDER;
-    return raw.filter((k): k is SectionKey => k in SECTION_META);
+    // Reader Architecture Rule: apenas seções editoriais aqui. Conexões
+    // teológicas (bible/catechism/magisterium/saints/fathers/liturgy/prayer/
+    // journey/nexus) são consolidadas no `NexusPanel` do slot `nexus`.
+    return raw.filter((k): k is SectionKey =>
+      k in SECTION_META && EDITORIAL_ONLY.has(k as SectionKey),
+    );
   }, [term]);
 
   const autoNexus = useMemo(() => (term ? resolveAutoNexus(term) : null), [term]);
+
+  const nexusPanelOutput = useMemo(() => {
+    if (!autoNexus) return null;
+    // Adapta `AutoNexusResult.byKind` (kinds semânticos do glossário) para
+    // o contrato `ReaderAutoNexusOutput.byBucket` que o NexusPanel consome.
+    const byBucket: Partial<Record<ReaderNexusBucket, typeof autoNexus.byKind[string]>> = {};
+    for (const bucket of NEXUS_ORDER) {
+      const list = autoNexus.byKind[bucket];
+      if (list && list.length > 0) byBucket[bucket] = list;
+    }
+    return {
+      selfId: autoNexus.selfId,
+      suggestions: [],
+      byBucket,
+      labels: { ...BUCKET_LABEL, ...autoNexus.labels },
+    };
+  }, [autoNexus]);
+
 
   if (loading) {
     return (
@@ -754,79 +646,104 @@ const GlossaryTermPage: React.FC = () => {
         shareUrl={canonical}
       />
 
-      <EditorialShell>
-        {/* Breadcrumb */}
-        <nav aria-label="Trilha de navegação" className="max-w-6xl mx-auto px-4 pt-6">
-          <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
-            <li>
-              <Link to="/glossario" className="hover:text-stitch-secondary transition">
-                Léxico
-              </Link>
-            </li>
-            {term.category && (
-              <>
-                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+      <ReaderShell
+        ariaLabel={`Verbete: ${term.term}`}
+        contentMaxWidth="max-w-6xl"
+        hero={
+          <>
+            {/* Breadcrumb */}
+            <nav aria-label="Trilha de navegação" className="max-w-6xl mx-auto px-4 pt-6">
+              <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
                 <li>
-                  <Link
-                    to={`/glossario?category=${encodeURIComponent(term.category)}`}
-                    className="hover:text-stitch-secondary transition"
-                  >
-                    {term.category}
+                  <Link to="/glossario" className="hover:text-stitch-secondary transition">
+                    Léxico
                   </Link>
                 </li>
-              </>
-            )}
-            <li aria-hidden="true" className="text-stitch-muted/50">/</li>
-            <li
-              aria-current="page"
-              className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm"
-            >
-              {term.term}
-            </li>
-          </ol>
-        </nav>
+                {term.category && (
+                  <>
+                    <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                    <li>
+                      <Link
+                        to={`/glossario?category=${encodeURIComponent(term.category)}`}
+                        className="hover:text-stitch-secondary transition"
+                      >
+                        {term.category}
+                      </Link>
+                    </li>
+                  </>
+                )}
+                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                <li
+                  aria-current="page"
+                  className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm"
+                >
+                  {term.term}
+                </li>
+              </ol>
+            </nav>
 
-        <EditorialHero
-          kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
-          title={term.term}
-          subtitle={heroSubtitle}
-          size="md"
-          parchment
-          action={
-            <button
-              type="button"
-              onClick={handleFavorite}
-              aria-pressed={favorited}
-              className={cn(
-                'inline-flex items-center gap-2 px-4 py-2 border rounded-full',
-                'font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] transition-colors',
-                favorited
-                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
-                  : 'border-stitch-outline-variant/60 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
-              )}
-            >
-              {favorited ? (
-                <>
-                  <BookmarkCheck className="h-4 w-4" aria-hidden="true" />
-                  Favoritado
-                </>
-              ) : (
-                <>
-                  <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
-                  Favoritar
-                </>
-              )}
-            </button>
-          }
-        />
+            <EditorialHero
+              kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
+              title={term.term}
+              subtitle={heroSubtitle}
+              size="md"
+              parchment
+              action={
+                <button
+                  type="button"
+                  onClick={handleFavorite}
+                  aria-pressed={favorited}
+                  className={cn(
+                    'inline-flex items-center gap-2 px-4 py-2 border rounded-full',
+                    'font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] transition-colors',
+                    favorited
+                      ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
+                      : 'border-stitch-outline-variant/60 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
+                  )}
+                >
+                  {favorited ? (
+                    <>
+                      <BookmarkCheck className="h-4 w-4" aria-hidden="true" />
+                      Favoritado
+                    </>
+                  ) : (
+                    <>
+                      <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
+                      Favoritar
+                    </>
+                  )}
+                </button>
+              }
+            />
 
-        {/* Selo de completude editorial */}
-        <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
-          <CompletenessBadge value={term.editorial_completeness} />
-        </div>
-
-        {/* Sumário lateral (desktop) */}
-        <div className="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 mt-8">
+            <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
+              <CompletenessBadge value={term.editorial_completeness} />
+            </div>
+          </>
+        }
+        nexus={
+          nexusPanelOutput && (
+            <NexusPanel
+              output={nexusPanelOutput}
+              order={NEXUS_ORDER}
+              title="Nexus Theologicus"
+              kicker="Conexões deste verbete"
+              className="mx-auto"
+            />
+          )
+        }
+        continuation={
+          <ReaderContinuation
+            context={{
+              kind: 'glossary-term',
+              id: term.slug ?? term.id,
+              meta: { theme: term.category ?? undefined },
+            }}
+          />
+        }
+      >
+        {/* Sumário lateral (desktop) + corpo editorial */}
+        <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
           <nav aria-label="Sumário do verbete" className="hidden lg:block sticky top-32 self-start">
             <EditorialKicker className="mb-4">Sumário</EditorialKicker>
             <ol className="space-y-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.16em] text-stitch-muted">
@@ -883,59 +800,8 @@ const GlossaryTermPage: React.FC = () => {
                   )}
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
-                  {k === 'bible' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.bible}
-                      emptyLabel="Passagens bíblicas ainda não indicadas."
-                    />
-                  )}
-                  {k === 'catechism' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.catechism}
-                      emptyLabel="Referências do Catecismo ainda não indicadas."
-                    />
-                  )}
-                  {k === 'magisterium' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.magisterium}
-                      emptyLabel="Documentos do Magistério ainda não indicados."
-                    />
-                  )}
-                  {k === 'saints' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.saint}
-                      emptyLabel="Santos relacionados ainda não indicados."
-                    />
-                  )}
-                  {k === 'fathers' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.father}
-                      emptyLabel="Padres relacionados ainda não indicados."
-                    />
-                  )}
-                  {k === 'liturgy' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.liturgy}
-                      emptyLabel="Referências litúrgicas ainda não indicadas."
-                    />
-                  )}
-                  {k === 'prayer' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.prayer}
-                      emptyLabel="Oração relacionada ainda não indicada."
-                    />
-                  )}
-                  {k === 'journey' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.journey}
-                      emptyLabel="Jornada sugerida ainda não indicada."
-                    />
-                  )}
                   {k === 'faq' && <FaqBlock items={term.faq} />}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
-                  {k === 'nexus' && (
-                    <NexusFullList byKind={nexus.byKind} labels={nexus.labels} />
-                  )}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
               );
@@ -945,15 +811,7 @@ const GlossaryTermPage: React.FC = () => {
               A palavra do sábio é como uma luz que dissipa as trevas do coração.
             </EditorialQuote>
 
-            <ReaderContinuation
-              context={{
-                kind: 'glossary-term',
-                id: term.slug ?? term.id,
-                meta: { theme: term.category ?? undefined },
-              }}
-            />
-
-            {/* Rodapé de versão / revisão teológica */}
+            {/* Rodapé de versão / revisão teológica (extensão do módulo, não substitui slots) */}
             <footer className="mt-16 pt-8 border-t border-stitch-outline-variant/40 max-w-[68ch] mx-auto">
               <EditorialDivider variant="gold-fade" className="mb-6" />
               <dl className="grid grid-cols-2 md:grid-cols-5 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
@@ -993,9 +851,10 @@ const GlossaryTermPage: React.FC = () => {
             </footer>
           </div>
         </div>
-      </EditorialShell>
+      </ReaderShell>
     </>
   );
 };
 
 export default GlossaryTermPage;
+
