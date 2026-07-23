@@ -112,6 +112,56 @@ jobs:
           path: playwright-report
           retention-days: 14
 
+  publish-gate:
+    name: Publish Gate · prebuild + Playwright full suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+
+      - name: Prebuild (sitemap + SEO gates + guard /planos)
+        run: bun run prebuild
+
+      - name: Build (garante publish success)
+        run: bun run build
+
+      - name: Instalar navegador Playwright (${{ matrix.project }})
+        run: bunx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Subir preview server
+        run: |
+          bun run preview --port 8080 --host 127.0.0.1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8080 >/dev/null; then
+              echo "preview up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "preview failed to start"; exit 1
+
+      - name: Playwright full suite (${{ matrix.project }})
+        env:
+          CI: 'true'
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
+        run: bunx playwright test --project=${{ matrix.project }}
+
+      - name: Publicar relatório Playwright (${{ matrix.project }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-publish-gate-${{ matrix.project }}
+          path: playwright-report
+          retention-days: 14
+
+
   smoke-console:
     name: Smoke E2E · rotas sem console.error / exception
     runs-on: ubuntu-latest
