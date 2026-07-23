@@ -985,6 +985,16 @@ export default function EditorialAuditPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
+                            {running && (
+                              <>
+                                <Button size="sm" variant="outline" onClick={togglePause} className="h-7 text-xs">
+                                  {bucketBatch?.paused ? "▶ Continuar" : "⏸ Pausar"}
+                                </Button>
+                                <Button size="sm" variant="destructive" onClick={cancelBatch} className="h-7 text-xs">
+                                  ✕ Cancelar
+                                </Button>
+                              </>
+                            )}
                             {bucketBatch && !running && fail > 0 && (
                               <Button size="sm" variant="outline" onClick={retryFailed} className="h-7 text-xs">
                                 <RefreshCw className="mr-1 h-3 w-3" /> Reprocessar {fail} falha(s)
@@ -1003,15 +1013,36 @@ export default function EditorialAuditPage() {
                           </div>
                         </div>
 
+                        {/* Sprint 6.1.1a — banner de retomada de checkpoint */}
+                        {!bucketBatch && resumable && (
+                          <div className="mt-3 flex items-center justify-between gap-2 rounded border border-amber-500/40 bg-amber-500/10 p-2 text-xs">
+                            <span>
+                              ⚡ Checkpoint disponível — <b>{resumable.label}</b>: {resumable.done}/{resumable.tasks.length} concluídas.
+                            </span>
+                            <div className="flex gap-1.5">
+                              <Button size="sm" variant="outline" onClick={resumeFromCheckpoint} className="h-6 px-2 text-[10px]">
+                                Retomar
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={discardCheckpoint} className="h-6 px-2 text-[10px]">
+                                Descartar
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
                         {bucketBatch && (
                           <div className="mt-3 space-y-2">
                             <div className="flex items-center justify-between text-[11px]">
                               <span className="tabular-nums">
                                 {bucketBatch.done}/{bucketBatch.total}
-                                {bucketBatch.current && running && (
+                                {bucketBatch.paused && <span className="ml-2 text-amber-700">⏸ pausado</span>}
+                                {bucketBatch.current && running && !bucketBatch.paused && (
                                   <span className="ml-2 text-muted-foreground">
                                     → {bucketBatch.current.term} · {fieldLabels[bucketBatch.current.field] ?? bucketBatch.current.field}
                                   </span>
+                                )}
+                                {bucketBatch.checkpointAt && (
+                                  <span className="ml-2 text-emerald-700">✓ checkpoint</span>
                                 )}
                               </span>
                               <span className="text-muted-foreground">
@@ -1021,11 +1052,35 @@ export default function EditorialAuditPage() {
                               </span>
                             </div>
                             <Progress value={pct} className="h-1.5" />
+
+                            {/* Sprint 6.1.1a — estatísticas finais */}
+                            {!running && bucketBatch.finishedAt && bucketBatch.startedAt && (() => {
+                              const dur = bucketBatch.finishedAt - bucketBatch.startedAt;
+                              const mm = Math.floor(dur / 60000);
+                              const ss = Math.floor((dur % 60000) / 1000);
+                              const iB = bucketBatch.iceBefore, iA = bucketBatch.iceAfter;
+                              const delta = iA && iB ? iA.weighted - iB.weighted : 0;
+                              return (
+                                <div className="grid grid-cols-2 gap-2 rounded border bg-background/50 p-2 text-[10px] md:grid-cols-4">
+                                  <div><div className="text-muted-foreground">Tempo total</div><div className="font-semibold tabular-nums">{mm}m{ss.toString().padStart(2, "0")}s</div></div>
+                                  <div><div className="text-muted-foreground">ICE antes</div><div className="font-semibold tabular-nums">{iB?.weighted ?? "—"}</div></div>
+                                  <div><div className="text-muted-foreground">ICE depois</div><div className="font-semibold tabular-nums">{iA?.weighted ?? "—"}</div></div>
+                                  <div>
+                                    <div className="text-muted-foreground">Δ ICE ponderado</div>
+                                    <div className={`font-semibold tabular-nums ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-700" : ""}`}>
+                                      {delta > 0 ? "+" : ""}{delta.toFixed(1)}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+
                             {!running && bucketBatch.results.length > 0 && (
                               <div className="max-h-32 overflow-y-auto rounded border bg-background/50 p-2 text-[10px] font-mono">
                                 {bucketBatch.results.map((r, i) => (
                                   <div key={i} className={r.ok ? "text-emerald-700" : "text-red-700"}>
                                     {r.ok ? "✓" : "✗"} {r.slug} · {fieldLabels[r.field] ?? r.field}
+                                    {r.ms && <span className="ml-1 opacity-50">{(r.ms / 1000).toFixed(1)}s</span>}
                                     {!r.ok && r.error && <span className="ml-1 opacity-70">— {r.error}</span>}
                                   </div>
                                 ))}
