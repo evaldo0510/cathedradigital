@@ -30,7 +30,7 @@ import ContemplativeSettingsDialog from '@/components/prayer/rosary/Contemplativ
 import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
@@ -42,16 +42,18 @@ import {
   PrayerContext,
   NexusPanel,
   ReaderContinuation,
+  ReferencePopover,
 } from '@/components/reader';
 
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
+import { resolveMysteryAutoNexus } from '@/core/knowledge/adapters/mysteryAutoNexus';
 import { usePrayerAutoAdvance } from '@/hooks/usePrayerAutoAdvance';
 import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import MysteryHero from '@/components/prayer/rosary/MysteryHero';
 import MysteryLogosMeditation from '@/components/prayer/rosary/MysteryLogosMeditation';
 import SpiritualFruitBadge from '@/components/prayer/rosary/SpiritualFruitBadge';
 import ContemplationInvitation from '@/components/prayer/rosary/ContemplationInvitation';
-import MysteryNexusPanel from '@/components/prayer/rosary/MysteryNexusPanel';
+
 import MysteryClosingCard from '@/components/prayer/rosary/MysteryClosingCard';
 import SpiritualProgressDots from '@/components/prayer/rosary/SpiritualProgressDots';
 import { resolveMysteryPalette } from '@/components/prayer/rosary/sectionPalette';
