@@ -474,13 +474,19 @@ export const PrayerEngineReader: React.FC<Props> = ({
     return (
       <>
         <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
-        <EditorialReaderChrome
-          kicker={chromeKicker}
-          title={prayer.title}
-          subtitle={prayer.subtitle ?? undefined}
-          backHref="/oracao"
-        />
-        <main className="mx-auto w-full max-w-[720px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
+        <ReaderShell
+          hero={
+            <EditorialHero
+              kicker={chromeKicker}
+              title={prayer.title}
+              subtitle={prayer.subtitle ?? undefined}
+              align="center"
+              size="md"
+            />
+          }
+          contentMaxWidth="max-w-[720px]"
+          ariaLabel={`${prayer.title} — retomar`}
+        >
           <section
             aria-labelledby="resume-title"
             className="rounded-2xl border border-stitch-secondary/40 bg-stitch-surface-container-lowest/40 p-6 md:p-8"
@@ -533,7 +539,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
               </Button>
             </div>
           </section>
-        </main>
+        </ReaderShell>
         <MobileBottomNav />
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
