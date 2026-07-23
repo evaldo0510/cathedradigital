@@ -83,15 +83,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     status: 'partial',
     blocking: false,
   },
-  {
-    id: 'prayer',
-    label: 'Prayer Engine',
-    entry: 'src/components/cathedra/PrayerEngineReader.tsx',
-    sampleRoutes: ['/oracao/rosario'],
-    targetScore: 85,
-    status: 'partial',
-    blocking: false,
-  },
+  // Nota: entrada canônica do Prayer Engine é `prayer-engine` (sub-onda C0.3).
   {
     id: 'journey',
     label: 'Jornadas',
