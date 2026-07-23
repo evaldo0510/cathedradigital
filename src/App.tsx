@@ -181,6 +181,7 @@ const ClientErrors = lazy(() => import('./pages/admin/ClientErrors'));
 const RuntimeErrors = lazy(() => import('./pages/admin/RuntimeErrors'));
 const NexusAuditPage = lazy(() => import('./pages/admin/NexusAudit'));
 const EditorialIntegrityPage = lazy(() => import('./pages/admin/EditorialIntegrity'));
+const EditorialAuditPage = lazy(() => import('./pages/admin/EditorialAudit'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
 const CollectionsAdmin = lazy(() => import('./pages/admin/CollectionsAdmin'));
