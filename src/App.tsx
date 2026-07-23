@@ -505,6 +505,8 @@ const AppLayout: React.FC = () => {
         )}
         
         <GlobalLogosAI />
+        <WelcomeFirstAccess />
+
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main
