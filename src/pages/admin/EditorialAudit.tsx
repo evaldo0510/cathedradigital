@@ -26,6 +26,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import {
   Loader2, Sparkles, AlertCircle, CheckCircle2, ExternalLink, Award, Filter,
   History, Lightbulb, ChevronDown, Snowflake, ShieldCheck, TrendingDown, RefreshCw,
+  Target, Lock, Trophy,
 } from "lucide-react";
 
 const GOLD_MIN = 20;
