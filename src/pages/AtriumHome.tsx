@@ -42,6 +42,8 @@ import {
   useAnnouncements,
 } from '@/modules/atrium/hooks';
 import type { ResumeItem } from '@/modules/atrium/types';
+import { useAuth } from '@/hooks/useAuth';
+import AtriumReception from '@/components/cathedra/AtriumReception';
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
@@ -76,6 +78,7 @@ const ENVIRONMENTS: {
 
 const AtriumHome: React.FC = () => {
   const navigate = useNavigate();
+  const { authenticated } = useAuth();
   const resume = useResume().slice(0, 2);
   const liturgy = useLiturgyToday();
   const themes = useFeaturedThemes().slice(0, 3);
@@ -125,7 +128,9 @@ const AtriumHome: React.FC = () => {
       <MobileTopBar kicker="Cathedra" title="Átrio" transparent />
 
       <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
-        {/* ─── Hero editorial ─────────────────────────────────────────── */}
+        {authenticated && <AtriumReception />}
+        {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
+        {!authenticated && (
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-stitch-secondary/30 md:block" />
           <p className="mb-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
@@ -255,6 +260,7 @@ const AtriumHome: React.FC = () => {
             </article>
           </div>
         </section>
+        )}
 
         {/* ─── Cinco Ambientes (P4) ──────────────────────────────────── */}
         <section className="mt-16">
