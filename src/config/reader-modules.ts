@@ -1,0 +1,187 @@
+/**
+ * Registro canônico de módulos de leitura da Cathedra.
+ *
+ * Fonte única de verdade para:
+ *  - `scripts/reader-template-audit.ts` (score de aderência ao Reader Template Master)
+ *  - `tests/e2e/reader-template-chain.spec.ts` (verificação DOM da cadeia)
+ *  - `src/test/reader-template-chain.static.test.ts` (verificação estática)
+ *
+ * Regra: TODO módulo com experiência de leitura deve estar aqui.
+ * Não criar readers fora deste registro (proíbe drift silencioso).
+ */
+
+export type ReaderModuleStatus = 'certified' | 'partial' | 'pending';
+
+export interface ReaderModule {
+  /** Slug estável. Aparece nos relatórios. */
+  id: string;
+  /** Nome humano do módulo. */
+  label: string;
+  /** Arquivo entry que renderiza o Reader (relativo à raiz). */
+  entry: string;
+  /**
+   * Rotas SPA que instanciam este módulo, na forma navegável.
+   * A primeira rota é usada como sample no E2E.
+   */
+  sampleRoutes: string[];
+  /** Score alvo desta Fase (0-100). Bloqueia CI quando `blocking = true`. */
+  targetScore: number;
+  /** Score atual ~ auditoria manual. Atualizado pelo auditor. */
+  status: ReaderModuleStatus;
+  /** Se `true`, score abaixo do alvo falha o CI. */
+  blocking: boolean;
+  /**
+   * Se o módulo intencionalmente NÃO possui um dos slots
+   * (ex.: coleção sem NexusPanel), documentar aqui para não penalizar.
+   */
+  optionalSlots?: Array<'nexus' | 'continuation' | 'popover'>;
+}
+
+export const READER_MODULES: readonly ReaderModule[] = [
+  {
+    id: 'glossary',
+    label: 'Glossário',
+    entry: 'src/pages/GlossaryTermPage.tsx',
+    sampleRoutes: ['/glossario/graca'],
+    targetScore: 100,
+    status: 'certified',
+    blocking: true,
+  },
+  {
+    id: 'catechism',
+    label: 'Catecismo',
+    entry: 'src/components/cathedra/Catechism.tsx',
+    sampleRoutes: ['/catechism?p=1'],
+    targetScore: 90,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'bible',
+    label: 'Bíblia',
+    entry: 'src/components/cathedra/BibleReader.tsx',
+    sampleRoutes: ['/biblia/joao/1'],
+    targetScore: 85,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'magisterium',
+    label: 'Magistério',
+    entry: 'src/components/cathedra/MagisteriumViewer.tsx',
+    sampleRoutes: ['/magisterio'],
+    targetScore: 80,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'saints',
+    label: 'Santos',
+    entry: 'src/components/cathedra/SaintDetail.tsx',
+    sampleRoutes: ['/santos'],
+    targetScore: 80,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'prayer',
+    label: 'Prayer Engine',
+    entry: 'src/components/cathedra/PrayerEngineReader.tsx',
+    sampleRoutes: ['/oracao/rosario'],
+    targetScore: 85,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'journey',
+    label: 'Jornadas',
+    entry: 'src/components/cathedra/JornadaStepPage.tsx',
+    sampleRoutes: ['/jornadas'],
+    targetScore: 80,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'collection',
+    label: 'Coleções',
+    entry: 'src/pages/CollectionPage.tsx',
+    sampleRoutes: ['/colecoes'],
+    targetScore: 80,
+    status: 'partial',
+    blocking: false,
+    optionalSlots: ['popover'],
+  },
+  {
+    id: 'novena',
+    label: 'Novenas',
+    entry: 'src/pages/NovenaDetailPage.tsx',
+    sampleRoutes: ['/novenas'],
+    targetScore: 80,
+    status: 'partial',
+    blocking: false,
+  },
+] as const;
+
+/** Componentes/adaptadores proibidos pelo Reader Architecture Rule. */
+export const FORBIDDEN_IMPORTS = [
+  {
+    id: 'nexus-bubbles',
+    pattern: /from\s+['"][^'"]*cathedra\/NexusBubbles['"]/,
+    label: 'NexusBubbles',
+    replacement: 'NexusPanel + ReferencePopover',
+  },
+  {
+    id: 'mystery-nexus-panel',
+    pattern: /from\s+['"][^'"]*prayer\/rosary\/MysteryNexusPanel['"]/,
+    label: 'MysteryNexusPanel',
+    replacement: 'NexusPanel + prayerAutoNexus',
+  },
+  {
+    id: 'auto-nexus-list-local',
+    // função local declarada dentro de uma página
+    pattern: /\b(?:function|const)\s+AutoNexusList\b/,
+    label: 'AutoNexusList (local)',
+    replacement: 'NexusPanel',
+  },
+  {
+    id: 'nexus-full-list-local',
+    pattern: /\b(?:function|const)\s+NexusFullList\b/,
+    label: 'NexusFullList (local)',
+    replacement: 'NexusPanel',
+  },
+  {
+    id: 'radix-popover-direct',
+    pattern: /from\s+['"]@radix-ui\/react-popover['"]/,
+    label: '@radix-ui/react-popover (direto)',
+    replacement: 'ReferencePopover ou src/components/ui/popover',
+  },
+] as const;
+
+/**
+ * Arquivos onde os imports proibidos são tolerados (guardrail allowlist).
+ * Sempre que Fase D remover fisicamente um arquivo deprecado, remover
+ * a entrada correspondente daqui.
+ */
+export const GUARDRAIL_ALLOWLIST: readonly string[] = [
+  // Os próprios arquivos deprecados (serão removidos na Fase D)
+  'src/components/cathedra/NexusBubbles.tsx',
+  'src/components/prayer/rosary/MysteryNexusPanel.tsx',
+  // Primitivo shadcn (Popover base)
+  'src/components/ui/popover.tsx',
+  // ReferencePopover é o único wrapper autorizado
+  'src/components/reader/ReferencePopover.tsx',
+  // ── Baseline Fase C: consumidores legados aguardando migração.
+  //    Remover ao concluir a sub-onda de cada módulo (ver docs/reader-template-master-fase-c.md).
+  'src/components/cathedra/BibleReader.tsx',           // sub-onda C.4
+  'src/components/cathedra/Catechism.tsx',             // sub-onda C.3
+  'src/components/cathedra/JornadaStepPage.tsx',       // Fase D
+  'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
+  'src/components/cathedra/SaintDetail.tsx',           // Fase D
+  'src/components/cathedra/PrayerEngineReader.tsx',    // sub-onda C.5
+  // Popovers editoriais legados (ainda usam radix diretamente até migrarem para ReferencePopover)
+  'src/components/cathedra/BibleVersePopover.tsx',
+  'src/components/cathedra/BibleDictionaryPopover.tsx',
+  'src/components/cathedra/CatechismPopover.tsx',
+  'src/lib/nexusContent.ts',
+];
+
