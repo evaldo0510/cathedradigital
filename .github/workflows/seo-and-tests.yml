@@ -105,12 +105,16 @@ jobs:
         run: bun scripts/reader-guardrail.ts
       - name: Auditoria — score por módulo (falha se blocking < alvo)
         run: bun scripts/reader-template-audit.ts --report
-      - name: Publicar relatório de aderência
+      - name: Cathedra Architecture Score (plataforma)
+        run: bun scripts/cathedra-architecture-score.ts --report
+      - name: Publicar relatórios de aderência
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reader-template-report
-          path: reports/reader-template.json
+          name: architecture-reports
+          path: |
+            reports/reader-template.json
+            reports/architecture-score.json
           if-no-files-found: warn
           retention-days: 30
 
