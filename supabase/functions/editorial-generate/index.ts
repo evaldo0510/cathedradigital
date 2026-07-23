@@ -13,7 +13,7 @@ type Entity = "glossary" | "saints" | "prayers" | "collections" | "journeys" | "
 const ROUTES: Partial<Record<Entity, string>> = {
   glossary: "glossary-generate-deep",
   prayers: "prayers-generate-deep",
-  catechism: "glossary-generate-deep", // stub · usa gerador editorial genérico até catechism-generate-deep existir
+  catechism: "catechism-generate-deep",
 };
 
 
