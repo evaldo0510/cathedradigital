@@ -444,6 +444,56 @@ export default function EditorialAuditPage() {
     await load();
   }, [filtered, batchField, load]);
 
+  // Sprint 6.1.1 — executa uma fila arbitrária de tarefas (slug×campo)
+  const runQueue = useCallback(async (tasks: BatchTask[], label: string) => {
+    if (tasks.length === 0) { toast.info("Nada a corrigir neste bucket."); return; }
+    if (!confirm(`Corrigir bucket "${label}"?\n\n${tasks.length} tarefa(s) — cada verbete volta para draft após IA.`)) return;
+
+    setBucketBatch({ running: true, total: tasks.length, done: 0, current: null, results: [], label });
+    const results: BatchResult[] = [];
+    for (let i = 0; i < tasks.length; i++) {
+      const t = tasks[i];
+      setBucketBatch(b => b && ({ ...b, current: t, done: i }));
+      try {
+        const { data, error } = await supabase.functions.invoke("glossary-generate-deep", {
+          body: { slug: t.slug, field: t.field },
+        });
+        if (error || (data as any)?.error) throw new Error(error?.message ?? (data as any)?.error);
+        results.push({ ...t, ok: true });
+      } catch (e: any) {
+        console.error(`[bucket-batch] ${t.slug}:${t.field}`, e);
+        results.push({ ...t, ok: false, error: e?.message ?? String(e) });
+      }
+      setBucketBatch(b => b && ({ ...b, results: [...results] }));
+      await new Promise(r => setTimeout(r, 700));
+    }
+    setBucketBatch(b => b && ({ ...b, running: false, done: tasks.length, current: null }));
+    const ok = results.filter(r => r.ok).length;
+    const fail = results.length - ok;
+    toast[fail === 0 ? "success" : "warning"](`Bucket "${label}" · ${ok} ok · ${fail} falha(s).`);
+    await Promise.all([load(), loadStrategy()]);
+  }, [load, loadStrategy]);
+
+  const buildTasksFromBucket = useCallback((bucketRows: typeof priorityRows): BatchTask[] => {
+    const tasks: BatchTask[] = [];
+    for (const r of bucketRows) {
+      if (r.missing_deep)    tasks.push({ slug: r.slug, term: r.term, field: "deep_interpretation" });
+      if (r.missing_faq)     tasks.push({ slug: r.slug, term: r.term, field: "faq" });
+      if (r.missing_logos)   tasks.push({ slug: r.slug, term: r.term, field: "logos_meditation" });
+      if (r.missing_bible)   tasks.push({ slug: r.slug, term: r.term, field: "bible_verses" });
+      if (r.missing_cic)     tasks.push({ slug: r.slug, term: r.term, field: "catechism_references" });
+      if (r.missing_fathers) tasks.push({ slug: r.slug, term: r.term, field: "fathers_refs" });
+    }
+    return tasks;
+  }, []);
+
+  const retryFailed = useCallback(async () => {
+    if (!bucketBatch) return;
+    const failed = bucketBatch.results.filter(r => !r.ok).map(({ slug, term, field }) => ({ slug, term, field }));
+    if (failed.length === 0) { toast.info("Nenhuma falha para reprocessar."); return; }
+    await runQueue(failed, `${bucketBatch.label} · retry`);
+  }, [bucketBatch, runQueue]);
+
   // Sprint 6.5 · Selo de Congelamento Editorial
   const freezeCriteria = useMemo(() => {
     const totalPublished = totals.published === totals.total && totals.total > 0;
