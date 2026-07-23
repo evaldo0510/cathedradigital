@@ -892,6 +892,164 @@ export default function EditorialAuditPage() {
             );
           })()}
 
+          {/* Sprint 6.1.2 — Painel de Missão · Operação Ouro (4 fases) */}
+          {(() => {
+            // Fase A — Fundação: 0 quick wins + 0 verbetes com ICE < 70
+            const belowIce70 = rows.filter(r => r.score < 70).length;
+            const phaseA_done = buckets.quick_win === 0 && belowIce70 === 0 && rows.length > 0;
+
+            // Fase B — Doutrina: cobertura por macroárea com tier
+            const areaTier = (ice: number) =>
+              ice >= 95 ? { label: "Ouro",    dot: "bg-emerald-500", cls: "text-emerald-700" }
+              : ice >= 85 ? { label: "Prata",   dot: "bg-sky-500",     cls: "text-sky-700" }
+              : ice >= 70 ? { label: "Bronze",  dot: "bg-amber-500",   cls: "text-amber-700" }
+              :             { label: "Revisão", dot: "bg-red-500",     cls: "text-red-700" };
+            const phaseB_done = coverage.length > 0 && coverage.every(c => Number(c.avg_ice) >= 95);
+
+            // Fase C — Nexus Ouro: 100% dos verbetes com nexus_score ≥ 90
+            const nexusGold = rows.filter(r => r.nexus_score >= 90).length;
+            const nexusPct = rows.length ? Math.round((nexusGold / rows.length) * 100) : 0;
+            const phaseC_done = rows.length > 0 && nexusGold === rows.length;
+
+            // Fase D — Certificação: reuso dos 5 critérios oficiais
+            const phaseD_done = frozen;
+
+            const allDone = phaseA_done && phaseB_done && phaseC_done && phaseD_done;
+
+            // Hash de certificação (determinístico p/ mesmo snapshot)
+            const certHash = allDone
+              ? btoa(`v1|${totals.total}|${totals.avg_weighted}|${nexusRelationCount}|${snapshot?.captured_at ?? ""}`)
+                  .replace(/[+/=]/g, "").slice(0, 16).toUpperCase()
+              : null;
+
+            if (allDone) {
+              const certDate = snapshot
+                ? new Date(snapshot.captured_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
+                : new Date().toLocaleDateString("pt-BR");
+              return (
+                <Card className="mb-6 relative overflow-hidden border-2 border-amber-500/60 bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 shadow-xl">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(217,119,6,0.15),transparent_60%)]" />
+                  <CardContent className="relative p-10 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-4 border-amber-500 bg-gradient-to-br from-amber-400 to-yellow-600 shadow-lg">
+                      <Trophy className="h-10 w-10 text-white" />
+                    </div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-800">Cathedra Editorial</p>
+                    <h2 className="mt-1 font-serif text-3xl text-amber-950">Glossário Teológico</h2>
+                    <p className="mt-1 text-xs uppercase tracking-widest text-amber-700">Versão 1.0 · Certificada</p>
+
+                    <div className="mx-auto mt-6 grid max-w-2xl grid-cols-3 gap-6 border-y border-amber-500/30 py-4 text-amber-900">
+                      <div><p className="text-[10px] uppercase opacity-70">ICE Final</p>
+                        <p className="font-serif text-2xl tabular-nums">{totals.avg_weighted.toFixed(1)}</p></div>
+                      <div><p className="text-[10px] uppercase opacity-70">Verbetes</p>
+                        <p className="font-serif text-2xl tabular-nums">{totals.total}</p></div>
+                      <div><p className="text-[10px] uppercase opacity-70">Relações Nexus</p>
+                        <p className="font-serif text-2xl tabular-nums">{nexusRelationCount}</p></div>
+                    </div>
+
+                    <p className="mt-5 text-xs text-amber-800">Certificado em <b>{certDate}</b></p>
+                    <p className="mt-1 font-mono text-[10px] tracking-widest text-amber-700/70">HASH · {certHash}</p>
+                  </CardContent>
+                </Card>
+              );
+            }
+
+            const PhaseHeader = ({ letter, title, done, subtitle }: { letter: string; title: string; done: boolean; subtitle: string }) => (
+              <div className="mb-2 flex items-center gap-2">
+                <div className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold ${
+                  done ? "bg-emerald-500 text-white" : "bg-muted text-muted-foreground"
+                }`}>{done ? <Lock className="h-3.5 w-3.5" /> : letter}</div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold leading-none">{title}</p>
+                  <p className="text-[11px] text-muted-foreground">{subtitle}</p>
+                </div>
+                {done && <Badge variant="outline" className="border-emerald-500/50 bg-emerald-500/10 text-[10px] text-emerald-700">🔒 Congelada</Badge>}
+              </div>
+            );
+
+            return (
+              <Card className="mb-6 border-l-4 border-l-primary">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Target className="h-4 w-4 text-primary" />
+                    Operação Ouro · Painel de Missão
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* FASE A */}
+                  <div>
+                    <PhaseHeader letter="A" title="Fase A · Fundação" done={phaseA_done}
+                      subtitle="Eliminar pendências críticas · 0 Quick Wins · 0 verbetes abaixo de ICE 70" />
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className={`rounded border p-3 ${buckets.quick_win === 0 ? "border-emerald-500/40 bg-emerald-500/5" : "border-red-500/40 bg-red-500/5"}`}>
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Quick Wins restantes</p>
+                        <p className={`text-xl font-bold tabular-nums ${buckets.quick_win === 0 ? "text-emerald-700" : "text-red-700"}`}>{buckets.quick_win}</p>
+                      </div>
+                      <div className={`rounded border p-3 ${belowIce70 === 0 ? "border-emerald-500/40 bg-emerald-500/5" : "border-red-500/40 bg-red-500/5"}`}>
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Verbetes ICE &lt; 70</p>
+                        <p className={`text-xl font-bold tabular-nums ${belowIce70 === 0 ? "text-emerald-700" : "text-red-700"}`}>{belowIce70}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FASE B */}
+                  <div>
+                    <PhaseHeader letter="B" title="Fase B · Doutrina" done={phaseB_done}
+                      subtitle="Equilíbrio entre macroáreas · toda área em Ouro" />
+                    {coverage.length === 0 ? (
+                      <p className="text-xs text-muted-foreground italic">Aguardando dados de cobertura…</p>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                        {coverage.map(c => {
+                          const t = areaTier(Number(c.avg_ice));
+                          return (
+                            <div key={c.area} className="flex items-center justify-between rounded border bg-muted/20 px-2.5 py-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className={`h-2 w-2 rounded-full ${t.dot}`} />
+                                <span className="text-xs font-medium">{c.area}</span>
+                              </div>
+                              <span className={`text-[11px] font-semibold ${t.cls}`}>{t.label} · {Number(c.avg_ice).toFixed(0)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* FASE C */}
+                  <div>
+                    <PhaseHeader letter="C" title="Fase C · Nexus Ouro" done={phaseC_done}
+                      subtitle="100% dos verbetes com 20 relações canônicas (nexus_score ≥ 90)" />
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground tabular-nums">{nexusGold} / {rows.length} verbetes</span>
+                        <span className={`font-semibold tabular-nums ${phaseC_done ? "text-emerald-700" : "text-muted-foreground"}`}>{nexusPct}%</span>
+                      </div>
+                      <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+                        <div className={`h-full transition-all ${phaseC_done ? "bg-emerald-500" : "bg-primary"}`} style={{ width: `${nexusPct}%` }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FASE D */}
+                  <div>
+                    <PhaseHeader letter="D" title="Fase D · Certificação" done={phaseD_done}
+                      subtitle="Cinco critérios oficiais do Selo de Congelamento" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                      {freezeCriteria.map(c => (
+                        <div key={c.key} className="flex items-center gap-2 text-[11px]">
+                          {c.ok
+                            ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                            : <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />}
+                          <span className={c.ok ? "text-foreground" : "text-muted-foreground"}>{c.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
+
           {/* Sprint 6.6 — Cobertura Doutrinária */}
           {coverage.length > 0 && (
             <Card className="mb-6">
