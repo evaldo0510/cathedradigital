@@ -34,6 +34,7 @@ Disallow: /home
 Disallow: /home-v3
 Disallow: /ladainhas
 Disallow: /legacy-home
+Disallow: /legal/privacy
 Disallow: /login
 Disallow: /magisterio
 Disallow: /offline
