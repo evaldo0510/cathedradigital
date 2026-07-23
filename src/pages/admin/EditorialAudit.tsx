@@ -683,6 +683,7 @@ export default function EditorialAuditPage() {
     } catch (e: any) {
       toast.error(`Não foi possível retomar: ${e?.message ?? e}`);
       clearCheckpoint(); setResumable(null);
+      void loadJobs();
     }
   }, [resumable, runQueue, clearCheckpoint]);
   const discardCheckpoint = useCallback(() => { clearCheckpoint(); setResumable(null); }, [clearCheckpoint]);
