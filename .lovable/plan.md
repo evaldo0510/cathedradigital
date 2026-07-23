@@ -1,84 +1,96 @@
+# Sprint 6.2 — Editorial Engine
 
-# Ciclo Editorial Fundacional — Fase 1
-
-Executar 27 entregas editoriais (7 Sacramentos + 10 Santos + 10 Verbetes) sem inflar o diff nem sacrificar profundidade. Cada onda entrega conteúdo pronto para publicação, com Nexus tecido no ato.
+Refatoração de infraestrutura. **Zero mudança visual, zero regressão funcional** no `/admin/editorial-audit` atual. O objetivo é transformar toda a lógica hoje acoplada a `glossary` em um núcleo genérico configurável por entidade, para que Santos, Orações, Coleções e Jornadas sejam plugadas sem duplicar código.
 
 ## Princípio
 
-Uma onda = 1 lote pequeno + 1 gate de aprovação. Nenhuma refatoração de código durante o ciclo — só dados (`glossary`, `saints`, `nexus_relations`, orações v2 quando faltar). Componentes já homologados (Harmony, PrayerPortal, SaintDetail, GlossaryTermPage) consomem sem alteração.
+Uma entidade editorial (Glossário, Santos, Orações…) é descrita por um **manifesto** que declara: tabela, campos obrigatórios, pesos, gate, macroáreas doutrinárias e prompts de IA. O motor executa: audit → ICE → gate → nexus → generator → snapshot → certification usando esse manifesto.
 
-## Eixos e ondas
+## Arquitetura
 
-### Eixo 1 — Os 7 Sacramentos (3 ondas)
+```text
+supabase/
+├── migrations/
+│   └── editorial_engine_core.sql       (tabelas genéricas + RPCs paramétricas)
+└── functions/
+    └── editorial-generate/             (generator paramétrico, substitui glossary-generate-deep)
 
-Cada sacramento entrega, em uma única migration de dados:
+src/lib/editorial-engine/
+├── types.ts                            (EntityManifest, FieldSpec, GateRule, Bucket, Snapshot)
+├── manifests/
+│   ├── glossary.manifest.ts            (migração do que hoje está hardcoded)
+│   └── index.ts                        (registry de entidades)
+├── useEditorialAudit.ts                (hook genérico: recebe manifest, devolve rows/totals/coverage/buckets)
+├── useEditorialQueue.ts                (fila com priorização, pause/resume, checkpoint, histórico)
+├── ice.ts                              (calculator puro)
+├── nexus-validator.ts                  (score Nexus por manifest)
+└── freeze-manager.ts                   (5 critérios paramétricos + hash)
 
-- Verbete `glossary` (deep_interpretation, etimologia, contexto histórico, FAQ×3-4, bibliografia×3-5, meditação Logos, 5-7 versículos, 4-5 §§CIC).
-- 6-10 arestas `nexus_relations` (≥3 bíblicas, ≥2 CIC, ≥1 patrística, verbetes irmãos).
-- Vínculo declarativo com orações v2 já existentes (Rosário, Comunhão Espiritual, etc.) e santos correlatos quando aplicável.
-
-Ondas:
-
-- **S1.1** — Batismo · Crisma (Iniciação Δ Eucaristia já publicada)
-- **S1.2** — Penitência (Confissão já existe → enriquecer) · Unção dos Enfermos
-- **S1.3** — Ordem · Matrimônio + verbete-índice `sacramentos-de-servico`
-
-Gate: revisar S1.1 antes de S1.2.
-
-### Eixo 2 — 10 Santos Fundamentais (3 ondas)
-
-Template homologado em São João Batista. Cada santo:
-
-- Ficha `saints` completa (bio curta/longa, contexto, virtudes, patronatos, iconografia, milagres, práticas espirituais).
-- 6-8 arestas `nexus_relations` (Bíblia, CIC, Magistério, verbetes, orações).
-
-Ondas:
-
-- **S2.1 — Colunas apostólicas**: São Pedro · São Paulo · Nossa Senhora · São José
-- **S2.2 — Doutores**: Santo Agostinho · São Tomás de Aquino · Santa Teresa d'Ávila
-- **S2.3 — Santidade contemporânea + carisma**: Santa Teresinha · São Francisco de Assis (S. João Batista ✔ já feito)
-
-Gate: revisar S2.1 antes de S2.2.
-
-### Eixo 3 — 10 Verbetes Fundamentais (2 ondas)
-
-Template homologado em Sacramento. Divisão por afinidade:
-
-- **S3.1 — Economia da Salvação**: Graça · Revelação · Tradição · Magistério · Salvação
-- **S3.2 — Vida Teologal e Santidade**: Igreja · Santidade · Misericórdia · Esperança · Caridade
-
-Reaproveita verbetes já publicados (Esperança Cristã → refinar em vez de duplicar).
-
-## Ordem de execução proposta
-
-```
-S1.1 → gate → S1.2 → gate → S1.3
-      ↓
-     S2.1 → gate → S2.2 → gate → S2.3
-      ↓
-     S3.1 → gate → S3.2
-      ↓
-   Ativar Library Curator Expert
+src/pages/admin/
+├── EditorialAudit.tsx                  (rewire: passa a receber ?entity=glossary; renderiza via engine)
+└── MissionControl.tsx                  (novo — Cathedra Mission Control, agrega todas as entidades)
 ```
 
-Alternativa (paralela): S1.1 + S3.1 na mesma onda quando os verbetes se reforçam (Sacramentos ↔ Graça).
+## Tarefas
 
-## Métricas de gate
+### 1. Núcleo de tipos e manifesto
+- `EntityManifest`: `{ id, label, table, slugField, statusField, fields: FieldSpec[], gate: GateRule[], doctrinalAreas?, aiPrompts, weight }`.
+- `FieldSpec`: `{ key, label, group: "editorial"|"nexus"|"meta", required, weight, validate?(value) }`.
+- Registrar `glossary.manifest.ts` reproduzindo 1:1 os campos atuais (`deep_interpretation`, `faq`, `logos_meditation`, `bible_verses`, `catechism_references`, `fathers_refs`, etc.), pesos, gate ≥85, macroáreas.
 
-Cada onda entrega relatório curto:
+### 2. Migração SQL — tornar RPCs genéricas
+- Substituir `glossary_doctrinal_coverage()`, `glossary_correction_priority()`, `glossary_quality_gate()`, `glossary_doctrinal_area()` por versões `editorial_*_by_entity(_entity text)`.
+- Manter as antigas como wrappers finos (`SELECT * FROM editorial_coverage('glossary')`) para não quebrar consumidores.
+- Generalizar `editorial_snapshots` (já genérica) e `editorial_jobs` (já tem coluna `module`).
 
-- Verbetes novos com `editorial_completeness='complete'` (contagem).
-- Arestas `nexus_relations` inseridas (contagem).
-- Santos com `status='complete'` (contagem).
-- Zero regressão: rota renderiza (Playwright smoke).
+### 3. Edge Function `editorial-generate`
+- Recebe `{ entity, slug, field }` → carrega manifesto do banco (`editorial_manifests` seed table) ou de constante compartilhada em `_shared/editorial-manifests.ts` → seleciona prompt correto → chama Lovable AI Gateway → grava no campo mapeado.
+- `glossary-generate-deep` vira wrapper que chama `editorial-generate` com `entity: "glossary"`.
 
-## Fora de escopo (nesta Fase 1)
+### 4. Hooks genéricos
+- `useEditorialAudit(manifest)` devolve exatamente a mesma forma de dados que hoje (`rows, totals, coverage, priorityRows, snapshot, prevSnapshot`), lendo pelo manifesto.
+- `useEditorialQueue(manifest)` — extrai a fila inteligente (priorização, pause/resume, checkpoint em `localStorage` chaveado por `entity`, histórico via `editorial_jobs`).
 
-- Coleções, séries, prateleiras, recomendações → Library Curator, após conclusão.
-- Novas orações que não sejam pré-requisito direto de um sacramento (ex.: Rito do Batismo simplificado).
-- Refactor de UI. Se algo faltar visualmente, registrar como débito e seguir.
+### 5. Refatorar `EditorialAudit.tsx`
+- Rota vira `/admin/editorial-audit?entity=glossary` (default = glossary; mantém `/admin/editorial-audit` funcionando).
+- Componente lê o manifesto do query param e delega tudo aos hooks/engine.
+- Todos os cards atuais (Certificação, Mission Panel Sprint 6.1.2, Cobertura, Prioridade, Fila, Histórico, Quality Gate, Certificado v1.0) passam a ser sub-componentes que recebem `{ manifest, data }`.
+- **Critério de sucesso:** diff visual zero em `/admin/editorial-audit`.
 
-## Decisão pedida
+### 6. `MissionControl.tsx` (nível superior)
+- Rota nova `/admin/mission-control`.
+- Lista todas as entidades registradas no manifest registry.
+- Para cada uma: card com ICE, barra, Nexus %, tier, status ("Pronto para Certificação" / "Em progresso" / "Fundação"), link para o audit específico.
+- Rodapé com "Sistema" agregado (média ponderada, últimas auditorias, próxima ação recomendada).
+- Nesta sprint só o **Glossário** aparecerá real; demais entidades ficam como placeholders "Não configurado" até 6.3+.
 
-1. Aprovar sequência linear (S1 → S2 → S3) **ou** intercalada (Sacramento + Verbete-irmão na mesma onda).
-2. Começar por **S1.1 (Batismo + Crisma)** agora?
+## Escopo NEGATIVO (não fazer nesta sprint)
+
+- Não criar manifesto de Santos, Orações, Coleções ou Jornadas.
+- Não gerar conteúdo novo.
+- Não mudar UI/UX visível do audit atual.
+- Não migrar dados existentes.
+- Não tocar em `PrayerPortal`, readers, ou qualquer superfície pública.
+
+## Critérios de aceite
+
+- `/admin/editorial-audit` renderiza pixel-idêntico ao atual, com dados vindos do engine.
+- `/admin/mission-control` funciona mostrando apenas Glossário.
+- `glossary-generate-deep` continua respondendo (via wrapper).
+- `bunx tsgo --noEmit` limpo.
+- Suite Vitest de integridade editorial continua verde.
+- Snapshot pós-refactor idêntico ao pré (ICE ponderado, buckets, cobertura).
+
+## Detalhes técnicos
+
+- **Registry**: constante TS em `src/lib/editorial-engine/manifests/index.ts` (não tabela) — decisões de campos/gate são código versionado, não dado.
+- **Compat SQL**: nada de `DROP FUNCTION`; sempre `CREATE OR REPLACE` + wrappers. Se um wrapper causar assinatura ambígua, versionar com sufixo `_v2` e apontar o wrapper antigo.
+- **Prompts de IA**: extrair os 11 prompts atuais de `glossary-generate-deep` para `supabase/functions/_shared/prompts/glossary.ts` e importar no manifesto.
+- **Hash de certificação**: passa a receber `entity` no input, para hashes independentes por módulo.
+- **Cache**: manifests carregam uma vez no bootstrap; hooks reidratam via React Query com `queryKey: ["editorial", entity, ...]`.
+
+## Depois desta sprint
+
+- 6.3 Santos: criar `saints.manifest.ts` + prompts. Zero código novo de infraestrutura.
+- 6.4 Orações, 6.5 Coleções, 6.6 Jornadas: idem.
+- Mission Control ganha entidades reais à medida que os manifestos são registrados.
