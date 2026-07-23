@@ -190,10 +190,20 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Comunidade de fiéis para discussão de fé, doutrina, oração e caminhada espiritual à luz da Tradição católica.',
   },
+  '/about': {
+    title: 'Sobre a Cathedra — Missão, Visão e Equipe',
+    description:
+      'Conheça a Cathedra Digital: missão de servir a fé católica com tradição e tecnologia, equipe e princípios que guiam a plataforma.',
+  },
   '/partners': {
     title: 'Parceiros Cathedra — Comunidades e Apostolados',
     description:
       'Parceiros institucionais da Cathedra: dioceses, paróquias, comunidades e apostolados que caminham conosco.',
+  },
+  '/admin/seo': {
+    title: 'Admin · SEO — Cathedra',
+    description: 'Painel administrativo de SEO e metadados. Acesso restrito.',
+    noindex: true,
   },
 
   // ─── Institucional / Legal ────────────────────────────────────
