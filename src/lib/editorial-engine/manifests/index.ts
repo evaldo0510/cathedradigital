@@ -50,5 +50,5 @@ export function auditRegistry() {
   return editorialRegistry.map(m => ({ id: m.id, ...validateManifest(m) }));
 }
 
-export { glossaryManifest };
+export { glossaryManifest, saintsManifest };
 
