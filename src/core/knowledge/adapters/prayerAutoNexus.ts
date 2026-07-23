@@ -201,7 +201,13 @@ export function resolvePrayerAutoNexus(input: PrayerNexusInput): PrayerAutoNexus
     });
   }
 
-  const result: PrayerAutoNexusResult = { selfId, suggestions, byBucket };
+  const labels: Record<string, string> = {};
+  for (const bucket of BUCKETS) {
+    for (const rn of byBucket[bucket]) labels[rn.node.id] = rn.node.label;
+  }
+
+  const result: PrayerAutoNexusResult = { selfId, suggestions, byBucket, labels };
+
   cache.set(key, result);
   if (cache.size > CACHE_MAX) {
     const first = cache.keys().next().value;
