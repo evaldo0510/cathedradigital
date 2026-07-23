@@ -295,30 +295,72 @@ export const BreviaryContinuousReader: React.FC<Props> = ({
     [prayer],
   );
 
-  return (
-    <div ref={rootRef} className="mx-auto max-w-3xl" style={contentStyle}>
+  const primaryHour = hours[0];
+  const heroTitle = hours.length > 1
+    ? 'Liturgia das Horas'
+    : (primaryHour?.title ?? 'Liturgia das Horas');
+  const heroKicker = hours.length > 1
+    ? `Ofício divino · ${new Date(isoDate + 'T00:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}`
+    : (primaryHour?.subtitle ?? undefined);
+
+  const dateLabel = new Date(isoDate + 'T00:00:00').toLocaleDateString('pt-BR', {
+    weekday: 'long', day: 'numeric', month: 'long',
+  });
+  const liturgicalColor = liturgy?.cor ?? null;
+  const liturgicalSeason = liturgy?.season ?? primaryHour?.office?.season_note ?? null;
+
+  const body = (
+    <div ref={rootRef} style={contentStyle}>
       {hours.map((h) => (
         <HourSection key={h.hourSlug} hour={h} celebrationMode={celebrationMode} />
       ))}
 
-      {/* Encerramento espiritual */}
       <footer className="mt-spacing-xl border-t border-border/50 pt-spacing-lg text-center">
         <Icons.Cross className="w-spacing-md h-spacing-md text-primary mx-auto" />
         <p className="mt-spacing-sm font-serif italic text-muted-foreground">
           Bendigamos ao Senhor. — Graças a Deus.
         </p>
       </footer>
+    </div>
+  );
 
-      {!celebrationMode && nexus.suggestions.length > 0 && (
-        <div className="mt-spacing-xl">
+  if (celebrationMode) {
+    return <div className="mx-auto max-w-3xl">{body}</div>;
+  }
+
+  return (
+    <ReaderShell
+      hero={
+        <EditorialHero
+          kicker={heroKicker}
+          title={heroTitle}
+          align="center"
+          size="md"
+        />
+      }
+      headerContext={
+        <LiturgicalContext
+          date={dateLabel}
+          color={liturgicalColor ?? undefined}
+          season={liturgicalSeason ?? undefined}
+        />
+      }
+      contentMaxWidth="max-w-3xl"
+      ariaLabel="Liturgia das Horas"
+      nexus={<NexusPanel output={nexus} />}
+      continuation={
+        nexus.suggestions.length > 0 ? (
           <ReaderContinuation
             context={{ kind: 'prayer', id: prayer.slug }}
             suggestions={nexus.suggestions}
           />
-        </div>
-      )}
-    </div>
+        ) : undefined
+      }
+    >
+      {body}
+    </ReaderShell>
   );
 };
 
 export default BreviaryContinuousReader;
+
