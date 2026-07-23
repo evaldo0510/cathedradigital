@@ -350,7 +350,6 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 /* Ver: docs/reader-architecture-master.md                             */
 
 
-}
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   if (!items || items.length === 0) {
