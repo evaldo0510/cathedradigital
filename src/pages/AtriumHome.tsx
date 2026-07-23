@@ -78,6 +78,7 @@ const ENVIRONMENTS: {
 
 const AtriumHome: React.FC = () => {
   const navigate = useNavigate();
+  const { authenticated } = useAuth();
   const resume = useResume().slice(0, 2);
   const liturgy = useLiturgyToday();
   const themes = useFeaturedThemes().slice(0, 3);
