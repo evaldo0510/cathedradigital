@@ -12,17 +12,28 @@ import { Link } from "react-router-dom";
 import { EditorialHero } from "@/components/editorial/harmony/EditorialHero";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { UserCircle, Palette, Type, Volume2, Sparkles, BellRing, ShieldCheck, ArrowRight } from "lucide-react";
 import A11ySettingsPanel from "@/components/cathedra/A11ySettingsPanel";
 import { ReadingPreferencesPanel } from "@/components/cathedra/ReadingPreferencesPanel";
 
-function PlaceholderCard({ icon: Icon, title, description, actionHref, actionLabel }: {
+function PlaceholderCard({ icon: Icon, title, description, action }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
-  actionHref: string;
-  actionLabel: string;
+  action: React.ReactNode;
 }) {
+  return (
+    <div className="rounded-lg border bg-card p-6">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-primary" />
+        <h3 className="font-serif text-base">{title}</h3>
+      </div>
+      <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+      <div className="mt-4">{action}</div>
+    </div>
+  );
+}
   return (
     <div className="rounded-lg border bg-card p-6">
       <div className="flex items-center gap-2">
