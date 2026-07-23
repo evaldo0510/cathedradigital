@@ -257,8 +257,8 @@ const GlossaryPage: React.FC = () => {
                     className={cn(
                       'px-4 py-2 rounded-full border font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] transition-colors',
                       active
-                        ? 'border-stitch-secondary bg-stitch-secondary text-stitch-on-secondary'
-                        : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
+                        ? 'border-stitch-secondary bg-stitch-secondary text-white font-semibold'
+                        : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-[color:var(--gold-text-strong)]',
                     )}
                   >
                     {cat}
