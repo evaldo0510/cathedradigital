@@ -232,7 +232,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
     canonicalPath: '/privacy',
+    noindex: true, // alias — canonical aponta para /privacy
   },
+
   '/legal/lgpd': {
     title: 'LGPD — Conformidade e Direitos do Titular · Cathedra',
     description:
