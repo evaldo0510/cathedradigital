@@ -313,7 +313,9 @@ const PublicLanding = () => {
                       onClick={() => navigate(p.href)}
                       size="lg"
                       variant={p.accent ? "default" : "outline"}
-                      className="rounded-full px-6"
+                      className={p.accent
+                        ? "rounded-full px-6 bg-primary !text-primary-foreground hover:bg-primary/90"
+                        : "rounded-full px-6"}
                     >
                       {p.cta}
                       <ArrowRight className="ml-2 h-4 w-4" />
